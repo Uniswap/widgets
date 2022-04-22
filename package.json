@@ -77,7 +77,6 @@
     "@types/react-window": "^1.8.2",
     "@types/rebass": "^4.0.7",
     "@types/styled-components": "^5.1.0",
-    "@types/testing-library__cypress": "^5.0.5",
     "@types/ua-parser-js": "^0.7.35",
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
@@ -97,7 +96,6 @@
     "babel-plugin-macros": "^3.1.0",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.3",
-    "cypress": "^7.7.0",
     "d3": "^7.0.0",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.11.0",
@@ -174,7 +172,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.cjs",
-    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "widgets:start": "cosmos",
     "widgets:build": "rollup --config --failAfterWarnings --configPlugin typescript2"
   },
