@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { DefinePlugin } = require('webpack')
 
 // Renders the cosmos fixtures in isolation, instead of using public/index.html.
 module.exports = (webpackConfig) => {
-  const { module, resolve } = webpackConfig
   return {
     ...webpackConfig,
     module: {
@@ -49,14 +47,9 @@ module.exports = (webpackConfig) => {
       new MiniCssExtractPlugin(),
       new DefinePlugin({
         'process.env.REACT_APP_INFURA_KEY': '"4bf032f2d38a4ed6bb975b80d6340847"',
-        'process.env.REACT_APP_LOCALES': '"../locales"',
       }),
       new HtmlWebpackPlugin(),
     ],
-    resolve: {
-      ...resolve,
-      plugins: [new TsconfigPathsPlugin()]
-    },
     stats: { children: true, errorDetails: true },
   }
 }

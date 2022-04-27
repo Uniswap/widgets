@@ -4,7 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ChainTokenMap } from 'lib/hooks/useTokenList/utils'
+import { ChainTokenMap } from 'hooks/useTokenList/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {

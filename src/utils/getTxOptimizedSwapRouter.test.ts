@@ -1,4 +1,4 @@
-import { ApprovalState } from 'lib/hooks/useApproval'
+import { ApprovalState } from 'hooks/useApproval'
 
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from './getTxOptimizedSwapRouter'
 

@@ -1,5 +1,5 @@
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
 import { useMemo } from 'react'
 
 import { useArgentWalletDetectorContract } from './useContract'

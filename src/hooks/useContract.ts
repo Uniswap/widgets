@@ -32,7 +32,7 @@ import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 
-import { getContract } from '../utils'
+import { getContract } from 'utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json

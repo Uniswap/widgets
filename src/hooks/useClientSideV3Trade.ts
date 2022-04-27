@@ -3,7 +3,7 @@ import { Route, SwapQuoter } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
-import { useSingleContractWithCallData } from 'lib/hooks/multicall'
+import { useSingleContractWithCallData } from 'hooks/multicall'
 import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 

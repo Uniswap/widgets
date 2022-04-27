@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useSingleCallResult } from 'lib/hooks/multicall'
+import { useSingleCallResult } from 'hooks/multicall'
 import { useMemo } from 'react'
 
 import { useInterfaceMulticall } from './useContract'

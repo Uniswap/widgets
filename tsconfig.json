@@ -3,7 +3,7 @@
     "allowJs": true,
     "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "src/lib",
+    "baseUrl": "src",
     "declaration": true,
     "declarationDir": "dts",
     "downlevelIteration": true,
@@ -20,17 +20,6 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": false,
-    "paths": {
-      "lib/*": ["./*"],
-      "abis/*": ["../abis/*"],
-      "assets/*": ["../assets/*"],
-      "constants/*": ["../constants/*"],
-      "hooks/*": ["../hooks/*"],
-      "locales/*": ["../locales/*"],
-      "state/*": ["../state/*"],
-      "types/*": ["../types/*"],
-      "utils/*": ["../utils/*"]
-    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
@@ -40,5 +29,5 @@
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "src/**/*.test.*"],
-  "include": ["src/lib/**/*.d.ts", "src/lib/index.tsx"]
+  "include": ["src/**/*.d.ts", "src/index.tsx"]
 }

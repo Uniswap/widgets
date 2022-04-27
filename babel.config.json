@@ -5,7 +5,12 @@
         ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
     ],
     "plugins": [
+        "@babel/plugin-transform-runtime",
         "macros",
-        "@babel/plugin-transform-runtime"
+        ["module-resolver", {
+                "root": ["src"],
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            }
+        ]
     ]
 }

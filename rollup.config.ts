@@ -3,7 +3,6 @@
  * This library lives in src/lib, but shares code with the interface application.
  */
 
-import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
@@ -24,7 +23,6 @@ import sass from 'rollup-plugin-scss'
 import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
-  'process.env.REACT_APP_LOCALES': '"./locales"',
   // esm requires fully-specified paths:
   'react/jsx-runtime': 'react/jsx-runtime.js',
 }
@@ -41,20 +39,9 @@ function isEthers(source: string) {
   return source.startsWith('@ethersproject/') && !source.endsWith('experimental')
 }
 
-const TS_CONFIG = './tsconfig.json'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { baseUrl, paths }: CompilerOptions = require(TS_CONFIG).compilerOptions
-const aliases = Object.entries({ ...paths }).flatMap(([find, replacements]) => {
-  return replacements.map((replacement) => ({
-    find: path.dirname(find),
-    replacement: path.join(__dirname, baseUrl || '.', path.dirname(replacement)),
-  }))
-})
-
 const plugins = [
   // Dependency resolution
   resolve({ extensions: EXTENSIONS }), // resolves third-party modules within node_modules/
-  alias({ entries: aliases }), // resolves paths aliased through the tsconfig (babel does not use tsconfig path resolution)
 
   // Source code transformation
   replace({ ...REPLACEMENTS, preventAssignment: true }),
@@ -62,19 +49,19 @@ const plugins = [
 ]
 
 const check = {
-  input: 'src/lib/index.tsx',
+  input: 'src/index.tsx',
   output: { file: 'dist/widgets.tsc', inlineDynamicImports: true },
   external: (source: string) => isAsset(source) || isEthers(source),
   plugins: [
     externals({ exclude: ['constants'], deps: true, peerDeps: true }), // marks builtins, dependencies, and peerDependencies external
     ...plugins,
-    typescript({ tsconfig: TS_CONFIG }),
+    typescript({ tsconfig: './tsconfig.json' }),
   ],
   onwarn: squelchTranspilationWarnings, // this pipeline is only for typechecking and generating definitions
 }
 
 const type = {
-  input: 'dist/dts/lib/index.d.ts',
+  input: 'dist/dts/index.d.ts',
   output: { file: 'dist/index.d.ts' },
   external: (source: string) => isAsset(source) || isEthers(source),
   plugins: [
@@ -101,7 +88,7 @@ const type = {
  */
 
 const transpile = {
-  input: 'src/lib/index.tsx',
+  input: 'src/index.tsx',
   output: [
     {
       dir: 'dist',
