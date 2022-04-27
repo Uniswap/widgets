@@ -1247,15 +1247,6 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/transactions" "^5.6.0"
 
-"@ethersproject/experimental@^5.4.0":
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/@ethersproject/experimental/-/experimental-5.6.0.tgz#c72ef00a79b746c522eb79736712169d71c55f64"
-  integrity sha512-lSEM/6t+BicbeyRxat5meoQhXZLoBEziVrxZqeCIhsPntvq4DlMobPBKXF0Iz3m0dMvl9uga7fHEO4YD9SgCgw==
-  dependencies:
-    "@ethersproject/web" "^5.6.0"
-    ethers "^5.6.0"
-    scrypt-js "3.0.1"
-
 "@ethersproject/hash@5.6.0", "@ethersproject/hash@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/hash/-/hash-5.6.0.tgz#d24446a5263e02492f9808baa99b6e2b4c3429a2"
@@ -6634,7 +6625,7 @@ ethereumjs-util@^6.0.0:
     ethjs-util "0.1.6"
     rlp "^2.2.3"
 
-ethers@^5.1.4, ethers@^5.6.0:
+ethers@^5.1.4:
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.2.tgz#e75bac7f038c5e0fdde667dba62fc223924143a2"
   integrity sha512-EzGCbns24/Yluu7+ToWnMca3SXJ1Jk1BvWB7CCmVNxyOeM4LLvw2OLuIHhlkhQk1dtOcj9UMsdkxUh8RiG1dxQ==

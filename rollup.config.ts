@@ -35,8 +35,8 @@ function isAsset(source: string) {
 }
 
 function isEthers(source: string) {
-  // @ethersproject/* modules are provided by ethers, with the exception of experimental.
-  return source.startsWith('@ethersproject/') && !source.endsWith('experimental')
+  // @ethersproject/* modules are provided by ethers
+  return source.startsWith('@ethersproject/')
 }
 
 const plugins = [
