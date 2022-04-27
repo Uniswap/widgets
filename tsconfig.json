@@ -1,10 +1,44 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "allowJs": true,
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src/lib",
+    "declaration": true,
+    "declarationDir": "dts",
+    "downlevelIteration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
-    "noEmit": true,
-    "baseUrl": "src"
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "paths": {
+      "lib/*": ["./*"],
+      "abis/*": ["../abis/*"],
+      "assets/*": ["../assets/*"],
+      "constants/*": ["../constants/*"],
+      "hooks/*": ["../hooks/*"],
+      "locales/*": ["../locales/*"],
+      "state/*": ["../state/*"],
+      "types/*": ["../types/*"],
+      "utils/*": ["../utils/*"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "es5",
+    "types": ["react-spring", "jest"],
+    "useUnknownInCatchVariables": false
   },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*"]
+  "exclude": ["node_modules", "src/**/*.test.*"],
+  "include": ["src/lib/**/*.d.ts", "src/lib/index.tsx"]
 }

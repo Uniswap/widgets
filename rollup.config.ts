@@ -24,7 +24,6 @@ import sass from 'rollup-plugin-scss'
 import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
-  'process.env.REACT_APP_IS_WIDGET': true,
   'process.env.REACT_APP_LOCALES': '"./locales"',
   // esm requires fully-specified paths:
   'react/jsx-runtime': 'react/jsx-runtime.js',
@@ -42,7 +41,7 @@ function isEthers(source: string) {
   return source.startsWith('@ethersproject/') && !source.endsWith('experimental')
 }
 
-const TS_CONFIG = './tsconfig.lib.json'
+const TS_CONFIG = './tsconfig.json'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { baseUrl, paths }: CompilerOptions = require(TS_CONFIG).compilerOptions
 const aliases = Object.entries({ ...paths }).flatMap(([find, replacements]) => {
@@ -132,18 +131,13 @@ const transpile = {
 
     // Source code transformation
     url({ include: ASSET_EXTENSIONS.map((extname) => '**/*' + extname), limit: Infinity }), // imports assets as data URIs
-    svgr({ exportType: 'named', svgo: false }), // imports svgs as React components
+    svgr(), // imports svgs as React components
     sass({ output: 'dist/fonts.css' }), // generates fonts.css
     commonjs(), // transforms cjs dependencies into tree-shakeable ES modules
 
     babel({
       babelHelpers: 'runtime',
-      presets: ['@babel/preset-env', ['@babel/preset-react', { runtime: 'automatic' }], '@babel/preset-typescript'],
       extensions: EXTENSIONS,
-      plugins: [
-        'macros', // enables @lingui and styled-components macros
-        '@babel/plugin-transform-runtime', // embeds the babel runtime for library distribution
-      ],
     }),
   ],
   onwarn: squelchTypeWarnings, // this pipeline is only for transpilation
