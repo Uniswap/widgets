@@ -6,8 +6,8 @@ import { Actions, Connector, Provider as Eip1193Provider, Web3ReactStore } from 
 import { Url } from '@web3-react/url'
 import { useAtom, WritableAtom } from 'jotai'
 import { atom } from 'jotai'
-import JsonRpcConnector from 'utils/JsonRpcConnector'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 type Web3ContextType = {
   connector: Connector

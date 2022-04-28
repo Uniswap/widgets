@@ -1,8 +1,8 @@
 import { Percent } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useUpdateAtom } from 'jotai/utils'
-import { feeOptionsAtom } from 'state/swap'
 import { useEffect } from 'react'
+import { feeOptionsAtom } from 'state/swap'
 
 export interface FeeOptions {
   convenienceFee?: number

@@ -7,9 +7,9 @@ import Row from 'components/Row'
 import Rule from 'components/Rule'
 import TokenImg from 'components/TokenImg'
 import { AutoRouter } from 'icons'
-import styled, { Layer, ThemedText } from 'theme'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import styled, { Layer, ThemedText } from 'theme'
 
 import { getTokenPath, RoutingDiagramEntry } from './utils'
 

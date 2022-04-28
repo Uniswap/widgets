@@ -4,7 +4,6 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
-import styled, { ThemedText } from 'theme'
 import {
   ComponentClass,
   CSSProperties,
@@ -20,6 +19,7 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
+import styled, { ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 

@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
-import styled, { ThemedText } from 'theme'
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
+import styled, { ThemedText } from 'theme'
 
 const Input = styled.input<{ text: string }>`
   -moz-appearance: none;

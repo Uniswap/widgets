@@ -2,10 +2,10 @@ import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import Row from 'components/Row'
-import { ThemedText } from 'theme'
-import formatLocaleNumber from 'utils/formatLocaleNumber'
 import { useCallback, useMemo, useState } from 'react'
+import { ThemedText } from 'theme'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
+import formatLocaleNumber from 'utils/formatLocaleNumber'
 
 import { TextButton } from '../Button'
 

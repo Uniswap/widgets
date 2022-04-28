@@ -9,10 +9,10 @@ import {
   useSwapInfo,
 } from 'hooks/swap'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
-import { Field } from 'state/swap'
-import styled, { ThemedText } from 'theme'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
+import { Field } from 'state/swap'
+import styled, { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 

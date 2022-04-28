@@ -1,6 +1,6 @@
 import { Icon } from 'icons'
-import styled, { Color, css } from 'theme'
 import { ComponentProps, forwardRef } from 'react'
+import styled, { Color, css } from 'theme'
 
 export const BaseButton = styled.button`
   background-color: transparent;

@@ -1,9 +1,9 @@
 import { Options, Placement } from '@popperjs/core'
-import styled, { Layer } from 'theme'
 import maxSize from 'popper-max-size-modifier'
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
+import styled, { Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 

@@ -1,7 +1,7 @@
 import { loadingOpacity } from 'css/loading'
-import styled, { css } from 'theme'
 import { transparentize } from 'polished'
 import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
+import styled, { css } from 'theme'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -50,13 +50,14 @@ const Input = styled.input`
 
 export default Input
 
-interface StringInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
+interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
   value: string
   onChange: (input: string) => void
+  placeholder?: string
 }
 
-export const StringInput = forwardRef<HTMLInputElement, StringInputProps>(function StringInput(
-  { value, onChange, ...props }: StringInputProps,
+export const StringInput = forwardRef<HTMLInputElement, InputProps>(function StringInput(
+  { value, onChange, ...props }: InputProps,
   ref
 ) {
   return (
@@ -78,18 +79,14 @@ export const StringInput = forwardRef<HTMLInputElement, StringInputProps>(functi
   )
 })
 
-interface NumericInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
-  value: string
-  onChange: (input: string) => void
-}
-
-interface EnforcedNumericInputProps extends NumericInputProps {
+interface EnforcedInputProps extends InputProps {
   // Validates nextUserInput; returns stringified value, or null if invalid
   enforcer: (nextUserInput: string) => string | null
+  pattern: string
 }
 
-const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(
-  { value, onChange, enforcer, pattern, ...props }: EnforcedNumericInputProps,
+const NumericInput = forwardRef<HTMLInputElement, EnforcedInputProps>(function NumericInput(
+  { value, onChange, enforcer, pattern, ...props }: EnforcedInputProps,
   ref
 ) {
   const validateChange = useCallback(
@@ -131,7 +128,7 @@ const integerEnforcer = (nextUserInput: string) => {
   }
   return null
 }
-export const IntegerInput = forwardRef(function IntegerInput(props: NumericInputProps, ref) {
+export const IntegerInput = forwardRef(function IntegerInput(props: InputProps, ref) {
   return <NumericInput pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
 })
 
@@ -146,7 +143,7 @@ const decimalEnforcer = (nextUserInput: string) => {
   }
   return null
 }
-export const DecimalInput = forwardRef(function DecimalInput(props: NumericInputProps, ref) {
+export const DecimalInput = forwardRef(function DecimalInput(props: InputProps, ref) {
   return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
 })
 

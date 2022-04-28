@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { AlertTriangle, ArrowRight, CheckCircle, Spinner, Trash2 } from 'icons'
-import styled, { ThemedText } from 'theme'
 import { useMemo, useState } from 'react'
+import styled, { ThemedText } from 'theme'
 
 import Button from './Button'
 import Column from './Column'

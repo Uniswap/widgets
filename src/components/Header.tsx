@@ -1,6 +1,6 @@
 import { largeIconCss } from 'icons'
-import styled, { ThemedText } from 'theme'
 import { ReactElement, ReactNode } from 'react'
+import styled, { ThemedText } from 'theme'
 
 import Row from './Row'
 

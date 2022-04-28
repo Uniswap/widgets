@@ -3,8 +3,8 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useAtom } from 'jotai'
-import { transactionTtlAtom } from 'state/settings'
 import { useMemo } from 'react'
+import { transactionTtlAtom } from 'state/settings'
 
 import useActiveWeb3React from './useActiveWeb3React'
 

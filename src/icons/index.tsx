@@ -7,7 +7,6 @@ import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { loadingCss } from 'css/loading'
-import styled, { Color, css, keyframes } from 'theme'
 import { FunctionComponent, SVGProps } from 'react'
 /* eslint-disable no-restricted-imports */
 import { Icon as FeatherIcon } from 'react-feather'
@@ -29,6 +28,7 @@ import {
   X as XIcon,
   XOctagon as XOctagonIcon,
 } from 'react-feather'
+import styled, { Color, css, keyframes } from 'theme'
 /* eslint-enable no-restricted-imports */
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>

@@ -1,11 +1,11 @@
 import { ContractTransaction } from '@ethersproject/contracts'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useWETHContract } from 'hooks/useContract'
 import { useAtomValue } from 'jotai/utils'
+import { useMemo } from 'react'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
-import { useMemo } from 'react'
 
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import useActiveWeb3React from '../useActiveWeb3React'
 import useCurrencyBalance from '../useCurrencyBalance'
 

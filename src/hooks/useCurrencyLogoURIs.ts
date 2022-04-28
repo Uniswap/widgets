@@ -1,11 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
+import EthereumLogo from 'assets/images/ethereum-logo.png'
+import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-
-import EthereumLogo from 'assets/images/ethereum-logo.png'
-import MaticLogo from 'assets/svg/matic-token-icon.svg'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 

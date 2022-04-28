@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useDefaultTransactionTtl, useTransactionTtl } from 'hooks/useTransactionDeadline'
-import styled, { ThemedText } from 'theme'
 import { useRef } from 'react'
+import styled, { ThemedText } from 'theme'
 
 import Column from '../../Column'
 import { inputCss, IntegerInput } from '../../Input'

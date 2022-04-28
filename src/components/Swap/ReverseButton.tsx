@@ -1,7 +1,7 @@
 import { useSwitchSwapCurrencies } from 'hooks/swap'
 import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'icons'
-import styled, { Layer } from 'theme'
 import { useCallback, useState } from 'react'
+import styled, { Layer } from 'theme'
 
 import Button from '../Button'
 import Row from '../Row'

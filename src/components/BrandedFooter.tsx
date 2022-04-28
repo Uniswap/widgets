@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { Logo } from 'icons'
-import styled, { brand, ThemedText } from 'theme'
 import { memo } from 'react'
+import styled, { brand, ThemedText } from 'theme'
 
 import ExternalLink from './ExternalLink'
 

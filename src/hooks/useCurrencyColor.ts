@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useTheme } from 'theme'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { useEffect, useState } from 'react'
+import { useTheme } from 'theme'
 
 import useCurrencyLogoURIs from './useCurrencyLogoURIs'
 

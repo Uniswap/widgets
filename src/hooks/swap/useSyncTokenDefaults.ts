@@ -1,11 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
-import { useUpdateAtom } from 'jotai/utils'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useToken } from 'hooks/useCurrency'
 import useNativeCurrency from 'hooks/useNativeCurrency'
-import { Field, Swap, swapAtom } from 'state/swap'
+import { useUpdateAtom } from 'jotai/utils'
 import { useCallback, useRef } from 'react'
+import { Field, Swap, swapAtom } from 'state/swap'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
 import { useIsTokenListLoaded } from '../useTokenList'

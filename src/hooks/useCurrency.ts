@@ -1,15 +1,15 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
+import { TOKEN_SHORTHANDS } from 'constants/tokens'
+import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
-import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useMemo } from 'react'
-
-import { TOKEN_SHORTHANDS } from 'constants/tokens'
 import { isAddress } from 'utils'
 import { supportedChainId } from 'utils/supportedChainId'
+
 import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response

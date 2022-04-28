@@ -1,8 +1,8 @@
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { Link } from 'icons'
-import styled, { Color } from 'theme'
 import { ReactNode, useMemo } from 'react'
+import styled, { Color } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import ExternalLink from './ExternalLink'

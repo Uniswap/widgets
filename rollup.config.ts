@@ -20,7 +20,6 @@ import dts from 'rollup-plugin-dts'
 import multi from 'rollup-plugin-multi-input'
 import externals from 'rollup-plugin-node-externals'
 import sass from 'rollup-plugin-scss'
-import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
   // esm requires fully-specified paths:

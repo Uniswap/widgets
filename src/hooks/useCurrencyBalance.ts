@@ -2,13 +2,12 @@ import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import JSBI from 'jsbi'
-import { useMultipleContractSingleData, useSingleContractMultipleData } from 'hooks/multicall'
-import { useMemo } from 'react'
-
 import { nativeOnChain } from 'constants/tokens'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from 'hooks/multicall'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useInterfaceMulticall } from 'hooks/useContract'
+import JSBI from 'jsbi'
+import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
 /**

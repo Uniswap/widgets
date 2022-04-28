@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
-import { useMemo, useRef } from 'react'
-
 import { SupportedChainId } from 'constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from 'constants/tokens'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useMemo, useRef } from 'react'
+import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
+
 import { useBestV2Trade } from './useBestV2Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 

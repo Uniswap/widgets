@@ -1,10 +1,10 @@
 import 'wicg-inert'
 
 import { X } from 'icons'
-import styled, { Color, Layer, ThemeProvider } from 'theme'
-import { delayUnmountForAnimation } from 'utils/animations'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import styled, { Color, Layer, ThemeProvider } from 'theme'
+import { delayUnmountForAnimation } from 'utils/animations'
 
 import { IconButton } from './Button'
 import Column from './Column'

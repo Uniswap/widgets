@@ -1,9 +1,9 @@
 import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import resolveENSContentHash from 'utils/resolveENSContentHash'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import resolveENSContentHash from 'utils/resolveENSContentHash'
 
 import fetchTokenList from './fetchTokenList'
 import { useQueryTokens } from './querying'

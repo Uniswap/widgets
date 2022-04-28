@@ -3,13 +3,13 @@ import { initializeConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
+import Widget from 'components/Widget'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
-import Widget from 'components/Widget'
-import { darkTheme, defaultTheme, lightTheme } from 'theme'
 import { ReactNode, useEffect, useState } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
+import { darkTheme, defaultTheme, lightTheme } from 'theme'
 
 const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask(actions))
 const [walletConnect] = initializeConnector<WalletConnect>(

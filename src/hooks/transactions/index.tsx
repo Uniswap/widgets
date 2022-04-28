@@ -1,9 +1,9 @@
 import { Token } from '@uniswap/sdk-core'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback } from 'react'
+import { Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
 
 import useBlockNumber from '../useBlockNumber'

@@ -2,8 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { useToken } from 'hooks/useCurrency'
 import useCurrencyLogoURIs from 'hooks/useCurrencyLogoURIs'
 import { MissingToken } from 'icons'
-import styled from 'theme'
 import { useCallback, useMemo, useState } from 'react'
+import styled from 'theme'
 
 const badSrcs = new Set<string>()
 

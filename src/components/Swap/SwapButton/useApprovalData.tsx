@@ -11,8 +11,8 @@ import {
 import { useAddTransaction, usePendingApproval } from 'hooks/transactions'
 import { Slippage } from 'hooks/useSlippage'
 import { Spinner } from 'icons'
-import { TransactionType } from 'state/transactions'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { TransactionType } from 'state/transactions'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 export function useIsPendingApproval(token?: Token, spender?: string): boolean {

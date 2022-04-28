@@ -1,7 +1,7 @@
 import { nativeOnChain } from 'constants/tokens'
-import useDebounce from 'hooks/useDebounce'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useTokenBalances } from 'hooks/useCurrencyBalance'
+import useDebounce from 'hooks/useDebounce'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 

@@ -4,13 +4,13 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import JSBI from 'jsbi'
-import { useSingleCallResult } from 'hooks/multicall'
-import { useMemo, useState } from 'react'
-
 import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
+import { useSingleCallResult } from 'hooks/multicall'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import JSBI from 'jsbi'
+import { useMemo, useState } from 'react'
+
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
 

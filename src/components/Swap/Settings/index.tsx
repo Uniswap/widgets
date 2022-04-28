@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { useResetAtom } from 'jotai/utils'
 import useScrollbar from 'hooks/useScrollbar'
 import { Settings as SettingsIcon } from 'icons'
+import { useResetAtom } from 'jotai/utils'
+import React, { useState } from 'react'
 import { settingsAtom } from 'state/settings'
 import styled, { ThemedText } from 'theme'
-import React, { useState } from 'react'
 
 import { IconButton, TextButton } from '../../Button'
 import Column from '../../Column'

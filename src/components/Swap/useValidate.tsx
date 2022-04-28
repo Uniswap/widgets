@@ -2,7 +2,6 @@ import { IntegrationError } from 'errors'
 import { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { PropsWithChildren, useEffect } from 'react'
-
 import { isAddress } from 'utils'
 
 function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {

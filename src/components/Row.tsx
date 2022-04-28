@@ -1,5 +1,5 @@
-import styled, { Color, Theme } from 'theme'
 import { Children, ReactNode } from 'react'
+import styled, { Color, Theme } from 'theme'
 
 const Row = styled.div<{
   color?: Color

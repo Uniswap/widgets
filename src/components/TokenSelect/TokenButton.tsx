@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { ChevronDown } from 'icons'
-import styled, { css, ThemedText } from 'theme'
 import { useEffect, useMemo, useState } from 'react'
+import styled, { css, ThemedText } from 'theme'
 
 import Button from '../Button'
 import Row from '../Row'
