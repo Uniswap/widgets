@@ -1,26 +1,42 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+const { DefinePlugin } = require('webpack')
 const EventEmitter = require('events')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { DefinePlugin } = require('webpack')
 const rollup = require('rollup')
 
-const [, , esm, locales] = require('./rollup.config.cjs')
+const rollupConfig = require('./rollup.config.cjs')
+const { assets: assetConfigs } = rollupConfig
 
 class RollupWatchPlugin extends EventEmitter {
-  constructor(transpile, locales) {
+  static PLUGIN_NAME = 'rollup-watch'
+
+  constructor({ watchConfig, assetConfigs }) {
     super()
-    this.locales = rollup.rollup(locales).then((build) => build.write(locales.output))
-    rollup.watch(transpile).on('event', this.onRollupEvent.bind(this))
-    this.transpile = new Promise((resolve) => this.once('end', resolve))
+
+    rollup.watch(watchConfig).on('event', (e) => {
+      this.emit(e.code, e)
+      if (e.result) {
+        e.result.close()
+      }
+    })
+
+    this.initialized = Promise.all([
+      ...assetConfigs.map((config) => rollup.rollup(config).then((build) => build.write(config.output))),
+      new Promise((resolve) => this.once('END', resolve)),
+    ])
   }
 
-  async onRollupEvent(e) {
-    if (e.code === 'END') this.emit('end')
-  }
+  apply(compiler) {
+    // Waits for rollup to generate assets for the initial compilation.
+    compiler.hooks.watchRun.tapPromise(RollupWatchPlugin.PLUGIN_NAME, () => this.initialized)
 
-  async apply(compiler) {
-    compiler.hooks.watchRun.tapPromise('rollup-watch', () => Promise.all([this.transpile, this.locales]))
-    this.on('end', () => compiler.watching.invalidate())
+    this.on('BUNDLE_END', (({ input, duration }) => console.log(`rollup built ${input} in ${duration}ms`)))
+    this.initialized.then(() => {
+      this.on('START', () => console.log('rollup build invalidated by unknown file'))
+
+      // Invalidates the build when rollup generates a new asset.
+      this.on('END', () => compiler.watching.invalidate())
+    })
   }
 } 
 
@@ -39,14 +55,15 @@ module.exports = (webpackConfig) => {
       ],
     },
     plugins: [
-      new RollupWatchPlugin(esm, locales),
+      new RollupWatchPlugin({ watchConfig: rollupConfig, assetConfigs }),
       new DefinePlugin({
         'process.env.REACT_APP_INFURA_KEY': '"4bf032f2d38a4ed6bb975b80d6340847"',
       }),
       new HtmlWebpackPlugin(),
     ],
+    stats: 'errors-warnings',
     watchOptions: {
       ignored: /dist/,
-    }
+    },
   }
 }

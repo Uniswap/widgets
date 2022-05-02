@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
     "declaration": true,
-    "declarationDir": "dts",
+    "declarationDir": "dist/dts",
     "downlevelIteration": true,
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
