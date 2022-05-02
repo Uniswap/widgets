@@ -1,4 +1,4 @@
-import { isAddress, shortenAddress } from '.'
+import { isAddress, shortenAddress } from './'
 
 describe('utils', () => {
   describe('#isAddress', () => {
