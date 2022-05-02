@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const EventEmitter = require('events')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const WebpackShellPlugin = require('webpack-shell-plugin-next')
 const { DefinePlugin } = require('webpack')
 const rollup = require('rollup')
 
