@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "lib": ["dom", "dom.iterable", "esnext"]
-  },
-  "files": ["rollup.config.ts"]
-}

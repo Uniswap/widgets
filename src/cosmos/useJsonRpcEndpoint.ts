@@ -1,13 +1,12 @@
-import { SupportedChainId } from './chains'
+import { SupportedChainId } from '@uniswap/widgets'
+
+import useOption from './useOption'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 }
 
-/**
- * These are the network URLs used by the interface when there is not another available source of chain data
- */
 export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
@@ -20,4 +19,15 @@ export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON]: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON_MUMBAI]: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
+}
+
+export default function useJsonRpcEndpoint() {
+  const endpoints = Object.entries(INFURA_NETWORK_URLS).reduce(
+    (acc, [chainId, url]) => ({
+      ...acc,
+      [SupportedChainId[chainId]]: url,
+    }),
+    {}
+  )
+  return useOption('jsonRpcEndpoint', { options: endpoints, defaultValue: SupportedChainId[SupportedChainId.MAINNET] })
 }
