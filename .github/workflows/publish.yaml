@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  workflow_dispatch: # manually
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/setup
+
+      - run: yarn lint
+
+      - run: yarn test
+
+      - id: tag-version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/create-release@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag-version.outputs.new_tag }}
+          release_name: Release ${{ needs.tag-version.outputs.new_tag }}
+          body: ${{ needs.bump_version.outputs.changelog }}
+
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
