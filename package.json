@@ -37,7 +37,7 @@
     "prepublishOnly": "tsc && yarn build",
     "start": "cosmos",
     "build": "rollup --config --failAfterWarnings",
-    "test": "jest --watch"
+    "test": "jest"
   },
   "browserslist": {
     "production": [
