@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # manually
 
 jobs:
-  unit-test:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

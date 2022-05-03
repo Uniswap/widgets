@@ -1,7 +1,7 @@
 # Uniswap Labs Widgets
 
 [![npm](https://img.shields.io/npm/v/@uniswap/widgets)](https://www.npmjs.com/package/@uniswap/widgets)
-[![Unit Tests](https://github.com/Uniswap/interface/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/unit-tests.yaml)
+[![Unit Tests](https://github.com/Uniswap/interface/actions/workflows/unit-test.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/unit-test.yaml)
 [![Lint](https://github.com/Uniswap/interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/lint.yml)
 [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
 
