@@ -1,4 +1,4 @@
-name: "Semantic commits"
+name: "Semantic commit"
 
 on:
   pull_request_target:
