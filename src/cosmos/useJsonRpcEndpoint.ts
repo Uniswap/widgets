@@ -2,9 +2,9 @@ import { SupportedChainId } from '@uniswap/widgets'
 
 import useOption from './useOption'
 
-const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
+const INFURA_KEY = process.env.INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
-  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
+  throw new Error(`INFURA_KEY must be a defined environment variable`)
 }
 
 export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {

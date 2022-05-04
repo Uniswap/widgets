@@ -21,6 +21,7 @@ package-lock.json
 # IDE metadata
 .idea/
 .vscode/
+*.swp
 
 # misc
 .DS_Store

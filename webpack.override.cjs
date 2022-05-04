@@ -4,46 +4,65 @@ const EventEmitter = require('events')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const rollup = require('rollup')
 
-const rollupConfig = require('./rollup.config.cjs')
-const { assets: assetConfigs } = rollupConfig
+const { config: rollupConfig, assets: assetConfigs } = require('./rollup.config.cjs')
+const path = require('path')
 
-class RollupWatchPlugin extends EventEmitter {
+class RollupPlugin extends EventEmitter {
   static PLUGIN_NAME = 'rollup-watch'
 
-  constructor({ watchConfig, assetConfigs }) {
+  constructor({ config, assetConfigs, watch }) {
     super()
 
-    rollup.watch(watchConfig).on('event', (e) => {
+    if (watch) {
+      this.watch(config)
+    } else {
+      this.rollup(config).then(() => this.emit('END'))
+    }
+
+    this.initialized = Promise.all([
+      ...assetConfigs.map(this.rollup),
+      new Promise((resolve) => this.once('END', resolve)),
+    ])
+  }
+
+  async rollup(config) {
+    const build = await rollup.rollup(config)
+    return await build.write(config.output)
+  }
+
+  watch(config) {
+    return rollup.watch(config).on('event', (e) => {
       this.emit(e.code, e)
       if (e.result) {
         e.result.close()
       }
     })
-
-    this.initialized = Promise.all([
-      ...assetConfigs.map((config) => rollup.rollup(config).then((build) => build.write(config.output))),
-      new Promise((resolve) => this.once('END', resolve)),
-    ])
   }
 
-  apply(compiler) {
-    // Waits for rollup to generate assets for the initial compilation.
-    compiler.hooks.watchRun.tapPromise(RollupWatchPlugin.PLUGIN_NAME, () => this.initialized)
+  async apply(compiler) {
+    // Waits for rollup to generate assets before compiling.
+    compiler.hooks.beforeCompile.tapPromise(RollupPlugin.PLUGIN_NAME, () => this.initialized)
 
-    this.on('BUNDLE_END', (({ input, duration }) => console.log(`rollup built ${input} in ${duration}ms`)))
-    this.initialized.then(() => {
-      this.on('START', () => console.log('rollup build invalidated by unknown file'))
+    this.on('BUNDLE_END', ({ input, duration }) => console.log(`rollup built ${input} in ${duration}ms`))
+    await this.initialized
+    this.on('START', () => console.log('rollup build invalidated by unknown file'))
 
-      // Invalidates the build when rollup generates a new asset.
-      this.on('END', () => compiler.watching.invalidate())
-    })
+    // Invalidates the build when rollup generates a new asset.
+    this.on('END', () => compiler.watching.invalidate())
   }
-} 
+}
 
 module.exports = (webpackConfig) => {
-  const { rules } = webpackConfig.module
+  const { mode, module, resolve } = webpackConfig
+  const { rules } = module
   return {
     ...webpackConfig,
+    resolve: {
+      ...resolve,
+      alias: {
+        '@uniswap/widgets': path.resolve(__dirname, 'dist/'),
+      },
+    },
     module: {
       rules: [
         ...rules,
@@ -55,9 +74,9 @@ module.exports = (webpackConfig) => {
       ],
     },
     plugins: [
-      new RollupWatchPlugin({ watchConfig: rollupConfig, assetConfigs }),
+      new RollupPlugin({ config: rollupConfig, assetConfigs, watch: mode !== 'production' }),
       new DefinePlugin({
-        'process.env.REACT_APP_INFURA_KEY': '"4bf032f2d38a4ed6bb975b80d6340847"',
+        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY || '4bf032f2d38a4ed6bb975b80d6340847'),
       }),
       new HtmlWebpackPlugin(),
     ],

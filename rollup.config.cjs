@@ -3,6 +3,7 @@
  * This library lives in src/lib, but shares code with the interface application.
  */
 
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { babel } = require('@rollup/plugin-babel')
 const commonjs = require('@rollup/plugin-commonjs')
 const json = require('@rollup/plugin-json')
@@ -36,22 +37,22 @@ const transpile = {
   external: isEthers,
   plugins: [
     // Dependency resolution
-    externals({ // marks dependencies as external so they are not bundled inline
+    externals({
       exclude: [
         'constants',
         /@lingui\/(core|react)/, // @lingui incorrectly exports esm, so it must be bundled in
         /\.json$/, // esm does not support JSON loading, so it must be bundled in
-      ],
+      ], // marks dependencies as external so they are not bundled inline
       deps: true,
       peerDeps: true,
     }),
     resolve({ extensions: EXTENSIONS }), // resolves third-party modules within node_modules/
 
     // Source code transformation
-    replace({ 
+    replace({
       // esm requires fully-specified paths:
       'react/jsx-runtime': 'react/jsx-runtime.js',
-      preventAssignment: true
+      preventAssignment: true,
     }),
     json(), // imports json as ES6; doing so enables module resolution
     url({ include: ['**/*.png', '**/*.svg'], limit: Infinity }), // imports assets as data URIs
@@ -99,25 +100,25 @@ const locales = {
     {
       dir: 'dist/cjs',
       sourcemap: false,
-    }
+    },
   ],
   watch: false,
-  plugins: [
-    commonjs(),
-    multi(),
-  ],
+  plugins: [commonjs(), multi()],
 }
 
-const assets = [{
-  ...locales,
-  output: {
-    dir: 'dist',
-    format: 'esm',
-    sourcemap: false,
+const assets = [
+  {
+    ...locales,
+    output: {
+      dir: 'dist',
+      format: 'esm',
+      sourcemap: false,
+    },
   },
-}]
+]
 
 const config = [esm, cjs, locales]
+config.config = { ...esm, output: { ...esm.output, sourcemap: true } }
 config.assets = assets
 module.exports = config
 
