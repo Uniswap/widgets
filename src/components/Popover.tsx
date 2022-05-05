@@ -3,7 +3,8 @@ import maxSize from 'popper-max-size-modifier'
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
-import styled, { Layer } from 'theme'
+import styled from 'styled-components/macro'
+import { Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 

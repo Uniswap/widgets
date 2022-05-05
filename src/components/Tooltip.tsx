@@ -3,7 +3,7 @@ import useHasFocus from 'hooks/useHasFocus'
 import useHasHover from 'hooks/useHasHover'
 import { HelpCircle, Icon } from 'icons'
 import { ComponentProps, ReactNode, useRef } from 'react'
-import styled from 'theme'
+import styled from 'styled-components/macro'
 
 import { IconButton } from './Button'
 import Popover from './Popover'

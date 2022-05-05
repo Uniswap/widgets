@@ -28,7 +28,8 @@ import {
   X as XIcon,
   XOctagon as XOctagonIcon,
 } from 'react-feather'
-import styled, { Color, css, keyframes } from 'theme'
+import styled, { css, keyframes } from 'styled-components/macro'
+import { Color } from 'theme'
 /* eslint-enable no-restricted-imports */
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>

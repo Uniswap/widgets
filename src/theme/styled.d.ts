@@ -43,3 +43,8 @@ export interface ComputedTheme extends Omit<Attributes, 'borderRadius'>, Colors 
   borderRadius: number
   onHover: (color: string) => string
 }
+
+declare module 'styled-components/macro' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  export interface DefaultTheme extends ComputedTheme {}
+}

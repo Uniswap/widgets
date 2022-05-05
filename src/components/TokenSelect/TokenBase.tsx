@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import styled, { ThemedText } from 'theme'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import Button from '../Button'
 import Row from '../Row'

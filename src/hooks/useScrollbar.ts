@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { css } from 'theme'
+import { css } from 'styled-components/macro'
 
 const overflowCss = css`
   overflow-y: scroll;

@@ -3,7 +3,7 @@ import { useToken } from 'hooks/useCurrency'
 import useCurrencyLogoURIs from 'hooks/useCurrencyLogoURIs'
 import { MissingToken } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
-import styled from 'theme'
+import styled from 'styled-components/macro'
 
 const badSrcs = new Set<string>()
 

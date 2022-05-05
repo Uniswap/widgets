@@ -4,7 +4,8 @@ import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { AlertTriangle, Icon, LargeIcon } from 'icons'
 import { ReactNode, useCallback, useState } from 'react'
-import styled, { Color, ThemedText } from 'theme'
+import styled from 'styled-components/macro'
+import { Color, ThemedText } from 'theme'
 
 const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;

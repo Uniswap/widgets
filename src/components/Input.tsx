@@ -1,7 +1,7 @@
 import { loadingOpacity } from 'css/loading'
 import { transparentize } from 'polished'
 import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
-import styled, { css } from 'theme'
+import styled, { css } from 'styled-components/macro'
 
 const Input = styled.input`
   -webkit-appearance: textfield;

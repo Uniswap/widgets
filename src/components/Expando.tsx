@@ -5,7 +5,7 @@ import Rule from 'components/Rule'
 import useScrollbar from 'hooks/useScrollbar'
 import { Expando as ExpandoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
-import styled from 'theme'
+import styled from 'styled-components/macro'
 
 const HeaderColumn = styled(Column)`
   transition: gap 0.25s;

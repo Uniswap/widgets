@@ -9,7 +9,8 @@ import TokenImg from 'components/TokenImg'
 import { AutoRouter } from 'icons'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { Layer, ThemedText } from 'theme'
+import styled from 'styled-components/macro'
+import { Layer, ThemedText } from 'theme'
 
 import { getTokenPath, RoutingDiagramEntry } from './utils'
 
