@@ -9,6 +9,7 @@ const commonjs = require('@rollup/plugin-commonjs')
 const json = require('@rollup/plugin-json')
 const { nodeResolve: resolve } = require('@rollup/plugin-node-resolve')
 const replace = require('@rollup/plugin-replace')
+const { default: dts } = require('rollup-plugin-dts')
 const url = require('@rollup/plugin-url')
 const svgr = require('@svgr/rollup')
 const { default: multi } = require('rollup-plugin-multi-input')
@@ -89,6 +90,14 @@ const cjs = {
   watch: false,
 }
 
+const types = {
+  input: 'dts/index.d.ts',
+  output: { file: 'dist/index.d.ts' },
+  external: (source) => source.endsWith('.scss'),
+  plugins: [dts({ compilerOptions: { baseUrl: 'dts' } })],
+  watch: false,
+}
+
 const locales = {
   input: 'src/locales/*.js',
   output: [
@@ -117,7 +126,7 @@ const assets = [
   },
 ]
 
-const config = [esm, cjs, locales]
+const config = [esm, cjs, types, locales]
 config.config = { ...esm, output: { ...esm.output, sourcemap: true } }
 config.assets = assets
 module.exports = config
