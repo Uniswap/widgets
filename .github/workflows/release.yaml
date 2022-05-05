@@ -16,9 +16,6 @@ jobs:
       - run: yarn test
         if: success()
 
-      - run: yarn build
-        if: success()
-
       - run: yarn release
         if: success()
         env:
