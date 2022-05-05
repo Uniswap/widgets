@@ -13,7 +13,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'state/swap'
 import { TransactionType } from 'state/transactions'
-import { useTheme } from 'theme'
+import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
 import { isAnimating } from 'utils/animations'
 

@@ -1,4 +1,5 @@
-import styled, { ThemedText } from 'theme'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import Column from '../Column'
 import Row from '../Row'

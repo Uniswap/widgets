@@ -1,4 +1,4 @@
-import styled from 'theme'
+import styled from 'styled-components/macro'
 
 const Rule = styled.hr<{ padded?: true; scrollingEdge?: 'top' | 'bottom' }>`
   border: none;

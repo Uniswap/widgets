@@ -1,6 +1,7 @@
 import { AlertTriangle, Icon, LargeIcon } from 'icons'
 import { ReactNode, useMemo } from 'react'
-import styled, { Color, css, keyframes, ThemedText } from 'theme'
+import styled, { css, keyframes } from 'styled-components/macro'
+import { Color, ThemedText } from 'theme'
 
 import Button from './Button'
 import Row from './Row'

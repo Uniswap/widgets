@@ -1,4 +1,5 @@
-import styled, { Color, css, Theme } from 'theme'
+import styled, { css } from 'styled-components/macro'
+import { Color } from 'theme'
 
 const Column = styled.div<{
   align?: string
@@ -8,7 +9,6 @@ const Column = styled.div<{
   padded?: true
   flex?: true
   grow?: true
-  theme: Theme
   css?: ReturnType<typeof css>
 }>`
   align-items: ${({ align }) => align ?? 'center'};

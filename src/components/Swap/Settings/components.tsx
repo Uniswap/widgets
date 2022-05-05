@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
-// eslint-disable-next-line no-restricted-imports
-import { AnyStyledComponent } from 'styled-components'
-import styled, { css, ThemedText } from 'theme'
+import styled, { AnyStyledComponent, css } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import Row from '../../Row'
 import Tooltip from '../../Tooltip'

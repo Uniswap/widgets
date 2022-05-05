@@ -2,15 +2,13 @@ import 'assets/fonts.scss'
 
 import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
+import { ThemeProvider as StyledProvider } from 'styled-components/macro'
 
-import styled, { ThemedProvider } from './styled'
-import { Colors, ComputedTheme, Theme } from './theme'
+import type { Colors, ComputedTheme, Theme } from './styled'
 
-export default styled
 export * from './dynamic'
 export * from './layer'
-export * from './styled'
-export * from './theme'
+export type { Color, Colors, Theme } from './styled'
 export * as ThemedText from './type'
 
 const white = 'hsl(0, 0%, 100%)'
@@ -108,7 +106,7 @@ export function ThemeProvider({ theme, children }: ThemeProviderProps) {
   }, [contextTheme, theme])
   return (
     <ThemeContext.Provider value={value}>
-      <ThemedProvider theme={value}>{children}</ThemedProvider>
+      <StyledProvider theme={value}>{children}</StyledProvider>
     </ThemeContext.Provider>
   )
 }
