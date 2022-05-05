@@ -41,6 +41,8 @@ If code is in the critical path, will be frequently visited, or makes large arch
 - Verify that all CI checks pass before merging
 - Have at least one product manager or designer approve of any significant UX changes
 
+Additionally, git commit messages should follow [Conventional Commits](https://conventionalcommits.org), which is used to standardize the release process.
+
 ## Guidelines
 
 The following points should help guide your development:
@@ -58,7 +60,7 @@ The following points should help guide your development:
 
 ## Publishing
 
-Releases are manually triggered on [GitHub](https://github.com/Uniswap/uniswap-interface/actions/workflows/publish.yaml).
+Releases are manually triggered [through the release workflow](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml).
 
 In general, fixes and features should be created on a new branch from `main`.
 Use the automatic Vercel preview for the branch to collect feedback.  
