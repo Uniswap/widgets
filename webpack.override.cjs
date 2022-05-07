@@ -13,25 +13,28 @@ class RollupPlugin extends EventEmitter {
   constructor({ config, assetConfigs, watch }) {
     super()
 
-    if (watch) {
-      this.watch(config)
-    } else {
-      this.rollup(config).then(() => this.emit('END'))
-    }
-
     this.initialized = Promise.all([
       ...assetConfigs.map(this.rollup),
-      new Promise((resolve) => this.once('END', resolve)),
+      new Promise((resolve) => {
+        if (watch) {
+          this.watch(config)
+          this.on('START', () => console.log('rollup building...'))
+            .on('BUNDLE_END', ({ input, duration }) => console.log(`rollup built ${input} in ${duration}ms`))
+            .once('END', resolve)
+        } else {
+          this.rollup(config).then(resolve)
+        }
+      }),
     ])
   }
 
   async rollup(config) {
     const build = await rollup.rollup(config)
-    return await build.write(config.output)
+    await build.write(config.output)
   }
 
   watch(config) {
-    return rollup.watch(config).on('event', (e) => {
+    rollup.watch(config).on('event', (e) => {
       this.emit(e.code, e)
       if (e.result) {
         e.result.close()
@@ -39,16 +42,13 @@ class RollupPlugin extends EventEmitter {
     })
   }
 
-  async apply(compiler) {
-    // Waits for rollup to generate assets before compiling.
+  apply(compiler) {
+    // Wait for rollup to generate initial assets before compilation.
     compiler.hooks.beforeCompile.tapPromise(RollupPlugin.PLUGIN_NAME, () => this.initialized)
 
-    this.on('BUNDLE_END', ({ input, duration }) => console.log(`rollup built ${input} in ${duration}ms`))
-    await this.initialized
-    this.on('START', () => console.log('rollup build invalidated by unknown file'))
-
-    // Invalidates the build when rollup generates a new asset.
-    this.on('END', () => compiler.watching.invalidate())
+    // It's possible to invalidate the watcher on BUILD_END, but that will duplicate builds due to webpack's watcher.
+    // It's also possible to ignore dist/ in webpack's watcher, and explicitly update the files in webpack, but it would
+    // be prohibitively complex. Instead, webpack just watches rollup's output.
   }
 }
 
@@ -81,8 +81,5 @@ module.exports = (webpackConfig) => {
       new HtmlWebpackPlugin(),
     ],
     stats: 'errors-warnings',
-    watchOptions: {
-      ignored: /dist/,
-    },
   }
 }

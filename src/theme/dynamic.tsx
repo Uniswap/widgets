@@ -4,7 +4,7 @@ import { ReactNode, useMemo } from 'react'
 import { ThemeProvider as StyledProvider, useTheme } from 'styled-components/macro'
 import { hex } from 'wcag-contrast'
 
-import { Colors, ComputedTheme } from './styled'
+import type { Colors, ComputedTheme } from './styled'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
 
