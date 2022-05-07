@@ -13,8 +13,7 @@ class RollupPlugin extends EventEmitter {
   constructor({ config, assetConfigs, watch }) {
     super()
 
-    // Use a promise to allow parallel rollup/webpack builds.
-    Promise.all([
+    this.initialized = Promise.all([
       ...assetConfigs.map(this.rollup),
       new Promise((resolve) => {
         if (watch) {
@@ -43,11 +42,14 @@ class RollupPlugin extends EventEmitter {
     })
   }
 
-  // It's possible to invalidate the watcher on BUILD_END, but that will duplicate builds due to webpack's watcher.
-  // It's also possible to ignore dist/ in webpack's watcher, and explicitly update the files in webpack, but it would
-  // be prohibitively complex. Instead, webpack just watches rollup's output.
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  apply() {}
+  apply(compiler) {
+    // Wait for rollup to generate initial assets before compilation.
+    compiler.hooks.beforeCompile.tapPromise(RollupPlugin.PLUGIN_NAME, () => this.initialized)
+
+    // It's possible to invalidate the watcher on BUILD_END, but that will duplicate builds due to webpack's watcher.
+    // It's also possible to ignore dist/ in webpack's watcher, and explicitly update the files in webpack, but it would
+    // be prohibitively complex. Instead, webpack just watches rollup's output.
+  }
 }
 
 module.exports = (webpackConfig) => {
