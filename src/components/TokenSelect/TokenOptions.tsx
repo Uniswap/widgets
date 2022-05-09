@@ -12,7 +12,6 @@ import {
   memo,
   SyntheticEvent,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -153,14 +152,14 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const hover = useMemo(() => (selected ? tokens.indexOf(selected) : -1), [selected, tokens])
 
   const list = useRef<FixedSizeList>(null)
-  useEffect(() => {
-    list.current?.scrollToItem(hover)
-  }, [hover])
-
   const [element, setElement] = useState<HTMLElement | null>(null)
+
   const scrollTo = useCallback(
-    (index: number | undefined) => {
+    (index: number | undefined, scroll = true) => {
       if (index === undefined) return
+      if (scroll) {
+        list.current?.scrollToItem(index)
+      }
       if (focused) {
         element?.querySelector<HTMLElement>(`[data-index='${index}']`)?.focus()
       }
@@ -199,7 +198,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
     [scrollTo]
   )
   const onBlur = useCallback(() => setFocused(false), [])
-  const onMouseMove = useCallback(({ index }: BubbledEvent) => scrollTo(index), [scrollTo])
+  const onMouseMove = useCallback(({ index }: BubbledEvent) => scrollTo(index, false), [scrollTo])
 
   const scrollbar = useScrollbar(element, { padded: true })
   const onHover = useRef<HTMLDivElement>(null)
