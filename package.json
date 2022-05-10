@@ -6,7 +6,6 @@
   "files": [
     "dist"
   ],
-  "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/cjs/index.cjs",
   "module": "dist/index.js",
