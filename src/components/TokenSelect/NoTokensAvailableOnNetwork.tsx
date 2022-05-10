@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { HelpCircle } from 'icons'
 import styled, { css } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
-import { HelpCircle } from '../../icons'
-import { ThemedText } from '../../theme'
 import Column from '../Column'
 
 const HelpCircleIcon = styled(HelpCircle)`

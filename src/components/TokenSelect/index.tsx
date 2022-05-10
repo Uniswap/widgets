@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Column from '../Column'
-import Dialog, { Header as DialogHeader } from '../Dialog'
+import Dialog, { Header } from '../Dialog'
 import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
@@ -76,14 +76,14 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   if (!listHasTokens && isLoaded) {
     return (
       <Dialog color="module" onClose={onClose}>
-        <DialogHeader title={<Trans>Select a token</Trans>} />
+        <Header title={<Trans>Select a token</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )
   }
   return (
     <Dialog color="module" onClose={onClose}>
-      <DialogHeader title={<Trans>Select a token</Trans>} />
+      <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
         <Row pad={0.75} grow>
           <ThemedText.Body1>
