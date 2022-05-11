@@ -60,7 +60,14 @@ export function usePendingApproval(token?: Token, spender?: string): string | un
   )?.info.response.hash
 }
 
-export function TransactionsUpdater() {
+
+interface TransactionsUpdaterProps {
+  onSuccess?: () => void
+}
+
+export function TransactionsUpdater(props: TransactionsUpdaterProps) {
+  const { onSuccess = () => {} } = props
+
   const pendingTransactions = usePendingTransactions()
 
   const updateTxs = useUpdateAtom(transactionsAtom)
@@ -83,10 +90,11 @@ export function TransactionsUpdater() {
         const tx = txs[chainId]?.[hash]
         if (tx) {
           tx.receipt = receipt
+          onSuccess()
         }
       })
     },
-    [updateTxs]
+    [updateTxs, onSuccess]
   )
 
   return <Updater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
