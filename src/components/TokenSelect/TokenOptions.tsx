@@ -12,8 +12,8 @@ import {
   memo,
   SyntheticEvent,
   useCallback,
-  useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -148,24 +148,22 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   ref
 ) {
   const [focused, setFocused] = useState(false)
-  const [hover, setHover] = useState<{ index: number; currency?: Currency }>({ index: -1 })
-  useEffect(() => {
-    setHover((hover) => {
-      const index = hover.currency ? tokens.indexOf(hover.currency) : -1
-      return { index, currency: tokens[index] }
-    })
-  }, [tokens])
+  const [selected, setSelected] = useState<Currency>()
+  const hover = useMemo(() => (selected ? tokens.indexOf(selected) : -1), [selected, tokens])
 
   const list = useRef<FixedSizeList>(null)
   const [element, setElement] = useState<HTMLElement | null>(null)
+
   const scrollTo = useCallback(
-    (index: number | undefined) => {
+    (index: number | undefined, scroll = true) => {
       if (index === undefined) return
-      list.current?.scrollToItem(index)
+      if (scroll) {
+        list.current?.scrollToItem(index)
+      }
       if (focused) {
         element?.querySelector<HTMLElement>(`[data-index='${index}']`)?.focus()
       }
-      setHover({ index, currency: tokens[index] })
+      setSelected(tokens[index])
     },
     [element, focused, tokens]
   )
@@ -173,22 +171,22 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        if (e.key === 'ArrowDown' && hover.index < tokens.length - 1) {
-          scrollTo(hover.index + 1)
-        } else if (e.key === 'ArrowUp' && hover.index > 0) {
-          scrollTo(hover.index - 1)
-        } else if (e.key === 'ArrowUp' && hover.index === -1) {
+        if (e.key === 'ArrowDown' && hover < tokens.length - 1) {
+          scrollTo(hover + 1)
+        } else if (e.key === 'ArrowUp' && hover > 0) {
+          scrollTo(hover - 1)
+        } else if (e.key === 'ArrowUp' && hover === -1) {
           scrollTo(tokens.length - 1)
         }
         e.preventDefault()
       }
-      if (e.key === 'Enter' && hover.index !== -1) {
-        onSelect(tokens[hover.index])
+      if (e.key === 'Enter' && hover !== -1) {
+        onSelect(tokens[hover])
       }
     },
-    [hover.index, onSelect, scrollTo, tokens]
+    [hover, onSelect, scrollTo, tokens]
   )
-  const blur = useCallback(() => setHover({ index: -1 }), [])
+  const blur = useCallback(() => setSelected(undefined), [])
   useImperativeHandle(ref, () => ({ onKeyDown, blur }), [blur, onKeyDown])
 
   const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
@@ -200,7 +198,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
     [scrollTo]
   )
   const onBlur = useCallback(() => setFocused(false), [])
-  const onMouseMove = useCallback(({ index }: BubbledEvent) => scrollTo(index), [scrollTo])
+  const onMouseMove = useCallback(({ index }: BubbledEvent) => scrollTo(index, false), [scrollTo])
 
   const scrollbar = useScrollbar(element, { padded: true })
   const onHover = useRef<HTMLDivElement>(null)
@@ -228,11 +226,11 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       style={{ overflow: 'hidden' }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
-      <OnHover hover={hover.index} ref={onHover} />
+      <OnHover hover={hover} ref={onHover} />
       <AutoSizer disableWidth>
         {({ height }) => (
           <TokenList
-            hover={hover.index}
+            hover={hover}
             height={height}
             width="100%"
             itemCount={tokens.length}
