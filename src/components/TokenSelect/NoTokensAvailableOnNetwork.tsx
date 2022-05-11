@@ -1,18 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { HelpCircle } from 'icons'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Column from '../Column'
 
 const HelpCircleIcon = styled(HelpCircle)`
-  height: 64px;
-  margin-bottom: 12px;
+  height: 4em;
+  margin-bottom: 0.75em;
   stroke: ${({ theme }) => theme.secondary};
-  width: 64px;
+  width: 4em;
 `
 
-const wrapperCss = css`
+const StyledColumn = styled(Column)`
   display: flex;
   height: 80%;
   text-align: center;
@@ -21,11 +21,11 @@ const wrapperCss = css`
 
 export default function NoTokensAvailableOnNetwork() {
   return (
-    <Column align="center" justify="center" css={wrapperCss}>
+    <StyledColumn align="center" justify="center">
       <HelpCircleIcon />
       <ThemedText.Body1 color="primary">
         <Trans>No tokens are available on this network. Please switch to another network.</Trans>
       </ThemedText.Body1>
-    </Column>
+    </StyledColumn>
   )
 }
