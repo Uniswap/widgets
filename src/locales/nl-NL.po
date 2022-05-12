@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -178,6 +178,10 @@ msgstr "Mock Toggle"
 msgid "No results found."
 msgstr "Geen resultaten gevonden."
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Er zijn geen tokens beschikbaar op dit netwerk. Schakel over naar een ander netwerk."
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "UIT"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "Zoeken op tokennaam of adres"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "Selecteer een token"

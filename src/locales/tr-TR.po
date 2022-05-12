@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -178,6 +178,10 @@ msgstr "Sahte Geçiş"
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Bu ağda kullanılabilir jeton yok. Lütfen başka bir ağa geçin."
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "KAPALI"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "Belirteç adına veya adresine göre arama yapın"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "Bir jeton seçin"

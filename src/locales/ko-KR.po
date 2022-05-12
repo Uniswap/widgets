@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -178,6 +178,10 @@ msgstr "모의 토글"
 msgid "No results found."
 msgstr "결과가 없습니다."
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "이 네트워크에서 사용할 수 있는 토큰이 없습니다. 다른 네트워크로 전환하십시오."
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "OFF"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "토큰 이름 또는 주소로 검색"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "토큰 선택"

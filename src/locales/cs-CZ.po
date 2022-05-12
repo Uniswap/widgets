@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -178,6 +178,10 @@ msgstr "Mock Toggle"
 msgid "No results found."
 msgstr "Nebyly nalezeny žádné výsledky."
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "V této síti nejsou k dispozici žádné tokeny. Přepněte na jinou síť."
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "VYPNUTO"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "Vyhledávejte podle názvu tokenu nebo adresy"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "Vyberte žeton"

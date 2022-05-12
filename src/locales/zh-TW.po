@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -178,6 +178,10 @@ msgstr "模擬切換"
 msgid "No results found."
 msgstr "未找到任何結果。"
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "此網絡上沒有可用的令牌。請切換到另一個網絡。"
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "關閉"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "按代幣名稱或地址搜索"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "選擇代幣"

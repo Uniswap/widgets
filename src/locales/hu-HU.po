@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -178,6 +178,10 @@ msgstr "Mock Toggle"
 msgid "No results found."
 msgstr "Nincs találat."
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Ezen a hálózaton nem érhetők el tokenek. Kérjük, váltson másik hálózatra."
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "KI"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "Keresés token név vagy cím alapján"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "Token választása"

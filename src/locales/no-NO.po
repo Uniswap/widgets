@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-11 16:11\n"
+"PO-Revision-Date: 2022-05-12 18:05\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -178,6 +178,10 @@ msgstr "Mock Toggle"
 msgid "No results found."
 msgstr "Ingen resultater."
 
+#: src/components/TokenSelect/NoTokensAvailableOnNetwork.tsx
+msgid "No tokens are available on this network. Please switch to another network."
+msgstr "Ingen tokens er tilgjengelig på dette nettverket. Vennligst bytt til et annet nettverk."
+
 #: src/components/Toggle.tsx
 msgid "OFF"
 msgstr "AV"
@@ -231,6 +235,7 @@ msgid "Search by token name or address"
 msgstr "Søk etter symbolnavn eller adresse"
 
 #: src/components/TokenSelect/TokenButton.tsx
+#: src/components/TokenSelect/index.tsx
 #: src/components/TokenSelect/index.tsx
 msgid "Select a token"
 msgstr "Velg en pollett"
