@@ -1,5 +1,14 @@
 import { tokens } from '@uniswap/default-token-list'
-import { darkTheme, DEFAULT_LOCALE, defaultTheme, lightTheme, SUPPORTED_LOCALES, SwapWidget } from '@uniswap/widgets'
+import { TokenInfo } from '@uniswap/token-lists'
+import {
+  darkTheme,
+  DEFAULT_LOCALE,
+  defaultTheme,
+  lightTheme,
+  SUPPORTED_LOCALES,
+  SupportedChainId,
+  SwapWidget,
+} from '@uniswap/widgets'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
@@ -41,6 +50,13 @@ function Fixture() {
   const jsonRpcEndpoint = useJsonRpcEndpoint()
   const connector = useProvider()
 
+  const tokenLists: Record<string, TokenInfo[]> = {
+    Default: tokens,
+    'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
+  }
+  const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
+  console.log(tokenList)
+
   return (
     <SwapWidget
       convenienceFee={convenienceFee}
@@ -53,7 +69,7 @@ function Fixture() {
       jsonRpcEndpoint={jsonRpcEndpoint}
       provider={connector}
       theme={theme}
-      tokenList={tokens}
+      tokenList={tokenList}
       width={width}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
     />
