@@ -90,7 +90,9 @@ export function TransactionsUpdater(props: TransactionsUpdaterProps) {
         const tx = txs[chainId]?.[hash]
         if (tx) {
           tx.receipt = receipt
-          onSuccess()
+          if (tx.info.type === TransactionType.SWAP || tx.info.type === TransactionType.WRAP) {
+            onSuccess()
+          }
         }
       })
     },
