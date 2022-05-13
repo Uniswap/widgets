@@ -16,6 +16,11 @@ jobs:
       - run: yarn test
         if: success()
 
+      - run: yarn hardhat &
+        if: success()
+
+      - run: yarn test:e2e
+
       - run: yarn release
         if: success()
         env:

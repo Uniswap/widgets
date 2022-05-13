@@ -19,6 +19,11 @@ Before developing locally, be sure to install the project's dependencies.
 1. `yarn test`
 - You may also run `yarn test --watch` for feedback in realtime.
 
+Integration tests are run through a separate command, and require a hardhat node to be running:
+
+1. `yarn hardhat &`
+1. `yarn test:e2e`
+
 ## Creating a production build
 
 _Releases are created through github workflows._

@@ -38,7 +38,9 @@
     "build": "tsc && rollup --config --failAfterWarnings",
     "release": "semantic-release",
     "lint": "eslint .",
-    "test": "jest"
+    "hardhat": "hardhat node",
+    "test": "jest --testPathIgnorePatterns=e2e",
+    "test:e2e": "jest --testPathPattern=e2e"
   },
   "browserslist": {
     "production": [
@@ -125,6 +127,7 @@
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@svgr/rollup": "^6.2.1",
+    "@testing-library/react": "^12",
     "@typechain/ethers-v5": "^7.0.0",
     "@types/jest": "^25.2.1",
     "@types/lingui__core": "^2.7.1",
@@ -166,6 +169,7 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "hardhat": "^2.9.3",
     "html-webpack-plugin": "^5.5.0",
     "inter-ui": "^3.13.1",
     "jest": "^27.5.1",
