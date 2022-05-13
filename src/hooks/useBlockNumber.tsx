@@ -52,15 +52,20 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
       // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
       setChainBlock((chainBlock) => (chainBlock.chainId === activeChainId ? chainBlock : { chainId: activeChainId }))
 
+      let stale = false
       library
         .getBlockNumber()
-        .then(onBlock)
+        .then((block) => {
+          if (stale) return
+          onBlock(block)
+        })
         .catch((error) => {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
 
       library.on('block', onBlock)
       return () => {
+        stale = true
         library.removeListener('block', onBlock)
       }
     }
