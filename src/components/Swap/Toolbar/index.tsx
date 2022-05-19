@@ -10,7 +10,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Row from '../../Row'
-import Rule from '../../Rule'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
@@ -77,13 +76,10 @@ export default memo(function Toolbar() {
   ])
 
   return (
-    <>
-      <Rule />
-      <ThemedText.Caption>
-        <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
-          {caption}
-        </ToolbarRow>
-      </ThemedText.Caption>
-    </>
+    <ThemedText.Caption data-testid="toolbar">
+      <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
+        {caption}
+      </ToolbarRow>
+    </ThemedText.Caption>
   )
 })

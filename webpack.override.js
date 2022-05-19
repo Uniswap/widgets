@@ -4,7 +4,7 @@ const EventEmitter = require('events')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const rollup = require('rollup')
 
-const { config: rollupConfig, assets: assetConfigs } = require('./rollup.config.cjs')
+const { config: rollupConfig, assets: assetConfigs } = require('./rollup.config.js')
 const path = require('path')
 
 class RollupPlugin extends EventEmitter {

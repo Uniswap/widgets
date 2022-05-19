@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import BrandedFooter from 'components/BrandedFooter'
+import Rule from 'components/Rule'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
@@ -94,6 +95,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
             </Row>
           </ThemedText.Body2>
         </TokenInput>
+        <Rule />
         {children}
         <BrandedFooter />
       </OutputColumn>

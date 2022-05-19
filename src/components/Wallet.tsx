@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Wallet as WalletIcon } from 'icons'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { TextButton } from './Button'
@@ -10,15 +11,20 @@ interface WalletProps {
   onClick?: () => void
 }
 
+const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
+  filter: none;
+  visibility: ${({ hidden }) => hidden && 'hidden'};
+`
+
 export default function Wallet({ disabled, onClick }: WalletProps) {
-  return disabled ? (
-    <TextButton disabled={!onClick} onClick={onClick} color="secondary" style={{ filter: 'none' }}>
+  return (
+    <WalletButton onClick={onClick} color="secondary" disabled={!onClick} hidden={disabled} data-testid="wallet">
       <ThemedText.Caption>
         <Row gap={0.5}>
           <WalletIcon />
-          <Trans>Connect your wallet</Trans>
+          <Trans>Connect wallet to swap</Trans>
         </Row>
       </ThemedText.Caption>
-    </TextButton>
-  ) : null
+    </WalletButton>
+  )
 }

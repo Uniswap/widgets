@@ -6,7 +6,6 @@
   "files": [
     "dist"
   ],
-  "type": "module",
   "types": "dist/index.d.ts",
   "main": "dist/cjs/index.cjs",
   "module": "dist/index.js",
@@ -39,7 +38,9 @@
     "build": "tsc && rollup --config --failAfterWarnings",
     "release": "semantic-release",
     "lint": "eslint .",
-    "test": "jest"
+    "hardhat": "hardhat node",
+    "test": "jest --testPathIgnorePatterns=e2e",
+    "test:e2e": "jest --testPathPattern=e2e"
   },
   "browserslist": {
     "production": [
@@ -67,11 +68,11 @@
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-sdk": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
-    "@web3-react/core": "^8.0.23-beta.0",
-    "@web3-react/eip1193": "^8.0.18-beta.0",
-    "@web3-react/empty": "^8.0.12-beta.0",
-    "@web3-react/types": "^8.0.12-beta.0",
-    "@web3-react/url": "^8.0.17-beta.0",
+    "@web3-react/core": "8.0.30-beta.0",
+    "@web3-react/eip1193": "8.0.23-beta.0",
+    "@web3-react/empty": "8.0.17-beta.0",
+    "@web3-react/types": "8.0.17-beta.0",
+    "@web3-react/url": "8.0.22-beta.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "ethers": "^5.1.4",
@@ -126,6 +127,7 @@
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@svgr/rollup": "^6.2.1",
+    "@testing-library/react": "^12",
     "@typechain/ethers-v5": "^7.0.0",
     "@types/jest": "^25.2.1",
     "@types/lingui__core": "^2.7.1",
@@ -151,8 +153,8 @@
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
     "@walletconnect/ethereum-provider": "^1.7.1",
-    "@web3-react/metamask": "^8.0.19-beta.0",
-    "@web3-react/walletconnect": "^8.0.26-beta.0",
+    "@web3-react/metamask": "8.0.24-beta.0",
+    "@web3-react/walletconnect": "8.0.31-beta.0",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.5",
     "babel-plugin-macros": "^3.1.0",
@@ -167,6 +169,7 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "hardhat": "^2.9.3",
     "html-webpack-plugin": "^5.5.0",
     "inter-ui": "^3.13.1",
     "jest": "^27.5.1",
