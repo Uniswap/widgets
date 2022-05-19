@@ -93,11 +93,10 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-  onConnect?: (provider: JsonRpcProvider) => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError, onConnect } = props
+  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -124,7 +123,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
               <ErrorBoundary onError={onError}>
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
-                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint} onConnect={onConnect}>
+                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater />

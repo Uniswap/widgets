@@ -30,13 +30,11 @@ export default function useActiveWeb3React() {
 interface ActiveWeb3ProviderProps {
   jsonRpcEndpoint?: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
-  onConnect?: (provider: Web3Provider) => void
 }
 
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
-  onConnect,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const network = useMemo(() => {
@@ -69,7 +67,7 @@ export function ActiveWeb3Provider({
     return EMPTY_STATE
   }, [provider])
 
-  const { connector, hooks } = wallet.hooks.useIsActive() ? wallet : network
+  const { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
   const activating = hooks.useIsActivating()
@@ -83,12 +81,6 @@ export function ActiveWeb3Provider({
     }
     return { connector, library, chainId, accounts, account, active, activating, error }
   }, [account, accounts, activating, active, chainId, connector, error, library])
-
-  useEffect(() => {
-    if (library) {
-      onConnect?.(library)
-    }
-  }, [library, onConnect])
 
   // Log web3 errors to facilitate debugging.
   useEffect(() => {

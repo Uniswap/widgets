@@ -22,7 +22,7 @@ export default function Wallet({ disabled, onClick }: WalletProps) {
       <ThemedText.Caption>
         <Row gap={0.5}>
           <WalletIcon />
-          <Trans>Connect your wallet</Trans>
+          <Trans>Connect wallet to swap</Trans>
         </Row>
       </ThemedText.Caption>
     </WalletButton>
