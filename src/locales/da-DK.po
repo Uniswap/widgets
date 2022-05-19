@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:05\n"
+"PO-Revision-Date: 2022-05-19 02:47\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -82,12 +82,9 @@ msgid "Confirm swap"
 msgstr "Bekræft swap"
 
 #: src/components/Swap/Toolbar/Caption.tsx
+#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Tilslut tegnebogen for at bytte"
-
-#: src/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "Tilslut din tegnebog"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"

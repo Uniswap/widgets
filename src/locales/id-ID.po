@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-16 21:05\n"
+"PO-Revision-Date: 2022-05-19 02:47\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -82,12 +82,9 @@ msgid "Confirm swap"
 msgstr "Konfirmasi pertukaran"
 
 #: src/components/Swap/Toolbar/Caption.tsx
+#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Hubungkan dompet untuk bertukar"
-
-#: src/components/Wallet.tsx
-msgid "Connect your wallet"
-msgstr "Hubungkan dompet Anda"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Connecting…"
