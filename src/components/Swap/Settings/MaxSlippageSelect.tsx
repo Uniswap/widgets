@@ -88,7 +88,9 @@ const Warning = memo(function Warning({ state, showTooltip }: { state?: 'warning
 export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
-  const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
+  // const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
+  const [maxSlippageInput, setMaxSlippageInput] = useState("")
+
 
   const option = useRef<HTMLButtonElement>(null)
   const showTooltip = useTooltip(option.current)
@@ -108,8 +110,12 @@ export default function MaxSlippageSelect() {
     setAutoSlippage(!percent || warning === 'error')
   }, [focus, maxSlippage, setAutoSlippage])
 
-  const processValue = useCallback(
-    (value: number | undefined) => {
+
+  const processInput = useCallback(
+    (input: string | undefined) => {
+      input = input || ""
+      setMaxSlippageInput(input)
+      const value = +input
       const percent = toPercent(value)
       const warning = getSlippageWarning(percent)
       setMaxSlippage(value)
@@ -117,6 +123,7 @@ export default function MaxSlippageSelect() {
     },
     [setAutoSlippage, setMaxSlippage]
   )
+
 
   return (
     <Column gap={0.75}>
@@ -139,7 +146,7 @@ export default function MaxSlippageSelect() {
             <DecimalInput
               size={Math.max(maxSlippageInput.length, 4)}
               value={maxSlippageInput}
-              onChange={(input) => processValue(+input)}
+              onChange={(input) => processInput(input)}
               placeholder={placeholder}
               ref={input}
             />
