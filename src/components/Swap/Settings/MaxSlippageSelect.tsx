@@ -98,6 +98,7 @@ export default function MaxSlippageSelect() {
 
   const [warning, setWarning] = useState<'warning' | 'error' | undefined>(getSlippageWarning(toPercent(maxSlippage)))
   useEffect(() => {
+    setMaxSlippageInput(maxSlippage?.toString() || '')
     setWarning(getSlippageWarning(toPercent(maxSlippage)))
   }, [maxSlippage])
 
@@ -112,7 +113,7 @@ export default function MaxSlippageSelect() {
     (input: string | undefined) => {
       input = input || ''
       setMaxSlippageInput(input)
-      const value = +input
+      const value = input !== '' ? +input : undefined
       const percent = toPercent(value)
       const warning = getSlippageWarning(percent)
       setMaxSlippage(value)
