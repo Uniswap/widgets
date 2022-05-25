@@ -84,6 +84,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       })
       setDisplayTxHash(transaction.hash)
     } catch (e) {
+      setIsPending(false)
       // TODO(zzmp): Surface errors from wrap.
       console.log(e)
     }
