@@ -4,7 +4,7 @@ import { useTooltip } from 'components/Tooltip'
 import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
 import { useAtom } from 'jotai'
-import { forwardRef, memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { autoSlippageAtom, maxSlippageAtom } from 'state/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -88,7 +88,7 @@ const Warning = memo(function Warning({ state, showTooltip }: { state?: 'warning
 export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
-  const [maxSlippageInput, setMaxSlippageInput] = useState("")
+  const [maxSlippageInput, setMaxSlippageInput] = useState(maxSlippage?.toString() || '')
 
   const option = useRef<HTMLButtonElement>(null)
   const showTooltip = useTooltip(option.current)
@@ -108,10 +108,9 @@ export default function MaxSlippageSelect() {
     setAutoSlippage(!percent || warning === 'error')
   }, [focus, maxSlippage, setAutoSlippage])
 
-
   const processInput = useCallback(
     (input: string | undefined) => {
-      input = input || ""
+      input = input || ''
       setMaxSlippageInput(input)
       const value = +input
       const percent = toPercent(value)
