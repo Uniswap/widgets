@@ -72,11 +72,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const [isPending, setIsPending] = useState(false)
   const onWrap = useCallback(async () => {
     setIsPending(true)
-
-    const postWrap = () => {
-      setIsPending(false)
-      document.removeEventListener('animationend', postWrap)
-    }
     try {
       const transaction = await wrapCallback?.()
       if (!transaction) return
@@ -88,18 +83,22 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         chainId,
       })
       setDisplayTxHash(transaction.hash)
+      // Only reset pending after any queued animations to avoid layout thrashing, because a
+      // successful wrap will open the status dialog and immediately cover the button.
+      const postWrap = () => {
+        setIsPending(false)
+        document.removeEventListener('animationend', postWrap)
+      }
+      if (isAnimating(document)) {
+        document.addEventListener('animationend', postWrap)
+      } else {
+        postWrap()
+      }
     } catch (e) {
-      postWrap()
       // TODO(zzmp): Surface errors from wrap.
       console.log(e)
-    }
-
-    // Only reset pending after any queued animations to avoid layout thrashing, because a
-    // successful wrap will open the status dialog and immediately cover the button.
-    if (isAnimating(document)) {
-      document.addEventListener('animationend', postWrap)
-    } else {
-      postWrap()
+    } finally {
+      setIsPending(false)
     }
   }, [addTransaction, chainId, setDisplayTxHash, wrapCallback, wrapType])
   // Reset the pending state if user updates the swap.
