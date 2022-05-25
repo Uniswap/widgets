@@ -111,9 +111,8 @@ export default function MaxSlippageSelect() {
 
   const processInput = useCallback(
     (input: string | undefined) => {
-      input = input || ''
-      setMaxSlippageInput(input)
-      const value = input !== '' ? +input : undefined
+      setMaxSlippageInput(input || '')
+      const value = input ? +input : undefined
       const percent = toPercent(value)
       const warning = getSlippageWarning(percent)
       setMaxSlippage(value)
