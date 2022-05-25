@@ -88,9 +88,7 @@ const Warning = memo(function Warning({ state, showTooltip }: { state?: 'warning
 export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
-  // const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
   const [maxSlippageInput, setMaxSlippageInput] = useState("")
-
 
   const option = useRef<HTMLButtonElement>(null)
   const showTooltip = useTooltip(option.current)
@@ -123,7 +121,6 @@ export default function MaxSlippageSelect() {
     },
     [setAutoSlippage, setMaxSlippage]
   )
-
 
   return (
     <Column gap={0.75}>
