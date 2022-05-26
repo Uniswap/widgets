@@ -72,13 +72,35 @@ export default function useSyncTokenDefaults({
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
 
-  const lastChainId = useRef<number | undefined>(undefined)
   const isTokenListLoaded = useIsTokenListLoaded()
+  const lastChainId = useRef<number | undefined>(undefined)
+  const lastDefaultInputAmount = useRef<number | string | undefined>(undefined)
+  const lastDefaultInputToken = useRef<Currency | undefined>(undefined)
+  const lastDefaultOutputAmount = useRef<number | string | undefined>(undefined)
+  const lastDefaultOutputToken = useRef<Currency | undefined>(undefined)
   useEffect(() => {
-    const shouldSync = isTokenListLoaded && chainId && chainId !== lastChainId.current
-    if (shouldSync) {
+    const isNewChain = chainId && chainId !== lastChainId.current
+    const isNewDefaultTokens =
+      (defaultInputAmount && defaultInputAmount !== lastDefaultInputAmount.current) ||
+      (defaultInputToken && defaultInputToken !== lastDefaultInputToken.current) ||
+      (defaultOutputAmount && defaultOutputAmount !== lastDefaultOutputAmount.current) ||
+      (defaultOutputToken && defaultOutputToken !== lastDefaultOutputToken.current)
+
+    if (isTokenListLoaded && (isNewChain || isNewDefaultTokens)) {
       setToDefaults()
       lastChainId.current = chainId
+      lastDefaultInputAmount.current = defaultInputAmount
+      lastDefaultInputToken.current = defaultInputToken
+      lastDefaultOutputAmount.current = defaultOutputAmount
+      lastDefaultOutputToken.current = defaultOutputToken
     }
-  }, [isTokenListLoaded, chainId, setToDefaults])
+  }, [
+    isTokenListLoaded,
+    chainId,
+    setToDefaults,
+    defaultInputAmount,
+    defaultInputToken,
+    defaultOutputAmount,
+    defaultOutputToken,
+  ])
 }
