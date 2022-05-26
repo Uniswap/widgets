@@ -92,7 +92,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       if (isAnimating(document)) {
         document.addEventListener('animationend', postWrap)
       } else {
-        postWrap()
+        setIsPending(false)
       }
     } catch (e) {
       // TODO(zzmp): Surface errors from wrap.
@@ -133,7 +133,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       if (isAnimating(document)) {
         document.addEventListener('animationend', postSwap)
       } else {
-        postSwap()
+        setOpen(false)
       }
     } catch (e) {
       // TODO(zzmp): Surface errors from swap.
