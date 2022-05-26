@@ -145,6 +145,7 @@ export default function MaxSlippageSelect() {
               onChange={(input) => processInput(input)}
               placeholder={placeholder}
               ref={input}
+              label={'max-slippage-field'}
             />
             %
           </Row>
