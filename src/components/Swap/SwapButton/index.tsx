@@ -2,14 +2,16 @@ import { Trans } from '@lingui/macro'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
+import { DefaultAddress } from 'hooks/swap/useSyncTokenDefaults'
 import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
 import { useAddTransaction } from 'hooks/transactions'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { Spinner } from 'icons'
+import { TokenDefaults } from 'index'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'state/swap'
 import { TransactionType } from 'state/transactions'
@@ -24,9 +26,10 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
 interface SwapButtonProps {
   disabled?: boolean
+  tokenDefaults?: TokenDefaults
 }
 
-export default memo(function SwapButton({ disabled }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: {
@@ -61,9 +64,34 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
 
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
-  useEffect(() => setOpen((open) => (trade.trade ? open : false)), [trade.trade])
+  useEffect(() => {
+    setOpen((open) => (trade.trade ? open : false))
+  }, [trade.trade])
   // Close the review modal on chain change.
-  useEffect(() => setOpen(false), [chainId])
+  useEffect(() => {
+    setOpen(false)
+  }, [chainId])
+  // Close the review modal on defaults change
+  const lastDefaultInputAmount = useRef<number | string | undefined>(undefined)
+  const lastDefaultInputTokenAddress = useRef<DefaultAddress | undefined>(undefined)
+  const lastDefaultOutputAmount = useRef<number | string | undefined>(undefined)
+  const lastDefaultOutputTokenAddress = useRef<DefaultAddress | undefined>(undefined)
+
+  useEffect(() => {
+    const isNewDefaultTokens =
+    (tokenDefaults?.defaultInputAmount && tokenDefaults?.defaultInputAmount !== lastDefaultInputAmount.current) ||
+    (tokenDefaults?.defaultInputTokenAddress &&
+      tokenDefaults?.defaultInputTokenAddress !== lastDefaultInputTokenAddress.current) ||
+    (tokenDefaults?.defaultOutputAmount && tokenDefaults?.defaultOutputAmount !== lastDefaultOutputAmount.current) ||
+    (tokenDefaults?.defaultOutputTokenAddress &&
+      tokenDefaults?.defaultOutputTokenAddress !== lastDefaultOutputTokenAddress.current)
+
+    lastDefaultInputAmount.current = tokenDefaults?.defaultInputAmount
+    lastDefaultInputTokenAddress.current = tokenDefaults?.defaultInputTokenAddress
+    lastDefaultOutputAmount.current = tokenDefaults?.defaultOutputAmount
+    lastDefaultOutputTokenAddress.current = tokenDefaults?.defaultOutputTokenAddress
+    setOpen(false)
+  }, [tokenDefaults?.defaultInputAmount, tokenDefaults?.defaultInputTokenAddress, tokenDefaults?.defaultOutputAmount, tokenDefaults?.defaultOutputTokenAddress])
 
   const addTransaction = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
@@ -157,7 +185,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       return approvalAction
         ? { action: approvalAction }
         : trade.state === TradeState.VALID
-        ? { onClick: () => setOpen(true) }
+        ? {
+            onClick: () => {
+              setOpen(true)
+            },
+          }
         : { disabled: true }
     } else {
       return isPending
@@ -176,7 +208,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         return <Trans>Review swap</Trans>
     }
   }, [inputCurrency?.symbol, wrapType])
-  const onClose = useCallback(() => setOpen(false), [])
+  const onClose = useCallback(() => {
+    setOpen(false)
+  }, [])
 
   const { tokenColorExtraction } = useTheme()
   return (
