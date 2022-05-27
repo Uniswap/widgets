@@ -180,7 +180,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
   return (
     <>
-      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} data-testid="help" {...actionProps}>
+      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} {...actionProps}>
         <Label />
       </ActionButton>
       {open && trade.trade && (
