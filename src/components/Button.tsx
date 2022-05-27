@@ -41,11 +41,6 @@ export default styled(BaseButton)<{ color?: Color; transition?: boolean }>`
   :enabled:hover {
     background-color: ${({ color = 'interactive', theme }) => theme.onHover(theme[color])};
   }
-
-  :disabled {
-    border-color: ${({ theme }) => theme.outline};
-    color: ${({ theme }) => theme.secondary};
-  }
 `
 
 const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: Color }>`
