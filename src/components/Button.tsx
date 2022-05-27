@@ -30,8 +30,8 @@ const transitionCss = css`
 `
 
 export default styled(BaseButton)<{ color?: Color; transition?: boolean }>`
-  border: 1px solid transparent;
   background-color: ${({ color = 'interactive', theme }) => theme[color]};
+  border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
