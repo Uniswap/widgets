@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import user from "@testing-library/user-event";
 
 import MaxSlippageSelect from './MaxSlippageSelect'
@@ -6,23 +6,30 @@ import SettingsDialog from './index'
 import { useState } from 'react';
 import Column from '../../Column'
 import { BoundaryProvider } from '../../Popover'
-
+import { Provider as I18nProvider } from 'i18n'
+import Dialog from '../../Dialog';
 
 describe('MaxSlippageSelect', () => {
 
-    test('can accept decimal input', () => {
-        // const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+    test('can accept decimal input', async () => {
+        // render MaxSlippageSelect field
+        const locale = 'en-US'
         const elem = render(
-          <Column gap={1} style={{ paddingTop: '1em' }} >
-            <BoundaryProvider value={null}>
-              <MaxSlippageSelect />
-            </BoundaryProvider>
-          </Column>
+            <I18nProvider locale={locale}>
+                <Dialog color="module">
+                    <SettingsDialog />
+                </Dialog>
+            </I18nProvider>
         )
 
-        const decimalInput = elem.getByLabelText('max-slippage-field')
-        fireEvent.change(decimalInput, {target: {value: '1.5'}})
-        expect(decimalInput.nodeValue).toBe('1.5')
+        console.log(elem)
+
+        const decimalInput = await elem.findByTestId('slippage')
+        act(() => {
+            fireEvent.change(decimalInput, {target: {value: '1.5'}}) // user inputs 1.5 to text field
+        })
+        expect(decimalInput.nodeValue).toBe('1.5') // fixme: expect decimalInput value = 1.5
+ 
     })
 
 
