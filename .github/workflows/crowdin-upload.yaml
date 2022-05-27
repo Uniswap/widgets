@@ -1,4 +1,4 @@
-name: Crowdin upload
+name: Crowdin Upload
 
 on:
   push:
@@ -10,9 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+          cache: 'yarn'
+
+      - run: yarn install --frozen-lockfile --ignore-scripts
 
       - run: yarn i18n:extract
 
