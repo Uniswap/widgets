@@ -72,7 +72,7 @@ export interface BaseProps {
 export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
 export default function ActionButton({ color = 'accent', disabled, action, onClick, children }: ActionButtonProps) {
-  const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
+  const textColor = useMemo(() => (color === 'accent' ? 'onAccent' : 'currentColor'), [color])
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch">
       {(action ? action.onClick : true) && (

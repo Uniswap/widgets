@@ -22,7 +22,7 @@ export const BaseButton = styled.button`
 
   :disabled {
     cursor: initial;
-    filter: saturate(0) opacity(0.4);
+    filter: opacity(0.4);
   }
 `
 const transitionCss = css`
@@ -31,10 +31,10 @@ const transitionCss = css`
 
 export default styled(BaseButton)<{ color?: Color; transition?: boolean }>`
   border: 1px solid transparent;
+  background-color: ${({ color = 'interactive', theme }) => theme[color]};
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
-    background-color: ${({ color = 'interactive', theme }) => theme[color]};
     ${({ transition = true }) => transition && transitionCss};
   }
 
