@@ -3,6 +3,7 @@
  */
 
 import '@ethersproject/providers'
+import 'jest-environment-hardhat'
 
 import { render, RenderResult, waitFor } from '@testing-library/react'
 import { tokens } from '@uniswap/default-token-list'

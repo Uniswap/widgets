@@ -1,6 +1,6 @@
 import { useSelect } from 'react-cosmos/fixture'
 
-const NONE = 'None'
+export const NONE = 'None'
 
 export default function useOption<T>(
   label: string,
