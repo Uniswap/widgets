@@ -1,4 +1,4 @@
-name: Crowdin download
+name: Crowdin Download
 
 on:
   schedule:
@@ -10,11 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+          cache: 'yarn'
 
-      - run: "yarn i18n:extract"
+      - run: yarn install --frozen-lockfile --ignore-scripts
+
+      - run: yarn i18n:extract
 
       - uses: crowdin/github-action@1.4.8
         with:

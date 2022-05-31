@@ -1,13 +1,21 @@
-
 # Contributing
 
 Thank you for your interest in contributing to the Uniswap widgets! 🦄
 
 # Development
 
-Before developing locally, be sure to install the project's dependencies.
+Before developing locally, you'll need install the project's dependencies and create a `.env` file.
 
-1. `yarn install`
+- `yarn install`
+
+The `.env` file specifies third-party APIs for use in e2e testing and the cosmos viewer:
+- `JSON_RPC_PROVIDER` must be specified for e2e tests to work.
+- `INFURA_KEY` must be specified to use a network provider in the cosmos viewer.
+
+```
+JSON_RPC_PROVIDER='<JSON_RPC_PROVIDER>`
+INFURA_KEY='<INFURA_KEY>'
+```
 
 ## Running widgets locally
 

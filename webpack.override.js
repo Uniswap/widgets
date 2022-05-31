@@ -7,6 +7,8 @@ const rollup = require('rollup')
 const { config: rollupConfig, assets: assetConfigs } = require('./rollup.config.js')
 const path = require('path')
 
+require('dotenv').config()
+
 class RollupPlugin extends EventEmitter {
   static PLUGIN_NAME = 'rollup-watch'
 
@@ -75,9 +77,7 @@ module.exports = (webpackConfig) => {
     },
     plugins: [
       new RollupPlugin({ config: rollupConfig, assetConfigs, watch: mode !== 'production' }),
-      new DefinePlugin({
-        'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY || '4bf032f2d38a4ed6bb975b80d6340847'),
-      }),
+      new DefinePlugin({ 'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY) }),
       new HtmlWebpackPlugin(),
     ],
     stats: 'errors-warnings',

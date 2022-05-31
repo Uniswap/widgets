@@ -38,9 +38,8 @@
     "build": "tsc && rollup --config --failAfterWarnings",
     "release": "semantic-release",
     "lint": "eslint .",
-    "hardhat": "hardhat node",
-    "test": "jest --testPathIgnorePatterns=e2e",
-    "test:e2e": "jest --testPathPattern=e2e"
+    "test": "jest src",
+    "test:e2e": "jest e2e"
   },
   "browserslist": {
     "production": [
@@ -118,6 +117,7 @@
     "@lingui/core": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "@lingui/react": "^3.9.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
@@ -148,6 +148,7 @@
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "@uniswap/default-token-list": "^3.2.0",
+    "jest-environment-hardhat": "^1.1.4",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@uniswap/v3-core": "1.0.0",
@@ -160,6 +161,7 @@
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-runtime": "^6.26.0",
+    "dotenv": "^16.0.1",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^7.0.1",
@@ -169,7 +171,7 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "hardhat": "^2.9.3",
+    "hardhat": "^2.9.6",
     "html-webpack-plugin": "^5.5.0",
     "inter-ui": "^3.13.1",
     "jest": "^27.5.1",

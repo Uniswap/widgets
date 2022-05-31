@@ -1,13 +1,14 @@
-import '@ethersproject/providers'
+/**
+ * @jest-environment hardhat/dist/jsdom
+ */
 
-import { JsonRpcProvider } from '@ethersproject/providers'
+import '@ethersproject/providers'
+import 'jest-environment-hardhat'
+
 import { render, RenderResult, waitFor } from '@testing-library/react'
 import { tokens } from '@uniswap/default-token-list'
 
 import { SwapWidget } from '../src'
-
-const JSON_RPC_ENDPOINT = 'http://127.0.0.1:8545/'
-const provider = new JsonRpcProvider('http://127.0.0.1:8545/')
 
 describe('connect', () => {
   let component: RenderResult
@@ -27,7 +28,7 @@ describe('connect', () => {
 
   describe('with jsonRpcEndpoint', () => {
     it('prompts for wallet connection in the Wallet', async () => {
-      component.rerender(<SwapWidget tokenList={tokens} jsonRpcEndpoint={JSON_RPC_ENDPOINT} />)
+      component.rerender(<SwapWidget tokenList={tokens} jsonRpcEndpoint={hardhat.url} />)
       expect(wallet.hidden).toBeTruthy()
       expect(toolbar.textContent).toBe('Connecting…')
 
@@ -40,7 +41,7 @@ describe('connect', () => {
 
   describe('with provider', () => {
     it('does not prompt for wallet connection', async () => {
-      component.rerender(<SwapWidget tokenList={tokens} provider={provider} />)
+      component.rerender(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
       expect(wallet.hidden).toBeTruthy()
       expect(toolbar.textContent).toBe('Connecting…')
 

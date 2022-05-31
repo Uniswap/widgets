@@ -17,7 +17,7 @@ const [walletConnect] = initializeConnector<WalletConnect>(
 )
 
 export default function useProvider() {
-  const connectorType = useOption('provider', { options: [Wallet.MetaMask, Wallet.WalletConnect] })
+  const connectorType = useOption<Wallet | undefined>('provider', { options: [Wallet.MetaMask, Wallet.WalletConnect] })
   const [connector, setConnector] = useState<Connector>()
   useEffect(() => {
     let stale = false
