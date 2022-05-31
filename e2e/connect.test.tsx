@@ -1,5 +1,5 @@
 /**
- * @jest-environment @uniswap/jest-environment-hardhat/dist/jsdom
+ * @jest-environment hardhat/dist/jsdom
  */
 
 import '@ethersproject/providers'

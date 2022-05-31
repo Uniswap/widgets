@@ -3594,13 +3594,6 @@
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-3.2.0.tgz#2a9c381dabf0062ef234cd4cca33aa156e5e3e45"
   integrity sha512-3wqLMiNZT6WrvSwZL6KwnPKNH5/MAS0agvu/KgUbYs5a+eKURSfYpWLbAGA4yJPdqJLipQYXrQG2xdtXjn9WCA==
 
-"@uniswap/jest-environment-hardhat@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/jest-environment-hardhat/-/jest-environment-hardhat-1.1.2.tgz#d550aac89b1717ab65ce22d606fd630cca45d279"
-  integrity sha512-SnxOIzkZiMFflQHUpFsrP05G+XpSyahkBr4bwyfKvq6rivT1W7Fg3gXp2mMtY7FG0n57AnPM/27OcVPYcWUtSg==
-  dependencies:
-    setimmediate "^1.0.5"
-
 "@uniswap/lib@1.1.1":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@uniswap/lib/-/lib-1.1.1.tgz"
@@ -8664,6 +8657,13 @@ jest-each@^27.5.1:
     jest-get-type "^27.5.1"
     jest-util "^27.5.1"
     pretty-format "^27.5.1"
+
+jest-environment-hardhat@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/jest-environment-hardhat/-/jest-environment-hardhat-1.1.4.tgz#f05491d8bc9f6850505fcb85ab342681b09637a6"
+  integrity sha512-vIYmH6rNcjrAsm86iicrn1uOHwbiQPFd1y1fmv2CaDLBwGWswl1smi5p+6/20VOkGvnOAi/CJFZ+QWjRDd7l2g==
+  dependencies:
+    setimmediate "^1.0.5"
 
 jest-environment-jsdom@^27.5.1:
   version "27.5.1"
