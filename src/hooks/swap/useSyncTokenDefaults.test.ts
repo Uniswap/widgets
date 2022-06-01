@@ -1,64 +1,65 @@
-import useSyncTokenDefaults, { TokenDefaults, DefaultAddress } from './useSyncTokenDefaults'
-import { Field, Swap, swapAtom } from '../../state/swap'
-import { useAtom } from 'jotai'
-import { Token } from '@uniswap/sdk-core'
-import { useToken } from '../../hooks/useCurrency'
-import { useAtomValue } from 'jotai/utils'
 import { renderHook } from '@testing-library/react-hooks/dom'
-import { act } from 'react-dom/test-utils'
+import { Token } from '@uniswap/sdk-core'
+import { useAtomValue } from 'jotai/utils'
+
+import { useToken } from '../../hooks/useCurrency'
+import { Field, swapAtom } from '../../state/swap'
+import useSyncTokenDefaults from './useSyncTokenDefaults'
 
 describe('tokens defaults changed', () => {
-    describe('swap should be updated', () => {
-        it('updates swap when default outputs are changed', () => {
-            const { result: swap } = renderHook(() => useAtomValue(swapAtom))
-            const defaultInputToken = swap.current.INPUT
-            const defaultInputTokenAddress = defaultInputToken.isNative ? 'NATIVE' : (defaultInputToken as Token).address
-            const defaultInputAmount = swap.current.amount
-            const defaultOutputToken = swap.current.OUTPUT
-            const defaultIndependentField = swap.current.independentField
-            const defaultTokens = {
-                defaultInputTokenAddress: defaultInputTokenAddress,
-                defaultInputAmount: defaultInputAmount,
-                defaultOutputTokenAddress: undefined,
-                defaultOutputAmount: '',
-            }
+  describe('swap should be updated', () => {
+    it('updates swap when default outputs are changed', () => {
+      const { result: swap } = renderHook(() => useAtomValue(swapAtom))
+      const defaultInputToken = swap.current.INPUT
+      const defaultInputTokenAddress = defaultInputToken.isNative ? 'NATIVE' : (defaultInputToken as Token).address
+      const defaultInputAmount = swap.current.amount
+      const defaultOutputToken = swap.current.OUTPUT
+      const defaultIndependentField = swap.current.independentField
+      const defaultTokens = {
+        defaultInputTokenAddress,
+        defaultInputAmount,
+        defaultOutputTokenAddress: undefined,
+        defaultOutputAmount: '',
+      }
 
-            const newInputTokenAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-            const newOutputTokenAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-            const { result: newOutputToken } = renderHook(() => useToken(newOutputTokenAddress))
-            const newOutputAmount = '50'
-            const newDefaultTokens = {
-                defaultInputTokenAddress: newInputTokenAddress,
-                defaultInputAmount: '',
-                defaultOutputTokenAddress: newOutputTokenAddress,
-                defaultOutputAmount: newOutputAmount,
-            }
-            const { rerender } = renderHook((defaultTokens) => {
-                console.log("HELLO THERE", defaultTokens)
-                useSyncTokenDefaults(defaultTokens)
-            }, {initialProps: defaultTokens})
+      const newInputTokenAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+      const newOutputTokenAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+      const { result: newOutputToken } = renderHook(() => useToken(newOutputTokenAddress))
+      const newOutputAmount = '50'
+      const newDefaultTokens = {
+        defaultInputTokenAddress: newInputTokenAddress,
+        defaultInputAmount: '',
+        defaultOutputTokenAddress: newOutputTokenAddress,
+        defaultOutputAmount: newOutputAmount,
+      }
+      const { rerender } = renderHook(
+        (defaultTokens) => {
+          console.log('HELLO THERE', defaultTokens)
+          useSyncTokenDefaults(defaultTokens)
+        },
+        { initialProps: defaultTokens }
+      )
 
-            rerender(newDefaultTokens)
-            
-            console.log("HERES WHAT I HAVE", swap.current)
-            expect(swap.current.INPUT).toEqual(defaultInputToken)
-            expect(swap.current.independentField).toEqual(Field.OUTPUT)
-            expect(swap.current.OUTPUT).toBeDefined()
-            expect(swap.current.OUTPUT.equals(newOutputToken.current))
-            expect(swap.current.amount).toEqual(newOutputAmount)
-        })
-        // it('throws error if only amount given without token address', () => {
-        // })
-        // it('returns false if has receipt and never checked', () => {
-        // })
-        // it('returns false if has receipt and never checked', () => {
-        // })
-        // it('returns false if has receipt and never checked', () => {
-        // })
-        // it('returns false if has receipt and never checked', () => {
-        // })
+      rerender(newDefaultTokens)
 
+      console.log('HERES WHAT I HAVE', swap.current)
+      expect(swap.current.INPUT).toEqual(defaultInputToken)
+      expect(swap.current.independentField).toEqual(Field.OUTPUT)
+      expect(swap.current.OUTPUT).toBeDefined()
+      expect(swap.current.OUTPUT.equals(newOutputToken.current))
+      expect(swap.current.amount).toEqual(newOutputAmount)
     })
+    // it('throws error if only amount given without token address', () => {
+    // })
+    // it('returns false if has receipt and never checked', () => {
+    // })
+    // it('returns false if has receipt and never checked', () => {
+    // })
+    // it('returns false if has receipt and never checked', () => {
+    // })
+    // it('returns false if has receipt and never checked', () => {
+    // })
+  })
 })
 // describe('transactions updater', () => {
 //   describe('shouldCheck', () => {
