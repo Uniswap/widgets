@@ -46,6 +46,7 @@ export default function useSyncTokenDefaults({
   defaultOutputTokenAddress,
   defaultOutputAmount,
 }: TokenDefaults) {
+  console.log("HELLO AGAIN")
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
@@ -69,6 +70,7 @@ export default function useSyncTokenDefaults({
       defaultSwapState.independentField = Field.OUTPUT
       defaultSwapState.amount = defaultOutputAmount.toString()
     }
+    console.log("I AM HERE", defaultSwapState)
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
 
@@ -86,7 +88,10 @@ export default function useSyncTokenDefaults({
       (defaultOutputAmount && defaultOutputAmount !== lastDefaultOutputAmount.current) ||
       (defaultOutputToken && defaultOutputToken !== lastDefaultOutputToken.current)
 
+    console.log("USING EFFECT", isNewDefaultTokens)
+
     if (isTokenListLoaded && (isNewChain || isNewDefaultTokens)) {
+      console.log("BUT NOT GOING INTO HERE")
       setToDefaults()
       lastChainId.current = chainId
       lastDefaultInputAmount.current = defaultInputAmount

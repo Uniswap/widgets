@@ -48,7 +48,6 @@ export default function useValidate(props: ValidatorProps) {
 
   const { defaultInputAmount, defaultOutputAmount } = props
   useEffect(() => {
-    console.log('asdfsd')
     if (defaultOutputAmount && defaultInputAmount) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
     }

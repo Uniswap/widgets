@@ -169,9 +169,7 @@ export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonP
       return approvalAction
         ? { action: approvalAction }
         : trade.state === TradeState.VALID
-        ? {
-            onClick: () => setOpen(true),
-          }
+        ? { onClick: () => setOpen(true) }
         : { disabled: true }
     } else {
       return isPending
