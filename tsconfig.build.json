@@ -20,17 +20,13 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": false,
-    "paths": {
-      "@uniswap/widgets": ["index"]
-    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
     "target": "es5",
-    "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules"],
-  "include": ["src/"]
+  "include": ["src/**/*.d.ts", "src/index.tsx"]
 }

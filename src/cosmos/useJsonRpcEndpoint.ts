@@ -24,10 +24,10 @@ export const INFURA_NETWORK_URLS: { [key in SupportedChainId]?: string } = INFUR
   : {}
 
 export default function useJsonRpcEndpoint() {
-  const endpoints = Object.entries(INFURA_NETWORK_URLS).reduce(
+  const endpoints = Object.entries(INFURA_NETWORK_URLS).reduce<{ [chainId: string]: string }>(
     (acc, [chainId, url]) => ({
       ...acc,
-      [SupportedChainId[chainId]]: url,
+      [SupportedChainId[Number(chainId)]]: url,
     }),
     {}
   )
