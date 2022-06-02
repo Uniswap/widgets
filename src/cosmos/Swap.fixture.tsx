@@ -1,9 +1,5 @@
 import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
-import { useEffect } from 'react'
-import { useValue } from 'react-cosmos/fixture'
-
-import { DAI, USDC_MAINNET } from '../constants/tokens'
 import {
   darkTheme,
   DEFAULT_LOCALE,
@@ -12,14 +8,18 @@ import {
   SUPPORTED_LOCALES,
   SupportedChainId,
   SwapWidget,
-} from '../index'
+} from '@uniswap/widgets'
+import { useEffect } from 'react'
+import { useValue } from 'react-cosmos/fixture'
+
+import { DAI, USDC_MAINNET } from '../constants/tokens'
 import useJsonRpcEndpoint from './useJsonRpcEndpoint'
 import useOption from './useOption'
 import useProvider from './useProvider'
 
 function Fixture() {
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
-  const convenienceFeeRecipient = useOption<string>('convenienceFeeRecipient', {
+  const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
     options: [
       '0x1D9Cd50Dde9C19073B81303b3d930444d11552f7',
       '0x0dA5533d5a9aA08c1792Ef2B6a7444E149cCB0AD',
@@ -41,7 +41,7 @@ function Fixture() {
   const [width] = useValue('width', { defaultValue: 360 })
 
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
-  const locale = useOption<string>('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })
+  const locale = useOption('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })
 
   const [theme, setTheme] = useValue('theme', { defaultValue: { ...defaultTheme } })
   const [darkMode] = useValue('darkMode', { defaultValue: false })

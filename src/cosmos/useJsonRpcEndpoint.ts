@@ -1,4 +1,5 @@
-import { SupportedChainId } from '../index'
+import { SupportedChainId } from '@uniswap/widgets'
+
 import useOption, { NONE } from './useOption'
 
 const INFURA_KEY = process.env.INFURA_KEY
@@ -6,7 +7,7 @@ if (INFURA_KEY === undefined) {
   console.warn(`INFURA_KEY must be a defined environment variable to use JsonRpcEndpoints in the cosmos viewer`)
 }
 
-export const INFURA_NETWORK_URLS: { [chainId: number]: string } = INFURA_KEY
+export const INFURA_NETWORK_URLS: { [key in SupportedChainId]?: string } = INFURA_KEY
   ? {
       [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
       [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
@@ -23,15 +24,15 @@ export const INFURA_NETWORK_URLS: { [chainId: number]: string } = INFURA_KEY
   : {}
 
 export default function useJsonRpcEndpoint() {
-  const endpoints = Object.entries(INFURA_NETWORK_URLS).reduce(
+  const endpoints = Object.entries(INFURA_NETWORK_URLS).reduce<{ [chainId: string]: string }>(
     (acc, [chainId, url]) => ({
       ...acc,
-      [SupportedChainId[chainId]]: url,
+      [SupportedChainId[Number(chainId)]]: url,
     }),
     {}
   )
 
-  return useOption<string>('jsonRpcEndpoint', {
+  return useOption('jsonRpcEndpoint', {
     options: endpoints,
     defaultValue: INFURA_NETWORK_URLS[SupportedChainId.MAINNET] ? SupportedChainId[SupportedChainId.MAINNET] : NONE,
   })
