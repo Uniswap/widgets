@@ -24,11 +24,9 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
     "target": "es5",
-    "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules"],
-  "include": ["src/"]
+  "include": ["src/**/*.d.ts", "src/index.tsx"]
 }
