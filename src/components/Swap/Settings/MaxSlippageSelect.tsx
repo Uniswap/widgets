@@ -37,17 +37,18 @@ interface OptionProps {
   wrapper: typeof Button | typeof Custom
   selected: boolean
   onSelect: () => void
+  'data-testid': string
   icon?: ReactNode
   tabIndex?: number
   children: ReactNode
 }
 
 const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
-  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex }: OptionProps,
+  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex, 'data-testid': testid }: OptionProps,
   ref
 ) {
   return (
-    <Wrapper selected={selected} onClick={onSelect} ref={ref} tabIndex={tabIndex}>
+    <Wrapper selected={selected} onClick={onSelect} ref={ref} tabIndex={tabIndex} data-testid={testid}>
       <Row gap={0.5}>
         {children}
         {icon ? icon : <LargeIcon icon={selected ? Check : undefined} size={1.25} />}
@@ -125,7 +126,7 @@ export default function MaxSlippageSelect() {
     <Column gap={0.75}>
       <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
       <Row gap={0.5} grow="last">
-        <Option wrapper={Button} selected={autoSlippage} onSelect={() => setAutoSlippage(true)}>
+        <Option wrapper={Button} selected={autoSlippage} onSelect={() => setAutoSlippage(true)} data-testid="auto">
           <ThemedText.ButtonMedium>
             <Trans>Auto</Trans>
           </ThemedText.ButtonMedium>
@@ -137,6 +138,7 @@ export default function MaxSlippageSelect() {
           icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
           ref={option}
           tabIndex={-1}
+          data-testid="custom"
         >
           <Row color={warning === 'error' ? 'error' : undefined}>
             <DecimalInput
@@ -145,7 +147,7 @@ export default function MaxSlippageSelect() {
               onChange={(input) => processInput(input)}
               placeholder={placeholder}
               ref={input}
-              data-testid="slippage"
+              data-testid="input"
             />
             %
           </Row>
