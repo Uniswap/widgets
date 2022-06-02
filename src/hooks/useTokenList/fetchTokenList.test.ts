@@ -1,4 +1,5 @@
 import defaultTokenList from '@uniswap/default-token-list'
+import { fetch } from 'test/utils'
 
 import fetchTokenList from './fetchTokenList'
 
@@ -8,7 +9,7 @@ describe('fetchTokenList', () => {
 
   it('throws on an invalid list url', async () => {
     const url = 'https://example.com/invalid-tokenlist.json'
-    fetchMock.mockIf(url, () => {
+    fetch.mockIf(url, () => {
       throw new Error()
     })
     await expect(fetchTokenList(url, resolver)).rejects.toThrowError(`failed to fetch list: ${url}`)
@@ -27,7 +28,7 @@ describe('fetchTokenList', () => {
 
   it('fetches and validates the default token list', async () => {
     const url = 'https://example.com/default-tokenlist.json'
-    fetchMock.mockIf(url, () => Promise.resolve(JSON.stringify(defaultTokenList)))
+    fetch.mockIf(url, () => Promise.resolve(JSON.stringify(defaultTokenList)))
     await expect(fetchTokenList(url, resolver)).resolves.toStrictEqual(defaultTokenList)
     expect(resolver).not.toHaveBeenCalled()
   })

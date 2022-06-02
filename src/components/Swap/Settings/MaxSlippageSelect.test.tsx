@@ -1,6 +1,6 @@
 import { MAX_VALID_SLIPPAGE } from 'hooks/useSlippage'
+import { act, render, RenderResult, user } from 'test/utils'
 
-import { act, render, RenderResult, user } from '../../../../test/utils'
 import MaxSlippageSelect from './MaxSlippageSelect'
 
 describe('MaxSlippageSelect', () => {

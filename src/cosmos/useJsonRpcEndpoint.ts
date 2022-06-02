@@ -1,5 +1,4 @@
-import { SupportedChainId } from '@uniswap/widgets'
-
+import { SupportedChainId } from '../index'
 import useOption from './useOption'
 
 const INFURA_KEY = process.env.INFURA_KEY
@@ -29,5 +28,8 @@ export default function useJsonRpcEndpoint() {
     }),
     {}
   )
-  return useOption('jsonRpcEndpoint', { options: endpoints, defaultValue: SupportedChainId[SupportedChainId.MAINNET] })
+  return useOption<string>('jsonRpcEndpoint', {
+    options: endpoints,
+    defaultValue: SupportedChainId[SupportedChainId.MAINNET],
+  })
 }
