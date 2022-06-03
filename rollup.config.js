@@ -8,7 +8,6 @@ const { babel } = require('@rollup/plugin-babel')
 const commonjs = require('@rollup/plugin-commonjs')
 const json = require('@rollup/plugin-json')
 const { nodeResolve: resolve } = require('@rollup/plugin-node-resolve')
-const replace = require('@rollup/plugin-replace')
 const { default: dts } = require('rollup-plugin-dts')
 const url = require('@rollup/plugin-url')
 const svgr = require('@svgr/rollup')
@@ -50,11 +49,6 @@ const transpile = {
     resolve({ extensions: EXTENSIONS }), // resolves third-party modules within node_modules/
 
     // Source code transformation
-    replace({
-      // esm requires fully-specified paths:
-      'react/jsx-runtime': 'react/jsx-runtime.js',
-      preventAssignment: true,
-    }),
     json(), // imports json as ES6; doing so enables module resolution
     url({ include: ['**/*.png', '**/*.svg'], limit: Infinity }), // imports assets as data URIs
     svgr(), // imports svgs as React components
