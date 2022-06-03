@@ -15,6 +15,7 @@ import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
+import ConnectedWalletChip from './ConnectWallet/ConnectedWalletChip'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -64,7 +65,11 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={!active || Boolean(account)} onClick={props.onConnectWallet} />
+        {!active || Boolean(account) ? (
+          <ConnectedWalletChip disabled={isDisabled} account={account}/>
+        ) : (
+          <Wallet onClick={props.onConnectWallet} />
+        )}
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

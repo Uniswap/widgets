@@ -14,6 +14,7 @@ import { MulticallUpdater, store as multicallStore } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
+import useProvider from './ConnectWallet/useProvider'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
@@ -96,7 +97,7 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -111,6 +112,9 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
+  const provider = useMemo(() => {
+    return props.provider ?? useProvider()
+  }, [props.provider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
