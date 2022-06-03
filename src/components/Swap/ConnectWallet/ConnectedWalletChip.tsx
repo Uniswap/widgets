@@ -1,11 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { TextButton } from 'components/Button'
 import Row from 'components/Row'
-import useScrollbar from 'hooks/useScrollbar'
-import { Settings as SettingsIcon } from 'icons'
-import { useResetAtom } from 'jotai/utils'
-import React, { useState } from 'react'
-import { settingsAtom } from 'state/settings'
+import { AccountAvatar } from 'icons'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -20,10 +15,10 @@ export default function ConnectedWalletChip({ disabled, account }: { disabled?: 
 
   return (
     <>
-      <AccountButton onClick={() => console.log("connected wallet chip clicked")} color="secondary" data-testid="wallet">
+      <AccountButton onClick={() => console.log("open account modal")} color="secondary" data-testid="wallet">
         <ThemedText.Subhead2>
           <Row gap={0.5}>
-            {/* <AccountAvatar /> */}
+            <AccountAvatar account={account} />
             {account?.substring(0, 6)}...{account?.substring(account.length - 4)}
           </Row>
         </ThemedText.Subhead2>

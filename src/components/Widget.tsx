@@ -14,7 +14,7 @@ import { MulticallUpdater, store as multicallStore } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
-import useProvider from './ConnectWallet/useProvider'
+import useProvider from '../hooks/useConnectWallet/useProvider'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
@@ -113,7 +113,8 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
   const provider = useMemo(() => {
-    return props.provider ?? useProvider()
+    return props.provider
+    // return props.provider ?? useProvider()
   }, [props.provider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
