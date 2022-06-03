@@ -35,7 +35,10 @@ const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
  */
 const transpile = {
   input: 'src/index.tsx',
-  external: isEthers,
+  external: (source) => {
+    // @ethersproject/* modules are provided by ethers
+    return source.startsWith('@ethersproject/')
+  },
   plugins: [
     // Dependency resolution
     externals({
@@ -62,7 +65,13 @@ const transpile = {
     }),
     inject({ React: 'react' }), // imports React (on the top-level, un-renamed), for the classic runtime
   ],
-  onwarn: squelchTypeWarnings, // this pipeline is only for transpilation
+  onwarn: (warning, warn) => {
+    // This pipeline is for transpilation - checking is done through tsc.
+    if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
+
+    warn(warning)
+    console.log(warning.loc, '\n')
+  },
 }
 
 const esm = {
@@ -126,13 +135,3 @@ const config = [esm, cjs, types, locales]
 config.config = { ...esm, output: { ...esm.output, sourcemap: true } }
 config.assets = assets
 module.exports = config
-
-function isEthers(source) {
-  // @ethersproject/* modules are provided by ethers
-  return source.startsWith('@ethersproject/')
-}
-
-function squelchTypeWarnings(warning, warn) {
-  if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
-  warn(warning)
-}
