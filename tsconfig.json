@@ -1,36 +1,10 @@
 {
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "allowJs": true,
-    "alwaysStrict": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "src",
-    "declaration": true,
-    "declarationDir": "dts",
-    "downlevelIteration": true,
-    "emitDeclarationOnly": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false,
     "paths": {
       "@uniswap/widgets": ["index"]
     },
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "target": "es5",
-    "types": ["jest"],
-    "useUnknownInCatchVariables": false
+    "types": ["jest"]
   },
-  "exclude": ["node_modules"],
   "include": ["src/"]
 }
