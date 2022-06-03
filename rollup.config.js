@@ -6,6 +6,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { babel } = require('@rollup/plugin-babel')
 const commonjs = require('@rollup/plugin-commonjs')
+const inject = require('@rollup/plugin-inject')
 const json = require('@rollup/plugin-json')
 const { nodeResolve: resolve } = require('@rollup/plugin-node-resolve')
 const { default: dts } = require('rollup-plugin-dts')
@@ -51,7 +52,7 @@ const transpile = {
     // Source code transformation
     json(), // imports json as ES6; doing so enables module resolution
     url({ include: ['**/*.png', '**/*.svg'], limit: Infinity }), // imports assets as data URIs
-    svgr(), // imports svgs as React components
+    svgr({ jsxRuntime: 'automatic' }), // imports svgs as React components (without re-importing React)
     sass({ output: 'dist/fonts.css', verbose: false }), // generates fonts.css
     commonjs(), // transforms cjs dependencies into tree-shakeable ES modules
 
@@ -59,6 +60,7 @@ const transpile = {
       babelHelpers: 'runtime',
       extensions: EXTENSIONS,
     }),
+    inject({ React: 'react' }), // imports React (on the top-level, un-renamed), for the classic runtime
   ],
   onwarn: squelchTypeWarnings, // this pipeline is only for transpilation
 }
