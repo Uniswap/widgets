@@ -37,7 +37,7 @@ export default function Wallet({ onClick }: WalletProps) {
         </ThemedText.Caption>
       </WalletButton>
       {open && (
-        <Dialog color="dialog" onClose={onClose}>
+        <Dialog color="module" onClose={onClose}>
           <ConnectWalletDialog />
         </Dialog>
       )}
