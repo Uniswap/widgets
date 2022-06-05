@@ -15,14 +15,6 @@ import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
 import { Label, optionCss } from './components'
 
-const tooltip = (
-  <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-)
-const highSlippage = <Trans>High slippage increases the risk of price movement</Trans>
-const invalidSlippage = <Trans>Please enter a valid slippage %</Trans>
-
-const placeholder = '0.10'
-
 const Button = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
 `
@@ -63,12 +55,12 @@ const Warning = memo(function Warning({ state, showTooltip }: { state?: 'warning
   switch (state) {
     case 'error':
       icon = XOctagon
-      content = invalidSlippage
+      content = <Trans>Please enter a valid slippage %</Trans>
       show = true
       break
     case 'warning':
       icon = AlertTriangle
-      content = highSlippage
+      content = <Trans>High slippage increases the risk of price movement</Trans>
       break
   }
   return (
@@ -120,7 +112,12 @@ export default function MaxSlippageSelect() {
 
   return (
     <Column gap={0.75}>
-      <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
+      <Label
+        name={<Trans>Max slippage</Trans>}
+        tooltip={
+          <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
+        }
+      />
       <Row gap={0.5} grow="last">
         <Option wrapper={Button} selected={autoSlippage} onSelect={() => setAutoSlippage(true)}>
           <ThemedText.ButtonMedium>
@@ -140,7 +137,7 @@ export default function MaxSlippageSelect() {
               size={Math.max(maxSlippageInput.length, 4)}
               value={maxSlippageInput}
               onChange={(input) => processValue(+input)}
-              placeholder={placeholder}
+              placeholder={'0.10'}
               ref={input}
             />
             %

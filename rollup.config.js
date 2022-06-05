@@ -6,9 +6,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { babel } = require('@rollup/plugin-babel')
 const commonjs = require('@rollup/plugin-commonjs')
+const inject = require('@rollup/plugin-inject')
 const json = require('@rollup/plugin-json')
 const { nodeResolve: resolve } = require('@rollup/plugin-node-resolve')
-const replace = require('@rollup/plugin-replace')
 const { default: dts } = require('rollup-plugin-dts')
 const url = require('@rollup/plugin-url')
 const svgr = require('@svgr/rollup')
@@ -35,7 +35,10 @@ const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
  */
 const transpile = {
   input: 'src/index.tsx',
-  external: isEthers,
+  external: (source) => {
+    // @ethersproject/* modules are provided by ethers
+    return source.startsWith('@ethersproject/')
+  },
   plugins: [
     // Dependency resolution
     externals({
@@ -50,14 +53,9 @@ const transpile = {
     resolve({ extensions: EXTENSIONS }), // resolves third-party modules within node_modules/
 
     // Source code transformation
-    replace({
-      // esm requires fully-specified paths:
-      'react/jsx-runtime': 'react/jsx-runtime.js',
-      preventAssignment: true,
-    }),
     json(), // imports json as ES6; doing so enables module resolution
     url({ include: ['**/*.png', '**/*.svg'], limit: Infinity }), // imports assets as data URIs
-    svgr(), // imports svgs as React components
+    svgr({ jsxRuntime: 'automatic' }), // imports svgs as React components (without re-importing React)
     sass({ output: 'dist/fonts.css', verbose: false }), // generates fonts.css
     commonjs(), // transforms cjs dependencies into tree-shakeable ES modules
 
@@ -65,8 +63,15 @@ const transpile = {
       babelHelpers: 'runtime',
       extensions: EXTENSIONS,
     }),
+    inject({ React: 'react' }), // imports React (on the top-level, un-renamed), for the classic runtime
   ],
-  onwarn: squelchTypeWarnings, // this pipeline is only for transpilation
+  onwarn: (warning, warn) => {
+    // This pipeline is for transpilation - checking is done through tsc.
+    if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
+
+    warn(warning)
+    console.log(warning.loc, '\n')
+  },
 }
 
 const esm = {
@@ -130,13 +135,3 @@ const config = [esm, cjs, types, locales]
 config.config = { ...esm, output: { ...esm.output, sourcemap: true } }
 config.assets = assets
 module.exports = config
-
-function isEthers(source) {
-  // @ethersproject/* modules are provided by ethers
-  return source.startsWith('@ethersproject/')
-}
-
-function squelchTypeWarnings(warning, warn) {
-  if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
-  warn(warning)
-}
