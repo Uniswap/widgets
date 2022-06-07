@@ -18,7 +18,7 @@ export default function ConnectedWalletChip({ disabled, account }: { disabled?: 
       <AccountButton onClick={() => console.log("open account modal")} color="secondary" data-testid="wallet">
         <ThemedText.Subhead2>
           <Row gap={0.5}>
-            <AccountAvatar account={account} />
+            {/* <AccountAvatar account={account} /> */}
             {account?.substring(0, 6)}...{account?.substring(account.length - 4)}
           </Row>
         </ThemedText.Subhead2>
