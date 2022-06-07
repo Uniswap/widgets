@@ -1,6 +1,6 @@
 const isDevelopment =
   process.env.NODE_ENV === 'test' || // jest
-  process.env.NODE_ENV === 'development' // cosmos
+  process.env.NODE_ENV === 'cosmos' // cosmos
 
 module.exports = {
   compact: false,
