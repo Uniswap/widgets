@@ -66,7 +66,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
       library.on('block', onBlock)
       return () => {
         stale = true
-        library.removeListener('block', onBlock)
+        library.off('block', onBlock)
       }
     }
     return undefined

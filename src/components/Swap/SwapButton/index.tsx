@@ -83,21 +83,22 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         chainId,
       })
       setDisplayTxHash(transaction.hash)
+      // Only reset pending after any queued animations to avoid layout thrashing, because a
+      // successful wrap will open the status dialog and immediately cover the button.
+      const postWrap = () => {
+        setIsPending(false)
+        document.removeEventListener('animationend', postWrap)
+      }
+      if (isAnimating(document)) {
+        document.addEventListener('animationend', postWrap)
+      } else {
+        setIsPending(false)
+      }
     } catch (e) {
       // TODO(zzmp): Surface errors from wrap.
       console.log(e)
-    }
-
-    // Only reset pending after any queued animations to avoid layout thrashing, because a
-    // successful wrap will open the status dialog and immediately cover the button.
-    const postWrap = () => {
+    } finally {
       setIsPending(false)
-      document.removeEventListener('animationend', postWrap)
-    }
-    if (isAnimating(document)) {
-      document.addEventListener('animationend', postWrap)
-    } else {
-      postWrap()
     }
   }, [addTransaction, chainId, setDisplayTxHash, wrapCallback, wrapType])
   // Reset the pending state if user updates the swap.
@@ -132,7 +133,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       if (isAnimating(document)) {
         document.addEventListener('animationend', postSwap)
       } else {
-        postSwap()
+        setOpen(false)
       }
     } catch (e) {
       // TODO(zzmp): Surface errors from swap.

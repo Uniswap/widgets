@@ -1,7 +1,31 @@
 import { useSelect } from 'react-cosmos/fixture'
 
-const NONE = 'None'
+export const NONE = 'None'
 
+export default function useOption<T extends string>(
+  label: string,
+  {
+    options,
+    defaultValue,
+    nullable,
+  }: {
+    options: T[]
+    defaultValue?: T
+    nullable?: boolean
+  }
+): T | undefined
+export default function useOption<T>(
+  label: string,
+  {
+    options,
+    defaultValue,
+    nullable,
+  }: {
+    options: Record<string, T>
+    defaultValue?: string
+    nullable?: boolean
+  }
+): T | undefined
 export default function useOption<T>(
   label: string,
   {
