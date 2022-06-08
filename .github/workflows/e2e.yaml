@@ -1,4 +1,4 @@
-name: "Unit test"
+name: "Integration test"
 
 on:
   push:
@@ -9,11 +9,13 @@ on:
       - main
 
 jobs:
-  unit-test:
+  e2e-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
       - uses: ./.github/actions/setup
 
-      - run: yarn test
+      - run: yarn hardhat &
+
+      - run: yarn test:e2e

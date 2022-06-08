@@ -9,6 +9,8 @@ import { inputCss, IntegerInput } from '../../Input'
 import Row from '../../Row'
 import { Label } from './components'
 
+const tooltip = <Trans>Your transaction will revert if it has been pending for longer than this period of time.</Trans>
+
 const Input = styled(Row)`
   ${inputCss}
 `
@@ -20,12 +22,7 @@ export default function TransactionTtlInput() {
   const input = useRef<HTMLInputElement>(null)
   return (
     <Column gap={0.75}>
-      <Label
-        name={<Trans>Transaction deadline</Trans>}
-        tooltip={
-          <Trans>Your transaction will revert if it has been pending for longer than this period of time.</Trans>
-        }
-      />
+      <Label name={<Trans>Transaction deadline</Trans>} tooltip={tooltip} />
       <ThemedText.Body1>
         <Input justify="start" onClick={() => input.current?.focus()}>
           <IntegerInput

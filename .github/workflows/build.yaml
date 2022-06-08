@@ -1,4 +1,4 @@
-name: "Unit test"
+name: Build
 
 on:
   push:
@@ -9,11 +9,11 @@ on:
       - main
 
 jobs:
-  unit-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
       - uses: ./.github/actions/setup
 
-      - run: yarn test
+      - run: yarn build

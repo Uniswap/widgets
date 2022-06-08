@@ -16,6 +16,14 @@ import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
 
+const errorMessage = (
+  <Trans>
+    Try increasing your slippage tolerance.
+    <br />
+    NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
+  </Trans>
+)
+
 const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
@@ -97,13 +105,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
   return tx.receipt?.status === 0 ? (
     <ErrorDialog
-      header={
-        <Trans>
-          Try increasing your slippage tolerance.
-          <br />
-          NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
-        </Trans>
-      }
+      header={errorMessage}
       error={new Error('TODO(zzmp)')}
       action={<Trans>Dismiss</Trans>}
       onClick={onClose}

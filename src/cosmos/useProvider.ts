@@ -13,7 +13,7 @@ enum Wallet {
 }
 const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask(actions))
 const [walletConnect] = initializeConnector<WalletConnect>(
-  (actions) => new WalletConnect(actions, { rpc: INFURA_NETWORK_URLS as { [chainId: number]: string } })
+  (actions) => new WalletConnect(actions, { rpc: INFURA_NETWORK_URLS })
 )
 
 export default function useProvider() {
