@@ -6,6 +6,15 @@ import styled from "styled-components/macro"
 import Row from "components/Row"
 import Button from "components/Button"
 import { ThemedText } from "theme"
+import { getConnectors, Web3Connector } from "hooks/useConnectWallet/useProvider"
+import useActiveWeb3React, { ActiveWeb3Provider, Web3Context } from "hooks/useActiveWeb3React"
+import { getPriorityConnector, initializeConnector, useWeb3React, Web3ReactHooks } from '@web3-react/core'
+import { MetaMask } from '@web3-react/metamask'
+import { Connector } from '@web3-react/types'
+import { WalletConnect } from "@web3-react/walletconnect"
+import useJsonRpcEndpoint from "cosmos/useJsonRpcEndpoint"
+
+const TEMP_WALLET_LOGO_URL = "https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png"
 
 const Content = styled(Column)``
 const Heading = styled(Column)``
@@ -88,38 +97,66 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   )
 }
 
-function MainWalletConnectionOptions() {
+
+function MainWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
+  const [walletConnect, wcHooks] = connector
+  const connectors = getConnectors()
+  const isActive = wcHooks.useIsActive()
+  const useWalletConnect = useCallback(() => {
+    connectors.forEach(([wallet, _]) => wallet.deactivate())
+    walletConnect.activate()
+  }, [walletConnect, isActive])
+
   return (
-    <Column gap={.75}>
-      <MainButton walletName="WalletConnect" logoSrc="https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png" onClick={() => console.log("open website")} />
-      <NoWalletButton />
-    </Column>
+    <MainButton 
+      walletName="WalletConnect" 
+      logoSrc={TEMP_WALLET_LOGO_URL} 
+      onClick={useWalletConnect} 
+    />
   )
 }
 
-function SecondaryWalletConnectionOptions() {
+function SecondaryWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
+  const [metaMask, mmHooks] = connector
+  const connectors = getConnectors()
+  const isActive = mmHooks.useIsActive()
+  const useMetaMask = useCallback(() => {
+    console.log("trying to connect metamask")
+    if (!isActive) {
+      console.log("mm is inactive, activating now")
+      connectors.forEach(([wallet, _]) => wallet.deactivate())
+      metaMask.activate()  
+    } else {
+      console.log("metamask should be already be active")
+    }
+  }, [metaMask, isActive])
+
   return (
-    <Column gap={.75} justify-content="flex-start">
-      <SmallButton walletName="Rainbow" logoSrc="https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png" onClick={() => console.log("open website")} />
-      <SmallButton walletName="MetaMask" logoSrc="https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png" onClick={() => console.log("open website")} />
-      <SmallButton walletName="Coinbase" logoSrc="https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png" onClick={() => console.log("open website")} />
-    </Column>
+    <Row gap={.75} justify-content="flex-start">
+      <SmallButton 
+        walletName="MetaMask" 
+        logoSrc={TEMP_WALLET_LOGO_URL} 
+        onClick={useMetaMask} 
+      />
+      <NoWalletButton />
+    </Row>
+
   )
 }
 
 
 
 export function ConnectWalletDialog() {
-  const [open, setOpen] = useState(false)
+  const [mmConnector, wcConnector] = getConnectors()
 
   return (
     <>
       <Header title={<Trans>Connect wallet</Trans>} />
       <Body flex align="stretch" padded gap={0.75} open={open}>
-        <Row>
-          <MainWalletConnectionOptions />
-          <SecondaryWalletConnectionOptions />
-        </Row>
+        <Column>
+          <MainWalletConnectionOptions connector={wcConnector} />
+          <SecondaryWalletConnectionOptions connector={mmConnector} />
+        </Column>
       </Body>
     </>
   )

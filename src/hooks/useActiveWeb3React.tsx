@@ -21,7 +21,7 @@ type Web3ContextType = {
 const [EMPTY_CONNECTOR, EMPTY_HOOKS] = initializeConnector<Connector>(() => EMPTY)
 const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
 const EMPTY_CONTEXT: Web3ContextType = { connector: EMPTY }
-const Web3Context = createContext(EMPTY_CONTEXT)
+export const Web3Context = createContext(EMPTY_CONTEXT)
 
 export default function useActiveWeb3React() {
   return useContext(Web3Context)
@@ -88,6 +88,12 @@ export function ActiveWeb3Provider({
       console.error('web3 error:', error)
     }
   }, [error])
+
+
+  useEffect(() => {
+    console.log("hmmm")
+  }, [active])
+
 
   return <Web3Context.Provider value={web3}>{children}</Web3Context.Provider>
 }

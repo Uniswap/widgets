@@ -49,7 +49,7 @@ function Fixture() {
 
   const jsonRpcEndpoint = useJsonRpcEndpoint()
   const connector = useProvider()
-
+  
   const tokenLists: Record<string, TokenInfo[]> = {
     Default: tokens,
     'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
@@ -71,7 +71,7 @@ function Fixture() {
       theme={theme}
       tokenList={tokenList}
       width={width}
-      onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      // onConnectWallet={() => console.log('integrator already provived a onConnectWallet')} // this handler is included as a test of functionality, but only logs
     />
   )
 }

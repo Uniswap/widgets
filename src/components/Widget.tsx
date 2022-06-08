@@ -1,9 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
+import { MetaMask } from '@web3-react/metamask'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionsUpdater } from 'hooks/transactions'
-import { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
+import useActiveWeb3React, { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
@@ -14,7 +15,7 @@ import { MulticallUpdater, store as multicallStore } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
-import useProvider from '../hooks/useConnectWallet/useProvider'
+import { getConnectors, useActiveProvider } from '../hooks/useConnectWallet/useProvider'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
@@ -94,10 +95,11 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
+  onConnectWallet?: () => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError, onConnectWallet } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -112,10 +114,19 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
+
+  // fixme
+  const newbieProvider = useActiveProvider()
+  const {connector} = useActiveWeb3React()
+  const [mm, wc] = getConnectors()
+  const [metamask, hooks] = mm
+  const active = hooks.useIsActive()
   const provider = useMemo(() => {
-    return props.provider
-    // return props.provider ?? useProvider()
-  }, [props.provider])
+    console.log("here", props.provider)
+    console.log("so we provide a profivder", newbieProvider)
+    // return props.provider
+    return onConnectWallet ? props.provider : newbieProvider
+  }, [props.provider, newbieProvider, connector, active])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

@@ -1,6 +1,6 @@
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
-import { Connector } from '@web3-react/types'
+import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { useCallback, useEffect, useState } from 'react'
 import type { Web3Provider } from '@ethersproject/providers'
