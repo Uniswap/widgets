@@ -145,7 +145,7 @@ export default function MaxSlippageSelect() {
               size={Math.max(maxSlippageInput.length, 4)}
               value={maxSlippageInput}
               onChange={(input) => processInput(input)}
-              placeholder={placeholder}
+              placeholder={'0.10'}
               ref={input}
               data-testid="input"
             />
