@@ -1,10 +1,10 @@
 import type { Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { getPriorityConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 export type Web3Connector = [Connector, Web3ReactHooks]
 
@@ -15,26 +15,53 @@ export function toWeb3Connector<T extends Connector>([connector, hooks]: [T, Web
   return [connector, hooks]
 }
 
-export function getConnectors() {
-  const { library } = useActiveWeb3React()
+export const metaMaskConnector = toWeb3Connector(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
 
-  const mmConnector = toWeb3Connector(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
-  const wcConnector = toWeb3Connector(
+export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProvider) {
+  // if (jsonRpcEndpoint) {
+  let rpcUrl: string
+  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+    rpcUrl = jsonRpcEndpoint.connection.url
+  } else {
+    rpcUrl = jsonRpcEndpoint || 'http://localhost:8545'
+  }
+
+  return toWeb3Connector(
     initializeConnector<WalletConnect>(
       (actions) =>
         new WalletConnect(
           actions,
           {
-            rpc: { 1: library?.connection.url || 'http://localhost:8545' },
+            rpc: { 1: rpcUrl }, //todo: wc only works on network chainid 1?
           },
           false
         )
     )
-  ) //todo: wc only works on network chainid 1?
-
-  return [mmConnector, wcConnector]
+  )
+  // }
+  // fixme: if jsonRPCendpoint not provided, WC cannot be initialized.
 }
+
+export const connectors = [metaMaskConnector, getWalletConnectConnector()]
 
 export function useActiveProvider(): Web3Provider | undefined {
-  return getPriorityConnector(...getConnectors()).usePriorityProvider() as Web3Provider
+  return getPriorityConnector(...connectors).usePriorityProvider() as Web3Provider
 }
+
+// TODO: if we disconnect metamask, there is no Network fallback. Implement Network fallback if we disconnect wallets
+
+// export const network = useMemo(() => {
+//   if (jsonRpcEndpoint) {
+//     let connector, hooks
+//     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+//       ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint))
+//     } else {
+//       ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint))
+//     }
+//     connector.activate()
+//     return { connector, hooks }
+//   }
+//   return EMPTY_STATE
+// }, [jsonRpcEndpoint])
+
+//  const { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network

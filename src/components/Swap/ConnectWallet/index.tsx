@@ -3,7 +3,8 @@ import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import { getConnectors, Web3Connector } from 'hooks/useConnectWallet/useProvider'
+import { Web3Context, Web3ContextType } from 'hooks/useActiveWeb3React'
+import { connectors, Web3Connector } from 'hooks/useConnectWallet/useProvider'
 import { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -92,21 +93,25 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
 
 function MainWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
   const [walletConnect, wcHooks] = connector
-  const connectors = getConnectors()
-  const isActive = wcHooks.useIsActive()
   const useWalletConnect = useCallback(() => {
     connectors.forEach(([wallet, _]) => wallet.deactivate())
     walletConnect.activate()
-  }, [walletConnect, isActive])
+  }, [walletConnect])
 
   return <MainButton walletName="WalletConnect" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useWalletConnect} />
 }
 
-function SecondaryWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
+function SecondaryWalletConnectionOptions({
+  connector,
+  context,
+}: {
+  connector: Web3Connector
+  context: Web3ContextType
+}) {
   const [metaMask, mmHooks] = connector
-  const connectors = getConnectors()
   const isActive = mmHooks.useIsActive()
   const useMetaMask = useCallback(() => {
+    // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
     console.log('trying to connect metamask')
     if (!isActive) {
       console.log('mm is inactive, activating now')
@@ -115,7 +120,15 @@ function SecondaryWalletConnectionOptions({ connector }: { connector: Web3Connec
     } else {
       console.log('metamask should be already be active')
     }
-  }, [metaMask, isActive])
+  }, [isActive, metaMask])
+
+  context.accounts = mmHooks.useAccounts()
+  context.account = mmHooks.useAccount()
+  context.activating = mmHooks.useIsActivating()
+  context.active = mmHooks.useIsActive()
+  context.chainId = mmHooks.useChainId()
+  context.error = mmHooks.useError()
+  context.library = mmHooks.useProvider()
 
   return (
     <Row gap={0.75} justify-content="flex-start">
@@ -126,17 +139,21 @@ function SecondaryWalletConnectionOptions({ connector }: { connector: Web3Connec
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnector, wcConnector] = getConnectors()
+  const [mmConnector, wcConnector] = connectors
 
   return (
-    <>
-      <Header title={<Trans>Connect wallet</Trans>} />
-      <Body flex align="stretch" padded gap={0.75} open={open}>
-        <Column>
-          <MainWalletConnectionOptions connector={wcConnector} />
-          <SecondaryWalletConnectionOptions connector={mmConnector} />
-        </Column>
-      </Body>
-    </>
+    <Web3Context.Consumer>
+      {(context) => (
+        <>
+          <Header title={<Trans>Connect wallet</Trans>} />
+          <Body flex align="stretch" padded gap={0.75} open={true}>
+            <Column>
+              <MainWalletConnectionOptions connector={wcConnector} />
+              <SecondaryWalletConnectionOptions connector={mmConnector} context={context} />
+            </Column>
+          </Body>
+        </>
+      )}
+    </Web3Context.Consumer>
   )
 }

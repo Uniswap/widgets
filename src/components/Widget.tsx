@@ -3,7 +3,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionsUpdater } from 'hooks/transactions'
-import useActiveWeb3React, { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
+import { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
@@ -15,7 +15,7 @@ import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
 
-import { getConnectors, useActiveProvider } from '../hooks/useConnectWallet/useProvider'
+import { getWalletConnectConnector, metaMaskConnector } from '../hooks/useConnectWallet/useProvider'
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 
@@ -115,17 +115,22 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   }, [props.locale])
 
   // fixme
-  const newbieProvider = useActiveProvider()
-  const { connector } = useActiveWeb3React()
-  const [mm, wc] = getConnectors()
-  const [metamask, hooks] = mm
-  const active = hooks.useIsActive()
+  const [metamask, mmHooks] = metaMaskConnector
+  const [walletConnect, wcHooks] = getWalletConnectConnector(jsonRpcEndpoint)
+  const mmIsActive = mmHooks.useIsActive()
+  const wcIsActive = wcHooks?.useIsActive()
   const provider = useMemo(() => {
-    console.log('here', props.provider)
-    console.log('so we provide a profivder', newbieProvider)
-    // return props.provider
-    return onConnectWallet ? props.provider : newbieProvider
-  }, [props.provider, newbieProvider, connector, active])
+    if (onConnectWallet) {
+      return props.provider
+    } else {
+      if (mmIsActive) {
+        return metamask.provider
+      } else if (wcIsActive) {
+        return walletConnect?.provider
+      }
+    }
+    return null
+  }, [onConnectWallet, props.provider, mmIsActive, wcIsActive, metamask.provider, walletConnect?.provider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

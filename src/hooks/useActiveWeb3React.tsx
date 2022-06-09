@@ -7,7 +7,7 @@ import { Url } from '@web3-react/url'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
-type Web3ContextType = {
+export type Web3ContextType = {
   connector: Connector
   library?: (JsonRpcProvider & { provider?: ExternalProvider }) | Web3Provider
   chainId?: ReturnType<Web3ReactHooks['useChainId']>
@@ -88,10 +88,6 @@ export function ActiveWeb3Provider({
       console.error('web3 error:', error)
     }
   }, [error])
-
-  useEffect(() => {
-    console.log('hmmm')
-  }, [active])
 
   return <Web3Context.Provider value={web3}>{children}</Web3Context.Provider>
 }
