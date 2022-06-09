@@ -1,25 +1,19 @@
-import { Trans } from "@lingui/macro"
-import { useCallback, useState } from "react"
+import { Trans } from '@lingui/macro'
+import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
-import styled from "styled-components/macro"
-import Row from "components/Row"
-import Button from "components/Button"
-import { ThemedText } from "theme"
-import { getConnectors, Web3Connector } from "hooks/useConnectWallet/useProvider"
-import useActiveWeb3React, { ActiveWeb3Provider, Web3Context } from "hooks/useActiveWeb3React"
-import { getPriorityConnector, initializeConnector, useWeb3React, Web3ReactHooks } from '@web3-react/core'
-import { MetaMask } from '@web3-react/metamask'
-import { Connector } from '@web3-react/types'
-import { WalletConnect } from "@web3-react/walletconnect"
-import useJsonRpcEndpoint from "cosmos/useJsonRpcEndpoint"
+import Row from 'components/Row'
+import { getConnectors, Web3Connector } from 'hooks/useConnectWallet/useProvider'
+import { useCallback } from 'react'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
-const TEMP_WALLET_LOGO_URL = "https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png"
+const TEMP_WALLET_LOGO_URL = 'https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png'
 
 const Content = styled(Column)``
 const Heading = styled(Column)``
 const Footing = styled(Column)``
-const Body = styled(Column) <{ open: boolean }>`
+const Body = styled(Column)<{ open: boolean }>`
   height: calc(100% - 2.5em);
 
   ${Content}, ${Heading} {
@@ -37,24 +31,24 @@ const Body = styled(Column) <{ open: boolean }>`
 `
 
 const StyledMainButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   background-color: ${({ theme }) => theme.container};
-  width: 204px;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 204px;
+  width: 204px;
 `
 
 const StyledNoWalletButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   background-color: ${({ theme }) => theme.container};
-  width: 204px;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 60px;
+  width: 204px;
 `
 
 const StyledSmallButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   background-color: ${({ theme }) => theme.container};
-  width: 112px;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 80px;
+  width: 112px;
 `
 
 interface ButtonProps {
@@ -77,14 +71,13 @@ function MainButton({ walletName, logoSrc, caption, onClick }: ButtonProps) {
 
 function NoWalletButton() {
   return (
-    <StyledNoWalletButton onClick={() => console.log("open website")}>
+    <StyledNoWalletButton onClick={() => console.log('open website')}>
       <ThemedText.Subhead1>
         <Trans>I don't have a wallet</Trans>
       </ThemedText.Subhead1>
     </StyledNoWalletButton>
   )
 }
-
 
 function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
@@ -97,7 +90,6 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   )
 }
 
-
 function MainWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
   const [walletConnect, wcHooks] = connector
   const connectors = getConnectors()
@@ -107,13 +99,7 @@ function MainWalletConnectionOptions({ connector }: { connector: Web3Connector }
     walletConnect.activate()
   }, [walletConnect, isActive])
 
-  return (
-    <MainButton 
-      walletName="WalletConnect" 
-      logoSrc={TEMP_WALLET_LOGO_URL} 
-      onClick={useWalletConnect} 
-    />
-  )
+  return <MainButton walletName="WalletConnect" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useWalletConnect} />
 }
 
 function SecondaryWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
@@ -121,30 +107,23 @@ function SecondaryWalletConnectionOptions({ connector }: { connector: Web3Connec
   const connectors = getConnectors()
   const isActive = mmHooks.useIsActive()
   const useMetaMask = useCallback(() => {
-    console.log("trying to connect metamask")
+    console.log('trying to connect metamask')
     if (!isActive) {
-      console.log("mm is inactive, activating now")
+      console.log('mm is inactive, activating now')
       connectors.forEach(([wallet, _]) => wallet.deactivate())
-      metaMask.activate()  
+      metaMask.activate()
     } else {
-      console.log("metamask should be already be active")
+      console.log('metamask should be already be active')
     }
   }, [metaMask, isActive])
 
   return (
-    <Row gap={.75} justify-content="flex-start">
-      <SmallButton 
-        walletName="MetaMask" 
-        logoSrc={TEMP_WALLET_LOGO_URL} 
-        onClick={useMetaMask} 
-      />
+    <Row gap={0.75} justify-content="flex-start">
+      <SmallButton walletName="MetaMask" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useMetaMask} />
       <NoWalletButton />
     </Row>
-
   )
 }
-
-
 
 export function ConnectWalletDialog() {
   const [mmConnector, wcConnector] = getConnectors()

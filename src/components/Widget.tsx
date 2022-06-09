@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
-import { MetaMask } from '@web3-react/metamask'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionsUpdater } from 'hooks/transactions'
@@ -15,8 +14,8 @@ import { MulticallUpdater, store as multicallStore } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
-import { getConnectors, useActiveProvider } from '../hooks/useConnectWallet/useProvider'
 
+import { getConnectors, useActiveProvider } from '../hooks/useConnectWallet/useProvider'
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 
@@ -117,13 +116,13 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
 
   // fixme
   const newbieProvider = useActiveProvider()
-  const {connector} = useActiveWeb3React()
+  const { connector } = useActiveWeb3React()
   const [mm, wc] = getConnectors()
   const [metamask, hooks] = mm
   const active = hooks.useIsActive()
   const provider = useMemo(() => {
-    console.log("here", props.provider)
-    console.log("so we provide a profivder", newbieProvider)
+    console.log('here', props.provider)
+    console.log('so we provide a profivder', newbieProvider)
     // return props.provider
     return onConnectWallet ? props.provider : newbieProvider
   }, [props.provider, newbieProvider, connector, active])

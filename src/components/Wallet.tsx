@@ -21,7 +21,7 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
 
 export default function Wallet({ onClick }: WalletProps) {
   const [open, setOpen] = useState(false)
-  
+
   // onClick = provided callback from integrator
   // todo: rename onClick to something that makes more distinction
   // if onClick == null; open our wallet connect modal flow

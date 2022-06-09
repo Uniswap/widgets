@@ -89,11 +89,9 @@ export function ActiveWeb3Provider({
     }
   }, [error])
 
-
   useEffect(() => {
-    console.log("hmmm")
+    console.log('hmmm')
   }, [active])
-
 
   return <Web3Context.Provider value={web3}>{children}</Web3Context.Provider>
 }

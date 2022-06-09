@@ -49,7 +49,7 @@ function Fixture() {
 
   const jsonRpcEndpoint = useJsonRpcEndpoint()
   const connector = useProvider()
-  
+
   const tokenLists: Record<string, TokenInfo[]> = {
     Default: tokens,
     'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
