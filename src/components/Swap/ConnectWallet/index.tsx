@@ -34,22 +34,18 @@ const Body = styled(Column)<{ open: boolean }>`
 const StyledMainButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 204px;
-  width: 204px;
 `
 
 const StyledNoWalletButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 60px;
-  width: 204px;
+  height: 90px;
 `
 
 const StyledSmallButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 80px;
-  width: 112px;
+  height: 90px;
 `
 
 interface ButtonProps {
@@ -144,7 +140,7 @@ function SecondaryWalletConnectionOptions({
   }
 
   return (
-    <Row gap={0.75} justify-content="flex-start">
+    <Row gap={0.75} grow={true}>
       <SmallButton walletName="MetaMask" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useMetaMask} />
       <NoWalletButton />
     </Row>
@@ -159,8 +155,8 @@ export function ConnectWalletDialog() {
       {(context) => (
         <>
           <Header title={<Trans>Connect wallet</Trans>} />
-          <Body flex align="stretch" padded gap={0.75} open={true}>
-            <Column>
+          <Body flex align="stretch" padded open={true}>
+            <Column gap={0.75} align="stretch" grow={true}>
               <MainWalletConnectionOptions connector={wcConnector} />
               <SecondaryWalletConnectionOptions connector={mmConnector} context={context} />
             </Column>
