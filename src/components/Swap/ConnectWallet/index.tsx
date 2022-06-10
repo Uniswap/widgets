@@ -66,8 +66,9 @@ function MainButton({ walletName, logoSrc, caption, onClick }: ButtonProps) {
 }
 
 function NoWalletButton() {
+  const helpCenterUrl = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
   return (
-    <StyledNoWalletButton onClick={() => console.log('open website')}>
+    <StyledNoWalletButton onClick={() => window.open(helpCenterUrl)}>
       <ThemedText.Subhead1>
         <Trans>I don't have a wallet</Trans>
       </ThemedText.Subhead1>
