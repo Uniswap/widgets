@@ -87,12 +87,35 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   )
 }
 
-function MainWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
-  const [walletConnect, _] = connector
+function MainWalletConnectionOptions({ connector, context }: { connector: Web3Connector; context: Web3ContextType }) {
+  const [walletConnect, wcHooks] = connector
+  const wcIsActive = wcHooks.useIsActive()
   const useWalletConnect = useCallback(() => {
+    console.log("hello")
     connectors.forEach(([wallet, _]) => wallet.deactivate())
     walletConnect.activate()
   }, [walletConnect])
+
+  const accounts = wcHooks.useAccounts()
+  const account = wcHooks.useAccount()
+  const activating = wcHooks.useIsActivating()
+  const active = wcHooks.useIsActive()
+  const chainId = wcHooks.useChainId()
+  const error = wcHooks.useError()
+  const library = wcHooks.useProvider()
+
+  if (wcIsActive) {
+    console.log('need to set context to wc')
+    context.accounts = accounts
+    context.account = account
+    context.activating = activating
+    context.active = active
+    context.chainId = chainId
+    context.error = error
+    context.library = library
+  } else {
+    console.log('need to set context to network')
+  }
 
   return <MainButton walletName="WalletConnect" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useWalletConnect} />
 }
@@ -150,6 +173,8 @@ function SecondaryWalletConnectionOptions({
 export function ConnectWalletDialog() {
   const [mmConnector, wcConnector] = connectors
 
+  // what happens when I try to connect 2 diff wallets at once
+
   return (
     <Web3Context.Consumer>
       {(context) => (
@@ -157,7 +182,7 @@ export function ConnectWalletDialog() {
           <Header title={<Trans>Connect wallet</Trans>} />
           <Body flex align="stretch" padded open={true}>
             <Column gap={0.75} align="stretch" grow={true}>
-              <MainWalletConnectionOptions connector={wcConnector} />
+              <MainWalletConnectionOptions connector={wcConnector} context={context} />
               <SecondaryWalletConnectionOptions connector={mmConnector} context={context} />
             </Column>
           </Body>
