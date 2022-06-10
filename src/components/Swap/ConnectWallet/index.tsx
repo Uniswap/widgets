@@ -4,8 +4,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import { Web3Context, Web3ContextType } from 'hooks/useActiveWeb3React'
-import { connectors, Web3Connector } from 'hooks/useConnectWallet/useProvider'
-import { useCallback } from 'react'
+import { connectors, useConnect, Web3Connector } from 'hooks/useConnectWallet/useProvider'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -88,35 +87,7 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
 }
 
 function MainWalletConnectionOptions({ connector, context }: { connector: Web3Connector; context: Web3ContextType }) {
-  const [walletConnect, wcHooks] = connector
-  const wcIsActive = wcHooks.useIsActive()
-  const useWalletConnect = useCallback(() => {
-    console.log("hello")
-    connectors.forEach(([wallet, _]) => wallet.deactivate())
-    walletConnect.activate()
-  }, [walletConnect])
-
-  const accounts = wcHooks.useAccounts()
-  const account = wcHooks.useAccount()
-  const activating = wcHooks.useIsActivating()
-  const active = wcHooks.useIsActive()
-  const chainId = wcHooks.useChainId()
-  const error = wcHooks.useError()
-  const library = wcHooks.useProvider()
-
-  if (wcIsActive) {
-    console.log('need to set context to wc')
-    context.accounts = accounts
-    context.account = account
-    context.activating = activating
-    context.active = active
-    context.chainId = chainId
-    context.error = error
-    context.library = library
-  } else {
-    console.log('need to set context to network')
-  }
-
+  const useWalletConnect = useConnect(connector, context)
   return <MainButton walletName="WalletConnect" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useWalletConnect} />
 }
 
@@ -127,41 +98,7 @@ function SecondaryWalletConnectionOptions({
   connector: Web3Connector
   context: Web3ContextType
 }) {
-  const [metaMask, mmHooks] = connector
-  const mmIsActive = mmHooks.useIsActive()
-  const useMetaMask = useCallback(() => {
-    // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
-    console.log('trying to connect metamask')
-    if (!mmIsActive) {
-      console.log('mm is inactive, activating now')
-      connectors.forEach(([wallet, _]) => wallet.deactivate())
-      metaMask.activate()
-    } else {
-      console.log('metamask should be already be active')
-    }
-  }, [mmIsActive, metaMask])
-
-  const accounts = mmHooks.useAccounts()
-  const account = mmHooks.useAccount()
-  const activating = mmHooks.useIsActivating()
-  const active = mmHooks.useIsActive()
-  const chainId = mmHooks.useChainId()
-  const error = mmHooks.useError()
-  const library = mmHooks.useProvider()
-
-  if (mmIsActive) {
-    console.log('need to set context to metamask')
-    context.accounts = accounts
-    context.account = account
-    context.activating = activating
-    context.active = active
-    context.chainId = chainId
-    context.error = error
-    context.library = library
-  } else {
-    console.log('need to set context to network')
-  }
-
+  const useMetaMask = useConnect(connector, context)
   return (
     <Row gap={0.75} grow={true}>
       <SmallButton walletName="MetaMask" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useMetaMask} />
@@ -172,9 +109,7 @@ function SecondaryWalletConnectionOptions({
 
 export function ConnectWalletDialog() {
   const [mmConnector, wcConnector] = connectors
-
-  // what happens when I try to connect 2 diff wallets at once
-
+  // what happens when I try to connect 2 diff wallets at once?
   return (
     <Web3Context.Consumer>
       {(context) => (

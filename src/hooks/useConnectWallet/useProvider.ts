@@ -5,6 +5,8 @@ import { getPriorityConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
+import { Web3ContextType } from 'hooks/useActiveWeb3React'
+import { useCallback } from 'react'
 
 export type Web3Connector = [Connector, Web3ReactHooks]
 
@@ -46,4 +48,43 @@ export const connectors = [metaMaskConnector, getWalletConnectConnector()]
 
 export function useActiveProvider(): Web3Provider | undefined {
   return getPriorityConnector(...connectors).usePriorityProvider() as Web3Provider
+}
+
+export function useConnect(connector: Web3Connector, context: Web3ContextType) {
+  const [wallet, hooks] = connector
+  const isActive = hooks.useIsActive()
+  const useWallet = useCallback(() => {
+    // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
+    console.log('trying to connect wallet')
+    if (!isActive) {
+      console.log('wallet is inactive, activating now')
+      connectors.forEach(([wallet, _]) => wallet.deactivate())
+      wallet.activate()
+    } else {
+      console.log('wallet should be already be active')
+    }
+  }, [isActive, wallet])
+
+  const accounts = hooks.useAccounts()
+  const account = hooks.useAccount()
+  const activating = hooks.useIsActivating()
+  const active = hooks.useIsActive()
+  const chainId = hooks.useChainId()
+  const error = hooks.useError()
+  const library = hooks.useProvider()
+
+  if (isActive) {
+    console.log('need to set context to wallet')
+    context.accounts = accounts
+    context.account = account
+    context.activating = activating
+    context.active = active
+    context.chainId = chainId
+    context.error = error
+    context.library = library
+  } else {
+    console.log('need to set context to network')
+  }
+
+  return useWallet
 }
