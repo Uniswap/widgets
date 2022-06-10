@@ -47,21 +47,3 @@ export const connectors = [metaMaskConnector, getWalletConnectConnector()]
 export function useActiveProvider(): Web3Provider | undefined {
   return getPriorityConnector(...connectors).usePriorityProvider() as Web3Provider
 }
-
-// TODO: if we disconnect metamask, there is no Network fallback. Implement Network fallback if we disconnect wallets
-
-// export const network = useMemo(() => {
-//   if (jsonRpcEndpoint) {
-//     let connector, hooks
-//     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-//       ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint))
-//     } else {
-//       ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint))
-//     }
-//     connector.activate()
-//     return { connector, hooks }
-//   }
-//   return EMPTY_STATE
-// }, [jsonRpcEndpoint])
-
-//  const { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network

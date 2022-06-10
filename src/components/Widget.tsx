@@ -3,7 +3,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionsUpdater } from 'hooks/transactions'
-import { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
+import { ActiveWeb3Provider, getNetwork } from 'hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
@@ -117,6 +117,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   // fixme
   const [metamask, mmHooks] = metaMaskConnector
   const [walletConnect, wcHooks] = getWalletConnectConnector(jsonRpcEndpoint)
+  const { connector: network } = getNetwork(jsonRpcEndpoint)
   const mmIsActive = mmHooks.useIsActive()
   const wcIsActive = wcHooks?.useIsActive()
   const provider = useMemo(() => {
@@ -129,8 +130,16 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
         return walletConnect?.provider
       }
     }
-    return null
-  }, [onConnectWallet, props.provider, mmIsActive, wcIsActive, metamask.provider, walletConnect?.provider])
+    return network?.provider
+  }, [
+    onConnectWallet,
+    network?.provider,
+    props.provider,
+    mmIsActive,
+    wcIsActive,
+    metamask.provider,
+    walletConnect?.provider,
+  ])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

@@ -92,7 +92,7 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
 }
 
 function MainWalletConnectionOptions({ connector }: { connector: Web3Connector }) {
-  const [walletConnect, wcHooks] = connector
+  const [walletConnect, _] = connector
   const useWalletConnect = useCallback(() => {
     connectors.forEach(([wallet, _]) => wallet.deactivate())
     walletConnect.activate()
@@ -109,26 +109,39 @@ function SecondaryWalletConnectionOptions({
   context: Web3ContextType
 }) {
   const [metaMask, mmHooks] = connector
-  const isActive = mmHooks.useIsActive()
+  const mmIsActive = mmHooks.useIsActive()
   const useMetaMask = useCallback(() => {
     // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
     console.log('trying to connect metamask')
-    if (!isActive) {
+    if (!mmIsActive) {
       console.log('mm is inactive, activating now')
       connectors.forEach(([wallet, _]) => wallet.deactivate())
       metaMask.activate()
     } else {
       console.log('metamask should be already be active')
     }
-  }, [isActive, metaMask])
+  }, [mmIsActive, metaMask])
 
-  context.accounts = mmHooks.useAccounts()
-  context.account = mmHooks.useAccount()
-  context.activating = mmHooks.useIsActivating()
-  context.active = mmHooks.useIsActive()
-  context.chainId = mmHooks.useChainId()
-  context.error = mmHooks.useError()
-  context.library = mmHooks.useProvider()
+  const accounts = mmHooks.useAccounts()
+  const account = mmHooks.useAccount()
+  const activating = mmHooks.useIsActivating()
+  const active = mmHooks.useIsActive()
+  const chainId = mmHooks.useChainId()
+  const error = mmHooks.useError()
+  const library = mmHooks.useProvider()
+
+  if (mmIsActive) {
+    console.log('need to set context to metamask')
+    context.accounts = accounts
+    context.account = account
+    context.activating = activating
+    context.active = active
+    context.chainId = chainId
+    context.error = error
+    context.library = library
+  } else {
+    console.log('need to set context to network')
+  }
 
   return (
     <Row gap={0.75} justify-content="flex-start">

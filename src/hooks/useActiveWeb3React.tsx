@@ -19,7 +19,7 @@ export type Web3ContextType = {
 }
 
 const [EMPTY_CONNECTOR, EMPTY_HOOKS] = initializeConnector<Connector>(() => EMPTY)
-const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
+export const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
 const EMPTY_CONTEXT: Web3ContextType = { connector: EMPTY }
 export const Web3Context = createContext(EMPTY_CONTEXT)
 
@@ -32,23 +32,27 @@ interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
 }
 
+export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
+  if (jsonRpcEndpoint) {
+    let connector, hooks
+    if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+      ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint))
+    } else {
+      ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint))
+    }
+    connector.activate()
+    return { connector, hooks }
+  }
+  return EMPTY_STATE
+}
+
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const network = useMemo(() => {
-    if (jsonRpcEndpoint) {
-      let connector, hooks
-      if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-        ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint))
-      } else {
-        ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint))
-      }
-      connector.activate()
-      return { connector, hooks }
-    }
-    return EMPTY_STATE
+    return getNetwork(jsonRpcEndpoint)
   }, [jsonRpcEndpoint])
 
   const wallet = useMemo(() => {
