@@ -11,7 +11,8 @@ import { ConnectWalletDialog } from './Swap/ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
-  onClick?: () => void
+  existsProvider: boolean
+  onClickConnectWallet?: () => void
 }
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
@@ -19,18 +20,21 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function Wallet({ onClick }: WalletProps) {
+export default function Wallet({ disabled, existsProvider, onClickConnectWallet }: WalletProps) {
   const [open, setOpen] = useState(false)
 
-  // onClick = provided callback from integrator
-  // todo: rename onClick to something that makes more distinction
-  // if onClick == null; open our wallet connect modal flow
+  // onClickConnectWallet = provided callback from integrator
+  // if onClickConnectWallet == null; open our wallet connect modal flow
   const onOpenConnectWalletModal = useCallback(() => setOpen(true), [])
   const onClose = useCallback(() => setOpen(false), [])
 
   return (
     <>
-      <WalletButton onClick={onClick || onOpenConnectWalletModal} color="secondary" data-testid="wallet">
+      <WalletButton
+        onClick={existsProvider ? onClickConnectWallet : onOpenConnectWalletModal}
+        color="secondary"
+        data-testid="wallet"
+      >
         <ThemedText.Caption>
           <Row gap={0.5}>
             <WalletIcon />

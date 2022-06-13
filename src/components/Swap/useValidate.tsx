@@ -82,4 +82,12 @@ export default function useValidate(props: ValidatorProps) {
       )
     }
   }, [defaultInputTokenAddress, defaultOutputTokenAddress])
+
+  // const { provider, onClickConnectWallet } = props
+  // useEffect(() => {
+  //   if (!provider && onClickConnectWallet) {
+  //     throw new IntegrationError('onClickConnectWallet must be empty when provider is not given.')
+  //   }
+  // }, [provider, onClickConnectWallet])
+
 }

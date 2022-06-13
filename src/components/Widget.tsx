@@ -3,7 +3,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionsUpdater } from 'hooks/transactions'
-import { ActiveWeb3Provider, getNetwork } from 'hooks/useActiveWeb3React'
+import { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
@@ -94,11 +94,10 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-  onConnectWallet?: () => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError, onConnectWallet } = props
+  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -116,13 +115,8 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
 
   const activeProvider = useActiveProvider()
   const provider = useMemo(() => {
-    if (onConnectWallet) {
-      // Integrator provided provider
-      return props.provider
-    } else {
-      return activeProvider
-    }
-  }, [onConnectWallet, props.provider, activeProvider])
+    return props.provider ?? activeProvider
+  }, [props.provider, activeProvider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

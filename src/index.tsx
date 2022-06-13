@@ -12,7 +12,6 @@ export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefau
 export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 
-// fixme: rename onConnectWallet prop to `onIntegratorConnectWallet` ?
 export type SwapWidgetProps = SwapProps & WidgetProps
 
 export function SwapWidget(props: SwapWidgetProps) {

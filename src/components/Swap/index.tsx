@@ -1,4 +1,6 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { Provider as Eip1193Provider } from '@web3-react/types'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -41,8 +43,11 @@ function getTransactionFromMap(
   return
 }
 
+// todo: refactor
+// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  onConnectWallet?: () => void
+  provider?: Eip1193Provider | JsonRpcProvider
+  onClickConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -62,13 +67,15 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
+  const existsProvider = Boolean(props.provider)
+
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
         {Boolean(account) ? (
           <ConnectedWalletChip disabled={isDisabled} account={account} />
         ) : (
-          <Wallet onClick={props.onConnectWallet} />
+          <Wallet existsProvider={existsProvider} onClickConnectWallet={props.onClickConnectWallet} />
         )}
         <Settings disabled={isDisabled} />
       </Header>
