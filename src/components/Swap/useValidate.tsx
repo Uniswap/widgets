@@ -89,5 +89,4 @@ export default function useValidate(props: ValidatorProps) {
   //     throw new IntegrationError('onClickConnectWallet must be empty when provider is not given.')
   //   }
   // }, [provider, onClickConnectWallet])
-
 }
