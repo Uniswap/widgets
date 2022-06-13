@@ -53,18 +53,6 @@ export function useActiveProvider(): Web3Provider | undefined {
 export function useConnect(connector: Web3Connector, context: Web3ContextType) {
   const [wallet, hooks] = connector
   const isActive = hooks.useIsActive()
-  const useWallet = useCallback(() => {
-    // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
-    console.log('trying to connect wallet')
-    if (!isActive) {
-      console.log('wallet is inactive, activating now')
-      connectors.forEach(([wallet, _]) => wallet.deactivate())
-      wallet.activate()
-    } else {
-      console.log('wallet should be already be active')
-    }
-  }, [isActive, wallet])
-
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
   const activating = hooks.useIsActivating()
@@ -73,18 +61,23 @@ export function useConnect(connector: Web3Connector, context: Web3ContextType) {
   const error = hooks.useError()
   const library = hooks.useProvider()
 
-  if (isActive) {
-    console.log('need to set context to wallet')
-    context.accounts = accounts
-    context.account = account
-    context.activating = activating
-    context.active = active
-    context.chainId = chainId
-    context.error = error
-    context.library = library
-  } else {
-    console.log('need to set context to network')
-  }
+  const useWallet = useCallback(() => {
+    // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
+    if (!isActive) {
+      console.log('wallet is inactive, activating now')
+      connectors.forEach(([wallet, _]) => wallet.deactivate())
+      wallet.activate()
+    } else {
+      console.log('wallet should be already be active')
+      context.accounts = accounts
+      context.account = account
+      context.activating = activating
+      context.active = active
+      context.chainId = chainId
+      context.error = error
+      context.library = library
+    }
+  }, [account, accounts, activating, active, chainId, context, error, isActive, library, wallet])
 
   return useWallet
 }
