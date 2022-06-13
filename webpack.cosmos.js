@@ -7,6 +7,7 @@ const rollup = require('rollup')
 const { config: rollupConfig, assets: assetConfigs } = require('./rollup.config.js')
 const path = require('path')
 
+process.env.NODE_ENV = 'cosmos'
 require('dotenv').config()
 
 class RollupPlugin extends EventEmitter {
