@@ -65,7 +65,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        {!active || Boolean(account) ? (
+        {Boolean(account) ? (
           <ConnectedWalletChip disabled={isDisabled} account={account} />
         ) : (
           <Wallet onClick={props.onConnectWallet} />

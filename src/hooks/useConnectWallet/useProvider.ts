@@ -5,7 +5,8 @@ import { getPriorityConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { Web3ContextType } from 'hooks/useActiveWeb3React'
+import { Buffer } from 'buffer'
+import { getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
 import { useCallback } from 'react'
 
 export type Web3Connector = [Connector, Web3ReactHooks]
@@ -20,12 +21,16 @@ export function toWeb3Connector<T extends Connector>([connector, hooks]: [T, Web
 export const metaMaskConnector = toWeb3Connector(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
 
 export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProvider) {
-  // if (jsonRpcEndpoint) {
+  // WalletConnect relies on Buffer, so it must be polyfilled.
+  if (!('Buffer' in window)) {
+    window.Buffer = Buffer
+  }
+
   let rpcUrl: string
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     rpcUrl = jsonRpcEndpoint.connection.url
   } else {
-    rpcUrl = jsonRpcEndpoint || 'http://localhost:8545'
+    rpcUrl = jsonRpcEndpoint || 'https://cloudflare-eth.com' // fixme: refactor to fallback json Rpc endpoint
   }
 
   return toWeb3Connector(
@@ -40,14 +45,14 @@ export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProv
         )
     )
   )
-  // }
-  // fixme: if jsonRPCendpoint not provided, WC cannot be initialized.
 }
 
 export const connectors = [metaMaskConnector, getWalletConnectConnector()]
 
 export function useActiveProvider(): Web3Provider | undefined {
-  return getPriorityConnector(...connectors).usePriorityProvider() as Web3Provider
+  const activeWalletProvider = getPriorityConnector(...connectors).usePriorityProvider() as Web3Provider
+  const { connector: network } = getNetwork() // Return network-only provider if no wallet is connected
+  return activeWalletProvider ?? network.provider
 }
 
 export function useConnect(connector: Web3Connector, context: Web3ContextType) {

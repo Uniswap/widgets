@@ -15,7 +15,7 @@ import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
 
-import { getWalletConnectConnector, metaMaskConnector } from '../hooks/useConnectWallet/useProvider'
+import { useActiveProvider } from '../hooks/useConnectWallet/useProvider'
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 
@@ -114,32 +114,15 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
 
-  // fixme
-  const [metamask, mmHooks] = metaMaskConnector
-  const [walletConnect, wcHooks] = getWalletConnectConnector(jsonRpcEndpoint)
-  const { connector: network } = getNetwork(jsonRpcEndpoint)
-  const mmIsActive = mmHooks.useIsActive()
-  const wcIsActive = wcHooks?.useIsActive()
+  const activeProvider = useActiveProvider()
   const provider = useMemo(() => {
     if (onConnectWallet) {
+      // Integrator provided provider
       return props.provider
     } else {
-      if (mmIsActive) {
-        return metamask.provider
-      } else if (wcIsActive) {
-        return walletConnect?.provider
-      }
+      return activeProvider
     }
-    return network?.provider
-  }, [
-    onConnectWallet,
-    network?.provider,
-    props.provider,
-    mmIsActive,
-    wcIsActive,
-    metamask.provider,
-    walletConnect?.provider,
-  ])
+  }, [onConnectWallet, props.provider, activeProvider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
