@@ -9,7 +9,7 @@ const AccountButton = styled(TextButton)<{ hidden?: boolean }>`
 `
 
 export default function ConnectedWalletChip({ disabled, account }: { disabled?: boolean; account?: string }) {
-  // todo: AccountDialog & AccountAvatar UI does not yet exist
+  // TODO(kristiehuang): AccountDialog & AccountAvatar UI does not yet exist
   // const [open, setOpen] = useState(false)
 
   return (

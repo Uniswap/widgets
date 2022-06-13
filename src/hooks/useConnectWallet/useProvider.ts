@@ -39,7 +39,7 @@ export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProv
         new WalletConnect(
           actions,
           {
-            rpc: { 1: rpcUrl }, // todo: WC only works on network chainid 1?
+            rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
           },
           false
         )
@@ -67,7 +67,7 @@ export function useConnect(connector: Web3Connector, context: Web3ContextType) {
   const library = hooks.useProvider()
 
   const useWallet = useCallback(() => {
-    // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
+    // TODO(kristiehuang): if user is already connected to the page, it should auto-connect.. why is isActive false on startup?
     if (!isActive) {
       console.log('wallet is inactive, activating now', wallet)
       connectors.forEach(([wallet, _]) => wallet.deactivate())

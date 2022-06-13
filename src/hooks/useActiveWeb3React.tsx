@@ -13,15 +13,15 @@ export type Web3ContextType = {
   chainId?: ReturnType<Web3ReactHooks['useChainId']>
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>
-  // FIXME: clarify- `active` currently describes both an active RPC network connection or active wallet connection
-  // We want active = true iff active wallet connection. Maybe set networkActive iff active network connection
+  // TODO(kristiehuang): clarify - `active` currently describes both an active RPC network connection or active wallet connection
+  // We want active = true iff active wallet connection. Maybe set new `networkActive` prop iff active network connection?
   active?: ReturnType<Web3ReactHooks['useIsActive']>
   activating?: ReturnType<Web3ReactHooks['useIsActivating']>
   error?: ReturnType<Web3ReactHooks['useError']>
 }
 
 const [EMPTY_CONNECTOR, EMPTY_HOOKS] = initializeConnector<Connector>(() => EMPTY)
-export const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
+const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
 const EMPTY_CONTEXT: Web3ContextType = { connector: EMPTY }
 export const Web3Context = createContext(EMPTY_CONTEXT)
 

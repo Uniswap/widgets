@@ -41,6 +41,8 @@ function getTransactionFromMap(
   return
 }
 
+// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
+// TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
   onConnectWallet?: () => void
 }
