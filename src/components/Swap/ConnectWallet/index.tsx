@@ -110,7 +110,8 @@ function SecondaryWalletConnectionOptions({
 
 export function ConnectWalletDialog() {
   const [mmConnector, wcConnector] = connectors
-  // what happens when I try to connect 2 diff wallets at once?
+  // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
+
   return (
     <Web3Context.Consumer>
       {(context) => (
