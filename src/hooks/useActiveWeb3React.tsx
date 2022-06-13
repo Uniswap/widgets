@@ -25,6 +25,8 @@ export const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
 const EMPTY_CONTEXT: Web3ContextType = { connector: EMPTY }
 export const Web3Context = createContext(EMPTY_CONTEXT)
 
+export const FALLBACK_JSON_RPC_URL = 'https://cloudflare-eth.com'
+
 export default function useActiveWeb3React() {
   return useContext(Web3Context)
 }
@@ -35,18 +37,16 @@ interface ActiveWeb3ProviderProps {
 }
 
 export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
-  if (jsonRpcEndpoint) {
-    let connector, hooks
-    if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-      ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint))
-    } else {
-      ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint))
-    }
-    connector.activate()
-    return { connector, hooks }
+  const jsonRpcUrl = jsonRpcEndpoint ?? FALLBACK_JSON_RPC_URL
+
+  let connector, hooks
+  if (JsonRpcProvider.isProvider(jsonRpcUrl)) {
+    ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcUrl))
+  } else {
+    ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcUrl))
   }
-  // todo: use fallback network rpc url
-  return EMPTY_STATE
+  connector.activate()
+  return { connector, hooks }
 }
 
 export function ActiveWeb3Provider({

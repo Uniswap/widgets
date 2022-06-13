@@ -6,7 +6,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import { getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
+import { FALLBACK_JSON_RPC_URL, getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
 import { useCallback } from 'react'
 
 export type Web3Connector = [Connector, Web3ReactHooks]
@@ -30,7 +30,7 @@ export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProv
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     rpcUrl = jsonRpcEndpoint.connection.url
   } else {
-    rpcUrl = jsonRpcEndpoint || 'https://cloudflare-eth.com' // fixme: refactor to fallback json Rpc endpoint
+    rpcUrl = jsonRpcEndpoint ?? FALLBACK_JSON_RPC_URL
   }
 
   return toWeb3Connector(
@@ -39,7 +39,7 @@ export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProv
         new WalletConnect(
           actions,
           {
-            rpc: { 1: rpcUrl }, //todo: wc only works on network chainid 1?
+            rpc: { 1: rpcUrl }, // todo: WC only works on network chainid 1?
           },
           false
         )
