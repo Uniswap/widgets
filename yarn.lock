@@ -2570,14 +2570,6 @@
     is-module "^1.0.0"
     resolve "^1.19.0"
 
-"@rollup/plugin-replace@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.npmjs.org/@rollup/plugin-replace/-/plugin-replace-3.0.1.tgz"
-  integrity sha512-989J5oRzf3mm0pO/0djTijdfEh9U3n63BIXN5X7T4U9BP+fN4oxQ6DvDuBvFaHA6scaHQRclqmKQEkBhB7k7Hg==
-  dependencies:
-    "@rollup/pluginutils" "^3.1.0"
-    magic-string "^0.25.7"
-
 "@rollup/plugin-url@^6.1.0":
   version "6.1.0"
   resolved "https://registry.npmjs.org/@rollup/plugin-url/-/plugin-url-6.1.0.tgz"
@@ -3317,10 +3309,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^13.13.5":
-  version "13.13.52"
-  resolved "https://registry.npmjs.org/@types/node/-/node-13.13.52.tgz"
-  integrity sha512-s3nugnZumCC//n4moGGe6tkNMyYEdaDBitVjwPxXmR5lnMG5dHePinH2EdxkG3Rh1ghFHHixAG4NJhpJW1rthQ==
+"@types/node@^16.7.13":
+  version "16.11.39"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.39.tgz#07223cd2bc332ad9d92135e3a522eebdee3b060e"
+  integrity sha512-K0MsdV42vPwm9L6UwhIxMAOmcvH/1OoVkZyCgEtVu4Wx7sElGloy/W7kMBNe/oJ7V/jW9BVt1F6RahH6e7tPXw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"

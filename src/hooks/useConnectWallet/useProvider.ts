@@ -64,7 +64,7 @@ export function useConnect(connector: Web3Connector, context: Web3ContextType) {
   const useWallet = useCallback(() => {
     // fixme: if user is already connected to the page, it should auto-connect.. why is isActive = false?
     if (!isActive) {
-      console.log('wallet is inactive, activating now')
+      console.log('wallet is inactive, activating now', wallet)
       connectors.forEach(([wallet, _]) => wallet.deactivate())
       wallet.activate()
     } else {

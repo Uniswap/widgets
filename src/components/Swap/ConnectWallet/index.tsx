@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Buffer } from 'buffer'
 import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
@@ -88,6 +89,10 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
 }
 
 function MainWalletConnectionOptions({ connector, context }: { connector: Web3Connector; context: Web3ContextType }) {
+  // WalletConnect relies on Buffer, so it must be polyfilled.
+  if (!('Buffer' in window)) {
+    window.Buffer = Buffer
+  }
   const useWalletConnect = useConnect(connector, context)
   return <MainButton walletName="WalletConnect" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useWalletConnect} />
 }
