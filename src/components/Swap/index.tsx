@@ -66,7 +66,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <ConnectWallet account={account} onConnectWallet={props.onClickConnectWallet} />
+        <ConnectWallet account={account} onClickConnectWallet={props.onClickConnectWallet} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

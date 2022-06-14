@@ -11,7 +11,7 @@ import Row from './Row'
 
 interface WalletProps {
   disabled?: boolean
-  onIntegratorConnectWalletCallback?: () => void
+  onClickIntegratorConnectWallet?: () => void
 }
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
@@ -19,7 +19,7 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function Wallet({ onIntegratorConnectWalletCallback }: WalletProps) {
+export default function Wallet({ onClickIntegratorConnectWallet }: WalletProps) {
   const [open, setOpen] = useState(false)
 
   const onOpen = useCallback(() => setOpen(true), [])
@@ -29,7 +29,7 @@ export default function Wallet({ onIntegratorConnectWalletCallback }: WalletProp
     <>
       <WalletButton
         // if integrator did not provide a callback, open our wallet connection modal
-        onClick={onIntegratorConnectWalletCallback || onOpen}
+        onClick={onClickIntegratorConnectWallet || onOpen}
         color="secondary"
         data-testid="wallet"
       >

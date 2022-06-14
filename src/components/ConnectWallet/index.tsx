@@ -4,13 +4,13 @@ import ConnectedWalletChip from './ConnectedWalletChip'
 
 interface ConnectWalletProps {
   account?: string
-  onConnectWallet?: () => void
+  onClickConnectWallet?: () => void
 }
 
-export default function ConnectWallet({ account, onConnectWallet }: ConnectWalletProps) {
+export default function ConnectWallet({ account, onClickConnectWallet }: ConnectWalletProps) {
   if (Boolean(account)) {
     return <ConnectedWalletChip account={account} />
   } else {
-    return <Wallet onIntegratorConnectWalletCallback={onConnectWallet} />
+    return <Wallet onClickIntegratorConnectWallet={onClickConnectWallet} />
   }
 }
