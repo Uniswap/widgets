@@ -5,13 +5,13 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { TextButton } from './Button'
+import { ConnectWalletDialog } from './ConnectWallet/ConnectWalletDialog'
 import Dialog from './Dialog'
 import Row from './Row'
-import { ConnectWalletDialog } from './Swap/ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
-  onClick?: () => void
+  onIntegratorConnectWalletCallback?: () => void
 }
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
@@ -19,18 +19,20 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function Wallet({ onClick }: WalletProps) {
+export default function Wallet({ onIntegratorConnectWalletCallback }: WalletProps) {
   const [open, setOpen] = useState(false)
 
-  // TODO(kristiehuang): rename onClick to make distinction between integrator-provided callback
-  // for now, onClick = provided callback from integrator
-  // if onClick == null: open our wallet connect modal flow
-  const onOpenConnectWalletModal = useCallback(() => setOpen(true), [])
+  const onOpen = useCallback(() => setOpen(true), [])
   const onClose = useCallback(() => setOpen(false), [])
 
   return (
     <>
-      <WalletButton onClick={onClick || onOpenConnectWalletModal} color="secondary" data-testid="wallet">
+      <WalletButton
+        // if integrator did not provide a callback, open our wallet connection modal
+        onClick={onIntegratorConnectWalletCallback || onOpen}
+        color="secondary"
+        data-testid="wallet"
+      >
         <ThemedText.Caption>
           <Row gap={0.5}>
             <WalletIcon />

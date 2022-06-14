@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import ConnectWallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -14,8 +15,6 @@ import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo 
 import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
-import Wallet from '../Wallet'
-import ConnectedWalletChip from './ConnectWallet/ConnectedWalletChip'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -44,7 +43,7 @@ function getTransactionFromMap(
 // SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  onConnectWallet?: () => void
+  onClickConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -67,11 +66,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        {Boolean(account) ? (
-          <ConnectedWalletChip disabled={isDisabled} account={account} />
-        ) : (
-          <Wallet onClick={props.onConnectWallet} />
-        )}
+        <ConnectWallet account={account} onConnectWallet={props.onClickConnectWallet} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
