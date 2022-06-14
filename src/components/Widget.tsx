@@ -94,11 +94,19 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-  onConnectWallet?: () => void
+  onClickConnectWallet?: () => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError, onConnectWallet } = props
+  const {
+    children,
+    theme,
+    jsonRpcEndpoint,
+    dialog: userDialog,
+    className,
+    onError,
+    onClickConnectWallet: onIntegratorConnectWalletCallback,
+  } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -116,13 +124,13 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
 
   const activeProvider = useActiveProvider()
   const provider = useMemo(() => {
-    if (props.provider || onConnectWallet) {
+    if (props.provider || onIntegratorConnectWalletCallback) {
       // Integrator gives their own provider or wallet connection callback
       return props.provider
     } else {
       return activeProvider
     }
-  }, [onConnectWallet, props.provider, activeProvider])
+  }, [onIntegratorConnectWalletCallback, props.provider, activeProvider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

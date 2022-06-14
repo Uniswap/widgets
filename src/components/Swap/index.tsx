@@ -1,4 +1,7 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { Provider as Eip1193Provider } from '@web3-react/types'
+import ConnectWallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -14,8 +17,6 @@ import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo 
 import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
-import Wallet from '../Wallet'
-import ConnectedWalletChip from './ConnectWallet/ConnectedWalletChip'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -45,7 +46,7 @@ function getTransactionFromMap(
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
   provider?: Eip1193Provider | JsonRpcProvider
-  onConnectWallet?: () => void
+  onClickConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -65,16 +66,17 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
-  const shouldOpenIntegratorFlow = props.provider || props.onConnectWallet
+  // FIXME(kristiehuang): clarify when the integrator flow should open
+  const shouldOpenIntegratorFlow = Boolean(props.provider) || Boolean(props.onClickConnectWallet)
 
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        {Boolean(account) ? (
-          <ConnectedWalletChip disabled={isDisabled} account={account} />
-        ) : (
-          <Wallet shouldOpenIntegratorFlow={shouldOpenIntegratorFlow} onClick={props.onConnectWallet} />
-        )}
+        <ConnectWallet
+          shouldOpenIntegratorFlow={shouldOpenIntegratorFlow}
+          account={account}
+          onConnectWallet={props.onClickConnectWallet}
+        />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

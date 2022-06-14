@@ -12,7 +12,6 @@ export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefau
 export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 
-// TODO(kristiehuang): rename onConnectWallet prop to `onClickConnectWallet`
 export type SwapWidgetProps = SwapProps & WidgetProps
 
 export function SwapWidget(props: SwapWidgetProps) {
