@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
+import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
@@ -7,8 +9,6 @@ import { Web3Context, Web3ContextType } from 'hooks/useActiveWeb3React'
 import { connectors, useConnect, Web3Connector } from 'hooks/useConnectWallet/useProvider'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-
-const TEMP_WALLET_LOGO_URL = 'https://uniswap.org/cdn-cgi/image/width=256/images/unigrants.png'
 
 const Content = styled(Column)``
 const Heading = styled(Column)``
@@ -30,21 +30,35 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
+const StyledRow = styled(Row)`
+  align-self: end;
+  grid-template-columns: repeat(2, calc(50% - 0.75em / 2));
+  height: fit-content;
+`
+
 const StyledMainButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-`
-
-const StyledNoWalletButton = styled(Button)`
-  background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 90px;
+  height: 183px;
 `
 
 const StyledSmallButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 90px;
+  padding: 20px;
+`
+
+const StyledNoWalletButton = styled(Button)`
+  background-color: ${({ theme }) => theme.container};
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  height: 90px;
+  padding: 20px;
+`
+
+const StyledNoWalletText = styled(ThemedText.Subhead1)`
+  line-height: 20px;
+  white-space: pre-wrap;
 `
 
 interface ButtonProps {
@@ -57,10 +71,12 @@ interface ButtonProps {
 function MainButton({ walletName, logoSrc, caption, onClick }: ButtonProps) {
   return (
     <StyledMainButton onClick={onClick}>
-      <img src={logoSrc} alt={walletName} key={walletName} width={80} />
-      <ThemedText.Subhead1>
-        <Trans>{walletName}</Trans>
-      </ThemedText.Subhead1>
+      <Column gap={0.75} css={'justify-items: center'}>
+        <img src={logoSrc} alt={walletName} key={walletName} width={100} />
+        <ThemedText.Subhead1>
+          <Trans>{walletName}</Trans>
+        </ThemedText.Subhead1>
+      </Column>
     </StyledMainButton>
   )
 }
@@ -69,9 +85,9 @@ function NoWalletButton() {
   const helpCenterUrl = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
   return (
     <StyledNoWalletButton onClick={() => window.open(helpCenterUrl)}>
-      <ThemedText.Subhead1>
+      <StyledNoWalletText>
         <Trans>I don't have a wallet</Trans>
-      </ThemedText.Subhead1>
+      </StyledNoWalletText>
     </StyledNoWalletButton>
   )
 }
@@ -79,17 +95,19 @@ function NoWalletButton() {
 function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
-      <img src={logoSrc} alt={walletName} key={walletName} width={30} />
-      <ThemedText.Subhead1>
-        <Trans>{walletName}</Trans>
-      </ThemedText.Subhead1>
+      <Column gap={0.5} css={'justify-items: center'}>
+        <img src={logoSrc} alt={walletName} key={walletName} width={26} />
+        <ThemedText.Subhead1>
+          <Trans>{walletName}</Trans>
+        </ThemedText.Subhead1>
+      </Column>
     </StyledSmallButton>
   )
 }
 
 function MainWalletConnectionOptions({ connector, context }: { connector: Web3Connector; context: Web3ContextType }) {
   const useWalletConnect = useConnect(connector, context)
-  return <MainButton walletName="WalletConnect" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useWalletConnect} />
+  return <MainButton walletName="WalletConnect" logoSrc={WALLETCONNECT_ICON_URL} onClick={useWalletConnect} />
 }
 
 function SecondaryWalletConnectionOptions({
@@ -101,10 +119,10 @@ function SecondaryWalletConnectionOptions({
 }) {
   const useMetaMask = useConnect(connector, context)
   return (
-    <Row gap={0.75} grow={true}>
-      <SmallButton walletName="MetaMask" logoSrc={TEMP_WALLET_LOGO_URL} onClick={useMetaMask} />
+    <StyledRow>
+      <SmallButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
       <NoWalletButton />
-    </Row>
+    </StyledRow>
   )
 }
 
@@ -117,8 +135,8 @@ export function ConnectWalletDialog() {
       {(context) => (
         <>
           <Header title={<Trans>Connect wallet</Trans>} />
-          <Body flex align="stretch" padded open={true}>
-            <Column gap={0.75} align="stretch" grow={true}>
+          <Body align="stretch" padded open={true}>
+            <Column>
               <MainWalletConnectionOptions connector={wcConnector} context={context} />
               <SecondaryWalletConnectionOptions connector={mmConnector} context={context} />
             </Column>
