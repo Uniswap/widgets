@@ -116,8 +116,8 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
 
   const activeProvider = useActiveProvider()
   const provider = useMemo(() => {
-    if (onConnectWallet) {
-      // Integrator provided provider
+    if (props.provider || onConnectWallet) {
+      // Integrator gives their own provider or wallet connection callback
       return props.provider
     } else {
       return activeProvider

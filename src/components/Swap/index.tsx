@@ -44,6 +44,7 @@ function getTransactionFromMap(
 // SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
+  provider?: Eip1193Provider | JsonRpcProvider
   onConnectWallet?: () => void
 }
 
@@ -64,13 +65,15 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
+  const shouldOpenIntegratorFlow = props.provider || props.onConnectWallet
+
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
         {Boolean(account) ? (
           <ConnectedWalletChip disabled={isDisabled} account={account} />
         ) : (
-          <Wallet onClick={props.onConnectWallet} />
+          <Wallet shouldOpenIntegratorFlow={shouldOpenIntegratorFlow} onClick={props.onConnectWallet} />
         )}
         <Settings disabled={isDisabled} />
       </Header>

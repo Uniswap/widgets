@@ -11,6 +11,7 @@ import { ConnectWalletDialog } from './Swap/ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
+  shouldOpenIntegratorFlow: boolean
   onClick?: () => void
 }
 
@@ -19,7 +20,7 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function Wallet({ onClick }: WalletProps) {
+export default function Wallet({ shouldOpenIntegratorFlow, onClick }: WalletProps) {
   const [open, setOpen] = useState(false)
 
   // TODO(kristiehuang): rename onClick to make distinction between integrator-provided callback
@@ -30,7 +31,11 @@ export default function Wallet({ onClick }: WalletProps) {
 
   return (
     <>
-      <WalletButton onClick={onClick || onOpenConnectWalletModal} color="secondary" data-testid="wallet">
+      <WalletButton
+        onClick={shouldOpenIntegratorFlow ? onClick : onOpenConnectWalletModal}
+        color="secondary"
+        data-testid="wallet"
+      >
         <ThemedText.Caption>
           <Row gap={0.5}>
             <WalletIcon />
