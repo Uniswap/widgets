@@ -74,7 +74,7 @@ export function ActiveWeb3Provider({
     return EMPTY_STATE
   }, [provider])
 
-  const { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
+  const { connector, hooks } = wallet.hooks.useIsActive() ? wallet : network
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
   const activating = hooks.useIsActivating()
