@@ -5,7 +5,6 @@ import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import { Web3Context, Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
 import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useConnect'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -105,25 +104,13 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   )
 }
 
-function MainWalletConnectionOptions({
-  connection,
-  context,
-}: {
-  connection: Web3Connection
-  context: Web3ContextType
-}) {
-  const useWalletConnect = useConnect(connection, context)
+function MainWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
+  const useWalletConnect = useConnect(connection)
   return <MainButton walletName="WalletConnect" logoSrc={WALLETCONNECT_ICON_URL} onClick={useWalletConnect} />
 }
 
-function SecondaryWalletConnectionOptions({
-  connection,
-  context,
-}: {
-  connection: Web3Connection
-  context: Web3ContextType
-}) {
-  const useMetaMask = useConnect(connection, context)
+function SecondaryWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
+  const useMetaMask = useConnect(connection)
   return (
     <StyledRow>
       <SmallButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
@@ -137,18 +124,14 @@ export function ConnectWalletDialog() {
   // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (
-    <Web3Context.Consumer>
-      {(context) => (
-        <>
-          <Header title={<Trans>Connect wallet</Trans>} />
-          <Body align="stretch" padded open={true}>
-            <Column>
-              <MainWalletConnectionOptions connection={wcConnection} context={context} />
-              <SecondaryWalletConnectionOptions connection={mmConnection} context={context} />
-            </Column>
-          </Body>
-        </>
-      )}
-    </Web3Context.Consumer>
+    <>
+      <Header title={<Trans>Connect wallet</Trans>} />
+      <Body align="stretch" padded open={true}>
+        <Column>
+          <MainWalletConnectionOptions connection={wcConnection} />
+          <SecondaryWalletConnectionOptions connection={mmConnection} />
+        </Column>
+      </Body>
+    </>
   )
 }
