@@ -4,7 +4,11 @@ import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import useActiveWeb3React, { getNetwork, Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
+import {
+  getNetwork,
+  useUpdateActiveWeb3React as useUpdateActiveWeb3ReactCallback,
+  Web3ContextType,
+} from 'hooks/connectWeb3/useActiveWeb3React'
 import { useCallback } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -62,7 +66,7 @@ export default function useConnect(connection: Web3Connection) {
   const chainId = hooks.useChainId()
   const error = hooks.useError()
   const library = hooks.useProvider()
-  const { updateActiveWeb3React } = useActiveWeb3React()
+  const updateActiveWeb3React = useUpdateActiveWeb3ReactCallback()
 
   const useWallet = useCallback(() => {
     // TODO(kristiehuang): if user is already connected to the page, it should auto-connect.. why is isActive false on startup?

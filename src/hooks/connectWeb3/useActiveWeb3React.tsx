@@ -27,7 +27,13 @@ const EMPTY_CONTEXT = { web3: EMPTY_WEB3, updateActiveWeb3React: (updateContext:
 export const Web3Context = createContext(EMPTY_CONTEXT)
 
 export default function useActiveWeb3React() {
-  return useContext(Web3Context)
+  const { web3 } = useContext(Web3Context)
+  return web3
+}
+
+export function useUpdateActiveWeb3React() {
+  const { updateActiveWeb3React } = useContext(Web3Context)
+  return updateActiveWeb3React
 }
 
 export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
