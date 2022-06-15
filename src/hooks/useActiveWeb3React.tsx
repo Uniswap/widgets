@@ -49,30 +49,29 @@ export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
   return { connector, hooks }
 }
 
+function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
+  if (provider) {
+    let connector, hooks
+    if (JsonRpcProvider.isProvider(provider)) {
+      ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, provider))
+    } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
+      throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
+    } else {
+      ;[connector, hooks] = initializeConnector((actions) => new EIP1193(actions, provider))
+    }
+    connector.activate()
+    return { connector, hooks }
+  }
+  return EMPTY_STATE
+}
+
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const network = useMemo(() => {
-    return getNetwork(jsonRpcEndpoint)
-  }, [jsonRpcEndpoint])
-
-  const wallet = useMemo(() => {
-    if (provider) {
-      let connector, hooks
-      if (JsonRpcProvider.isProvider(provider)) {
-        ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, provider))
-      } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
-        throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
-      } else {
-        ;[connector, hooks] = initializeConnector((actions) => new EIP1193(actions, provider))
-      }
-      connector.activate()
-      return { connector, hooks }
-    }
-    return EMPTY_STATE
-  }, [provider])
+  const network = useMemo(() => getNetwork(jsonRpcEndpoint), [jsonRpcEndpoint])
+  const wallet = useMemo(() => getWallet(provider), [provider])
 
   const { connector, hooks } = wallet.hooks.useIsActive() ? wallet : network
   const accounts = hooks.useAccounts()

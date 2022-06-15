@@ -9,18 +9,18 @@ import { Buffer } from 'buffer'
 import { FALLBACK_JSON_RPC_URL, getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
 import { useCallback } from 'react'
 
-export type Web3Connector = [Connector, Web3ReactHooks]
+export type Web3Connection = [Connector, Web3ReactHooks]
 
-export function toWeb3Connector<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
+function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
   T,
   Web3ReactHooks
 ] {
   return [connector, hooks]
 }
 
-export const metaMaskConnector = toWeb3Connector(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
+const metaMaskConnection = toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
 
-export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProvider) {
+function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) {
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
@@ -33,7 +33,7 @@ export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProv
     rpcUrl = jsonRpcEndpoint ?? FALLBACK_JSON_RPC_URL
   }
 
-  return toWeb3Connector(
+  return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
         new WalletConnect(
@@ -47,16 +47,16 @@ export function getWalletConnectConnector(jsonRpcEndpoint?: string | JsonRpcProv
   )
 }
 
-export const connectors = [metaMaskConnector, getWalletConnectConnector()]
+export const connections = [metaMaskConnection, getWalletConnectConnection()]
 
 export function useActiveProvider(): Web3Provider | undefined {
-  const activeWalletProvider = getPriorityConnector(...connectors).usePriorityProvider() as Web3Provider
+  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
   const { connector: network } = getNetwork() // Return network-only provider if no wallet is connected
   return activeWalletProvider ?? network.provider
 }
 
-export function useConnect(connector: Web3Connector, context: Web3ContextType) {
-  const [wallet, hooks] = connector
+export function useConnect(connection: Web3Connection, context: Web3ContextType) {
+  const [wallet, hooks] = connection
   const isActive = hooks.useIsActive()
   const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
@@ -70,7 +70,7 @@ export function useConnect(connector: Web3Connector, context: Web3ContextType) {
     // TODO(kristiehuang): if user is already connected to the page, it should auto-connect.. why is isActive false on startup?
     if (!isActive) {
       console.log('wallet is inactive, activating now', wallet)
-      connectors.forEach(([wallet, _]) => wallet.deactivate())
+      connections.forEach(([wallet, _]) => wallet.deactivate())
       wallet.activate()
     } else {
       console.log('wallet should be already be active')

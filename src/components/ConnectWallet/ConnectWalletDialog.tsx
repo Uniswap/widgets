@@ -6,7 +6,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import { Web3Context, Web3ContextType } from 'hooks/useActiveWeb3React'
-import { connectors, useConnect, Web3Connector } from 'hooks/useConnectWallet/useProvider'
+import { connections, useConnect, Web3Connection } from 'hooks/useConnectWallet/useProvider'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -105,19 +105,25 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   )
 }
 
-function MainWalletConnectionOptions({ connector, context }: { connector: Web3Connector; context: Web3ContextType }) {
-  const useWalletConnect = useConnect(connector, context)
+function MainWalletConnectionOptions({
+  connection,
+  context,
+}: {
+  connection: Web3Connection
+  context: Web3ContextType
+}) {
+  const useWalletConnect = useConnect(connection, context)
   return <MainButton walletName="WalletConnect" logoSrc={WALLETCONNECT_ICON_URL} onClick={useWalletConnect} />
 }
 
 function SecondaryWalletConnectionOptions({
-  connector,
+  connection,
   context,
 }: {
-  connector: Web3Connector
+  connection: Web3Connection
   context: Web3ContextType
 }) {
-  const useMetaMask = useConnect(connector, context)
+  const useMetaMask = useConnect(connection, context)
   return (
     <StyledRow>
       <SmallButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
@@ -127,7 +133,7 @@ function SecondaryWalletConnectionOptions({
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnector, wcConnector] = connectors
+  const [mmConnection, wcConnection] = connections
   // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (
@@ -137,8 +143,8 @@ export function ConnectWalletDialog() {
           <Header title={<Trans>Connect wallet</Trans>} />
           <Body align="stretch" padded open={true}>
             <Column>
-              <MainWalletConnectionOptions connector={wcConnector} context={context} />
-              <SecondaryWalletConnectionOptions connector={mmConnector} context={context} />
+              <MainWalletConnectionOptions connection={wcConnection} context={context} />
+              <SecondaryWalletConnectionOptions connection={mmConnection} context={context} />
             </Column>
           </Body>
         </>
