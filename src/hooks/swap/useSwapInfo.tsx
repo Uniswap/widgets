@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import useUSDCPriceImpact, { PriceImpact } from 'hooks/useUSDCPriceImpact'

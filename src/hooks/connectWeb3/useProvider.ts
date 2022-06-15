@@ -6,7 +6,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import { getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
+import { getNetwork, Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
 import { useCallback } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]

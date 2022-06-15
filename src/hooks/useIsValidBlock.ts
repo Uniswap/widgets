@@ -2,7 +2,7 @@ import { atomWithImmer } from 'jotai/immer'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
 
-import useActiveWeb3React from './useActiveWeb3React'
+import useActiveWeb3React from './connectWeb3/useActiveWeb3React'
 import useBlockNumber from './useBlockNumber'
 
 // The oldest block (per chain) to be considered valid.
