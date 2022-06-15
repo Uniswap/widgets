@@ -6,7 +6,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import { FALLBACK_JSON_RPC_URL, getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
+import { getNetwork, Web3ContextType } from 'hooks/useActiveWeb3React'
 import { useCallback } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -30,7 +30,7 @@ function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) 
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     rpcUrl = jsonRpcEndpoint.connection.url
   } else {
-    rpcUrl = jsonRpcEndpoint ?? FALLBACK_JSON_RPC_URL
+    rpcUrl = jsonRpcEndpoint ?? '' // FIXME: use fallback RPC URL
   }
 
   return toWeb3Connection(
