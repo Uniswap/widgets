@@ -6,7 +6,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import { Web3Context, Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
-import { connections, useConnect, Web3Connection } from 'hooks/connectWeb3/useProvider'
+import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useConnect'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 

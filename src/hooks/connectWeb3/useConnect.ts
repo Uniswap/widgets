@@ -1,12 +1,10 @@
-import type { Web3Provider } from '@ethersproject/providers'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
-import { getPriorityConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import { getNetwork, Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
+import { Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
 import { useCallback } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -49,13 +47,7 @@ function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) 
 
 export const connections = [metaMaskConnection, getWalletConnectConnection()]
 
-export function useActiveProvider(): Web3Provider | undefined {
-  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
-  const { connector: network } = getNetwork() // Return network-only provider if no wallet is connected
-  return activeWalletProvider ?? network.provider
-}
-
-export function useConnect(connection: Web3Connection, context: Web3ContextType) {
+export default function useConnect(connection: Web3Connection, context: Web3ContextType) {
   const [wallet, hooks] = connection
   const isActive = hooks.useIsActive()
   const accounts = hooks.useAccounts()
