@@ -7,11 +7,10 @@ import ConnectWallet from './ConnectWallet'
 interface WalletProps {
   disabled?: boolean
   account?: string
-  shouldOpenIntegratorFlow: boolean
-  onConnectWallet?: () => void
+  onConnectWallet?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function Wallet({ disabled, account, shouldOpenIntegratorFlow, onConnectWallet }: WalletProps) {
+export default function Wallet({ disabled, account, onConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
     connections.forEach(
@@ -25,12 +24,6 @@ export default function Wallet({ disabled, account, shouldOpenIntegratorFlow, on
   if (Boolean(account)) {
     return <ConnectedWalletChip disabled={disabled} account={account} />
   } else {
-    return (
-      <ConnectWallet
-        disabled={disabled}
-        shouldOpenIntegratorFlow={shouldOpenIntegratorFlow}
-        onIntegratorConnectWalletCallback={onConnectWallet}
-      />
-    )
+    return <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWallet} />
   }
 }

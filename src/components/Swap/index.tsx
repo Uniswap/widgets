@@ -46,7 +46,7 @@ function getTransactionFromMap(
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
   provider?: Eip1193Provider | JsonRpcProvider
-  onClickConnectWallet?: () => void
+  onClickConnectWallet?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -67,18 +67,11 @@ export default function Swap(props: SwapProps) {
   const focused = useHasFocus(wrapper)
 
   const hideConnectionUI = false // TODO(kristiehuang): add new prop to allow integrator to hide entire connection UI
-  // FIXME(kristiehuang): clarify when the integrator flow should open
-  const shouldOpenIntegratorFlow = Boolean(props.provider) || Boolean(props.onClickConnectWallet)
 
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet
-          disabled={hideConnectionUI}
-          shouldOpenIntegratorFlow={!hideConnectionUI && shouldOpenIntegratorFlow}
-          account={account}
-          onConnectWallet={props.onClickConnectWallet}
-        />
+        <Wallet disabled={hideConnectionUI} account={account} onConnectWallet={props.onClickConnectWallet} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

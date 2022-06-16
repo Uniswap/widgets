@@ -94,7 +94,7 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-  onClickConnectWallet?: () => void
+  onClickConnectWallet?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
@@ -124,13 +124,8 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
 
   const activeProvider = useActiveProvider()
   const provider = useMemo(() => {
-    if (props.provider || onIntegratorConnectWalletCallback) {
-      // Integrator gives their own provider or wallet connection callback
-      return props.provider
-    } else {
-      return activeProvider
-    }
-  }, [onIntegratorConnectWalletCallback, props.provider, activeProvider])
+    return props.provider ?? activeProvider
+  }, [props.provider, activeProvider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

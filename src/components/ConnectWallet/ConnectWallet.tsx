@@ -11,8 +11,7 @@ import { ConnectWalletDialog } from './ConnectWalletDialog'
 
 interface ConnectWalletProps {
   disabled?: boolean
-  shouldOpenIntegratorFlow: boolean
-  onIntegratorConnectWalletCallback?: () => void
+  onIntegratorConnectWalletCallback?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
@@ -20,24 +19,26 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function ConnectWallet({
-  disabled,
-  shouldOpenIntegratorFlow,
-  onIntegratorConnectWalletCallback,
-}: ConnectWalletProps) {
+export default function ConnectWallet({ disabled, onIntegratorConnectWalletCallback }: ConnectWalletProps) {
+  // Opens a dialog that initiates own wallet connection flow
   const [open, setOpen] = useState(false)
 
-  const onOpen = useCallback(() => setOpen(true), [])
   const onClose = useCallback(() => setOpen(false), [])
+
+  const onClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (onIntegratorConnectWalletCallback) {
+        onIntegratorConnectWalletCallback(e)
+        if (e.defaultPrevented) return
+      }
+      setOpen(true) // Initiate our own wallet connection flow
+    },
+    [onIntegratorConnectWalletCallback]
+  )
 
   return (
     <>
-      <WalletButton
-        hidden={disabled}
-        onClick={shouldOpenIntegratorFlow ? onIntegratorConnectWalletCallback : onOpen}
-        color="secondary"
-        data-testid="wallet"
-      >
+      <WalletButton hidden={disabled} onClick={onClick} color="secondary" data-testid="wallet">
         <ThemedText.Caption>
           <Row gap={0.5}>
             <WalletIcon />

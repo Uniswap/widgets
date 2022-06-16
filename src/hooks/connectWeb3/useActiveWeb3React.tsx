@@ -100,7 +100,6 @@ export function ActiveWeb3Provider({
     connector = updateContext.connector
     accounts = updateContext.accounts
     account = updateContext.account
-    console.log('web3 got updated', account)
     activating = updateContext.activating ?? false
     active = updateContext.active ?? false
     chainId = updateContext.chainId
