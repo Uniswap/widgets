@@ -9,7 +9,7 @@ import Dialog from '../Dialog'
 import Row from '../Row'
 import { ConnectWalletDialog } from './ConnectWalletDialog'
 
-interface WalletProps {
+interface ConnectWalletProps {
   disabled?: boolean
   shouldOpenIntegratorFlow: boolean
   onIntegratorConnectWalletCallback?: () => void
@@ -20,7 +20,11 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function ConnectWallet({ shouldOpenIntegratorFlow, onIntegratorConnectWalletCallback }: WalletProps) {
+export default function ConnectWallet({
+  disabled,
+  shouldOpenIntegratorFlow,
+  onIntegratorConnectWalletCallback,
+}: ConnectWalletProps) {
   const [open, setOpen] = useState(false)
 
   const onOpen = useCallback(() => setOpen(true), [])
@@ -29,6 +33,7 @@ export default function ConnectWallet({ shouldOpenIntegratorFlow, onIntegratorCo
   return (
     <>
       <WalletButton
+        hidden={disabled}
         onClick={shouldOpenIntegratorFlow ? onIntegratorConnectWalletCallback : onOpen}
         color="secondary"
         data-testid="wallet"

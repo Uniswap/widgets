@@ -4,13 +4,14 @@ import { useEffect } from 'react'
 import ConnectedWalletChip from './ConnectedWalletChip'
 import ConnectWallet from './ConnectWallet'
 
-interface ConnectWalletProps {
+interface WalletProps {
+  disabled?: boolean
   account?: string
   shouldOpenIntegratorFlow: boolean
   onConnectWallet?: () => void
 }
 
-export default function Wallet({ account, shouldOpenIntegratorFlow, onConnectWallet }: ConnectWalletProps) {
+export default function Wallet({ disabled, account, shouldOpenIntegratorFlow, onConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
     connections.forEach(
@@ -22,10 +23,11 @@ export default function Wallet({ account, shouldOpenIntegratorFlow, onConnectWal
   }, [])
 
   if (Boolean(account)) {
-    return <ConnectedWalletChip account={account} />
+    return <ConnectedWalletChip disabled={disabled} account={account} />
   } else {
     return (
       <ConnectWallet
+        disabled={disabled}
         shouldOpenIntegratorFlow={shouldOpenIntegratorFlow}
         onIntegratorConnectWalletCallback={onConnectWallet}
       />

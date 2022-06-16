@@ -66,6 +66,7 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
+  const hideConnectionUI = false // TODO(kristiehuang): add new prop to allow integrator to hide entire connection UI
   // FIXME(kristiehuang): clarify when the integrator flow should open
   const shouldOpenIntegratorFlow = Boolean(props.provider) || Boolean(props.onClickConnectWallet)
 
@@ -73,7 +74,8 @@ export default function Swap(props: SwapProps) {
     <>
       <Header title={<Trans>Swap</Trans>}>
         <Wallet
-          shouldOpenIntegratorFlow={shouldOpenIntegratorFlow}
+          disabled={hideConnectionUI}
+          shouldOpenIntegratorFlow={!hideConnectionUI && shouldOpenIntegratorFlow}
           account={account}
           onConnectWallet={props.onClickConnectWallet}
         />

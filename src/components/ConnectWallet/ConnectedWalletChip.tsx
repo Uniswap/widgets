@@ -14,7 +14,12 @@ export default function ConnectedWalletChip({ disabled, account }: { disabled?: 
 
   return (
     <>
-      <AccountButton onClick={() => console.log('open account modal')} color="secondary" data-testid="wallet">
+      <AccountButton
+        hidden={disabled}
+        onClick={() => console.log('open account modal')}
+        color="secondary"
+        data-testid="wallet"
+      >
         <ThemedText.Subhead2>
           <Row gap={0.5}>
             {/* <AccountAvatar account={account} /> */}
