@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { TextButton } from './Button'
-import { ConnectWalletDialog } from './ConnectWallet/ConnectWalletDialog'
-import Dialog from './Dialog'
-import Row from './Row'
+import { TextButton } from '../Button'
+import Dialog from '../Dialog'
+import Row from '../Row'
+import { ConnectWalletDialog } from './ConnectWalletDialog'
 
 interface WalletProps {
   disabled?: boolean
@@ -20,7 +20,7 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function Wallet({ shouldOpenIntegratorFlow, onIntegratorConnectWalletCallback }: WalletProps) {
+export default function ConnectWallet({ shouldOpenIntegratorFlow, onIntegratorConnectWalletCallback }: WalletProps) {
   const [open, setOpen] = useState(false)
 
   const onOpen = useCallback(() => setOpen(true), [])

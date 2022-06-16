@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import ConnectWallet from 'components/ConnectWallet'
+import Wallet from 'components/ConnectWallet'
 import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
@@ -72,7 +72,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <ConnectWallet
+        <Wallet
           shouldOpenIntegratorFlow={shouldOpenIntegratorFlow}
           account={account}
           onConnectWallet={props.onClickConnectWallet}

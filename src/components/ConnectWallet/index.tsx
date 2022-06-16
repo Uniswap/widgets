@@ -1,8 +1,8 @@
-import Wallet from 'components/Wallet'
 import { connections } from 'hooks/connectWeb3/useConnect'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
+import ConnectWallet from './ConnectWallet'
 
 interface ConnectWalletProps {
   account?: string
@@ -10,7 +10,7 @@ interface ConnectWalletProps {
   onConnectWallet?: () => void
 }
 
-export default function ConnectWallet({ account, shouldOpenIntegratorFlow, onConnectWallet }: ConnectWalletProps) {
+export default function Wallet({ account, shouldOpenIntegratorFlow, onConnectWallet }: ConnectWalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
     connections.forEach(
@@ -25,7 +25,10 @@ export default function ConnectWallet({ account, shouldOpenIntegratorFlow, onCon
     return <ConnectedWalletChip account={account} />
   } else {
     return (
-      <Wallet shouldOpenIntegratorFlow={shouldOpenIntegratorFlow} onIntegratorConnectWalletCallback={onConnectWallet} />
+      <ConnectWallet
+        shouldOpenIntegratorFlow={shouldOpenIntegratorFlow}
+        onIntegratorConnectWalletCallback={onConnectWallet}
+      />
     )
   }
 }
