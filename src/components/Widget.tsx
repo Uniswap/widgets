@@ -94,19 +94,10 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-  onClickConnectWallet?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const {
-    children,
-    theme,
-    jsonRpcEndpoint,
-    dialog: userDialog,
-    className,
-    onError,
-    onClickConnectWallet: onIntegratorConnectWalletCallback,
-  } = props
+  const { children, theme, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
