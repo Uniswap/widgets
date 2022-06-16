@@ -56,7 +56,7 @@ interface ButtonProps {
   onClick: () => void
 }
 
-function MainButton({ walletName, logoSrc, caption, onClick }: ButtonProps) {
+function WalletConnectButton({ walletName, logoSrc, caption, onClick }: ButtonProps) {
   return (
     <StyledMainButton onClick={onClick}>
       <ButtonContents>
@@ -80,7 +80,7 @@ function NoWalletButton() {
   )
 }
 
-function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
+function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
       <ButtonContents>
@@ -95,14 +95,14 @@ function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
 
 function MainWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
   const useWalletConnect = useConnect(connection)
-  return <MainButton walletName="WalletConnect" logoSrc={WALLETCONNECT_ICON_URL} onClick={useWalletConnect} />
+  return <WalletConnectButton walletName="WalletConnect" logoSrc={WALLETCONNECT_ICON_URL} onClick={useWalletConnect} />
 }
 
 function SecondaryWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
   const useMetaMask = useConnect(connection)
   return (
     <SecondaryOptions>
-      <SmallButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
+      <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
       <NoWalletButton />
     </SecondaryOptions>
   )
