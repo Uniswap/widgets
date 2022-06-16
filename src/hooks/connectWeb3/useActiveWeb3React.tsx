@@ -23,7 +23,7 @@ export type Web3ContextType = {
 const [EMPTY_CONNECTOR, EMPTY_HOOKS] = initializeConnector<Connector>(() => EMPTY)
 const EMPTY_STATE = { connector: EMPTY_CONNECTOR, hooks: EMPTY_HOOKS }
 const EMPTY_WEB3: Web3ContextType = { connector: EMPTY }
-const EMPTY_CONTEXT = { web3: EMPTY_WEB3, updateActiveWeb3React: (updateContext: Web3ContextType) => undefined }
+const EMPTY_CONTEXT = { web3: EMPTY_WEB3, updateWeb3: (updateContext: Web3ContextType) => console.log(updateContext) }
 export const Web3Context = createContext(EMPTY_CONTEXT)
 
 export default function useActiveWeb3React() {
@@ -31,9 +31,9 @@ export default function useActiveWeb3React() {
   return web3
 }
 
-export function useUpdateActiveWeb3React() {
-  const { updateActiveWeb3React } = useContext(Web3Context)
-  return updateActiveWeb3React
+export function useUpdateActiveWeb3ReactCallback() {
+  const { updateWeb3 } = useContext(Web3Context)
+  return updateWeb3
 }
 
 export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
@@ -93,24 +93,22 @@ export function ActiveWeb3Provider({
     if (connector === EMPTY || !(active || activating)) {
       return EMPTY_WEB3
     }
-    console.log('web3 got updated', account)
     return { connector, library, chainId, accounts, account, active, activating, error }
   }, [account, accounts, activating, active, chainId, connector, error, library])
 
-  const updateActiveWeb3React = (updateContext: Web3ContextType) => {
+  const updateWeb3 = (updateContext: Web3ContextType) => {
     connector = updateContext.connector
     accounts = updateContext.accounts
     account = updateContext.account
+    console.log('web3 got updated', account)
     activating = updateContext.activating ?? false
     active = updateContext.active ?? false
     chainId = updateContext.chainId
     error = updateContext.error
     library = updateContext.library as Web3Provider
-    console.log('here')
-    return undefined
   }
 
-  const value = { web3, updateActiveWeb3React }
+  const value = { web3, updateWeb3 }
 
   // Log web3 errors to facilitate debugging.
   useEffect(() => {
