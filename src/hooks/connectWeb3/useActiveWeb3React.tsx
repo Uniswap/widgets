@@ -80,7 +80,7 @@ export function ActiveWeb3Provider({
   const wallet = useMemo(() => getWallet(provider), [provider])
 
   // eslint-disable-next-line prefer-const
-  let { connector, hooks } = wallet.hooks.useIsActive() ? wallet : network
+  let { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
   let accounts = hooks.useAccounts()
   let account = hooks.useAccount()
   let activating = hooks.useIsActivating()
