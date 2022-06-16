@@ -75,16 +75,6 @@ export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIco
   )
 }
 
-// TODO(kristiehuang): get an account avatar icon
-// export const AccountAvatar = (account?: string) => {
-//   // todo: use ENS NFT profile pic
-
-//   // mod n to get unique account gradient
-//   const modNum = parseInt(account || '', 16) % 30
-//   return icon(AccountAvatarIcon)
-// }
-export const AccountAvatar = icon(WalletIcon)
-
 export const AlertTriangle = icon(AlertTriangleIcon)
 export const ArrowDown = icon(ArrowDownIcon)
 export const ArrowRight = icon(ArrowRightIcon)
