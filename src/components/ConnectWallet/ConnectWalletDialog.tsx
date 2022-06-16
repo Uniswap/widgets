@@ -9,30 +9,19 @@ import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useCo
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const Content = styled(Column)``
-const Heading = styled(Column)``
-const Footing = styled(Column)``
-const Body = styled(Column)<{ open: boolean }>`
+const Body = styled(Column)`
   height: calc(100% - 2.5em);
-
-  ${Content}, ${Heading} {
-    flex-grow: 1;
-    transition: flex-grow 0.25s;
-  }
-
-  ${Footing} {
-    margin-bottom: ${({ open }) => (open ? '-0.75em' : undefined)};
-    max-height: ${({ open }) => (open ? 0 : '3em')};
-    opacity: ${({ open }) => (open ? 0 : 1)};
-    transition: max-height 0.25s, margin-bottom 0.25s, opacity 0.15s 0.1s;
-    visibility: ${({ open }) => (open ? 'hidden' : undefined)};
-  }
 `
 
-const StyledRow = styled(Row)`
+const SecondaryOptions = styled(Row)`
   align-self: end;
   grid-template-columns: repeat(2, calc(50% - 0.75em / 2));
   height: fit-content;
+`
+
+const ButtonContents = styled(Column)`
+  gap: 0.75em;
+  justify-items: center;
 `
 
 const StyledMainButton = styled(Button)`
@@ -70,12 +59,12 @@ interface ButtonProps {
 function MainButton({ walletName, logoSrc, caption, onClick }: ButtonProps) {
   return (
     <StyledMainButton onClick={onClick}>
-      <Column gap={0.75} css={'justify-items: center'}>
+      <ButtonContents>
         <img src={logoSrc} alt={walletName} key={walletName} width={100} />
         <ThemedText.Subhead1>
           <Trans>{walletName}</Trans>
         </ThemedText.Subhead1>
-      </Column>
+      </ButtonContents>
     </StyledMainButton>
   )
 }
@@ -94,12 +83,12 @@ function NoWalletButton() {
 function SmallButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
-      <Column gap={0.5} css={'justify-items: center'}>
+      <ButtonContents>
         <img src={logoSrc} alt={walletName} key={walletName} width={26} />
         <ThemedText.Subhead1>
           <Trans>{walletName}</Trans>
         </ThemedText.Subhead1>
-      </Column>
+      </ButtonContents>
     </StyledSmallButton>
   )
 }
@@ -112,10 +101,10 @@ function MainWalletConnectionOptions({ connection }: { connection: Web3Connectio
 function SecondaryWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
   const useMetaMask = useConnect(connection)
   return (
-    <StyledRow>
+    <SecondaryOptions>
       <SmallButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
       <NoWalletButton />
-    </StyledRow>
+    </SecondaryOptions>
   )
 }
 

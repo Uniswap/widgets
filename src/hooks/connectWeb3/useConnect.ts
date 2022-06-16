@@ -65,7 +65,6 @@ export default function useConnect(connection: Web3Connection) {
   const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
 
   const useWallet = useCallback(() => {
-    // TODO(kristiehuang): if user is already connected to the page, it should auto-connect.. why is isActive false on startup?
     if (!isActive) {
       console.log('wallet is inactive, activating now', wallet)
       connections.forEach(([wallet, _]) => wallet.deactivate())

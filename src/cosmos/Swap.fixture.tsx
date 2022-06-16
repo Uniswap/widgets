@@ -67,11 +67,11 @@ function Fixture() {
       defaultOutputAmount={defaultOutputAmount}
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint}
-      // provider={connector}
+      provider={connector}
       theme={theme}
       tokenList={tokenList}
       width={width}
-      // onClickConnectWallet={() => console.log('integrator already provided a onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onClickConnectWallet={() => console.log('integrator already provided a onConnectWallet')} // this handler is included as a test of functionality, but only logs
     />
   )
 }
