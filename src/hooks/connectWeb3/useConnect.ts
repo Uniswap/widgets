@@ -16,6 +16,7 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
   return [connector, hooks]
 }
 
+// TODO(kristiehuang): should we memoize these connections instead of generating them again each time
 const metaMaskConnection = toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
 
 function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) {
@@ -38,6 +39,7 @@ function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) 
           actions,
           {
             rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
+            qrcode: false,
           },
           false
         )
