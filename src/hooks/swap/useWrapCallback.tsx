@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import useActiveWeb3React from '../useActiveWeb3React'
+import useActiveWeb3React from '../connectWeb3/useActiveWeb3React'
 import useCurrencyBalance from '../useCurrencyBalance'
 
 export enum WrapType {

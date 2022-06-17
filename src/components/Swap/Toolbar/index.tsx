@@ -1,7 +1,7 @@
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { largeIconCss } from 'icons'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'

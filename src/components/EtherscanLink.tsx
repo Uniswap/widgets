@@ -1,5 +1,5 @@
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { Link } from 'icons'
 import { ReactNode, useMemo } from 'react'
 import styled from 'styled-components/macro'

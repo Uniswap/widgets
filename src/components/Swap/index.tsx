@@ -1,9 +1,12 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { Provider as Eip1193Provider } from '@web3-react/types'
+import Wallet from 'components/ConnectWallet'
+import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
@@ -14,7 +17,6 @@ import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo 
 import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
-import Wallet from '../Wallet'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -40,8 +42,11 @@ function getTransactionFromMap(
   return
 }
 
+// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
+// TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  onConnectWallet?: () => void
+  provider?: Eip1193Provider | JsonRpcProvider
+  onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -61,10 +66,12 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
+  const hideConnectionUI = false // TODO(kristiehuang): add new prop to allow integrator to hide entire connection UI
+
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={!active || Boolean(account)} onClick={props.onConnectWallet} />
+        <Wallet disabled={hideConnectionUI} account={account} onConnectWallet={props.onClickConnectWallet} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
