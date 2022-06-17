@@ -5,7 +5,7 @@ import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import useConnect, { connections } from 'hooks/connectWeb3/useConnect'
+import useConnectWallet, { connections } from 'hooks/connectWeb3/useConnect'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -98,10 +98,14 @@ export function ConnectWalletDialog() {
           <WalletConnectButton
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
-            onClick={useConnect(wcConnection)}
+            onClick={useConnectWallet(wcConnection)}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useConnect(mmConnection)} />
+            <MetaMaskButton
+              walletName="MetaMask"
+              logoSrc={METAMASK_ICON_URL}
+              onClick={useConnectWallet(mmConnection)}
+            />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>

@@ -53,7 +53,7 @@ export function useActiveProvider(): Web3Provider | undefined {
   return activeWalletProvider ?? network.provider
 }
 
-export default function useConnect(connection: Web3Connection) {
+export default function useConnectWallet(connection: Web3Connection) {
   const [wallet, hooks] = connection
   const isActive = hooks.useIsActive()
   const accounts = hooks.useAccounts()
@@ -77,7 +77,7 @@ export default function useConnect(connection: Web3Connection) {
         accounts,
         account,
         activating,
-        active: isActive,
+        activeWallet: isActive,
         chainId,
         error,
       }

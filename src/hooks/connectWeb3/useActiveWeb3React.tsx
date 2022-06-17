@@ -13,10 +13,10 @@ export type Web3ContextType = {
   chainId?: ReturnType<Web3ReactHooks['useChainId']>
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>
-  // TODO(kristiehuang): clarify - `active` currently describes both an active RPC network connection or active wallet connection
-  // We want active = true iff active wallet connection. Maybe set new `networkActive` prop iff active network connection?
-  active?: ReturnType<Web3ReactHooks['useIsActive']>
-  activating?: ReturnType<Web3ReactHooks['useIsActivating']>
+  activeWallet?: ReturnType<Web3ReactHooks['useIsActive']> // active wallet connection
+  activatingWallet?: ReturnType<Web3ReactHooks['useIsActivating']>
+  activeNetwork?: ReturnType<Web3ReactHooks['useIsActive']> // active RPC network connection
+  activatingNetwork?: ReturnType<Web3ReactHooks['useIsActivating']>
   error?: ReturnType<Web3ReactHooks['useError']>
 }
 
@@ -83,25 +83,56 @@ export function ActiveWeb3Provider({
   let { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
   let accounts = hooks.useAccounts()
   let account = hooks.useAccount()
-  let activating = hooks.useIsActivating()
-  let active = hooks.useIsActive()
+  let activatingWallet = wallet.hooks.useIsActivating()
+  let activeWallet = wallet.hooks.useIsActive()
+  let activatingNetwork = network.hooks.useIsActivating()
+  let activeNetwork = network.hooks.useIsActive()
   let chainId = hooks.useChainId()
   let error = hooks.useError()
   let library = hooks.useProvider()
+
+  const active = activeWallet || activeNetwork
+  const activating = activatingWallet || activatingNetwork
 
   const web3 = useMemo(() => {
     if (connector === EMPTY || !(active || activating)) {
       return EMPTY_WEB3
     }
-    return { connector, library, chainId, accounts, account, active, activating, error }
-  }, [account, accounts, activating, active, chainId, connector, error, library])
+    return {
+      connector,
+      library,
+      chainId,
+      accounts,
+      account,
+      activeWallet,
+      activatingWallet,
+      activeNetwork,
+      activatingNetwork,
+      error,
+    }
+  }, [
+    account,
+    accounts,
+    activating,
+    activatingNetwork,
+    activatingWallet,
+    active,
+    activeNetwork,
+    activeWallet,
+    chainId,
+    connector,
+    error,
+    library,
+  ])
 
   const updateWeb3 = (updateContext: Web3ContextType) => {
     connector = updateContext.connector
     accounts = updateContext.accounts
     account = updateContext.account
-    activating = updateContext.activating ?? false
-    active = updateContext.active ?? false
+    activeWallet = updateContext.activeWallet ?? false
+    activatingWallet = updateContext.activatingWallet ?? false
+    activeNetwork = updateContext.activeNetwork ?? false
+    activatingNetwork = updateContext.activatingNetwork ?? false
     chainId = updateContext.chainId
     error = updateContext.error
     library = updateContext.library as Web3Provider

@@ -18,7 +18,7 @@ const ToolbarRow = styled(Row)`
 `
 
 export default memo(function Toolbar() {
-  const { active, activating, chainId } = useActiveWeb3React()
+  const { account, activeWallet, activatingWallet, activeNetwork, activatingNetwork, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
@@ -27,9 +27,12 @@ export default memo(function Toolbar() {
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
+  const activating = activatingWallet || activatingNetwork
   const caption = useMemo(() => {
-    if (!active || !chainId) {
-      if (activating) return <Caption.Connecting />
+    if (activating) return <Caption.Connecting />
+
+    // fixme(kristiehuang): activeWallet is not the same as Boolean(account)... why?
+    if (!Boolean(account) || !chainId) {
       return <Caption.ConnectWallet />
     }
 
@@ -61,7 +64,7 @@ export default memo(function Toolbar() {
     return <Caption.Empty />
   }, [
     activating,
-    active,
+    activeWallet,
     chainId,
     impact,
     inputAmount,
