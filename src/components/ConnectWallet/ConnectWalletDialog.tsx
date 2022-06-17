@@ -9,7 +9,7 @@ import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useConnect'
 import QRCode from 'qrcode'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -61,11 +61,29 @@ interface ButtonProps {
 }
 
 function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConnection, onClick }: ButtonProps) {
-  const [connector] = wcConnection as [WalletConnect, Web3ReactHooks]
-  connector.activate()
-  console.log('activated')
+  const [connector, hooks] = wcConnection as [WalletConnect, Web3ReactHooks]
+  console.log('active', hooks.useIsActive())
+  console.log('activating', hooks.useIsActivating())
 
   const [qrCodeUri, setQrCodeUri] = useState<string>('')
+  console.log('on open, uri is', qrCodeUri)
+
+  useEffect(() => {
+    console.log('activate')
+    connector.activate()
+    return () => {
+      console.log('deactivate')
+      connector.deactivate()
+    }
+  }, [connector, qrCodeUri])
+
+  connector.provider?.connector.on('display_uri', async (err, payload) => {
+    const uri = payload.params[0]
+    setQrCodeUri(uri)
+    console.log('uri is', payload.params[0])
+    if (uri) await formatQrCodeImage(payload.params[0])
+    // qrCodeSvg = await formatQrCodeImage(uri)
+  })
 
   const [qrCodeSvg, setQrCodeImg] = useState<string>('')
 
@@ -78,13 +96,6 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
     }
     setQrCodeImg(result)
   }
-
-  connector.provider?.connector.on('display_uri', async (err, payload) => {
-    setQrCodeUri(payload.params[0])
-    console.log('uri is', payload.params[0])
-    await formatQrCodeImage(payload.params[0])
-    // qrCodeSvg = await formatQrCodeImage(uri)
-  })
 
   // useEffect(() => {
   //   let active = true
