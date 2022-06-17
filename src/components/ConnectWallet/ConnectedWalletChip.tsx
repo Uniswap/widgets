@@ -22,7 +22,7 @@ export default function ConnectedWalletChip({ disabled, account }: { disabled?: 
       >
         <ThemedText.Subhead2>
           <Row gap={0.5}>
-            {/* <AccountAvatar account={account} /> */}
+            <Identicon />
             {account?.substring(0, 6)}...{account?.substring(account.length - 4)}
           </Row>
         </ThemedText.Subhead2>
