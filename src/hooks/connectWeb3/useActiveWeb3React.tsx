@@ -13,8 +13,6 @@ export type Web3ContextType = {
   chainId?: ReturnType<Web3ReactHooks['useChainId']>
   accounts?: ReturnType<Web3ReactHooks['useAccounts']>
   account?: ReturnType<Web3ReactHooks['useAccount']>
-  // TODO(kristiehuang): clarify - `active` currently describes both an active RPC network connection or active wallet connection
-  // We want active = true iff active wallet connection. Maybe set new `networkActive` prop iff active network connection?
   active?: ReturnType<Web3ReactHooks['useIsActive']>
   activating?: ReturnType<Web3ReactHooks['useIsActivating']>
   error?: ReturnType<Web3ReactHooks['useError']>

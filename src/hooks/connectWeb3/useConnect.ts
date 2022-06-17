@@ -66,11 +66,10 @@ export default function useConnect(connection: Web3Connection) {
 
   const useWallet = useCallback(() => {
     if (!isActive) {
-      console.log('wallet is inactive, activating now', wallet)
       connections.forEach(([wallet, _]) => wallet.deactivate())
       wallet.activate()
     } else {
-      console.log('wallet should be already be active')
+      // wallet should be already be active
       const updateContext: Web3ContextType = {
         connector: wallet,
         library,
