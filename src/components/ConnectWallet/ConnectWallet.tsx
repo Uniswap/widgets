@@ -11,7 +11,7 @@ import { ConnectWalletDialog } from './ConnectWalletDialog'
 
 interface ConnectWalletProps {
   disabled?: boolean
-  onIntegratorConnectWalletCallback?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onIntegratorConnectWalletCallback?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
@@ -26,10 +26,10 @@ export default function ConnectWallet({ disabled, onIntegratorConnectWalletCallb
   const onClose = useCallback(() => setOpen(false), [])
 
   const onClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    (e?: React.MouseEvent<HTMLButtonElement>) => {
       if (onIntegratorConnectWalletCallback) {
         onIntegratorConnectWalletCallback(e)
-        if (e.defaultPrevented) return
+        if (e && e.defaultPrevented) return
       }
       setOpen(true) // Initiate our own wallet connection flow
     },

@@ -5,7 +5,7 @@ import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useConnect'
+import useConnect, { connections } from 'hooks/connectWeb3/useConnect'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -13,7 +13,7 @@ const Body = styled(Column)`
   height: calc(100% - 2.5em);
 `
 
-const SecondaryOptions = styled(Row)`
+const SecondaryOptionsRow = styled(Row)`
   align-self: end;
   grid-template-columns: repeat(2, calc(50% - 0.75em / 2));
   height: fit-content;
@@ -31,13 +31,6 @@ const StyledMainButton = styled(Button)`
 `
 
 const StyledSmallButton = styled(Button)`
-  background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 90px;
-  padding: 20px;
-`
-
-const StyledNoWalletButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 90px;
@@ -69,17 +62,6 @@ function WalletConnectButton({ walletName, logoSrc, caption, onClick }: ButtonPr
   )
 }
 
-function NoWalletButton() {
-  const helpCenterUrl = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
-  return (
-    <StyledNoWalletButton onClick={() => window.open(helpCenterUrl)}>
-      <StyledNoWalletText>
-        <Trans>I don't have a wallet</Trans>
-      </StyledNoWalletText>
-    </StyledNoWalletButton>
-  )
-}
-
 function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
@@ -93,18 +75,14 @@ function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   )
 }
 
-function MainWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
-  const useWalletConnect = useConnect(connection)
-  return <WalletConnectButton walletName="WalletConnect" logoSrc={WALLETCONNECT_ICON_URL} onClick={useWalletConnect} />
-}
-
-function SecondaryWalletConnectionOptions({ connection }: { connection: Web3Connection }) {
-  const useMetaMask = useConnect(connection)
+function NoWalletButton() {
+  const helpCenterUrl = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
   return (
-    <SecondaryOptions>
-      <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useMetaMask} />
-      <NoWalletButton />
-    </SecondaryOptions>
+    <StyledSmallButton onClick={() => window.open(helpCenterUrl)}>
+      <StyledNoWalletText>
+        <Trans>I don't have a wallet</Trans>
+      </StyledNoWalletText>
+    </StyledSmallButton>
   )
 }
 
@@ -117,8 +95,15 @@ export function ConnectWalletDialog() {
       <Header title={<Trans>Connect wallet</Trans>} />
       <Body align="stretch" padded open={true}>
         <Column>
-          <MainWalletConnectionOptions connection={wcConnection} />
-          <SecondaryWalletConnectionOptions connection={mmConnection} />
+          <WalletConnectButton
+            walletName="WalletConnect"
+            logoSrc={WALLETCONNECT_ICON_URL}
+            onClick={useConnect(wcConnection)}
+          />
+          <SecondaryOptionsRow>
+            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useConnect(mmConnection)} />
+            <NoWalletButton />
+          </SecondaryOptionsRow>
         </Column>
       </Body>
     </>

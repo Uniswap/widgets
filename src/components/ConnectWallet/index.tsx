@@ -7,23 +7,19 @@ import ConnectWallet from './ConnectWallet'
 interface WalletProps {
   disabled?: boolean
   account?: string
-  onConnectWallet?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Wallet({ disabled, account, onConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
-    connections.forEach(
-      ([wallet, _]) =>
-        void wallet.connectEagerly().catch(() => {
-          console.debug('Failed to connect eagerly to wallet')
-        })
-    )
+    connections.forEach(([wallet, _]) => wallet.connectEagerly())
   }, [])
 
-  if (Boolean(account)) {
-    return <ConnectedWalletChip disabled={disabled} account={account} />
-  } else {
-    return <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWallet} />
-  }
+  const isConnected = Boolean(account)
+  return isConnected ? (
+    <ConnectedWalletChip disabled={disabled} account={account} />
+  ) : (
+    <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWallet} />
+  )
 }

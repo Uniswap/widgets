@@ -107,8 +107,6 @@ export function ActiveWeb3Provider({
     library = updateContext.library as Web3Provider
   }
 
-  const value = { web3, updateWeb3 }
-
   // Log web3 errors to facilitate debugging.
   useEffect(() => {
     if (error) {
@@ -116,5 +114,5 @@ export function ActiveWeb3Provider({
     }
   }, [error])
 
-  return <Web3Context.Provider value={value}>{children}</Web3Context.Provider>
+  return <Web3Context.Provider value={{ web3, updateWeb3 }}>{children}</Web3Context.Provider>
 }
