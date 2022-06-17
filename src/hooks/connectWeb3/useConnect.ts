@@ -66,7 +66,6 @@ export default function useConnect(connection: Web3Connection) {
 
   const useWallet = useCallback(() => {
     if (!isActive) {
-      connections.forEach(([wallet, _]) => wallet.deactivate())
       wallet.activate()
     } else {
       // wallet should be already be active
