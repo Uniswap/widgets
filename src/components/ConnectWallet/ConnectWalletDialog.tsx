@@ -33,6 +33,7 @@ const StyledMainButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 183px;
   padding: 22px;
+  pointer-events: none;
 `
 
 const StyledMainButtonRow = styled(Row)`
@@ -65,9 +66,6 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
   console.log('active', hooks.useIsActive())
   console.log('activating', hooks.useIsActivating())
 
-  const [qrCodeUri, setQrCodeUri] = useState<string>('')
-  console.log('on open, uri is', qrCodeUri)
-
   useEffect(() => {
     console.log('activate')
     connector.activate()
@@ -75,14 +73,12 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
       console.log('deactivate')
       connector.deactivate()
     }
-  }, [connector, qrCodeUri])
+  }, [connector])
 
   connector.provider?.connector.on('display_uri', async (err, payload) => {
     const uri = payload.params[0]
-    setQrCodeUri(uri)
-    console.log('uri is', payload.params[0])
-    if (uri) await formatQrCodeImage(payload.params[0])
-    // qrCodeSvg = await formatQrCodeImage(uri)
+    console.log('uri is', uri)
+    if (uri) await formatQrCodeImage(uri)
   })
 
   const [qrCodeSvg, setQrCodeImg] = useState<string>('')
@@ -92,34 +88,16 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
     let result = ''
     const dataString = await QRCode.toString(uri, { margin: 0, type: 'svg' })
     if (typeof dataString === 'string') {
-      result = dataString.replace('<svg', `<svg class="walletconnect-qrcode__image" alt="WalletConnect" width="100"`)
+      result = dataString.replace(
+        '<svg',
+        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="100"`
+      )
     }
     setQrCodeImg(result)
   }
 
-  // useEffect(() => {
-  //   let active = true
-  //   if (qrCodeUri) formatQrCodeImage(qrCodeUri)
-  //   return () => {
-  //     active = false
-  //   }
-
-  //   async function formatQrCodeImage(uri: string) {
-  //     console.log('formatting qr code now')
-  //     let result = ''
-  //     const dataString = await QRCode.toString(uri, { margin: 0, type: 'svg' })
-  //     if (typeof dataString === 'string') {
-  //       result = dataString.replace('<svg', `<svg class="walletconnect-qrcode__image" alt="WalletConnect" width="100"`)
-  //     }
-  //     if (!active) {
-  //       return
-  //     }
-  //     setQrCodeImg(result)
-  //   }
-  // }, [qrCodeUri])
-
   return (
-    <StyledMainButton disabled={true} onClick={useConnect(wcConnection)}>
+    <StyledMainButton onClick={useConnect(wcConnection)}>
       <StyledMainButtonRow>
         <ButtonContents>
           <img src={logoSrc} alt={walletName} key={walletName} width={32} />
@@ -131,7 +109,6 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
           </ThemedText.Caption>
         </ButtonContents>
         <div dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></div>
-        {/* <img src={qrCodeImg} alt={walletName} key={walletName} width={100} /> */}
       </StyledMainButtonRow>
     </StyledMainButton>
   )
