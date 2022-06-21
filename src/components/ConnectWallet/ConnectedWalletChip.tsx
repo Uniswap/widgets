@@ -10,14 +10,14 @@ const AccountButton = styled(TextButton)<{ hidden?: boolean }>`
 `
 
 export default function ConnectedWalletChip({ disabled, account }: { disabled?: boolean; account?: string }) {
-  // TODO(kristiehuang): AccountDialog & AccountAvatar UI does not yet exist
+  // TODO(kristiehuang): AccountDialog UI does not yet exist
   // const [open, setOpen] = useState(false)
 
   return (
     <>
       <AccountButton
         hidden={disabled}
-        onClick={() => console.log('open account modal')}
+        // onClick={() => console.log('open account modal')}
         color="secondary"
         data-testid="wallet"
       >
