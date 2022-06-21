@@ -19,7 +19,7 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
 // TODO(kristiehuang): should we memoize these connections instead of generating them again each time
 const metaMaskConnection = toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
 
-function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) {
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
@@ -39,7 +39,7 @@ function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) 
           actions,
           {
             rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
-            qrcode: false,
+            qrcode: useDefault,
           },
           false
         )
@@ -47,7 +47,10 @@ function getWalletConnectConnection(jsonRpcEndpoint?: string | JsonRpcProvider) 
   )
 }
 
-export const connections = [metaMaskConnection, getWalletConnectConnection()]
+const walletConnectConnectionQR = getWalletConnectConnection(false) // WC via tile QR code scan
+const walletConnectConnectionPopup = getWalletConnectConnection(true) // WC via built-in popup
+
+export const connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
 
 export function useActiveProvider(): Web3Provider | undefined {
   const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider

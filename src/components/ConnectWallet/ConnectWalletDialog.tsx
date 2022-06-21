@@ -33,7 +33,6 @@ const StyledMainButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 183px;
   padding: 22px;
-  pointer-events: none;
 `
 
 const StyledMainButtonRow = styled(Row)`
@@ -57,25 +56,29 @@ interface ButtonProps {
   walletName?: string
   logoSrc?: string
   caption?: string
-  connection: Web3Connection
+  connection?: Web3Connection
   onClick: () => void
 }
 
-function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConnection, onClick }: ButtonProps) {
-  const [connector, hooks] = wcConnection as [WalletConnect, Web3ReactHooks]
-  console.log('active', hooks.useIsActive())
-  console.log('activating', hooks.useIsActivating())
+function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileConnection, onClick }: ButtonProps) {
+  const [tileConnector, tileHooks] = wcTileConnection as [WalletConnect, Web3ReactHooks]
+
+  // WEB3 REACT HOOKS NOT UPDATING::
+  // ASK noah
+  // zach
+  // try vig's upgraded web3react
 
   useEffect(() => {
     console.log('activate')
-    connector.activate()
+    tileConnector.activate()
+    // FIX:::: jotai atom & handle on error/just recall
     return () => {
-      console.log('deactivate')
-      connector.deactivate()
+      console.log('remove event listener')
+      // ;(tileConnector.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', this.URIListener)
     }
-  }, [connector])
+  }, [tileConnector])
 
-  connector.provider?.connector.on('display_uri', async (err, payload) => {
+  tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
     const uri = payload.params[0]
     console.log('uri is', uri)
     if (uri) await formatQrCodeImage(uri)
@@ -90,14 +93,14 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
     if (typeof dataString === 'string') {
       result = dataString.replace(
         '<svg',
-        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="100"`
+        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="120"`
       )
     }
     setQrCodeImg(result)
   }
 
   return (
-    <StyledMainButton onClick={useConnect(wcConnection)}>
+    <StyledMainButton onClick={onClick}>
       <StyledMainButtonRow>
         <ButtonContents>
           <img src={logoSrc} alt={walletName} key={walletName} width={32} />
@@ -114,7 +117,7 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcConne
   )
 }
 
-function MetaMaskButton({ walletName, logoSrc, connection, onClick }: ButtonProps) {
+function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
       <ButtonContents>
@@ -139,7 +142,7 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnection, wcConnection] = connections
+  const [mmConnection, wcConnectionTile, wcConnectionPopup] = connections
   // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (
@@ -151,16 +154,11 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             caption="Scan to connect your wallet. Works with most wallets."
-            connection={wcConnection}
-            onClick={useConnect(wcConnection)}
+            connection={wcConnectionTile}
+            onClick={useConnect(wcConnectionPopup)}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton
-              walletName="MetaMask"
-              logoSrc={METAMASK_ICON_URL}
-              connection={mmConnection}
-              onClick={useConnect(mmConnection)}
-            />
+            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useConnect(mmConnection)} />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>
