@@ -8,6 +8,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useConnect'
+import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -60,34 +61,43 @@ interface ButtonProps {
   onClick: () => void
 }
 
+const wcQRUriAtom = atom<string | undefined>(undefined)
+
 function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileConnection, onClick }: ButtonProps) {
   const [tileConnector, tileHooks] = wcTileConnection as [WalletConnect, Web3ReactHooks]
 
-  // WEB3 REACT HOOKS NOT UPDATING::
-  // ASK noah
-  // zach
-  // try vig's upgraded web3react
+  const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
+  const [qrCodeSvg, setQrCodeImg] = useState<string>('')
 
   useEffect(() => {
-    console.log('activate')
-    tileConnector.activate()
-    // FIX:::: jotai atom & handle on error/just recall
+    if (QRUri) {
+      formatQrCodeImage(QRUri)
+    } else {
+      tileConnector.activate()
+    }
+    // FIX: handle on error/just recall
+    // error: if we connect and then disconnect, we need a new tile activate
+    // error: if we're connected, then reload the page -- we get error  POST https://mainnet.infura.io/v3/undefined 401
+    // at what point does the same QR code URI expire?
+    // error: if we close the popup modal before we connect, error
     return () => {
       console.log('remove event listener')
       // ;(tileConnector.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', this.URIListener)
     }
-  }, [tileConnector])
+  }, [QRUri, tileConnector])
 
   tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
-    const uri = payload.params[0]
-    console.log('uri is', uri)
-    if (uri) await formatQrCodeImage(uri)
+    if (err) {
+      console.warn(err)
+    }
+    const uri: string = payload.params[0]
+    if (uri) {
+      setQRUri(uri)
+      await formatQrCodeImage(uri)
+    }
   })
 
-  const [qrCodeSvg, setQrCodeImg] = useState<string>('')
-
   async function formatQrCodeImage(uri: string) {
-    console.log('formatting qr code now')
     let result = ''
     const dataString = await QRCode.toString(uri, { margin: 0, type: 'svg' })
     if (typeof dataString === 'string') {
