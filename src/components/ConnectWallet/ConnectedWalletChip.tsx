@@ -1,5 +1,6 @@
 import { TextButton } from 'components/Button'
 import Row from 'components/Row'
+import Identicon from 'icons/identicon'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 

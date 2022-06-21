@@ -1,57 +1,38 @@
+import IdenticonGradient0 from 'assets/images/identicons/IdenticonGradient-0.png'
+import IdenticonGradient1 from 'assets/images/identicons/IdenticonGradient-1.png'
+import IdenticonGradient2 from 'assets/images/identicons/IdenticonGradient-2.png'
+import IdenticonGradient3 from 'assets/images/identicons/IdenticonGradient-3.png'
+import IdenticonGradient4 from 'assets/images/identicons/IdenticonGradient-4.png'
+import IdenticonGradient5 from 'assets/images/identicons/IdenticonGradient-5.png'
+import IdenticonGradient6 from 'assets/images/identicons/IdenticonGradient-6.png'
+import IdenticonGradient7 from 'assets/images/identicons/IdenticonGradient-7.png'
+import IdenticonGradient8 from 'assets/images/identicons/IdenticonGradient-8.png'
+import IdenticonGradient9 from 'assets/images/identicons/IdenticonGradient-9.png'
 import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
-import useENSAvatar from 'hooks/useENSAvatar'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
+import { useMemo } from 'react'
 
-const StyledIdenticon = styled.div`
-  background-color: ${({ theme }) => theme.bg4};
-  border-radius: 1.125rem;
-  font-size: initial;
-  height: 1rem;
-  width: 1rem;
-`
+const gradients = [
+  IdenticonGradient0,
+  IdenticonGradient1,
+  IdenticonGradient2,
+  IdenticonGradient3,
+  IdenticonGradient4,
+  IdenticonGradient5,
+  IdenticonGradient6,
+  IdenticonGradient7,
+  IdenticonGradient8,
+  IdenticonGradient9,
+]
 
-const StyledAvatar = styled.img`
-  border-radius: inherit;
-  height: inherit;
-  width: inherit;
-`
-
-function accountAvatar(account: string) {
+function getGradientIconSrc(account: string) {
   const num = parseInt(account.slice(2, 10), 16)
-  const avatarIndex = num % 8
-  return avatars[avatarIndex]
+  const i = num % 10
+  return gradients[i]
 }
 
-export default function Identicon() {
+export default function IdenticonIcon() {
   const { account } = useActiveWeb3React()
-  const { avatar } = useENSAvatar(account ?? undefined)
-  const [fetchable, setFetchable] = useState(true)
+  const iconSrc = useMemo(() => account && getGradientIconSrc(account), [account])
 
-  const icon = useMemo(() => account && accountAvatar(account), [account])
-  const iconRef = useRef<HTMLDivElement>(null)
-  useLayoutEffect(() => {
-    const current = iconRef.current
-    if (icon) {
-      current?.appendChild(icon)
-      return () => {
-        try {
-          current?.removeChild(icon)
-        } catch (e) {
-          console.error('Avatar icon not found')
-        }
-      }
-    }
-    return
-  }, [icon, iconRef])
-
-  return (
-    <StyledIdenticon>
-      {avatar && fetchable ? (
-        <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
-      ) : (
-        <span ref={iconRef} />
-      )}
-    </StyledIdenticon>
-  )
+  return <img src={iconSrc} alt="account icon" width="16px" height="16px" />
 }

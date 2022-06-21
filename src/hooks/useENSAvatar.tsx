@@ -36,8 +36,10 @@ export default function useENSAvatar(
   avatar = nftAvatar.avatar || avatar
 
   const http = avatar && uriToHttp(avatar)[0]
-
+  console.log('avatar', avatar)
+  console.log('http', http)
   const changed = debouncedAddress !== address
+  console.log('changed,', changed)
   return useMemo(
     () => ({
       avatar: changed ? null : http ?? null,
