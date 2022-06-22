@@ -29,6 +29,9 @@ import {
 } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Color } from 'theme'
+
+import IdenticonIcon from './identicon'
+
 /* eslint-enable no-restricted-imports */
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
@@ -84,6 +87,7 @@ export const BarChart = icon(BarChart2Icon)
 export const ChevronDown = icon(ChevronDownIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
+export const Identicon = icon(IdenticonIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
 export const AutoRouter = icon(RouterIcon)

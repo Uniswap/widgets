@@ -1,5 +1,6 @@
 import { TextButton } from 'components/Button'
 import Row from 'components/Row'
+import Identicon from 'icons/identicon'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -9,20 +10,20 @@ const AccountButton = styled(TextButton)<{ hidden?: boolean }>`
 `
 
 export default function ConnectedWalletChip({ disabled, account }: { disabled?: boolean; account?: string }) {
-  // TODO(kristiehuang): AccountDialog & AccountAvatar UI does not yet exist
+  // TODO(kristiehuang): AccountDialog UI does not yet exist
   // const [open, setOpen] = useState(false)
 
   return (
     <>
       <AccountButton
         hidden={disabled}
-        onClick={() => console.log('open account modal')}
+        // onClick={() => console.log('open account modal')}
         color="secondary"
         data-testid="wallet"
       >
         <ThemedText.Subhead2>
           <Row gap={0.5}>
-            {/* <AccountAvatar account={account} /> */}
+            <Identicon />
             {account?.substring(0, 6)}...{account?.substring(account.length - 4)}
           </Row>
         </ThemedText.Subhead2>
