@@ -76,7 +76,6 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
       tileConnector.activate()
     }
     // FIX: handle on error/just recall
-    // error: if we connect and then disconnect, we need a new tile activate
     // error: if we're connected, then reload the page -- we get error  POST https://mainnet.infura.io/v3/undefined 401
     // at what point does the same QR code URI expire?
     // error: if we close the popup modal before we connect, error
@@ -86,10 +85,14 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     }
   }, [QRUri, tileConnector])
 
+  tileConnector.provider?.connector.on('disconnect', async (err, _) => {
+    if (err) console.warn(err)
+    // Clear saved QR URI after disconnection
+    setQRUri(undefined)
+  })
+
   tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
-    if (err) {
-      console.warn(err)
-    }
+    if (err) console.warn(err)
     const uri: string = payload.params[0]
     if (uri) {
       setQRUri(uri)
