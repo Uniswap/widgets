@@ -16,7 +16,6 @@ package-lock.json
 # builds
 /cache
 /cosmos-export
-/dist
 /dts
 
 # IDE metadata
