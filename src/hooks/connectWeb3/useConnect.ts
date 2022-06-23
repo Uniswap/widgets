@@ -17,7 +17,7 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
 }
 
 // TODO(kristiehuang): should we memoize these connections instead of generating them again each time
-const metaMaskConnection = toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask(actions)))
+const metaMaskConnection = toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions })))
 
 function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
   // WalletConnect relies on Buffer, so it must be polyfilled.
@@ -35,14 +35,15 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
-        new WalletConnect(
+        new WalletConnect({
           actions,
-          {
-            rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
+          options: {
+            rpc: {
+              1: [rpcUrl, 'https://cloudflare-eth.com'].filter((url) => url !== undefined && url !== ''),
+            },
             qrcode: useDefault,
-          },
-          false
-        )
+          }, // TODO(kristiehuang): WC only works on network chainid 1?
+        })
     )
   )
 }
@@ -65,7 +66,6 @@ export default function useConnect(connection: Web3Connection) {
   const account = hooks.useAccount()
   const activating = hooks.useIsActivating()
   const chainId = hooks.useChainId()
-  const error = hooks.useError()
   const library = hooks.useProvider()
   const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
 
@@ -82,11 +82,10 @@ export default function useConnect(connection: Web3Connection) {
         activating,
         active: isActive,
         chainId,
-        error,
       }
       updateActiveWeb3ReactCallback(updateContext)
     }
-  }, [account, accounts, activating, chainId, error, isActive, library, updateActiveWeb3ReactCallback, wallet])
+  }, [account, accounts, activating, chainId, isActive, library, updateActiveWeb3ReactCallback, wallet])
 
   return useWallet
 }

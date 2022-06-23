@@ -66,7 +66,7 @@ function Fixture() {
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
       locale={locale}
-      jsonRpcEndpoint={jsonRpcEndpoint}
+      jsonRpcEndpoint={jsonRpcEndpoint?.at(0)}
       provider={connector}
       theme={theme}
       tokenList={tokenList}

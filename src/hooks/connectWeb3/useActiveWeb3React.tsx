@@ -4,7 +4,7 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { EMPTY } from '@web3-react/empty'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { Url } from '@web3-react/url'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 export type Web3ContextType = {
@@ -15,7 +15,6 @@ export type Web3ContextType = {
   account?: ReturnType<Web3ReactHooks['useAccount']>
   active?: ReturnType<Web3ReactHooks['useIsActive']>
   activating?: ReturnType<Web3ReactHooks['useIsActivating']>
-  error?: ReturnType<Web3ReactHooks['useError']>
 }
 
 const [EMPTY_CONNECTOR, EMPTY_HOOKS] = initializeConnector<Connector>(() => EMPTY)
@@ -40,7 +39,7 @@ export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
       ;[connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint))
     } else {
-      ;[connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint))
+      ;[connector, hooks] = initializeConnector((actions) => new Url({ actions, url: jsonRpcEndpoint }))
     }
     connector.activate()
     return { connector, hooks }
@@ -49,6 +48,7 @@ export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
 }
 
 function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
+  console.log('wallet provider is', provider)
   if (provider) {
     let connector, hooks
     if (JsonRpcProvider.isProvider(provider)) {
@@ -56,7 +56,7 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
     } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
       throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
     } else {
-      ;[connector, hooks] = initializeConnector((actions) => new EIP1193(actions, provider))
+      ;[connector, hooks] = initializeConnector((actions) => new EIP1193({ actions, provider }))
     }
     connector.activate()
     return { connector, hooks }
@@ -84,15 +84,14 @@ export function ActiveWeb3Provider({
   let activating = hooks.useIsActivating()
   let active = hooks.useIsActive()
   let chainId = hooks.useChainId()
-  let error = hooks.useError()
   let library = hooks.useProvider()
 
   const web3 = useMemo(() => {
     if (connector === EMPTY || !(active || activating)) {
       return EMPTY_WEB3
     }
-    return { connector, library, chainId, accounts, account, active, activating, error }
-  }, [account, accounts, activating, active, chainId, connector, error, library])
+    return { connector, library, chainId, accounts, account, active, activating }
+  }, [account, accounts, activating, active, chainId, connector, library])
 
   const updateWeb3 = (updateContext: Web3ContextType) => {
     connector = updateContext.connector
@@ -101,16 +100,15 @@ export function ActiveWeb3Provider({
     activating = updateContext.activating ?? false
     active = updateContext.active ?? false
     chainId = updateContext.chainId
-    error = updateContext.error
     library = updateContext.library as Web3Provider
   }
 
   // Log web3 errors to facilitate debugging.
-  useEffect(() => {
-    if (error) {
-      console.error('web3 error:', error)
-    }
-  }, [error])
+  // useEffect(() => {
+  //   if (error) {
+  //     console.error('web3 error:', error)
+  //   }
+  // }, [error])
 
   return <Web3Context.Provider value={{ web3, updateWeb3 }}>{children}</Web3Context.Provider>
 }
