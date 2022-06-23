@@ -22,7 +22,6 @@ import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -111,7 +110,8 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>
-            {balance?.greaterThan(0) && formatCurrencyAmount(balance, 2, i18n.locale)}
+            {balance?.greaterThan(0) && balance?.toFixed(2)}
+            {/* or formatCurrencyAmount(balance, 4, i18n.locale), which does it cleaner but doesnt include number locale */}
           </TokenBalance>
         </Row>
       </ThemedText.Body1>
