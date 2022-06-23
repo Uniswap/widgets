@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { OnChange } from 'components/Widget'
 import { loadingTransitionCss } from 'css/loading'
 import {
   useIsSwapFieldIndependent,
@@ -9,6 +10,7 @@ import {
   useSwapInfo,
 } from 'hooks/swap'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
+import { useEffect } from 'react'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
@@ -44,6 +46,7 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 export interface InputProps {
   disabled: boolean
   focused: boolean
+  onChange?: OnChange
 }
 
 interface UseFormattedFieldAmountArguments {
@@ -67,12 +70,18 @@ export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount 
   }, [disabled, currencyAmount, fieldAmount])
 }
 
-export default function Input({ disabled, focused }: InputProps) {
+export default function Input({ disabled, focused, onChange }: InputProps) {
   const { i18n } = useLingui()
+  const swapInfo = useSwapInfo()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
     trade: { state: tradeState },
-  } = useSwapInfo()
+  } = swapInfo
+
+  useEffect(() => {
+    if (!swapInfo) return
+    onChange?.(swapInfo)
+  }, [swapInfo])
 
   const [inputAmount, updateInputAmount] = useSwapAmount(Field.INPUT)
   const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)

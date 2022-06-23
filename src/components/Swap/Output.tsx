@@ -6,7 +6,7 @@ import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo 
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -36,14 +36,19 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
-export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
+export default function Output({ disabled, focused, children, onChange }: PropsWithChildren<InputProps>) {
   const { i18n } = useLingui()
-
+  const swapInfo = useSwapInfo()
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
     trade: { state: tradeState },
     impact,
-  } = useSwapInfo()
+  } = swapInfo
+
+  useEffect(() => {
+    if (!swapInfo) return
+    onChange?.(swapInfo)
+  }, [swapInfo])
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)

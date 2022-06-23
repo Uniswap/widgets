@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { OnChange } from 'components/Widget'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -20,7 +21,6 @@ import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
-import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
@@ -42,6 +42,7 @@ function getTransactionFromMap(
 
 export interface SwapProps extends TokenDefaults, FeeOptions {
   onConnectWallet?: () => void
+  onChange?: OnChange
 }
 
 export default function Swap(props: SwapProps) {
@@ -70,11 +71,10 @@ export default function Swap(props: SwapProps) {
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
           <SwapInfoProvider disabled={isDisabled}>
-            <Input disabled={isDisabled} focused={focused} />
+            <Input disabled={isDisabled} focused={focused} onChange={props.onChange} />
             <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused}>
+            <Output disabled={isDisabled} focused={focused} onChange={props.onChange}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>

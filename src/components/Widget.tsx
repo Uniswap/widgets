@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { SwapInfo } from 'hooks/swap/useSwapInfo'
 import { TransactionsUpdater } from 'hooks/transactions'
 import { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
@@ -82,7 +83,7 @@ const DialogWrapper = styled.div`
     }
   }
 `
-
+export type OnChange = (e: SwapInfo) => void
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
@@ -93,10 +94,12 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
+  onChange?: OnChange
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -113,6 +116,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   }, [props.locale])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
+
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>

@@ -19,7 +19,7 @@ interface SwapField {
   usdc?: CurrencyAmount<Currency>
 }
 
-interface SwapInfo {
+export interface SwapInfo {
   [Field.INPUT]: SwapField
   [Field.OUTPUT]: SwapField
   trade: {
