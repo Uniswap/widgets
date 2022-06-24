@@ -1,4 +1,4 @@
-import { connections } from 'hooks/connectWeb3/useConnect'
+import { connections } from 'hooks/connectWeb3/useActiveWeb3React'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
