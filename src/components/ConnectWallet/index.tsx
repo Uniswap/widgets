@@ -1,4 +1,4 @@
-import { connections } from 'hooks/connectWeb3/useConnect'
+import { useConnections } from 'hooks/connectWeb3/useConnect'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
@@ -12,8 +12,11 @@ interface WalletProps {
 
 export default function Wallet({ disabled, account, onConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
+  const connections = useConnections()
   useEffect(() => {
-    connections.forEach(([wallet, _]) => wallet.connectEagerly())
+    console.log('connect eagerly', connections)
+    connections.forEach(([wallet, _]) => void wallet.connectEagerly())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const isConnected = Boolean(account)

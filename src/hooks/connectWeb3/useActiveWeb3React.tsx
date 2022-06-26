@@ -4,6 +4,7 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { EMPTY } from '@web3-react/empty'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { Url } from '@web3-react/url'
+import { atom, useAtom } from 'jotai'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
@@ -69,16 +70,25 @@ interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
 }
 
+export const jsonRpcEndpointAtom = atom<string | JsonRpcProvider | undefined>(undefined)
+
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  const [_, setIntegratorJsonRpcEndpoint] = useAtom(jsonRpcEndpointAtom)
+  useEffect(() => {
+    console.log('useing effect')
+    setIntegratorJsonRpcEndpoint(jsonRpcEndpoint)
+  }, [jsonRpcEndpoint, setIntegratorJsonRpcEndpoint])
+
   const network = useMemo(() => getNetwork(jsonRpcEndpoint), [jsonRpcEndpoint])
   const wallet = useMemo(() => getWallet(provider), [provider])
 
   // eslint-disable-next-line prefer-const
   let { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
+  console.log('my connector', wallet)
   let accounts = hooks.useAccounts()
   let account = hooks.useAccount()
   let activating = hooks.useIsActivating()

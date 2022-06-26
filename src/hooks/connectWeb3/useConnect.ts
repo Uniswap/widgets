@@ -4,8 +4,14 @@ import { MetaMask } from '@web3-react/metamask'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import { getNetwork, useUpdateActiveWeb3ReactCallback, Web3ContextType } from 'hooks/connectWeb3/useActiveWeb3React'
-import { useCallback } from 'react'
+import {
+  getNetwork,
+  jsonRpcEndpointAtom,
+  useUpdateActiveWeb3ReactCallback,
+  Web3ContextType,
+} from 'hooks/connectWeb3/useActiveWeb3React'
+import { useAtomValue } from 'jotai/utils'
+import { useCallback, useMemo } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
 
@@ -47,13 +53,21 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   )
 }
 
-const walletConnectConnectionQR = getWalletConnectConnection(false) // WC via tile QR code scan
-const walletConnectConnectionPopup = getWalletConnectConnection(true) // WC via built-in popup
+export function useConnections() {
+  const jsonRpcEndpoint = useAtomValue(jsonRpcEndpointAtom)
+  console.log('jsonrpc', jsonRpcEndpoint)
 
-export const connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
+  const walletConnectConnectionQR = useMemo(() => getWalletConnectConnection(false, jsonRpcEndpoint), [jsonRpcEndpoint]) // WC via tile QR code scan
+  const walletConnectConnectionPopup = useMemo(
+    () => getWalletConnectConnection(true, jsonRpcEndpoint),
+    [jsonRpcEndpoint]
+  ) // WC via built-in popup
+  return [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
+}
 
 export function useActiveProvider(): Web3Provider | undefined {
-  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
+  const activeWalletProvider = getPriorityConnector(...useConnections()).usePriorityProvider() as Web3Provider
+  console.log('why active wallet provider null', activeWalletProvider)
   const { connector: network } = getNetwork() // Return network-only provider if no wallet is connected
   return activeWalletProvider ?? network.provider
 }

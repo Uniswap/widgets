@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
-import { WalletConnect } from '@web3-react/walletconnect'
+import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import useConnect, { connections, Web3Connection } from 'hooks/connectWeb3/useConnect'
+import useConnect, { useConnections, Web3Connection } from 'hooks/connectWeb3/useConnect'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
@@ -71,8 +71,10 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
 
   useEffect(() => {
     if (QRUri) {
+      console.log('already have saved qri')
       formatQrCodeImage(QRUri)
     } else {
+      console.log('activate')
       tileConnector.activate()
     }
     // FIX: handle on error/just recall
@@ -91,7 +93,16 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     setQRUri(undefined)
   })
 
+  tileConnector.events.on(URI_AVAILABLE, async (uri: string) => {
+    console.log('i got uri')
+    if (uri) {
+      setQRUri(uri)
+      await formatQrCodeImage(uri)
+    }
+  })
+
   tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
+    console.log('displayuri')
     if (err) console.warn(err)
     const uri: string = payload.params[0]
     if (uri) {
@@ -155,7 +166,7 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnection, wcConnectionTile, wcConnectionPopup] = connections
+  const [mmConnection, wcConnectionTile, wcConnectionPopup] = useConnections()
   // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (
