@@ -28,6 +28,7 @@ export default function useActiveWeb3React() {
 }
 
 interface ActiveWeb3ProviderProps {
+  accounts: string[]
   jsonRpcEndpoint?: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
 }
@@ -36,6 +37,7 @@ export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
   children,
+  accounts
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const network = useMemo(() => {
     if (jsonRpcEndpoint) {
@@ -68,7 +70,6 @@ export function ActiveWeb3Provider({
   }, [provider])
 
   const { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
-  const accounts = hooks.useAccounts()
   const account = hooks.useAccount()
   const activating = hooks.useIsActivating()
   const active = hooks.useIsActive()

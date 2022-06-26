@@ -85,6 +85,7 @@ const DialogWrapper = styled.div`
 `
 export type OnChange = (e: SwapInfo) => void
 export type WidgetProps = {
+  accounts: string[]
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
@@ -98,7 +99,7 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+  const { children, theme, provider, jsonRpcEndpoint, accounts, dialog: userDialog, className, onError } = props
 
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
@@ -127,7 +128,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
               <ErrorBoundary onError={onError}>
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
-                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint} accounts={accounts}>
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater />

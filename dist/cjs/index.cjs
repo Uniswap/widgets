@@ -902,7 +902,8 @@ function useActiveWeb3React() {
 function ActiveWeb3Provider(_ref) {
   var jsonRpcEndpoint = _ref.jsonRpcEndpoint,
       provider = _ref.provider,
-      children = _ref.children;
+      children = _ref.children,
+      accounts = _ref.accounts;
   var network = React.useMemo(function () {
     if (jsonRpcEndpoint) {
       var _connector, _hooks;
@@ -982,7 +983,6 @@ function ActiveWeb3Provider(_ref) {
       connector = _ref2.connector,
       hooks = _ref2.hooks;
 
-  var accounts = hooks.useAccounts();
   var account = hooks.useAccount();
   var activating = hooks.useIsActivating();
   var active = hooks.useIsActive();
@@ -15962,6 +15962,7 @@ function Widget(props) {
       theme = props.theme,
       provider = props.provider,
       jsonRpcEndpoint = props.jsonRpcEndpoint,
+      accounts = props.accounts,
       userDialog = props.dialog,
       className = props.className,
       onError = props.onError;
@@ -16008,7 +16009,8 @@ function Widget(props) {
     store: store
   }, /*#__PURE__*/React__default["default"].createElement(jotai.Provider, null, /*#__PURE__*/React__default["default"].createElement(ActiveWeb3Provider, {
     provider: provider,
-    jsonRpcEndpoint: jsonRpcEndpoint
+    jsonRpcEndpoint: jsonRpcEndpoint,
+    accounts: accounts
   }, /*#__PURE__*/React__default["default"].createElement(BlockNumberProvider, null, /*#__PURE__*/React__default["default"].createElement(MulticallUpdater, null), /*#__PURE__*/React__default["default"].createElement(TransactionsUpdater, null), /*#__PURE__*/React__default["default"].createElement(TokenListProvider, {
     list: props.tokenList
   }, children)))))))))));

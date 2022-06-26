@@ -144,6 +144,7 @@ declare type ErrorHandler = (error: Error, info: ErrorInfo) => void;
 
 declare type OnChange = (e: SwapInfo) => void;
 declare type WidgetProps = {
+    accounts: string[];
     theme?: Theme;
     locale?: SupportedLocale;
     provider?: Provider | JsonRpcProvider;
