@@ -70,7 +70,7 @@ export function ActiveWeb3Provider({
   }, [provider])
 
   const { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
-  const account = hooks.useAccount()
+  const account = accounts[0]
   const activating = hooks.useIsActivating()
   const active = hooks.useIsActive()
   const chainId = hooks.useChainId()
