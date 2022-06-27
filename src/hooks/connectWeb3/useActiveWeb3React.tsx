@@ -27,8 +27,6 @@ const EMPTY_WEB3: Web3ContextType = { connector: EMPTY }
 const EMPTY_CONTEXT = { web3: EMPTY_WEB3, updateWeb3: (updateContext: Web3ContextType) => console.log(updateContext) }
 const Web3Context = createContext(EMPTY_CONTEXT)
 
-export let integratorJsonRpcEndpoint: string | JsonRpcProvider | undefined = ''
-
 export default function useActiveWeb3React() {
   const { web3 } = useContext(Web3Context)
   return web3
@@ -70,6 +68,8 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
   return EMPTY_STATE
 }
 
+export let connections: [Connector, Web3ReactHooks][] = []
+
 interface ActiveWeb3ProviderProps {
   jsonRpcEndpoint?: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
@@ -80,10 +80,21 @@ export function ActiveWeb3Provider({
   provider: propsProvider, // either props.provider or null
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  integratorJsonRpcEndpoint = jsonRpcEndpoint
+  const metaMaskConnection = useMemo(
+    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
+    []
+  )
+  const walletConnectConnectionQR = useMemo(() => getWalletConnectConnection(false, jsonRpcEndpoint), [jsonRpcEndpoint]) // WC via tile QR code scan
+  const walletConnectConnectionPopup = useMemo(
+    () => getWalletConnectConnection(true, jsonRpcEndpoint),
+    [jsonRpcEndpoint]
+  ) // WC via built-in popup
+
+  connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
+
   const network = useMemo(() => getNetwork(jsonRpcEndpoint), [jsonRpcEndpoint])
-  const activeProvider = useActiveWalletProvider(propsProvider)
-  const wallet = useMemo(() => getWallet(activeProvider), [activeProvider])
+  const activeProvider = useActiveWalletProvider()
+  const wallet = useMemo(() => getWallet(propsProvider ?? activeProvider), [propsProvider, activeProvider])
 
   console.log('jsonrpc endpoint', jsonRpcEndpoint)
   console.log('using wallet activeprovider', activeProvider)
@@ -141,12 +152,8 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
   return [connector, hooks]
 }
 
-// TODO(kristiehuang): should we memoize these connections instead of generating them again each time
-const metaMaskConnection = toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions })))
-
-function getWalletConnectConnection(useDefault: boolean) {
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
   // TODO(kristiehuang): implement RPC URL fallback, then jsonRpcEndpoint can be optional
-  const jsonRpcEndpoint = integratorJsonRpcEndpoint
 
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
@@ -160,7 +167,6 @@ function getWalletConnectConnection(useDefault: boolean) {
     rpcUrl = jsonRpcEndpoint ?? '' // TODO(kristiehuang): use fallback RPC URL
   }
 
-  console.log('initailize connector with jsonrpc', rpcUrl)
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
@@ -177,16 +183,9 @@ function getWalletConnectConnection(useDefault: boolean) {
   )
 }
 
-const walletConnectConnectionQR = getWalletConnectConnection(false) // WC via tile QR code scan
-const walletConnectConnectionPopup = getWalletConnectConnection(true) // WC via built-in popup
-export const connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
-
-export function useActiveWalletProvider(
-  propsProvider?: Eip1193Provider | JsonRpcProvider
-): JsonRpcProvider | Eip1193Provider | undefined {
+export function useActiveWalletProvider(): JsonRpcProvider | Eip1193Provider | undefined {
   const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider()
-  console.log('FIXME: returning wallet even when nothing is connected', activeWalletProvider)
-  return propsProvider ?? activeWalletProvider
+  return activeWalletProvider
 }
 
 export function useConnect(connection: Web3Connection) {
