@@ -1,12 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
-import { WalletConnect } from '@web3-react/walletconnect'
+import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
+import EventEmitter from 'events'
 import { connections, useConnect, Web3Connection } from 'hooks/connectWeb3/useActiveWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
@@ -85,19 +86,36 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     }
   }, [error])
 
-  tileConnector.provider?.connector.on('disconnect', async (err, _) => {
-    if (err) console.warn(err)
-    // Clear saved QR URI after disconnection
-    setQRUri(undefined)
-    tileConnector.deactivate()
-  })
+  useEffect(() => {
+    const disconnectListener = async (err: Error | null, _: any) => {
+      if (err) console.warn(err)
+      // Clear saved QR URI after disconnection
+      setQRUri(undefined)
+      tileConnector.deactivate()
+    }
+    tileConnector.provider?.connector.on('disconnect', disconnectListener)
 
-  tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
-    if (err) console.warn(err)
-    const uri: string = payload.params[0]
-    if (uri) {
-      setQRUri(uri)
-      await formatQrCodeImage(uri)
+    // Need both URI event listeners
+    tileConnector.events.on(URI_AVAILABLE, async (uri: string) => {
+      if (uri) {
+        setQRUri(uri)
+        await formatQrCodeImage(uri)
+      }
+    })
+
+    const uriListener = async (err: Error | null, payload: any) => {
+      if (err) console.warn(err)
+      const uri: string = payload.params[0]
+      if (uri) {
+        setQRUri(uri)
+        await formatQrCodeImage(uri)
+      }
+    }
+    tileConnector.provider?.connector.on('display_uri', uriListener)
+
+    return () => {
+      tileConnector.events.off(URI_AVAILABLE)
+      ;(tileConnector.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', uriListener)
     }
   })
 
