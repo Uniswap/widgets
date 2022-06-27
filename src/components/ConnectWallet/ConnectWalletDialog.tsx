@@ -92,7 +92,7 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     if (typeof dataString === 'string') {
       result = dataString.replace(
         '<svg',
-        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="100" height="100"`
+        `<svg class="walletconnect-qrcode__tile" alt="WalletConnect" key="WalletConnect" width="100" height="100"`
       )
     }
     setQrCodeSvg(result)

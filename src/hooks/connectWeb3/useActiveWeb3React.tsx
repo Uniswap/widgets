@@ -67,6 +67,80 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
   return EMPTY_STATE
 }
 
+export type Web3Connection = [Connector, Web3ReactHooks]
+
+function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
+  T,
+  Web3ReactHooks
+] {
+  return [connector, hooks]
+}
+
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
+  // WalletConnect relies on Buffer, so it must be polyfilled.
+  if (!('Buffer' in window)) {
+    window.Buffer = Buffer
+  }
+
+  let rpcUrl: string
+  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+    rpcUrl = jsonRpcEndpoint.connection.url
+  } else {
+    rpcUrl = jsonRpcEndpoint ?? '' // FIXME: use fallback RPC URL
+  }
+
+  return toWeb3Connection(
+    initializeConnector<WalletConnect>(
+      (actions) =>
+        new WalletConnect(
+          actions,
+          {
+            rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
+            qrcode: useDefault,
+          },
+          false
+        )
+    )
+  )
+}
+
+function useActiveWalletProvider(): Web3Provider | undefined {
+  return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
+}
+
+export function useConnect(connection: Web3Connection) {
+  const [wallet, hooks] = connection
+  const isActive = hooks.useIsActive()
+  const accounts = hooks.useAccounts()
+  const account = hooks.useAccount()
+  const activating = hooks.useIsActivating()
+  const chainId = hooks.useChainId()
+  const error = hooks.useError()
+  const library = hooks.useProvider()
+  const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
+
+  const useWallet = useCallback(() => {
+    if (!isActive) {
+      wallet.activate()
+    } else {
+      // wallet should be already be active
+      const updateContext: Web3ContextType = {
+        connector: wallet,
+        library,
+        accounts,
+        account,
+        activating,
+        active: isActive,
+        chainId,
+        error,
+      }
+      updateActiveWeb3ReactCallback(updateContext)
+    }
+  }, [account, accounts, activating, chainId, error, isActive, library, updateActiveWeb3ReactCallback, wallet])
+
+  return useWallet
+}
+
 interface ActiveWeb3ProviderProps {
   jsonRpcEndpoint?: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
@@ -132,80 +206,4 @@ export function ActiveWeb3Provider({
   }, [error])
 
   return <Web3Context.Provider value={{ web3, updateWeb3 }}>{children}</Web3Context.Provider>
-}
-
-export type Web3Connection = [Connector, Web3ReactHooks]
-
-function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
-  T,
-  Web3ReactHooks
-] {
-  return [connector, hooks]
-}
-
-// TODO(kristiehuang): should we memoize these connections instead of generating them again each time
-
-function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
-  // WalletConnect relies on Buffer, so it must be polyfilled.
-  if (!('Buffer' in window)) {
-    window.Buffer = Buffer
-  }
-
-  let rpcUrl: string
-  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    rpcUrl = jsonRpcEndpoint.connection.url
-  } else {
-    rpcUrl = jsonRpcEndpoint ?? '' // FIXME: use fallback RPC URL
-  }
-
-  return toWeb3Connection(
-    initializeConnector<WalletConnect>(
-      (actions) =>
-        new WalletConnect(
-          actions,
-          {
-            rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
-            qrcode: useDefault,
-          },
-          false
-        )
-    )
-  )
-}
-
-export function useActiveWalletProvider(): Web3Provider | undefined {
-  return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
-}
-
-export function useConnect(connection: Web3Connection) {
-  const [wallet, hooks] = connection
-  const isActive = hooks.useIsActive()
-  const accounts = hooks.useAccounts()
-  const account = hooks.useAccount()
-  const activating = hooks.useIsActivating()
-  const chainId = hooks.useChainId()
-  const error = hooks.useError()
-  const library = hooks.useProvider()
-  const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
-
-  const useWallet = useCallback(() => {
-    if (!isActive) {
-      wallet.activate()
-    } else {
-      // wallet should be already be active
-      const updateContext: Web3ContextType = {
-        connector: wallet,
-        library,
-        accounts,
-        account,
-        activating,
-        active: isActive,
-        chainId,
-        error,
-      }
-      updateActiveWeb3ReactCallback(updateContext)
-    }
-  }, [account, accounts, activating, chainId, error, isActive, library, updateActiveWeb3ReactCallback, wallet])
-
-  return useWallet
 }
