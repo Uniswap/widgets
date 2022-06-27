@@ -7,6 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
+import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { useCallback } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
@@ -37,7 +38,7 @@ export function useUpdateActiveWeb3ReactCallback() {
   return updateWeb3
 }
 
-function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
+function getNetwork(jsonRpcEndpoint: string | JsonRpcProvider) {
   if (jsonRpcEndpoint) {
     let connector, hooks
     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
@@ -70,7 +71,7 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 export let connections: [Connector, Web3ReactHooks][] = []
 
 interface ActiveWeb3ProviderProps {
-  jsonRpcEndpoint?: string | JsonRpcProvider
+  jsonRpcEndpoint: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
 }
 
@@ -132,9 +133,7 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
   return [connector, hooks]
 }
 
-function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
-  // TODO(kristiehuang): implement RPC URL fallback, then jsonRpcEndpoint can be optional
-
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string | JsonRpcProvider) {
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
@@ -144,9 +143,9 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     rpcUrl = jsonRpcEndpoint.connection.url
   } else {
-    rpcUrl = jsonRpcEndpoint ?? '' // TODO(kristiehuang): use fallback RPC URL
+    rpcUrl = jsonRpcEndpoint
   }
-
+  console.log('rpc url', rpcUrl)
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
@@ -154,7 +153,7 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
           actions,
           options: {
             rpc: {
-              1: [rpcUrl].filter((url) => url !== undefined && url !== ''),
+              1: [rpcUrl, ...JSON_RPC_FALLBACK_ENDPOINTS[1]].filter((url) => url !== undefined && url !== ''),
             },
             qrcode: useDefault,
           }, // TODO(kristiehuang): WC only works on network chainid 1?
