@@ -93,11 +93,11 @@ export function ActiveWeb3Provider({
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
 
   const network = useMemo(() => getNetwork(jsonRpcEndpoint), [jsonRpcEndpoint])
-  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
+  const activeWalletProvider = useActiveWalletProvider()
   const wallet = useMemo(() => getWallet(provider ?? activeWalletProvider), [provider, activeWalletProvider])
 
   // eslint-disable-next-line prefer-const
-  let { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
+  let { connector, hooks } = wallet.hooks.useAccount() && wallet !== EMPTY_STATE ? wallet : network
   let accounts = hooks.useAccounts()
   let account = hooks.useAccount()
   let activating = hooks.useIsActivating()
@@ -146,7 +146,6 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
 // TODO(kristiehuang): should we memoize these connections instead of generating them again each time
 
 function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
-  console.log('running getwccon')
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
@@ -174,10 +173,8 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   )
 }
 
-export function useActiveProvider(): Web3Provider | undefined {
-  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
-  const { connector: network } = getNetwork() // Return network-only provider if no wallet is connected
-  return activeWalletProvider ?? network.provider
+export function useActiveWalletProvider(): Web3Provider | undefined {
+  return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
 }
 
 export function useConnect(connection: Web3Connection) {
