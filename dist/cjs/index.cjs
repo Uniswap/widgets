@@ -983,7 +983,7 @@ function ActiveWeb3Provider(_ref) {
       connector = _ref2.connector,
       hooks = _ref2.hooks;
 
-  var account = hooks.useAccount();
+  var account = accounts[0];
   var activating = hooks.useIsActivating();
   var active = hooks.useIsActive();
   var chainId = hooks.useChainId();
@@ -15957,6 +15957,11 @@ var DialogWrapper = /*#__PURE__*/_styled__default["default"].div.withConfig({
   return theme.borderRadius * 0.75;
 }, Modal, slideIn, UNMOUNTING, slideOut);
 
+// const getCustomProvider = () => {
+//   const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/14c73ecdbcaa464585aa7c438fdf6a77')
+//   const jsonRpcEndpoint = 'https://rinkeby.infura.io/v3/14c73ecdbcaa464585aa7c438fdf6a77'
+//   return { provider, jsonRpcEndpoint }
+// }
 function Widget(props) {
   var children = props.children,
       theme = props.theme,

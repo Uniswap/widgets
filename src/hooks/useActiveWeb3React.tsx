@@ -37,7 +37,7 @@ export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
   children,
-  accounts
+  accounts,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const network = useMemo(() => {
     if (jsonRpcEndpoint) {

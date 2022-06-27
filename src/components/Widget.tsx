@@ -98,6 +98,13 @@ export type WidgetProps = {
   onChange?: OnChange
 }
 
+// const getCustomProvider = () => {
+//   const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/14c73ecdbcaa464585aa7c438fdf6a77')
+//   const jsonRpcEndpoint = 'https://rinkeby.infura.io/v3/14c73ecdbcaa464585aa7c438fdf6a77'
+
+//   return { provider, jsonRpcEndpoint }
+// }
+
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const { children, theme, provider, jsonRpcEndpoint, accounts, dialog: userDialog, className, onError } = props
 
