@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
-import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
+import { WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
@@ -67,24 +67,13 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
   const [tileConnector, tileHooks] = wcTileConnection as [WalletConnect, Web3ReactHooks]
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
-  const [qrCodeSvg, setQrCodeImg] = useState<string>('')
+  const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
 
   useEffect(() => {
     if (QRUri) {
       formatQrCodeImage(QRUri)
     } else {
-      console.log('activates')
       tileConnector.activate()
-    }
-    // feel like this def gets used in lots of other places, how do other dapps handle this?
-
-    // FIX: handle on error/just recall
-    // error: if we're connected, then reload the page -- we get error  POST https://mainnet.infura.io/v3/undefined 401
-    // at what point does the same QR code URI expire?
-    // error: if we close the popup modal before we connect, error
-    return () => {
-      console.log('remove event listener')
-      // ;(tileConnector.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', handleDisplayUri)
     }
   }, [QRUri, tileConnector])
 
@@ -95,13 +84,7 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     tileConnector.deactivate()
   })
 
-  // log URI when available
-  tileConnector.events.on(URI_AVAILABLE, (uri: string) => {
-    console.log(`we have uri: ${uri}`)
-  })
-
   tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
-    console.log('displayuri')
     if (err) console.warn(err)
     const uri: string = payload.params[0]
     if (uri) {
@@ -116,10 +99,10 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     if (typeof dataString === 'string') {
       result = dataString.replace(
         '<svg',
-        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="120"`
+        `<svg class="walletconnect-qrcode_tile" alt="WalletConnect" key="WalletConnect" width="100"`
       )
     }
-    setQrCodeImg(result)
+    setQrCodeSvg(result)
   }
 
   return (

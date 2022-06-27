@@ -52,7 +52,6 @@ export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
 }
 
 function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
-  console.log('wallet provider is', provider)
   if (provider) {
     let connector, hooks
     if (JsonRpcProvider.isProvider(provider)) {
@@ -77,7 +76,7 @@ interface ActiveWeb3ProviderProps {
 
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
-  provider: propsProvider, // either props.provider or null
+  provider: propsProvider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const metaMaskConnection = useMemo(
@@ -89,31 +88,19 @@ export function ActiveWeb3Provider({
     () => getWalletConnectConnection(true, jsonRpcEndpoint),
     [jsonRpcEndpoint]
   ) // WC via built-in popup
-
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
 
   const network = useMemo(() => getNetwork(jsonRpcEndpoint), [jsonRpcEndpoint])
   const activeProvider = useActiveWalletProvider()
   const wallet = useMemo(() => getWallet(propsProvider ?? activeProvider), [propsProvider, activeProvider])
 
-  console.log('jsonrpc endpoint', jsonRpcEndpoint)
-  console.log('using wallet activeprovider', activeProvider)
-  console.log('using wallet?', wallet !== EMPTY_STATE)
-  console.log('wallet', wallet)
-
   // eslint-disable-next-line prefer-const
   let { connector, hooks } = wallet !== EMPTY_STATE ? wallet : network
-  // let { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
   let accounts = hooks.useAccounts()
   let account = hooks.useAccount()
   let activating = hooks.useIsActivating()
   let active = hooks.useIsActive()
   let chainId = hooks.useChainId()
-  console.log('hooks.useAccounts()', hooks.useAccounts())
-  console.log('hooks.useAccount()', hooks.useAccount())
-  console.log('hooks.useChainId()', hooks.useChainId())
-  console.log('hooks.useIsActive()', hooks.useIsActive())
-
   let library = hooks.useProvider()
 
   const web3 = useMemo(() => {
@@ -133,12 +120,11 @@ export function ActiveWeb3Provider({
     library = updateContext.library as Web3Provider
   }
 
-  // Log web3 errors to facilitate debugging.
-  // useEffect(() => {
-  //   if (error) {
-  //     console.error('web3 error:', error)
-  //   }
-  // }, [error])
+  useEffect(() => {
+    if (error) {
+      console.error('web3 error:', error)
+    }
+  }, [error])
 
   return <Web3Context.Provider value={{ web3, updateWeb3 }}>{children}</Web3Context.Provider>
 }
@@ -183,9 +169,8 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   )
 }
 
-export function useActiveWalletProvider(): JsonRpcProvider | Eip1193Provider | undefined {
-  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider()
-  return activeWalletProvider
+export function useActiveWalletProvider(): Web3Provider | undefined {
+  return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
 }
 
 export function useConnect(connection: Web3Connection) {
@@ -200,11 +185,9 @@ export function useConnect(connection: Web3Connection) {
 
   const useWallet = useCallback(() => {
     if (!isActive) {
-      console.log('use wallet activating')
       wallet.activate()
     } else {
       // wallet should be already be active
-      console.log('wallet is active already')
       const updateContext: Web3ContextType = {
         connector: wallet,
         library,
