@@ -1,11 +1,13 @@
 import { ExternalProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
+import { getPriorityConnector, initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { EMPTY } from '@web3-react/empty'
-import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
+import { MetaMask } from '@web3-react/metamask'
+import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
-import { atom, useAtom } from 'jotai'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import { WalletConnect } from '@web3-react/walletconnect'
+import { Buffer } from 'buffer'
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 export type Web3ContextType = {
@@ -70,25 +72,32 @@ interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
 }
 
-export const jsonRpcEndpointAtom = atom<string | JsonRpcProvider | undefined>(undefined)
+// export const connectionsAtom = atom<[Connector, Web3ReactHooks][]>([])
+export let connections: [Connector, Web3ReactHooks][] = []
 
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   provider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const [_, setIntegratorJsonRpcEndpoint] = useAtom(jsonRpcEndpointAtom)
-  useEffect(() => {
-    console.log('useing effect')
-    setIntegratorJsonRpcEndpoint(jsonRpcEndpoint)
-  }, [jsonRpcEndpoint, setIntegratorJsonRpcEndpoint])
+  const metaMaskConnection = useMemo(
+    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask(actions))),
+    []
+  )
+  const walletConnectConnectionQR = useMemo(() => getWalletConnectConnection(false, jsonRpcEndpoint), [jsonRpcEndpoint]) // WC via tile QR code scan
+  const walletConnectConnectionPopup = useMemo(
+    () => getWalletConnectConnection(true, jsonRpcEndpoint),
+    [jsonRpcEndpoint]
+  ) // WC via built-in popup
+
+  connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
 
   const network = useMemo(() => getNetwork(jsonRpcEndpoint), [jsonRpcEndpoint])
-  const wallet = useMemo(() => getWallet(provider), [provider])
+  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
+  const wallet = useMemo(() => getWallet(provider ?? activeWalletProvider), [provider, activeWalletProvider])
 
   // eslint-disable-next-line prefer-const
   let { connector, hooks } = wallet.hooks.useIsActive() || network === EMPTY_STATE ? wallet : network
-  console.log('my connector', wallet)
   let accounts = hooks.useAccounts()
   let account = hooks.useAccount()
   let activating = hooks.useIsActivating()
@@ -123,4 +132,83 @@ export function ActiveWeb3Provider({
   }, [error])
 
   return <Web3Context.Provider value={{ web3, updateWeb3 }}>{children}</Web3Context.Provider>
+}
+
+export type Web3Connection = [Connector, Web3ReactHooks]
+
+function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
+  T,
+  Web3ReactHooks
+] {
+  return [connector, hooks]
+}
+
+// TODO(kristiehuang): should we memoize these connections instead of generating them again each time
+
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
+  console.log('running getwccon')
+  // WalletConnect relies on Buffer, so it must be polyfilled.
+  if (!('Buffer' in window)) {
+    window.Buffer = Buffer
+  }
+
+  let rpcUrl: string
+  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+    rpcUrl = jsonRpcEndpoint.connection.url
+  } else {
+    rpcUrl = jsonRpcEndpoint ?? '' // FIXME: use fallback RPC URL
+  }
+
+  return toWeb3Connection(
+    initializeConnector<WalletConnect>(
+      (actions) =>
+        new WalletConnect(
+          actions,
+          {
+            rpc: { 1: rpcUrl }, // TODO(kristiehuang): WC only works on network chainid 1?
+            qrcode: useDefault,
+          },
+          false
+        )
+    )
+  )
+}
+
+export function useActiveProvider(): Web3Provider | undefined {
+  const activeWalletProvider = getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
+  const { connector: network } = getNetwork() // Return network-only provider if no wallet is connected
+  return activeWalletProvider ?? network.provider
+}
+
+export function useConnect(connection: Web3Connection) {
+  const [wallet, hooks] = connection
+  const isActive = hooks.useIsActive()
+  const accounts = hooks.useAccounts()
+  const account = hooks.useAccount()
+  const activating = hooks.useIsActivating()
+  const chainId = hooks.useChainId()
+  const error = hooks.useError()
+  const library = hooks.useProvider()
+  const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
+
+  const useWallet = useCallback(() => {
+    if (!isActive) {
+      wallet.activate()
+    } else {
+      // wallet should be already be active
+      const updateContext: Web3ContextType = {
+        connector: wallet,
+        library,
+        accounts,
+        account,
+        activating,
+        active: isActive,
+        chainId,
+        error,
+      }
+      updateActiveWeb3ReactCallback(updateContext)
+    }
+  }, [account, accounts, activating, chainId, error, isActive, library, updateActiveWeb3ReactCallback, wallet])
+
+  return useWallet
 }

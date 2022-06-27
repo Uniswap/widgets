@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
-import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
+import { WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import useConnect, { useConnections, Web3Connection } from 'hooks/connectWeb3/useConnect'
+import { connections, useConnect, Web3Connection } from 'hooks/connectWeb3/useActiveWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
@@ -67,49 +67,24 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
   const [tileConnector, tileHooks] = wcTileConnection as [WalletConnect, Web3ReactHooks]
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
-  const [qrCodeSvg, setQrCodeImg] = useState<string>('')
+  const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
 
-  useEffect(() => {
-    if (QRUri) {
-      console.log('already have saved qri')
-      formatQrCodeImage(QRUri)
-    } else {
-      console.log('activate')
-      tileConnector.activate()
-    }
-    // FIX: handle on error/just recall
-    // error: if we're connected, then reload the page -- we get error  POST https://mainnet.infura.io/v3/undefined 401
-    // at what point does the same QR code URI expire?
-    // error: if we close the popup modal before we connect, error
-    return () => {
-      console.log('remove event listener')
-      // ;(tileConnector.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', this.URIListener)
-    }
-  }, [QRUri, tileConnector])
-
-  tileConnector.provider?.connector.on('disconnect', async (err, _) => {
+  const disconnectListener = async (err: Error | null, _: any) => {
     if (err) console.warn(err)
     // Clear saved QR URI after disconnection
     setQRUri(undefined)
-  })
+  }
+  tileConnector.provider?.connector.on('disconnect', disconnectListener)
 
-  tileConnector.events.on(URI_AVAILABLE, async (uri: string) => {
-    console.log('i got uri')
-    if (uri) {
-      setQRUri(uri)
-      await formatQrCodeImage(uri)
-    }
-  })
-
-  tileConnector.provider?.connector.on('display_uri', async (err, payload) => {
-    console.log('displayuri')
+  const uriListener = async (err: Error | null, payload: any) => {
     if (err) console.warn(err)
     const uri: string = payload.params[0]
     if (uri) {
       setQRUri(uri)
       await formatQrCodeImage(uri)
     }
-  })
+  }
+  tileConnector.provider?.connector.on('display_uri', uriListener)
 
   async function formatQrCodeImage(uri: string) {
     let result = ''
@@ -117,11 +92,20 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     if (typeof dataString === 'string') {
       result = dataString.replace(
         '<svg',
-        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="120"`
+        `<svg class="walletconnect-qrcode__image" alt="WalletConnect" key="WalletConnect" width="100" height="100"`
       )
     }
-    setQrCodeImg(result)
+    setQrCodeSvg(result)
   }
+
+  useEffect(() => {
+    if (QRUri) {
+      formatQrCodeImage(QRUri)
+    } else {
+      tileConnector.activate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [QRUri, tileConnector])
 
   return (
     <StyledMainButton onClick={onClick}>
@@ -166,7 +150,7 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnection, wcConnectionTile, wcConnectionPopup] = useConnections()
+  const [mmConnection, wcConnectionTile, wcConnectionPopup] = connections
   // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (

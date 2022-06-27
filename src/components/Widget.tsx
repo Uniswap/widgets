@@ -3,7 +3,6 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useActiveWeb3React'
-import { useActiveProvider } from 'hooks/connectWeb3/useConnect'
 import { TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
@@ -113,10 +112,9 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
 
-  const activeProvider = useActiveProvider()
   const provider = useMemo(() => {
-    return props.provider ?? activeProvider
-  }, [props.provider, activeProvider])
+    return props.provider
+  }, [props.provider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
