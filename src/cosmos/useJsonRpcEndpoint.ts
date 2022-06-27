@@ -35,5 +35,5 @@ export default function useJsonRpcEndpoint() {
   return useOption('jsonRpcEndpoint', {
     options: endpoints,
     defaultValue: INFURA_NETWORK_URLS[SupportedChainId.MAINNET] ? SupportedChainId[SupportedChainId.MAINNET] : NONE,
-  })
+  })?.at(0)
 }

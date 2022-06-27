@@ -37,7 +37,7 @@ export function useUpdateActiveWeb3ReactCallback() {
   return updateWeb3
 }
 
-export function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
+function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
   if (jsonRpcEndpoint) {
     let connector, hooks
     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
@@ -163,7 +163,7 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   )
 }
 
-export function useActiveWalletProvider(): Web3Provider | undefined {
+function useActiveWalletProvider(): Web3Provider | undefined {
   return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
 }
 
