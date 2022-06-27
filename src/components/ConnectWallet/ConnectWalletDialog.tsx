@@ -64,7 +64,8 @@ interface ButtonProps {
 const wcQRUriAtom = atom<string | undefined>(undefined)
 
 function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileConnection, onClick }: ButtonProps) {
-  const [tileConnector, tileHooks] = wcTileConnection as [WalletConnect, Web3ReactHooks]
+  const [tileConnector] = wcTileConnection as [WalletConnect, Web3ReactHooks]
+  const [error, setError] = useState(undefined)
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
@@ -73,9 +74,16 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     if (QRUri) {
       formatQrCodeImage(QRUri)
     } else {
-      tileConnector.activate()
+      tileConnector.activate().catch(setError)
     }
   }, [QRUri, tileConnector])
+
+  useEffect(() => {
+    // Log web3 errors
+    if (error) {
+      console.error('web3 error:', error)
+    }
+  }, [error])
 
   tileConnector.provider?.connector.on('disconnect', async (err, _) => {
     if (err) console.warn(err)

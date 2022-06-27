@@ -13,7 +13,11 @@ interface WalletProps {
 export default function Wallet({ disabled, account, onConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
-    connections.forEach(([wallet, _]) => wallet?.connectEagerly?.())
+    try {
+      connections.forEach(([wallet, _]) => wallet?.connectEagerly?.())
+    } catch {
+      console.debug('Failed to connect eagerly')
+    }
   }, [])
 
   const isConnected = Boolean(account)

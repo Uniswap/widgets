@@ -120,12 +120,6 @@ export function ActiveWeb3Provider({
     library = updateContext.library as Web3Provider
   }
 
-  useEffect(() => {
-    if (error) {
-      console.error('web3 error:', error)
-    }
-  }, [error])
-
   return <Web3Context.Provider value={{ web3, updateWeb3 }}>{children}</Web3Context.Provider>
 }
 
