@@ -53,7 +53,7 @@ export default function Expando({ title, open, onExpand, height, children }: Pro
           {title}
           <IconButton color="secondary" onClick={onExpand} icon={ExpandoIcon} iconProps={{ open }} />
         </Row>
-        <Rule />
+        {open && <Rule />}
       </HeaderColumn>
       <ExpandoColumn open={open} height={height}>
         <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>

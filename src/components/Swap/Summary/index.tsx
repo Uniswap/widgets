@@ -171,7 +171,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
             impact={impact}
-            displayVertical={!open}
+            collapsedView={open}
           />
           <Price trade={trade} />
         </Heading>
