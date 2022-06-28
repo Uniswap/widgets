@@ -147,7 +147,6 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string
   } else {
     mainnetRpcUrl = jsonRpcEndpoint
   }
-  console.log('rpc url', mainnetRpcUrl)
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
