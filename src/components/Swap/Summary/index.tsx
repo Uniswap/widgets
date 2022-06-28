@@ -85,7 +85,11 @@ function Estimate({ trade, slippage }: { trade: Trade<Currency, Currency, TradeT
         )
     }
   }, [i18n.locale, slippage.allowed, trade])
-  return <ThemedText.Caption color="secondary">{text}</ThemedText.Caption>
+  return (
+    <ThemedText.Caption color="secondary" marginTop="0.5em" marginBottom="0.5em">
+      {text}
+    </ThemedText.Caption>
+  )
 }
 
 function ConfirmButton({
@@ -152,7 +156,9 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
   const { inputAmount, outputAmount } = trade
 
   const [open, setOpen] = useState(false)
-  const onExpand = useCallback(() => setOpen((open) => !open), [])
+  const onExpand = useCallback(() => {
+    setOpen((open) => !open)
+  }, [])
 
   return (
     <>
@@ -165,16 +171,15 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
             impact={impact}
+            displayVertical={!open}
           />
           <Price trade={trade} />
         </Heading>
         <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
-          <Expando title={<Subhead impact={impact} slippage={slippage} />} open={open} onExpand={onExpand} height={7}>
+          <Expando title={<Subhead impact={impact} slippage={slippage} />} open={open} onExpand={onExpand} height={6}>
             <Details trade={trade} slippage={slippage} impact={impact} />
-          </Expando>
-          <Footing>
             <Estimate trade={trade} slippage={slippage} />
-          </Footing>
+          </Expando>
           <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
         </Column>
       </Body>
