@@ -140,7 +140,8 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string
     window.Buffer = Buffer
   }
 
-  let mainnetRpcUrl: string // TODO(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet
+  // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
+  let mainnetRpcUrl: string
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     mainnetRpcUrl = jsonRpcEndpoint.connection.url
   } else {
@@ -154,10 +155,7 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string
           actions,
           options: {
             rpc: {
-              [SupportedChainId.MAINNET]: [
-                mainnetRpcUrl,
-                ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
-              ],
+              [SupportedChainId.MAINNET]: mainnetRpcUrl,
               [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
             },
             qrcode: useDefault,

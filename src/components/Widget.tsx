@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useActiveWeb3React'
@@ -112,8 +113,9 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
+  // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
   const jsonRpcEndpoint = useMemo(
-    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[1][0], // FIXME(kristiehuang): we only provide 1 fallback endpoint for mainnet
+    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET]?.[0] ?? '',
     [props.jsonRpcEndpoint]
   )
 
