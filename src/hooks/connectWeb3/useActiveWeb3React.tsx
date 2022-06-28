@@ -7,6 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
+import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { useCallback } from 'react'
@@ -139,13 +140,13 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string
     window.Buffer = Buffer
   }
 
-  let rpcUrl: string
+  let mainnetRpcUrl: string // TODO(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    rpcUrl = jsonRpcEndpoint.connection.url
+    mainnetRpcUrl = jsonRpcEndpoint.connection.url
   } else {
-    rpcUrl = jsonRpcEndpoint
+    mainnetRpcUrl = jsonRpcEndpoint
   }
-  console.log('rpc url', rpcUrl)
+  console.log('rpc url', mainnetRpcUrl)
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
@@ -153,10 +154,14 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string
           actions,
           options: {
             rpc: {
-              1: [rpcUrl, ...JSON_RPC_FALLBACK_ENDPOINTS[1]].filter((url) => url !== undefined && url !== ''),
+              [SupportedChainId.MAINNET]: [
+                mainnetRpcUrl,
+                ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
+              ],
+              [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
             },
             qrcode: useDefault,
-          }, // TODO(kristiehuang): WC only works on network chainid 1?
+          },
         })
     )
   )
