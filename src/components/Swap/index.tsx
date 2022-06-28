@@ -1,89 +1,65 @@
-import { Trans } from '@lingui/macro'
-import { OnChange } from 'components/Widget'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
-import { usePendingTransactions } from 'hooks/transactions'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import { useAtom } from 'jotai'
-import { useState } from 'react'
-import { displayTxHashAtom } from 'state/swap'
-import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
-import Dialog from '../Dialog'
-import Header from '../Header'
-import { BoundaryProvider } from '../Popover'
-import Wallet from '../Wallet'
-import Input from './Input'
-import Output from './Output'
-import ReverseButton from './ReverseButton'
-import Settings from './Settings'
-import { StatusDialog } from './Status'
-import Toolbar from './Toolbar'
+import useInput from './useInput'
 import useValidate from './useValidate'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { useEffect, useState } from 'react'
+import { useDispatchSwapValues, useSwapValues } from '../../'
 
-function getTransactionFromMap(
-  txs: { [hash: string]: Transaction },
-  hash?: string
-): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
-  if (hash) {
-    const tx = txs[hash]
-    if (tx?.info?.type === TransactionType.SWAP) {
-      return tx as Transaction<SwapTransactionInfo>
-    }
-    if (tx?.info?.type === TransactionType.WRAP) {
-      return tx as Transaction<WrapTransactionInfo>
-    }
-  }
-  return
+
+export interface SwapToken {
+  address: string,
+  decimals: number,
 }
 
+export interface SwapField {
+  amount?: string;
+  currency?: SwapToken;
+}
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  onConnectWallet?: () => void
-  onChange?: OnChange
+  chainId: number;
+  children: JSX.Element | JSX.Element[] | null
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
+  
+  const dispatchSwapValues = useDispatchSwapValues()
+  const { uniswap: { input, output }} = useSwapValues();
 
-  const { active, account } = useActiveWeb3React()
-  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
-
-  const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
-  const pendingTxs = usePendingTransactions()
-  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
-
+  const {  chainId } = props;
+  
+  const { active } = useActiveWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(active && onSupportedNetwork)
+  const [inputCurrency, setInputCurrency] = useState<Currency | undefined>();
+  const [outputCurrency, setOutputCurrency] = useState<Currency | undefined>();
 
-  const focused = useHasFocus(wrapper)
+  useEffect(() => {
+    if (!input?.currency?.address) return;
+    setInputCurrency(new Token(chainId, input.currency.address, input.currency.decimals))
+  }, [input?.currency?.address])
 
+  useEffect(() => {
+    if (!output?.currency?.address) return;
+    setOutputCurrency(new Token(chainId, output.currency.address, output.currency.decimals))
+  }, [output?.currency?.address])
+
+  useEffect(() => {
+    const swapInput = useInput({ input: { disabled: isDisabled, amount: input?.amount, currency: inputCurrency }, output: { disabled: isDisabled, amount: output?.amount, currency: outputCurrency } })
+  
+    dispatchSwapValues({ uniswap: { values: swapInput }, type: 'setUniswapValues' })
+  }, [input, output])
   return (
-    <>
-      <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={!active || Boolean(account)} onClick={props.onConnectWallet} />
-        <Settings disabled={isDisabled} />
-      </Header>
-      <div ref={setWrapper}>
-        <BoundaryProvider value={wrapper}>
-          <SwapInfoProvider disabled={isDisabled}>
-            <Input disabled={isDisabled} focused={focused} onChange={props.onChange} />
-            <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused} onChange={props.onChange}>
-              <Toolbar />
-            </Output>
-          </SwapInfoProvider>
-        </BoundaryProvider>
-      </div>
-      {displayTx && (
-        <Dialog color="dialog">
-          <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />
-        </Dialog>
-      )}
-    </>
+    <SwapInfoProvider disabled={isDisabled}>
+      {props.children}
+    </SwapInfoProvider>
+
   )
 }

@@ -39,7 +39,7 @@ export function computeRoutes(
       if (!rawAmountIn || !rawAmountOut) {
         throw new Error('Expected both amountIn and amountOut to be present')
       }
-
+  
       return {
         routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,

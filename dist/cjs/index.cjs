@@ -2,9 +2,10 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var React = require('react');
+var _objectWithoutProperties = require('@babel/runtime/helpers/objectWithoutProperties');
 var _slicedToArray = require('@babel/runtime/helpers/slicedToArray');
 var _defineProperty = require('@babel/runtime/helpers/defineProperty');
+var React = require('react');
 var sdkCore = require('@uniswap/sdk-core');
 var providers = require('@ethersproject/providers');
 var core = require('@web3-react/core');
@@ -32,7 +33,6 @@ var JSBI = require('jsbi');
 var hash = require('@ethersproject/hash');
 var units = require('@ethersproject/units');
 var _toConsumableArray = require('@babel/runtime/helpers/toConsumableArray');
-var _objectWithoutProperties = require('@babel/runtime/helpers/objectWithoutProperties');
 var routerSdk = require('@uniswap/router-sdk');
 var utils = require('jotai/utils');
 var jotai = require('jotai');
@@ -44,25 +44,18 @@ var strings = require('@ethersproject/strings');
 var CID = require('cids');
 var multicodec = require('multicodec');
 var multihashes = require('multihashes');
-var _assertThisInitialized = require('@babel/runtime/helpers/assertThisInitialized');
 var _wrapNativeSuper = require('@babel/runtime/helpers/wrapNativeSuper');
+var _assertThisInitialized = require('@babel/runtime/helpers/assertThisInitialized');
+var reactRedux = require('react-redux');
 var _styled = require('styled-components');
 require('wicg-inert');
 var _taggedTemplateLiteral = require('@babel/runtime/helpers/taggedTemplateLiteral');
 var reactFeather = require('react-feather');
 var reactDom = require('react-dom');
 var polished = require('polished');
-var wcagContrast = require('wcag-contrast');
-var _extends$8 = require('@babel/runtime/helpers/extends');
+require('wcag-contrast');
+var _extends$3 = require('@babel/runtime/helpers/extends');
 var rebass = require('rebass');
-var maxSize = require('popper-max-size-modifier');
-var reactPopper = require('react-popper');
-var Vibrant = require('node-vibrant/lib/bundle.js');
-var AutoSizer = require('react-virtualized-auto-sizer');
-var reactWindow = require('react-window');
-require('@ethersproject/bignumber');
-var plurals = require('make-plural/plurals');
-var reactRedux = require('react-redux');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -84,9 +77,10 @@ function _interopNamespace(e) {
   return Object.freeze(n);
 }
 
-var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+var _objectWithoutProperties__default = /*#__PURE__*/_interopDefaultLegacy(_objectWithoutProperties);
 var _slicedToArray__default = /*#__PURE__*/_interopDefaultLegacy(_slicedToArray);
 var _defineProperty__default = /*#__PURE__*/_interopDefaultLegacy(_defineProperty);
+var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var _asyncToGenerator__default = /*#__PURE__*/_interopDefaultLegacy(_asyncToGenerator);
 var _classCallCheck__default = /*#__PURE__*/_interopDefaultLegacy(_classCallCheck);
 var _createClass__default = /*#__PURE__*/_interopDefaultLegacy(_createClass);
@@ -97,702 +91,17 @@ var _regeneratorRuntime__default = /*#__PURE__*/_interopDefaultLegacy(_regenerat
 var invariant__default = /*#__PURE__*/_interopDefaultLegacy(invariant);
 var JSBI__default = /*#__PURE__*/_interopDefaultLegacy(JSBI);
 var _toConsumableArray__default = /*#__PURE__*/_interopDefaultLegacy(_toConsumableArray);
-var _objectWithoutProperties__default = /*#__PURE__*/_interopDefaultLegacy(_objectWithoutProperties);
 var _typeof__default = /*#__PURE__*/_interopDefaultLegacy(_typeof);
 var CID__default = /*#__PURE__*/_interopDefaultLegacy(CID);
-var _assertThisInitialized__default = /*#__PURE__*/_interopDefaultLegacy(_assertThisInitialized);
 var _wrapNativeSuper__default = /*#__PURE__*/_interopDefaultLegacy(_wrapNativeSuper);
+var _assertThisInitialized__default = /*#__PURE__*/_interopDefaultLegacy(_assertThisInitialized);
 var _styled__default = /*#__PURE__*/_interopDefaultLegacy(_styled);
 var _taggedTemplateLiteral__default = /*#__PURE__*/_interopDefaultLegacy(_taggedTemplateLiteral);
-var _extends__default = /*#__PURE__*/_interopDefaultLegacy(_extends$8);
-var maxSize__default = /*#__PURE__*/_interopDefaultLegacy(maxSize);
-var Vibrant__default = /*#__PURE__*/_interopDefaultLegacy(Vibrant);
-var AutoSizer__default = /*#__PURE__*/_interopDefaultLegacy(AutoSizer);
+var _extends__default = /*#__PURE__*/_interopDefaultLegacy(_extends$3);
 
-var LinguiContext = /*#__PURE__*/React__default["default"].createContext(null);
+function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
 
-function useLingui$1() {
-  var context = React__default["default"].useContext(LinguiContext);
-  {
-    if (context == null) {
-      throw new Error("useLingui hook was used without I18nProvider.");
-    }
-  }
-  return context;
-}
-
-function withI18n(o) {
-  return function (WrappedComponent) {
-    return function (props) {
-      {
-        if (typeof o === "function" || /*#__PURE__*/React__default["default"].isValidElement(o)) {
-          throw new Error("withI18n([options]) takes options as a first argument, " + "but received React component itself. Without options, the Component " + "should be wrapped as withI18n()(Component), not withI18n(Component).");
-        }
-      }
-
-      var _useLingui = useLingui$1(),
-          i18n = _useLingui.i18n;
-
-      return /*#__PURE__*/React__default["default"].createElement(WrappedComponent, Object.assign({}, props, {
-        i18n: i18n
-      }));
-    };
-  };
-}
-
-var I18nProvider$1 = function I18nProvider(_ref) {
-  var i18n = _ref.i18n,
-      defaultComponent = _ref.defaultComponent,
-      _ref$forceRenderOnLoc = _ref.forceRenderOnLocaleChange,
-      forceRenderOnLocaleChange = _ref$forceRenderOnLoc === void 0 ? true : _ref$forceRenderOnLoc,
-      children = _ref.children;
-  /**
-   * We can't pass `i18n` object directly through context, because even when locale
-   * or messages are changed, i18n object is still the same. Context provider compares
-   * reference identity and suggested workaround is create a wrapper object every time
-   * we need to trigger re-render. See https://reactjs.org/docs/context.html#caveats.
-   *
-   * Due to this effect we also pass `defaultComponent` in the same context, instead
-   * of creating a separate Provider/Consumer pair.
-   *
-   * We can't use useMemo hook either, because we want to recalculate value manually.
-   */
-
-  var makeContext = function makeContext() {
-    return {
-      i18n: i18n,
-      defaultComponent: defaultComponent
-    };
-  };
-
-  var getRenderKey = function getRenderKey() {
-    return forceRenderOnLocaleChange ? i18n.locale || 'default' : 'default';
-  };
-
-  var _React$useState = React__default["default"].useState(makeContext()),
-      _React$useState2 = _slicedToArray__default["default"](_React$useState, 2),
-      context = _React$useState2[0],
-      setContext = _React$useState2[1],
-      _React$useState3 = React__default["default"].useState(getRenderKey()),
-      _React$useState4 = _slicedToArray__default["default"](_React$useState3, 2),
-      renderKey = _React$useState4[0],
-      setRenderKey = _React$useState4[1];
-  /**
-   * Subscribe for locale/message changes
-   *
-   * I18n object from `@lingui/core` is the single source of truth for all i18n related
-   * data (active locale, catalogs). When new messages are loaded or locale is changed
-   * we need to trigger re-rendering of LinguiContext.Consumers.
-   *
-   * We call `setContext(makeContext())` after adding the observer in case the `change`
-   * event would already have fired between the inital renderKey calculation and the
-   * `useEffect` hook being called. This can happen if locales are loaded/activated
-   * async.
-   */
-
-
-  React__default["default"].useEffect(function () {
-    var unsubscribe = i18n.on("change", function () {
-      setContext(makeContext());
-      setRenderKey(getRenderKey());
-    });
-
-    if (renderKey === 'default') {
-      setRenderKey(getRenderKey());
-    }
-
-    if (forceRenderOnLocaleChange && renderKey === 'default') {
-      console.log("I18nProvider did not render. A call to i18n.activate still needs to happen or forceRenderOnLocaleChange must be set to false.");
-    }
-
-    return function () {
-      return unsubscribe();
-    };
-  }, []);
-  if (forceRenderOnLocaleChange && renderKey === 'default') return null;
-  return /*#__PURE__*/React__default["default"].createElement(LinguiContext.Provider, {
-    value: context,
-    key: renderKey
-  }, children);
-};
-
-function _createForOfIteratorHelper$2(o, allowArrayLike) {
-  var it;
-
-  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
-    if (Array.isArray(o) || (it = _unsupportedIterableToArray$2(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it) o = it;
-      var i = 0;
-
-      var F = function F() {};
-
-      return {
-        s: F,
-        n: function n() {
-          if (i >= o.length) return {
-            done: true
-          };
-          return {
-            done: false,
-            value: o[i++]
-          };
-        },
-        e: function e(_e) {
-          throw _e;
-        },
-        f: F
-      };
-    }
-
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  var normalCompletion = true,
-      didErr = false,
-      err;
-  return {
-    s: function s() {
-      it = o[Symbol.iterator]();
-    },
-    n: function n() {
-      var step = it.next();
-      normalCompletion = step.done;
-      return step;
-    },
-    e: function e(_e2) {
-      didErr = true;
-      err = _e2;
-    },
-    f: function f() {
-      try {
-        if (!normalCompletion && it.return != null) it.return();
-      } finally {
-        if (didErr) throw err;
-      }
-    }
-  };
-}
-
-function _unsupportedIterableToArray$2(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$2(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen);
-}
-
-function _arrayLikeToArray$2(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-var tagRe = /<(\d+)>(.*?)<\/\1>|<(\d+)\/>/;
-var nlRe = /(?:\r\n|\r|\n)/g; // For HTML, certain tags should omit their close tag. We keep a whitelist for
-// those special-case tags.
-
-var voidElementTags = {
-  area: true,
-  base: true,
-  br: true,
-  col: true,
-  embed: true,
-  hr: true,
-  img: true,
-  input: true,
-  keygen: true,
-  link: true,
-  meta: true,
-  param: true,
-  source: true,
-  track: true,
-  wbr: true,
-  menuitem: true
-};
-/**
- * `formatElements` - parse string and return tree of react elements
- *
- * `value` is string to be formatted with <0>Paired<0/> or <0/> (unpaired)
- * placeholders. `elements` is a array of react elements which indexes
- * correspond to element indexes in formatted string
- */
-
-function formatElements(value) {
-  var elements = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var uniqueId = makeCounter(0, '$lingui$');
-  var parts = value.replace(nlRe, "").split(tagRe); // no inline elements, return
-
-  if (parts.length === 1) return value;
-  var tree = [];
-  var before = parts.shift();
-  if (before) tree.push(before);
-
-  var _iterator = _createForOfIteratorHelper$2(getElements(parts)),
-      _step;
-
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var _step$value = _slicedToArray__default["default"](_step.value, 3),
-          index = _step$value[0],
-          children = _step$value[1],
-          after = _step$value[2];
-
-      var element = elements[index];
-
-      if (!element || voidElementTags[element.type] && children) {
-        if (!element) {
-          console.error("Can use element at index '".concat(index, "' as it is not declared in the original translation"));
-        } else {
-          console.error("".concat(element.type, " is a void element tag therefore it must have no children"));
-        } // ignore problematic element but push its children and elements after it
-
-
-        element = /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment);
-      }
-
-      tree.push( /*#__PURE__*/React__default["default"].cloneElement(element, {
-        key: uniqueId()
-      }, // format children for pair tags
-      // unpaired tags might have children if it's a component passed as a variable
-      children ? formatElements(children, elements) : element.props.children));
-      if (after) tree.push(after);
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-
-  return tree;
-}
-/*
- * `getElements` - return array of element indexes and element childrens
- *
- * `parts` is array of [pairedIndex, children, unpairedIndex, textAfter, ...]
- * where:
- * - `pairedIndex` is index of paired element (undef for unpaired)
- * - `children` are children of paired element (undef for unpaired)
- * - `unpairedIndex` is index of unpaired element (undef for paired)
- * - `textAfter` is string after all elements (empty string, if there's nothing)
- *
- * `parts` length is always multiply of 4
- *
- * Returns: Array<[elementIndex, children, after]>
- */
-
-
-function getElements(parts) {
-  if (!parts.length) return [];
-
-  var _parts$slice = parts.slice(0, 4),
-      _parts$slice2 = _slicedToArray__default["default"](_parts$slice, 4),
-      paired = _parts$slice2[0],
-      children = _parts$slice2[1],
-      unpaired = _parts$slice2[2],
-      after = _parts$slice2[3];
-
-  return [[parseInt(paired || unpaired), children || "", after]].concat(getElements(parts.slice(4, parts.length)));
-}
-
-var makeCounter = function makeCounter() {
-  var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
-  return function () {
-    return "".concat(prefix, "_").concat(count++);
-  };
-};
-
-function ownKeys$b(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread$b(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys$b(Object(source), true).forEach(function (key) {
-        _defineProperty__default["default"](target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys$b(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function Trans$1(props) {
-  var _useLingui = useLingui$1(),
-      i18n = _useLingui.i18n,
-      defaultComponent = _useLingui.defaultComponent;
-
-  var render = props.render,
-      component = props.component,
-      id = props.id,
-      message = props.message,
-      formats = props.formats;
-
-  var values = _objectSpread$b({}, props.values);
-
-  var components = _objectSpread$b({}, props.components);
-
-  if (values) {
-    /*
-      Related discussion: https://github.com/lingui/js-lingui/issues/183
-           Values *might* contain React elements with static content.
-      They're replaced with <INDEX /> placeholders and added to `components`.
-           Example:
-      Translation: Hello {name}
-      Values: { name: <strong>Jane</strong> }
-           It'll become "Hello <0 />" with components=[<strong>Jane</strong>]
-      */
-    Object.keys(values).forEach(function (key) {
-      var value = values[key];
-      if (! /*#__PURE__*/React__default["default"].isValidElement(value)) return;
-      var index = Object.keys(components).length;
-      components[index] = value;
-      values[key] = "<".concat(index, "/>");
-    });
-  }
-
-  var _translation = i18n && typeof i18n._ === "function" ? i18n._(id, values, {
-    message: message,
-    formats: formats
-  }) : id; // i18n provider isn't loaded at all
-
-
-  var translation = _translation ? formatElements(_translation, components) : null;
-
-  if (render === null || component === null) {
-    // Although `string` is a valid react element, types only allow `Element`
-    // Upstream issue: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544
-    return translation;
-  }
-
-  var FallbackComponent = defaultComponent || React__default["default"].Fragment; // Validation of `render` and `component` props
-
-  if (render && component) {
-    console.error("You can't use both `component` and `render` prop at the same time. `component` is ignored.");
-  } else if (render && typeof render !== "function") {
-    console.error("Invalid value supplied to prop `render`. It must be a function, provided ".concat(render));
-  } else if (component && typeof component !== "function") {
-    // Apparently, both function components and class components are functions
-    // See https://stackoverflow.com/a/41658173/1535540
-    console.error("Invalid value supplied to prop `component`. It must be a React component, provided ".concat(component));
-    return /*#__PURE__*/React__default["default"].createElement(FallbackComponent, null, translation);
-  } // Rendering using a render prop
-
-
-  if (typeof render === "function") {
-    // Component: render={(props) => <a title={props.translation}>x</a>}
-    return render({
-      id: id,
-      translation: translation,
-      message: message
-    });
-  } // `component` prop has a higher precedence over `defaultComponent`
-
-
-  var Component = component || FallbackComponent;
-  return /*#__PURE__*/React__default["default"].createElement(Component, null, translation);
-}
-
-Trans$1.defaultProps = {
-  values: {},
-  components: {}
-};
-
-var r = /*#__PURE__*/React__default["default"].createContext(null);
-
-function o() {
-  var e = React__default["default"].useContext(r);
-  return e;
-}
-
-function a(e) {
-  return function (e) {
-    return function (t) {
-      var r = o(),
-          a = r.i18n;
-      return /*#__PURE__*/React__default["default"].createElement(e, Object.assign({}, t, {
-        i18n: a
-      }));
-    };
-  };
-}
-
-var i$1 = function i(t) {
-  var o = t.i18n,
-      a = t.defaultComponent,
-      i = t.forceRenderOnLocaleChange,
-      c = void 0 === i || i,
-      u = t.children,
-      l = function l() {
-    return {
-      i18n: o,
-      defaultComponent: a
-    };
-  },
-      f = function f() {
-    return c && o.locale || "default";
-  },
-      s = React__default["default"].useState(l()),
-      p = _slicedToArray__default["default"](s, 2),
-      m = p[0],
-      d = p[1],
-      v = React__default["default"].useState(f()),
-      y = _slicedToArray__default["default"](v, 2),
-      h = y[0],
-      b = y[1];
-
-  return React__default["default"].useEffect(function () {
-    var e = o.on("change", function () {
-      d(l()), b(f());
-    });
-    return "default" === h && b(f()), c && "default" === h && console.log("I18nProvider did not render. A call to i18n.activate still needs to happen or forceRenderOnLocaleChange must be set to false."), function () {
-      return e();
-    };
-  }, []), c && "default" === h ? null : /*#__PURE__*/React__default["default"].createElement(r.Provider, {
-    value: m,
-    key: h
-  }, u);
-};
-
-function c$1(e, n) {
-  var t;
-
-  if ("undefined" == typeof Symbol || null == e[Symbol.iterator]) {
-    if (Array.isArray(e) || (t = function (e, n) {
-      if (!e) return;
-      if ("string" == typeof e) return u$1(e, n);
-      var t = Object.prototype.toString.call(e).slice(8, -1);
-      "Object" === t && e.constructor && (t = e.constructor.name);
-      if ("Map" === t || "Set" === t) return Array.from(e);
-      if ("Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)) return u$1(e, n);
-    }(e)) || n && e && "number" == typeof e.length) {
-      t && (e = t);
-
-      var r = 0,
-          o = function o() {};
-
-      return {
-        s: o,
-        n: function n() {
-          return r >= e.length ? {
-            done: !0
-          } : {
-            done: !1,
-            value: e[r++]
-          };
-        },
-        e: function e(_e) {
-          throw _e;
-        },
-        f: o
-      };
-    }
-
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  var a,
-      i = !0,
-      c = !1;
-  return {
-    s: function s() {
-      t = e[Symbol.iterator]();
-    },
-    n: function n() {
-      var e = t.next();
-      return i = e.done, e;
-    },
-    e: function e(_e2) {
-      c = !0, a = _e2;
-    },
-    f: function f() {
-      try {
-        i || null == t.return || t.return();
-      } finally {
-        if (c) throw a;
-      }
-    }
-  };
-}
-
-function u$1(e, n) {
-  (null == n || n > e.length) && (n = e.length);
-
-  for (var t = 0, r = new Array(n); t < n; t++) {
-    r[t] = e[t];
-  }
-
-  return r;
-}
-
-var l = /<(\d+)>(.*?)<\/\1>|<(\d+)\/>/,
-    f$1 = /(?:\r\n|\r|\n)/g,
-    s$1 = {
-  area: !0,
-  base: !0,
-  br: !0,
-  col: !0,
-  embed: !0,
-  hr: !0,
-  img: !0,
-  input: !0,
-  keygen: !0,
-  link: !0,
-  meta: !0,
-  param: !0,
-  source: !0,
-  track: !0,
-  wbr: !0,
-  menuitem: !0
-};
-
-function p$1(n) {
-  if (!n.length) return [];
-  var t = n.slice(0, 4),
-      r = _slicedToArray__default["default"](t, 4),
-      o = r[0],
-      a = r[1],
-      i = r[2],
-      c = r[3];
-  return [[parseInt(o || i), a || "", c]].concat(p$1(n.slice(4, n.length)));
-}
-
-var m$1 = function m() {
-  var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
-      n = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "";
-  return function () {
-    return "".concat(n, "_").concat(e++);
-  };
-};
-
-function d$1(e, n) {
-  var t = Object.keys(e);
-
-  if (Object.getOwnPropertySymbols) {
-    var r = Object.getOwnPropertySymbols(e);
-    n && (r = r.filter(function (n) {
-      return Object.getOwnPropertyDescriptor(e, n).enumerable;
-    })), t.push.apply(t, r);
-  }
-
-  return t;
-}
-
-function v$1(e) {
-  for (var n = 1; n < arguments.length; n++) {
-    var r = null != arguments[n] ? arguments[n] : {};
-    n % 2 ? d$1(Object(r), !0).forEach(function (n) {
-      _defineProperty__default["default"](e, n, r[n]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(r)) : d$1(Object(r)).forEach(function (n) {
-      Object.defineProperty(e, n, Object.getOwnPropertyDescriptor(r, n));
-    });
-  }
-
-  return e;
-}
-
-function y$1(t) {
-  var r = o(),
-      a = r.i18n,
-      i = r.defaultComponent,
-      u = t.render,
-      d = t.component,
-      y = t.id,
-      h = t.message,
-      b = t.formats,
-      g = v$1({}, t.values),
-      O = v$1({}, t.components);
-  g && Object.keys(g).forEach(function (e) {
-    var t = g[e];
-
-    if ( /*#__PURE__*/React__default["default"].isValidElement(t)) {
-      var r = Object.keys(O).length;
-      O[r] = t, g[e] = "<".concat(r, "/>");
-    }
-  });
-  var j = a && "function" == typeof a._ ? a._(y, g, {
-    message: h,
-    formats: b
-  }) : y,
-      w = j ? function t(r) {
-    var o = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
-        a = m$1(0, "$lingui$"),
-        i = r.replace(f$1, "").split(l);
-    if (1 === i.length) return r;
-    var u = [],
-        d = i.shift();
-    d && u.push(d);
-    var v,
-        y = c$1(p$1(i));
-
-    try {
-      for (y.s(); !(v = y.n()).done;) {
-        var h = _slicedToArray__default["default"](v.value, 3),
-            b = h[0],
-            g = h[1],
-            O = h[2],
-            j = o[b];
-        (!j || s$1[j.type] && g) && (j ? console.error("".concat(j.type, " is a void element tag therefore it must have no children")) : console.error("Can use element at index '".concat(b, "' as it is not declared in the original translation")), j = /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment)), u.push( /*#__PURE__*/React__default["default"].cloneElement(j, {
-          key: a()
-        }, g ? t(g, o) : j.props.children)), O && u.push(O);
-      }
-    } catch (e) {
-      y.e(e);
-    } finally {
-      y.f();
-    }
-
-    return u;
-  }(j, O) : null;
-  if (null === u || null === d) return w;
-  var E = i || React__default["default"].Fragment;
-  if (u && d) console.error("You can't use both `component` and `render` prop at the same time. `component` is ignored.");else if (u && "function" != typeof u) console.error("Invalid value supplied to prop `render`. It must be a function, provided ".concat(u));else if (d && "function" != typeof d) return console.error("Invalid value supplied to prop `component`. It must be a React component, provided ".concat(d)), /*#__PURE__*/React__default["default"].createElement(E, null, w);
-  if ("function" == typeof u) return u({
-    id: y,
-    translation: w,
-    message: h
-  });
-  var P = d || E;
-  return /*#__PURE__*/React__default["default"].createElement(P, null, w);
-}
-
-y$1.defaultProps = {
-  values: {},
-  components: {}
-};
-
-var I18nProvider = process.env.NODE_ENV === "production" ? i$1 : I18nProvider$1;
-var Trans = process.env.NODE_ENV === "production" ? y$1 : Trans$1;
-var useLingui = process.env.NODE_ENV === "production" ? o : useLingui$1;
-process.env.NODE_ENV === "production" ? a : withI18n;
-
-function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
-
-function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function parseChainId(chainId) {
   return Number.parseInt(chainId, 16);
@@ -801,7 +110,7 @@ function parseChainId(chainId) {
 var JsonRpcConnector = /*#__PURE__*/function (_Connector) {
   _inherits__default["default"](JsonRpcConnector, _Connector);
 
-  var _super = _createSuper$6(JsonRpcConnector);
+  var _super = _createSuper$5(JsonRpcConnector);
 
   function JsonRpcConnector(actions, customProvider) {
     var _this;
@@ -1296,11 +605,11 @@ function constructSameAddressMap(address) {
 
 var _objectSpread2$2, _ENS_REGISTRAR_ADDRES, _TICK_LENS_ADDRESSES;
 
-function ownKeys$a(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$9(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$a(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$a(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$a(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$9(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$9(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$9(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var UNI_ADDRESS = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984');
-var MULTICALL_ADDRESS = _objectSpread$a(_objectSpread$a({}, constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [exports.SupportedChainId.OPTIMISTIC_KOVAN, exports.SupportedChainId.OPTIMISM, exports.SupportedChainId.POLYGON_MUMBAI, exports.SupportedChainId.POLYGON])), {}, (_objectSpread2$2 = {}, _defineProperty__default["default"](_objectSpread2$2, exports.SupportedChainId.ARBITRUM_ONE, '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB'), _defineProperty__default["default"](_objectSpread2$2, exports.SupportedChainId.ARBITRUM_RINKEBY, '0xa501c031958F579dB7676fF1CE78AD305794d579'), _objectSpread2$2));
+var MULTICALL_ADDRESS = _objectSpread$9(_objectSpread$9({}, constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [exports.SupportedChainId.OPTIMISTIC_KOVAN, exports.SupportedChainId.OPTIMISM, exports.SupportedChainId.POLYGON_MUMBAI, exports.SupportedChainId.POLYGON])), {}, (_objectSpread2$2 = {}, _defineProperty__default["default"](_objectSpread2$2, exports.SupportedChainId.ARBITRUM_ONE, '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB'), _defineProperty__default["default"](_objectSpread2$2, exports.SupportedChainId.ARBITRUM_RINKEBY, '0xa501c031958F579dB7676fF1CE78AD305794d579'), _objectSpread2$2));
 var V2_FACTORY_ADDRESSES = constructSameAddressMap(v2Sdk.FACTORY_ADDRESS);
 constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D');
 constructSameAddressMap('0xE592427A0AEce92De3Edee1F18E0157C05861564', [exports.SupportedChainId.OPTIMISM, exports.SupportedChainId.OPTIMISTIC_KOVAN, exports.SupportedChainId.ARBITRUM_ONE, exports.SupportedChainId.ARBITRUM_RINKEBY, exports.SupportedChainId.POLYGON, exports.SupportedChainId.POLYGON_MUMBAI]);
@@ -1333,13 +642,13 @@ constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [exports.S
 
 var _USDC, _UNI, _objectSpread2$1, _USDC2;
 
-function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
+function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
 
-function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-function ownKeys$9(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$9(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$9(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$9(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$8(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var USDC_MAINNET = new sdkCore.Token(exports.SupportedChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C');
 var USDC_ROPSTEN = new sdkCore.Token(exports.SupportedChainId.ROPSTEN, '0x07865c6e87b9f70255377e024ace6630c1eaa37f', 6, 'USDC', 'USD//C');
 var USDC_RINKEBY = new sdkCore.Token(exports.SupportedChainId.RINKEBY, '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b', 6, 'tUSDC', 'test USD//C');
@@ -1377,7 +686,7 @@ var SWISE = new sdkCore.Token(exports.SupportedChainId.MAINNET, '0x48C3399719B58
 var WETH_POLYGON_MUMBAI = new sdkCore.Token(exports.SupportedChainId.POLYGON_MUMBAI, '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa', 18, 'WETH', 'Wrapped Ether');
 var WETH_POLYGON = new sdkCore.Token(exports.SupportedChainId.POLYGON, '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 18, 'WETH', 'Wrapped Ether');
 (_UNI = {}, _defineProperty__default["default"](_UNI, exports.SupportedChainId.MAINNET, new sdkCore.Token(exports.SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap')), _defineProperty__default["default"](_UNI, exports.SupportedChainId.RINKEBY, new sdkCore.Token(exports.SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap')), _defineProperty__default["default"](_UNI, exports.SupportedChainId.ROPSTEN, new sdkCore.Token(exports.SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap')), _defineProperty__default["default"](_UNI, exports.SupportedChainId.GOERLI, new sdkCore.Token(exports.SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap')), _defineProperty__default["default"](_UNI, exports.SupportedChainId.KOVAN, new sdkCore.Token(exports.SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap')), _UNI);
-var WRAPPED_NATIVE_CURRENCY = _objectSpread$9(_objectSpread$9({}, sdkCore.WETH9), {}, (_objectSpread2$1 = {}, _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.OPTIMISM, new sdkCore.Token(exports.SupportedChainId.OPTIMISM, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.OPTIMISTIC_KOVAN, new sdkCore.Token(exports.SupportedChainId.OPTIMISTIC_KOVAN, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.ARBITRUM_ONE, new sdkCore.Token(exports.SupportedChainId.ARBITRUM_ONE, '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.ARBITRUM_RINKEBY, new sdkCore.Token(exports.SupportedChainId.ARBITRUM_RINKEBY, '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.POLYGON, new sdkCore.Token(exports.SupportedChainId.POLYGON, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.POLYGON_MUMBAI, new sdkCore.Token(exports.SupportedChainId.POLYGON_MUMBAI, '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', 18, 'WMATIC', 'Wrapped MATIC')), _objectSpread2$1));
+var WRAPPED_NATIVE_CURRENCY = _objectSpread$8(_objectSpread$8({}, sdkCore.WETH9), {}, (_objectSpread2$1 = {}, _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.OPTIMISM, new sdkCore.Token(exports.SupportedChainId.OPTIMISM, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.OPTIMISTIC_KOVAN, new sdkCore.Token(exports.SupportedChainId.OPTIMISTIC_KOVAN, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.ARBITRUM_ONE, new sdkCore.Token(exports.SupportedChainId.ARBITRUM_ONE, '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.ARBITRUM_RINKEBY, new sdkCore.Token(exports.SupportedChainId.ARBITRUM_RINKEBY, '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', 18, 'WETH', 'Wrapped Ether')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.POLYGON, new sdkCore.Token(exports.SupportedChainId.POLYGON, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC')), _defineProperty__default["default"](_objectSpread2$1, exports.SupportedChainId.POLYGON_MUMBAI, new sdkCore.Token(exports.SupportedChainId.POLYGON_MUMBAI, '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', 18, 'WMATIC', 'Wrapped MATIC')), _objectSpread2$1));
 
 function isMatic(chainId) {
   return chainId === exports.SupportedChainId.POLYGON_MUMBAI || chainId === exports.SupportedChainId.POLYGON;
@@ -1386,7 +695,7 @@ function isMatic(chainId) {
 var MaticNativeCurrency = /*#__PURE__*/function (_NativeCurrency) {
   _inherits__default["default"](MaticNativeCurrency, _NativeCurrency);
 
-  var _super = _createSuper$5(MaticNativeCurrency);
+  var _super = _createSuper$4(MaticNativeCurrency);
 
   function MaticNativeCurrency(chainId) {
     _classCallCheck__default["default"](this, MaticNativeCurrency);
@@ -1416,7 +725,7 @@ var MaticNativeCurrency = /*#__PURE__*/function (_NativeCurrency) {
 var ExtendedEther = /*#__PURE__*/function (_Ether) {
   _inherits__default["default"](ExtendedEther, _Ether);
 
-  var _super2 = _createSuper$5(ExtendedEther);
+  var _super2 = _createSuper$4(ExtendedEther);
 
   function ExtendedEther() {
     _classCallCheck__default["default"](this, ExtendedEther);
@@ -4296,8 +3605,8 @@ function useV3Quoter() {
 }
 
 var multicall = reduxMulticall.createMulticall();
-var reducer = redux.combineReducers(_defineProperty__default["default"]({}, multicall.reducerPath, multicall.reducer));
-var store = redux.createStore(reducer);
+var reducer$1 = redux.combineReducers(_defineProperty__default["default"]({}, multicall.reducerPath, multicall.reducer));
+var store = redux.createStore(reducer$1);
 function MulticallUpdater() {
   var _useActiveWeb3React = useActiveWeb3React(),
       chainId = _useActiveWeb3React.chainId;
@@ -4627,9 +3936,6 @@ function tryParseCurrencyAmount(value, currency) {
   return undefined;
 }
 
-var DEFAULT_DEADLINE_FROM_NOW = 60 * 30;
-var L2_DEADLINE_FROM_NOW = 60 * 5; // transaction popup dismisal amounts
-
 JSBI__default["default"].BigInt(60 * 60 * 24 * 7);
 JSBI__default["default"].BigInt(0); // one basis JSBI.BigInt
 
@@ -4674,9 +3980,9 @@ function isTradeBetter(tradeA, tradeB) {
 
 var _objectSpread2, _SupportedChainId$MAI, _COMMON_BASES;
 
-function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$8(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$7(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var WRAPPED_NATIVE_CURRENCIES_ONLY = Object.fromEntries(Object.entries(WRAPPED_NATIVE_CURRENCY).map(function (_ref) {
   var _ref2 = _slicedToArray__default["default"](_ref, 2),
       key = _ref2[0],
@@ -4685,7 +3991,7 @@ var WRAPPED_NATIVE_CURRENCIES_ONLY = Object.fromEntries(Object.entries(WRAPPED_N
   return [key, [value]];
 }).filter(Boolean)); // used to construct intermediary pairs for trading
 
-var BASES_TO_CHECK_TRADES_AGAINST = _objectSpread$8(_objectSpread$8({}, WRAPPED_NATIVE_CURRENCIES_ONLY), {}, (_objectSpread2 = {}, _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.MAINNET, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.MAINNET]), [DAI, USDC_MAINNET, USDT, WBTC])), _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.OPTIMISM, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.OPTIMISM]), [DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM])), _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.ARBITRUM_ONE, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.ARBITRUM_ONE]), [DAI_ARBITRUM_ONE, USDT_ARBITRUM_ONE, WBTC_ARBITRUM_ONE])), _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.POLYGON, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.POLYGON]), [DAI_POLYGON, USDC_POLYGON, USDT_POLYGON, WETH_POLYGON])), _objectSpread2));
+var BASES_TO_CHECK_TRADES_AGAINST = _objectSpread$7(_objectSpread$7({}, WRAPPED_NATIVE_CURRENCIES_ONLY), {}, (_objectSpread2 = {}, _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.MAINNET, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.MAINNET]), [DAI, USDC_MAINNET, USDT, WBTC])), _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.OPTIMISM, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.OPTIMISM]), [DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM])), _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.ARBITRUM_ONE, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.ARBITRUM_ONE]), [DAI_ARBITRUM_ONE, USDT_ARBITRUM_ONE, WBTC_ARBITRUM_ONE])), _defineProperty__default["default"](_objectSpread2, exports.SupportedChainId.POLYGON, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.POLYGON]), [DAI_POLYGON, USDC_POLYGON, USDT_POLYGON, WETH_POLYGON])), _objectSpread2));
 var ADDITIONAL_BASES = _defineProperty__default["default"]({}, exports.SupportedChainId.MAINNET, (_SupportedChainId$MAI = {
   '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI]
 }, _defineProperty__default["default"](_SupportedChainId$MAI, rETH2.address, [sETH2]), _defineProperty__default["default"](_SupportedChainId$MAI, SWISE.address, [sETH2]), _defineProperty__default["default"](_SupportedChainId$MAI, FEI.address, [TRIBE]), _defineProperty__default["default"](_SupportedChainId$MAI, TRIBE.address, [FEI]), _defineProperty__default["default"](_SupportedChainId$MAI, FRAX.address, [FXS]), _defineProperty__default["default"](_SupportedChainId$MAI, FXS.address, [FRAX]), _defineProperty__default["default"](_SupportedChainId$MAI, WBTC.address, [renBTC]), _defineProperty__default["default"](_SupportedChainId$MAI, renBTC.address, [WBTC]), _SupportedChainId$MAI));
@@ -4701,7 +4007,7 @@ var CUSTOM_BASES = _defineProperty__default["default"]({}, exports.SupportedChai
 
 (_COMMON_BASES = {}, _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.MAINNET, [nativeOnChain(exports.SupportedChainId.MAINNET), DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.MAINNET]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.ROPSTEN, [nativeOnChain(exports.SupportedChainId.ROPSTEN), WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.ROPSTEN]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.RINKEBY, [nativeOnChain(exports.SupportedChainId.RINKEBY), WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.RINKEBY]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.GOERLI, [nativeOnChain(exports.SupportedChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.GOERLI]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.KOVAN, [nativeOnChain(exports.SupportedChainId.KOVAN), WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.KOVAN]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.ARBITRUM_ONE, [nativeOnChain(exports.SupportedChainId.ARBITRUM_ONE), DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDT_ARBITRUM_ONE, WBTC_ARBITRUM_ONE, WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.ARBITRUM_ONE]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.ARBITRUM_RINKEBY, [nativeOnChain(exports.SupportedChainId.ARBITRUM_RINKEBY), WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.ARBITRUM_RINKEBY]]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.OPTIMISM, [nativeOnChain(exports.SupportedChainId.OPTIMISM), DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.OPTIMISTIC_KOVAN, [nativeOnChain(exports.SupportedChainId.OPTIMISTIC_KOVAN)]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.POLYGON, [nativeOnChain(exports.SupportedChainId.POLYGON), WETH_POLYGON, USDC_POLYGON, DAI_POLYGON, USDT_POLYGON, WBTC_POLYGON]), _defineProperty__default["default"](_COMMON_BASES, exports.SupportedChainId.POLYGON_MUMBAI, [nativeOnChain(exports.SupportedChainId.POLYGON_MUMBAI), WRAPPED_NATIVE_CURRENCY[exports.SupportedChainId.POLYGON_MUMBAI], WETH_POLYGON_MUMBAI]), _COMMON_BASES); // used to construct the list of all pairs we consider by default in the frontend
 
-_objectSpread$8(_objectSpread$8({}, WRAPPED_NATIVE_CURRENCIES_ONLY), {}, _defineProperty__default["default"]({}, exports.SupportedChainId.MAINNET, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.MAINNET]), [DAI, USDC_MAINNET, USDT, WBTC])));
+_objectSpread$7(_objectSpread$7({}, WRAPPED_NATIVE_CURRENCIES_ONLY), {}, _defineProperty__default["default"]({}, exports.SupportedChainId.MAINNET, [].concat(_toConsumableArray__default["default"](WRAPPED_NATIVE_CURRENCIES_ONLY[exports.SupportedChainId.MAINNET]), [DAI, USDC_MAINNET, USDT, WBTC])));
 _defineProperty__default["default"]({}, exports.SupportedChainId.MAINNET, [[new sdkCore.Token(exports.SupportedChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'), new sdkCore.Token(exports.SupportedChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')], [USDC_MAINNET, USDT], [DAI, USDT]]);
 
 function useAllCurrencyCombinations(currencyA, currencyB) {
@@ -4935,11 +4241,11 @@ function useBestV2Trade(tradeType, amountSpecified, otherCurrency) {
   }, [tradeType, amountSpecified, currencyIn, currencyOut, allowedPairs, maxHops]);
 }
 
-var _excluded$4 = ["gasUseEstimateUSD"];
+var _excluded$2 = ["gasUseEstimateUSD"];
 
-function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
+function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
 
-function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 var TradeState; // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 (function (TradeState) {
@@ -4953,13 +4259,13 @@ var TradeState; // from https://github.com/Uniswap/routing-api/blob/main/lib/han
 var InterfaceTrade = /*#__PURE__*/function (_Trade) {
   _inherits__default["default"](InterfaceTrade, _Trade);
 
-  var _super = _createSuper$4(InterfaceTrade);
+  var _super = _createSuper$3(InterfaceTrade);
 
   function InterfaceTrade(_ref) {
     var _this;
 
     var gasUseEstimateUSD = _ref.gasUseEstimateUSD,
-        routes = _objectWithoutProperties__default["default"](_ref, _excluded$4);
+        routes = _objectWithoutProperties__default["default"](_ref, _excluded$2);
 
     _classCallCheck__default["default"](this, InterfaceTrade);
 
@@ -5795,7 +5101,7 @@ var initialSettings = {
 var settingsAtom = utils.atomWithReset(initialSettings);
 var autoSlippageAtom = pickAtom(settingsAtom, 'autoSlippage');
 var maxSlippageAtom = pickAtom(settingsAtom, 'maxSlippage');
-var transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl');
+pickAtom(settingsAtom, 'transactionTtl');
 pickAtom(settingsAtom, 'mockTogglable', setTogglable);
 pickAtom(settingsAtom, 'clientSideRouter');
 
@@ -5903,7 +5209,7 @@ var swapAtom = immer.atomWithImmer(_defineProperty__default["default"]({
   amount: ''
 }, Field.INPUT, nativeOnChain(exports.SupportedChainId.MAINNET))); // If set to a transaction hash, that transaction will display in a status dialog.
 
-var displayTxHashAtom = jotai.atom(undefined);
+jotai.atom(undefined);
 var feeOptionsAtom = jotai.atom(undefined);
 
 /**
@@ -6120,9 +5426,9 @@ function useGetIsValidBlock() {
   }, [currentBlock, maxBlockAge, oldestBlock]);
 }
 
-function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$7(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$6(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var DEFAULT_POLLING_INTERVAL = 15000;
 var DEFAULT_KEEP_UNUSED_DATA_FOR = 10000;
 function usePoll(fetch) {
@@ -6193,7 +5499,7 @@ function usePoll(fetch) {
                 ttl = _args.length > 0 && _args[0] !== undefined ? _args[0] : Date.now() + pollingInterval;
                 timeout = setTimeout(poll, pollingInterval); // queue the next poll
 
-                cache.set(key, _objectSpread$7({
+                cache.set(key, _objectSpread$6({
                   ttl: null
                 }, cache.get(key))); // mark the entry as a pending fetch
                 // Always set the result in the cache, but only set it as data if the key is still being queried.
@@ -6820,9 +6126,9 @@ function uriToHttp(uri) {
   }
 }
 
-function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$6(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$5(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 var ValidationSchema;
 
@@ -6850,7 +6156,7 @@ var validator = new Promise( /*#__PURE__*/function () {
             validator = new ajv.default({
               allErrors: true
             }).addSchema(schema, ValidationSchema.LIST) // Adds a meta scheme of Pick<TokenList, 'tokens'>
-            .addSchema(_objectSpread$6(_objectSpread$6({}, schema), {}, {
+            .addSchema(_objectSpread$5(_objectSpread$5({}, schema), {}, {
               $id: schema.$id + '#tokens',
               required: ['tokens']
             }), ValidationSchema.TOKENS);
@@ -7121,9 +6427,9 @@ function _fetchTokenList() {
   return _fetchTokenList.apply(this, arguments);
 }
 
-function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$5(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$4(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 /**
  * Token instances created from token info on a token list.
@@ -7187,7 +6493,7 @@ var WrappedTokenInfo = /*#__PURE__*/function () {
       var listTags = (_this$list = this.list) === null || _this$list === void 0 ? void 0 : _this$list.tags;
       if (!listTags) return this._tags = [];
       return this._tags = this.tokenInfo.tags.map(function (tagId) {
-        return _objectSpread$5(_objectSpread$5({}, listTags[tagId]), {}, {
+        return _objectSpread$4(_objectSpread$4({}, listTags[tagId]), {}, {
           id: tagId
         });
       });
@@ -7247,136 +6553,6 @@ function tokensToChainTokenMap(tokens) {
   return map;
 }
 
-var alwaysTrue = function alwaysTrue() {
-  return true;
-};
-/** Creates a filter function that filters tokens that do not match the query. */
-
-
-function getTokenFilter(query) {
-  var searchingAddress = isAddress(query);
-
-  if (searchingAddress) {
-    var address = searchingAddress.toLowerCase();
-    return function (t) {
-      return 'address' in t && address === t.address.toLowerCase();
-    };
-  }
-
-  var queryParts = query.toLowerCase().split(/\s+/).filter(function (s) {
-    return s.length > 0;
-  });
-  if (queryParts.length === 0) return alwaysTrue;
-
-  var match = function match(s) {
-    var parts = s.toLowerCase().split(/\s+/).filter(function (s) {
-      return s.length > 0;
-    });
-    return queryParts.every(function (p) {
-      return p.length === 0 || parts.some(function (sp) {
-        return sp.startsWith(p) || sp.endsWith(p);
-      });
-    });
-  };
-
-  return function (_ref) {
-    var name = _ref.name,
-        symbol = _ref.symbol;
-    return Boolean(symbol && match(symbol) || name && match(name));
-  };
-}
-
-/** Sorts currency amounts (descending). */
-
-function balanceComparator(a, b) {
-  if (a && b) {
-    return a.greaterThan(b) ? -1 : a.equalTo(b) ? 0 : 1;
-  } else if (a !== null && a !== void 0 && a.greaterThan('0')) {
-    return -1;
-  } else if (b !== null && b !== void 0 && b.greaterThan('0')) {
-    return 1;
-  }
-
-  return 0;
-}
-
-/** Sorts tokens by currency amount (descending), then symbol (ascending). */
-function tokenComparator(balances, a, b) {
-  // Sorts by balances
-  var balanceComparison = balanceComparator(balances[a.address], balances[b.address]);
-  if (balanceComparison !== 0) return balanceComparison; // Sorts by symbol
-
-  if (a.symbol && b.symbol) {
-    return a.symbol.toLowerCase() < b.symbol.toLowerCase() ? -1 : 1;
-  }
-
-  return -1;
-}
-/** Sorts tokens by query, giving precedence to exact matches and partial matches. */
-
-function useSortTokensByQuery(query, tokens) {
-  return React.useMemo(function () {
-    if (!tokens) {
-      return [];
-    }
-
-    var matches = query.toLowerCase().split(/\s+/).filter(function (s) {
-      return s.length > 0;
-    });
-
-    if (matches.length > 1) {
-      return tokens;
-    }
-
-    var exactMatches = [];
-    var symbolSubtrings = [];
-    var rest = []; // sort tokens by exact match -> subtring on symbol match -> rest
-
-    tokens.map(function (token) {
-      var _token$symbol, _token$symbol2;
-
-      if (((_token$symbol = token.symbol) === null || _token$symbol === void 0 ? void 0 : _token$symbol.toLowerCase()) === matches[0]) {
-        return exactMatches.push(token);
-      } else if ((_token$symbol2 = token.symbol) !== null && _token$symbol2 !== void 0 && _token$symbol2.toLowerCase().startsWith(query.toLowerCase().trim())) {
-        return symbolSubtrings.push(token);
-      } else {
-        return rest.push(token);
-      }
-    });
-    return [].concat(exactMatches, symbolSubtrings, rest);
-  }, [tokens, query]);
-}
-
-function useQueryTokens(query, tokens) {
-  var _useActiveWeb3React = useActiveWeb3React(),
-      chainId = _useActiveWeb3React.chainId,
-      account = _useActiveWeb3React.account;
-
-  var balances = useTokenBalances(account, tokens);
-  var sortedTokens = React.useMemo( // Create a new array because sort is in-place and returns a referentially equivalent array.
-  function () {
-    return Array.from(tokens).sort(tokenComparator.bind(null, balances));
-  }, [balances, tokens]);
-  var debouncedQuery = useDebounce(query, 200);
-  var filter = React.useMemo(function () {
-    return getTokenFilter(debouncedQuery);
-  }, [debouncedQuery]);
-  var filteredTokens = React.useMemo(function () {
-    return sortedTokens.filter(filter);
-  }, [filter, sortedTokens]);
-  var queriedTokens = useSortTokensByQuery(debouncedQuery, filteredTokens);
-  var native = React.useMemo(function () {
-    return chainId && nativeOnChain(chainId);
-  }, [chainId]);
-  return React.useMemo(function () {
-    if (native && filter(native)) {
-      return [native].concat(_toConsumableArray__default["default"](queriedTokens));
-    }
-
-    return queriedTokens;
-  }, [filter, native, queriedTokens]);
-}
-
 var DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org';
 var MISSING_PROVIDER = Symbol();
 var ChainTokenMapContext = /*#__PURE__*/React.createContext(MISSING_PROVIDER);
@@ -7393,20 +6569,6 @@ function useChainTokenMapContext() {
 
 function useIsTokenListLoaded() {
   return Boolean(useChainTokenMapContext());
-}
-function useTokenList() {
-  var _useActiveWeb3React = useActiveWeb3React(),
-      chainId = _useActiveWeb3React.chainId;
-
-  var chainTokenMap = useChainTokenMapContext();
-  var tokenMap = chainId && (chainTokenMap === null || chainTokenMap === void 0 ? void 0 : chainTokenMap[chainId]);
-  return React.useMemo(function () {
-    if (!tokenMap) return [];
-    return Object.values(tokenMap).map(function (_ref) {
-      var token = _ref.token;
-      return token;
-    });
-  }, [tokenMap]);
 }
 function useTokenMap() {
   var _useActiveWeb3React2 = useActiveWeb3React(),
@@ -7607,9 +6769,9 @@ function useOnSupportedNetwork() {
   }, [chainId]);
 }
 
-function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$4(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$3(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function useDefaultToken(defaultAddress, chainId) {
   var address = undefined;
@@ -7662,7 +6824,7 @@ function useSyncTokenDefaults(_ref) {
     }
 
     updateSwap(function (swap) {
-      return _objectSpread$4(_objectSpread$4({}, swap), defaultSwapState);
+      return _objectSpread$3(_objectSpread$3({}, swap), defaultSwapState);
     });
   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap]);
   var lastChainId = React.useRef(undefined);
@@ -7677,6 +6839,371 @@ function useSyncTokenDefaults(_ref) {
   }, [isTokenListLoaded, chainId, setToDefaults]);
 }
 
+function otherField(field) {
+  switch (field) {
+    case Field.INPUT:
+      return Field.OUTPUT;
+
+    case Field.OUTPUT:
+      return Field.INPUT;
+  }
+}
+
+function useSwitchSwapCurrencies() {
+  var update = utils.useUpdateAtom(swapAtom);
+  return React.useCallback(function () {
+    update(function (swap) {
+      var oldOutput = swap[Field.OUTPUT];
+      swap[Field.OUTPUT] = swap[Field.INPUT];
+      swap[Field.INPUT] = oldOutput;
+
+      switch (swap.independentField) {
+        case Field.INPUT:
+          swap.independentField = Field.OUTPUT;
+          break;
+
+        case Field.OUTPUT:
+          swap.independentField = Field.INPUT;
+          break;
+      }
+    });
+  }, [update]);
+}
+function useSwapCurrency(field) {
+  var atom = React.useMemo(function () {
+    return pickAtom(swapAtom, field);
+  }, [field]);
+  var otherAtom = React.useMemo(function () {
+    return pickAtom(swapAtom, otherField(field));
+  }, [field]);
+
+  var _useAtom = jotai.useAtom(atom),
+      _useAtom2 = _slicedToArray__default["default"](_useAtom, 2),
+      currency = _useAtom2[0],
+      setCurrency = _useAtom2[1];
+
+  var otherCurrency = utils.useAtomValue(otherAtom);
+  var switchSwapCurrencies = useSwitchSwapCurrencies();
+  var setOrSwitchCurrency = React.useCallback(function (currency) {
+    if (currency === otherCurrency) {
+      switchSwapCurrencies();
+    } else {
+      setCurrency(currency);
+    }
+  }, [otherCurrency, setCurrency, switchSwapCurrencies]);
+  return [currency, setOrSwitchCurrency];
+}
+var independentFieldAtom = pickAtom(swapAtom, 'independentField');
+function useIsSwapFieldIndependent(field) {
+  var independentField = utils.useAtomValue(independentFieldAtom);
+  return independentField === field;
+}
+var amountAtom = pickAtom(swapAtom, 'amount'); // check if any amount has been entered by user
+
+function useIsAmountPopulated() {
+  return Boolean(utils.useAtomValue(amountAtom));
+}
+function useSwapAmount(field) {
+  var amount = utils.useAtomValue(amountAtom);
+  var isFieldIndependent = useIsSwapFieldIndependent(field);
+  var value = isFieldIndependent ? amount : undefined;
+  var updateSwap = utils.useUpdateAtom(swapAtom);
+  var updateAmount = React.useCallback(function (amount) {
+    return updateSwap(function (swap) {
+      swap.independentField = field;
+      swap.amount = amount;
+    });
+  }, [field, updateSwap]);
+  return [value, updateAmount];
+}
+function useSwapCurrencyAmount(field) {
+  var isFieldIndependent = useIsSwapFieldIndependent(field);
+  var isAmountPopulated = useIsAmountPopulated();
+
+  var _useSwapAmount = useSwapAmount(field),
+      _useSwapAmount2 = _slicedToArray__default["default"](_useSwapAmount, 1),
+      swapAmount = _useSwapAmount2[0];
+
+  var _useSwapCurrency = useSwapCurrency(field),
+      _useSwapCurrency2 = _slicedToArray__default["default"](_useSwapCurrency, 1),
+      swapCurrency = _useSwapCurrency2[0];
+
+  var currencyAmount = React.useMemo(function () {
+    return tryParseCurrencyAmount(swapAmount, swapCurrency);
+  }, [swapAmount, swapCurrency]);
+
+  if (isFieldIndependent && isAmountPopulated) {
+    return currencyAmount;
+  }
+
+  return;
+}
+
+var MIN_NATIVE_CURRENCY_FOR_GAS = JSBI__default["default"].exponentiate(JSBI__default["default"].BigInt(10), JSBI__default["default"].BigInt(16)); // .01 ETH
+
+/**
+ * Given some token amount, return the max that can be spent of it
+ * @param currencyAmount to return max of
+ */
+
+function maxAmountSpend(currencyAmount) {
+  if (!currencyAmount) return undefined;
+
+  if (currencyAmount.currency.isNative) {
+    if (JSBI__default["default"].greaterThan(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS)) {
+      return sdkCore.CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI__default["default"].subtract(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS));
+    } else {
+      return sdkCore.CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI__default["default"].BigInt(0));
+    }
+  }
+
+  return currencyAmount;
+}
+
+function useFormattedFieldAmount(_ref) {
+  var disabled = _ref.disabled,
+      currencyAmount = _ref.currencyAmount,
+      fieldAmount = _ref.fieldAmount;
+  return React.useMemo(function () {
+    if (disabled) {
+      return '';
+    }
+
+    if (fieldAmount !== undefined) {
+      return fieldAmount;
+    }
+
+    if (currencyAmount) {
+      return currencyAmount.toSignificant(6);
+    }
+
+    return '';
+  }, [disabled, currencyAmount, fieldAmount]);
+}
+function useInput(_ref2) {
+  var input = _ref2.input,
+      output = _ref2.output;
+  var swapInfo = useSwapInfo();
+  var _swapInfo$Field$INPUT = swapInfo[Field.INPUT],
+      balance = _swapInfo$Field$INPUT.balance,
+      tradeCurrencyAmount = _swapInfo$Field$INPUT.amount,
+      tradeState = swapInfo.trade.state;
+
+  var _useSwapAmount = useSwapAmount(Field.INPUT),
+      _useSwapAmount2 = _slicedToArray__default["default"](_useSwapAmount, 2),
+      inputAmount = _useSwapAmount2[0],
+      updateInputAmount = _useSwapAmount2[1];
+
+  var _useSwapCurrency = useSwapCurrency(Field.INPUT),
+      _useSwapCurrency2 = _slicedToArray__default["default"](_useSwapCurrency, 2);
+      _useSwapCurrency2[0];
+      var updateInputCurrency = _useSwapCurrency2[1];
+
+  var _useSwapAmount3 = useSwapAmount(Field.OUTPUT),
+      _useSwapAmount4 = _slicedToArray__default["default"](_useSwapAmount3, 2),
+      outputAmount = _useSwapAmount4[0],
+      updateSwapOutputAmount = _useSwapAmount4[1];
+
+  var _useSwapCurrency3 = useSwapCurrency(Field.OUTPUT),
+      _useSwapCurrency4 = _slicedToArray__default["default"](_useSwapCurrency3, 2);
+      _useSwapCurrency4[0];
+      var updateSwapOutputCurrency = _useSwapCurrency4[1];
+
+  var inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT);
+  React.useEffect(function () {
+    if (!input.amount) return;
+    if (!input.currency) return;
+    updateInputAmount(input.amount);
+    updateInputCurrency(input.currency);
+  }, [input.amount, input.currency]);
+  React.useEffect(function () {
+    if (!output.amount) return;
+    if (!output.currency) return;
+    updateSwapOutputAmount(output.amount);
+    updateSwapOutputCurrency(output.currency);
+  }, [output.amount, output.currency]);
+  var isRouteLoading = input.disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING;
+  var isDependentField = !useIsSwapFieldIndependent(Field.INPUT);
+  var isLoading = isRouteLoading && isDependentField;
+  var max = React.useMemo(function () {
+    var maxAmount = maxAmountSpend(balance);
+    return maxAmount !== null && maxAmount !== void 0 && maxAmount.greaterThan(0) ? maxAmount.toExact() : undefined;
+  }, [balance]);
+  var formattedInputAmount = useFormattedFieldAmount({
+    disabled: input.disabled,
+    currencyAmount: tradeCurrencyAmount,
+    fieldAmount: inputAmount
+  });
+  return {
+    swapInfo: swapInfo,
+    inputAmount: formattedInputAmount,
+    output: output,
+    max: max,
+    isLoading: isLoading,
+    inputCurrencyAmount: inputCurrencyAmount,
+    outputAmount: outputAmount
+  };
+}
+
+function _createSuper$2(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$2(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
+
+function _isNativeReflectConstruct$2() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+var IntegrationError = /*#__PURE__*/function (_Error) {
+  _inherits__default["default"](IntegrationError, _Error);
+
+  var _super = _createSuper$2(IntegrationError);
+
+  function IntegrationError(message) {
+    var _this;
+
+    _classCallCheck__default["default"](this, IntegrationError);
+
+    _this = _super.call(this, message);
+    _this.name = 'Integration Error';
+    return _this;
+  }
+
+  return _createClass__default["default"](IntegrationError);
+}( /*#__PURE__*/_wrapNativeSuper__default["default"](Error));
+
+function isAddressOrAddressMap(addressOrMap) {
+  if (_typeof__default["default"](addressOrMap) === 'object') {
+    return Object.values(addressOrMap).every(function (address) {
+      return isAddress(address);
+    });
+  }
+
+  if (typeof addressOrMap === 'string') {
+    return typeof isAddress(addressOrMap) === 'string';
+  }
+
+  return false;
+}
+
+function useValidate(props) {
+  var convenienceFee = props.convenienceFee,
+      convenienceFeeRecipient = props.convenienceFeeRecipient;
+  React.useEffect(function () {
+    if (convenienceFee) {
+      if (convenienceFee > 100 || convenienceFee < 0) {
+        throw new IntegrationError("convenienceFee must be between 0 and 100 (you set it to ".concat(convenienceFee, ")."));
+      }
+
+      if (!convenienceFeeRecipient) {
+        throw new IntegrationError('convenienceFeeRecipient is required when convenienceFee is set.');
+      }
+
+      if (typeof convenienceFeeRecipient === 'string') {
+        if (!isAddress(convenienceFeeRecipient)) {
+          throw new IntegrationError("convenienceFeeRecipient must be a valid address (you set it to ".concat(convenienceFeeRecipient, ")."));
+        }
+      } else if (_typeof__default["default"](convenienceFeeRecipient) === 'object') {
+        Object.values(convenienceFeeRecipient).forEach(function (recipient) {
+          if (!isAddress(recipient)) {
+            var values = Object.values(convenienceFeeRecipient).join(', ');
+            throw new IntegrationError("All values in convenienceFeeRecipient object must be valid addresses (you used ".concat(values, ")."));
+          }
+        });
+      }
+    }
+  }, [convenienceFee, convenienceFeeRecipient]);
+  var defaultInputAmount = props.defaultInputAmount,
+      defaultOutputAmount = props.defaultOutputAmount;
+  React.useEffect(function () {
+    if (defaultOutputAmount && defaultInputAmount) {
+      throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.');
+    }
+
+    if (defaultInputAmount && (isNaN(+defaultInputAmount) || defaultInputAmount < 0)) {
+      throw new IntegrationError("defaultInputAmount must be a positive number (you set it to ".concat(defaultInputAmount, ")"));
+    }
+
+    if (defaultOutputAmount && (isNaN(+defaultOutputAmount) || defaultOutputAmount < 0)) {
+      throw new IntegrationError("defaultOutputAmount must be a positive number (you set it to ".concat(defaultOutputAmount, ")."));
+    }
+  }, [defaultInputAmount, defaultOutputAmount]);
+  var defaultInputTokenAddress = props.defaultInputTokenAddress,
+      defaultOutputTokenAddress = props.defaultOutputTokenAddress;
+  React.useEffect(function () {
+    if (defaultInputTokenAddress && !isAddressOrAddressMap(defaultInputTokenAddress) && defaultInputTokenAddress !== 'NATIVE') {
+      throw new IntegrationError("defaultInputTokenAddress must be a valid address or \"NATIVE\" (you set it to ".concat(defaultInputTokenAddress, ")."));
+    }
+
+    if (defaultOutputTokenAddress && !isAddressOrAddressMap(defaultOutputTokenAddress) && defaultOutputTokenAddress !== 'NATIVE') {
+      throw new IntegrationError("defaultOutputTokenAddress must be a valid address or \"NATIVE\" (you set it to ".concat(defaultOutputTokenAddress, ")."));
+    }
+  }, [defaultInputTokenAddress, defaultOutputTokenAddress]);
+}
+
+function Swap(props) {
+  var _input$currency2, _output$currency2;
+
+  useValidate(props);
+  useSyncConvenienceFee(props);
+  useSyncTokenDefaults(props);
+  var dispatchSwapValues = useDispatchSwapValues();
+
+  var _useSwapValues = useSwapValues(),
+      _useSwapValues$uniswa = _useSwapValues.uniswap,
+      input = _useSwapValues$uniswa.input,
+      output = _useSwapValues$uniswa.output;
+
+  var chainId = props.chainId;
+
+  var _useActiveWeb3React = useActiveWeb3React(),
+      active = _useActiveWeb3React.active;
+
+  var onSupportedNetwork = useOnSupportedNetwork();
+  var isDisabled = !(active && onSupportedNetwork);
+
+  var _useState = React.useState(),
+      _useState2 = _slicedToArray__default["default"](_useState, 2),
+      inputCurrency = _useState2[0],
+      setInputCurrency = _useState2[1];
+
+  var _useState3 = React.useState(),
+      _useState4 = _slicedToArray__default["default"](_useState3, 2),
+      outputCurrency = _useState4[0],
+      setOutputCurrency = _useState4[1];
+
+  React.useEffect(function () {
+    var _input$currency;
+
+    if (!(input !== null && input !== void 0 && (_input$currency = input.currency) !== null && _input$currency !== void 0 && _input$currency.address)) return;
+    setInputCurrency(new sdkCore.Token(chainId, input.currency.address, input.currency.decimals));
+  }, [input === null || input === void 0 ? void 0 : (_input$currency2 = input.currency) === null || _input$currency2 === void 0 ? void 0 : _input$currency2.address]);
+  React.useEffect(function () {
+    var _output$currency;
+
+    if (!(output !== null && output !== void 0 && (_output$currency = output.currency) !== null && _output$currency !== void 0 && _output$currency.address)) return;
+    setOutputCurrency(new sdkCore.Token(chainId, output.currency.address, output.currency.decimals));
+  }, [output === null || output === void 0 ? void 0 : (_output$currency2 = output.currency) === null || _output$currency2 === void 0 ? void 0 : _output$currency2.address]);
+  React.useEffect(function () {
+    var swapInput = useInput({
+      input: {
+        disabled: isDisabled,
+        amount: input === null || input === void 0 ? void 0 : input.amount,
+        currency: inputCurrency
+      },
+      output: {
+        disabled: isDisabled,
+        amount: output === null || output === void 0 ? void 0 : output.amount,
+        currency: outputCurrency
+      }
+    });
+    dispatchSwapValues({
+      uniswap: {
+        values: swapInput
+      },
+      type: 'setUniswapValues'
+    });
+  }, [input, output]);
+  return /*#__PURE__*/React__default["default"].createElement(SwapInfoProvider, {
+    disabled: isDisabled
+  }, props.children);
+}
+
 var TransactionType;
 
 (function (TransactionType) {
@@ -7687,9 +7214,9 @@ var TransactionType;
 
 var transactionsAtom = immer.atomWithImmer({});
 
-function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
+function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
 
-function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function wait(ms) {
   return new Promise(function (resolve) {
@@ -7708,7 +7235,7 @@ function waitRandom(min, max) {
 var CancelledError = /*#__PURE__*/function (_Error) {
   _inherits__default["default"](CancelledError, _Error);
 
-  var _super = _createSuper$3(CancelledError);
+  var _super = _createSuper$1(CancelledError);
 
   function CancelledError() {
     var _this;
@@ -7732,7 +7259,7 @@ var CancelledError = /*#__PURE__*/function (_Error) {
 var RetryableError = /*#__PURE__*/function (_Error2) {
   _inherits__default["default"](RetryableError, _Error2);
 
-  var _super2 = _createSuper$3(RetryableError);
+  var _super2 = _createSuper$1(RetryableError);
 
   function RetryableError() {
     var _this2;
@@ -8000,48 +7527,693 @@ function TransactionsUpdater() {
   });
 }
 
-function useHasFocus(node) {
-  var _node$contains, _document;
+var LinguiContext = /*#__PURE__*/React__default["default"].createContext(null);
 
-  React.useEffect(function () {
-    if (node instanceof HTMLElement) {
-      // tabIndex is required to receive blur events from non-button elements.
-      node.tabIndex = node.tabIndex || -1; // Without explicitly omitting outline, Safari will now outline this node when focused.
-
-      node.style.outline = node.style.outline || 'none';
+function useLingui() {
+  var context = React__default["default"].useContext(LinguiContext);
+  {
+    if (context == null) {
+      throw new Error("useLingui hook was used without I18nProvider.");
     }
-  }, [node]);
-
-  var _useState = React.useState((_node$contains = node === null || node === void 0 ? void 0 : node.contains((_document = document) === null || _document === void 0 ? void 0 : _document.activeElement)) !== null && _node$contains !== void 0 ? _node$contains : false),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      hasFocus = _useState2[0],
-      setHasFocus = _useState2[1];
-
-  var onFocus = React.useCallback(function () {
-    return setHasFocus(true);
-  }, []);
-  var onBlur = React.useCallback(function (e) {
-    var _node$contains2;
-
-    return setHasFocus((_node$contains2 = node === null || node === void 0 ? void 0 : node.contains(e.relatedTarget)) !== null && _node$contains2 !== void 0 ? _node$contains2 : false);
-  }, [node]);
-  React.useEffect(function () {
-    node === null || node === void 0 ? void 0 : node.addEventListener('focusin', onFocus);
-    node === null || node === void 0 ? void 0 : node.addEventListener('focusout', onBlur);
-    return function () {
-      node === null || node === void 0 ? void 0 : node.removeEventListener('focusin', onFocus);
-      node === null || node === void 0 ? void 0 : node.removeEventListener('focusout', onBlur);
-    };
-  }, [node, onFocus, onBlur]);
-  return hasFocus;
+  }
+  return context;
 }
 
-var _defs, _path$2;
+function withI18n(o) {
+  return function (WrappedComponent) {
+    return function (props) {
+      {
+        if (typeof o === "function" || /*#__PURE__*/React__default["default"].isValidElement(o)) {
+          throw new Error("withI18n([options]) takes options as a first argument, " + "but received React component itself. Without options, the Component " + "should be wrapped as withI18n()(Component), not withI18n(Component).");
+        }
+      }
 
-function _extends$7() { _extends$7 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$7.apply(this, arguments); }
+      var _useLingui = useLingui(),
+          i18n = _useLingui.i18n;
+
+      return /*#__PURE__*/React__default["default"].createElement(WrappedComponent, Object.assign({}, props, {
+        i18n: i18n
+      }));
+    };
+  };
+}
+
+var I18nProvider = function I18nProvider(_ref) {
+  var i18n = _ref.i18n,
+      defaultComponent = _ref.defaultComponent,
+      _ref$forceRenderOnLoc = _ref.forceRenderOnLocaleChange,
+      forceRenderOnLocaleChange = _ref$forceRenderOnLoc === void 0 ? true : _ref$forceRenderOnLoc,
+      children = _ref.children;
+  /**
+   * We can't pass `i18n` object directly through context, because even when locale
+   * or messages are changed, i18n object is still the same. Context provider compares
+   * reference identity and suggested workaround is create a wrapper object every time
+   * we need to trigger re-render. See https://reactjs.org/docs/context.html#caveats.
+   *
+   * Due to this effect we also pass `defaultComponent` in the same context, instead
+   * of creating a separate Provider/Consumer pair.
+   *
+   * We can't use useMemo hook either, because we want to recalculate value manually.
+   */
+
+  var makeContext = function makeContext() {
+    return {
+      i18n: i18n,
+      defaultComponent: defaultComponent
+    };
+  };
+
+  var getRenderKey = function getRenderKey() {
+    return forceRenderOnLocaleChange ? i18n.locale || 'default' : 'default';
+  };
+
+  var _React$useState = React__default["default"].useState(makeContext()),
+      _React$useState2 = _slicedToArray__default["default"](_React$useState, 2),
+      context = _React$useState2[0],
+      setContext = _React$useState2[1],
+      _React$useState3 = React__default["default"].useState(getRenderKey()),
+      _React$useState4 = _slicedToArray__default["default"](_React$useState3, 2),
+      renderKey = _React$useState4[0],
+      setRenderKey = _React$useState4[1];
+  /**
+   * Subscribe for locale/message changes
+   *
+   * I18n object from `@lingui/core` is the single source of truth for all i18n related
+   * data (active locale, catalogs). When new messages are loaded or locale is changed
+   * we need to trigger re-rendering of LinguiContext.Consumers.
+   *
+   * We call `setContext(makeContext())` after adding the observer in case the `change`
+   * event would already have fired between the inital renderKey calculation and the
+   * `useEffect` hook being called. This can happen if locales are loaded/activated
+   * async.
+   */
+
+
+  React__default["default"].useEffect(function () {
+    var unsubscribe = i18n.on("change", function () {
+      setContext(makeContext());
+      setRenderKey(getRenderKey());
+    });
+
+    if (renderKey === 'default') {
+      setRenderKey(getRenderKey());
+    }
+
+    if (forceRenderOnLocaleChange && renderKey === 'default') {
+      console.log("I18nProvider did not render. A call to i18n.activate still needs to happen or forceRenderOnLocaleChange must be set to false.");
+    }
+
+    return function () {
+      return unsubscribe();
+    };
+  }, []);
+  if (forceRenderOnLocaleChange && renderKey === 'default') return null;
+  return /*#__PURE__*/React__default["default"].createElement(LinguiContext.Provider, {
+    value: context,
+    key: renderKey
+  }, children);
+};
+
+function _createForOfIteratorHelper(o, allowArrayLike) {
+  var it;
+
+  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it) o = it;
+      var i = 0;
+
+      var F = function F() {};
+
+      return {
+        s: F,
+        n: function n() {
+          if (i >= o.length) return {
+            done: true
+          };
+          return {
+            done: false,
+            value: o[i++]
+          };
+        },
+        e: function e(_e) {
+          throw _e;
+        },
+        f: F
+      };
+    }
+
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  var normalCompletion = true,
+      didErr = false,
+      err;
+  return {
+    s: function s() {
+      it = o[Symbol.iterator]();
+    },
+    n: function n() {
+      var step = it.next();
+      normalCompletion = step.done;
+      return step;
+    },
+    e: function e(_e2) {
+      didErr = true;
+      err = _e2;
+    },
+    f: function f() {
+      try {
+        if (!normalCompletion && it.return != null) it.return();
+      } finally {
+        if (didErr) throw err;
+      }
+    }
+  };
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+var tagRe = /<(\d+)>(.*?)<\/\1>|<(\d+)\/>/;
+var nlRe = /(?:\r\n|\r|\n)/g; // For HTML, certain tags should omit their close tag. We keep a whitelist for
+// those special-case tags.
+
+var voidElementTags = {
+  area: true,
+  base: true,
+  br: true,
+  col: true,
+  embed: true,
+  hr: true,
+  img: true,
+  input: true,
+  keygen: true,
+  link: true,
+  meta: true,
+  param: true,
+  source: true,
+  track: true,
+  wbr: true,
+  menuitem: true
+};
+/**
+ * `formatElements` - parse string and return tree of react elements
+ *
+ * `value` is string to be formatted with <0>Paired<0/> or <0/> (unpaired)
+ * placeholders. `elements` is a array of react elements which indexes
+ * correspond to element indexes in formatted string
+ */
+
+function formatElements(value) {
+  var elements = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var uniqueId = makeCounter(0, '$lingui$');
+  var parts = value.replace(nlRe, "").split(tagRe); // no inline elements, return
+
+  if (parts.length === 1) return value;
+  var tree = [];
+  var before = parts.shift();
+  if (before) tree.push(before);
+
+  var _iterator = _createForOfIteratorHelper(getElements(parts)),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var _step$value = _slicedToArray__default["default"](_step.value, 3),
+          index = _step$value[0],
+          children = _step$value[1],
+          after = _step$value[2];
+
+      var element = elements[index];
+
+      if (!element || voidElementTags[element.type] && children) {
+        if (!element) {
+          console.error("Can use element at index '".concat(index, "' as it is not declared in the original translation"));
+        } else {
+          console.error("".concat(element.type, " is a void element tag therefore it must have no children"));
+        } // ignore problematic element but push its children and elements after it
+
+
+        element = /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment);
+      }
+
+      tree.push( /*#__PURE__*/React__default["default"].cloneElement(element, {
+        key: uniqueId()
+      }, // format children for pair tags
+      // unpaired tags might have children if it's a component passed as a variable
+      children ? formatElements(children, elements) : element.props.children));
+      if (after) tree.push(after);
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  return tree;
+}
+/*
+ * `getElements` - return array of element indexes and element childrens
+ *
+ * `parts` is array of [pairedIndex, children, unpairedIndex, textAfter, ...]
+ * where:
+ * - `pairedIndex` is index of paired element (undef for unpaired)
+ * - `children` are children of paired element (undef for unpaired)
+ * - `unpairedIndex` is index of unpaired element (undef for paired)
+ * - `textAfter` is string after all elements (empty string, if there's nothing)
+ *
+ * `parts` length is always multiply of 4
+ *
+ * Returns: Array<[elementIndex, children, after]>
+ */
+
+
+function getElements(parts) {
+  if (!parts.length) return [];
+
+  var _parts$slice = parts.slice(0, 4),
+      _parts$slice2 = _slicedToArray__default["default"](_parts$slice, 4),
+      paired = _parts$slice2[0],
+      children = _parts$slice2[1],
+      unpaired = _parts$slice2[2],
+      after = _parts$slice2[3];
+
+  return [[parseInt(paired || unpaired), children || "", after]].concat(getElements(parts.slice(4, parts.length)));
+}
+
+var makeCounter = function makeCounter() {
+  var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+  var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+  return function () {
+    return "".concat(prefix, "_").concat(count++);
+  };
+};
+
+function ownKeys$2(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread$2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys$2(Object(source), true).forEach(function (key) {
+        _defineProperty__default["default"](target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys$2(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function Trans$1(props) {
+  var _useLingui = useLingui(),
+      i18n = _useLingui.i18n,
+      defaultComponent = _useLingui.defaultComponent;
+
+  var render = props.render,
+      component = props.component,
+      id = props.id,
+      message = props.message,
+      formats = props.formats;
+
+  var values = _objectSpread$2({}, props.values);
+
+  var components = _objectSpread$2({}, props.components);
+
+  if (values) {
+    /*
+      Related discussion: https://github.com/lingui/js-lingui/issues/183
+           Values *might* contain React elements with static content.
+      They're replaced with <INDEX /> placeholders and added to `components`.
+           Example:
+      Translation: Hello {name}
+      Values: { name: <strong>Jane</strong> }
+           It'll become "Hello <0 />" with components=[<strong>Jane</strong>]
+      */
+    Object.keys(values).forEach(function (key) {
+      var value = values[key];
+      if (! /*#__PURE__*/React__default["default"].isValidElement(value)) return;
+      var index = Object.keys(components).length;
+      components[index] = value;
+      values[key] = "<".concat(index, "/>");
+    });
+  }
+
+  var _translation = i18n && typeof i18n._ === "function" ? i18n._(id, values, {
+    message: message,
+    formats: formats
+  }) : id; // i18n provider isn't loaded at all
+
+
+  var translation = _translation ? formatElements(_translation, components) : null;
+
+  if (render === null || component === null) {
+    // Although `string` is a valid react element, types only allow `Element`
+    // Upstream issue: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544
+    return translation;
+  }
+
+  var FallbackComponent = defaultComponent || React__default["default"].Fragment; // Validation of `render` and `component` props
+
+  if (render && component) {
+    console.error("You can't use both `component` and `render` prop at the same time. `component` is ignored.");
+  } else if (render && typeof render !== "function") {
+    console.error("Invalid value supplied to prop `render`. It must be a function, provided ".concat(render));
+  } else if (component && typeof component !== "function") {
+    // Apparently, both function components and class components are functions
+    // See https://stackoverflow.com/a/41658173/1535540
+    console.error("Invalid value supplied to prop `component`. It must be a React component, provided ".concat(component));
+    return /*#__PURE__*/React__default["default"].createElement(FallbackComponent, null, translation);
+  } // Rendering using a render prop
+
+
+  if (typeof render === "function") {
+    // Component: render={(props) => <a title={props.translation}>x</a>}
+    return render({
+      id: id,
+      translation: translation,
+      message: message
+    });
+  } // `component` prop has a higher precedence over `defaultComponent`
+
+
+  var Component = component || FallbackComponent;
+  return /*#__PURE__*/React__default["default"].createElement(Component, null, translation);
+}
+
+Trans$1.defaultProps = {
+  values: {},
+  components: {}
+};
+
+var r = /*#__PURE__*/React__default["default"].createContext(null);
+
+function o() {
+  var e = React__default["default"].useContext(r);
+  return e;
+}
+
+function a(e) {
+  return function (e) {
+    return function (t) {
+      var r = o(),
+          a = r.i18n;
+      return /*#__PURE__*/React__default["default"].createElement(e, Object.assign({}, t, {
+        i18n: a
+      }));
+    };
+  };
+}
+
+var i = function i(t) {
+  var o = t.i18n,
+      a = t.defaultComponent,
+      i = t.forceRenderOnLocaleChange,
+      c = void 0 === i || i,
+      u = t.children,
+      l = function l() {
+    return {
+      i18n: o,
+      defaultComponent: a
+    };
+  },
+      f = function f() {
+    return c && o.locale || "default";
+  },
+      s = React__default["default"].useState(l()),
+      p = _slicedToArray__default["default"](s, 2),
+      m = p[0],
+      d = p[1],
+      v = React__default["default"].useState(f()),
+      y = _slicedToArray__default["default"](v, 2),
+      h = y[0],
+      b = y[1];
+
+  return React__default["default"].useEffect(function () {
+    var e = o.on("change", function () {
+      d(l()), b(f());
+    });
+    return "default" === h && b(f()), c && "default" === h && console.log("I18nProvider did not render. A call to i18n.activate still needs to happen or forceRenderOnLocaleChange must be set to false."), function () {
+      return e();
+    };
+  }, []), c && "default" === h ? null : /*#__PURE__*/React__default["default"].createElement(r.Provider, {
+    value: m,
+    key: h
+  }, u);
+};
+
+function c(e, n) {
+  var t;
+
+  if ("undefined" == typeof Symbol || null == e[Symbol.iterator]) {
+    if (Array.isArray(e) || (t = function (e, n) {
+      if (!e) return;
+      if ("string" == typeof e) return u(e, n);
+      var t = Object.prototype.toString.call(e).slice(8, -1);
+      "Object" === t && e.constructor && (t = e.constructor.name);
+      if ("Map" === t || "Set" === t) return Array.from(e);
+      if ("Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)) return u(e, n);
+    }(e)) || n && e && "number" == typeof e.length) {
+      t && (e = t);
+
+      var r = 0,
+          o = function o() {};
+
+      return {
+        s: o,
+        n: function n() {
+          return r >= e.length ? {
+            done: !0
+          } : {
+            done: !1,
+            value: e[r++]
+          };
+        },
+        e: function e(_e) {
+          throw _e;
+        },
+        f: o
+      };
+    }
+
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  var a,
+      i = !0,
+      c = !1;
+  return {
+    s: function s() {
+      t = e[Symbol.iterator]();
+    },
+    n: function n() {
+      var e = t.next();
+      return i = e.done, e;
+    },
+    e: function e(_e2) {
+      c = !0, a = _e2;
+    },
+    f: function f() {
+      try {
+        i || null == t.return || t.return();
+      } finally {
+        if (c) throw a;
+      }
+    }
+  };
+}
+
+function u(e, n) {
+  (null == n || n > e.length) && (n = e.length);
+
+  for (var t = 0, r = new Array(n); t < n; t++) {
+    r[t] = e[t];
+  }
+
+  return r;
+}
+
+var l = /<(\d+)>(.*?)<\/\1>|<(\d+)\/>/,
+    f = /(?:\r\n|\r|\n)/g,
+    s = {
+  area: !0,
+  base: !0,
+  br: !0,
+  col: !0,
+  embed: !0,
+  hr: !0,
+  img: !0,
+  input: !0,
+  keygen: !0,
+  link: !0,
+  meta: !0,
+  param: !0,
+  source: !0,
+  track: !0,
+  wbr: !0,
+  menuitem: !0
+};
+
+function p(n) {
+  if (!n.length) return [];
+  var t = n.slice(0, 4),
+      r = _slicedToArray__default["default"](t, 4),
+      o = r[0],
+      a = r[1],
+      i = r[2],
+      c = r[3];
+  return [[parseInt(o || i), a || "", c]].concat(p(n.slice(4, n.length)));
+}
+
+var m = function m() {
+  var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+      n = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "";
+  return function () {
+    return "".concat(n, "_").concat(e++);
+  };
+};
+
+function d(e, n) {
+  var t = Object.keys(e);
+
+  if (Object.getOwnPropertySymbols) {
+    var r = Object.getOwnPropertySymbols(e);
+    n && (r = r.filter(function (n) {
+      return Object.getOwnPropertyDescriptor(e, n).enumerable;
+    })), t.push.apply(t, r);
+  }
+
+  return t;
+}
+
+function v(e) {
+  for (var n = 1; n < arguments.length; n++) {
+    var r = null != arguments[n] ? arguments[n] : {};
+    n % 2 ? d(Object(r), !0).forEach(function (n) {
+      _defineProperty__default["default"](e, n, r[n]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(r)) : d(Object(r)).forEach(function (n) {
+      Object.defineProperty(e, n, Object.getOwnPropertyDescriptor(r, n));
+    });
+  }
+
+  return e;
+}
+
+function y(t) {
+  var r = o(),
+      a = r.i18n,
+      i = r.defaultComponent,
+      u = t.render,
+      d = t.component,
+      y = t.id,
+      h = t.message,
+      b = t.formats,
+      g = v({}, t.values),
+      O = v({}, t.components);
+  g && Object.keys(g).forEach(function (e) {
+    var t = g[e];
+
+    if ( /*#__PURE__*/React__default["default"].isValidElement(t)) {
+      var r = Object.keys(O).length;
+      O[r] = t, g[e] = "<".concat(r, "/>");
+    }
+  });
+  var j = a && "function" == typeof a._ ? a._(y, g, {
+    message: h,
+    formats: b
+  }) : y,
+      w = j ? function t(r) {
+    var o = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
+        a = m(0, "$lingui$"),
+        i = r.replace(f, "").split(l);
+    if (1 === i.length) return r;
+    var u = [],
+        d = i.shift();
+    d && u.push(d);
+    var v,
+        y = c(p(i));
+
+    try {
+      for (y.s(); !(v = y.n()).done;) {
+        var h = _slicedToArray__default["default"](v.value, 3),
+            b = h[0],
+            g = h[1],
+            O = h[2],
+            j = o[b];
+        (!j || s[j.type] && g) && (j ? console.error("".concat(j.type, " is a void element tag therefore it must have no children")) : console.error("Can use element at index '".concat(b, "' as it is not declared in the original translation")), j = /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment)), u.push( /*#__PURE__*/React__default["default"].cloneElement(j, {
+          key: a()
+        }, g ? t(g, o) : j.props.children)), O && u.push(O);
+      }
+    } catch (e) {
+      y.e(e);
+    } finally {
+      y.f();
+    }
+
+    return u;
+  }(j, O) : null;
+  if (null === u || null === d) return w;
+  var E = i || React__default["default"].Fragment;
+  if (u && d) console.error("You can't use both `component` and `render` prop at the same time. `component` is ignored.");else if (u && "function" != typeof u) console.error("Invalid value supplied to prop `render`. It must be a function, provided ".concat(u));else if (d && "function" != typeof d) return console.error("Invalid value supplied to prop `component`. It must be a React component, provided ".concat(d)), /*#__PURE__*/React__default["default"].createElement(E, null, w);
+  if ("function" == typeof u) return u({
+    id: y,
+    translation: w,
+    message: h
+  });
+  var P = d || E;
+  return /*#__PURE__*/React__default["default"].createElement(P, null, w);
+}
+
+y.defaultProps = {
+  values: {},
+  components: {}
+};
+
+process.env.NODE_ENV === "production" ? i : I18nProvider;
+var Trans = process.env.NODE_ENV === "production" ? y : Trans$1;
+process.env.NODE_ENV === "production" ? o : useLingui;
+process.env.NODE_ENV === "production" ? a : withI18n;
+
+var _defs, _path$1;
+
+function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 
 var SvgAutoRouter = function SvgAutoRouter(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$7({
+  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$2({
     width: 23,
     height: 20,
     viewBox: "0 0 23 20",
@@ -8066,7 +8238,7 @@ var SvgAutoRouter = function SvgAutoRouter(props) {
     id: "stop2",
     offset: 1,
     stopColor: "#3FB672"
-  })))), _path$2 || (_path$2 = /*#__PURE__*/React__default["default"].createElement("path", {
+  })))), _path$1 || (_path$1 = /*#__PURE__*/React__default["default"].createElement("path", {
     d: "M16 16C10 16 9 10 5 10M16 16C16 17.6569 17.3431 19 19 19C20.6569 19 22 17.6569 22 16C22 14.3431 20.6569 13 19 13C17.3431 13 16 14.3431 16 16ZM5 10C9 10 10 4 16 4M5 10H1.5M16 4C16 5.65685 17.3431 7 19 7C20.6569 7 22 5.65685 22 4C22 2.34315 20.6569 1 19 1C17.3431 1 16 2.34315 16 4Z",
     strokeWidth: 2,
     strokeLinecap: "round",
@@ -8075,34 +8247,12 @@ var SvgAutoRouter = function SvgAutoRouter(props) {
   })));
 };
 
-var _circle$2, _path$1;
-
-function _extends$6() { _extends$6 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$6.apply(this, arguments); }
-
-var SvgCheck = function SvgCheck(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$6({
-    viewBox: "0 0 20 20",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _circle$2 || (_circle$2 = /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 10,
-    cy: 10,
-    r: 10
-  })), _path$1 || (_path$1 = /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M14 7L8.5 12.5L6 10",
-    stroke: "white",
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })));
-};
-
 var _polyline, _polyline2;
 
-function _extends$5() { _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$5.apply(this, arguments); }
+function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
 
 var SvgExpando = function SvgExpando(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$5({
+  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$1({
     viewBox: "0 0 24 24",
     fill: "none",
     strokeWidth: 2,
@@ -8117,152 +8267,12 @@ var SvgExpando = function SvgExpando(props) {
   })));
 };
 
-var _mask$1, _circle$1, _circle2, _circle3;
-
-function _extends$4() { _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$4.apply(this, arguments); }
-
-var SvgInlineSpinner = function SvgInlineSpinner(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$4({
-    viewBox: "0 0 24 24",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _mask$1 || (_mask$1 = /*#__PURE__*/React__default["default"].createElement("mask", {
-    id: "mask"
-  }, /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 12,
-    r: 10,
-    fill: "black",
-    stroke: "black",
-    strokeWidth: 2
-  }), /*#__PURE__*/React__default["default"].createElement("rect", {
-    width: 12,
-    height: 12,
-    fill: "white",
-    strokeWidth: 0
-  }), /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 2,
-    cy: 12,
-    r: 1,
-    fill: "white",
-    strokeWidth: 0
-  }), /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 2,
-    r: 1,
-    fill: "white",
-    strokeWidth: 0
-  }))), _circle$1 || (_circle$1 = /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 12,
-    r: 6,
-    stroke: "none"
-  })), _circle2 || (_circle2 = /*#__PURE__*/React__default["default"].createElement("circle", {
-    id: "track",
-    cx: 12,
-    cy: 12,
-    r: 10,
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    fill: "none"
-  })), _circle3 || (_circle3 = /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 12,
-    r: 10,
-    stroke: "currentColor",
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    fill: "none",
-    mask: "url(#mask)"
-  })));
-};
-
-var _g;
-
-function _extends$3() { _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$3.apply(this, arguments); }
-
-var SvgLogo = function SvgLogo(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$3({
-    viewBox: "0 0 14 15",
-    fill: "black",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _g || (_g = /*#__PURE__*/React__default["default"].createElement("g", null, /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M4.15217 1.55141C3.96412 1.52242 3.95619 1.51902 4.04468 1.5055C4.21427 1.47958 4.61472 1.51491 4.89067 1.58012C5.53489 1.73232 6.12109 2.12221 6.74683 2.81466L6.91307 2.99862L7.15088 2.96062C8.15274 2.8006 9.17194 2.92778 10.0244 3.31918C10.2589 3.42686 10.6287 3.64121 10.6749 3.69629C10.6896 3.71384 10.7166 3.82684 10.7349 3.94742C10.7982 4.36458 10.7665 4.68434 10.6382 4.92317C10.5683 5.05313 10.5644 5.09432 10.6114 5.20554C10.6489 5.2943 10.7534 5.35999 10.8569 5.35985C11.0687 5.35956 11.2968 5.0192 11.4024 4.54561L11.4444 4.3575L11.5275 4.45109C11.9835 4.96459 12.3417 5.66488 12.4032 6.16335L12.4192 6.29332L12.3426 6.17517C12.2107 5.97186 12.0781 5.83346 11.9084 5.72183C11.6024 5.52062 11.2789 5.45215 10.4222 5.40727C9.64839 5.36675 9.21045 5.30106 8.77621 5.16032C8.03738 4.9209 7.66493 4.60204 6.78729 3.4576C6.39748 2.94928 6.15654 2.66804 5.91687 2.44155C5.37228 1.92691 4.83716 1.65701 4.15217 1.55141Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M10.8494 2.68637C10.8689 2.34575 10.9153 2.12108 11.0088 1.9159C11.0458 1.83469 11.0804 1.76822 11.0858 1.76822C11.0911 1.76822 11.075 1.82816 11.05 1.90142C10.9821 2.10054 10.9709 2.3729 11.0177 2.68978C11.0771 3.09184 11.1109 3.14985 11.5385 3.58416C11.739 3.78788 11.9723 4.0448 12.0568 4.15511L12.2106 4.35568L12.0568 4.21234C11.8688 4.03705 11.4364 3.6952 11.3409 3.64633C11.2768 3.61356 11.2673 3.61413 11.2278 3.65321C11.1914 3.68922 11.1837 3.74333 11.1787 3.99915C11.1708 4.39786 11.1161 4.65377 10.9842 4.90965C10.9128 5.04805 10.9015 5.01851 10.9661 4.8623C11.0143 4.74566 11.0192 4.69439 11.0189 4.30842C11.0181 3.53291 10.9255 3.34647 10.3823 3.02709C10.2447 2.94618 10.0179 2.8295 9.87839 2.76778C9.73887 2.70606 9.62805 2.6523 9.63208 2.64828C9.64746 2.63307 10.1772 2.78675 10.3905 2.86828C10.7077 2.98954 10.76 3.00526 10.7985 2.99063C10.8244 2.98082 10.8369 2.90608 10.8494 2.68637Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M4.51745 4.01304C4.13569 3.49066 3.89948 2.68973 3.95062 2.091L3.96643 1.90572L4.05333 1.92148C4.21652 1.95106 4.49789 2.05515 4.62964 2.13469C4.9912 2.35293 5.14773 2.64027 5.30697 3.37811C5.35362 3.59423 5.41482 3.8388 5.44298 3.9216C5.48831 4.05487 5.65962 4.36617 5.7989 4.56834C5.89922 4.71395 5.83258 4.78295 5.61082 4.76305C5.27215 4.73267 4.8134 4.41799 4.51745 4.01304Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M10.3863 7.90088C8.60224 7.18693 7.97389 6.56721 7.97389 5.52157C7.97389 5.36769 7.97922 5.24179 7.98571 5.24179C7.99221 5.24179 8.06124 5.29257 8.1391 5.35465C8.50088 5.64305 8.906 5.76623 10.0275 5.92885C10.6875 6.02455 11.0589 6.10185 11.4015 6.21477C12.4904 6.57371 13.1641 7.30212 13.3248 8.29426C13.3715 8.58255 13.3441 9.12317 13.2684 9.4081C13.2087 9.63315 13.0263 10.0388 12.9779 10.0544C12.9645 10.0587 12.9514 10.0076 12.9479 9.93809C12.9296 9.56554 12.7402 9.20285 12.4221 8.93116C12.0604 8.62227 11.5745 8.37633 10.3863 7.90088Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M9.13385 8.19748C9.11149 8.06527 9.07272 7.89643 9.04769 7.82228L9.00217 7.68748L9.08672 7.7818C9.20374 7.91233 9.2962 8.07937 9.37457 8.30185C9.43438 8.47165 9.44111 8.52215 9.44066 8.79807C9.4402 9.06896 9.43273 9.12575 9.3775 9.27858C9.29042 9.51959 9.18233 9.69048 9.00097 9.87391C8.67507 10.2036 8.25607 10.3861 7.65143 10.4618C7.54633 10.4749 7.24 10.4971 6.97069 10.511C6.292 10.5461 5.84531 10.6186 5.44393 10.7587C5.38623 10.7788 5.3347 10.7911 5.32947 10.7859C5.31323 10.7698 5.58651 10.6079 5.81223 10.4998C6.1305 10.3474 6.44733 10.2643 7.15719 10.1468C7.50785 10.0887 7.86998 10.0183 7.96194 9.99029C8.83033 9.72566 9.27671 9.04276 9.13385 8.19748Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M9.95169 9.64109C9.71465 9.13463 9.66022 8.64564 9.79009 8.18961C9.80399 8.14088 9.82632 8.101 9.83976 8.101C9.85319 8.101 9.90913 8.13105 9.96404 8.16777C10.0733 8.24086 10.2924 8.36395 10.876 8.68023C11.6043 9.0749 12.0196 9.3805 12.302 9.72965C12.5493 10.0354 12.7023 10.3837 12.776 10.8084C12.8177 11.0489 12.7932 11.6277 12.7311 11.8699C12.5353 12.6337 12.0802 13.2336 11.4311 13.5837C11.336 13.635 11.2506 13.6771 11.2414 13.6773C11.2321 13.6775 11.2668 13.5899 11.3184 13.4827C11.5367 13.029 11.5616 12.5877 11.3965 12.0965C11.2954 11.7957 11.0893 11.4287 10.6732 10.8084C10.1893 10.0873 10.0707 9.89539 9.95169 9.64109Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    d: "M3.25046 12.3737C3.91252 11.8181 4.73629 11.4234 5.48666 11.3022C5.81005 11.25 6.34877 11.2707 6.64823 11.3469C7.12824 11.469 7.55763 11.7425 7.78094 12.0683C7.99918 12.3867 8.09281 12.6642 8.19029 13.2816C8.22875 13.5252 8.27057 13.7697 8.28323 13.8251C8.35644 14.1451 8.4989 14.4008 8.67544 14.5293C8.95583 14.7333 9.43865 14.7459 9.91362 14.5618C9.99423 14.5305 10.0642 14.5089 10.0691 14.5138C10.0864 14.5308 9.84719 14.6899 9.67847 14.7737C9.45143 14.8864 9.2709 14.93 9.03102 14.93C8.59601 14.93 8.23486 14.7101 7.9335 14.2616C7.87419 14.1733 7.7409 13.909 7.63729 13.6741C7.3191 12.9528 7.16199 12.7331 6.79255 12.4926C6.47104 12.2834 6.05641 12.2459 5.74449 12.3979C5.33475 12.5976 5.22043 13.118 5.51389 13.4478C5.63053 13.5789 5.84803 13.6919 6.02588 13.7139C6.35861 13.7551 6.64455 13.5035 6.64455 13.1696C6.64455 12.9528 6.56071 12.8291 6.34966 12.7344C6.0614 12.6051 5.75156 12.7562 5.75304 13.0254C5.75368 13.1402 5.80396 13.2122 5.91971 13.2643C5.99397 13.2977 5.99569 13.3003 5.93514 13.2878C5.67066 13.2333 5.6087 12.9164 5.82135 12.706C6.07667 12.4535 6.60461 12.5649 6.78591 12.9097C6.86208 13.0545 6.87092 13.3429 6.80451 13.517C6.6559 13.9068 6.22256 14.1117 5.78297 14.0002C5.48368 13.9242 5.36181 13.842 5.00097 13.4726C4.37395 12.8306 4.13053 12.7062 3.22657 12.566L3.05335 12.5391L3.25046 12.3737Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    fillRule: "evenodd",
-    clipRule: "evenodd",
-    d: "M0.308383 0.883984C2.40235 3.40996 3.84457 4.45213 4.00484 4.67231C4.13717 4.85412 4.08737 5.01757 3.86067 5.14567C3.7346 5.21689 3.47541 5.28905 3.34564 5.28905C3.19887 5.28905 3.14847 5.23278 3.14847 5.23278C3.06337 5.15255 3.01544 5.16658 2.5784 4.39555C1.97166 3.45981 1.46389 2.68357 1.45004 2.67057C1.41801 2.64052 1.41856 2.64153 2.51654 4.59413C2.69394 5.0011 2.55182 5.15049 2.55182 5.20845C2.55182 5.32636 2.51946 5.38834 2.37311 5.55059C2.12914 5.8211 2.02008 6.12505 1.94135 6.7541C1.8531 7.45926 1.60492 7.95737 0.917156 8.80989C0.514562 9.30893 0.448686 9.4004 0.3471 9.60153C0.219144 9.85482 0.183961 9.99669 0.169701 10.3165C0.154629 10.6547 0.183983 10.8732 0.287934 11.1965C0.378939 11.4796 0.473932 11.6665 0.716778 12.0403C0.926351 12.3629 1.04702 12.6027 1.04702 12.6965C1.04702 12.7711 1.06136 12.7712 1.38611 12.6983C2.16328 12.5239 2.79434 12.2171 3.14925 11.8411C3.36891 11.6084 3.42048 11.4799 3.42215 11.1611C3.42325 10.9525 3.41587 10.9088 3.35914 10.7888C3.2668 10.5935 3.09869 10.4311 2.72817 10.1794C2.2427 9.84953 2.03534 9.58398 1.97807 9.21878C1.93108 8.91913 1.98559 8.70771 2.25416 8.14825C2.53214 7.56916 2.60103 7.32239 2.64763 6.73869C2.67773 6.36158 2.71941 6.21286 2.82842 6.09348C2.94212 5.969 3.04447 5.92684 3.32584 5.88863C3.78457 5.82635 4.07667 5.70839 4.31677 5.48849C4.52505 5.29772 4.61221 5.11391 4.62558 4.8372L4.63574 4.62747L4.51934 4.49259C4.09783 4.00411 0.0261003 0.5 0.000160437 0.5C-0.00538105 0.5 0.133325 0.672804 0.308383 0.883984ZM1.28364 10.6992C1.37894 10.5314 1.3283 10.3158 1.16889 10.2104C1.01827 10.1109 0.78428 10.1578 0.78428 10.2875C0.78428 10.3271 0.806303 10.3559 0.855937 10.3813C0.939514 10.424 0.945581 10.4721 0.879823 10.5703C0.81323 10.6698 0.818604 10.7573 0.894991 10.8167C1.0181 10.9125 1.19237 10.8598 1.28364 10.6992Z"
-  }), /*#__PURE__*/React__default["default"].createElement("path", {
-    fillRule: "evenodd",
-    clipRule: "evenodd",
-    d: "M4.92523 5.99865C4.70988 6.06439 4.50054 6.29124 4.43574 6.5291C4.39621 6.67421 4.41864 6.92875 4.47785 7.00736C4.57351 7.13433 4.66602 7.16778 4.91651 7.16603C5.40693 7.16263 5.83327 6.95358 5.88284 6.69224C5.92347 6.47801 5.73622 6.18112 5.4783 6.05078C5.34521 5.98355 5.06217 5.95688 4.92523 5.99865ZM5.49853 6.44422C5.57416 6.33741 5.54107 6.22198 5.41245 6.14391C5.1675 5.99525 4.79708 6.11827 4.79708 6.34826C4.79708 6.46274 4.99025 6.58765 5.16731 6.58765C5.28516 6.58765 5.44644 6.5178 5.49853 6.44422Z"
-  }))));
-};
-
-var _mask, _circle;
-
-function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
-
-var SvgSpinner = function SvgSpinner(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$2({
-    viewBox: "0 0 24 24",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _mask || (_mask = /*#__PURE__*/React__default["default"].createElement("mask", {
-    id: "mask"
-  }, /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 12,
-    r: 10,
-    stroke: "white",
-    strokeWidth: 2
-  }), /*#__PURE__*/React__default["default"].createElement("rect", {
-    width: 12,
-    height: 12,
-    fill: "black",
-    strokeWidth: 0
-  }), /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 2,
-    cy: 12,
-    r: 1,
-    fill: "white",
-    strokeWidth: 0
-  }), /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 2,
-    r: 1,
-    fill: "white",
-    strokeWidth: 0
-  }))), _circle || (_circle = /*#__PURE__*/React__default["default"].createElement("circle", {
-    cx: 12,
-    cy: 12,
-    r: 10,
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    mask: "url(#mask)"
-  })));
-};
-
 var _path, _path2, _path3;
 
-function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 var SvgWallet = function SvgWallet(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends$1({
+  return /*#__PURE__*/React__default["default"].createElement("svg", _extends({
     width: 24,
     height: 24,
     viewBox: "0 0 24 24",
@@ -8282,18 +8292,7 @@ var SvgWallet = function SvgWallet(props) {
   })));
 };
 
-var loadingOpacity = 0.6;
-var loadingCss = /*#__PURE__*/_styled.css(["filter:grayscale(1);opacity:", ";"], loadingOpacity); // need to use isLoading as `loading` is a reserved prop
-
-var loadingTransitionCss = /*#__PURE__*/_styled.css(["opacity:", ";transition:color 0.125s linear,opacity ", "s ease-in-out;"], function (_ref) {
-  var isLoading = _ref.isLoading;
-  return isLoading && loadingOpacity;
-}, function (_ref2) {
-  var isLoading = _ref2.isLoading;
-  return isLoading ? 0 : 0.25;
-});
-
-var _templateObject$7, _templateObject2$2;
+var _templateObject$2, _templateObject2$1;
 
 function icon(Icon) {
   return _styled__default["default"](Icon).withConfig({
@@ -8307,7 +8306,7 @@ function icon(Icon) {
   });
 }
 
-var largeIconCss = _styled.css(_templateObject$7 || (_templateObject$7 = _taggedTemplateLiteral__default["default"](["\n  display: flex;\n\n  svg {\n    align-self: center;\n    height: ", "em;\n    width: ", "em;\n  }\n"])), function (_ref2) {
+var largeIconCss = _styled.css(_templateObject$2 || (_templateObject$2 = _taggedTemplateLiteral__default["default"](["\n  display: flex;\n\n  svg {\n    align-self: center;\n    height: ", "em;\n    width: ", "em;\n  }\n"])), function (_ref2) {
   var iconSize = _ref2.iconSize;
   return iconSize;
 }, function (_ref3) {
@@ -8338,30 +8337,23 @@ function LargeIcon(_ref5) {
   }));
 }
 var AlertTriangle = icon(reactFeather.AlertTriangle);
-var ArrowDown$1 = icon(reactFeather.ArrowDown);
-var ArrowRight = icon(reactFeather.ArrowRight);
-var ArrowUp$1 = icon(reactFeather.ArrowUp);
-var CheckCircle = icon(reactFeather.CheckCircle);
+icon(reactFeather.ArrowDown);
+icon(reactFeather.ArrowRight);
+icon(reactFeather.ArrowUp);
+icon(reactFeather.CheckCircle);
 icon(reactFeather.BarChart2);
-var ChevronDown = icon(reactFeather.ChevronDown);
-var Clock = icon(reactFeather.Clock);
-var HelpCircle = icon(reactFeather.HelpCircle);
-var Info = icon(reactFeather.Info);
-var Link = icon(reactFeather.ExternalLink);
-var AutoRouter = icon(SvgAutoRouter);
-var Settings$1 = icon(reactFeather.Settings);
+icon(reactFeather.ChevronDown);
+icon(reactFeather.Clock);
+icon(reactFeather.HelpCircle);
+icon(reactFeather.Info);
+icon(reactFeather.ExternalLink);
+icon(SvgAutoRouter);
+icon(reactFeather.Settings);
 icon(reactFeather.Slash);
 icon(reactFeather.Trash2);
-var Wallet$1 = icon(SvgWallet);
-var X = icon(reactFeather.X);
-var XOctagon = icon(reactFeather.XOctagon);
-var Check = /*#__PURE__*/_styled__default["default"](icon(SvgCheck)).withConfig({
-  displayName: "icons__Check",
-  componentId: "sc-lekdau-2"
-})(["circle{fill:", ";stroke:none;}"], function (_ref6) {
-  var theme = _ref6.theme;
-  return theme.active;
-});
+icon(SvgWallet);
+icon(reactFeather.X);
+icon(reactFeather.XOctagon);
 var Expando$1 = /*#__PURE__*/_styled__default["default"](icon(SvgExpando)).withConfig({
   displayName: "icons__Expando",
   componentId: "sc-lekdau-3"
@@ -8372,49 +8364,12 @@ var Expando$1 = /*#__PURE__*/_styled__default["default"](icon(SvgExpando)).withC
   var open = _ref8.open;
   return open ? undefined : 'translateX(25%)';
 });
-var Logo = /*#__PURE__*/_styled__default["default"](icon(SvgLogo)).withConfig({
-  displayName: "icons__Logo",
-  componentId: "sc-lekdau-4"
-})(["fill:", ";stroke:none;"], function (_ref9) {
-  var theme = _ref9.theme;
-  return theme.secondary;
-});
 
-var rotate = _styled.keyframes(_templateObject2$2 || (_templateObject2$2 = _taggedTemplateLiteral__default["default"](["\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n"])));
+_styled.keyframes(_templateObject2$1 || (_templateObject2$1 = _taggedTemplateLiteral__default["default"](["\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n"])));
 
-var Spinner = /*#__PURE__*/_styled__default["default"](icon(SvgSpinner)).withConfig({
-  displayName: "icons__Spinner",
-  componentId: "sc-lekdau-5"
-})(["animation:2s ", " linear infinite;stroke:", ";stroke-linecap:round;stroke-width:2;"], rotate, function (_ref10) {
-  var _ref10$color = _ref10.color,
-      color = _ref10$color === void 0 ? 'active' : _ref10$color,
-      theme = _ref10.theme;
-  return theme[color];
-});
-var InlineSpinner = /*#__PURE__*/_styled__default["default"](icon(SvgInlineSpinner)).withConfig({
-  displayName: "icons__InlineSpinner",
-  componentId: "sc-lekdau-6"
-})(["animation:", " 1s cubic-bezier(0.83,0,0.17,1) infinite;color:", ";fill:", ";#track{stroke:", ";", ";}"], rotate, function (_ref11) {
-  var _ref11$color = _ref11.color,
-      color = _ref11$color === void 0 ? 'active' : _ref11$color,
-      theme = _ref11.theme;
-  return theme[color];
-}, function (_ref12) {
-  var _ref12$color = _ref12.color,
-      color = _ref12$color === void 0 ? 'active' : _ref12$color,
-      theme = _ref12.theme;
-  return theme[color];
-}, function (_ref13) {
-  var theme = _ref13.theme;
-  return theme.secondary;
-}, loadingCss);
-
-function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$3(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var black$1 = 'hsl(0, 0%, 0%)';
 var white$1 = 'hsl(0, 0%, 100%)';
-var light = {
+({
   // surface
   interactive: polished.transparentize(1 - 0.54, black$1),
   outline: polished.transparentize(1 - 0.24, black$1),
@@ -8422,8 +8377,8 @@ var light = {
   primary: black$1,
   secondary: polished.transparentize(1 - 0.64, black$1),
   onInteractive: white$1
-};
-var dark = {
+});
+({
   // surface
   interactive: polished.transparentize(1 - 0.48, white$1),
   outline: polished.transparentize(1 - 0.12, white$1),
@@ -8431,57 +8386,7 @@ var dark = {
   primary: white$1,
   secondary: polished.transparentize(1 - 0.6, white$1),
   onInteractive: black$1
-};
-function getDynamicTheme(theme, color) {
-  var colors = {
-    light: light,
-    dark: dark
-  }[polished.readableColor(color, 'light', 'dark', false)];
-  return _objectSpread$3(_objectSpread$3(_objectSpread$3({}, theme), colors), {}, {
-    module: color,
-    onHover: function onHover(color) {
-      return color === colors.primary ? polished.transparentize(0.4, colors.primary) : polished.opacify(0.25, color);
-    }
-  });
-}
-
-function getAccessibleColor(theme, color) {
-  var dynamic = getDynamicTheme(theme, color);
-  var primary = dynamic.primary;
-  var AAscore = wcagContrast.hex(color, primary);
-  var contrastify = wcagContrast.hex(color, '#000') > wcagContrast.hex(color, '#fff') ? polished.darken : polished.lighten;
-
-  while (AAscore < 3) {
-    color = contrastify(0.005, color);
-    primary = getDynamicTheme(theme, color).primary;
-    AAscore = wcagContrast.hex(color, primary);
-  }
-
-  return color;
-}
-
-function DynamicThemeProvider(_ref) {
-  var color = _ref.color,
-      children = _ref.children;
-
-  var theme = _styled.useTheme();
-
-  var value = React.useMemo(function () {
-    if (!color) {
-      return theme;
-    }
-
-    var accessibleColor = getAccessibleColor(theme, color);
-    return getDynamicTheme(theme, accessibleColor);
-  }, [theme, color]);
-  return /*#__PURE__*/React__default["default"].createElement(_styled.ThemeProvider, {
-    theme: value
-  }, /*#__PURE__*/React__default["default"].createElement("div", {
-    style: {
-      color: value.primary
-    }
-  }, children));
-}
+});
 
 var Layer;
 
@@ -8515,15 +8420,6 @@ var TransitionTextWrapper = /*#__PURE__*/_styled__default["default"](TextWrapper
   displayName: "type__TransitionTextWrapper",
   componentId: "sc-16386l-1"
 })(["transition:font-size 0.25s ease-out,line-height 0.25s ease-out;"]);
-function H2(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "headline headline-2",
-    fontSize: 32,
-    fontWeight: 400,
-    lineHeight: "32px",
-    noWrap: true
-  }, props));
-}
 function Subhead1(props) {
   return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
     className: "subhead subhead-1",
@@ -8542,64 +8438,12 @@ function Subhead2(props) {
     noWrap: true
   }, props));
 }
-function Body1(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "body body-1",
-    fontSize: 16,
-    fontWeight: 400,
-    lineHeight: "24px"
-  }, props));
-}
 function Body2(props) {
   return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
     className: "body body-2",
     fontSize: 14,
     fontWeight: 400,
     lineHeight: "20px"
-  }, props));
-}
-function Caption$1(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "caption",
-    fontSize: 12,
-    fontWeight: 400,
-    lineHeight: "16px"
-  }, props));
-}
-function Badge(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "badge",
-    fontSize: "8px",
-    fontWeight: 600,
-    lineHeight: "8px",
-    noWrap: true
-  }, props));
-}
-function ButtonLarge(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "button button-large",
-    fontSize: 20,
-    fontWeight: 500,
-    lineHeight: "20px",
-    noWrap: true
-  }, props));
-}
-function ButtonMedium(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "button button-medium",
-    fontSize: 16,
-    fontWeight: 500,
-    lineHeight: "16px",
-    noWrap: true
-  }, props));
-}
-function ButtonSmall(props) {
-  return /*#__PURE__*/React__default["default"].createElement(TextWrapper, _extends__default["default"]({
-    className: "button button-small",
-    fontSize: 14,
-    fontWeight: 500,
-    lineHeight: "14px",
-    noWrap: true
   }, props));
 }
 function TransitionButton(props) {
@@ -8631,21 +8475,20 @@ function Code(props) {
   }, props));
 }
 
-function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$2(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$1(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var white = 'hsl(0, 0%, 100%)';
 var black = 'hsl(0, 0%, 0%)';
 var brandLight = 'hsl(331.3, 100%, 50%)';
 var brandDark = 'hsl(215, 79%, 51.4%)';
-var brand = brandLight;
 var stateColors = {
   active: 'hsl(215, 79%, 51.4%)',
   success: 'hsl(145, 63.4%, 41.8%)',
   warning: 'hsl(43, 89.9%, 53.5%)',
   error: 'hsl(0, 98%, 62.2%)'
 };
-var lightTheme = _objectSpread$2(_objectSpread$2({
+var lightTheme = _objectSpread$1(_objectSpread$1({
   // surface
   accent: brandLight,
   container: 'hsl(220, 23%, 97.5%)',
@@ -8662,7 +8505,7 @@ var lightTheme = _objectSpread$2(_objectSpread$2({
 }, stateColors), {}, {
   currentColor: 'currentColor'
 });
-var darkTheme = _objectSpread$2(_objectSpread$2({
+var darkTheme = _objectSpread$1(_objectSpread$1({
   // surface
   accent: brandDark,
   container: 'hsl(220, 10.7%, 11%)',
@@ -8679,7 +8522,7 @@ var darkTheme = _objectSpread$2(_objectSpread$2({
 }, stateColors), {}, {
   currentColor: 'currentColor'
 });
-var defaultTheme = _objectSpread$2({
+var defaultTheme = _objectSpread$1({
   borderRadius: 1,
   fontFamily: {
     font: '"Inter", sans-serif',
@@ -8694,7 +8537,7 @@ function ThemeProvider(_ref) {
       children = _ref.children;
   var contextTheme = React.useContext(ThemeContext);
   var value = React.useMemo(function () {
-    return toComputedTheme(_objectSpread$2(_objectSpread$2({}, contextTheme), theme));
+    return toComputedTheme(_objectSpread$1(_objectSpread$1({}, contextTheme), theme));
   }, [contextTheme, theme]);
   return /*#__PURE__*/React__default["default"].createElement(ThemeContext.Provider, {
     value: value
@@ -8704,7 +8547,7 @@ function ThemeProvider(_ref) {
 }
 
 function toComputedTheme(theme) {
-  return _objectSpread$2(_objectSpread$2({}, theme), {}, {
+  return _objectSpread$1(_objectSpread$1({}, theme), {}, {
     borderRadius: clamp(Number.isFinite(theme.borderRadius) ? theme.borderRadius : theme.borderRadius ? 1 : 0),
     onHover: function onHover(color) {
       return color === theme.primary ? polished.transparentize(0.4, theme.primary) : polished.mix(0.16, theme.primary, color);
@@ -8755,17 +8598,17 @@ function delayUnmountForAnimation(node) {
   }
 }
 
-var _excluded$3 = ["icon", "iconProps"];
+var _excluded$1 = ["icon", "iconProps"];
 
-var _templateObject$6;
+var _templateObject$1;
 var BaseButton = /*#__PURE__*/_styled__default["default"].button.withConfig({
   displayName: "Button__BaseButton",
   componentId: "sc-1soikk5-0"
 })(["background-color:transparent;border:none;border-radius:0.5em;color:currentColor;cursor:pointer;font-size:inherit;font-weight:inherit;height:inherit;line-height:inherit;margin:0;padding:0;:enabled{transition:filter 0.125s linear;}:disabled{cursor:initial;filter:opacity(0.4);}"]);
 
-var transitionCss$1 = _styled.css(_templateObject$6 || (_templateObject$6 = _taggedTemplateLiteral__default["default"](["\n  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear;\n"])));
+var transitionCss = _styled.css(_templateObject$1 || (_templateObject$1 = _taggedTemplateLiteral__default["default"](["\n  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear;\n"])));
 
-var Button$1 = _styled__default["default"](BaseButton).withConfig({
+var Button = _styled__default["default"](BaseButton).withConfig({
   displayName: "Button",
   componentId: "sc-1soikk5-1"
 })(["background-color:", ";border:1px solid transparent;color:", ";:enabled{", ";}:enabled:hover{background-color:", ";}"], function (_ref) {
@@ -8781,7 +8624,7 @@ var Button$1 = _styled__default["default"](BaseButton).withConfig({
 }, function (_ref3) {
   var _ref3$transition = _ref3.transition,
       transition = _ref3$transition === void 0 ? true : _ref3$transition;
-  return transition && transitionCss$1;
+  return transition && transitionCss;
 }, function (_ref4) {
   var _ref4$color = _ref4.color,
       color = _ref4$color === void 0 ? 'interactive' : _ref4$color,
@@ -8806,12 +8649,12 @@ var transparentButton = function transparentButton(defaultColor) {
   });
 };
 
-var TextButton = transparentButton('accent');
+transparentButton('accent');
 var SecondaryButton = transparentButton('secondary');
 var IconButton = /*#__PURE__*/React.forwardRef(function IconButton(_ref7, ref) {
   var Icon = _ref7.icon,
       iconProps = _ref7.iconProps,
-      props = _objectWithoutProperties__default["default"](_ref7, _excluded$3);
+      props = _objectWithoutProperties__default["default"](_ref7, _excluded$1);
 
   return /*#__PURE__*/React__default["default"].createElement(SecondaryButton, _extends__default["default"]({}, props, {
     ref: ref
@@ -8882,23 +8725,6 @@ var Row = /*#__PURE__*/_styled__default["default"].div.withConfig({
   return pad && "0 ".concat(pad, "em");
 });
 
-var HeaderRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "Header__HeaderRow",
-  componentId: "sc-1a8935c-0"
-})(["height:1.75em;margin:0 0.75em 0.75em;padding-top:0.5em;", ""], largeIconCss);
-
-function Header$2(_ref) {
-  var title = _ref.title,
-      children = _ref.children;
-  return /*#__PURE__*/React__default["default"].createElement(HeaderRow, {
-    iconSize: 1.2
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5
-  }, title && /*#__PURE__*/React__default["default"].createElement(Subhead1, null, title)), /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 1
-  }, children));
-}
-
 var Rule = /*#__PURE__*/_styled__default["default"].hr.withConfig({
   displayName: "Rule",
   componentId: "sc-1568p9j-0"
@@ -8923,54 +8749,9 @@ var Context = /*#__PURE__*/React.createContext({
     return undefined;
   }
 });
-function Provider$1(_ref) {
-  var value = _ref.value,
-      children = _ref.children;
-  // If a Dialog is active, mark the main content inert
-  var ref = React.useRef(null);
-
-  var _useState = React.useState(false),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      active = _useState2[0],
-      setActive = _useState2[1];
-
-  var context = {
-    element: value,
-    active: active,
-    setActive: setActive
-  };
-  React.useEffect(function () {
-    if (ref.current) {
-      ref.current.inert = active;
-    }
-  }, [active]);
-  return /*#__PURE__*/React__default["default"].createElement("div", {
-    ref: ref,
-    style: {
-      isolation: 'isolate'
-    } // creates a new stacking context, preventing the dialog from intercepting non-dialog clicks
-
-  }, /*#__PURE__*/React__default["default"].createElement(Context.Provider, {
-    value: context
-  }, children));
-}
 var OnCloseContext = /*#__PURE__*/React.createContext(function () {
   return void 0;
 });
-function Header$1(_ref2) {
-  var title = _ref2.title,
-      children = _ref2.children,
-      ruled = _ref2.ruled;
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Column, null, /*#__PURE__*/React__default["default"].createElement(Header$2, {
-    title: title
-  }, children, /*#__PURE__*/React__default["default"].createElement(IconButton, {
-    color: "primary",
-    onClick: React.useContext(OnCloseContext),
-    icon: X
-  })), ruled && /*#__PURE__*/React__default["default"].createElement(Rule, {
-    padded: true
-  })));
-}
 var Modal = /*#__PURE__*/_styled__default["default"].div.withConfig({
   displayName: "Dialog__Modal",
   componentId: "sc-c8nkza-0"
@@ -9018,5555 +8799,9 @@ function Dialog(_ref5) {
   }, children))), context.element);
 }
 
-function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+var _templateObject, _templateObject2;
 
-function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$1(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-var BoundaryContext = /*#__PURE__*/React.createContext(null);
-var BoundaryProvider = BoundaryContext.Provider;
-
-var PopoverContainer = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "Popover__PopoverContainer",
-  componentId: "sc-1liex6z-0"
-})(["background-color:", ";border:1px solid ", ";border-radius:0.5em;opacity:", ";padding:10px 12px;transition:visibility 0.25s linear,opacity 0.25s linear;visibility:", ";z-index:", ";"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.dialog;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.outline;
-}, function (props) {
-  return props.show ? 1 : 0;
-}, function (props) {
-  return props.show ? 'visible' : 'hidden';
-}, Layer.TOOLTIP);
-
-var Reference = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "Popover__Reference",
-  componentId: "sc-1liex6z-1"
-})(["align-self:flex-start;display:inline-block;height:1em;"]);
-
-var Arrow = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "Popover__Arrow",
-  componentId: "sc-1liex6z-2"
-})(["height:8px;width:8px;z-index:", ";::before{background:", ";border:1px solid ", ";content:'';height:8px;position:absolute;transform:rotate(45deg);width:8px;}&.arrow-top{bottom:-4px;::before{border-radius:1px;border-left:none;border-top:none;}}&.arrow-bottom{top:-5px;::before{border-bottom:none;border-right:none;border-radius:1px;}}&.arrow-left{right:-4px;::before{border-bottom:none;border-left:none;border-radius:1px;}}&.arrow-right{left:-5px;::before{border-radius:1px;border-right:none;border-top:none;}}"], Layer.TOOLTIP, function (_ref3) {
-  var theme = _ref3.theme;
-  return theme.dialog;
-}, function (_ref4) {
-  var theme = _ref4.theme;
-  return theme.outline;
-});
-
-function Popover(_ref5) {
-  var _attributes$popper$da, _attributes$popper;
-
-  var content = _ref5.content,
-      show = _ref5.show,
-      children = _ref5.children,
-      placement = _ref5.placement,
-      offset = _ref5.offset,
-      contained = _ref5.contained;
-  var boundary = React.useContext(BoundaryContext);
-  var reference = React.useRef(null); // Use callback refs to be notified when instantiated
-
-  var _useState = React.useState(null),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      popover = _useState2[0],
-      setPopover = _useState2[1];
-
-  var _useState3 = React.useState(null),
-      _useState4 = _slicedToArray__default["default"](_useState3, 2),
-      arrow = _useState4[0],
-      setArrow = _useState4[1];
-
-  var options = React.useMemo(function () {
-    var modifiers = [{
-      name: 'offset',
-      options: {
-        offset: [4, offset || 4]
-      }
-    }, {
-      name: 'arrow',
-      options: {
-        element: arrow,
-        padding: 4
-      }
-    }];
-
-    if (contained) {
-      modifiers.push({
-        name: 'preventOverflow',
-        options: {
-          boundary: boundary,
-          padding: 8
-        }
-      }, {
-        name: 'flip',
-        options: {
-          boundary: boundary,
-          padding: 8
-        }
-      }, _objectSpread$1(_objectSpread$1({}, maxSize__default["default"]), {}, {
-        options: {
-          boundary: boundary,
-          padding: 8
-        }
-      }), {
-        name: 'applyMaxSize',
-        enabled: true,
-        phase: 'beforeWrite',
-        requires: ['maxSize'],
-        fn: function fn(_ref6) {
-          var state = _ref6.state;
-          var width = state.modifiersData.maxSize.width;
-          state.styles.popper = _objectSpread$1(_objectSpread$1({}, state.styles.popper), {}, {
-            maxWidth: "".concat(width, "px")
-          });
-        }
-      });
-    }
-
-    return {
-      placement: placement,
-      strategy: 'absolute',
-      modifiers: modifiers
-    };
-  }, [offset, arrow, contained, placement, boundary]);
-
-  var _usePopper = reactPopper.usePopper(reference.current, popover, options),
-      styles = _usePopper.styles,
-      attributes = _usePopper.attributes;
-
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Reference, {
-    ref: reference
-  }, children), boundary && /*#__PURE__*/reactDom.createPortal( /*#__PURE__*/React__default["default"].createElement(PopoverContainer, _extends__default["default"]({
-    show: show,
-    ref: setPopover,
-    style: styles.popper
-  }, attributes.popper), content, /*#__PURE__*/React__default["default"].createElement(Arrow, _extends__default["default"]({
-    className: "arrow-".concat((_attributes$popper$da = (_attributes$popper = attributes.popper) === null || _attributes$popper === void 0 ? void 0 : _attributes$popper['data-popper-placement']) !== null && _attributes$popper$da !== void 0 ? _attributes$popper$da : ''),
-    ref: setArrow,
-    style: styles.arrow
-  }, attributes.arrow))), boundary));
-}
-
-var WalletButton = /*#__PURE__*/_styled__default["default"](TextButton).withConfig({
-  displayName: "Wallet__WalletButton",
-  componentId: "sc-1ajkvi1-0"
-})(["filter:none;visibility:", ";"], function (_ref) {
-  var hidden = _ref.hidden;
-  return hidden && 'hidden';
-});
-
-function Wallet(_ref2) {
-  var disabled = _ref2.disabled,
-      onClick = _ref2.onClick;
-  return /*#__PURE__*/React__default["default"].createElement(WalletButton, {
-    onClick: onClick,
-    color: "secondary",
-    disabled: !onClick,
-    hidden: disabled,
-    "data-testid": "wallet"
-  }, /*#__PURE__*/React__default["default"].createElement(Caption$1, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5
-  }, /*#__PURE__*/React__default["default"].createElement(Wallet$1, null), /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Connect wallet to swap"
-  }))));
-}
-
-function otherField(field) {
-  switch (field) {
-    case Field.INPUT:
-      return Field.OUTPUT;
-
-    case Field.OUTPUT:
-      return Field.INPUT;
-  }
-}
-
-function useSwitchSwapCurrencies() {
-  var update = utils.useUpdateAtom(swapAtom);
-  return React.useCallback(function () {
-    update(function (swap) {
-      var oldOutput = swap[Field.OUTPUT];
-      swap[Field.OUTPUT] = swap[Field.INPUT];
-      swap[Field.INPUT] = oldOutput;
-
-      switch (swap.independentField) {
-        case Field.INPUT:
-          swap.independentField = Field.OUTPUT;
-          break;
-
-        case Field.OUTPUT:
-          swap.independentField = Field.INPUT;
-          break;
-      }
-    });
-  }, [update]);
-}
-function useSwapCurrency(field) {
-  var atom = React.useMemo(function () {
-    return pickAtom(swapAtom, field);
-  }, [field]);
-  var otherAtom = React.useMemo(function () {
-    return pickAtom(swapAtom, otherField(field));
-  }, [field]);
-
-  var _useAtom = jotai.useAtom(atom),
-      _useAtom2 = _slicedToArray__default["default"](_useAtom, 2),
-      currency = _useAtom2[0],
-      setCurrency = _useAtom2[1];
-
-  var otherCurrency = utils.useAtomValue(otherAtom);
-  var switchSwapCurrencies = useSwitchSwapCurrencies();
-  var setOrSwitchCurrency = React.useCallback(function (currency) {
-    if (currency === otherCurrency) {
-      switchSwapCurrencies();
-    } else {
-      setCurrency(currency);
-    }
-  }, [otherCurrency, setCurrency, switchSwapCurrencies]);
-  return [currency, setOrSwitchCurrency];
-}
-var independentFieldAtom = pickAtom(swapAtom, 'independentField');
-function useIsSwapFieldIndependent(field) {
-  var independentField = utils.useAtomValue(independentFieldAtom);
-  return independentField === field;
-}
-var amountAtom = pickAtom(swapAtom, 'amount'); // check if any amount has been entered by user
-
-function useIsAmountPopulated() {
-  return Boolean(utils.useAtomValue(amountAtom));
-}
-function useSwapAmount(field) {
-  var amount = utils.useAtomValue(amountAtom);
-  var isFieldIndependent = useIsSwapFieldIndependent(field);
-  var value = isFieldIndependent ? amount : undefined;
-  var updateSwap = utils.useUpdateAtom(swapAtom);
-  var updateAmount = React.useCallback(function (amount) {
-    return updateSwap(function (swap) {
-      swap.independentField = field;
-      swap.amount = amount;
-    });
-  }, [field, updateSwap]);
-  return [value, updateAmount];
-}
-function useSwapCurrencyAmount(field) {
-  var isFieldIndependent = useIsSwapFieldIndependent(field);
-  var isAmountPopulated = useIsAmountPopulated();
-
-  var _useSwapAmount = useSwapAmount(field),
-      _useSwapAmount2 = _slicedToArray__default["default"](_useSwapAmount, 1),
-      swapAmount = _useSwapAmount2[0];
-
-  var _useSwapCurrency = useSwapCurrency(field),
-      _useSwapCurrency2 = _slicedToArray__default["default"](_useSwapCurrency, 1),
-      swapCurrency = _useSwapCurrency2[0];
-
-  var currencyAmount = React.useMemo(function () {
-    return tryParseCurrencyAmount(swapAmount, swapCurrency);
-  }, [swapAmount, swapCurrency]);
-
-  if (isFieldIndependent && isAmountPopulated) {
-    return currencyAmount;
-  }
-
-  return;
-}
-
-var EthereumLogo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAADxdJREFUeJztXVtzFMcVplwuP8VVeYmf7HJ+RKqSl/AQP6X8H+yqXUEIjhMnQY5jO9oVCIzA5mowdzAYG4xAGAyWLC5G3IyDL8gOASUYKrarYGZWC7qi23b6692VV6uZ7e6ZnT3di07VV6JUaLfnnG+6z+lz+vScOXUoL6SzP52/2PtlQ9p7piHlLU2k3P2JJqcjkXLO8589/OdN/tPjvx8VEP8Wv+sp/J8O/A3+Fp+Bz8JnUj/XrPjIwjT7ybxm57fJlLsy2eR2cwPe4QZksYB/Nr4D34XvxHdTP/8DJ+k0e4S/lb9Jpr2WZJNzgRtjPDaDS4DvFmPgY8GYMDZq/dStNKQzv0qmnA1c6RkqgysQIoMxYqzU+qoLWZDO/jyZdl7lir1ObdwQZLiOseMZqPVonSTS7i+4AtsTTW6O2pDR4ebEs/Bnotar8dKw2Pk1n0I76Y0W16zgdOIZqfVsnCSbvaeEB2+AkWpCBEQS/Jmp9U4u3Fl6nIdWB6gNQgb+7NABtR1qLjxcejiZdhfxKXGA3AjUswHXAXQBnVDbpSbCPeO5fAr8hlrxpgE6gW6o7ROb5N96Z3l9ePZxgUcMXEd1NxssbMk8kWxyztEr2A5AV3XjGySb3acTSLYYoFjL4EF31PYLLXwaeyiZcltnp/woEJtIrdAltT21BEkR7tnuo1dgfQC6tCbRlGh1H02k3C5qpalg/bt3WdOGDPk4lACdct1S27eiLEgPPMbDmcvkylLAgiUOc/sm2LHuITavmX48KoBun1828DNqO/tKsiX7JF+zeqmVpIqPzg2xyckc++Sfw2ImoB6POtxe6Jra3tMEb75Nxv/Hmxk2MZGbIsCpz4bZn1d45OPSIQF0Tm13IViXbJn2i+i9NcYgRQIA+zsGyMelA6Fzap8AnqktDl8RO9r7WVFKCQAs3dJHPj4tcN2TRQcizrcs1Hv+NZf1D04GEqDj/JBwDqnHqYNCiFj7fYL8Jg+9AnTQfXmYlUo5AYAtbffIx6lNAm6L2hpfbO/atcO3dGsfy+VyUgIAL66yySEE3FzNto2R2ElYtrffkHbYd7fHWbkEEeDQyUHk6cnHrQkPtonV+CKla2FWDx6+nwQRAFi5K0s+bl3ANrGmkvP5fPoH1cFfX/fYyP2cNgG6Lg6z55a55OPXJgG3UVzGn2vbug98fvW+r/FlBADePtJPPn59iKKS6lYW5ad++8q4Vu+5G2h8FQIAr663JFlUAtiqqksBZ1Uj9UPp4neLHeb0TUQmwNEzg2xemv559OE2VsX4KE2ysXoXhpOJCgGAdXttShblAZtVpayMe5Zt1A+ji5fXZdj4uL/jF4YApy4NsxdaLXQIue2iGb/Ze4r6IcLg6rejUuPrEAB47yO7kkVTJIhyAsnG41rYylUVHQIAizdZlixqyh9DC2V8HGKkHrwuELffHZiUWz4kAVBEAueS+jl1EepAqo2ndLFW64guAYBNB2xMFjmdWsbHWXbqQesC0zMMGjcBgEVv2JYs4tDpT5BvzmDAoBWBxM2tH8a0jB+FAAe77EsWwaZKxkdLE9u2fPce65dbu4oEAFp32JYscnNK7WrQ14Z+sOpAMefwiLrjVy0CdF0cYguX2rU3ANtKCWBTdS9wqWcklPGjEgDYcdiuZBEaV1U0PtqbUQ9SB6/vyoY2fjUIALy81q5kUcUWduhxRz1AVcxvdthtb2aVT60JcOT0oKg4otaHKmBjX+OLA50GN2Esx+FT8mRPLQgAIO1MrQ91ArgZ31JytDqlHpwqXlrjsbExvZg/TgKcvDTM/rjcHocQtp45/ae9FuqBqeLr/6gle2pFAAChKLVeVAFbzyRAk3OBemAq2LhfPdlTSwIA6Y12JItg62nGR9tzyq7bqljY4rK+e5WrfCgJcPzskHBOqfUkJQC39bRW9+h9Tz0oFXx8Yahqxo+DAMCGfXY4hLB5SfjnrqQekAypjRntZA8FAU5/NixK0an1JQNsXrL+m1/4ceM7/WRPJcExsas3Rtn7nQNVJ8GBj82vHppWKBLrNStVAOrzqyWjPHzEWQGEbjBW81t9bPn2LNt9tF/UE1SLBMu2Ge4QcpsL4+MyJPLBVADi68HhcMmeUrnbP8kufDUyw8ggQBHoD7Dt4D3WyX2NqASAv/L7Fnr9VYK4CAs3YlEPpBLOfxk+2QP5wRlnZy7ztTnAUKUEKGLJpj72JnfmUFoehQTbDpldPQTb8/Xfe5Z6IEHA1BxWem+N8rdd/ib7EaAUq/dkxZoelgTYtaTWYxBwJR7y/8uoB+IHnMbB26sjY+M59uU1vr5/qj6FywhQxIodWfbOh/2ioZQOAZCzMLV6CLafU7hUkXww5Wjr8j/S7Sdo+3LxyojSGx+WAFN+wtY+tp1P7V0afsIbbxtaPcRtb2T1b+Mqj90flcf8t91x1v158PoeBwGKWLy5j23kfsIxBT/h5KfDoj8RtV7LIaqFTcwBfHUt+Eg35L//G2WnqxSyhSVAKdZwP+FgV2U/Yc9R85JFIieQwH25BgymCHTt9JPxiRy7ch3xe/QQrdoEKGLlzqzICgb5CQb2Je6ZU7g0mXogAmjR5mWnJ3uwB3Dp65nxu4kEKGIZ9xN2tN9jJy5OJ6txfYm57TEDGNPwCdm0otzJTLCzX+T31uMwfJwEmNpP2NLHNu2/y453/0gEw/oSe3MK16dTD2Sqf+/N78diN3qtCDDlMG7qY2v33mWHTg6Y1ZeY294YAhw7Ozi1P19L1IIA0/yEXdxpfMeQWUAQwJAlAClUtHOrdwL8fW3GpBPGnlFOIIDp8lh3dT19EwiAJe4PprWdKziBRoWBALaB1/JpEhsothMAdYJY8w3dDhZh4HkDBuIL7J7t+qDfWgKg57BRYV85uO0xA3SQD0SCl9ZkRP9eWwjwyrqM8bUABXQYkwySpU0xhb62Lcs6z5u7E4idPpUDIn8ypeOYSAYZkg5esTPLPr0yIu2+gd1CnA3QTcvGSYA0B6IY2TpfXNLQxo5a30BDyluKI2HPUA+kCHj/qNlDDl0WKsGxevd49LAxqvGxPM2XjBV+AJpNYp/DpJ1AURBiUkkYvP9i9S9yAnjTZX+DaffoJ+H9g7CGR1j3nEKDCIS12OLGd6HGwaRoQJSEmVYU+rfVHhu+/2MR6LWbo+JMQGUmO6Lo4kSIsDFMWKfSNRRLWWnJOdrPm3aAVBSFmlgWXt7sEQc4kB+QKRBv5Pb2e7ERAIUqssbROL629eDMMSzZbFiZeLEs3NSDISjhLpeh4Umx7ssaMiD+bpMUaOgQAE6b7DYxjAkdS7ouzoxScFUdtT7LMe1giIlHw/AmORn/g6AoFlWps0OdP7p7hiUA/AuVUi74A+gU4vf5KC2XOYkkBCg9Gmbq4VBMm0gRBwkqgGX7B1A+PO+ggpKgsO4vK+VhHXwBVAAFkQuhqqk3kE07HGry8XDU5FcStIWHl40Zo9LnwH9AXZ6MAHBCZUe8EaLiFLBsL2LVbjOrgWccDze5QQTeQpX27zj6tV3hJM4r6zPsg5Lpemr7lv9eRiIA5V4dCruR+wxuLz+jQYTpLWIwHQ8MqZ0P/Pb7MdYiuQMYpMLOI87vIcRU2ZrFUnPwhNp+A7arTb5xzLdFjOlNorCTpio4+o0zhSBOpc+EZy+LKJDD33lYLyNpYPXvNPg2ibKhTRzqA3QE9wUiHAzTtgXx/po9+jUJpreTD2wTlw8HzW4UCY/e7wpYmSCc1NmDRxQQpioJOQzTbxgLbBSZXwbMbxWLmDtsj8B/3RiteA8gMnr7QtYlItEjW3JMQMVWsflZwL1OPUgZEM6FFWwrI2dQWp+H4o3NB/S2kMuBo+zUepFB2ixaEMCSdvFf/Lvy+UGZIKpAW5hiNBDF+Cae+/MlgEq7eFsujMAWbdSegdXoEoZNKFmewAwoXhhRWAasuDIGTRuitI57kNrFK18ZA7Hp0qgPz4RvHhmVACZV90ihc2lUfhYwr3GEHxrS4XsIRiEAchQmVfdUgva1cRCbLo58sayKKG4CIOdvWnVPxZckzMWRYhYwsFAkCDpXxkYlgHHVPRUQ+upYQQDLLo/W7SkYhgAoOaN+Ti0CRLk8GpJIOQeoH0IVSOfeCagiqgYBUH1sYnVPILjtIhkf0pDOPM6diAHyh1EEpufxClVEYQmA4o9Gi66Mhc1gu8gEgCTT7iLqB9KBrIooDAGM7fUXRABus6oYH5JOs4e5M/EN9UNpsF+0gq8WAd4zuLrH9/m5rWCzqhEAkkw7c23YIi4CmTl0EI1KAFHdY9UVsW4Otqqq8UtIsJz+AdWBJhNRCYD0M/Vz6AA2isX4kPxS4JyjfkgdVKoikhHgrfctC/m4bao+9ZfLwpbMEwlDGkupoFIVUSUCtJ80v7qnDB5sE6vxi5Jsdp+2yR9AFdCoTxVREAEwaxjTy08JfN3nNqmJ8adIkHJb6R9cHbt9qoiCCIBOJNTj1QFsUVPjQ/ha8xCPNfdRP7wOcFmUjAC7j9hR3TNlfG4D2KLmBCiQ4JFEyu2iVoIqyquIyglgT3VPAVz3gSXetZJEq/tossm9TK4MRbSWVBGVEwDtXqjHpwqhc657UuMXZUF64DHuiPRSK0UVOLJdTgCcPKIelzrcXuic2u7TJNmSfdIWEhSriIoEsKm6BzqGrqnt7StgpS3LAc7to+MIqntMvM/HD9CtcW9+uWBdssUxxDk+dPGiHocSoFNT1nyZiIOmloWIJqMQ6tF6+7oi9gnEZpE9O4bmwc1Bh2RxfjUkv21sT+7AIHg1396NS5CksC2LSAnoqmaJnVqJSCWLeoLZJSEYophjeewpXUpBtYpN5WW1AnQSWyWPaQKGc7Y32lRtHJvhhQ7cxrp+64NElJw3OW3URqB76522qpVu2yw4vWLTMbTohne7I5/YqUfBIUZbTiWHMjx/ttAHNR8kwVn2fJOKeogYxGZOu/b5/FnJt6vJ9yyyI8tYZvhejF25LcusVBa0N0OPO5ObWWJsGKO0FdushBckRdDqFP1u0fSYsss5vluMgY8FY7IuYVMPgrbn6H2PCxBEJBHn9Tf8s4UHz78L3zmj5fqsmCG4DAk3YiWbvGfFvYgpdz888EJL/J7Chdkerk8XEP8Wv+vJzyo8EsHf8L/FZ+Czpi5YqjP5P2ey0rAsl+yGAAAAAElFTkSuQmCC";
-
-var MaticLogo = "data:image/svg+xml,%3Csvg%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%22512%22%20r%3D%22512%22%20fill%3D%22%238247E5%22%2F%3E%3Cpath%20d%3D%22M681.469%20402.456C669.189%20395.312%20653.224%20395.312%20639.716%20402.456L543.928%20457.228L478.842%20492.949L383.055%20547.721C370.774%20554.865%20354.81%20554.865%20341.301%20547.721L265.162%20504.856C252.882%20497.712%20244.286%20484.614%20244.286%20470.325V385.786C244.286%20371.498%20251.654%20358.4%20265.162%20351.256L340.073%20309.581C352.353%20302.437%20368.318%20302.437%20381.827%20309.581L456.737%20351.256C469.018%20358.4%20477.614%20371.498%20477.614%20385.786V440.558L542.7%20403.646V348.874C542.7%20334.586%20535.332%20321.488%20521.824%20314.344L383.055%20235.758C370.774%20228.614%20354.81%20228.614%20341.301%20235.758L200.076%20314.344C186.567%20321.488%20179.199%20334.586%20179.199%20348.874V507.237C179.199%20521.525%20186.567%20534.623%20200.076%20541.767L341.301%20620.353C353.582%20627.498%20369.546%20627.498%20383.055%20620.353L478.842%20566.772L543.928%20529.86L639.716%20476.279C651.996%20469.135%20667.961%20469.135%20681.469%20476.279L756.38%20517.953C768.66%20525.098%20777.257%20538.195%20777.257%20552.484V637.023C777.257%20651.312%20769.888%20664.409%20756.38%20671.553L681.469%20714.419C669.189%20721.563%20653.224%20721.563%20639.716%20714.419L564.805%20672.744C552.525%20665.6%20543.928%20652.502%20543.928%20638.214V583.442L478.842%20620.353V675.125C478.842%20689.414%20486.21%20702.512%20499.719%20709.656L640.944%20788.242C653.224%20795.386%20669.189%20795.386%20682.697%20788.242L823.922%20709.656C836.203%20702.512%20844.799%20689.414%20844.799%20675.125V516.763C844.799%20502.474%20837.431%20489.377%20823.922%20482.232L681.469%20402.456Z%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E";
-
-/**
- * Does a lookup for an ENS name to find its contenthash.
- */
-
-function useENSContentHash(ensName) {
-  var _resolverAddressResul;
-
-  var ensNodeArgument = React.useMemo(function () {
-    return [ensName === null ? undefined : safeNamehash(ensName)];
-  }, [ensName]);
-  var registrarContract = useENSRegistrarContract(false);
-  var resolverAddressResult = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument);
-  var resolverAddress = (_resolverAddressResul = resolverAddressResult.result) === null || _resolverAddressResul === void 0 ? void 0 : _resolverAddressResul[0];
-  var resolverContract = useENSResolverContract(resolverAddress && isZero(resolverAddress) ? undefined : resolverAddress, false);
-  var contenthash = useSingleCallResult(resolverContract, 'contenthash', ensNodeArgument);
-  return React.useMemo(function () {
-    var _contenthash$result$, _contenthash$result;
-
-    return {
-      contenthash: (_contenthash$result$ = (_contenthash$result = contenthash.result) === null || _contenthash$result === void 0 ? void 0 : _contenthash$result[0]) !== null && _contenthash$result$ !== void 0 ? _contenthash$result$ : null,
-      loading: resolverAddressResult.loading || contenthash.loading
-    };
-  }, [contenthash.loading, contenthash.result, resolverAddressResult.loading]);
-}
-
-function useHttpLocations(uri) {
-  var ens = React.useMemo(function () {
-    return uri ? parseENSAddress(uri) : undefined;
-  }, [uri]);
-  var resolvedContentHash = useENSContentHash(ens === null || ens === void 0 ? void 0 : ens.ensName);
-  return React.useMemo(function () {
-    if (ens) {
-      return resolvedContentHash.contenthash ? uriToHttp(contenthashToUri(resolvedContentHash.contenthash)) : [];
-    } else {
-      return uri ? uriToHttp(uri) : [];
-    }
-  }, [ens, resolvedContentHash.contenthash, uri]);
-}
-
-function chainIdToNetworkName(networkId) {
-  switch (networkId) {
-    case exports.SupportedChainId.MAINNET:
-      return 'ethereum';
-
-    case exports.SupportedChainId.ARBITRUM_ONE:
-      return 'arbitrum';
-
-    case exports.SupportedChainId.OPTIMISM:
-      return 'optimism';
-
-    default:
-      return 'ethereum';
-  }
-}
-
-function getNativeLogoURI() {
-  var chainId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : exports.SupportedChainId.MAINNET;
-
-  switch (chainId) {
-    case exports.SupportedChainId.POLYGON_MUMBAI:
-    case exports.SupportedChainId.POLYGON:
-      return MaticLogo;
-
-    default:
-      return EthereumLogo;
-  }
-}
-
-function getTokenLogoURI(address) {
-  var chainId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : exports.SupportedChainId.MAINNET;
-  var networkName = chainIdToNetworkName(chainId);
-  var networksWithUrls = [exports.SupportedChainId.ARBITRUM_ONE, exports.SupportedChainId.MAINNET, exports.SupportedChainId.OPTIMISM];
-
-  if (networksWithUrls.includes(chainId)) {
-    return "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/".concat(networkName, "/assets/").concat(address, "/logo.png");
-  }
-}
-
-function useCurrencyLogoURIs(currency) {
-  var locations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined);
-  return React.useMemo(function () {
-    var logoURIs = _toConsumableArray__default["default"](locations);
-
-    if (currency) {
-      if (currency.isNative) {
-        logoURIs.push(getNativeLogoURI(currency.chainId));
-      } else if (currency.isToken) {
-        var logoURI = getTokenLogoURI(currency.address, currency.chainId);
-
-        if (logoURI) {
-          logoURIs.push(logoURI);
-        }
-      }
-    }
-
-    return logoURIs;
-  }, [currency, locations]);
-}
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-var colors = new Map();
-/**
- * Extracts the prominent color from a token.
- * NB: If cached, this function returns synchronously; using a callback allows sync or async returns.
- */
-
-function getColorFromLogoURIs(_x) {
-  return _getColorFromLogoURIs.apply(this, arguments);
-}
-
-function _getColorFromLogoURIs() {
-  _getColorFromLogoURIs = _asyncToGenerator__default["default"]( /*#__PURE__*/_regeneratorRuntime__default["default"].mark(function _callee(logoURIs) {
-    var cb,
-        key,
-        color,
-        _iterator,
-        _step,
-        logoURI,
-        uri,
-        _args = arguments;
-
-    return _regeneratorRuntime__default["default"].wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            cb = _args.length > 1 && _args[1] !== undefined ? _args[1] : function () {
-              return void 0;
-            };
-            key = logoURIs[0];
-            color = colors.get(key);
-
-            if (color) {
-              _context.next = 26;
-              break;
-            }
-
-            _iterator = _createForOfIteratorHelper(logoURIs);
-            _context.prev = 5;
-
-            _iterator.s();
-
-          case 7:
-            if ((_step = _iterator.n()).done) {
-              _context.next = 18;
-              break;
-            }
-
-            logoURI = _step.value;
-            uri = logoURI;
-
-            if (logoURI.startsWith('http')) {
-              // Color extraction must use a CORS-compatible resource, but the resource may already be cached.
-              // Adds a dummy parameter to force a different browser resource cache entry. Without this, color extraction prevents resource caching.
-              uri += '?color';
-            }
-
-            _context.next = 13;
-            return getColorFromUriPath(uri);
-
-          case 13:
-            color = _context.sent;
-
-            if (!color) {
-              _context.next = 16;
-              break;
-            }
-
-            return _context.abrupt("break", 18);
-
-          case 16:
-            _context.next = 7;
-            break;
-
-          case 18:
-            _context.next = 23;
-            break;
-
-          case 20:
-            _context.prev = 20;
-            _context.t0 = _context["catch"](5);
-
-            _iterator.e(_context.t0);
-
-          case 23:
-            _context.prev = 23;
-
-            _iterator.f();
-
-            return _context.finish(23);
-
-          case 26:
-            colors.set(key, color);
-            return _context.abrupt("return", cb(color));
-
-          case 28:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[5, 20, 23, 26]]);
-  }));
-  return _getColorFromLogoURIs.apply(this, arguments);
-}
-
-function getColorFromUriPath(_x2) {
-  return _getColorFromUriPath.apply(this, arguments);
-}
-
-function _getColorFromUriPath() {
-  _getColorFromUriPath = _asyncToGenerator__default["default"]( /*#__PURE__*/_regeneratorRuntime__default["default"].mark(function _callee2(uri) {
-    var _palette$Vibrant, palette;
-
-    return _regeneratorRuntime__default["default"].wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return Vibrant__default["default"].from(uri).getPalette();
-
-          case 3:
-            palette = _context2.sent;
-            return _context2.abrupt("return", (_palette$Vibrant = palette.Vibrant) === null || _palette$Vibrant === void 0 ? void 0 : _palette$Vibrant.hex);
-
-          case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-
-          case 9:
-            return _context2.abrupt("return");
-
-          case 10:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, null, [[0, 7]]);
-  }));
-  return _getColorFromUriPath.apply(this, arguments);
-}
-
-function usePrefetchCurrencyColor(token) {
-  var theme = _styled.useTheme();
-
-  var logoURIs = useCurrencyLogoURIs(token);
-  React.useEffect(function () {
-    if (theme.tokenColorExtraction && token) {
-      getColorFromLogoURIs(logoURIs);
-    }
-  }, [token, logoURIs, theme.tokenColorExtraction]);
-}
-function useCurrencyColor(token) {
-  var _useState = React.useState(undefined),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      color = _useState2[0],
-      setColor = _useState2[1];
-
-  var theme = _styled.useTheme();
-
-  var logoURIs = useCurrencyLogoURIs(token);
-  React.useEffect(function () {
-    var stale = false;
-
-    if (theme.tokenColorExtraction && token) {
-      getColorFromLogoURIs(logoURIs, function (color) {
-        if (!stale && color) {
-          setColor(color);
-        }
-      });
-    }
-
-    return function () {
-      stale = true;
-      setColor(undefined);
-    };
-  }, [token, logoURIs, theme.tokenColorExtraction]);
-  return color;
-}
-
-var SUPPORTED_LOCALES = [// order as they appear in the language dropdown
-'en-US', 'af-ZA', 'ar-SA', 'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'es-ES', 'fi-FI', 'fr-FR', 'he-IL', 'hu-HU', 'id-ID', 'it-IT', 'ja-JP', 'ko-KR', 'nl-NL', 'no-NO', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sr-SP', 'sv-SE', 'sw-TZ', 'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'];
-var DEFAULT_LOCALE = 'en-US';
-
-function formatLocaleNumber(_ref) {
-  var number = _ref.number,
-      locale = _ref.locale,
-      sigFigs = _ref.sigFigs,
-      fixedDecimals = _ref.fixedDecimals,
-      _ref$options = _ref.options,
-      options = _ref$options === void 0 ? {} : _ref$options;
-  var localeArg;
-
-  if (!locale || locale && !SUPPORTED_LOCALES.includes(locale)) {
-    localeArg = DEFAULT_LOCALE;
-  } else {
-    localeArg = [locale, DEFAULT_LOCALE];
-  }
-
-  options.minimumFractionDigits = options.minimumFractionDigits || fixedDecimals;
-  options.maximumFractionDigits = options.maximumFractionDigits || fixedDecimals; // Fixed decimals should override significant figures.
-
-  options.maximumSignificantDigits = options.maximumSignificantDigits || fixedDecimals ? undefined : sigFigs;
-  var numberString;
-
-  if (typeof number === 'number') {
-    numberString = fixedDecimals ? parseFloat(number.toFixed(fixedDecimals)) : number;
-  } else {
-    var baseString = parseFloat(number.toSignificant(sigFigs));
-    numberString = fixedDecimals ? parseFloat(baseString.toFixed(fixedDecimals)) : baseString;
-  }
-
-  return numberString.toLocaleString(localeArg, options);
-}
-
-function formatCurrencyAmount(amount, sigFigs) {
-  var locale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DEFAULT_LOCALE;
-  var fixedDecimals = arguments.length > 3 ? arguments[3] : undefined;
-
-  if (!amount) {
-    return '-';
-  }
-
-  if (JSBI__default["default"].equal(amount.quotient, JSBI__default["default"].BigInt(0))) {
-    return '0';
-  }
-
-  if (amount.divide(amount.decimalScale).lessThan(new sdkCore.Fraction(1, 100000))) {
-    return "<".concat(formatLocaleNumber({
-      number: 0.00001,
-      locale: locale,
-      sigFigs: sigFigs,
-      fixedDecimals: fixedDecimals
-    }));
-  }
-
-  return formatLocaleNumber({
-    number: amount,
-    locale: locale,
-    sigFigs: sigFigs,
-    fixedDecimals: fixedDecimals
-  });
-}
-function formatPrice(price, sigFigs) {
-  var locale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DEFAULT_LOCALE;
-
-  if (!price) {
-    return '-';
-  }
-
-  if (parseFloat(price.toFixed(sigFigs)) < 0.0001) {
-    return "<".concat(formatLocaleNumber({
-      number: 0.00001,
-      locale: locale
-    }));
-  }
-
-  return formatLocaleNumber({
-    number: price,
-    locale: locale,
-    sigFigs: sigFigs
-  });
-}
-
-var MIN_NATIVE_CURRENCY_FOR_GAS = JSBI__default["default"].exponentiate(JSBI__default["default"].BigInt(10), JSBI__default["default"].BigInt(16)); // .01 ETH
-
-/**
- * Given some token amount, return the max that can be spent of it
- * @param currencyAmount to return max of
- */
-
-function maxAmountSpend(currencyAmount) {
-  if (!currencyAmount) return undefined;
-
-  if (currencyAmount.currency.isNative) {
-    if (JSBI__default["default"].greaterThan(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS)) {
-      return sdkCore.CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI__default["default"].subtract(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS));
-    } else {
-      return sdkCore.CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI__default["default"].BigInt(0));
-    }
-  }
-
-  return currencyAmount;
-}
-
-var missingTokenSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAlrSURBVHgB7Z1NbBvXEYBnlrQQpQFKpwWawilMA47RHlyLMhqol4rKSW0OkZFcGqAWjcZ2AxSwdeihRWLTsVsE6KESEKCK3CKbpnBPheVD3dxE5RLHaGoqPuTPgCnERpxDDBoI7CQWdzLzSOqP3D9yufuW2g+QRfFnJc+8N3/vvVkETSkUihlIwxBAbchKURYJdwJQFgAzQJAB5K/1EFT5uSoQVgCpSkjLRo0fQ6oMK1A2zWIVNARBE5TAt9UmyDBGgaw8P5WFQKEyIJbRgkW4nyqxQiqgAZEqoD7KawVCfIpHbR7ChLCEQK9HrYxIFFB4rpgntE6GLnR75kUZ5tyZeQiZ0BSwOtoNOAaBm5fAqCDBKfPsaRNCIhQFHDx64hhaVGxxnPoSmiJ6qgBlaozaa6DviHej54roiQLY3GRpoPYXfjgB/QCCiV+lTvXCWacgYA4+f2IS0JrnP3oI+ochSNFEbnj0Tvn/b5UhQAKbAeJkaYBOAljHob+Zxq/VbAgksQtEAQ2TswDxtfV+qbASxoIwSQZ0CQt/iLbVrsDWEb6gBlzh8B+6NrNdKUDsPf8hV2IUXgZJljB15dAR9nld0LETbsT2s7DFIY70cvvZOb/71iXogI4UoIRPNA0JTcY7VYJvBYjZSUZ+W8aH9+cr5XcXl/x8yFcUpBzugHK4CTYg1XLm2T95zhU8O+FGqHkeEhxhx7wgsvL6fk8zoJ5kbblQsxskT8h5SdY8zYB6hpsI3wdiLU56eaOrEy4cfrHAhu1lSPDLiBen7GiCtmCJIWiqDVNUsXuDowmyBlaKkAi/GzKNsrwttjNATA8hvAYJXcN505j5tzOldq+l7T7EwvfkRMLiOw9vhx/v/SHs2Z2FHTse4Z/Xyk93730JN2/eghs3P4Wlqx/Cx9eug06QgTKQd7V7re0M0Gn0P7Z7Fzw5nufvWc+f+fx2Fd65XIa3L1+B27f12I/Fgp4y505Pt3m+lckjL8oQykKEPMwj/OCzB3wJfjOiiItvluDSZS2Sd3HIuzbnBi1haD3shAJEyMjjOTjy61/CI9/7LnTDg4MPwD42Ww8ODsL15RuwsrICEfIApuizzQW7ligoatv/i/Ex+NWzE0p4QTE2OgLHf3sIBgO8Zidw6frY5uc2KKBw5AXZxZCFiBDhi73vBY+y4z7KsypisoXnXsivf2KDAizCAkSE2PxeCb+J+JNnDvwcooTQ2GBhVhUgWS8iPAURISYiDMQcdePYuwYpr7ZpNljLA7bV8hARI48PbYjrnVi6+gEsLL6t4n6J/wUxL5IjiPP2cp0n2dRNvxJhlD1QK/C/KiRdVQABTio3EQFi+92QkHLu7//iZOtWy2s3VBJ2ixVzSV3rCR7lTsgMkK+Pr1UgCohQLI1SgApD1QJC2opkjVdGv4xcJ0T4L//5r+q7ExJmvv/BNfV4z+5dju+VzPrS5UA3uXkHIZvb+8RMuVz6su4DIjQ/O3Z83/F1EfoMm4umufGCJF8fuYxumQGRhqXbamrfrFKAFeFBCbd4/x3OYj/voJzwz3Puq6ePucySniJHsaChACRjH0TE0tX3HV/v1EyI0txmgVfH3wuofg4ODBUSIUW2k/k9jmrsBHXxzYWORv/6azsh0VOEZEX2BqRXIt9GLjb+P+uELRHNG+fm+bkSdMPde/dAa1j2aTBQi3384jgvdinw2MGyNzg3zkKfsscl473nI7LqCUhZw1Knz/sPqS15yS8ixcKsgYDfhj5DhO+ltvSeSwTWawhxpyHTAPqIpvDdQkxx9JHPAKCM1IL65nCFmJynD4x7WsyRupEG9IcC/C7cy8jXZJ04k4YY08mOCakpzbyixYYPRSwV0KygdrKwIjWi6G3/GrFTQDfrxlLaWHIpT4SNKECGQyz8gJSPOxG+mJ1/n/9vdPV/e6qxUsCjLmsH7XBaSdMAVgBhlXMBiAN+F1Bk7VjqS3ejLjnYQVhJE9AyQjwaa8imW6nfuClCytti76Na8/UKAt1JcypcIYjHDBDhS9nabm9PXAS/ikGVNJufCsQIyWBFEfnRn8IPeEFFzIssW0p0ExvBNxETBBaVuS4NcUKiGQ0jGv+w7A1YSffB/ySmsOyNxn71CiSEDKpuvvVdEYCLkBAqiKQsT31jFlEJEsJFWihDUwH3U/OQEC6pVEm+KQUoP0BYgoRwYFmbs/XD26vnA9gmXYCEUFBNwxuslaO/TpngcqpbF5onKOW8sCw/SgL2D67z63Ik1ZWG+RE2ZGCTh08saNTRvC0i/N//7vmWdV/JjuXQhaZVz1W47nnBPHt6ovmzsfFF6xRozjM2i+5SoIv6/JcnkMz1P25QgOpngHLbD33Zt/dHtq9FevbLCyzbzfcoaDknjEQzoDGRbyfsArSoxcK0tqsRZ1xfJdOSTxxsvNbVUBn9bdrgtyhAcgL2zNr6AtnV0G4WSFn6jXP69hRsN/rV83YfmDx64jqXKLKgIbLt8Gl2uNIHQgQvkY8sumsbAfHof/3Vl9qeh7LdloI16xAZuAAa0lxojwt2o1+wbVnW6PCU1Ii6BJGtusMtUBx7xqGRmgKNHbL2SEiPKUd/6ti2svy/UjU3PPoZe4oJSPANZ71T5txLJaf3uPYNlXum5IZ/tp21OQIJnuHi5gwnXa79Vr31jr6fLuqeIWuFyGowXfTyVk8KULkBGtJRI/EHbrDwRVbmtLeb/PhrX3+4OESYtK93AimVM88Wg29fL8iF2bGE01kphqABh/wIX/B9Bw3llPeP3uGH45CwCoI1Zb56xvedRTq6h4y0XkyUsIYS/twfO+q31PFdlJQShkeXt3qOoMxOByN/9fPQJcoxG9Z5XQt3PaTKDnfMr83fTDC3MvxNMUtkLWwZJTRDzVkNbmUoyB+CXxk53VfTgkAyXBw0ckEIX10PAkZ1XjfwZB/Ohirb+ylzNtibOwd+P2EVpv5k7AKStZ31G4ujT27wKJ3nyvABc9a5sNbhtXtH7GeD2HpemLK7+0UgvwJCIIaK4HVx61Snsb0fQj2bpL0i1IjnQOKhlOm1mNb1r4QIkDb59VbJmiRxhCXZFdhLU2NHpKfzJH+AWi2vlBH2nlQldLoQ5mhvhzbHI5vKEEWQNJINvpcpr88aJbTuL8K3BuajFPp6tD2fWjhezMAX0tOUQ9kUcaaNO3nUZhot1jLQ2t+iqr7qrRc4U6VlqMkqHpXhoXRZF4Fv5huBn+mZ1fAVaAAAAABJRU5ErkJggg==";
-
-var _excluded$2 = ["token"];
-var badSrcs = new Set();
-
-var MissingTokenImg = /*#__PURE__*/_styled__default["default"].img.withConfig({
-  displayName: "TokenImg__MissingTokenImg",
-  componentId: "sc-1r1qqs2-0"
-})(["height:1em;width:1em;"]);
-
-function TokenImg(_ref) {
-  var _useToken;
-
-  var token = _ref.token,
-      rest = _objectWithoutProperties__default["default"](_ref, _excluded$2);
-
-  // Use the wrapped token info so that it includes the logoURI.
-  var tokenInfo = (_useToken = useToken(token.isToken ? token.wrapped.address : undefined)) !== null && _useToken !== void 0 ? _useToken : token;
-  var srcs = useCurrencyLogoURIs(tokenInfo);
-  var alt = tokenInfo.name || tokenInfo.symbol;
-
-  var _useState = React.useState(0),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      attempt = _useState2[0],
-      setAttempt = _useState2[1];
-
-  var src = React.useMemo(function () {
-    return srcs.find(function (src) {
-      return !badSrcs.has(src);
-    });
-  }, [attempt, srcs]);
-  var onError = React.useCallback(function (e) {
-    if (src) badSrcs.add(src);
-    setAttempt(function (attempt) {
-      return ++attempt;
-    });
-  }, [src]);
-  if (!src) return /*#__PURE__*/React__default["default"].createElement(MissingTokenImg, _extends__default["default"]({
-    src: missingTokenSrc,
-    alt: alt,
-    color: "secondary"
-  }, rest));
-  return /*#__PURE__*/React__default["default"].createElement("img", _extends__default["default"]({
-    src: src,
-    alt: alt,
-    key: alt,
-    onError: onError
-  }, rest));
-}
-
-var TokenImg$1 = _styled__default["default"](TokenImg).withConfig({
-  displayName: "TokenImg",
-  componentId: "sc-1r1qqs2-1"
-})(["background:radial-gradient( ", " calc(100% / ", " - 1.5px),", " calc(100% / ", " - 1.5px) );border-radius:100%;height:", "em;width:", "em;"], function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.module;
-}, Math.sqrt(2), function (_ref3) {
-  var theme = _ref3.theme;
-  return theme.outline;
-}, Math.sqrt(2), function (_ref4) {
-  var size = _ref4.size;
-  return size || 1;
-}, function (_ref5) {
-  var size = _ref5.size;
-  return size || 1;
-});
-
-var _templateObject$5;
-
-var _excluded$1 = ["value", "onChange"],
-    _excluded2 = ["value", "onChange", "enforcer", "pattern"];
-
-var Input$2 = /*#__PURE__*/_styled__default["default"].input.withConfig({
-  displayName: "Input",
-  componentId: "sc-1e35ws5-0"
-})(["-webkit-appearance:textfield;background-color:transparent;border:none;color:currentColor;font-family:inherit;font-size:inherit;font-weight:inherit;line-height:inherit;margin:0;outline:none;overflow:hidden;padding:0;text-align:left;text-overflow:ellipsis;width:100%;::-webkit-search-decoration{-webkit-appearance:none;}[type='number']{-moz-appearance:textfield;}::-webkit-outer-spin-button,::-webkit-inner-spin-button{-webkit-appearance:none;}::placeholder{color:", ";}:enabled{transition:color 0.125s linear;}:disabled{-webkit-text-fill-color:", ";color:", ";}"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.secondary;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return polished.transparentize(1 - loadingOpacity, theme.primary);
-}, function (_ref3) {
-  var theme = _ref3.theme;
-  return polished.transparentize(1 - loadingOpacity, theme.primary);
-});
-var StringInput = /*#__PURE__*/React.forwardRef(function StringInput(_ref4, ref) {
-  var value = _ref4.value,
-      _onChange = _ref4.onChange,
-      props = _objectWithoutProperties__default["default"](_ref4, _excluded$1);
-
-  return /*#__PURE__*/React__default["default"].createElement(Input$2, _extends__default["default"]({
-    value: value,
-    onChange: function onChange(e) {
-      return _onChange(e.target.value);
-    } // universal input options
-    ,
-    inputMode: "text",
-    autoComplete: "off",
-    autoCorrect: "off" // text-specific options
-    ,
-    type: "text",
-    placeholder: props.placeholder || '-',
-    minLength: 1,
-    spellCheck: "false",
-    ref: ref
-  }, props));
-});
-var NumericInput = /*#__PURE__*/React.forwardRef(function NumericInput(_ref5, ref) {
-  var value = _ref5.value,
-      onChange = _ref5.onChange,
-      enforcer = _ref5.enforcer,
-      pattern = _ref5.pattern,
-      props = _objectWithoutProperties__default["default"](_ref5, _excluded2);
-
-  var validateChange = React.useCallback(function (event) {
-    var _enforcer;
-
-    var nextInput = (_enforcer = enforcer(event.target.value.replace(/,/g, '.'))) === null || _enforcer === void 0 ? void 0 : _enforcer.replace(/^0+$/, '0');
-
-    if (nextInput !== undefined) {
-      onChange(nextInput);
-    }
-  }, [enforcer, onChange]);
-  return /*#__PURE__*/React__default["default"].createElement(Input$2, _extends__default["default"]({
-    value: value,
-    onChange: validateChange // universal input options
-    ,
-    inputMode: "decimal",
-    autoComplete: "off",
-    autoCorrect: "off" // text-specific options
-    ,
-    type: "text",
-    pattern: pattern,
-    placeholder: props.placeholder || '0',
-    minLength: 1,
-    maxLength: 79,
-    spellCheck: "false",
-    ref: ref
-  }, props));
-});
-var integerRegexp = /^\d*$/;
-
-var integerEnforcer = function integerEnforcer(nextUserInput) {
-  if (nextUserInput === '' || integerRegexp.test(nextUserInput)) {
-    var nextInput = parseInt(nextUserInput);
-    return isNaN(nextInput) ? '' : nextInput.toString();
-  }
-
-  return null;
-};
-
-var IntegerInput = /*#__PURE__*/React.forwardRef(function IntegerInput(props, ref) {
-  return /*#__PURE__*/React__default["default"].createElement(NumericInput, _extends__default["default"]({
-    pattern: "^[0-9]*$",
-    enforcer: integerEnforcer,
-    ref: ref
-  }, props));
-});
-var decimalRegexp = /^\d*(?:[.])?\d*$/;
-
-var decimalEnforcer = function decimalEnforcer(nextUserInput) {
-  if (nextUserInput === '') {
-    return '';
-  } else if (nextUserInput === '.') {
-    return '0.';
-  } else if (decimalRegexp.test(nextUserInput)) {
-    return nextUserInput;
-  }
-
-  return null;
-};
-
-var DecimalInput = /*#__PURE__*/React.forwardRef(function DecimalInput(props, ref) {
-  return /*#__PURE__*/React__default["default"].createElement(NumericInput, _extends__default["default"]({
-    pattern: "^[0-9]*[.,]?[0-9]*$",
-    enforcer: decimalEnforcer,
-    ref: ref
-  }, props));
-});
-var inputCss = _styled.css(_templateObject$5 || (_templateObject$5 = _taggedTemplateLiteral__default["default"](["\n  background-color: ", ";\n  border: 1px solid ", ";\n  border-radius: ", "em;\n  cursor: text;\n  padding: calc(0.5em - 1px);\n\n  :hover:not(:focus-within) {\n    background-color: ", ";\n    border-color: ", ";\n  }\n\n  :focus-within {\n    border-color: ", ";\n  }\n"])), function (_ref6) {
-  var theme = _ref6.theme;
-  return theme.container;
-}, function (_ref7) {
-  var theme = _ref7.theme;
-  return theme.container;
-}, function (_ref8) {
-  var theme = _ref8.theme;
-  return theme.borderRadius;
-}, function (_ref9) {
-  var theme = _ref9.theme;
-  return theme.onHover(theme.container);
-}, function (_ref10) {
-  var theme = _ref10.theme;
-  return theme.onHover(theme.container);
-}, function (_ref11) {
-  var theme = _ref11.theme;
-  return theme.active;
-});
-
-var i = function i(e) {
-  return "string" == typeof e;
-},
-    s = function s(e) {
-  return "function" == typeof e;
-},
-    u = new Map(),
-    c = new Map();
-
-function f(e) {
-  var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
-      r = !(arguments.length > 2 && void 0 !== arguments[2]) || arguments[2];
-  return function (n) {
-    if (i(n) && (n = new Date(n)), r) {
-      var a = v(e, t),
-          o = c.get(a);
-      if (o) return o.format(n);
-      var l = new Intl.DateTimeFormat(e, t);
-      return c.set(a, l), l.format(n);
-    }
-
-    var s = new Intl.DateTimeFormat(e, t);
-    return s.format(n);
-  };
-}
-
-function h(e) {
-  var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
-      r = !(arguments.length > 2 && void 0 !== arguments[2]) || arguments[2];
-  return function (n) {
-    if (r) {
-      var a = v(e, t),
-          o = u.get(a);
-      if (o) return o.format(n);
-      var l = new Intl.NumberFormat(e, t);
-      return u.set(a, l), l.format(n);
-    }
-
-    var i = new Intl.NumberFormat(e, t);
-    return i.format(n);
-  };
-}
-
-function v(e) {
-  var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
-      r = Array.isArray(e) ? e.sort().join("-") : e;
-  return "".concat(r, "-").concat(JSON.stringify(t));
-}
-
-var m = Object.freeze({
-  __proto__: null,
-  date: f,
-  number: h
-});
-
-function g(e) {
-  var t = e.locale,
-      r = e.locales,
-      n = e.values,
-      a = e.formats,
-      o = e.localeData,
-      u = function (e, t) {
-    var r = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {
-      plurals: void 0
-    },
-        n = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : {};
-    t = t || e;
-
-    var a = r.plurals,
-        o = function o(e) {
-      return i(e) ? n[e] || {
-        style: e
-      } : e;
-    },
-        u = function u(e, r) {
-      return function (n) {
-        var a = s(r) ? r(n) : r,
-            o = Array.isArray(a) ? a : [a],
-            l = h(t)(e);
-        return o.map(function (e) {
-          return i(e) ? e.replace("#", l) : e;
-        });
-      };
-    };
-
-    return a || console.error("Plurals for locale ".concat(e, " aren't loaded. Use i18n.loadLocaleData method to load plurals for specific locale. Using other plural rule as a fallback.")), {
-      plural: function plural(e, t) {
-        var r = t.offset,
-            n = void 0 === r ? 0 : r,
-            o = _objectWithoutProperties__default["default"](t, ["offset"]),
-            i = o[e] || o[null == a ? void 0 : a(e - n)] || o.other;
-        return u(e - n, i);
-      },
-      selectordinal: function selectordinal(e, t) {
-        var r = t.offset,
-            n = void 0 === r ? 0 : r,
-            o = _objectWithoutProperties__default["default"](t, ["offset"]),
-            i = o[e] || o[null == a ? void 0 : a(e - n, !0)] || o.other;
-        return u(e - n, i);
-      },
-      select: function select(e, t) {
-        return t[e] || t.other;
-      },
-      number: function number(e, r) {
-        return h(t, o(r))(e);
-      },
-      date: function date(e, r) {
-        return f(t, o(r))(e);
-      },
-      undefined: function undefined$1(e) {
-        return e;
-      }
-    };
-  }(t, r, o, a);
-
-  return function e(t, r, a) {
-    var o = n[t],
-        l = u[r](o, a),
-        i = s(l) ? l(e) : l;
-    return Array.isArray(i) ? i.join("") : i;
-  };
-}
-
-function d(e, t, r, n) {
-  return function (a) {
-    var l = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
-        s = g({
-      locale: t,
-      locales: r,
-      localeData: n,
-      formats: l,
-      values: a
-    }),
-        u = function e(t) {
-      return Array.isArray(t) ? t.reduce(function (t, r) {
-        if (i(r)) return t + r;
-        var n = _slicedToArray__default["default"](r, 3),
-            a = n[0],
-            l = n[1],
-            u = n[2],
-            c = {};
-        null == u || i(u) ? c = u : Object.keys(u).forEach(function (t) {
-          c[t] = e(u[t]);
-        });
-        var f = s(a, l, c);
-        return null == f ? t : t + f;
-      }, "") : t;
-    },
-        c = u(e);
-
-    return i(c) && /\\u[a-fA-F0-9]{4}/g.test(c) ? JSON.parse('"'.concat(c.trim(), '"')) : i(c) ? c.trim() : c;
-  };
-}
-
-var p = function () {
-  function r() {
-    _classCallCheck__default["default"](this, r), this._events = {};
-  }
-
-  return _createClass__default["default"](r, [{
-    key: "on",
-    value: function value(e, t) {
-      var r = this;
-      return this._hasEvent(e) || (this._events[e] = []), this._events[e].push(t), function () {
-        return r.removeListener(e, t);
-      };
-    }
-  }, {
-    key: "removeListener",
-    value: function value(e, t) {
-      if (this._hasEvent(e)) {
-        var r = this._events[e].indexOf(t);
-
-        ~r && this._events[e].splice(r, 1);
-      }
-    }
-  }, {
-    key: "emit",
-    value: function value(e) {
-      for (var t = this, r = arguments.length, n = new Array(r > 1 ? r - 1 : 0), a = 1; a < r; a++) {
-        n[a - 1] = arguments[a];
-      }
-
-      this._hasEvent(e) && this._events[e].map(function (e) {
-        return e.apply(t, n);
-      });
-    }
-  }, {
-    key: "_hasEvent",
-    value: function value(e) {
-      return Array.isArray(this._events[e]);
-    }
-  }]), r;
-}();
-
-function y(e) {
-  var t = function () {
-    if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
-    if (Reflect.construct.sham) return !1;
-    if ("function" == typeof Proxy) return !0;
-
-    try {
-      return Date.prototype.toString.call(Reflect.construct(Date, [], function () {})), !0;
-    } catch (e) {
-      return !1;
-    }
-  }();
-
-  return function () {
-    var r,
-        o = _getPrototypeOf__default["default"](e);
-
-    if (t) {
-      var l = _getPrototypeOf__default["default"](this).constructor;
-      r = Reflect.construct(o, arguments, l);
-    } else r = o.apply(this, arguments);
-
-    return _possibleConstructorReturn__default["default"](this, r);
-  };
-}
-
-var _ = function (n) {
-  _inherits__default["default"](o, n);
-  var a = y(o);
-
-  function o(t) {
-    var r;
-    return _classCallCheck__default["default"](this, o), r = a.call(this), r._messages = {}, r._localeData = {}, null != t.missing && (r._missing = t.missing), null != t.messages && r.load(t.messages), null != t.localeData && r.loadLocaleData(t.localeData), null == t.locale && null == t.locales || r.activate(t.locale, t.locales), r;
-  }
-
-  return _createClass__default["default"](o, [{
-    key: "_loadLocaleData",
-    value: function value(e, t) {
-      null == this._localeData[e] ? this._localeData[e] = t : Object.assign(this._localeData[e], t);
-    }
-  }, {
-    key: "loadLocaleData",
-    value: function value(e, t) {
-      var r = this;
-      null != t ? this._loadLocaleData(e, t) : Object.keys(e).forEach(function (t) {
-        return r._loadLocaleData(t, e[t]);
-      }), this.emit("change");
-    }
-  }, {
-    key: "_load",
-    value: function value(e, t) {
-      null == this._messages[e] ? this._messages[e] = t : Object.assign(this._messages[e], t);
-    }
-  }, {
-    key: "load",
-    value: function value(e, t) {
-      var r = this;
-      null != t ? this._load(e, t) : Object.keys(e).forEach(function (t) {
-        return r._load(t, e[t]);
-      }), this.emit("change");
-    }
-  }, {
-    key: "activate",
-    value: function value(e, t) {
-      this._locale = e, this._locales = t, this.emit("change");
-    }
-  }, {
-    key: "_",
-    value: function value(e) {
-      var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
-          r = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {},
-          n = r.message,
-          a = r.formats;
-      i(e) || (t = e.values || t, n = e.message, e = e.id);
-      var o = this.messages[e] || n || e,
-          l = this._missing;
-      return l && !this.messages[e] ? s(l) ? l(this.locale, e) : l : (this.messages[e] || this.emit("missing", {
-        id: e,
-        locale: this._locale
-      }), i(o) && /\\u[a-fA-F0-9]{4}/g.test(o) ? JSON.parse('"'.concat(o, '"')) : i(o) ? o : d(o, this.locale, this.locales, this.localeData)(t, a));
-    }
-  }, {
-    key: "date",
-    value: function value(e, t) {
-      return f(this.locales || this.locale, t)(e);
-    }
-  }, {
-    key: "number",
-    value: function value(e, t) {
-      return h(this.locales || this.locale, t)(e);
-    }
-  }, {
-    key: "locale",
-    get: function get() {
-      return this._locale;
-    }
-  }, {
-    key: "locales",
-    get: function get() {
-      return this._locales;
-    }
-  }, {
-    key: "messages",
-    get: function get() {
-      var e;
-      return null !== (e = this._messages[this._locale]) && void 0 !== e ? e : {};
-    }
-  }, {
-    key: "localeData",
-    get: function get() {
-      var e;
-      return null !== (e = this._localeData[this._locale]) && void 0 !== e ? e : {};
-    }
-  }]), o;
-}(p);
-
-function b() {
-  var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
-  return new _(e);
-}
-
-var D = b();
-
-/*
- * Generated by PEG.js 0.10.0.
- *
- * http://pegjs.org/
- */
-
-function peg$subclass(child, parent) {
-  function ctor() {
-    this.constructor = child;
-  }
-
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor();
-}
-
-function peg$SyntaxError(message, expected, found, location) {
-  this.message = message;
-  this.expected = expected;
-  this.found = found;
-  this.location = location;
-  this.name = "SyntaxError";
-
-  if (typeof Error.captureStackTrace === "function") {
-    Error.captureStackTrace(this, peg$SyntaxError);
-  }
-}
-
-peg$subclass(peg$SyntaxError, Error);
-
-peg$SyntaxError.buildMessage = function (expected, found) {
-  var DESCRIBE_EXPECTATION_FNS = {
-    literal: function literal(expectation) {
-      return "\"" + literalEscape(expectation.text) + "\"";
-    },
-    "class": function _class(expectation) {
-      var escapedParts = "",
-          i;
-
-      for (i = 0; i < expectation.parts.length; i++) {
-        escapedParts += expectation.parts[i] instanceof Array ? classEscape(expectation.parts[i][0]) + "-" + classEscape(expectation.parts[i][1]) : classEscape(expectation.parts[i]);
-      }
-
-      return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
-    },
-    any: function any(expectation) {
-      return "any character";
-    },
-    end: function end(expectation) {
-      return "end of input";
-    },
-    other: function other(expectation) {
-      return expectation.description;
-    }
-  };
-
-  function hex(ch) {
-    return ch.charCodeAt(0).toString(16).toUpperCase();
-  }
-
-  function literalEscape(s) {
-    return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\0/g, '\\0').replace(/\t/g, '\\t').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/[\x00-\x0F]/g, function (ch) {
-      return '\\x0' + hex(ch);
-    }).replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
-      return '\\x' + hex(ch);
-    });
-  }
-
-  function classEscape(s) {
-    return s.replace(/\\/g, '\\\\').replace(/\]/g, '\\]').replace(/\^/g, '\\^').replace(/-/g, '\\-').replace(/\0/g, '\\0').replace(/\t/g, '\\t').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/[\x00-\x0F]/g, function (ch) {
-      return '\\x0' + hex(ch);
-    }).replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
-      return '\\x' + hex(ch);
-    });
-  }
-
-  function describeExpectation(expectation) {
-    return DESCRIBE_EXPECTATION_FNS[expectation.type](expectation);
-  }
-
-  function describeExpected(expected) {
-    var descriptions = new Array(expected.length),
-        i,
-        j;
-
-    for (i = 0; i < expected.length; i++) {
-      descriptions[i] = describeExpectation(expected[i]);
-    }
-
-    descriptions.sort();
-
-    if (descriptions.length > 0) {
-      for (i = 1, j = 1; i < descriptions.length; i++) {
-        if (descriptions[i - 1] !== descriptions[i]) {
-          descriptions[j] = descriptions[i];
-          j++;
-        }
-      }
-
-      descriptions.length = j;
-    }
-
-    switch (descriptions.length) {
-      case 1:
-        return descriptions[0];
-
-      case 2:
-        return descriptions[0] + " or " + descriptions[1];
-
-      default:
-        return descriptions.slice(0, -1).join(", ") + ", or " + descriptions[descriptions.length - 1];
-    }
-  }
-
-  function describeFound(found) {
-    return found ? "\"" + literalEscape(found) + "\"" : "end of input";
-  }
-
-  return "Expected " + describeExpected(expected) + " but " + describeFound(found) + " found.";
-};
-
-function peg$parse(input, options) {
-  options = options !== void 0 ? options : {};
-
-  var peg$FAILED = {},
-      peg$startRuleFunctions = {
-    start: peg$parsestart
-  },
-      peg$startRuleFunction = peg$parsestart,
-      peg$c0 = "#",
-      peg$c1 = peg$literalExpectation("#", false),
-      peg$c2 = function peg$c2() {
-    return inPlural[0];
-  },
-      peg$c3 = function peg$c3() {
-    return {
-      type: 'octothorpe'
-    };
-  },
-      peg$c4 = function peg$c4(str) {
-    return str.join('');
-  },
-      peg$c5 = "{",
-      peg$c6 = peg$literalExpectation("{", false),
-      peg$c7 = "}",
-      peg$c8 = peg$literalExpectation("}", false),
-      peg$c9 = function peg$c9(arg) {
-    return {
-      type: 'argument',
-      arg: arg
-    };
-  },
-      peg$c10 = ",",
-      peg$c11 = peg$literalExpectation(",", false),
-      peg$c12 = "select",
-      peg$c13 = peg$literalExpectation("select", false),
-      peg$c14 = function peg$c14(arg, m) {
-    if (options.strict) {
-      inPlural.unshift(false);
-    }
-
-    return m;
-  },
-      peg$c15 = function peg$c15(arg, cases) {
-    if (options.strict) inPlural.shift();
-    return {
-      type: 'select',
-      arg: arg,
-      cases: cases
-    };
-  },
-      peg$c16 = "plural",
-      peg$c17 = peg$literalExpectation("plural", false),
-      peg$c18 = "selectordinal",
-      peg$c19 = peg$literalExpectation("selectordinal", false),
-      peg$c20 = function peg$c20(arg, m) {
-    inPlural.unshift(true);
-    return m;
-  },
-      peg$c21 = function peg$c21(arg, type, offset, cases) {
-    var ls = (type === 'selectordinal' ? options.ordinal : options.cardinal) || ['zero', 'one', 'two', 'few', 'many', 'other'];
-    if (ls && ls.length) cases.forEach(function (c) {
-      if (isNaN(c.key) && ls.indexOf(c.key) < 0) throw new Error('Invalid key `' + c.key + '` for argument `' + arg + '`.' + ' Valid ' + type + ' keys for this locale are `' + ls.join('`, `') + '`, and explicit keys like `=0`.');
-    });
-    inPlural.shift();
-    return {
-      type: type,
-      arg: arg,
-      offset: offset || 0,
-      cases: cases
-    };
-  },
-      peg$c22 = function peg$c22(arg, key, param) {
-    return {
-      type: 'function',
-      arg: arg,
-      key: key,
-      param: param
-    };
-  },
-      peg$c23 = peg$otherExpectation("identifier"),
-      peg$c24 = /^[^\t-\r \x85\u200E\u200F\u2028\u2029!-\/:-@[-\^`{-~\xA1-\xA7\xA9\xAB\xAC\xAE\xB0\xB1\xB6\xBB\xBF\xD7\xF7\u2010-\u2027\u2030-\u203E\u2041-\u2053\u2055-\u205E\u2190-\u245F\u2500-\u2775\u2794-\u2BFF\u2E00-\u2E7F\u3001-\u3003\u3008-\u3020\u3030\uFD3E\uFD3F\uFE45\uFE46]/,
-      peg$c25 = peg$classExpectation([["\t", "\r"], " ", "\x85", "\u200E", "\u200F", "\u2028", "\u2029", ["!", "/"], [":", "@"], ["[", "^"], "`", ["{", "~"], ["\xA1", "\xA7"], "\xA9", "\xAB", "\xAC", "\xAE", "\xB0", "\xB1", "\xB6", "\xBB", "\xBF", "\xD7", "\xF7", ["\u2010", "\u2027"], ["\u2030", "\u203E"], ["\u2041", "\u2053"], ["\u2055", "\u205E"], ["\u2190", "\u245F"], ["\u2500", "\u2775"], ["\u2794", "\u2BFF"], ["\u2E00", "\u2E7F"], ["\u3001", "\u3003"], ["\u3008", "\u3020"], "\u3030", "\uFD3E", "\uFD3F", "\uFE45", "\uFE46"], true, false),
-      peg$c26 = function peg$c26(key, tokens) {
-    return {
-      key: key,
-      tokens: tokens
-    };
-  },
-      peg$c27 = function peg$c27(tokens) {
-    return tokens;
-  },
-      peg$c28 = peg$otherExpectation("plural offset"),
-      peg$c29 = "offset",
-      peg$c30 = peg$literalExpectation("offset", false),
-      peg$c31 = ":",
-      peg$c32 = peg$literalExpectation(":", false),
-      peg$c33 = function peg$c33(d) {
-    return d;
-  },
-      peg$c34 = "=",
-      peg$c35 = peg$literalExpectation("=", false),
-      peg$c36 = "number",
-      peg$c37 = peg$literalExpectation("number", false),
-      peg$c38 = "date",
-      peg$c39 = peg$literalExpectation("date", false),
-      peg$c40 = "time",
-      peg$c41 = peg$literalExpectation("time", false),
-      peg$c42 = "spellout",
-      peg$c43 = peg$literalExpectation("spellout", false),
-      peg$c44 = "ordinal",
-      peg$c45 = peg$literalExpectation("ordinal", false),
-      peg$c46 = "duration",
-      peg$c47 = peg$literalExpectation("duration", false),
-      peg$c48 = function peg$c48(key) {
-    if (options.strict || /^\d/.test(key)) return false;
-
-    switch (key.toLowerCase()) {
-      case 'select':
-      case 'plural':
-      case 'selectordinal':
-        return false;
-
-      default:
-        return true;
-    }
-  },
-      peg$c49 = function peg$c49(key) {
-    return key;
-  },
-      peg$c50 = function peg$c50(tokens) {
-    return !options.strict;
-  },
-      peg$c51 = function peg$c51(tokens) {
-    return {
-      tokens: tokens
-    };
-  },
-      peg$c52 = function peg$c52(parts) {
-    return {
-      tokens: [parts.join('')]
-    };
-  },
-      peg$c53 = peg$otherExpectation("a valid (strict) function parameter"),
-      peg$c54 = /^[^'{}]/,
-      peg$c55 = peg$classExpectation(["'", "{", "}"], true, false),
-      peg$c56 = function peg$c56(p) {
-    return p.join('');
-  },
-      peg$c57 = "'",
-      peg$c58 = peg$literalExpectation("'", false),
-      peg$c59 = function peg$c59(quoted) {
-    return quoted;
-  },
-      peg$c60 = function peg$c60(p) {
-    return '{' + p.join('') + '}';
-  },
-      peg$c61 = peg$otherExpectation("doubled apostrophe"),
-      peg$c62 = "''",
-      peg$c63 = peg$literalExpectation("''", false),
-      peg$c64 = function peg$c64() {
-    return "'";
-  },
-      peg$c65 = /^[^']/,
-      peg$c66 = peg$classExpectation(["'"], true, false),
-      peg$c67 = "'{",
-      peg$c68 = peg$literalExpectation("'{", false),
-      peg$c69 = function peg$c69(str) {
-    return "{" + str.join('');
-  },
-      peg$c70 = "'}",
-      peg$c71 = peg$literalExpectation("'}", false),
-      peg$c72 = function peg$c72(str) {
-    return "}" + str.join('');
-  },
-      peg$c73 = peg$otherExpectation("escaped string"),
-      peg$c74 = "'#",
-      peg$c75 = peg$literalExpectation("'#", false),
-      peg$c76 = function peg$c76(str) {
-    return "#" + str.join('');
-  },
-      peg$c77 = function peg$c77(quotedOcto) {
-    return quotedOcto[0];
-  },
-      peg$c78 = peg$otherExpectation("plain char"),
-      peg$c79 = /^[^{}#\0-\x08\x0E-\x1F\x7F]/,
-      peg$c80 = peg$classExpectation(["{", "}", "#", ["\0", "\b"], ["\x0E", "\x1F"], "\x7F"], true, false),
-      peg$c81 = function peg$c81(octo) {
-    return !inPlural[0];
-  },
-      peg$c82 = function peg$c82(octo) {
-    return octo;
-  },
-      peg$c83 = peg$otherExpectation("integer"),
-      peg$c84 = /^[0-9]/,
-      peg$c85 = peg$classExpectation([["0", "9"]], false, false),
-      peg$c86 = peg$otherExpectation("white space"),
-      peg$c87 = /^[\t-\r \x85\u200E\u200F\u2028\u2029]/,
-      peg$c88 = peg$classExpectation([["\t", "\r"], " ", "\x85", "\u200E", "\u200F", "\u2028", "\u2029"], false, false),
-      peg$currPos = 0,
-      peg$posDetailsCache = [{
-    line: 1,
-    column: 1
-  }],
-      peg$maxFailPos = 0,
-      peg$maxFailExpected = [],
-      peg$silentFails = 0,
-      peg$result;
-
-  if ("startRule" in options) {
-    if (!(options.startRule in peg$startRuleFunctions)) {
-      throw new Error("Can't start parsing from rule \"" + options.startRule + "\".");
-    }
-
-    peg$startRuleFunction = peg$startRuleFunctions[options.startRule];
-  }
-
-  function peg$literalExpectation(text, ignoreCase) {
-    return {
-      type: "literal",
-      text: text,
-      ignoreCase: ignoreCase
-    };
-  }
-
-  function peg$classExpectation(parts, inverted, ignoreCase) {
-    return {
-      type: "class",
-      parts: parts,
-      inverted: inverted,
-      ignoreCase: ignoreCase
-    };
-  }
-
-  function peg$endExpectation() {
-    return {
-      type: "end"
-    };
-  }
-
-  function peg$otherExpectation(description) {
-    return {
-      type: "other",
-      description: description
-    };
-  }
-
-  function peg$computePosDetails(pos) {
-    var details = peg$posDetailsCache[pos],
-        p;
-
-    if (details) {
-      return details;
-    } else {
-      p = pos - 1;
-
-      while (!peg$posDetailsCache[p]) {
-        p--;
-      }
-
-      details = peg$posDetailsCache[p];
-      details = {
-        line: details.line,
-        column: details.column
-      };
-
-      while (p < pos) {
-        if (input.charCodeAt(p) === 10) {
-          details.line++;
-          details.column = 1;
-        } else {
-          details.column++;
-        }
-
-        p++;
-      }
-
-      peg$posDetailsCache[pos] = details;
-      return details;
-    }
-  }
-
-  function peg$computeLocation(startPos, endPos) {
-    var startPosDetails = peg$computePosDetails(startPos),
-        endPosDetails = peg$computePosDetails(endPos);
-    return {
-      start: {
-        offset: startPos,
-        line: startPosDetails.line,
-        column: startPosDetails.column
-      },
-      end: {
-        offset: endPos,
-        line: endPosDetails.line,
-        column: endPosDetails.column
-      }
-    };
-  }
-
-  function peg$fail(expected) {
-    if (peg$currPos < peg$maxFailPos) {
-      return;
-    }
-
-    if (peg$currPos > peg$maxFailPos) {
-      peg$maxFailPos = peg$currPos;
-      peg$maxFailExpected = [];
-    }
-
-    peg$maxFailExpected.push(expected);
-  }
-
-  function peg$buildStructuredError(expected, found, location) {
-    return new peg$SyntaxError(peg$SyntaxError.buildMessage(expected, found), expected, found, location);
-  }
-
-  function peg$parsestart() {
-    var s0, s1;
-    s0 = [];
-    s1 = peg$parsetoken();
-
-    while (s1 !== peg$FAILED) {
-      s0.push(s1);
-      s1 = peg$parsetoken();
-    }
-
-    return s0;
-  }
-
-  function peg$parsetoken() {
-    var s0, s1, s2;
-    s0 = peg$parseargument();
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$parseselect();
-
-      if (s0 === peg$FAILED) {
-        s0 = peg$parseplural();
-
-        if (s0 === peg$FAILED) {
-          s0 = peg$parsefunction();
-
-          if (s0 === peg$FAILED) {
-            s0 = peg$currPos;
-
-            if (input.charCodeAt(peg$currPos) === 35) {
-              s1 = peg$c0;
-              peg$currPos++;
-            } else {
-              s1 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c1);
-              }
-            }
-
-            if (s1 !== peg$FAILED) {
-              s2 = peg$c2();
-
-              if (s2) {
-                s2 = void 0;
-              } else {
-                s2 = peg$FAILED;
-              }
-
-              if (s2 !== peg$FAILED) {
-                s1 = peg$c3();
-                s0 = s1;
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-
-            if (s0 === peg$FAILED) {
-              s0 = peg$currPos;
-              s1 = [];
-              s2 = peg$parsechar();
-
-              if (s2 !== peg$FAILED) {
-                while (s2 !== peg$FAILED) {
-                  s1.push(s2);
-                  s2 = peg$parsechar();
-                }
-              } else {
-                s1 = peg$FAILED;
-              }
-
-              if (s1 !== peg$FAILED) {
-                s1 = peg$c4(s1);
-              }
-
-              s0 = s1;
-            }
-          }
-        }
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parseargument() {
-    var s0, s1, s2, s3, s4, s5;
-    s0 = peg$currPos;
-
-    if (input.charCodeAt(peg$currPos) === 123) {
-      s1 = peg$c5;
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c6);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parseid();
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parse_();
-
-          if (s4 !== peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 125) {
-              s5 = peg$c7;
-              peg$currPos++;
-            } else {
-              s5 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c8);
-              }
-            }
-
-            if (s5 !== peg$FAILED) {
-              s1 = peg$c9(s3);
-              s0 = s1;
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parseselect() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13;
-    s0 = peg$currPos;
-
-    if (input.charCodeAt(peg$currPos) === 123) {
-      s1 = peg$c5;
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c6);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parseid();
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parse_();
-
-          if (s4 !== peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 44) {
-              s5 = peg$c10;
-              peg$currPos++;
-            } else {
-              s5 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c11);
-              }
-            }
-
-            if (s5 !== peg$FAILED) {
-              s6 = peg$parse_();
-
-              if (s6 !== peg$FAILED) {
-                s7 = peg$currPos;
-
-                if (input.substr(peg$currPos, 6) === peg$c12) {
-                  s8 = peg$c12;
-                  peg$currPos += 6;
-                } else {
-                  s8 = peg$FAILED;
-
-                  if (peg$silentFails === 0) {
-                    peg$fail(peg$c13);
-                  }
-                }
-
-                if (s8 !== peg$FAILED) {
-                  s8 = peg$c14(s3, s8);
-                }
-
-                s7 = s8;
-
-                if (s7 !== peg$FAILED) {
-                  s8 = peg$parse_();
-
-                  if (s8 !== peg$FAILED) {
-                    if (input.charCodeAt(peg$currPos) === 44) {
-                      s9 = peg$c10;
-                      peg$currPos++;
-                    } else {
-                      s9 = peg$FAILED;
-
-                      if (peg$silentFails === 0) {
-                        peg$fail(peg$c11);
-                      }
-                    }
-
-                    if (s9 !== peg$FAILED) {
-                      s10 = peg$parse_();
-
-                      if (s10 !== peg$FAILED) {
-                        s11 = [];
-                        s12 = peg$parseselectCase();
-
-                        if (s12 !== peg$FAILED) {
-                          while (s12 !== peg$FAILED) {
-                            s11.push(s12);
-                            s12 = peg$parseselectCase();
-                          }
-                        } else {
-                          s11 = peg$FAILED;
-                        }
-
-                        if (s11 !== peg$FAILED) {
-                          s12 = peg$parse_();
-
-                          if (s12 !== peg$FAILED) {
-                            if (input.charCodeAt(peg$currPos) === 125) {
-                              s13 = peg$c7;
-                              peg$currPos++;
-                            } else {
-                              s13 = peg$FAILED;
-
-                              if (peg$silentFails === 0) {
-                                peg$fail(peg$c8);
-                              }
-                            }
-
-                            if (s13 !== peg$FAILED) {
-                              s1 = peg$c15(s3, s11);
-                              s0 = s1;
-                            } else {
-                              peg$currPos = s0;
-                              s0 = peg$FAILED;
-                            }
-                          } else {
-                            peg$currPos = s0;
-                            s0 = peg$FAILED;
-                          }
-                        } else {
-                          peg$currPos = s0;
-                          s0 = peg$FAILED;
-                        }
-                      } else {
-                        peg$currPos = s0;
-                        s0 = peg$FAILED;
-                      }
-                    } else {
-                      peg$currPos = s0;
-                      s0 = peg$FAILED;
-                    }
-                  } else {
-                    peg$currPos = s0;
-                    s0 = peg$FAILED;
-                  }
-                } else {
-                  peg$currPos = s0;
-                  s0 = peg$FAILED;
-                }
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parseplural() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14;
-    s0 = peg$currPos;
-
-    if (input.charCodeAt(peg$currPos) === 123) {
-      s1 = peg$c5;
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c6);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parseid();
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parse_();
-
-          if (s4 !== peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 44) {
-              s5 = peg$c10;
-              peg$currPos++;
-            } else {
-              s5 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c11);
-              }
-            }
-
-            if (s5 !== peg$FAILED) {
-              s6 = peg$parse_();
-
-              if (s6 !== peg$FAILED) {
-                s7 = peg$currPos;
-
-                if (input.substr(peg$currPos, 6) === peg$c16) {
-                  s8 = peg$c16;
-                  peg$currPos += 6;
-                } else {
-                  s8 = peg$FAILED;
-
-                  if (peg$silentFails === 0) {
-                    peg$fail(peg$c17);
-                  }
-                }
-
-                if (s8 === peg$FAILED) {
-                  if (input.substr(peg$currPos, 13) === peg$c18) {
-                    s8 = peg$c18;
-                    peg$currPos += 13;
-                  } else {
-                    s8 = peg$FAILED;
-
-                    if (peg$silentFails === 0) {
-                      peg$fail(peg$c19);
-                    }
-                  }
-                }
-
-                if (s8 !== peg$FAILED) {
-                  s8 = peg$c20(s3, s8);
-                }
-
-                s7 = s8;
-
-                if (s7 !== peg$FAILED) {
-                  s8 = peg$parse_();
-
-                  if (s8 !== peg$FAILED) {
-                    if (input.charCodeAt(peg$currPos) === 44) {
-                      s9 = peg$c10;
-                      peg$currPos++;
-                    } else {
-                      s9 = peg$FAILED;
-
-                      if (peg$silentFails === 0) {
-                        peg$fail(peg$c11);
-                      }
-                    }
-
-                    if (s9 !== peg$FAILED) {
-                      s10 = peg$parse_();
-
-                      if (s10 !== peg$FAILED) {
-                        s11 = peg$parseoffset();
-
-                        if (s11 === peg$FAILED) {
-                          s11 = null;
-                        }
-
-                        if (s11 !== peg$FAILED) {
-                          s12 = [];
-                          s13 = peg$parsepluralCase();
-
-                          if (s13 !== peg$FAILED) {
-                            while (s13 !== peg$FAILED) {
-                              s12.push(s13);
-                              s13 = peg$parsepluralCase();
-                            }
-                          } else {
-                            s12 = peg$FAILED;
-                          }
-
-                          if (s12 !== peg$FAILED) {
-                            s13 = peg$parse_();
-
-                            if (s13 !== peg$FAILED) {
-                              if (input.charCodeAt(peg$currPos) === 125) {
-                                s14 = peg$c7;
-                                peg$currPos++;
-                              } else {
-                                s14 = peg$FAILED;
-
-                                if (peg$silentFails === 0) {
-                                  peg$fail(peg$c8);
-                                }
-                              }
-
-                              if (s14 !== peg$FAILED) {
-                                s1 = peg$c21(s3, s7, s11, s12);
-                                s0 = s1;
-                              } else {
-                                peg$currPos = s0;
-                                s0 = peg$FAILED;
-                              }
-                            } else {
-                              peg$currPos = s0;
-                              s0 = peg$FAILED;
-                            }
-                          } else {
-                            peg$currPos = s0;
-                            s0 = peg$FAILED;
-                          }
-                        } else {
-                          peg$currPos = s0;
-                          s0 = peg$FAILED;
-                        }
-                      } else {
-                        peg$currPos = s0;
-                        s0 = peg$FAILED;
-                      }
-                    } else {
-                      peg$currPos = s0;
-                      s0 = peg$FAILED;
-                    }
-                  } else {
-                    peg$currPos = s0;
-                    s0 = peg$FAILED;
-                  }
-                } else {
-                  peg$currPos = s0;
-                  s0 = peg$FAILED;
-                }
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parsefunction() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
-    s0 = peg$currPos;
-
-    if (input.charCodeAt(peg$currPos) === 123) {
-      s1 = peg$c5;
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c6);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parseid();
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parse_();
-
-          if (s4 !== peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 44) {
-              s5 = peg$c10;
-              peg$currPos++;
-            } else {
-              s5 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c11);
-              }
-            }
-
-            if (s5 !== peg$FAILED) {
-              s6 = peg$parse_();
-
-              if (s6 !== peg$FAILED) {
-                s7 = peg$parsefunctionKey();
-
-                if (s7 !== peg$FAILED) {
-                  s8 = peg$parse_();
-
-                  if (s8 !== peg$FAILED) {
-                    s9 = peg$parsefunctionParam();
-
-                    if (s9 === peg$FAILED) {
-                      s9 = null;
-                    }
-
-                    if (s9 !== peg$FAILED) {
-                      if (input.charCodeAt(peg$currPos) === 125) {
-                        s10 = peg$c7;
-                        peg$currPos++;
-                      } else {
-                        s10 = peg$FAILED;
-
-                        if (peg$silentFails === 0) {
-                          peg$fail(peg$c8);
-                        }
-                      }
-
-                      if (s10 !== peg$FAILED) {
-                        s1 = peg$c22(s3, s7, s9);
-                        s0 = s1;
-                      } else {
-                        peg$currPos = s0;
-                        s0 = peg$FAILED;
-                      }
-                    } else {
-                      peg$currPos = s0;
-                      s0 = peg$FAILED;
-                    }
-                  } else {
-                    peg$currPos = s0;
-                    s0 = peg$FAILED;
-                  }
-                } else {
-                  peg$currPos = s0;
-                  s0 = peg$FAILED;
-                }
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parseid() {
-    var s0, s1, s2;
-    peg$silentFails++;
-    s0 = peg$currPos;
-    s1 = [];
-
-    if (peg$c24.test(input.charAt(peg$currPos))) {
-      s2 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s2 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c25);
-      }
-    }
-
-    if (s2 !== peg$FAILED) {
-      while (s2 !== peg$FAILED) {
-        s1.push(s2);
-
-        if (peg$c24.test(input.charAt(peg$currPos))) {
-          s2 = input.charAt(peg$currPos);
-          peg$currPos++;
-        } else {
-          s2 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c25);
-          }
-        }
-      }
-    } else {
-      s1 = peg$FAILED;
-    }
-
-    if (s1 !== peg$FAILED) {
-      s0 = input.substring(s0, peg$currPos);
-    } else {
-      s0 = s1;
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c23);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parseselectCase() {
-    var s0, s1, s2, s3, s4;
-    s0 = peg$currPos;
-    s1 = peg$parse_();
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parseid();
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parse_();
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parsecaseTokens();
-
-          if (s4 !== peg$FAILED) {
-            s1 = peg$c26(s2, s4);
-            s0 = s1;
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parsepluralCase() {
-    var s0, s1, s2, s3, s4;
-    s0 = peg$currPos;
-    s1 = peg$parse_();
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parsepluralKey();
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parse_();
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parsecaseTokens();
-
-          if (s4 !== peg$FAILED) {
-            s1 = peg$c26(s2, s4);
-            s0 = s1;
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parsecaseTokens() {
-    var s0, s1, s2, s3, s4, s5;
-    s0 = peg$currPos;
-
-    if (input.charCodeAt(peg$currPos) === 123) {
-      s1 = peg$c5;
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c6);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s2 = peg$currPos;
-      s3 = peg$parse_();
-
-      if (s3 !== peg$FAILED) {
-        s4 = peg$currPos;
-        peg$silentFails++;
-
-        if (input.charCodeAt(peg$currPos) === 123) {
-          s5 = peg$c5;
-          peg$currPos++;
-        } else {
-          s5 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c6);
-          }
-        }
-
-        peg$silentFails--;
-
-        if (s5 !== peg$FAILED) {
-          peg$currPos = s4;
-          s4 = void 0;
-        } else {
-          s4 = peg$FAILED;
-        }
-
-        if (s4 !== peg$FAILED) {
-          s3 = [s3, s4];
-          s2 = s3;
-        } else {
-          peg$currPos = s2;
-          s2 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s2;
-        s2 = peg$FAILED;
-      }
-
-      if (s2 === peg$FAILED) {
-        s2 = null;
-      }
-
-      if (s2 !== peg$FAILED) {
-        s3 = [];
-        s4 = peg$parsetoken();
-
-        while (s4 !== peg$FAILED) {
-          s3.push(s4);
-          s4 = peg$parsetoken();
-        }
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$parse_();
-
-          if (s4 !== peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 125) {
-              s5 = peg$c7;
-              peg$currPos++;
-            } else {
-              s5 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c8);
-              }
-            }
-
-            if (s5 !== peg$FAILED) {
-              s1 = peg$c27(s3);
-              s0 = s1;
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    return s0;
-  }
-
-  function peg$parseoffset() {
-    var s0, s1, s2, s3, s4, s5, s6, s7;
-    peg$silentFails++;
-    s0 = peg$currPos;
-    s1 = peg$parse_();
-
-    if (s1 !== peg$FAILED) {
-      if (input.substr(peg$currPos, 6) === peg$c29) {
-        s2 = peg$c29;
-        peg$currPos += 6;
-      } else {
-        s2 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c30);
-        }
-      }
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$parse_();
-
-        if (s3 !== peg$FAILED) {
-          if (input.charCodeAt(peg$currPos) === 58) {
-            s4 = peg$c31;
-            peg$currPos++;
-          } else {
-            s4 = peg$FAILED;
-
-            if (peg$silentFails === 0) {
-              peg$fail(peg$c32);
-            }
-          }
-
-          if (s4 !== peg$FAILED) {
-            s5 = peg$parse_();
-
-            if (s5 !== peg$FAILED) {
-              s6 = peg$parsedigits();
-
-              if (s6 !== peg$FAILED) {
-                s7 = peg$parse_();
-
-                if (s7 !== peg$FAILED) {
-                  s1 = peg$c33(s6);
-                  s0 = s1;
-                } else {
-                  peg$currPos = s0;
-                  s0 = peg$FAILED;
-                }
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c28);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsepluralKey() {
-    var s0, s1, s2;
-    s0 = peg$parseid();
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-
-      if (input.charCodeAt(peg$currPos) === 61) {
-        s1 = peg$c34;
-        peg$currPos++;
-      } else {
-        s1 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c35);
-        }
-      }
-
-      if (s1 !== peg$FAILED) {
-        s2 = peg$parsedigits();
-
-        if (s2 !== peg$FAILED) {
-          s1 = peg$c33(s2);
-          s0 = s1;
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsefunctionKey() {
-    var s0, s1, s2, s3, s4, s5;
-
-    if (input.substr(peg$currPos, 6) === peg$c36) {
-      s0 = peg$c36;
-      peg$currPos += 6;
-    } else {
-      s0 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c37);
-      }
-    }
-
-    if (s0 === peg$FAILED) {
-      if (input.substr(peg$currPos, 4) === peg$c38) {
-        s0 = peg$c38;
-        peg$currPos += 4;
-      } else {
-        s0 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c39);
-        }
-      }
-
-      if (s0 === peg$FAILED) {
-        if (input.substr(peg$currPos, 4) === peg$c40) {
-          s0 = peg$c40;
-          peg$currPos += 4;
-        } else {
-          s0 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c41);
-          }
-        }
-
-        if (s0 === peg$FAILED) {
-          if (input.substr(peg$currPos, 8) === peg$c42) {
-            s0 = peg$c42;
-            peg$currPos += 8;
-          } else {
-            s0 = peg$FAILED;
-
-            if (peg$silentFails === 0) {
-              peg$fail(peg$c43);
-            }
-          }
-
-          if (s0 === peg$FAILED) {
-            if (input.substr(peg$currPos, 7) === peg$c44) {
-              s0 = peg$c44;
-              peg$currPos += 7;
-            } else {
-              s0 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c45);
-              }
-            }
-
-            if (s0 === peg$FAILED) {
-              if (input.substr(peg$currPos, 8) === peg$c46) {
-                s0 = peg$c46;
-                peg$currPos += 8;
-              } else {
-                s0 = peg$FAILED;
-
-                if (peg$silentFails === 0) {
-                  peg$fail(peg$c47);
-                }
-              }
-
-              if (s0 === peg$FAILED) {
-                s0 = peg$currPos;
-                s1 = peg$currPos;
-                peg$silentFails++;
-
-                if (input.substr(peg$currPos, 6) === peg$c12) {
-                  s2 = peg$c12;
-                  peg$currPos += 6;
-                } else {
-                  s2 = peg$FAILED;
-
-                  if (peg$silentFails === 0) {
-                    peg$fail(peg$c13);
-                  }
-                }
-
-                peg$silentFails--;
-
-                if (s2 === peg$FAILED) {
-                  s1 = void 0;
-                } else {
-                  peg$currPos = s1;
-                  s1 = peg$FAILED;
-                }
-
-                if (s1 !== peg$FAILED) {
-                  s2 = peg$currPos;
-                  peg$silentFails++;
-
-                  if (input.substr(peg$currPos, 6) === peg$c16) {
-                    s3 = peg$c16;
-                    peg$currPos += 6;
-                  } else {
-                    s3 = peg$FAILED;
-
-                    if (peg$silentFails === 0) {
-                      peg$fail(peg$c17);
-                    }
-                  }
-
-                  peg$silentFails--;
-
-                  if (s3 === peg$FAILED) {
-                    s2 = void 0;
-                  } else {
-                    peg$currPos = s2;
-                    s2 = peg$FAILED;
-                  }
-
-                  if (s2 !== peg$FAILED) {
-                    s3 = peg$currPos;
-                    peg$silentFails++;
-
-                    if (input.substr(peg$currPos, 13) === peg$c18) {
-                      s4 = peg$c18;
-                      peg$currPos += 13;
-                    } else {
-                      s4 = peg$FAILED;
-
-                      if (peg$silentFails === 0) {
-                        peg$fail(peg$c19);
-                      }
-                    }
-
-                    peg$silentFails--;
-
-                    if (s4 === peg$FAILED) {
-                      s3 = void 0;
-                    } else {
-                      peg$currPos = s3;
-                      s3 = peg$FAILED;
-                    }
-
-                    if (s3 !== peg$FAILED) {
-                      s4 = peg$parseid();
-
-                      if (s4 !== peg$FAILED) {
-                        s5 = peg$c48(s4);
-
-                        if (s5) {
-                          s5 = void 0;
-                        } else {
-                          s5 = peg$FAILED;
-                        }
-
-                        if (s5 !== peg$FAILED) {
-                          s1 = peg$c49(s4);
-                          s0 = s1;
-                        } else {
-                          peg$currPos = s0;
-                          s0 = peg$FAILED;
-                        }
-                      } else {
-                        peg$currPos = s0;
-                        s0 = peg$FAILED;
-                      }
-                    } else {
-                      peg$currPos = s0;
-                      s0 = peg$FAILED;
-                    }
-                  } else {
-                    peg$currPos = s0;
-                    s0 = peg$FAILED;
-                  }
-                } else {
-                  peg$currPos = s0;
-                  s0 = peg$FAILED;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsefunctionParam() {
-    var s0, s1, s2, s3, s4;
-    s0 = peg$currPos;
-    s1 = peg$parse_();
-
-    if (s1 !== peg$FAILED) {
-      if (input.charCodeAt(peg$currPos) === 44) {
-        s2 = peg$c10;
-        peg$currPos++;
-      } else {
-        s2 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c11);
-        }
-      }
-
-      if (s2 !== peg$FAILED) {
-        s3 = [];
-        s4 = peg$parsetoken();
-
-        while (s4 !== peg$FAILED) {
-          s3.push(s4);
-          s4 = peg$parsetoken();
-        }
-
-        if (s3 !== peg$FAILED) {
-          s4 = peg$c50();
-
-          if (s4) {
-            s4 = void 0;
-          } else {
-            s4 = peg$FAILED;
-          }
-
-          if (s4 !== peg$FAILED) {
-            s1 = peg$c51(s3);
-            s0 = s1;
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-      s1 = peg$parse_();
-
-      if (s1 !== peg$FAILED) {
-        if (input.charCodeAt(peg$currPos) === 44) {
-          s2 = peg$c10;
-          peg$currPos++;
-        } else {
-          s2 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c11);
-          }
-        }
-
-        if (s2 !== peg$FAILED) {
-          s3 = [];
-          s4 = peg$parsestrictFunctionParamPart();
-
-          while (s4 !== peg$FAILED) {
-            s3.push(s4);
-            s4 = peg$parsestrictFunctionParamPart();
-          }
-
-          if (s3 !== peg$FAILED) {
-            s1 = peg$c52(s3);
-            s0 = s1;
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsestrictFunctionParamPart() {
-    var s0, s1, s2, s3;
-    peg$silentFails++;
-    s0 = peg$currPos;
-    s1 = [];
-
-    if (peg$c54.test(input.charAt(peg$currPos))) {
-      s2 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s2 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c55);
-      }
-    }
-
-    if (s2 !== peg$FAILED) {
-      while (s2 !== peg$FAILED) {
-        s1.push(s2);
-
-        if (peg$c54.test(input.charAt(peg$currPos))) {
-          s2 = input.charAt(peg$currPos);
-          peg$currPos++;
-        } else {
-          s2 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c55);
-          }
-        }
-      }
-    } else {
-      s1 = peg$FAILED;
-    }
-
-    if (s1 !== peg$FAILED) {
-      s1 = peg$c56(s1);
-    }
-
-    s0 = s1;
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$parsedoubleapos();
-
-      if (s0 === peg$FAILED) {
-        s0 = peg$currPos;
-
-        if (input.charCodeAt(peg$currPos) === 39) {
-          s1 = peg$c57;
-          peg$currPos++;
-        } else {
-          s1 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c58);
-          }
-        }
-
-        if (s1 !== peg$FAILED) {
-          s2 = peg$parseinapos();
-
-          if (s2 !== peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 39) {
-              s3 = peg$c57;
-              peg$currPos++;
-            } else {
-              s3 = peg$FAILED;
-
-              if (peg$silentFails === 0) {
-                peg$fail(peg$c58);
-              }
-            }
-
-            if (s3 !== peg$FAILED) {
-              s1 = peg$c59(s2);
-              s0 = s1;
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-
-        if (s0 === peg$FAILED) {
-          s0 = peg$currPos;
-
-          if (input.charCodeAt(peg$currPos) === 123) {
-            s1 = peg$c5;
-            peg$currPos++;
-          } else {
-            s1 = peg$FAILED;
-
-            if (peg$silentFails === 0) {
-              peg$fail(peg$c6);
-            }
-          }
-
-          if (s1 !== peg$FAILED) {
-            s2 = [];
-            s3 = peg$parsestrictFunctionParamPart();
-
-            while (s3 !== peg$FAILED) {
-              s2.push(s3);
-              s3 = peg$parsestrictFunctionParamPart();
-            }
-
-            if (s2 !== peg$FAILED) {
-              if (input.charCodeAt(peg$currPos) === 125) {
-                s3 = peg$c7;
-                peg$currPos++;
-              } else {
-                s3 = peg$FAILED;
-
-                if (peg$silentFails === 0) {
-                  peg$fail(peg$c8);
-                }
-              }
-
-              if (s3 !== peg$FAILED) {
-                s1 = peg$c60(s2);
-                s0 = s1;
-              } else {
-                peg$currPos = s0;
-                s0 = peg$FAILED;
-              }
-            } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
-            }
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        }
-      }
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c53);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsedoubleapos() {
-    var s0, s1;
-    peg$silentFails++;
-    s0 = peg$currPos;
-
-    if (input.substr(peg$currPos, 2) === peg$c62) {
-      s1 = peg$c62;
-      peg$currPos += 2;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c63);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s1 = peg$c64();
-    }
-
-    s0 = s1;
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c61);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parseinapos() {
-    var s0, s1, s2;
-    s0 = peg$parsedoubleapos();
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-      s1 = [];
-
-      if (peg$c65.test(input.charAt(peg$currPos))) {
-        s2 = input.charAt(peg$currPos);
-        peg$currPos++;
-      } else {
-        s2 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c66);
-        }
-      }
-
-      if (s2 !== peg$FAILED) {
-        while (s2 !== peg$FAILED) {
-          s1.push(s2);
-
-          if (peg$c65.test(input.charAt(peg$currPos))) {
-            s2 = input.charAt(peg$currPos);
-            peg$currPos++;
-          } else {
-            s2 = peg$FAILED;
-
-            if (peg$silentFails === 0) {
-              peg$fail(peg$c66);
-            }
-          }
-        }
-      } else {
-        s1 = peg$FAILED;
-      }
-
-      if (s1 !== peg$FAILED) {
-        s1 = peg$c4(s1);
-      }
-
-      s0 = s1;
-    }
-
-    return s0;
-  }
-
-  function peg$parsequotedCurly() {
-    var s0, s1, s2, s3;
-    s0 = peg$currPos;
-
-    if (input.substr(peg$currPos, 2) === peg$c67) {
-      s1 = peg$c67;
-      peg$currPos += 2;
-    } else {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c68);
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s2 = [];
-      s3 = peg$parseinapos();
-
-      while (s3 !== peg$FAILED) {
-        s2.push(s3);
-        s3 = peg$parseinapos();
-      }
-
-      if (s2 !== peg$FAILED) {
-        if (input.charCodeAt(peg$currPos) === 39) {
-          s3 = peg$c57;
-          peg$currPos++;
-        } else {
-          s3 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c58);
-          }
-        }
-
-        if (s3 !== peg$FAILED) {
-          s1 = peg$c69(s2);
-          s0 = s1;
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-
-      if (input.substr(peg$currPos, 2) === peg$c70) {
-        s1 = peg$c70;
-        peg$currPos += 2;
-      } else {
-        s1 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c71);
-        }
-      }
-
-      if (s1 !== peg$FAILED) {
-        s2 = [];
-        s3 = peg$parseinapos();
-
-        while (s3 !== peg$FAILED) {
-          s2.push(s3);
-          s3 = peg$parseinapos();
-        }
-
-        if (s2 !== peg$FAILED) {
-          if (input.charCodeAt(peg$currPos) === 39) {
-            s3 = peg$c57;
-            peg$currPos++;
-          } else {
-            s3 = peg$FAILED;
-
-            if (peg$silentFails === 0) {
-              peg$fail(peg$c58);
-            }
-          }
-
-          if (s3 !== peg$FAILED) {
-            s1 = peg$c72(s2);
-            s0 = s1;
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsequoted() {
-    var s0, s1, s2, s3, s4, s5;
-    peg$silentFails++;
-    s0 = peg$parsequotedCurly();
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-      s1 = peg$currPos;
-      s2 = peg$currPos;
-
-      if (input.substr(peg$currPos, 2) === peg$c74) {
-        s3 = peg$c74;
-        peg$currPos += 2;
-      } else {
-        s3 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c75);
-        }
-      }
-
-      if (s3 !== peg$FAILED) {
-        s4 = [];
-        s5 = peg$parseinapos();
-
-        while (s5 !== peg$FAILED) {
-          s4.push(s5);
-          s5 = peg$parseinapos();
-        }
-
-        if (s4 !== peg$FAILED) {
-          if (input.charCodeAt(peg$currPos) === 39) {
-            s5 = peg$c57;
-            peg$currPos++;
-          } else {
-            s5 = peg$FAILED;
-
-            if (peg$silentFails === 0) {
-              peg$fail(peg$c58);
-            }
-          }
-
-          if (s5 !== peg$FAILED) {
-            s3 = peg$c76(s4);
-            s2 = s3;
-          } else {
-            peg$currPos = s2;
-            s2 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s2;
-          s2 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s2;
-        s2 = peg$FAILED;
-      }
-
-      if (s2 !== peg$FAILED) {
-        s3 = peg$c2();
-
-        if (s3) {
-          s3 = void 0;
-        } else {
-          s3 = peg$FAILED;
-        }
-
-        if (s3 !== peg$FAILED) {
-          s2 = [s2, s3];
-          s1 = s2;
-        } else {
-          peg$currPos = s1;
-          s1 = peg$FAILED;
-        }
-      } else {
-        peg$currPos = s1;
-        s1 = peg$FAILED;
-      }
-
-      if (s1 !== peg$FAILED) {
-        s1 = peg$c77(s1);
-      }
-
-      s0 = s1;
-
-      if (s0 === peg$FAILED) {
-        if (input.charCodeAt(peg$currPos) === 39) {
-          s0 = peg$c57;
-          peg$currPos++;
-        } else {
-          s0 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c58);
-          }
-        }
-      }
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c73);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parseplainChar() {
-    var s0;
-    peg$silentFails++;
-
-    if (peg$c79.test(input.charAt(peg$currPos))) {
-      s0 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s0 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c80);
-      }
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c78);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsechar() {
-    var s0, s1, s2;
-    s0 = peg$parsedoubleapos();
-
-    if (s0 === peg$FAILED) {
-      s0 = peg$parsequoted();
-
-      if (s0 === peg$FAILED) {
-        s0 = peg$currPos;
-
-        if (input.charCodeAt(peg$currPos) === 35) {
-          s1 = peg$c0;
-          peg$currPos++;
-        } else {
-          s1 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c1);
-          }
-        }
-
-        if (s1 !== peg$FAILED) {
-          s2 = peg$c81();
-
-          if (s2) {
-            s2 = void 0;
-          } else {
-            s2 = peg$FAILED;
-          }
-
-          if (s2 !== peg$FAILED) {
-            s1 = peg$c82(s1);
-            s0 = s1;
-          } else {
-            peg$currPos = s0;
-            s0 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
-
-        if (s0 === peg$FAILED) {
-          s0 = peg$parseplainChar();
-        }
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parsedigits() {
-    var s0, s1, s2;
-    peg$silentFails++;
-    s0 = peg$currPos;
-    s1 = [];
-
-    if (peg$c84.test(input.charAt(peg$currPos))) {
-      s2 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s2 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c85);
-      }
-    }
-
-    if (s2 !== peg$FAILED) {
-      while (s2 !== peg$FAILED) {
-        s1.push(s2);
-
-        if (peg$c84.test(input.charAt(peg$currPos))) {
-          s2 = input.charAt(peg$currPos);
-          peg$currPos++;
-        } else {
-          s2 = peg$FAILED;
-
-          if (peg$silentFails === 0) {
-            peg$fail(peg$c85);
-          }
-        }
-      }
-    } else {
-      s1 = peg$FAILED;
-    }
-
-    if (s1 !== peg$FAILED) {
-      s0 = input.substring(s0, peg$currPos);
-    } else {
-      s0 = s1;
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c83);
-      }
-    }
-
-    return s0;
-  }
-
-  function peg$parse_() {
-    var s0, s1, s2;
-    peg$silentFails++;
-    s0 = peg$currPos;
-    s1 = [];
-
-    if (peg$c87.test(input.charAt(peg$currPos))) {
-      s2 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s2 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c88);
-      }
-    }
-
-    while (s2 !== peg$FAILED) {
-      s1.push(s2);
-
-      if (peg$c87.test(input.charAt(peg$currPos))) {
-        s2 = input.charAt(peg$currPos);
-        peg$currPos++;
-      } else {
-        s2 = peg$FAILED;
-
-        if (peg$silentFails === 0) {
-          peg$fail(peg$c88);
-        }
-      }
-    }
-
-    if (s1 !== peg$FAILED) {
-      s0 = input.substring(s0, peg$currPos);
-    } else {
-      s0 = s1;
-    }
-
-    peg$silentFails--;
-
-    if (s0 === peg$FAILED) {
-      s1 = peg$FAILED;
-
-      if (peg$silentFails === 0) {
-        peg$fail(peg$c86);
-      }
-    }
-
-    return s0;
-  }
-
-  var inPlural = [false];
-  peg$result = peg$startRuleFunction();
-
-  if (peg$result !== peg$FAILED && peg$currPos === input.length) {
-    return peg$result;
-  } else {
-    if (peg$result !== peg$FAILED && peg$currPos < input.length) {
-      peg$fail(peg$endExpectation());
-    }
-
-    throw peg$buildStructuredError(peg$maxFailExpected, peg$maxFailPos < input.length ? input.charAt(peg$maxFailPos) : null, peg$maxFailPos < input.length ? peg$computeLocation(peg$maxFailPos, peg$maxFailPos + 1) : peg$computeLocation(peg$maxFailPos, peg$maxFailPos));
-  }
-}
-
-var parser = {
-  SyntaxError: peg$SyntaxError,
-  parse: peg$parse
-};
-
-var isString = function isString(s) {
-  return typeof s === "string";
-};
-
-var isFunction = function isFunction(f) {
-  return typeof f === "function";
-};
-/** Memoized cache */
-
-
-var numberFormats = new Map();
-var dateFormats = new Map();
-
-function date(locales) {
-  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var memoize = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  return function (value) {
-    if (isString(value)) value = new Date(value);
-
-    if (memoize) {
-      var key = cacheKey(locales, format);
-      var cachedFormatter = dateFormats.get(key);
-
-      if (cachedFormatter) {
-        return cachedFormatter.format(value);
-      }
-
-      var _formatter = new Intl.DateTimeFormat(locales, format);
-
-      dateFormats.set(key, _formatter);
-      return _formatter.format(value);
-    }
-
-    var formatter = new Intl.DateTimeFormat(locales, format);
-    return formatter.format(value);
-  };
-}
-
-function number(locales) {
-  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var memoize = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  return function (value) {
-    if (memoize) {
-      var key = cacheKey(locales, format);
-      var cachedFormatter = numberFormats.get(key);
-
-      if (cachedFormatter) {
-        return cachedFormatter.format(value);
-      }
-
-      var _formatter2 = new Intl.NumberFormat(locales, format);
-
-      numberFormats.set(key, _formatter2);
-      return _formatter2.format(value);
-    }
-
-    var formatter = new Intl.NumberFormat(locales, format);
-    return formatter.format(value);
-  };
-}
-/** Memoize helpers */
-
-
-function cacheKey(locales) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var localeKey = Array.isArray(locales) ? locales.sort().join('-') : locales;
-  return "".concat(localeKey, "-").concat(JSON.stringify(options));
-}
-
-var formats = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  date: date,
-  number: number
-});
-
-var defaultFormats = function defaultFormats(locale, locales) {
-  var localeData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
-    plurals: undefined
-  };
-  var formats = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  locales = locales || locale;
-  var plurals = localeData.plurals;
-
-  var style = function style(format) {
-    return isString(format) ? formats[format] || {
-      style: format
-    } : format;
-  };
-
-  var replaceOctothorpe = function replaceOctothorpe(value, message) {
-    return function (ctx) {
-      var msg = isFunction(message) ? message(ctx) : message;
-      var norm = Array.isArray(msg) ? msg : [msg];
-      var valueStr = number(locales)(value);
-      return norm.map(function (m) {
-        return isString(m) ? m.replace("#", valueStr) : m;
-      });
-    };
-  };
-
-  if (!plurals) {
-    console.error("Plurals for locale ".concat(locale, " aren't loaded. Use i18n.loadLocaleData method to load plurals for specific locale. Using other plural rule as a fallback."));
-  }
-
-  return {
-    plural: function plural(value, _ref) {
-      var _ref$offset = _ref.offset,
-          offset = _ref$offset === void 0 ? 0 : _ref$offset,
-          rules = _objectWithoutProperties__default["default"](_ref, ["offset"]);
-
-      var message = rules[value] || rules[plurals === null || plurals === void 0 ? void 0 : plurals(value - offset)] || rules.other;
-      return replaceOctothorpe(value - offset, message);
-    },
-    selectordinal: function selectordinal(value, _ref2) {
-      var _ref2$offset = _ref2.offset,
-          offset = _ref2$offset === void 0 ? 0 : _ref2$offset,
-          rules = _objectWithoutProperties__default["default"](_ref2, ["offset"]);
-
-      var message = rules[value] || rules[plurals === null || plurals === void 0 ? void 0 : plurals(value - offset, true)] || rules.other;
-      return replaceOctothorpe(value - offset, message);
-    },
-    select: function select(value, rules) {
-      return rules[value] || rules.other;
-    },
-    number: function number$1(value, format) {
-      return number(locales, style(format))(value);
-    },
-    date: function date$1(value, format) {
-      return date(locales, style(format))(value);
-    },
-    undefined: function undefined$1(value) {
-      return value;
-    }
-  };
-}; // Params -> CTX
-
-/**
- * Creates a context object, which formats ICU MessageFormat arguments based on
- * argument type.
- *
- * @param locale     - Locale of message
- * @param locales      - Locales to be used when formatting the numbers or dates
- * @param values       - Parameters for variable interpolation
- * @param localeData - Locale data (e.g: plurals)
- * @param formats - Custom format styles
- * @returns {function(string, string, any)}
- */
-
-
-function context(_ref3) {
-  var locale = _ref3.locale,
-      locales = _ref3.locales,
-      values = _ref3.values,
-      formats = _ref3.formats,
-      localeData = _ref3.localeData;
-  var formatters = defaultFormats(locale, locales, localeData, formats);
-
-  var ctx = function ctx(name, type, format) {
-    var value = values[name];
-    var formatted = formatters[type](value, format);
-    var message = isFunction(formatted) ? formatted(ctx) : formatted;
-    return Array.isArray(message) ? message.join("") : message;
-  };
-
-  return ctx;
-}
-
-function interpolate(translation, locale, locales, localeData) {
-  return function (values) {
-    var formats = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var ctx = context({
-      locale: locale,
-      locales: locales,
-      localeData: localeData,
-      formats: formats,
-      values: values
-    });
-
-    var formatMessage = function formatMessage(message) {
-      if (!Array.isArray(message)) return message;
-      return message.reduce(function (message, token) {
-        if (isString(token)) return message + token;
-
-        var _token = _slicedToArray__default["default"](token, 3),
-            name = _token[0],
-            type = _token[1],
-            format = _token[2];
-
-        var interpolatedFormat = {};
-
-        if (format != null && !isString(format)) {
-          Object.keys(format).forEach(function (key) {
-            interpolatedFormat[key] = formatMessage(format[key]);
-          });
-        } else {
-          interpolatedFormat = format;
-        }
-
-        var value = ctx(name, type, interpolatedFormat);
-        if (value == null) return message;
-        return message + value;
-      }, "");
-    };
-
-    var result = formatMessage(translation);
-    if (isString(result) && /\\u[a-fA-F0-9]{4}/g.test(result)) return JSON.parse("\"".concat(result.trim(), "\""));
-    if (isString(result)) return result.trim();
-    return result;
-  };
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty__default["default"](target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function processTokens(tokens) {
-  if (!tokens.filter(function (token) {
-    return !isString(token);
-  }).length) {
-    return tokens.join("");
-  }
-
-  return tokens.map(function (token) {
-    if (isString(token)) {
-      return token; // # in plural case
-    } else if (token.type === "octothorpe") {
-      return "#"; // simple argument
-    } else if (token.type === "argument") {
-      return [token.arg]; // argument with custom format (date, number)
-    } else if (token.type === "function") {
-      var _param = token.param && token.param.tokens[0];
-
-      var param = typeof _param === "string" ? _param.trim() : _param;
-      return [token.arg, token.key, param].filter(Boolean);
-    }
-
-    var offset = token.offset ? parseInt(token.offset) : undefined; // complex argument with cases
-
-    var formatProps = {};
-    token.cases.forEach(function (item) {
-      formatProps[item.key] = processTokens(item.tokens);
-    });
-    return [token.arg, token.type, _objectSpread({
-      offset: offset
-    }, formatProps)];
-  });
-} // Message -> (Params -> String)
-
-
-function compile(message) {
-  try {
-    return processTokens(parser.parse(message));
-  } catch (e) {
-    console.error("Message cannot be parsed due to syntax errors: ".concat(message));
-    return message;
-  }
-}
-
-var EventEmitter = /*#__PURE__*/function () {
-  function EventEmitter() {
-    _classCallCheck__default["default"](this, EventEmitter);
-
-    this._events = {};
-  }
-
-  _createClass__default["default"](EventEmitter, [{
-    key: "on",
-    value: function on(event, listener) {
-      var _this = this;
-
-      if (!this._hasEvent(event)) this._events[event] = [];
-
-      this._events[event].push(listener);
-
-      return function () {
-        return _this.removeListener(event, listener);
-      };
-    }
-  }, {
-    key: "removeListener",
-    value: function removeListener(event, listener) {
-      if (!this._hasEvent(event)) return;
-
-      var index = this._events[event].indexOf(listener);
-
-      if (~index) this._events[event].splice(index, 1);
-    }
-  }, {
-    key: "emit",
-    value: function emit(event) {
-      var _this2 = this;
-
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      if (!this._hasEvent(event)) return;
-
-      this._events[event].map(function (listener) {
-        return listener.apply(_this2, args);
-      });
-    }
-  }, {
-    key: "_hasEvent",
-    value: function _hasEvent(event) {
-      return Array.isArray(this._events[event]);
-    }
-  }]);
-
-  return EventEmitter;
-}();
-
-function _createSuper$2(Derived) {
-  var hasNativeReflectConstruct = _isNativeReflectConstruct$2();
-
-  return function _createSuperInternal() {
-    var Super = _getPrototypeOf__default["default"](Derived),
-        result;
-
-    if (hasNativeReflectConstruct) {
-      var NewTarget = _getPrototypeOf__default["default"](this).constructor;
-
-      result = Reflect.construct(Super, arguments, NewTarget);
-    } else {
-      result = Super.apply(this, arguments);
-    }
-
-    return _possibleConstructorReturn__default["default"](this, result);
-  };
-}
-
-function _isNativeReflectConstruct$2() {
-  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-  if (Reflect.construct.sham) return false;
-  if (typeof Proxy === "function") return true;
-
-  try {
-    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-var I18n = /*#__PURE__*/function (_EventEmitter) {
-  _inherits__default["default"](I18n, _EventEmitter);
-
-  var _super = _createSuper$2(I18n);
-
-  function I18n(params) {
-    var _this;
-
-    _classCallCheck__default["default"](this, I18n);
-
-    _this = _super.call(this);
-    _this._messages = {};
-    _this._localeData = {};
-    if (params.missing != null) _this._missing = params.missing;
-    if (params.messages != null) _this.load(params.messages);
-    if (params.localeData != null) _this.loadLocaleData(params.localeData);
-
-    if (params.locale != null || params.locales != null) {
-      _this.activate(params.locale, params.locales);
-    }
-
-    return _this;
-  }
-
-  _createClass__default["default"](I18n, [{
-    key: "_loadLocaleData",
-    value: function _loadLocaleData(locale, localeData) {
-      if (this._localeData[locale] == null) {
-        this._localeData[locale] = localeData;
-      } else {
-        Object.assign(this._localeData[locale], localeData);
-      }
-    }
-  }, {
-    key: "loadLocaleData",
-    value: function loadLocaleData(localeOrAllData, localeData) {
-      var _this2 = this;
-
-      if (localeData != null) {
-        // loadLocaleData('en', enLocaleData)
-        // Loading locale data for a single locale.
-        this._loadLocaleData(localeOrAllData, localeData);
-      } else {
-        // loadLocaleData(allLocaleData)
-        // Loading all locale data at once.
-        Object.keys(localeOrAllData).forEach(function (locale) {
-          return _this2._loadLocaleData(locale, localeOrAllData[locale]);
-        });
-      }
-
-      this.emit("change");
-    }
-  }, {
-    key: "_load",
-    value: function _load(locale, messages) {
-      if (this._messages[locale] == null) {
-        this._messages[locale] = messages;
-      } else {
-        Object.assign(this._messages[locale], messages);
-      }
-    }
-  }, {
-    key: "load",
-    value: function load(localeOrMessages, messages) {
-      var _this3 = this;
-
-      if (messages != null) {
-        // load('en', catalog)
-        // Loading a catalog for a single locale.
-        this._load(localeOrMessages, messages);
-      } else {
-        // load(catalogs)
-        // Loading several locales at once.
-        Object.keys(localeOrMessages).forEach(function (locale) {
-          return _this3._load(locale, localeOrMessages[locale]);
-        });
-      }
-
-      this.emit("change");
-    }
-  }, {
-    key: "activate",
-    value: function activate(locale, locales) {
-      {
-        if (!this._messages[locale]) {
-          console.warn("Messages for locale \"".concat(locale, "\" not loaded."));
-        }
-
-        if (!this._localeData[locale]) {
-          console.warn("Locale data for locale \"".concat(locale, "\" not loaded. Plurals won't work correctly."));
-        }
-      }
-      this._locale = locale;
-      this._locales = locales;
-      this.emit("change");
-    } // method for translation and formatting
-
-  }, {
-    key: "_",
-    value: function _(id) {
-      var values = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-          message = _ref.message,
-          formats = _ref.formats;
-
-      if (!isString(id)) {
-        values = id.values || values;
-        message = id.message;
-        id = id.id;
-      }
-
-      var translation = this.messages[id] || message || id; // replace missing messages with custom message for debugging
-
-      var missing = this._missing;
-
-      if (missing && !this.messages[id]) {
-        return isFunction(missing) ? missing(this.locale, id) : missing;
-      }
-
-      if (!this.messages[id]) {
-        this.emit("missing", {
-          id: id,
-          locale: this._locale
-        });
-      }
-
-      {
-        translation = isString(translation) ? compile(translation) : translation;
-      } // hack for parsing unicode values inside a string to get parsed in react native environments
-
-      if (isString(translation) && /\\u[a-fA-F0-9]{4}/g.test(translation)) return JSON.parse("\"".concat(translation, "\""));
-      if (isString(translation)) return translation;
-      return interpolate(translation, this.locale, this.locales, this.localeData)(values, formats);
-    }
-  }, {
-    key: "date",
-    value: function date$1(value, format) {
-      return date(this.locales || this.locale, format)(value);
-    }
-  }, {
-    key: "number",
-    value: function number$1(value, format) {
-      return number(this.locales || this.locale, format)(value);
-    }
-  }, {
-    key: "locale",
-    get: function get() {
-      return this._locale;
-    }
-  }, {
-    key: "locales",
-    get: function get() {
-      return this._locales;
-    }
-  }, {
-    key: "messages",
-    get: function get() {
-      var _this$_messages$this$;
-
-      return (_this$_messages$this$ = this._messages[this._locale]) !== null && _this$_messages$this$ !== void 0 ? _this$_messages$this$ : {};
-    }
-  }, {
-    key: "localeData",
-    get: function get() {
-      var _this$_localeData$thi;
-
-      return (_this$_localeData$thi = this._localeData[this._locale]) !== null && _this$_localeData$thi !== void 0 ? _this$_localeData$thi : {};
-    }
-  }]);
-
-  return I18n;
-}(EventEmitter);
-
-function setupI18n() {
-  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  return new I18n(params);
-}
-
-var i18n$1 = setupI18n();
-
-var i18n = process.env.NODE_ENV === 'production' ? D : i18n$1;
-process.env.NODE_ENV === 'production' ? b : setupI18n;
-process.env.NODE_ENV === 'production' ? m : formats;
-process.env.NODE_ENV === 'production' ? _ : I18n;
-
-var HelpCircleIcon = /*#__PURE__*/_styled__default["default"](HelpCircle).withConfig({
-  displayName: "NoTokensAvailableOnNetwork__HelpCircleIcon",
-  componentId: "sc-1xm8b8y-0"
-})(["height:4em;margin-bottom:0.75em;stroke:", ";width:4em;"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.secondary;
-});
-
-var StyledColumn = /*#__PURE__*/_styled__default["default"](Column).withConfig({
-  displayName: "NoTokensAvailableOnNetwork__StyledColumn",
-  componentId: "sc-1xm8b8y-1"
-})(["display:flex;height:80%;text-align:center;width:100%;"]);
-
-function NoTokensAvailableOnNetwork() {
-  return /*#__PURE__*/React__default["default"].createElement(StyledColumn, {
-    align: "center",
-    justify: "center"
-  }, /*#__PURE__*/React__default["default"].createElement(HelpCircleIcon, null), /*#__PURE__*/React__default["default"].createElement(Body1, {
-    color: "primary"
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "No tokens are available on this network. Please switch to another network."
-  })));
-}
-
-var _templateObject$4;
-
-var transitionCss = _styled.css(_templateObject$4 || (_templateObject$4 = _taggedTemplateLiteral__default["default"](["\n  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear, width 0.125s ease-out;\n"])));
-
-var StyledTokenButton = /*#__PURE__*/_styled__default["default"](Button$1).withConfig({
-  displayName: "TokenButton__StyledTokenButton",
-  componentId: "sc-1u7emor-0"
-})(["border-radius:", "em;padding:0.25em;:enabled{", ";}"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.borderRadius;
-}, function (_ref2) {
-  var transition = _ref2.transition;
-  return transition && transitionCss;
-});
-
-var TokenButtonRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "TokenButton__TokenButtonRow",
-  componentId: "sc-1u7emor-1"
-})(["float:right;height:1.2em;max-width:", ";padding-left:", "em;width:fit-content;overflow:hidden;transition:max-width 0.25s linear;img{min-width:1.2em;}"], function (_ref3) {
-  var collapsed = _ref3.collapsed;
-  return collapsed ? '1.2em' : '12em';
-}, function (_ref4) {
-  var empty = _ref4.empty;
-  return empty && 0.5;
-});
-
-function TokenButton$1(_ref5) {
-  var value = _ref5.value,
-      collapsed = _ref5.collapsed,
-      disabled = _ref5.disabled,
-      onClick = _ref5.onClick;
-  var buttonBackgroundColor = React.useMemo(function () {
-    return value ? 'interactive' : 'accent';
-  }, [value]);
-  var contentColor = React.useMemo(function () {
-    return value || disabled ? 'onInteractive' : 'onAccent';
-  }, [value, disabled]); // Transition the button only if transitioning from a disabled state.
-  // This makes initialization cleaner without adding distracting UX to normal swap flows.
-
-  var _useState = React.useState(disabled),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      shouldTransition = _useState2[0],
-      setShouldTransition = _useState2[1];
-
-  React.useEffect(function () {
-    if (disabled) {
-      setShouldTransition(true);
-    }
-  }, [disabled]); // width must have an absolute value in order to transition, so it is taken from the row ref.
-
-  var _useState3 = React.useState(null),
-      _useState4 = _slicedToArray__default["default"](_useState3, 2),
-      row = _useState4[0],
-      setRow = _useState4[1];
-
-  var style = React.useMemo(function () {
-    if (!shouldTransition) return;
-    return {
-      width: row ? row.clientWidth +
-      /* padding= */
-      8 +
-      /* border= */
-      2 : undefined
-    };
-  }, [row, shouldTransition]);
-  return /*#__PURE__*/React__default["default"].createElement(StyledTokenButton, {
-    onClick: onClick,
-    color: buttonBackgroundColor,
-    disabled: disabled,
-    style: style,
-    transition: shouldTransition,
-    onTransitionEnd: function onTransitionEnd() {
-      return setShouldTransition(false);
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(ButtonLarge, {
-    color: contentColor
-  }, /*#__PURE__*/React__default["default"].createElement(TokenButtonRow, {
-    gap: 0.4,
-    empty: !value,
-    collapsed: collapsed // ref is used to set an absolute width, so it must be reset for each value passed.
-    // To force this, value?.symbol is passed as a key.
-    ,
-    ref: setRow,
-    key: value === null || value === void 0 ? void 0 : value.symbol
-  }, value ? /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: value,
-    size: 1.2
-  }), value.symbol) : /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Select a token"
-  }), /*#__PURE__*/React__default["default"].createElement(ChevronDown, {
-    color: contentColor,
-    strokeWidth: 3
-  }))));
-}
-
-function useNativeEvent(element, type, listener, options) {
-  React.useEffect(function () {
-    element === null || element === void 0 ? void 0 : element.addEventListener(type, listener, options);
-    return function () {
-      return element === null || element === void 0 ? void 0 : element.removeEventListener(type, listener, options);
-    };
-  }, [element, type, listener, options]);
-}
-
-var overflowCss = /*#__PURE__*/_styled.css(["overflow-y:scroll;"]);
-/** Customizes the scrollbar for vertical overflow. */
-
-
-var scrollbarCss = function scrollbarCss(padded) {
-  return _styled.css(["overflow-y:scroll;::-webkit-scrollbar{width:1.25em;}::-webkit-scrollbar-thumb{background:radial-gradient( closest-corner at 0.25em 0.25em,", " 0.25em,transparent 0.25em ),linear-gradient( to bottom,#ffffff00 0.25em,", " 0.25em,", " calc(100% - 0.25em),#ffffff00 calc(100% - 0.25em) ),radial-gradient( closest-corner at 0.25em calc(100% - 0.25em),", " 0.25em,#ffffff00 0.25em );background-clip:padding-box;border:none;", ":0.75em solid transparent;}@supports not selector(::-webkit-scrollbar-thumb){scrollbar-color:", " transparent;}"], function (_ref) {
-    var theme = _ref.theme;
-    return theme.interactive;
-  }, function (_ref2) {
-    var theme = _ref2.theme;
-    return theme.interactive;
-  }, function (_ref3) {
-    var theme = _ref3.theme;
-    return theme.interactive;
-  }, function (_ref4) {
-    var theme = _ref4.theme;
-    return theme.interactive;
-  }, padded ? 'border-right' : 'border-left', function (_ref5) {
-    var theme = _ref5.theme;
-    return theme.interactive;
-  });
-};
-
-function useScrollbar(element) {
-  var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      _ref6$padded = _ref6.padded,
-      padded = _ref6$padded === void 0 ? false : _ref6$padded;
-
-  return React.useMemo( // NB: The css must be applied on an element's first render. WebKit will not re-apply overflow
-  // properties until any transitions have ended, so waiting a frame for state would cause jank.
-  function () {
-    return hasOverflow(element) ? scrollbarCss(padded) : overflowCss;
-  }, [element, padded]);
-
-  function hasOverflow(element) {
-    if (!element) return true;
-    return element.scrollHeight > element.clientHeight;
-  }
-}
-
-function currencyId(currency) {
-  if (currency.isNative) return 'ETH';
-  if (currency.isToken) return currency.address;
-  throw new Error('invalid currency');
-}
-
-var TokenButton = /*#__PURE__*/_styled__default["default"](BaseButton).withConfig({
-  displayName: "TokenOptions__TokenButton",
-  componentId: "sc-xx1k3q-0"
-})(["border-radius:0;outline:none;padding:0.5em 0.75em;"]);
-
-var ITEM_SIZE = 56;
-
-var TokenList = /*#__PURE__*/_styled__default["default"](reactWindow.FixedSizeList).withConfig({
-  displayName: "TokenOptions__TokenList",
-  componentId: "sc-xx1k3q-1"
-})(["", "[data-index='", "']{background-color:", ";}", " overscroll-behavior:none;"], TokenButton, function (_ref) {
-  var hover = _ref.hover;
-  return hover;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.onHover(theme.module);
-}, function (_ref3) {
-  var scrollbar = _ref3.scrollbar;
-  return scrollbar;
-});
-
-var OnHover = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptions__OnHover",
-  componentId: "sc-xx1k3q-2"
-})(["background-color:", ";height:", "px;left:0;position:absolute;top:", "px;width:100%;"], function (_ref4) {
-  var theme = _ref4.theme;
-  return theme.onHover(theme.module);
-}, ITEM_SIZE, function (_ref5) {
-  var hover = _ref5.hover;
-  return hover * ITEM_SIZE;
-});
-
-var TokenBalance = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptions__TokenBalance",
-  componentId: "sc-xx1k3q-3"
-})(["background-color:", ";border-radius:0.25em;padding:0.375em 0;"], function (_ref6) {
-  var theme = _ref6.theme,
-      isLoading = _ref6.isLoading;
-  return isLoading && theme.secondary;
-});
-
-function TokenOption$1(_ref7) {
-  var index = _ref7.index,
-      value = _ref7.value,
-      style = _ref7.style;
-
-  var _useLingui = useLingui(),
-      i18n = _useLingui.i18n;
-
-  var ref = React.useRef(null); // Annotate the event to be handled later instead of passing in handlers to avoid rerenders.
-  // This prevents token logos from reloading and flashing on the screen.
-
-  var onEvent = function onEvent(e) {
-    var _ref$current;
-
-    e.index = index;
-    e.token = value;
-    e.ref = (_ref$current = ref.current) !== null && _ref$current !== void 0 ? _ref$current : undefined;
-  };
-
-  var _useActiveWeb3React = useActiveWeb3React(),
-      account = _useActiveWeb3React.account;
-
-  var balance = useCurrencyBalance(account, value);
-  return /*#__PURE__*/React__default["default"].createElement(TokenButton, {
-    "data-index": index,
-    style: style,
-    onClick: onEvent,
-    onBlur: onEvent,
-    onFocus: onEvent,
-    onMouseMove: onEvent,
-    onKeyDown: onEvent,
-    ref: ref
-  }, /*#__PURE__*/React__default["default"].createElement(Body1, null, /*#__PURE__*/React__default["default"].createElement(Row, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5
-  }, /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: value,
-    size: 1.5
-  }), /*#__PURE__*/React__default["default"].createElement(Column, {
-    flex: true,
-    gap: 0.125,
-    align: "flex-start"
-  }, /*#__PURE__*/React__default["default"].createElement(Subhead1, null, value.symbol), /*#__PURE__*/React__default["default"].createElement(Caption$1, {
-    color: "secondary"
-  }, value.name))), /*#__PURE__*/React__default["default"].createElement(TokenBalance, {
-    isLoading: Boolean(account) && !balance
-  }, (balance === null || balance === void 0 ? void 0 : balance.greaterThan(0)) && formatCurrencyAmount(balance, 2, i18n.locale)))));
-}
-
-var itemKey = function itemKey(index, tokens) {
-  return currencyId(tokens[index]);
-};
-
-var ItemRow = /*#__PURE__*/React.memo(function ItemRow(_ref8) {
-  var tokens = _ref8.data,
-      index = _ref8.index,
-      style = _ref8.style;
-  return /*#__PURE__*/React__default["default"].createElement(TokenOption$1, {
-    index: index,
-    value: tokens[index],
-    style: style
-  });
-}, reactWindow.areEqual);
-var TokenOptions = /*#__PURE__*/React.forwardRef(function TokenOptions(_ref9, ref) {
-  var tokens = _ref9.tokens,
-      onSelect = _ref9.onSelect;
-
-  var _useState = React.useState(false),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      focused = _useState2[0],
-      setFocused = _useState2[1];
-
-  var _useState3 = React.useState(),
-      _useState4 = _slicedToArray__default["default"](_useState3, 2),
-      selected = _useState4[0],
-      setSelected = _useState4[1];
-
-  var hover = React.useMemo(function () {
-    return selected ? tokens.indexOf(selected) : -1;
-  }, [selected, tokens]);
-  var list = React.useRef(null);
-
-  var _useState5 = React.useState(null),
-      _useState6 = _slicedToArray__default["default"](_useState5, 2),
-      element = _useState6[0],
-      setElement = _useState6[1];
-
-  var scrollTo = React.useCallback(function (index) {
-    var scroll = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (index === undefined) return;
-
-    if (scroll) {
-      var _list$current;
-
-      (_list$current = list.current) === null || _list$current === void 0 ? void 0 : _list$current.scrollToItem(index);
-    }
-
-    if (focused) {
-      var _element$querySelecto;
-
-      element === null || element === void 0 ? void 0 : (_element$querySelecto = element.querySelector("[data-index='".concat(index, "']"))) === null || _element$querySelecto === void 0 ? void 0 : _element$querySelecto.focus();
-    }
-
-    setSelected(tokens[index]);
-  }, [element, focused, tokens]);
-  var onKeyDown = React.useCallback(function (e) {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      if (e.key === 'ArrowDown' && hover < tokens.length - 1) {
-        scrollTo(hover + 1);
-      } else if (e.key === 'ArrowUp' && hover > 0) {
-        scrollTo(hover - 1);
-      } else if (e.key === 'ArrowUp' && hover === -1) {
-        scrollTo(tokens.length - 1);
-      }
-
-      e.preventDefault();
-    }
-
-    if (e.key === 'Enter' && hover !== -1) {
-      onSelect(tokens[hover]);
-    }
-  }, [hover, onSelect, scrollTo, tokens]);
-  var blur = React.useCallback(function () {
-    return setSelected(undefined);
-  }, []);
-  React.useImperativeHandle(ref, function () {
-    return {
-      onKeyDown: onKeyDown,
-      blur: blur
-    };
-  }, [blur, onKeyDown]);
-  var onClick = React.useCallback(function (_ref10) {
-    var token = _ref10.token;
-    return token && onSelect(token);
-  }, [onSelect]);
-  var onFocus = React.useCallback(function (_ref11) {
-    var index = _ref11.index;
-    setFocused(true);
-    scrollTo(index);
-  }, [scrollTo]);
-  var onBlur = React.useCallback(function () {
-    return setFocused(false);
-  }, []);
-  var onMouseMove = React.useCallback(function (_ref12) {
-    var index = _ref12.index;
-    return scrollTo(index, false);
-  }, [scrollTo]);
-  var scrollbar = useScrollbar(element, {
-    padded: true
-  });
-  var onHover = React.useRef(null); // use native onscroll handler to capture Safari's bouncy overscroll effect
-
-  useNativeEvent(element, 'scroll', React.useCallback(function () {
-    if (element && onHover.current) {
-      // must be set synchronously to avoid jank (avoiding useState)
-      onHover.current.style.marginTop = "".concat(-element.scrollTop, "px");
-    }
-  }, [element]));
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    align: "unset",
-    grow: true,
-    onKeyDown: onKeyDown,
-    onClick: onClick,
-    onBlur: onBlur,
-    onFocus: onFocus,
-    onMouseMove: onMouseMove,
-    style: {
-      overflow: 'hidden'
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(OnHover, {
-    hover: hover,
-    ref: onHover
-  }), /*#__PURE__*/React__default["default"].createElement(AutoSizer__default["default"], {
-    disableWidth: true
-  }, function (_ref13) {
-    var height = _ref13.height;
-    return /*#__PURE__*/React__default["default"].createElement(TokenList, {
-      hover: hover,
-      height: height,
-      width: "100%",
-      itemCount: tokens.length,
-      itemData: tokens,
-      itemKey: itemKey,
-      itemSize: ITEM_SIZE,
-      className: "scrollbar",
-      ref: list,
-      outerRef: setElement,
-      scrollbar: scrollbar
-    }, ItemRow);
-  }));
-});
-
-var Img = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptionsSkeleton__Img",
-  componentId: "sc-vnnix6-0"
-})(["clip-path:circle(50%);height:1.5em;width:1.5em;"]);
-
-var _Symbol = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptionsSkeleton__Symbol",
-  componentId: "sc-vnnix6-1"
-})(["height:0.75em;width:7em;"]);
-
-var Name = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptionsSkeleton__Name",
-  componentId: "sc-vnnix6-2"
-})(["height:0.5em;width:5.5em;"]);
-
-var Balance$1 = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptionsSkeleton__Balance",
-  componentId: "sc-vnnix6-3"
-})(["padding:0.375em 0;width:1.5em;"]);
-
-var TokenRow = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "TokenOptionsSkeleton__TokenRow",
-  componentId: "sc-vnnix6-4"
-})(["outline:none;padding:0.6875em 0.75em;", ",", ",", ",", "{background-color:", ";border-radius:0.25em;}"], Img, _Symbol, Name, Balance$1, function (_ref) {
-  var theme = _ref.theme;
-  return theme.secondary;
-});
-
-function TokenOption() {
-  return /*#__PURE__*/React__default["default"].createElement(TokenRow, null, /*#__PURE__*/React__default["default"].createElement(Body1, null, /*#__PURE__*/React__default["default"].createElement(Row, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5
-  }, /*#__PURE__*/React__default["default"].createElement(Img, null), /*#__PURE__*/React__default["default"].createElement(Column, {
-    flex: true,
-    gap: 0.125,
-    align: "flex-start",
-    justify: "flex-center"
-  }, /*#__PURE__*/React__default["default"].createElement(Subhead1, {
-    style: {
-      display: 'flex'
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(_Symbol, null)), /*#__PURE__*/React__default["default"].createElement(Caption$1, {
-    style: {
-      display: 'flex'
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(Name, null)))), /*#__PURE__*/React__default["default"].createElement(Balance$1, null))));
-}
-
-function TokenOptionsSkeleton() {
-  return /*#__PURE__*/React__default["default"].createElement(Column, null, /*#__PURE__*/React__default["default"].createElement(TokenOption, null), /*#__PURE__*/React__default["default"].createElement(TokenOption, null), /*#__PURE__*/React__default["default"].createElement(TokenOption, null), /*#__PURE__*/React__default["default"].createElement(TokenOption, null), /*#__PURE__*/React__default["default"].createElement(TokenOption, null));
-}
-
-var SearchInput = /*#__PURE__*/_styled__default["default"](StringInput).withConfig({
-  displayName: "TokenSelect__SearchInput",
-  componentId: "sc-1krctvh-0"
-})(["", ""], inputCss);
-
-function usePrefetchBalances() {
-  var _useActiveWeb3React = useActiveWeb3React(),
-      account = _useActiveWeb3React.account;
-
-  var tokenList = useTokenList();
-  var prefetchedTokenList = React.useRef();
-  useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined);
-  prefetchedTokenList.current = tokenList;
-}
-
-function useAreBalancesLoaded() {
-  var _useActiveWeb3React2 = useActiveWeb3React(),
-      account = _useActiveWeb3React2.account;
-
-  var tokens = useTokenList();
-  var native = useNativeCurrency();
-  var currencies = React.useMemo(function () {
-    return [native].concat(_toConsumableArray__default["default"](tokens));
-  }, [native, tokens]);
-  var balances = useCurrencyBalances(account, currencies).filter(Boolean);
-  return !account || currencies.length === balances.length;
-}
-
-function TokenSelectDialog(_ref) {
-  _ref.value;
-      var onSelect = _ref.onSelect,
-      onClose = _ref.onClose;
-
-  var _useState = React.useState(''),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      query = _useState2[0],
-      setQuery = _useState2[1];
-
-  var list = useTokenList();
-  var tokens = useQueryTokens(query, list);
-  var isTokenListLoaded = useIsTokenListLoaded();
-  var areBalancesLoaded = useAreBalancesLoaded();
-
-  var _useState3 = React.useState(isTokenListLoaded && areBalancesLoaded),
-      _useState4 = _slicedToArray__default["default"](_useState3, 2),
-      isLoaded = _useState4[0],
-      setIsLoaded = _useState4[1]; // Give the balance-less tokens a small block period to avoid layout thrashing from re-sorting.
-
-
-  React.useEffect(function () {
-    if (!isLoaded) {
-      var timeout = setTimeout(function () {
-        return setIsLoaded(true);
-      }, 250);
-      return function () {
-        return clearTimeout(timeout);
-      };
-    }
-
-    return;
-  }, [isLoaded]);
-  React.useEffect(function () {
-    return setIsLoaded(Boolean(query) || isTokenListLoaded && areBalancesLoaded);
-  }, [query, areBalancesLoaded, isTokenListLoaded]);
-  var input = React.useRef(null);
-  React.useEffect(function () {
-    var _input$current;
-
-    return (_input$current = input.current) === null || _input$current === void 0 ? void 0 : _input$current.focus({
-      preventScroll: true
-    });
-  }, [input]);
-
-  var _useState5 = React.useState(null),
-      _useState6 = _slicedToArray__default["default"](_useState5, 2),
-      options = _useState6[0],
-      setOptions = _useState6[1];
-
-  var _useActiveWeb3React3 = useActiveWeb3React(),
-      chainId = _useActiveWeb3React3.chainId;
-
-  var listHasTokens = React.useMemo(function () {
-    return list.some(function (token) {
-      return token.chainId === chainId;
-    });
-  }, [chainId, list]);
-
-  if (!listHasTokens && isLoaded) {
-    return /*#__PURE__*/React__default["default"].createElement(Dialog, {
-      color: "module",
-      onClose: onClose
-    }, /*#__PURE__*/React__default["default"].createElement(Header$1, {
-      title: /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "Select a token"
-      })
-    }), /*#__PURE__*/React__default["default"].createElement(NoTokensAvailableOnNetwork, null));
-  }
-
-  return /*#__PURE__*/React__default["default"].createElement(Dialog, {
-    color: "module",
-    onClose: onClose
-  }, /*#__PURE__*/React__default["default"].createElement(Header$1, {
-    title: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Select a token"
-    })
-  }), /*#__PURE__*/React__default["default"].createElement(Column, {
-    gap: 0.75
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    pad: 0.75,
-    grow: true
-  }, /*#__PURE__*/React__default["default"].createElement(Body1, null, /*#__PURE__*/React__default["default"].createElement(SearchInput, {
-    value: query,
-    onChange: setQuery,
-    placeholder:
-    /*i18n*/
-    i18n._("Search by token name or address"),
-    onKeyDown: options === null || options === void 0 ? void 0 : options.onKeyDown,
-    onBlur: options === null || options === void 0 ? void 0 : options.blur,
-    ref: input
-  }))), /*#__PURE__*/React__default["default"].createElement(Rule, {
-    padded: true
-  })), isLoaded ? tokens.length ? /*#__PURE__*/React__default["default"].createElement(TokenOptions, {
-    tokens: tokens,
-    onSelect: onSelect,
-    ref: setOptions
-  }) : /*#__PURE__*/React__default["default"].createElement(Column, {
-    padded: true
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    justify: "center"
-  }, /*#__PURE__*/React__default["default"].createElement(Body1, {
-    color: "secondary"
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "No results found."
-  })))) : /*#__PURE__*/React__default["default"].createElement(TokenOptionsSkeleton, null));
-}
-var TokenSelect = /*#__PURE__*/React.memo(function TokenSelect(_ref2) {
-  var value = _ref2.value,
-      collapsed = _ref2.collapsed,
-      disabled = _ref2.disabled,
-      onSelect = _ref2.onSelect;
-  usePrefetchBalances();
-
-  var _useState7 = React.useState(false),
-      _useState8 = _slicedToArray__default["default"](_useState7, 2),
-      open = _useState8[0],
-      setOpen = _useState8[1];
-
-  var onOpen = React.useCallback(function () {
-    return setOpen(true);
-  }, []);
-  var selectAndClose = React.useCallback(function (value) {
-    onSelect(value);
-    setOpen(false);
-  }, [onSelect, setOpen]);
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(TokenButton$1, {
-    value: value,
-    collapsed: collapsed,
-    disabled: disabled,
-    onClick: onOpen
-  }), open && /*#__PURE__*/React__default["default"].createElement(TokenSelectDialog, {
-    value: value,
-    onSelect: selectAndClose,
-    onClose: function onClose() {
-      return setOpen(false);
-    }
-  }));
-});
-
-var _templateObject$3;
-
-var TokenInputRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "TokenInput__TokenInputRow",
-  componentId: "sc-8sl0d3-0"
-})(["grid-template-columns:1fr;"]);
-
-var ValueInput = /*#__PURE__*/_styled__default["default"](DecimalInput).withConfig({
-  displayName: "TokenInput__ValueInput",
-  componentId: "sc-8sl0d3-1"
-})(["color:", ";height:1.5em;margin:-0.25em 0;:hover:not(:focus-within){color:", ";}:hover:not(:focus-within)::placeholder{color:", ";}", ""], function (_ref) {
-  var theme = _ref.theme;
-  return theme.primary;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.onHover(theme.primary);
-}, function (_ref3) {
-  var theme = _ref3.theme;
-  return theme.onHover(theme.secondary);
-}, loadingTransitionCss);
-
-var delayedFadeIn = _styled.keyframes(_templateObject$3 || (_templateObject$3 = _taggedTemplateLiteral__default["default"](["\n  0% {\n    opacity: 0;\n  }\n  25% {\n    opacity: 0;\n  }\n  100% {\n    opacity: 1;\n  }\n"])));
-
-var MaxButton = /*#__PURE__*/_styled__default["default"](Button$1).withConfig({
-  displayName: "TokenInput__MaxButton",
-  componentId: "sc-8sl0d3-2"
-})(["animation:", " 0.25s linear;border-radius:0.75em;padding:0.5em;"], delayedFadeIn);
-
-function TokenInput(_ref4) {
-  var currency = _ref4.currency,
-      amount = _ref4.amount,
-      max = _ref4.max,
-      disabled = _ref4.disabled,
-      onChangeInput = _ref4.onChangeInput,
-      onChangeCurrency = _ref4.onChangeCurrency,
-      loading = _ref4.loading,
-      children = _ref4.children;
-  var input = React.useRef(null);
-  var onSelect = React.useCallback(function (currency) {
-    onChangeCurrency(currency);
-    setImmediate(function () {
-      var _input$current;
-
-      return (_input$current = input.current) === null || _input$current === void 0 ? void 0 : _input$current.focus();
-    });
-  }, [onChangeCurrency]);
-  var maxButton = React.useRef(null);
-  var hasMax = React.useMemo(function () {
-    return Boolean(max && max !== amount);
-  }, [max, amount]);
-
-  var _useState = React.useState(hasMax),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      showMax = _useState2[0],
-      setShowMax = _useState2[1];
-
-  React.useEffect(function () {
-    var _ref5, _input$current2;
-
-    return setShowMax((_ref5 = hasMax && ((_input$current2 = input.current) === null || _input$current2 === void 0 ? void 0 : _input$current2.contains(document.activeElement))) !== null && _ref5 !== void 0 ? _ref5 : false);
-  }, [hasMax]);
-  var onBlur = React.useCallback(function (e) {
-    var _input$current3, _maxButton$current;
-
-    // Filters out clicks on input or maxButton, because onBlur fires before onClickMax.
-    if (!((_input$current3 = input.current) !== null && _input$current3 !== void 0 && _input$current3.contains(e.relatedTarget)) && !((_maxButton$current = maxButton.current) !== null && _maxButton$current !== void 0 && _maxButton$current.contains(e.relatedTarget))) {
-      setShowMax(false);
-    }
-  }, []);
-  var onClickMax = React.useCallback(function () {
-    onChangeInput(max || '');
-    setShowMax(false);
-    setImmediate(function () {
-      var _input$current4, _input$current5;
-
-      (_input$current4 = input.current) === null || _input$current4 === void 0 ? void 0 : _input$current4.focus(); // Brings the start of the input into view. NB: This only works for clicks, not eg keyboard interactions.
-
-      (_input$current5 = input.current) === null || _input$current5 === void 0 ? void 0 : _input$current5.setSelectionRange(0, null);
-    });
-  }, [max, onChangeInput]);
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    gap: 0.25
-  }, /*#__PURE__*/React__default["default"].createElement(TokenInputRow, {
-    gap: 0.5,
-    onBlur: onBlur
-  }, /*#__PURE__*/React__default["default"].createElement(H2, null, /*#__PURE__*/React__default["default"].createElement(ValueInput, {
-    value: amount,
-    onFocus: function onFocus() {
-      return setShowMax(hasMax);
-    },
-    onChange: onChangeInput,
-    disabled: disabled || !currency,
-    isLoading: Boolean(loading),
-    ref: input
-  })), showMax && /*#__PURE__*/React__default["default"].createElement(MaxButton, {
-    onClick: onClickMax,
-    ref: maxButton
-  }, /*#__PURE__*/React__default["default"].createElement(ButtonMedium, {
-    tabIndex: -1
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Max"
-  }))), /*#__PURE__*/React__default["default"].createElement(TokenSelect, {
-    value: currency,
-    collapsed: showMax,
-    disabled: disabled,
-    onSelect: onSelect
-  })), children);
-}
-
-var USDC = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "Input__USDC",
-  componentId: "sc-ud81g8-0"
-})(["", ";"], loadingTransitionCss);
-var Balance = /*#__PURE__*/_styled__default["default"](Body2).withConfig({
-  displayName: "Input__Balance",
-  componentId: "sc-ud81g8-1"
-})(["opacity:", ";transition:opacity 0.25s ", ";"], function (_ref) {
-  var focused = _ref.focused;
-  return focused ? 1 : 0;
-}, function (_ref2) {
-  var focused = _ref2.focused;
-  return focused ? 'ease-in' : 'ease-out';
-});
-
-var InputColumn = /*#__PURE__*/_styled__default["default"](Column).withConfig({
-  displayName: "Input__InputColumn",
-  componentId: "sc-ud81g8-2"
-})(["margin:0.75em;position:relative;", "{filter:", ";transition:filter 0.25s;}"], TokenImg$1, function (_ref3) {
-  var approved = _ref3.approved;
-  return approved ? undefined : 'saturate(0) opacity(0.4)';
-});
-
-function useFormattedFieldAmount(_ref4) {
-  var disabled = _ref4.disabled,
-      currencyAmount = _ref4.currencyAmount,
-      fieldAmount = _ref4.fieldAmount;
-  return React.useMemo(function () {
-    if (disabled) {
-      return '';
-    }
-
-    if (fieldAmount !== undefined) {
-      return fieldAmount;
-    }
-
-    if (currencyAmount) {
-      return currencyAmount.toSignificant(6);
-    }
-
-    return '';
-  }, [disabled, currencyAmount, fieldAmount]);
-}
-function Input$1(_ref5) {
-  var disabled = _ref5.disabled,
-      focused = _ref5.focused,
-      onChange = _ref5.onChange;
-
-  var _useLingui = useLingui(),
-      i18n = _useLingui.i18n;
-
-  var swapInfo = useSwapInfo();
-  var _swapInfo$Field$INPUT = swapInfo[Field.INPUT],
-      balance = _swapInfo$Field$INPUT.balance,
-      tradeCurrencyAmount = _swapInfo$Field$INPUT.amount,
-      usdc = _swapInfo$Field$INPUT.usdc,
-      tradeState = swapInfo.trade.state;
-  React.useEffect(function () {
-    if (!swapInfo) return;
-    onChange === null || onChange === void 0 ? void 0 : onChange(swapInfo);
-  }, [swapInfo]);
-
-  var _useSwapAmount = useSwapAmount(Field.INPUT),
-      _useSwapAmount2 = _slicedToArray__default["default"](_useSwapAmount, 2),
-      inputAmount = _useSwapAmount2[0],
-      updateInputAmount = _useSwapAmount2[1];
-
-  var _useSwapCurrency = useSwapCurrency(Field.INPUT),
-      _useSwapCurrency2 = _slicedToArray__default["default"](_useSwapCurrency, 2),
-      inputCurrency = _useSwapCurrency2[0],
-      updateInputCurrency = _useSwapCurrency2[1];
-
-  var inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT); // extract eagerly in case of reversal
-
-  usePrefetchCurrencyColor(inputCurrency);
-  var isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING;
-  var isDependentField = !useIsSwapFieldIndependent(Field.INPUT);
-  var isLoading = isRouteLoading && isDependentField; //TODO(ianlapham): mimic logic from app swap page
-
-  var mockApproved = true; // account for gas needed if using max on native token
-
-  var max = React.useMemo(function () {
-    var maxAmount = maxAmountSpend(balance);
-    return maxAmount !== null && maxAmount !== void 0 && maxAmount.greaterThan(0) ? maxAmount.toExact() : undefined;
-  }, [balance]);
-  var balanceColor = React.useMemo(function () {
-    var insufficientBalance = balance && (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : tradeCurrencyAmount === null || tradeCurrencyAmount === void 0 ? void 0 : tradeCurrencyAmount.greaterThan(balance));
-    return insufficientBalance ? 'error' : undefined;
-  }, [balance, inputCurrencyAmount, tradeCurrencyAmount]);
-  var amount = useFormattedFieldAmount({
-    disabled: disabled,
-    currencyAmount: tradeCurrencyAmount,
-    fieldAmount: inputAmount
-  });
-  return /*#__PURE__*/React__default["default"].createElement(InputColumn, {
-    gap: 0.5,
-    approved: mockApproved
-  }, /*#__PURE__*/React__default["default"].createElement(TokenInput, {
-    currency: inputCurrency,
-    amount: amount,
-    max: max,
-    disabled: disabled,
-    onChangeInput: updateInputAmount,
-    onChangeCurrency: updateInputCurrency,
-    loading: isLoading
-  }, /*#__PURE__*/React__default["default"].createElement(Body2, {
-    color: "secondary",
-    userSelect: true
-  }, /*#__PURE__*/React__default["default"].createElement(Row, null, /*#__PURE__*/React__default["default"].createElement(USDC, {
-    isLoading: isRouteLoading
-  }, usdc ? "$".concat(formatCurrencyAmount(usdc, 6, 'en', 2)) : '-'), balance && /*#__PURE__*/React__default["default"].createElement(Balance, {
-    color: balanceColor,
-    focused: focused
-  }, "Balance: ", /*#__PURE__*/React__default["default"].createElement("span", null, formatCurrencyAmount(balance, 4, i18n.locale)))))), /*#__PURE__*/React__default["default"].createElement(Row, null));
-}
-
-var _excluded = ["target", "href", "rel"];
-
-/**
- * Outbound link
- */
-function ExternalLink(_ref) {
-  var _ref$target = _ref.target,
-      target = _ref$target === void 0 ? '_blank' : _ref$target,
-      href = _ref.href,
-      _ref$rel = _ref.rel,
-      rel = _ref$rel === void 0 ? 'noopener noreferrer' : _ref$rel,
-      rest = _objectWithoutProperties__default["default"](_ref, _excluded);
-
-  return /*#__PURE__*/React__default["default"].createElement("a", _extends__default["default"]({
-    target: target,
-    rel: rel,
-    href: href
-  }, rest), rest.children);
-}
-
-var UniswapA = /*#__PURE__*/_styled__default["default"](ExternalLink).withConfig({
-  displayName: "BrandedFooter__UniswapA",
-  componentId: "sc-kpe23m-0"
-})(["color:", ";cursor:pointer;text-decoration:none;", "{fill:", ";height:1em;transition:transform 0.25s ease,fill 0.25s ease;width:1em;will-change:transform;}:hover ", "{fill:", ";transform:rotate(-5deg);}"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.secondary;
-}, Logo, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.secondary;
-}, Logo, brand);
-
-var BrandedFooter = /*#__PURE__*/React.memo(function BrandedFooter() {
-  return /*#__PURE__*/React__default["default"].createElement(Row, {
-    justify: "center"
-  }, /*#__PURE__*/React__default["default"].createElement(UniswapA, {
-    href: "https://uniswap.org/"
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.25
-  }, /*#__PURE__*/React__default["default"].createElement(Logo, null), /*#__PURE__*/React__default["default"].createElement(Caption$1, null, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Powered by the Uniswap protocol"
-  })))));
-});
-
-var colorAtom = jotai.atom(undefined);
-
-var OutputColumn = /*#__PURE__*/_styled__default["default"](Column).withConfig({
-  displayName: "Output__OutputColumn",
-  componentId: "sc-3psmgo-0"
-})(["background-color:", ";border-radius:", "em;padding:0.75em;padding-bottom:0.5em;position:relative;transition:", ";>{transition:", ";}"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.module;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.borderRadius - 0.25;
-}, function (_ref3) {
-  var hasColor = _ref3.hasColor;
-  return hasColor ? 'background-color 0.25s ease-out' : undefined;
-}, function (_ref4) {
-  var hasColor = _ref4.hasColor;
-  return hasColor === null ? 'color 0.25s ease-in, stroke 0.25s ease-in' : undefined;
-});
-
-function Output(_ref5) {
-  var disabled = _ref5.disabled,
-      focused = _ref5.focused,
-      children = _ref5.children,
-      onChange = _ref5.onChange;
-
-  var _useLingui = useLingui(),
-      i18n = _useLingui.i18n;
-
-  var swapInfo = useSwapInfo();
-  var _swapInfo$Field$OUTPU = swapInfo[Field.OUTPUT],
-      balance = _swapInfo$Field$OUTPU.balance,
-      outputCurrencyAmount = _swapInfo$Field$OUTPU.amount,
-      outputUSDC = _swapInfo$Field$OUTPU.usdc,
-      tradeState = swapInfo.trade.state,
-      impact = swapInfo.impact;
-  React.useEffect(function () {
-    if (!swapInfo) return;
-    onChange === null || onChange === void 0 ? void 0 : onChange(swapInfo);
-  }, [swapInfo]);
-
-  var _useSwapAmount = useSwapAmount(Field.OUTPUT),
-      _useSwapAmount2 = _slicedToArray__default["default"](_useSwapAmount, 2),
-      swapOutputAmount = _useSwapAmount2[0],
-      updateSwapOutputAmount = _useSwapAmount2[1];
-
-  var _useSwapCurrency = useSwapCurrency(Field.OUTPUT),
-      _useSwapCurrency2 = _slicedToArray__default["default"](_useSwapCurrency, 2),
-      swapOutputCurrency = _useSwapCurrency2[0],
-      updateSwapOutputCurrency = _useSwapCurrency2[1];
-
-  var isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING;
-  var isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT);
-  var isLoading = isRouteLoading && isDependentField;
-  var overrideColor = utils.useAtomValue(colorAtom);
-  var dynamicColor = useCurrencyColor(swapOutputCurrency);
-  var color = overrideColor || dynamicColor; // different state true/null/false allow smoother color transition
-
-  var hasColor = swapOutputCurrency ? Boolean(color) || null : false;
-  var amount = useFormattedFieldAmount({
-    disabled: disabled,
-    currencyAmount: outputCurrencyAmount,
-    fieldAmount: swapOutputAmount
-  });
-  return /*#__PURE__*/React__default["default"].createElement(DynamicThemeProvider, {
-    color: color
-  }, /*#__PURE__*/React__default["default"].createElement(OutputColumn, {
-    hasColor: hasColor,
-    gap: 0.5
-  }, /*#__PURE__*/React__default["default"].createElement(Row, null, /*#__PURE__*/React__default["default"].createElement(Subhead1, {
-    color: "secondary"
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "For"
-  }))), /*#__PURE__*/React__default["default"].createElement(TokenInput, {
-    currency: swapOutputCurrency,
-    amount: amount,
-    disabled: disabled,
-    onChangeInput: updateSwapOutputAmount,
-    onChangeCurrency: updateSwapOutputCurrency,
-    loading: isLoading
-  }, /*#__PURE__*/React__default["default"].createElement(Body2, {
-    color: "secondary",
-    userSelect: true
-  }, /*#__PURE__*/React__default["default"].createElement(Row, null, /*#__PURE__*/React__default["default"].createElement(USDC, {
-    gap: 0.5,
-    isLoading: isRouteLoading
-  }, outputUSDC ? "$".concat(formatCurrencyAmount(outputUSDC, 6, 'en', 2)) : '-', ' ', impact && /*#__PURE__*/React__default["default"].createElement(Body2, {
-    color: impact.warning
-  }, "(", impact.toString(), ")")), balance && /*#__PURE__*/React__default["default"].createElement(Balance, {
-    focused: focused
-  }, "Balance: ", /*#__PURE__*/React__default["default"].createElement("span", null, formatCurrencyAmount(balance, 4, i18n.locale)))))), /*#__PURE__*/React__default["default"].createElement(Rule, null), children, /*#__PURE__*/React__default["default"].createElement(BrandedFooter, null)));
-}
-
-var ReverseRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "ReverseButton__ReverseRow",
-  componentId: "sc-d3cn9-0"
-})(["left:50%;position:absolute;transform:translate(-50%,-50%);z-index:", ";"], Layer.OVERLAY);
-
-var ArrowUp = /*#__PURE__*/_styled__default["default"](ArrowUp$1).withConfig({
-  displayName: "ReverseButton__ArrowUp",
-  componentId: "sc-d3cn9-1"
-})(["left:calc(50% - 0.37em);position:absolute;top:calc(50% - 0.82em);"]);
-
-var ArrowDown = /*#__PURE__*/_styled__default["default"](ArrowDown$1).withConfig({
-  displayName: "ReverseButton__ArrowDown",
-  componentId: "sc-d3cn9-2"
-})(["bottom:calc(50% - 0.82em);position:absolute;right:calc(50% - 0.37em);"]);
-
-var Overlay$1 = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "ReverseButton__Overlay",
-  componentId: "sc-d3cn9-3"
-})(["background-color:", ";border-radius:", "em;padding:0.25em;"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.container;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.borderRadius;
-});
-
-var StyledReverseButton = /*#__PURE__*/_styled__default["default"](Button$1).withConfig({
-  displayName: "ReverseButton__StyledReverseButton",
-  componentId: "sc-d3cn9-4"
-})(["border-radius:", "em;color:", ";height:2.5em;position:relative;width:2.5em;div{transform:rotate(", "turn);transition:transform 0.25s ease-in-out;will-change:transform;}"], function (_ref3) {
-  var theme = _ref3.theme;
-  return theme.borderRadius * 0.75;
-}, function (_ref4) {
-  var theme = _ref4.theme;
-  return theme.primary;
-}, function (_ref5) {
-  var turns = _ref5.turns;
-  return turns / 2;
-});
-
-function ReverseButton(_ref6) {
-  var disabled = _ref6.disabled;
-
-  var _useState = React.useState(0),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      turns = _useState2[0],
-      setTurns = _useState2[1];
-
-  var switchCurrencies = useSwitchSwapCurrencies();
-  var onClick = React.useCallback(function () {
-    switchCurrencies();
-    setTurns(function (turns) {
-      return ++turns;
-    });
-  }, [switchCurrencies]);
-  return /*#__PURE__*/React__default["default"].createElement(ReverseRow, {
-    justify: "center"
-  }, /*#__PURE__*/React__default["default"].createElement(Overlay$1, null, /*#__PURE__*/React__default["default"].createElement(StyledReverseButton, {
-    disabled: disabled,
-    onClick: onClick,
-    turns: turns
-  }, /*#__PURE__*/React__default["default"].createElement("div", null, /*#__PURE__*/React__default["default"].createElement(ArrowUp, {
-    strokeWidth: 3
-  }), /*#__PURE__*/React__default["default"].createElement(ArrowDown, {
-    strokeWidth: 3
-  })))));
-}
-
-function useHasHover(node) {
-  var _useState = React.useState(false),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      hasHover = _useState2[0],
-      setHasHover = _useState2[1];
-
-  var onMouseEnter = React.useCallback(function () {
-    return setHasHover(true);
-  }, []);
-  var onMouseLeave = React.useCallback(function (e) {
-    return setHasHover(false);
-  }, []);
-  React.useEffect(function () {
-    node === null || node === void 0 ? void 0 : node.addEventListener('mouseenter', onMouseEnter);
-    node === null || node === void 0 ? void 0 : node.addEventListener('mouseleave', onMouseLeave);
-    return function () {
-      node === null || node === void 0 ? void 0 : node.removeEventListener('mouseenter', onMouseEnter);
-      node === null || node === void 0 ? void 0 : node.removeEventListener('mouseleave', onMouseLeave);
-    };
-  }, [node, onMouseEnter, onMouseLeave]);
-  return hasHover;
-}
-
-function useTooltip(tooltip) {
-  var hover = useHasHover(tooltip);
-  var focus = useHasFocus(tooltip);
-  return hover || focus;
-}
-
-var IconTooltip = /*#__PURE__*/_styled__default["default"](IconButton).withConfig({
-  displayName: "Tooltip__IconTooltip",
-  componentId: "sc-tsxpgp-0"
-})(["cursor:help;"]);
-
-function Tooltip(_ref) {
-  var _ref$icon = _ref.icon,
-      Icon = _ref$icon === void 0 ? HelpCircle : _ref$icon,
-      iconProps = _ref.iconProps,
-      children = _ref.children,
-      _ref$placement = _ref.placement,
-      placement = _ref$placement === void 0 ? 'auto' : _ref$placement,
-      offset = _ref.offset,
-      contained = _ref.contained;
-  var tooltip = React.useRef(null);
-  var showTooltip = useTooltip(tooltip.current);
-  return /*#__PURE__*/React__default["default"].createElement(Popover, {
-    content: children,
-    show: showTooltip,
-    placement: placement,
-    offset: offset,
-    contained: contained
-  }, /*#__PURE__*/React__default["default"].createElement(IconTooltip, {
-    icon: Icon,
-    iconProps: iconProps,
-    ref: tooltip
-  }));
-}
-
-var _templateObject$2;
-var optionCss = function optionCss(selected) {
-  return _styled.css(_templateObject$2 || (_templateObject$2 = _taggedTemplateLiteral__default["default"](["\n  border: 1px solid ", ";\n  border-radius: ", "em;\n  color: ", " !important;\n  display: grid;\n  grid-gap: 0.25em;\n  padding: calc(0.75em - 1px) 0.625em;\n\n  :enabled {\n    border: 1px solid ", ";\n  }\n\n  :enabled:hover {\n    border-color: ", ";\n  }\n\n  :enabled:focus-within {\n    border-color: ", ";\n  }\n"])), function (_ref) {
-    var theme = _ref.theme;
-    return selected ? theme.active : theme.outline;
-  }, function (_ref2) {
-    var theme = _ref2.theme;
-    return theme.borderRadius * 0.75;
-  }, function (_ref3) {
-    var theme = _ref3.theme;
-    return theme.primary;
-  }, function (_ref4) {
-    var theme = _ref4.theme;
-    return selected ? theme.active : theme.outline;
-  }, function (_ref5) {
-    var theme = _ref5.theme;
-    return theme.onHover(selected ? theme.active : theme.outline);
-  }, function (_ref6) {
-    var theme = _ref6.theme;
-    return theme.active;
-  });
-};
-function Label(_ref8) {
-  var name = _ref8.name,
-      tooltip = _ref8.tooltip;
-  return /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5,
-    justify: "flex-start"
-  }, /*#__PURE__*/React__default["default"].createElement(Subhead2, null, name), tooltip && /*#__PURE__*/React__default["default"].createElement(Tooltip, {
-    placement: "top",
-    contained: true
-  }, /*#__PURE__*/React__default["default"].createElement(Caption$1, null, tooltip)));
-}
-
-var Button = /*#__PURE__*/_styled__default["default"](TextButton).withConfig({
-  displayName: "MaxSlippageSelect__Button",
-  componentId: "sc-9adwbi-0"
-})(["", ""], function (_ref) {
-  var selected = _ref.selected;
-  return optionCss(selected);
-});
-
-var Custom = /*#__PURE__*/_styled__default["default"](BaseButton).withConfig({
-  displayName: "MaxSlippageSelect__Custom",
-  componentId: "sc-9adwbi-1"
-})(["", " ", " padding:calc(0.75em - 3px) 0.625em;"], function (_ref2) {
-  var selected = _ref2.selected;
-  return optionCss(selected);
-}, inputCss);
-
-var Option = /*#__PURE__*/React.forwardRef(function Option(_ref3, ref) {
-  var Wrapper = _ref3.wrapper,
-      children = _ref3.children,
-      selected = _ref3.selected,
-      onSelect = _ref3.onSelect,
-      icon = _ref3.icon,
-      tabIndex = _ref3.tabIndex,
-      testid = _ref3['data-testid'];
-  return /*#__PURE__*/React__default["default"].createElement(Wrapper, {
-    selected: selected,
-    onClick: onSelect,
-    ref: ref,
-    tabIndex: tabIndex,
-    "data-testid": testid
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5
-  }, children, icon ? icon : /*#__PURE__*/React__default["default"].createElement(LargeIcon, {
-    icon: selected ? Check : undefined,
-    size: 1.25
-  })));
-});
-var Warning = /*#__PURE__*/React.memo(function Warning(_ref4) {
-  var state = _ref4.state,
-      showTooltip = _ref4.showTooltip;
-  var icon;
-  var content;
-  var show = showTooltip;
-
-  switch (state) {
-    case 'error':
-      icon = XOctagon;
-      content = /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "Please enter a valid slippage %"
-      });
-      show = true;
-      break;
-
-    case 'warning':
-      icon = AlertTriangle;
-      content = /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "High slippage increases the risk of price movement"
-      });
-      break;
-  }
-
-  return /*#__PURE__*/React__default["default"].createElement(Popover, {
-    key: state,
-    content: /*#__PURE__*/React__default["default"].createElement(Caption$1, null, content),
-    show: show,
-    placement: "top",
-    offset: 16,
-    contained: true
-  }, /*#__PURE__*/React__default["default"].createElement(LargeIcon, {
-    icon: icon,
-    color: state,
-    size: 1.25
-  }));
-});
-function MaxSlippageSelect() {
-  var _useAtom = jotai.useAtom(autoSlippageAtom),
-      _useAtom2 = _slicedToArray__default["default"](_useAtom, 2),
-      autoSlippage = _useAtom2[0],
-      setAutoSlippage = _useAtom2[1];
-
-  var _useAtom3 = jotai.useAtom(maxSlippageAtom),
-      _useAtom4 = _slicedToArray__default["default"](_useAtom3, 2),
-      maxSlippage = _useAtom4[0],
-      setMaxSlippage = _useAtom4[1];
-
-  var _useState = React.useState((maxSlippage === null || maxSlippage === void 0 ? void 0 : maxSlippage.toString()) || ''),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      maxSlippageInput = _useState2[0],
-      setMaxSlippageInput = _useState2[1];
-
-  var option = React.useRef(null);
-  var showTooltip = useTooltip(option.current);
-  var input = React.useRef(null);
-  var focus = React.useCallback(function () {
-    var _input$current;
-
-    return (_input$current = input.current) === null || _input$current === void 0 ? void 0 : _input$current.focus();
-  }, [input]);
-
-  var _useState3 = React.useState(getSlippageWarning(toPercent(maxSlippage))),
-      _useState4 = _slicedToArray__default["default"](_useState3, 2),
-      warning = _useState4[0],
-      setWarning = _useState4[1];
-
-  React.useEffect(function () {
-    setMaxSlippageInput((maxSlippage === null || maxSlippage === void 0 ? void 0 : maxSlippage.toString()) || '');
-    setWarning(getSlippageWarning(toPercent(maxSlippage)));
-  }, [maxSlippage]);
-  var onInputSelect = React.useCallback(function () {
-    focus();
-    var percent = toPercent(maxSlippage);
-    var warning = getSlippageWarning(percent);
-    setAutoSlippage(!percent || warning === 'error');
-  }, [focus, maxSlippage, setAutoSlippage]);
-  var processInput = React.useCallback(function (input) {
-    setMaxSlippageInput(input || '');
-    var value = input ? +input : undefined;
-    var percent = toPercent(value);
-    var warning = getSlippageWarning(percent);
-    setMaxSlippage(value);
-    setAutoSlippage(!percent || warning === 'error');
-  }, [setAutoSlippage, setMaxSlippage]);
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    gap: 0.75
-  }, /*#__PURE__*/React__default["default"].createElement(Label, {
-    name: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Max slippage"
-    }),
-    tooltip: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Your transaction will revert if the price changes unfavorably by more than this percentage."
-    })
-  }), /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5,
-    grow: "last"
-  }, /*#__PURE__*/React__default["default"].createElement(Option, {
-    wrapper: Button,
-    selected: autoSlippage,
-    onSelect: function onSelect() {
-      return setAutoSlippage(true);
-    },
-    "data-testid": "auto"
-  }, /*#__PURE__*/React__default["default"].createElement(ButtonMedium, null, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Auto"
-  }))), /*#__PURE__*/React__default["default"].createElement(Option, {
-    wrapper: Custom,
-    selected: !autoSlippage,
-    onSelect: onInputSelect,
-    icon: warning && /*#__PURE__*/React__default["default"].createElement(Warning, {
-      state: warning,
-      showTooltip: showTooltip
-    }),
-    ref: option,
-    tabIndex: -1,
-    "data-testid": "custom"
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    color: warning === 'error' ? 'error' : undefined
-  }, /*#__PURE__*/React__default["default"].createElement(DecimalInput, {
-    size: Math.max(maxSlippageInput.length, 4),
-    value: maxSlippageInput,
-    onChange: function onChange(input) {
-      return processInput(input);
-    },
-    placeholder: '0.10',
-    ref: input,
-    "data-testid": "input"
-  }), "%"))));
-}
-
-/** Returns the default transaction TTL for the chain, in minutes. */
-
-function useDefaultTransactionTtl() {
-  var _useActiveWeb3React = useActiveWeb3React(),
-      chainId = _useActiveWeb3React.chainId;
-
-  if (chainId && L2_CHAIN_IDS.includes(chainId)) return L2_DEADLINE_FROM_NOW / 60;
-  return DEFAULT_DEADLINE_FROM_NOW / 60;
-}
-/** Returns the user-inputted transaction TTL, in minutes. */
-
-function useTransactionTtl() {
-  return jotai.useAtom(transactionTtlAtom);
-} // combines the block timestamp with the user setting to give the deadline that should be used for any submitted transaction
-
-var Input = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "TransactionTtlInput__Input",
-  componentId: "sc-1fem02o-0"
-})(["", ""], inputCss);
-
-function TransactionTtlInput() {
-  var _ttl$toString;
-
-  var _useTransactionTtl = useTransactionTtl(),
-      _useTransactionTtl2 = _slicedToArray__default["default"](_useTransactionTtl, 2),
-      ttl = _useTransactionTtl2[0],
-      setTtl = _useTransactionTtl2[1];
-
-  var defaultTtl = useDefaultTransactionTtl();
-  var placeholder = defaultTtl.toString();
-  var input = React.useRef(null);
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    gap: 0.75
-  }, /*#__PURE__*/React__default["default"].createElement(Label, {
-    name: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Transaction deadline"
-    }),
-    tooltip: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Your transaction will revert if it has been pending for longer than this period of time."
-    })
-  }), /*#__PURE__*/React__default["default"].createElement(Body1, null, /*#__PURE__*/React__default["default"].createElement(Input, {
-    justify: "start",
-    onClick: function onClick() {
-      var _input$current;
-
-      return (_input$current = input.current) === null || _input$current === void 0 ? void 0 : _input$current.focus();
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(IntegerInput, {
-    placeholder: placeholder,
-    value: (_ttl$toString = ttl === null || ttl === void 0 ? void 0 : ttl.toString()) !== null && _ttl$toString !== void 0 ? _ttl$toString : '',
-    onChange: function onChange(value) {
-      return setTtl(value ? parseFloat(value) : 0);
-    },
-    size: Math.max((ttl === null || ttl === void 0 ? void 0 : ttl.toString().length) || 0, placeholder.length),
-    ref: input
-  }), /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "minutes"
-  }))));
-}
-
-function SettingsDialog() {
-  var _useState = React.useState(null),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      boundary = _useState2[0],
-      setBoundary = _useState2[1];
-
-  var scrollbar = useScrollbar(boundary, {
-    padded: true
-  });
-  var resetSettings = utils.useResetAtom(settingsAtom);
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Header$1, {
-    title: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Settings"
-    }),
-    ruled: true
-  }, /*#__PURE__*/React__default["default"].createElement(TextButton, {
-    onClick: resetSettings
-  }, /*#__PURE__*/React__default["default"].createElement(ButtonSmall, null, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Reset"
-  })))), /*#__PURE__*/React__default["default"].createElement(_StyledColumn, {
-    gap: 1,
-    style: {
-      paddingTop: '1em'
-    },
-    ref: setBoundary,
-    padded: true,
-    $_css: scrollbar
-  }, /*#__PURE__*/React__default["default"].createElement(BoundaryProvider, {
-    value: boundary
-  }, /*#__PURE__*/React__default["default"].createElement(MaxSlippageSelect, null), /*#__PURE__*/React__default["default"].createElement(TransactionTtlInput, null))));
-}
-
-var SettingsButton = /*#__PURE__*/_styled__default["default"](IconButton).withConfig({
-  displayName: "Settings__SettingsButton",
-  componentId: "sc-1hvqnx5-0"
-})(["", "{transform:", ";transition:", ";will-change:transform;}"], Settings$1, function (_ref) {
-  var hover = _ref.hover;
-  return hover && 'rotate(45deg)';
-}, function (_ref2) {
-  var hover = _ref2.hover;
-  return hover && 'transform 0.25s';
-});
-
-function Settings(_ref3) {
-  var disabled = _ref3.disabled;
-
-  var _useState3 = React.useState(false),
-      _useState4 = _slicedToArray__default["default"](_useState3, 2),
-      open = _useState4[0],
-      setOpen = _useState4[1];
-
-  var _useState5 = React.useState(false),
-      _useState6 = _slicedToArray__default["default"](_useState5, 2),
-      hover = _useState6[0],
-      setHover = _useState6[1];
-
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(SettingsButton, {
-    disabled: disabled,
-    hover: hover,
-    onClick: function onClick() {
-      return setOpen(true);
-    },
-    onMouseEnter: function onMouseEnter() {
-      return setHover(true);
-    },
-    onMouseLeave: function onMouseLeave() {
-      return setHover(false);
-    },
-    icon: Settings$1
-  }), open && /*#__PURE__*/React__default["default"].createElement(Dialog, {
-    color: "module",
-    onClose: function onClose() {
-      return setOpen(false);
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(SettingsDialog, null)));
-}
-
-var _StyledColumn = /*#__PURE__*/_styled__default["default"](Column).withConfig({
-  displayName: "Settings___StyledColumn",
-  componentId: "sc-1hvqnx5-1"
-})(["", ""], function (p) {
-  return p.$_css;
-});
-
-var _templateObject$1, _templateObject2$1;
-
-var StyledButton = /*#__PURE__*/_styled__default["default"](Button$1).withConfig({
+var StyledButton = /*#__PURE__*/_styled__default["default"](Button).withConfig({
   displayName: "ActionButton__StyledButton",
   componentId: "sc-xgl46p-0"
 })(["border-radius:", "em;flex-grow:1;transition:background-color 0.25s ease-out,border-radius 0.25s ease-out,flex-grow 0.25s ease-out;:disabled{margin:-1px;}"], function (_ref) {
@@ -14579,9 +8814,9 @@ var ActionRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
   componentId: "sc-xgl46p-1"
 })([""]);
 
-var grow = _styled.keyframes(_templateObject$1 || (_templateObject$1 = _taggedTemplateLiteral__default["default"](["\n  from {\n    opacity: 0;\n    width: 0;\n  }\n  to {\n    opacity: 1;\n    width: max-content;\n  }\n"])));
+var grow = _styled.keyframes(_templateObject || (_templateObject = _taggedTemplateLiteral__default["default"](["\n  from {\n    opacity: 0;\n    width: 0;\n  }\n  to {\n    opacity: 1;\n    width: max-content;\n  }\n"])));
 
-var actionCss = _styled.css(_templateObject2$1 || (_templateObject2$1 = _taggedTemplateLiteral__default["default"](["\n  border: 1px solid ", ";\n  padding: calc(0.25em - 1px);\n  padding-left: calc(0.75em - 1px);\n\n  ", " {\n    animation: ", " 0.25s ease-in;\n    flex-grow: 1;\n    justify-content: flex-start;\n    white-space: nowrap;\n  }\n\n  ", " {\n    border-radius: ", "em;\n    flex-grow: 0;\n    padding: 1em;\n  }\n"])), function (_ref2) {
+var actionCss = _styled.css(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral__default["default"](["\n  border: 1px solid ", ";\n  padding: calc(0.25em - 1px);\n  padding-left: calc(0.75em - 1px);\n\n  ", " {\n    animation: ", " 0.25s ease-in;\n    flex-grow: 1;\n    justify-content: flex-start;\n    white-space: nowrap;\n  }\n\n  ", " {\n    border-radius: ", "em;\n    flex-grow: 0;\n    padding: 1em;\n  }\n"])), function (_ref2) {
   var theme = _ref2.theme;
   return theme.outline;
 }, ActionRow, grow, StyledButton, function (_ref3) {
@@ -14626,6 +8861,46 @@ function ActionButton(_ref6) {
     color: "currentColor",
     icon: action.icon || AlertTriangle
   }), /*#__PURE__*/React__default["default"].createElement(Subhead2, null, action === null || action === void 0 ? void 0 : action.message)));
+}
+
+var overflowCss = /*#__PURE__*/_styled.css(["overflow-y:scroll;"]);
+/** Customizes the scrollbar for vertical overflow. */
+
+
+var scrollbarCss = function scrollbarCss(padded) {
+  return _styled.css(["overflow-y:scroll;::-webkit-scrollbar{width:1.25em;}::-webkit-scrollbar-thumb{background:radial-gradient( closest-corner at 0.25em 0.25em,", " 0.25em,transparent 0.25em ),linear-gradient( to bottom,#ffffff00 0.25em,", " 0.25em,", " calc(100% - 0.25em),#ffffff00 calc(100% - 0.25em) ),radial-gradient( closest-corner at 0.25em calc(100% - 0.25em),", " 0.25em,#ffffff00 0.25em );background-clip:padding-box;border:none;", ":0.75em solid transparent;}@supports not selector(::-webkit-scrollbar-thumb){scrollbar-color:", " transparent;}"], function (_ref) {
+    var theme = _ref.theme;
+    return theme.interactive;
+  }, function (_ref2) {
+    var theme = _ref2.theme;
+    return theme.interactive;
+  }, function (_ref3) {
+    var theme = _ref3.theme;
+    return theme.interactive;
+  }, function (_ref4) {
+    var theme = _ref4.theme;
+    return theme.interactive;
+  }, padded ? 'border-right' : 'border-left', function (_ref5) {
+    var theme = _ref5.theme;
+    return theme.interactive;
+  });
+};
+
+function useScrollbar(element) {
+  var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      _ref6$padded = _ref6.padded,
+      padded = _ref6$padded === void 0 ? false : _ref6$padded;
+
+  return React.useMemo( // NB: The css must be applied on an element's first render. WebKit will not re-apply overflow
+  // properties until any transitions have ended, so waiting a frame for state would cause jank.
+  function () {
+    return hasOverflow(element) ? scrollbarCss(padded) : overflowCss;
+  }, [element, padded]);
+
+  function hasOverflow(element) {
+    if (!element) return true;
+    return element.scrollHeight > element.clientHeight;
+  }
 }
 
 var HeaderColumn = /*#__PURE__*/_styled__default["default"](Column).withConfig({
@@ -14784,1080 +9059,6 @@ function ErrorDialog(_ref3) {
   }, action)));
 }
 
-var _ETHERSCAN_PREFIXES;
-var ETHERSCAN_PREFIXES = (_ETHERSCAN_PREFIXES = {}, _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.MAINNET, 'https://etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.ROPSTEN, 'https://ropsten.etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.RINKEBY, 'https://rinkeby.etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.GOERLI, 'https://goerli.etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.KOVAN, 'https://kovan.etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.OPTIMISM, 'https://optimistic.etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.OPTIMISTIC_KOVAN, 'https://kovan-optimistic.etherscan.io'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.POLYGON_MUMBAI, 'https://mumbai.polygonscan.com'), _defineProperty__default["default"](_ETHERSCAN_PREFIXES, exports.SupportedChainId.POLYGON, 'https://polygonscan.com'), _ETHERSCAN_PREFIXES);
-var ExplorerDataType;
-/**
- * Return the explorer link for the given data and data type
- * @param chainId the ID of the chain for which to return the data
- * @param data the data to return a link for
- * @param type the type of the data
- */
-
-(function (ExplorerDataType) {
-  ExplorerDataType["TRANSACTION"] = "transaction";
-  ExplorerDataType["TOKEN"] = "token";
-  ExplorerDataType["ADDRESS"] = "address";
-  ExplorerDataType["BLOCK"] = "block";
-})(ExplorerDataType || (ExplorerDataType = {}));
-
-function getExplorerLink(chainId, data, type) {
-  var _ETHERSCAN_PREFIXES$c;
-
-  if (chainId === exports.SupportedChainId.ARBITRUM_ONE) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return "https://arbiscan.io/tx/".concat(data);
-
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return "https://arbiscan.io/address/".concat(data);
-
-      case ExplorerDataType.BLOCK:
-        return "https://arbiscan.io/block/".concat(data);
-
-      default:
-        return "https://arbiscan.io/";
-    }
-  }
-
-  if (chainId === exports.SupportedChainId.ARBITRUM_RINKEBY) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return "https://rinkeby-explorer.arbitrum.io/tx/".concat(data);
-
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return "https://rinkeby-explorer.arbitrum.io/address/".concat(data);
-
-      case ExplorerDataType.BLOCK:
-        return "https://rinkeby-explorer.arbitrum.io/block/".concat(data);
-
-      default:
-        return "https://rinkeby-explorer.arbitrum.io/";
-    }
-  }
-
-  var prefix = (_ETHERSCAN_PREFIXES$c = ETHERSCAN_PREFIXES[chainId]) !== null && _ETHERSCAN_PREFIXES$c !== void 0 ? _ETHERSCAN_PREFIXES$c : 'https://etherscan.io';
-
-  switch (type) {
-    case ExplorerDataType.TRANSACTION:
-      return "".concat(prefix, "/tx/").concat(data);
-
-    case ExplorerDataType.TOKEN:
-      return "".concat(prefix, "/token/").concat(data);
-
-    case ExplorerDataType.BLOCK:
-      if (chainId === exports.SupportedChainId.OPTIMISM || chainId === exports.SupportedChainId.OPTIMISTIC_KOVAN) {
-        return "".concat(prefix, "/tx/").concat(data);
-      }
-
-      return "".concat(prefix, "/block/").concat(data);
-
-    case ExplorerDataType.ADDRESS:
-      return "".concat(prefix, "/address/").concat(data);
-
-    default:
-      return "".concat(prefix);
-  }
-}
-
-var StyledExternalLink = /*#__PURE__*/_styled__default["default"](ExternalLink).withConfig({
-  displayName: "EtherscanLink__StyledExternalLink",
-  componentId: "sc-chwn20-0"
-})(["color:", ";text-decoration:none;"], function (_ref) {
-  var theme = _ref.theme,
-      color = _ref.color;
-  return theme[color];
-});
-
-function EtherscanLink(_ref2) {
-  var data = _ref2.data,
-      type = _ref2.type,
-      _ref2$color = _ref2.color,
-      color = _ref2$color === void 0 ? 'currentColor' : _ref2$color,
-      children = _ref2.children;
-
-  var _useActiveWeb3React = useActiveWeb3React(),
-      chainId = _useActiveWeb3React.chainId;
-
-  var url = React.useMemo(function () {
-    return data && getExplorerLink(chainId || exports.SupportedChainId.MAINNET, data, type);
-  }, [chainId, data, type]);
-  return /*#__PURE__*/React__default["default"].createElement(StyledExternalLink, {
-    href: url,
-    color: color,
-    target: "_blank"
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.25
-  }, children, url && /*#__PURE__*/React__default["default"].createElement(Link, null)));
-}
-
-/** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */
-function Price(_ref) {
-  var trade = _ref.trade,
-      outputUSDC = _ref.outputUSDC;
-
-  var _useLingui = useLingui(),
-      i18n = _useLingui.i18n;
-
-  var inputAmount = trade.inputAmount,
-      outputAmount = trade.outputAmount,
-      executionPrice = trade.executionPrice;
-
-  var _useState = React.useState('input'),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      base = _useState2[0],
-      setBase = _useState2[1];
-
-  var onClick = React.useCallback(function () {
-    return setBase(function (base) {
-      return base === 'input' ? 'output' : 'input';
-    });
-  }, []); // Compute the usdc price from the output price, so that it aligns with the displayed price.
-
-  var _useMemo = React.useMemo(function () {
-    switch (base) {
-      case 'input':
-        return {
-          price: executionPrice,
-          usdcPrice: outputUSDC === null || outputUSDC === void 0 ? void 0 : outputUSDC.multiply(inputAmount.decimalScale).divide(inputAmount)
-        };
-
-      case 'output':
-        return {
-          price: executionPrice.invert(),
-          usdcPrice: outputUSDC === null || outputUSDC === void 0 ? void 0 : outputUSDC.multiply(outputAmount.decimalScale).divide(outputAmount)
-        };
-    }
-  }, [base, executionPrice, inputAmount, outputAmount, outputUSDC]),
-      price = _useMemo.price,
-      usdcPrice = _useMemo.usdcPrice;
-
-  return /*#__PURE__*/React__default["default"].createElement(TextButton, {
-    color: "primary",
-    onClick: onClick
-  }, /*#__PURE__*/React__default["default"].createElement(Caption$1, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.25
-  }, formatLocaleNumber({
-    number: 1,
-    sigFigs: 1,
-    locale: i18n.locale
-  }), " ", price.baseCurrency.symbol, " =", ' ', formatPrice(price, 6, i18n.locale), " ", price.quoteCurrency.symbol, usdcPrice && /*#__PURE__*/React__default["default"].createElement(Caption$1, {
-    color: "secondary"
-  }, "($", formatCurrencyAmount(usdcPrice, 6, 'en', 2), ")"))));
-}
-
-function TokenValue(_ref) {
-  var input = _ref.input,
-      usdc = _ref.usdc,
-      children = _ref.children;
-
-  var _useLingui = useLingui(),
-      i18n = _useLingui.i18n;
-
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    justify: "flex-start"
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.375,
-    justify: "flex-start"
-  }, /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: input.currency
-  }), /*#__PURE__*/React__default["default"].createElement(Body2, {
-    userSelect: true
-  }, formatCurrencyAmount(input, 6, i18n.locale), " ", input.currency.symbol)), usdc && /*#__PURE__*/React__default["default"].createElement(Caption$1, {
-    color: "secondary",
-    userSelect: true
-  }, /*#__PURE__*/React__default["default"].createElement(Row, {
-    justify: "flex-start",
-    gap: 0.25
-  }, "$", formatCurrencyAmount(usdc, 6, 'en', 2), children)));
-}
-
-function Summary(_ref2) {
-  var input = _ref2.input,
-      output = _ref2.output,
-      inputUSDC = _ref2.inputUSDC,
-      outputUSDC = _ref2.outputUSDC,
-      impact = _ref2.impact;
-  return /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: impact ? 1 : 0.25
-  }, /*#__PURE__*/React__default["default"].createElement(TokenValue, {
-    input: input,
-    usdc: inputUSDC
-  }), /*#__PURE__*/React__default["default"].createElement(ArrowRight, null), /*#__PURE__*/React__default["default"].createElement(TokenValue, {
-    input: output,
-    usdc: outputUSDC
-  }, impact && /*#__PURE__*/React__default["default"].createElement(Caption$1, {
-    color: impact.warning
-  }, "(", impact.toString(), ")")));
-}
-
-/**
- * Invokes callback repeatedly over an interval defined by the delay
- * @param callback
- * @param delay if null, the callback will not be invoked
- * @param leading if true, the callback will be invoked immediately (on the leading edge); otherwise, it will be invoked after delay
- */
-
-function useInterval(callback, delay) {
-  var leading = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  var savedCallback = React.useRef(); // Remember the latest callback.
-
-  React.useEffect(function () {
-    savedCallback.current = callback;
-  }, [callback]); // Set up the interval.
-
-  React.useEffect(function () {
-    function tick() {
-      var current = savedCallback.current;
-      current && current();
-    }
-
-    if (delay !== null) {
-      if (leading) tick();
-      var id = setInterval(tick, delay);
-      return function () {
-        return clearInterval(id);
-      };
-    }
-
-    return;
-  }, [delay, leading]);
-}
-
-var TransactionRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "StatusDialog__TransactionRow",
-  componentId: "sc-1wcaa6z-0"
-})(["flex-direction:row-reverse;"]);
-
-function ElapsedTime(_ref) {
-  var tx = _ref.tx;
-
-  var _useState = React.useState(0),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      elapsedMs = _useState2[0],
-      setElapsedMs = _useState2[1];
-
-  useInterval(function () {
-    return setElapsedMs(Date.now() - tx.addedTime);
-  }, tx.receipt ? null : 1000);
-  var toElapsedTime = React.useCallback(function (ms) {
-    var sec = Math.floor(ms / 1000);
-    var min = Math.floor(sec / 60);
-    sec = sec % 60;
-
-    if (min) {
-      return /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "{min}m {sec}s",
-        values: {
-          min: min,
-          sec: sec
-        }
-      });
-    } else {
-      return /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "{sec}s",
-        values: {
-          sec: sec
-        }
-      });
-    }
-  }, []);
-  return /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.5
-  }, /*#__PURE__*/React__default["default"].createElement(Clock, null), /*#__PURE__*/React__default["default"].createElement(Body2, null, toElapsedTime(elapsedMs)));
-}
-
-function TransactionStatus(_ref2) {
-  var _tx$receipt2, _tx$receipt7, _tx$receipt8;
-
-  var tx = _ref2.tx,
-      onClose = _ref2.onClose;
-  var Icon = React.useMemo(function () {
-    var _tx$receipt;
-
-    return (_tx$receipt = tx.receipt) !== null && _tx$receipt !== void 0 && _tx$receipt.status ? CheckCircle : Spinner;
-  }, [(_tx$receipt2 = tx.receipt) === null || _tx$receipt2 === void 0 ? void 0 : _tx$receipt2.status]);
-  var heading = React.useMemo(function () {
-    var _tx$receipt6;
-
-    if (tx.info.type === TransactionType.SWAP) {
-      var _tx$receipt3;
-
-      return (_tx$receipt3 = tx.receipt) !== null && _tx$receipt3 !== void 0 && _tx$receipt3.status ? /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "Swap confirmed"
-      }) : /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "Swap pending"
-      });
-    } else if (tx.info.type === TransactionType.WRAP) {
-      var _tx$receipt5;
-
-      if (tx.info.unwrapped) {
-        var _tx$receipt4;
-
-        return (_tx$receipt4 = tx.receipt) !== null && _tx$receipt4 !== void 0 && _tx$receipt4.status ? /*#__PURE__*/React__default["default"].createElement(Trans, {
-          id: "Unwrap confirmed"
-        }) : /*#__PURE__*/React__default["default"].createElement(Trans, {
-          id: "Unwrap pending"
-        });
-      }
-
-      return (_tx$receipt5 = tx.receipt) !== null && _tx$receipt5 !== void 0 && _tx$receipt5.status ? /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "Wrap confirmed"
-      }) : /*#__PURE__*/React__default["default"].createElement(Trans, {
-        id: "Wrap pending"
-      });
-    }
-
-    return (_tx$receipt6 = tx.receipt) !== null && _tx$receipt6 !== void 0 && _tx$receipt6.status ? /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Transaction confirmed"
-    }) : /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Transaction pending"
-    });
-  }, [tx.info, (_tx$receipt7 = tx.receipt) === null || _tx$receipt7 === void 0 ? void 0 : _tx$receipt7.status]);
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    flex: true,
-    padded: true,
-    gap: 0.75,
-    align: "stretch",
-    style: {
-      height: '100%'
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(StatusHeader, {
-    icon: Icon,
-    iconColor: (_tx$receipt8 = tx.receipt) !== null && _tx$receipt8 !== void 0 && _tx$receipt8.status ? 'success' : undefined
-  }, /*#__PURE__*/React__default["default"].createElement(Subhead1, null, heading), tx.info.type === TransactionType.SWAP ? /*#__PURE__*/React__default["default"].createElement(Summary, {
-    input: tx.info.inputCurrencyAmount,
-    output: tx.info.outputCurrencyAmount
-  }) : null), /*#__PURE__*/React__default["default"].createElement(Rule, null), /*#__PURE__*/React__default["default"].createElement(TransactionRow, {
-    flex: true
-  }, /*#__PURE__*/React__default["default"].createElement(ButtonSmall, null, /*#__PURE__*/React__default["default"].createElement(EtherscanLink, {
-    type: ExplorerDataType.TRANSACTION,
-    data: tx.info.response.hash
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "View on Etherscan"
-  }))), /*#__PURE__*/React__default["default"].createElement(ElapsedTime, {
-    tx: tx
-  })), /*#__PURE__*/React__default["default"].createElement(ActionButton, {
-    onClick: onClose
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Close"
-  })));
-}
-
-function TransactionStatusDialog(_ref3) {
-  var _tx$receipt9;
-
-  var tx = _ref3.tx,
-      onClose = _ref3.onClose;
-  return ((_tx$receipt9 = tx.receipt) === null || _tx$receipt9 === void 0 ? void 0 : _tx$receipt9.status) === 0 ? /*#__PURE__*/React__default["default"].createElement(ErrorDialog, {
-    header: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3.",
-      components: {
-        0: /*#__PURE__*/React__default["default"].createElement("br", null)
-      }
-    }),
-    error: new Error('TODO(zzmp)'),
-    action: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Dismiss"
-    }),
-    onClick: onClose
-  }) : /*#__PURE__*/React__default["default"].createElement(TransactionStatus, {
-    tx: tx,
-    onClose: onClose
-  });
-}
-
-var _line;
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-var SvgDotLine = function SvgDotLine(props) {
-  return /*#__PURE__*/React__default["default"].createElement("svg", _extends({
-    width: "100%",
-    height: 35,
-    viewBox: "850 0 300 200",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _line || (_line = /*#__PURE__*/React__default["default"].createElement("line", {
-    x1: 0,
-    x2: 3000,
-    y1: 100,
-    y2: 100,
-    stroke: "currentColor",
-    strokeWidth: 20,
-    strokeLinecap: "round",
-    strokeDasharray: "1, 45"
-  })));
-};
-
-var V2_DEFAULT_FEE_TIER = 3000;
-/**
- * Loops through all routes on a trade and returns an array of diagram entries.
- */
-
-function getTokenPath(trade) {
-  return trade.swaps.map(function (_ref) {
-    var _ref$route = _ref.route,
-        tokenPath = _ref$route.path,
-        pools = _ref$route.pools,
-        protocol = _ref$route.protocol,
-        inputAmount = _ref.inputAmount,
-        outputAmount = _ref.outputAmount;
-    var portion = trade.tradeType === sdkCore.TradeType.EXACT_INPUT ? inputAmount.divide(trade.inputAmount) : outputAmount.divide(trade.outputAmount);
-    var percent = new sdkCore.Percent(portion.numerator, portion.denominator);
-    var path = [];
-
-    for (var i = 0; i < pools.length; i++) {
-      var nextPool = pools[i];
-      var tokenIn = tokenPath[i];
-      var tokenOut = tokenPath[i + 1];
-      var entry = [tokenIn, tokenOut, nextPool instanceof v2Sdk.Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee];
-      path.push(entry);
-    }
-
-    return {
-      percent: percent,
-      path: path,
-      protocol: protocol
-    };
-  });
-}
-
-var StyledAutoRouterLabel = /*#__PURE__*/_styled__default["default"](ButtonSmall).withConfig({
-  displayName: "RoutingDiagram__StyledAutoRouterLabel",
-  componentId: "sc-3p4p27-0"
-})(["@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent){background-image:linear-gradient(90deg,#2172e5 0%,#54e521 163.16%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}"]);
-
-function Header(_ref) {
-  var routes = _ref.routes;
-  return /*#__PURE__*/React__default["default"].createElement(Row, {
-    justify: "space-between",
-    gap: 1
-  }, /*#__PURE__*/React__default["default"].createElement(Subhead2, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.25
-  }, /*#__PURE__*/React__default["default"].createElement(AutoRouter, null), /*#__PURE__*/React__default["default"].createElement(StyledAutoRouterLabel, {
-    color: "primary",
-    lineHeight: '16px'
-  }, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "Auto Router"
-  })))), /*#__PURE__*/React__default["default"].createElement(Body2, null, /*#__PURE__*/React__default["default"].createElement(Trans, {
-    id: "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}",
-    values: {
-      0: routes.length
-    }
-  })));
-}
-
-var Dots = /*#__PURE__*/_styled__default["default"](SvgDotLine).withConfig({
-  displayName: "RoutingDiagram__Dots",
-  componentId: "sc-3p4p27-1"
-})(["color:", ";position:absolute;z-index:", ";"], function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.outline;
-}, Layer.UNDERLAYER);
-
-var RouteRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "RoutingDiagram__RouteRow",
-  componentId: "sc-3p4p27-2"
-})(["flex-wrap:nowrap;"]);
-
-var RouteNode = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "RoutingDiagram__RouteNode",
-  componentId: "sc-3p4p27-3"
-})(["background-color:", ";border-radius:", ";margin-left:1.625em;padding:0.25em 0.375em;width:max-content;"], function (_ref3) {
-  var theme = _ref3.theme;
-  return theme.interactive;
-}, function (_ref4) {
-  var _theme$borderRadius;
-
-  var theme = _ref4.theme;
-  return "".concat(((_theme$borderRadius = theme.borderRadius) !== null && _theme$borderRadius !== void 0 ? _theme$borderRadius : 1) * 0.5, "em");
-});
-
-var RouteBadge = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "RoutingDiagram__RouteBadge",
-  componentId: "sc-3p4p27-4"
-})(["background-color:", ";border-radius:", ";padding:0.125em;"], function (_ref5) {
-  var theme = _ref5.theme;
-  return theme.module;
-}, function (_ref6) {
-  var _theme$borderRadius2;
-
-  var theme = _ref6.theme;
-  return "".concat(((_theme$borderRadius2 = theme.borderRadius) !== null && _theme$borderRadius2 !== void 0 ? _theme$borderRadius2 : 1) * 0.25, "em");
-});
-
-function RouteDetail(_ref7) {
-  var route = _ref7.route;
-  var protocol = route.protocol.toUpperCase();
-  return /*#__PURE__*/React__default["default"].createElement(RouteNode, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.375
-  }, /*#__PURE__*/React__default["default"].createElement(Caption$1, null, route.percent.toSignificant(2), "%"), /*#__PURE__*/React__default["default"].createElement(RouteBadge, null, /*#__PURE__*/React__default["default"].createElement(Badge, {
-    color: "secondary"
-  }, protocol))));
-}
-
-var RoutePool = /*#__PURE__*/_styled__default["default"](RouteNode).withConfig({
-  displayName: "RoutingDiagram__RoutePool",
-  componentId: "sc-3p4p27-5"
-})(["margin:0 0.75em;"]);
-
-function Pool(_ref8) {
-  var originCurrency = _ref8.originCurrency,
-      targetCurrency = _ref8.targetCurrency,
-      feeAmount = _ref8.feeAmount;
-  return /*#__PURE__*/React__default["default"].createElement(RoutePool, null, /*#__PURE__*/React__default["default"].createElement(Caption$1, null, /*#__PURE__*/React__default["default"].createElement(Row, {
-    gap: 0.25
-  }, /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: originCurrency
-  }), /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: targetCurrency,
-    style: {
-      marginLeft: '-0.65em'
-    }
-  }), feeAmount / 10000, "%")));
-}
-
-function Route(_ref9) {
-  var route = _ref9.route;
-
-  var _route$path$ = _slicedToArray__default["default"](route.path[0], 1),
-      originCurrency = _route$path$[0];
-
-  var _route$path = _slicedToArray__default["default"](route.path[route.path.length - 1], 2),
-      targetCurrency = _route$path[1];
-
-  return /*#__PURE__*/React__default["default"].createElement(Row, {
-    align: "center",
-    style: {
-      gridTemplateColumns: '1em 1fr 1em'
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: originCurrency
-  }), /*#__PURE__*/React__default["default"].createElement(RouteRow, {
-    flex: true,
-    style: {
-      position: 'relative'
-    }
-  }, /*#__PURE__*/React__default["default"].createElement(Dots, null), /*#__PURE__*/React__default["default"].createElement(RouteDetail, {
-    route: route
-  }), /*#__PURE__*/React__default["default"].createElement(RouteRow, {
-    justify: "space-evenly",
-    flex: true
-  }, route.path.map(function (_ref10, index) {
-    var _ref11 = _slicedToArray__default["default"](_ref10, 3),
-        originCurrency = _ref11[0],
-        targetCurrency = _ref11[1],
-        feeAmount = _ref11[2];
-
-    return /*#__PURE__*/React__default["default"].createElement(Pool, {
-      key: index,
-      originCurrency: originCurrency,
-      targetCurrency: targetCurrency,
-      feeAmount: feeAmount
-    });
-  }))), /*#__PURE__*/React__default["default"].createElement(TokenImg$1, {
-    token: targetCurrency
-  }));
-}
-
-function RoutingDiagram(_ref12) {
-  var trade = _ref12.trade;
-  var routes = React.useMemo(function () {
-    return getTokenPath(trade);
-  }, [trade]);
-  return /*#__PURE__*/React__default["default"].createElement(Column, {
-    gap: 0.75
-  }, /*#__PURE__*/React__default["default"].createElement(Header, {
-    routes: routes
-  }), /*#__PURE__*/React__default["default"].createElement(Rule, null), routes.map(function (route, index) {
-    return /*#__PURE__*/React__default["default"].createElement(Route, {
-      key: index,
-      route: route
-    });
-  }));
-}
-
-var Loading = /*#__PURE__*/_styled__default["default"].span.withConfig({
-  displayName: "Caption__Loading",
-  componentId: "sc-7raauu-0"
-})(["color:", ";", ";"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.secondary;
-}, loadingCss);
-
-function Caption(_ref2) {
-  var _ref2$icon = _ref2.icon,
-      Icon = _ref2$icon === void 0 ? AlertTriangle : _ref2$icon,
-      caption = _ref2.caption;
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Icon, {
-    color: "secondary"
-  }), caption);
-}
-
-function Connecting() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    icon: InlineSpinner,
-    caption: /*#__PURE__*/React__default["default"].createElement(Loading, null, /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Connecting\u2026"
-    }))
-  });
-}
-function ConnectWallet() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    caption: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Connect wallet to swap"
-    })
-  });
-}
-function UnsupportedNetwork() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    caption: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Unsupported network - switch to another to trade"
-    })
-  });
-}
-function InsufficientBalance(_ref3) {
-  var currency = _ref3.currency;
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    caption: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Insufficient {0} balance",
-      values: {
-        0: currency === null || currency === void 0 ? void 0 : currency.symbol
-      }
-    })
-  });
-}
-function InsufficientLiquidity() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    caption: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Insufficient liquidity in the pool for your trade"
-    })
-  });
-}
-function Error$1() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    caption: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Error fetching trade"
-    })
-  });
-}
-function Empty() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    icon: Info,
-    caption: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Enter an amount"
-    })
-  });
-}
-function LoadingTrade() {
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    icon: InlineSpinner,
-    caption: /*#__PURE__*/React__default["default"].createElement(Loading, null, /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Fetching best price\u2026"
-    }))
-  });
-}
-function WrapCurrency(_ref4) {
-  var inputCurrency = _ref4.inputCurrency,
-      outputCurrency = _ref4.outputCurrency;
-  var Text = React.useCallback(function () {
-    return /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Convert {0} to {1}",
-      values: {
-        0: inputCurrency.symbol,
-        1: outputCurrency.symbol
-      }
-    });
-  }, [inputCurrency.symbol, outputCurrency.symbol]);
-  return /*#__PURE__*/React__default["default"].createElement(Caption, {
-    icon: Info,
-    caption: /*#__PURE__*/React__default["default"].createElement(Text, null)
-  });
-}
-function Trade(_ref5) {
-  var trade = _ref5.trade,
-      outputUSDC = _ref5.outputUSDC,
-      impact = _ref5.impact;
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Tooltip, {
-    placement: "bottom",
-    icon: impact !== null && impact !== void 0 && impact.warning ? AlertTriangle : Info
-  }, /*#__PURE__*/React__default["default"].createElement(Column, {
-    gap: 0.75
-  }, (impact === null || impact === void 0 ? void 0 : impact.warning) && /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Caption$1, null, "The output amount is estimated at ", impact.toString(), " less than the input amount due to high price impact"), /*#__PURE__*/React__default["default"].createElement(Rule, null)), /*#__PURE__*/React__default["default"].createElement(RoutingDiagram, {
-    trade: trade
-  }))), /*#__PURE__*/React__default["default"].createElement(Price, {
-    trade: trade,
-    outputUSDC: outputUSDC
-  }));
-}
-
-var ToolbarRow = /*#__PURE__*/_styled__default["default"](Row).withConfig({
-  displayName: "Toolbar__ToolbarRow",
-  componentId: "sc-7xbipv-0"
-})(["padding:0.5em 0;", ""], largeIconCss);
-
-var Toolbar = /*#__PURE__*/React.memo(function Toolbar() {
-  var _useActiveWeb3React = useActiveWeb3React(),
-      active = _useActiveWeb3React.active,
-      activating = _useActiveWeb3React.activating,
-      chainId = _useActiveWeb3React.chainId;
-
-  var _useSwapInfo = useSwapInfo(),
-      _useSwapInfo$Field$IN = _useSwapInfo[Field.INPUT],
-      inputCurrency = _useSwapInfo$Field$IN.currency,
-      inputBalance = _useSwapInfo$Field$IN.balance,
-      inputAmount = _useSwapInfo$Field$IN.amount,
-      _useSwapInfo$Field$OU = _useSwapInfo[Field.OUTPUT],
-      outputCurrency = _useSwapInfo$Field$OU.currency,
-      outputUSDC = _useSwapInfo$Field$OU.usdc,
-      _useSwapInfo$trade = _useSwapInfo.trade,
-      trade = _useSwapInfo$trade.trade,
-      state = _useSwapInfo$trade.state,
-      impact = _useSwapInfo.impact;
-
-  var isAmountPopulated = useIsAmountPopulated();
-
-  var _useWrapCallback = useWrapCallback(),
-      wrapType = _useWrapCallback.type;
-
-  var caption = React.useMemo(function () {
-    if (!active || !chainId) {
-      if (activating) return /*#__PURE__*/React__default["default"].createElement(Connecting, null);
-      return /*#__PURE__*/React__default["default"].createElement(ConnectWallet, null);
-    }
-
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
-      return /*#__PURE__*/React__default["default"].createElement(UnsupportedNetwork, null);
-    }
-
-    if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
-        return /*#__PURE__*/React__default["default"].createElement(LoadingTrade, null);
-      }
-
-      if (inputBalance && inputAmount !== null && inputAmount !== void 0 && inputAmount.greaterThan(inputBalance)) {
-        return /*#__PURE__*/React__default["default"].createElement(InsufficientBalance, {
-          currency: inputCurrency
-        });
-      }
-
-      if (wrapType !== WrapType.NONE) {
-        return /*#__PURE__*/React__default["default"].createElement(WrapCurrency, {
-          inputCurrency: inputCurrency,
-          outputCurrency: outputCurrency
-        });
-      }
-
-      if (state === TradeState.NO_ROUTE_FOUND || trade && !trade.swaps) {
-        return /*#__PURE__*/React__default["default"].createElement(InsufficientLiquidity, null);
-      }
-
-      if (trade !== null && trade !== void 0 && trade.inputAmount && trade.outputAmount) {
-        return /*#__PURE__*/React__default["default"].createElement(Trade, {
-          trade: trade,
-          outputUSDC: outputUSDC,
-          impact: impact
-        });
-      }
-
-      if (state === TradeState.INVALID) {
-        return /*#__PURE__*/React__default["default"].createElement(Error$1, null);
-      }
-    }
-
-    return /*#__PURE__*/React__default["default"].createElement(Empty, null);
-  }, [activating, active, chainId, impact, inputAmount, inputBalance, inputCurrency, isAmountPopulated, outputCurrency, outputUSDC, state, trade, wrapType]);
-  return /*#__PURE__*/React__default["default"].createElement(Caption$1, {
-    "data-testid": "toolbar"
-  }, /*#__PURE__*/React__default["default"].createElement(ToolbarRow, {
-    justify: "flex-start",
-    gap: 0.5,
-    iconSize: 4 / 3
-  }, caption));
-});
-
-function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
-
-function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-var IntegrationError = /*#__PURE__*/function (_Error) {
-  _inherits__default["default"](IntegrationError, _Error);
-
-  var _super = _createSuper$1(IntegrationError);
-
-  function IntegrationError(message) {
-    var _this;
-
-    _classCallCheck__default["default"](this, IntegrationError);
-
-    _this = _super.call(this, message);
-    _this.name = 'Integration Error';
-    return _this;
-  }
-
-  return _createClass__default["default"](IntegrationError);
-}( /*#__PURE__*/_wrapNativeSuper__default["default"](Error));
-
-function isAddressOrAddressMap(addressOrMap) {
-  if (_typeof__default["default"](addressOrMap) === 'object') {
-    return Object.values(addressOrMap).every(function (address) {
-      return isAddress(address);
-    });
-  }
-
-  if (typeof addressOrMap === 'string') {
-    return typeof isAddress(addressOrMap) === 'string';
-  }
-
-  return false;
-}
-
-function useValidate(props) {
-  var convenienceFee = props.convenienceFee,
-      convenienceFeeRecipient = props.convenienceFeeRecipient;
-  React.useEffect(function () {
-    if (convenienceFee) {
-      if (convenienceFee > 100 || convenienceFee < 0) {
-        throw new IntegrationError("convenienceFee must be between 0 and 100 (you set it to ".concat(convenienceFee, ")."));
-      }
-
-      if (!convenienceFeeRecipient) {
-        throw new IntegrationError('convenienceFeeRecipient is required when convenienceFee is set.');
-      }
-
-      if (typeof convenienceFeeRecipient === 'string') {
-        if (!isAddress(convenienceFeeRecipient)) {
-          throw new IntegrationError("convenienceFeeRecipient must be a valid address (you set it to ".concat(convenienceFeeRecipient, ")."));
-        }
-      } else if (_typeof__default["default"](convenienceFeeRecipient) === 'object') {
-        Object.values(convenienceFeeRecipient).forEach(function (recipient) {
-          if (!isAddress(recipient)) {
-            var values = Object.values(convenienceFeeRecipient).join(', ');
-            throw new IntegrationError("All values in convenienceFeeRecipient object must be valid addresses (you used ".concat(values, ")."));
-          }
-        });
-      }
-    }
-  }, [convenienceFee, convenienceFeeRecipient]);
-  var defaultInputAmount = props.defaultInputAmount,
-      defaultOutputAmount = props.defaultOutputAmount;
-  React.useEffect(function () {
-    if (defaultOutputAmount && defaultInputAmount) {
-      throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.');
-    }
-
-    if (defaultInputAmount && (isNaN(+defaultInputAmount) || defaultInputAmount < 0)) {
-      throw new IntegrationError("defaultInputAmount must be a positive number (you set it to ".concat(defaultInputAmount, ")"));
-    }
-
-    if (defaultOutputAmount && (isNaN(+defaultOutputAmount) || defaultOutputAmount < 0)) {
-      throw new IntegrationError("defaultOutputAmount must be a positive number (you set it to ".concat(defaultOutputAmount, ")."));
-    }
-  }, [defaultInputAmount, defaultOutputAmount]);
-  var defaultInputTokenAddress = props.defaultInputTokenAddress,
-      defaultOutputTokenAddress = props.defaultOutputTokenAddress;
-  React.useEffect(function () {
-    if (defaultInputTokenAddress && !isAddressOrAddressMap(defaultInputTokenAddress) && defaultInputTokenAddress !== 'NATIVE') {
-      throw new IntegrationError("defaultInputTokenAddress must be a valid address or \"NATIVE\" (you set it to ".concat(defaultInputTokenAddress, ")."));
-    }
-
-    if (defaultOutputTokenAddress && !isAddressOrAddressMap(defaultOutputTokenAddress) && defaultOutputTokenAddress !== 'NATIVE') {
-      throw new IntegrationError("defaultOutputTokenAddress must be a valid address or \"NATIVE\" (you set it to ".concat(defaultOutputTokenAddress, ")."));
-    }
-  }, [defaultInputTokenAddress, defaultOutputTokenAddress]);
-}
-
-function getTransactionFromMap(txs, hash) {
-  if (hash) {
-    var _tx$info, _tx$info2;
-
-    var tx = txs[hash];
-
-    if ((tx === null || tx === void 0 ? void 0 : (_tx$info = tx.info) === null || _tx$info === void 0 ? void 0 : _tx$info.type) === TransactionType.SWAP) {
-      return tx;
-    }
-
-    if ((tx === null || tx === void 0 ? void 0 : (_tx$info2 = tx.info) === null || _tx$info2 === void 0 ? void 0 : _tx$info2.type) === TransactionType.WRAP) {
-      return tx;
-    }
-  }
-
-  return;
-}
-
-function Swap(props) {
-  useValidate(props);
-  useSyncConvenienceFee(props);
-  useSyncTokenDefaults(props);
-
-  var _useActiveWeb3React = useActiveWeb3React(),
-      active = _useActiveWeb3React.active,
-      account = _useActiveWeb3React.account;
-
-  var _useState = React.useState(null),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      wrapper = _useState2[0],
-      setWrapper = _useState2[1];
-
-  var _useAtom = jotai.useAtom(displayTxHashAtom),
-      _useAtom2 = _slicedToArray__default["default"](_useAtom, 2),
-      displayTxHash = _useAtom2[0],
-      setDisplayTxHash = _useAtom2[1];
-
-  var pendingTxs = usePendingTransactions();
-  var displayTx = getTransactionFromMap(pendingTxs, displayTxHash);
-  var onSupportedNetwork = useOnSupportedNetwork();
-  var isDisabled = !(active && onSupportedNetwork);
-  var focused = useHasFocus(wrapper);
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(Header$2, {
-    title: /*#__PURE__*/React__default["default"].createElement(Trans, {
-      id: "Swap"
-    })
-  }, /*#__PURE__*/React__default["default"].createElement(Wallet, {
-    disabled: !active || Boolean(account),
-    onClick: props.onConnectWallet
-  }), /*#__PURE__*/React__default["default"].createElement(Settings, {
-    disabled: isDisabled
-  })), /*#__PURE__*/React__default["default"].createElement("div", {
-    ref: setWrapper
-  }, /*#__PURE__*/React__default["default"].createElement(BoundaryProvider, {
-    value: wrapper
-  }, /*#__PURE__*/React__default["default"].createElement(SwapInfoProvider, {
-    disabled: isDisabled
-  }, /*#__PURE__*/React__default["default"].createElement(Input$1, {
-    disabled: isDisabled,
-    focused: focused,
-    onChange: props.onChange
-  }), /*#__PURE__*/React__default["default"].createElement(ReverseButton, {
-    disabled: isDisabled
-  }), /*#__PURE__*/React__default["default"].createElement(Output, {
-    disabled: isDisabled,
-    focused: focused,
-    onChange: props.onChange
-  }, /*#__PURE__*/React__default["default"].createElement(Toolbar, null))))), displayTx && /*#__PURE__*/React__default["default"].createElement(Dialog, {
-    color: "dialog"
-  }, /*#__PURE__*/React__default["default"].createElement(TransactionStatusDialog, {
-    tx: displayTx,
-    onClose: function onClose() {
-      return setDisplayTxHash();
-    }
-  })));
-}
-
-var _plurals = {
-  'af-ZA': plurals.af,
-  'ar-SA': plurals.ar,
-  'ca-ES': plurals.ca,
-  'cs-CZ': plurals.cs,
-  'da-DK': plurals.da,
-  'de-DE': plurals.de,
-  'el-GR': plurals.el,
-  'en-US': plurals.en,
-  'es-ES': plurals.es,
-  'fi-FI': plurals.fi,
-  'fr-FR': plurals.fr,
-  'he-IL': plurals.he,
-  'hu-HU': plurals.hu,
-  'id-ID': plurals.id,
-  'it-IT': plurals.it,
-  'ja-JP': plurals.ja,
-  'ko-KR': plurals.ko,
-  'nl-NL': plurals.nl,
-  'no-NO': plurals.no,
-  'pl-PL': plurals.pl,
-  'pt-BR': plurals.pt,
-  'pt-PT': plurals.pt,
-  'ro-RO': plurals.ro,
-  'ru-RU': plurals.ru,
-  'sr-SP': plurals.sr,
-  'sv-SE': plurals.sv,
-  'sw-TZ': plurals.sw,
-  'tr-TR': plurals.tr,
-  'uk-UA': plurals.uk,
-  'vi-VN': plurals.vi,
-  'zh-CN': plurals.zh,
-  'zh-TW': plurals.zh,
-  pseudo: plurals.en
-};
-function dynamicActivate(_x) {
-  return _dynamicActivate.apply(this, arguments);
-}
-
-function _dynamicActivate() {
-  _dynamicActivate = _asyncToGenerator__default["default"]( /*#__PURE__*/_regeneratorRuntime__default["default"].mark(function _callee(locale) {
-    var catalog;
-    return _regeneratorRuntime__default["default"].wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            i18n.loadLocaleData(locale, {
-              plurals: function plurals() {
-                return _plurals[locale];
-              }
-            });
-            _context.prev = 1;
-            _context.next = 4;
-            return (function (t) { return Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require(t)); }); })("./locales/".concat(locale, ".js"));
-
-          case 4:
-            catalog = _context.sent;
-            // Bundlers will either export it as default or as a named export named default.
-            i18n.load(locale, catalog.messages || catalog.default.messages);
-            _context.next = 10;
-            break;
-
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](1);
-
-          case 10:
-            i18n.activate(locale);
-
-          case 11:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[1, 8]]);
-  }));
-  return _dynamicActivate.apply(this, arguments);
-}
-
-function Provider(_ref) {
-  var locale = _ref.locale,
-      _ref$forceRenderAfter = _ref.forceRenderAfterLocaleChange,
-      forceRenderAfterLocaleChange = _ref$forceRenderAfter === void 0 ? true : _ref$forceRenderAfter,
-      onActivate = _ref.onActivate,
-      children = _ref.children;
-  React.useEffect(function () {
-    dynamicActivate(locale).then(function () {
-      return onActivate === null || onActivate === void 0 ? void 0 : onActivate(locale);
-    }).catch(function (error) {
-      console.error('Failed to activate locale', locale, error);
-    });
-  }, [locale, onActivate]); // Initialize the locale immediately if it is DEFAULT_LOCALE, so that keys are shown while the translation messages load.
-  // This renders the translation _keys_, not the translation _messages_, which is only acceptable while loading the DEFAULT_LOCALE,
-  // as [there are no "default" messages](https://github.com/lingui/js-lingui/issues/388#issuecomment-497779030).
-  // See https://github.com/lingui/js-lingui/issues/1194#issuecomment-1068488619.
-
-  if (i18n.locale === undefined && locale === DEFAULT_LOCALE) {
-    i18n.loadLocaleData(DEFAULT_LOCALE, {
-      plurals: function plurals() {
-        return _plurals[DEFAULT_LOCALE];
-      }
-    });
-    i18n.load(DEFAULT_LOCALE, {});
-    i18n.activate(DEFAULT_LOCALE);
-  }
-
-  return /*#__PURE__*/React__default["default"].createElement(I18nProvider, {
-    forceRenderOnLocaleChange: forceRenderAfterLocaleChange,
-    i18n: i18n
-  }, children);
-}
-
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf__default["default"](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default["default"](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default["default"](this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -15920,95 +9121,18 @@ var ErrorBoundary = /*#__PURE__*/function (_Component) {
   return ErrorBoundary;
 }(React.Component);
 
-var _templateObject, _templateObject2;
-
-var WidgetWrapper = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "Widget__WidgetWrapper",
-  componentId: "sc-f3lvcb-0"
-})(["-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:rgba(0,0,0,0);background-color:", ";border-radius:", "em;box-sizing:border-box;color:", ";display:flex;flex-direction:column;font-feature-settings:'ss01' on,'ss02' on,'cv01' on,'cv03' on;font-size:16px;font-smooth:always;font-variant:none;height:360px;min-width:300px;padding:0.25em;position:relative;user-select:none;width:", ";*{box-sizing:border-box;font-family:", ";@supports (font-variation-settings:normal){font-family:", ";}}"], function (_ref) {
-  var theme = _ref.theme;
-  return theme.container;
-}, function (_ref2) {
-  var theme = _ref2.theme;
-  return theme.borderRadius;
-}, function (_ref3) {
-  var theme = _ref3.theme;
-  return theme.primary;
-}, function (_ref4) {
-  var width = _ref4.width;
-  return width && (isNaN(Number(width)) ? width : "".concat(width, "px"));
-}, function (_ref5) {
-  var theme = _ref5.theme;
-  return typeof theme.fontFamily === 'string' ? theme.fontFamily : theme.fontFamily.font;
-}, function (_ref6) {
-  var theme = _ref6.theme;
-  return typeof theme.fontFamily === 'string' ? undefined : theme.fontFamily.variable;
-});
-
-var slideIn = _styled.keyframes(_templateObject || (_templateObject = _taggedTemplateLiteral__default["default"](["\n  from {\n    transform: translateY(calc(100% - 0.25em));\n  }\n"])));
-
-var slideOut = _styled.keyframes(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral__default["default"](["\n  to {\n    transform: translateY(calc(100% - 0.25em));\n  }\n"])));
-
-var DialogWrapper = /*#__PURE__*/_styled__default["default"].div.withConfig({
-  displayName: "Widget__DialogWrapper",
-  componentId: "sc-f3lvcb-1"
-})(["border-radius:", "em;height:calc(100% - 0.5em);left:0;margin:0.25em;overflow:hidden;position:absolute;top:0;width:calc(100% - 0.5em);@supports (overflow:clip){overflow:clip;}", "{animation:", " 0.25s ease-in;&.", "{animation:", " 0.25s ease-out;}}"], function (_ref7) {
-  var theme = _ref7.theme;
-  return theme.borderRadius * 0.75;
-}, Modal, slideIn, UNMOUNTING, slideOut);
-
 // const getCustomProvider = () => {
 //   const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/14c73ecdbcaa464585aa7c438fdf6a77')
 //   const jsonRpcEndpoint = 'https://rinkeby.infura.io/v3/14c73ecdbcaa464585aa7c438fdf6a77'
 //   return { provider, jsonRpcEndpoint }
 // }
-function Widget(props) {
+function Wrapper(props) {
   var children = props.children,
-      theme = props.theme,
       provider = props.provider,
       jsonRpcEndpoint = props.jsonRpcEndpoint,
       accounts = props.accounts,
-      userDialog = props.dialog,
-      className = props.className,
       onError = props.onError;
-  var width = React.useMemo(function () {
-    var _props$width;
-
-    if (props.width && props.width < 300) {
-      console.warn("Widget width must be at least 300px (you set it to ".concat(props.width, "). Falling back to 300px."));
-      return 300;
-    }
-
-    return (_props$width = props.width) !== null && _props$width !== void 0 ? _props$width : 360;
-  }, [props.width]);
-  var locale = React.useMemo(function () {
-    var _props$locale;
-
-    if (props.locale && ![].concat(_toConsumableArray__default["default"](SUPPORTED_LOCALES), ['pseudo']).includes(props.locale)) {
-      console.warn("Unsupported locale: ".concat(props.locale, ". Falling back to ").concat(DEFAULT_LOCALE, "."));
-      return DEFAULT_LOCALE;
-    }
-
-    return (_props$locale = props.locale) !== null && _props$locale !== void 0 ? _props$locale : DEFAULT_LOCALE;
-  }, [props.locale]);
-
-  var _useState = React.useState(null),
-      _useState2 = _slicedToArray__default["default"](_useState, 2),
-      dialog = _useState2[0],
-      setDialog = _useState2[1];
-
-  return /*#__PURE__*/React__default["default"].createElement(React.StrictMode, null, /*#__PURE__*/React__default["default"].createElement(ThemeProvider, {
-    theme: theme
-  }, /*#__PURE__*/React__default["default"].createElement(WidgetWrapper, {
-    width: width,
-    className: className
-  }, /*#__PURE__*/React__default["default"].createElement(Provider, {
-    locale: locale
-  }, /*#__PURE__*/React__default["default"].createElement(DialogWrapper, {
-    ref: setDialog
-  }), /*#__PURE__*/React__default["default"].createElement(Provider$1, {
-    value: userDialog || dialog
-  }, /*#__PURE__*/React__default["default"].createElement(ErrorBoundary, {
+  return /*#__PURE__*/React__default["default"].createElement(React.StrictMode, null, /*#__PURE__*/React__default["default"].createElement(ErrorBoundary, {
     onError: onError
   }, /*#__PURE__*/React__default["default"].createElement(reactRedux.Provider, {
     store: store
@@ -16018,16 +9142,87 @@ function Widget(props) {
     accounts: accounts
   }, /*#__PURE__*/React__default["default"].createElement(BlockNumberProvider, null, /*#__PURE__*/React__default["default"].createElement(MulticallUpdater, null), /*#__PURE__*/React__default["default"].createElement(TransactionsUpdater, null), /*#__PURE__*/React__default["default"].createElement(TokenListProvider, {
     list: props.tokenList
-  }, children)))))))))));
+  }, children)))))));
 }
 
-function SwapWidget(props) {
-  return /*#__PURE__*/React__default["default"].createElement(Widget, props, /*#__PURE__*/React__default["default"].createElement(Swap, props));
+var SUPPORTED_LOCALES = [// order as they appear in the language dropdown
+'en-US', 'af-ZA', 'ar-SA', 'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'es-ES', 'fi-FI', 'fr-FR', 'he-IL', 'hu-HU', 'id-ID', 'it-IT', 'ja-JP', 'ko-KR', 'nl-NL', 'no-NO', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sr-SP', 'sv-SE', 'sw-TZ', 'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'];
+var DEFAULT_LOCALE = 'en-US';
+
+var _excluded = ["children"];
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty__default["default"](target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+var reducer = function reducer(state, action) {
+  var _action$uniswap, _action$uniswap2, _action$uniswap3;
+
+  switch (action.type) {
+    case 'setUniswapValues':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        uniswap: _objectSpread(_objectSpread({}, action === null || action === void 0 ? void 0 : action.uniswap), {}, {
+          values: (_action$uniswap = action.uniswap) === null || _action$uniswap === void 0 ? void 0 : _action$uniswap.values
+        })
+      });
+
+    case 'setUniswapInput':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        uniswap: _objectSpread(_objectSpread({}, action === null || action === void 0 ? void 0 : action.uniswap), {}, {
+          input: (_action$uniswap2 = action.uniswap) === null || _action$uniswap2 === void 0 ? void 0 : _action$uniswap2.input
+        })
+      });
+
+    case 'setUniswapOutput':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        uniswap: _objectSpread(_objectSpread({}, action === null || action === void 0 ? void 0 : action.uniswap), {}, {
+          output: (_action$uniswap3 = action.uniswap) === null || _action$uniswap3 === void 0 ? void 0 : _action$uniswap3.output
+        })
+      });
+
+    default:
+      return state;
+  }
+};
+
+var DispatchSwapValues = /*#__PURE__*/React__default["default"].createContext(undefined);
+var initValues = {
+  uniswap: {}
+};
+var SwapValuesContext = /*#__PURE__*/React__default["default"].createContext(initValues);
+var SwapValuesProvider = function SwapValuesProvider(props) {
+  var _useReducer = React.useReducer(reducer, initValues),
+      _useReducer2 = _slicedToArray__default["default"](_useReducer, 2),
+      values = _useReducer2[0],
+      dispatchSwapValues = _useReducer2[1];
+
+  var children = props.children,
+      rest = _objectWithoutProperties__default["default"](props, _excluded);
+
+  return /*#__PURE__*/React__default["default"].createElement(SwapValuesContext.Provider, {
+    value: values
+  }, /*#__PURE__*/React__default["default"].createElement(DispatchSwapValues.Provider, {
+    value: dispatchSwapValues
+  }, /*#__PURE__*/React__default["default"].createElement(Wrapper, rest, /*#__PURE__*/React__default["default"].createElement(Swap, rest, children))));
+};
+var useDispatchSwapValues = function useDispatchSwapValues() {
+  var context = React__default["default"].useContext(DispatchSwapValues);
+
+  if (context === undefined) {
+    throw new Error('useOnChainContract context is missing');
+  }
+
+  return context;
+};
+function useSwapValues() {
+  return React.useContext(SwapValuesContext);
 }
 
 exports.DEFAULT_LOCALE = DEFAULT_LOCALE;
 exports.SUPPORTED_LOCALES = SUPPORTED_LOCALES;
-exports.SwapWidget = SwapWidget;
+exports.SwapValuesProvider = SwapValuesProvider;
 exports.darkTheme = darkTheme;
 exports.defaultTheme = defaultTheme;
 exports.lightTheme = lightTheme;
+exports.useDispatchSwapValues = useDispatchSwapValues;
+exports.useSwapValues = useSwapValues;
