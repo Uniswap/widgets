@@ -11,20 +11,20 @@ import { default as Col } from '../../Column'
 import Row from '../../Row'
 import TokenImg from '../../TokenImg'
 
-const Column = styled(Col)<{ collapsedView: boolean }>`
-  justify-items: ${({ collapsedView }) => (collapsedView ? 'left' : 'center')};
+const Column = styled(Col)<{ collapsedDetails: boolean }>`
+  justify-items: ${({ collapsedDetails }) => (collapsedDetails ? 'center' : 'left')};
 `
 
 interface TokenValueProps {
   input: CurrencyAmount<Currency>
   usdc?: CurrencyAmount<Currency>
-  collapsedView: boolean
+  collapsedDetails: boolean
 }
 
-function TokenValue({ input, usdc, collapsedView, children }: PropsWithChildren<TokenValueProps>) {
+function TokenValue({ input, usdc, collapsedDetails, children }: PropsWithChildren<TokenValueProps>) {
   const { i18n } = useLingui()
   return (
-    <Column justify="flex-start" collapsedView={collapsedView}>
+    <Column justify="flex-start" collapsedDetails={collapsedDetails}>
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2 userSelect>
@@ -49,27 +49,27 @@ interface SummaryProps {
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
-  collapsedView: boolean
+  collapsedDetails: boolean
 }
 
-export default function Summary({ input, output, inputUSDC, outputUSDC, impact, collapsedView }: SummaryProps) {
+export default function Summary({ input, output, inputUSDC, outputUSDC, impact, collapsedDetails }: SummaryProps) {
   const summaryContents = (
     <>
-      <TokenValue input={input} usdc={inputUSDC} collapsedView={collapsedView} />
-      {collapsedView ? <ArrowRight /> : <ArrowDown />}
-      <TokenValue input={output} usdc={outputUSDC} collapsedView={collapsedView}>
+      <TokenValue input={input} usdc={inputUSDC} collapsedDetails={collapsedDetails} />
+      {collapsedDetails ? <ArrowDown /> : <ArrowRight />}
+      <TokenValue input={output} usdc={outputUSDC} collapsedDetails={collapsedDetails}>
         {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
       </TokenValue>
     </>
   )
 
-  if (collapsedView) {
-    return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
-  } else {
+  if (collapsedDetails) {
     return (
-      <Column collapsedView={collapsedView} gap={impact ? 1 : 0.25}>
+      <Column collapsedDetails={collapsedDetails} gap={impact ? 1 : 0.25}>
         {summaryContents}
       </Column>
     )
+  } else {
+    return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
   }
 }
