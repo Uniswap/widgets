@@ -32,7 +32,7 @@ export default function useActiveWeb3React() {
   return web3
 }
 
-export function useUpdateActiveWeb3ReactCallback() {
+function useUpdateActiveWeb3ReactCallback() {
   const { updateWeb3 } = useContext(Web3Context)
   return updateWeb3
 }
@@ -175,6 +175,11 @@ export function useConnect(connection: Web3Connection) {
   const activating = hooks.useIsActivating()
   const chainId = hooks.useChainId()
   const library = hooks.useProvider()
+  console.log('useConnect connection', wallet)
+  console.log('hooks.useChainId()', hooks.useChainId())
+  console.log('hooks.useAccount()', hooks.useAccount())
+  console.log('hooks.useIsActive()', hooks.useIsActive())
+
   const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
 
   const useWallet = useCallback(() => {
@@ -182,6 +187,7 @@ export function useConnect(connection: Web3Connection) {
       wallet.activate()
     } else {
       // wallet should be already be active
+      console.log('Wallet is already active!')
       const updateContext: Web3ContextType = {
         connector: wallet,
         library,

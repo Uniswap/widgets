@@ -17,7 +17,7 @@ const [walletConnect] = initializeConnector<WalletConnect>(
     new WalletConnect({
       actions,
       options: {
-        rpc: INFURA_NETWORK_URLS as { [chainId: number]: string | string[] },
+        rpc: INFURA_NETWORK_URLS as { [chainId: number]: string[] },
       },
     })
 )

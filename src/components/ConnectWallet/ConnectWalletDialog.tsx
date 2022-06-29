@@ -65,7 +65,7 @@ interface ButtonProps {
 const wcQRUriAtom = atom<string | undefined>(undefined)
 
 function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileConnection, onClick }: ButtonProps) {
-  const [tileConnector] = wcTileConnection as [WalletConnect, Web3ReactHooks]
+  const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
   const [error, setError] = useState(undefined)
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
@@ -75,9 +75,9 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     if (QRUri) {
       formatQrCodeImage(QRUri)
     } else {
-      tileConnector.activate().catch(setError)
+      walletConnect.activate().catch(setError)
     }
-  }, [QRUri, tileConnector])
+  }, [QRUri, walletConnect])
 
   useEffect(() => {
     // Log web3 errors
@@ -91,12 +91,12 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
       if (err) console.warn(err)
       // Clear saved QR URI after disconnection
       setQRUri(undefined)
-      tileConnector.deactivate()
+      walletConnect.deactivate()
     }
-    tileConnector.provider?.connector.on('disconnect', disconnectListener)
+    walletConnect.provider?.connector.on('disconnect', disconnectListener)
 
     // Need both URI event listeners
-    tileConnector.events.on(URI_AVAILABLE, async (uri: string) => {
+    walletConnect.events.on(URI_AVAILABLE, async (uri: string) => {
       if (uri) {
         setQRUri(uri)
         await formatQrCodeImage(uri)
@@ -111,11 +111,11 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
         await formatQrCodeImage(uri)
       }
     }
-    tileConnector.provider?.connector.on('display_uri', uriListener)
+    walletConnect.provider?.connector.on('display_uri', uriListener)
 
     return () => {
-      tileConnector.events.off(URI_AVAILABLE)
-      ;(tileConnector.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', uriListener)
+      walletConnect.events.off(URI_AVAILABLE)
+      ;(walletConnect.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', uriListener)
     }
   })
 
@@ -174,7 +174,7 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnection, wcConnectionTile, wcConnectionPopup] = connections
+  const [mmConnection, wcTileConnection, wcPopupConnection] = connections
   // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (
@@ -186,8 +186,8 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             caption="Scan to connect your wallet. Works with most wallets."
-            connection={wcConnectionTile}
-            onClick={useConnect(wcConnectionPopup)}
+            connection={wcTileConnection}
+            onClick={useConnect(wcPopupConnection)}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useConnect(mmConnection)} />
