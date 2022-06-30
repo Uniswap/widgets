@@ -55,7 +55,7 @@ export default function Expando({ title, open, onExpand, height, children }: Pro
         <Rule />
         <Row>
           {title}
-          <IconButton color="secondary" onClick={onExpand} icon={ExpandoIcon} iconProps={{ open }} />
+          <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
         </Row>
         <Rule />
       </HeaderColumn>
