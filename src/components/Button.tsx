@@ -63,7 +63,7 @@ interface IconButtonProps {
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps & ComponentProps<typeof BaseButton>>(
   function IconButton({ icon: Icon, iconProps, ...props }: IconButtonProps & ComponentProps<typeof BaseButton>, ref) {
     return (
-      <SecondaryButton {...props} ref={ref} style={{ transform: 'translateY(2px)' }}>
+      <SecondaryButton {...props} ref={ref} style={{ transform: 'translateY(1.75px)' }}>
         <Icon {...iconProps} />
       </SecondaryButton>
     )
