@@ -8,11 +8,8 @@ import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 const HeaderColumn = styled(Column)`
+  cursor: pointer;
   transition: gap 0.25s;
-
-  :hover {
-    cursor: pointer;
-  }
 `
 
 const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
