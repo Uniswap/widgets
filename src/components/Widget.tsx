@@ -89,6 +89,7 @@ export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
+  // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
   jsonRpcEndpoint?: string | JsonRpcProvider
   tokenList?: string | TokenInfo[]
   width?: string | number
@@ -113,9 +114,8 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
-  // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
   const jsonRpcEndpoint = useMemo(
-    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET]?.[0] ?? '',
+    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET]?.[0],
     [props.jsonRpcEndpoint]
   )
 

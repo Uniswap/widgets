@@ -39,7 +39,7 @@ export function useUpdateActiveWeb3ReactCallback() {
   return updateWeb3
 }
 
-function getNetwork(jsonRpcEndpoint: string | JsonRpcProvider) {
+function getNetwork(jsonRpcEndpoint?: string | JsonRpcProvider) {
   if (jsonRpcEndpoint) {
     let connector, hooks
     if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
@@ -72,7 +72,7 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 export let connections: [Connector, Web3ReactHooks][] = []
 
 interface ActiveWeb3ProviderProps {
-  jsonRpcEndpoint: string | JsonRpcProvider
+  jsonRpcEndpoint?: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
 }
 
@@ -134,14 +134,16 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
   return [connector, hooks]
 }
 
-function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string | JsonRpcProvider) {
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
   }
 
+  console.log('adda')
+
   // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
-  let mainnetRpcUrl: string
+  let mainnetRpcUrl: string | undefined
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     mainnetRpcUrl = jsonRpcEndpoint.connection.url
   } else {
@@ -154,7 +156,10 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint: string
           actions,
           options: {
             rpc: {
-              [SupportedChainId.MAINNET]: mainnetRpcUrl,
+              [SupportedChainId.MAINNET]: [
+                mainnetRpcUrl ?? '',
+                ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
+              ].filter((url) => url !== undefined && url !== ''),
               [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
             },
             qrcode: useDefault,
