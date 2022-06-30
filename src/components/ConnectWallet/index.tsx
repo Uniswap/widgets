@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import useActiveWeb3React, { connections } from 'hooks/connectWeb3/useActiveWeb3React'
 import { useEffect } from 'react'
 

@@ -57,14 +57,13 @@ const StyledNoWalletText = styled(ThemedText.Subhead1)`
 interface ButtonProps {
   walletName?: string
   logoSrc?: string
-  caption?: string
   connection?: Web3Connection
   onClick: () => void
 }
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
 
-function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileConnection, onClick }: ButtonProps) {
+function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
   const [error, setError] = useState(undefined)
 
@@ -123,10 +122,7 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     let result = ''
     const dataString = await QRCode.toString(uri, { margin: 0, type: 'svg' })
     if (typeof dataString === 'string') {
-      result = dataString.replace(
-        '<svg',
-        `<svg class="walletconnect-qrcode_tile" alt="WalletConnect" key="WalletConnect" width="100"`
-      )
+      result = dataString.replace('<svg', `<svg class="walletconnect-qrcode_tile" alt="WalletConnect" width="100"`)
     }
     setQrCodeSvg(result)
   }
@@ -135,12 +131,12 @@ function WalletConnectButton({ walletName, logoSrc, caption, connection: wcTileC
     <StyledMainButton onClick={onClick}>
       <StyledMainButtonRow>
         <ButtonContents>
-          <img src={logoSrc} alt={walletName} key={walletName} width={32} />
+          <img src={logoSrc} alt={walletName} width={32} />
           <ThemedText.Subhead1>
             <Trans>{walletName}</Trans>
           </ThemedText.Subhead1>
           <ThemedText.Caption color="secondary">
-            <Trans>{caption}</Trans>
+            <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
           </ThemedText.Caption>
         </ButtonContents>
         <div dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></div>
@@ -153,7 +149,7 @@ function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
       <ButtonContents>
-        <img src={logoSrc} alt={walletName} key={walletName} width={26} />
+        <img src={logoSrc} alt={walletName} width={26} />
         <ThemedText.Subhead1>
           <Trans>{walletName}</Trans>
         </ThemedText.Subhead1>
@@ -185,7 +181,6 @@ export function ConnectWalletDialog() {
           <WalletConnectButton
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
-            caption="Scan to connect your wallet. Works with most wallets."
             connection={wcTileConnection}
             onClick={useConnect(wcPopupConnection)}
           />
