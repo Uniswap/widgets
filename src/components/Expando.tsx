@@ -9,6 +9,10 @@ import styled from 'styled-components/macro'
 
 const HeaderColumn = styled(Column)`
   transition: gap 0.25s;
+
+  :hover {
+    cursor: pointer;
+  }
 `
 
 const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
@@ -47,7 +51,7 @@ export default function Expando({ title, open, onExpand, height, children }: Pro
   const scrollbar = useScrollbar(scrollingEl)
   return (
     <Column>
-      <HeaderColumn gap={open ? 0.5 : 0.75}>
+      <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
         <Rule />
         <Row>
           {title}
@@ -62,5 +66,4 @@ export default function Expando({ title, open, onExpand, height, children }: Pro
       </ExpandoColumn>
     </Column>
   )
-  return null
 }
