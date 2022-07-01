@@ -33,6 +33,37 @@ function getWallet(provider: JsonRpcProvider | Eip1193Provider) {
   }
 }
 
+function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
+  // TODO(kristiehuang): implement RPC URL fallback, then jsonRpcEndpoint can be optional
+
+  // WalletConnect relies on Buffer, so it must be polyfilled.
+  if (!('Buffer' in window)) {
+    window.Buffer = Buffer
+  }
+
+  let rpcUrl: string
+  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+    rpcUrl = jsonRpcEndpoint.connection.url
+  } else {
+    rpcUrl = jsonRpcEndpoint ?? '' // TODO(kristiehuang): use fallback RPC URL
+  }
+
+  return toWeb3Connection(
+    initializeConnector<WalletConnect>(
+      (actions) =>
+        new WalletConnect({
+          actions,
+          options: {
+            rpc: {
+              1: [rpcUrl].filter((url) => url !== undefined && url !== ''),
+            },
+            qrcode: useDefault,
+          }, // TODO(kristiehuang): WC only works on network chainid 1?
+        })
+    )
+  )
+}
+
 interface ActiveWeb3ProviderProps {
   jsonRpcEndpoint?: string | JsonRpcProvider
   provider?: Eip1193Provider | JsonRpcProvider
@@ -43,49 +74,16 @@ export function ActiveWeb3Provider({
   provider: propsProvider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const getWalletConnectConnection = useCallback((useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) => {
-    // TODO(kristiehuang): implement RPC URL fallback, then jsonRpcEndpoint can be optional
-
-    // WalletConnect relies on Buffer, so it must be polyfilled.
-    if (!('Buffer' in window)) {
-      window.Buffer = Buffer
-    }
-
-    let rpcUrl: string
-    if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-      rpcUrl = jsonRpcEndpoint.connection.url
-    } else {
-      rpcUrl = jsonRpcEndpoint ?? '' // TODO(kristiehuang): use fallback RPC URL
-    }
-
-    return toWeb3Connection(
-      initializeConnector<WalletConnect>(
-        (actions) =>
-          new WalletConnect({
-            actions,
-            options: {
-              rpc: {
-                1: [rpcUrl].filter((url) => url !== undefined && url !== ''),
-              },
-              qrcode: useDefault,
-            }, // TODO(kristiehuang): WC only works on network chainid 1?
-          })
-      )
-    )
-  }, [])
-
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
     []
   )
-  const walletConnectConnectionQR = useMemo(
-    () => getWalletConnectConnection(false, jsonRpcEndpoint),
-    [getWalletConnectConnection, jsonRpcEndpoint]
-  ) // WC via tile QR code scan
+  const walletConnectConnectionQR = useMemo(() => getWalletConnectConnection(false, jsonRpcEndpoint), [jsonRpcEndpoint]) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
     () => getWalletConnectConnection(true, jsonRpcEndpoint),
-    [getWalletConnectConnection, jsonRpcEndpoint]
+    [jsonRpcEndpoint]
   ) // WC via built-in popup
+
   // const networkConnection = useMemo(() => {
   //   let network
   //   console.log(jsonRpcEndpoint)
