@@ -8,7 +8,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, useWalletCallback, Web3Connection } from 'hooks/connectWeb3/useActiveWeb3React'
+import { connections, useConnectCallback, Web3Connection } from 'hooks/connectWeb3/useActiveWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
@@ -181,13 +181,13 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onClick={useWalletCallback(wcPopupConnection)}
+            onClick={useConnectCallback(wcPopupConnection)}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton
               walletName="MetaMask"
               logoSrc={METAMASK_ICON_URL}
-              onClick={useWalletCallback(mmConnection)}
+              onClick={useConnectCallback(mmConnection)}
             />
             <NoWalletButton />
           </SecondaryOptionsRow>

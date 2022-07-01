@@ -167,7 +167,7 @@ function useActiveWalletProvider(): Web3Provider | undefined {
   return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
 }
 
-export function useWalletCallback(connection: Web3Connection) {
+export function useConnectCallback(connection: Web3Connection) {
   const [wallet, hooks] = connection
   const isActive = hooks.useIsActive()
   const accounts = hooks.useAccounts()
@@ -178,7 +178,7 @@ export function useWalletCallback(connection: Web3Connection) {
 
   const updateActiveWeb3ReactCallback = useUpdateActiveWeb3ReactCallback()
 
-  const useWallet = useCallback(() => {
+  const activateWallet = useCallback(() => {
     if (!isActive) {
       wallet.activate()
     } else {
@@ -196,5 +196,5 @@ export function useWalletCallback(connection: Web3Connection) {
     }
   }, [account, accounts, activating, chainId, isActive, library, updateActiveWeb3ReactCallback, wallet])
 
-  return useWallet
+  return activateWallet
 }
