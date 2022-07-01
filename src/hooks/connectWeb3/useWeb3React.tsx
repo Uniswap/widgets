@@ -21,7 +21,8 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
   return [connector, hooks]
 }
 
-function getWallet(provider: JsonRpcProvider | Eip1193Provider) {
+function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
+  if (!provider) return
   if (JsonRpcProvider.isProvider(provider)) {
     return toWeb3Connection(initializeConnector((actions) => new Url({ actions, url: provider })))
   } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
@@ -72,6 +73,7 @@ export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
     []
@@ -83,28 +85,28 @@ export function ActiveWeb3Provider({
   ) // WC via built-in popup
 
   const networkConnection = useMemo(() => {
-    let network: string[] | JsonRpcProvider[]
-    if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-      network = [jsonRpcEndpoint]
-    } else {
-      network = [jsonRpcEndpoint ?? '']
+    if (jsonRpcEndpoint) {
+      const networkRpc = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? [jsonRpcEndpoint] : [jsonRpcEndpoint]
+      const urlMap = { [SupportedChainId.MAINNET]: networkRpc }
+      return toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
     }
-    const urlMap = { [SupportedChainId.MAINNET]: network }
-    const connection = toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
-    connection[0].activate() // Activate network immediately after instantiation
-    return connection
+    return
   }, [jsonRpcEndpoint])
 
-  if (propsProvider) {
+  if (integratorConnection && networkConnection) {
     connections = [
-      getWallet(propsProvider),
+      integratorConnection,
       metaMaskConnection,
       walletConnectConnectionQR,
       walletConnectConnectionPopup,
       networkConnection,
     ]
-  } else {
+  } else if (integratorConnection) {
+    connections = [integratorConnection, metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
+  } else if (networkConnection) {
     connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
+  } else {
+    connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
   }
 
   return <Web3ReactProvider connectors={connections}>{children}</Web3ReactProvider>
@@ -114,11 +116,7 @@ export function useConnectCallback(connection: Web3Connection) {
   const [wallet, hooks] = connection
   const isActive = hooks.useIsActive()
 
-  const activateWallet = useCallback(() => {
-    if (!isActive) {
-      wallet.activate()
-    }
+  return useCallback(() => {
+    if (!isActive) wallet.activate()
   }, [isActive, wallet])
-
-  return activateWallet
 }
