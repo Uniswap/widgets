@@ -8,7 +8,6 @@ import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { PropsWithChildren, useMemo } from 'react'
-import { useCallback } from 'react'
 
 export let connections: [Connector, Web3ReactHooks][] = []
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -91,13 +90,4 @@ export function ActiveWeb3Provider({
   if (networkConnection) connections.push(networkConnection)
 
   return <Web3ReactProvider connectors={connections}>{children}</Web3ReactProvider>
-}
-
-export function useConnectCallback(connection: Web3Connection) {
-  const [wallet, hooks] = connection
-  const isActive = hooks.useIsActive()
-
-  return useCallback(() => {
-    if (!isActive) wallet.activate()
-  }, [isActive, wallet])
 }
