@@ -54,7 +54,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
 
-  const { active } = useActiveWeb3React()
+  const { isActive } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
@@ -62,7 +62,7 @@ export default function Swap(props: SwapProps) {
   const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
   const onSupportedNetwork = useOnSupportedNetwork()
-  const isDisabled = !(active && onSupportedNetwork)
+  const isDisabled = !(isActive && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
 

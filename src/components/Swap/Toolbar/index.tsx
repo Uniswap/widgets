@@ -18,7 +18,7 @@ const ToolbarRow = styled(Row)`
 `
 
 export default memo(function Toolbar() {
-  const { active, activating, chainId } = useActiveWeb3React()
+  const { isActive, isActivating, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
@@ -28,8 +28,8 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
-    if (!active || !chainId) {
-      if (activating) return <Caption.Connecting />
+    if (!isActive || !chainId) {
+      if (isActivating) return <Caption.Connecting />
       return <Caption.ConnectWallet />
     }
 
@@ -60,8 +60,8 @@ export default memo(function Toolbar() {
 
     return <Caption.Empty />
   }, [
-    activating,
-    active,
+    isActivating,
+    isActive,
     chainId,
     impact,
     inputAmount,

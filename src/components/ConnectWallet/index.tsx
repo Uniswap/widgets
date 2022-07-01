@@ -15,9 +15,9 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
     connections.forEach(([wallet, _]) => wallet?.connectEagerly?.())
   }, [])
 
-  const { account, active } = useActiveWeb3React()
+  const { account, isActive } = useActiveWeb3React()
 
-  const isConnected = active && Boolean(account)
+  const isConnected = isActive && Boolean(account)
   return isConnected ? (
     <ConnectedWalletChip disabled={disabled} />
   ) : (
