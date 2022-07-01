@@ -140,8 +140,6 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
     window.Buffer = Buffer
   }
 
-  console.log('adda')
-
   // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
   let mainnetRpcUrl: string | undefined
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
