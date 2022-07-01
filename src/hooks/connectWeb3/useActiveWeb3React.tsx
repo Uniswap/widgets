@@ -167,7 +167,7 @@ function useActiveWalletProvider(): Web3Provider | undefined {
   return getPriorityConnector(...connections).usePriorityProvider() as Web3Provider
 }
 
-export function useConnect(connection: Web3Connection) {
+export function useWalletCallback(connection: Web3Connection) {
   const [wallet, hooks] = connection
   const isActive = hooks.useIsActive()
   const accounts = hooks.useAccounts()

@@ -8,7 +8,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, useConnect, Web3Connection } from 'hooks/connectWeb3/useActiveWeb3React'
+import { connections, useWalletCallback, Web3Connection } from 'hooks/connectWeb3/useActiveWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
@@ -171,7 +171,6 @@ function NoWalletButton() {
 
 export function ConnectWalletDialog() {
   const [mmConnection, wcTileConnection, wcPopupConnection] = connections
-  // TODO(kristiehuang): what happens when I try to connect one wallet without disconnecting the other?
 
   return (
     <>
@@ -182,10 +181,14 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onClick={useConnect(wcPopupConnection)}
+            onClick={useWalletCallback(wcPopupConnection)}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={useConnect(mmConnection)} />
+            <MetaMaskButton
+              walletName="MetaMask"
+              logoSrc={METAMASK_ICON_URL}
+              onClick={useWalletCallback(mmConnection)}
+            />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>
