@@ -6,7 +6,6 @@ import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { Buffer } from 'buffer'
 import { SupportedChainId } from 'constants/chains'
 import { PropsWithChildren, useMemo } from 'react'
 import { useCallback } from 'react'
@@ -34,17 +33,13 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 
 function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
   // TODO(kristiehuang): implement RPC URL fallback, then jsonRpcEndpoint can be optional
-
-  // WalletConnect relies on Buffer, so it must be polyfilled.
-  if (!('Buffer' in window)) {
-    window.Buffer = Buffer
-  }
-
   let rpcUrl: string
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     rpcUrl = jsonRpcEndpoint.connection.url
   } else {
-    rpcUrl = jsonRpcEndpoint ?? '' // TODO(kristiehuang): use fallback RPC URL
+    // TODO(kristiehuang): temporarily needed to instantiate WC if integrator doesn't provide RPC
+    // replace logic when we add in fallback JSON RPC URL
+    rpcUrl = jsonRpcEndpoint ?? 'https://cloudflare-eth.com'
   }
 
   return toWeb3Connection(
@@ -85,29 +80,15 @@ export function ActiveWeb3Provider({
   ) // WC via built-in popup
 
   const networkConnection = useMemo(() => {
-    if (jsonRpcEndpoint) {
-      const networkRpc = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? [jsonRpcEndpoint] : [jsonRpcEndpoint]
-      const urlMap = { [SupportedChainId.MAINNET]: networkRpc }
-      return toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
-    }
-    return
+    if (!jsonRpcEndpoint) return
+    const networkRpc = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? [jsonRpcEndpoint] : [jsonRpcEndpoint]
+    const urlMap = { [SupportedChainId.MAINNET]: networkRpc }
+    return toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
   }, [jsonRpcEndpoint])
 
-  if (integratorConnection && networkConnection) {
-    connections = [
-      integratorConnection,
-      metaMaskConnection,
-      walletConnectConnectionQR,
-      walletConnectConnectionPopup,
-      networkConnection,
-    ]
-  } else if (integratorConnection) {
-    connections = [integratorConnection, metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
-  } else if (networkConnection) {
-    connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
-  } else {
-    connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
-  }
+  connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
+  if (integratorConnection) connections = [integratorConnection, ...connections]
+  if (networkConnection) connections.push(networkConnection)
 
   return <Web3ReactProvider connectors={connections}>{children}</Web3ReactProvider>
 }
