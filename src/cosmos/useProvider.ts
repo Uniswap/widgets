@@ -33,7 +33,7 @@ export default function useProvider() {
     }
 
     async function activateConnector(connectorType: Wallet | undefined) {
-      let connector: Connector
+      let connector: Connector | undefined
       switch (connectorType) {
         case Wallet.MetaMask:
           await metaMask.activate()
