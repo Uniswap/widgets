@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
@@ -27,7 +27,7 @@ interface SwapButtonProps {
 }
 
 export default memo(function SwapButton({ disabled }: SwapButtonProps) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
   const {
     [Field.INPUT]: {
       currency: inputCurrency,

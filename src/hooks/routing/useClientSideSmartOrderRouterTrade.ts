@@ -2,6 +2,7 @@ import 'setimmediate'
 
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
@@ -9,7 +10,6 @@ import { useCallback, useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
-import useActiveWeb3React from '../connectWeb3/useActiveWeb3React'
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import { useGetIsValidBlock } from '../useIsValidBlock'
 import usePoll from '../usePoll'
@@ -66,7 +66,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     useClientSideRouter: true,
   })
   const chainId = amountSpecified?.currency.chainId
-  const { provider } = useActiveWeb3React()
+  const { provider } = useWeb3React()
   const params = useMemo(() => chainId && provider && { chainId, provider }, [chainId, provider])
   const config = useMemo(() => getConfig(chainId), [chainId])
   const { type: wrapType } = useWrapCallback()

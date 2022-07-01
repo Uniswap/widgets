@@ -1,6 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
 import { TextButton } from 'components/Button'
 import Row from 'components/Row'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import Identicon from 'icons/identicon'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -14,7 +14,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
   // TODO(kristiehuang): AccountDialog UI does not yet exist
   // const [open, setOpen] = useState(false)
 
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
 
   return (
     <>

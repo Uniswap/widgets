@@ -1,5 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
 import { largeIconCss } from 'icons'
@@ -18,7 +18,7 @@ const ToolbarRow = styled(Row)`
 `
 
 export default memo(function Toolbar() {
-  const { account, isActive, isActivating, chainId, provider } = useActiveWeb3React()
+  const { account, isActivating, chainId } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
@@ -60,19 +60,19 @@ export default memo(function Toolbar() {
 
     return <Caption.Empty />
   }, [
-    isActivating,
-    isActive,
+    account,
     chainId,
-    impact,
-    inputAmount,
-    inputBalance,
     inputCurrency,
-    isAmountPopulated,
     outputCurrency,
-    outputUSDC,
+    isAmountPopulated,
+    isActivating,
     state,
-    trade,
+    inputBalance,
+    inputAmount,
     wrapType,
+    trade,
+    outputUSDC,
+    impact,
   ])
 
   return (

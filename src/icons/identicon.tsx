@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import IdenticonGradient0 from 'assets/images/identicons/IdenticonGradient-0.png'
 import IdenticonGradient1 from 'assets/images/identicons/IdenticonGradient-1.png'
 import IdenticonGradient2 from 'assets/images/identicons/IdenticonGradient-2.png'
@@ -8,7 +9,6 @@ import IdenticonGradient6 from 'assets/images/identicons/IdenticonGradient-6.png
 import IdenticonGradient7 from 'assets/images/identicons/IdenticonGradient-7.png'
 import IdenticonGradient8 from 'assets/images/identicons/IdenticonGradient-8.png'
 import IdenticonGradient9 from 'assets/images/identicons/IdenticonGradient-9.png'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { useMemo } from 'react'
 
 const gradients = [
@@ -31,7 +31,7 @@ function getGradientIconSrc(account: string) {
 }
 
 export default function IdenticonIcon() {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const iconSrc = useMemo(() => account && getGradientIconSrc(account), [account])
 
   return <img src={iconSrc} alt="account icon" width="16px" height="16px" />

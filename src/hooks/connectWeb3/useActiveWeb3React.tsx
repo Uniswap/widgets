@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { initializeConnector, useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
+import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
@@ -10,10 +10,6 @@ import { Buffer } from 'buffer'
 import { SupportedChainId } from 'constants/chains'
 import { PropsWithChildren, useMemo } from 'react'
 import { useCallback } from 'react'
-
-export default function useActiveWeb3React() {
-  return useWeb3React()
-}
 
 export let connections: [Connector, Web3ReactHooks][] = []
 export type Web3Connection = [Connector, Web3ReactHooks]

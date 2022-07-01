@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
@@ -29,7 +29,7 @@ export function useIsTokenListLoaded() {
 }
 
 export default function useTokenList(): WrappedTokenInfo[] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const chainTokenMap = useChainTokenMapContext()
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
@@ -41,7 +41,7 @@ export default function useTokenList(): WrappedTokenInfo[] {
 export type TokenMap = { [address: string]: Token }
 
 export function useTokenMap(): TokenMap {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const chainTokenMap = useChainTokenMapContext()
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
@@ -65,7 +65,7 @@ export function TokenListProvider({
 
   useEffect(() => setChainTokenMap(undefined), [list])
 
-  const { chainId, provider } = useActiveWeb3React()
+  const { chainId, provider } = useWeb3React()
   const resolver = useCallback(
     (ensName: string) => {
       if (provider && chainId === 1) {

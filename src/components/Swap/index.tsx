@@ -1,8 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import Wallet from 'components/ConnectWallet'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -54,7 +54,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
 
-  const { isActive } = useActiveWeb3React()
+  const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)

@@ -1,9 +1,9 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
 import { nativeOnChain } from 'constants/tokens'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'hooks/multicall'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import JSBI from 'jsbi'
@@ -16,7 +16,7 @@ import { isAddress } from 'utils'
 export function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefined)[]): {
   [address: string]: CurrencyAmount<Currency> | undefined
 } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const multicallContract = useInterfaceMulticall()
 
   const validAddressInputs: [string][] = useMemo(
