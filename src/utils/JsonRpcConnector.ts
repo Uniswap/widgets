@@ -36,5 +36,6 @@ export default class JsonRpcConnector extends Connector {
     } catch (e) {
       this.actions.resetState()
       throw e
+    }
   }
 }
