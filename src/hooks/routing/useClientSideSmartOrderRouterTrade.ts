@@ -66,8 +66,8 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     useClientSideRouter: true,
   })
   const chainId = amountSpecified?.currency.chainId
-  const { library } = useActiveWeb3React()
-  const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
+  const { provider } = useActiveWeb3React()
+  const params = useMemo(() => chainId && provider && { chainId, provider }, [chainId, provider])
   const config = useMemo(() => getConfig(chainId), [chainId])
   const { type: wrapType } = useWrapCallback()
 

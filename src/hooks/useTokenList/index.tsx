@@ -65,15 +65,15 @@ export function TokenListProvider({
 
   useEffect(() => setChainTokenMap(undefined), [list])
 
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, provider } = useActiveWeb3React()
   const resolver = useCallback(
     (ensName: string) => {
-      if (library && chainId === 1) {
-        return resolveENSContentHash(ensName, library)
+      if (provider && chainId === 1) {
+        return resolveENSContentHash(ensName, provider)
       }
       throw new Error('Could not construct mainnet ENS resolver')
     },
-    [chainId, library]
+    [chainId, provider]
   )
 
   useEffect(() => {

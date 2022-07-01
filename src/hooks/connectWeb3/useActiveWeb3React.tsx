@@ -1,31 +1,14 @@
-import { ExternalProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { Eip1193Provider, SupportedChainId } from '@uniswap/widgets'
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { Eip1193Provider } from '@uniswap/widgets'
 import { initializeConnector, useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
-import { EMPTY } from '@web3-react/empty'
 import { MetaMask } from '@web3-react/metamask'
-import { Network } from '@web3-react/network'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { Buffer } from 'buffer'
-import { createContext, PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { useCallback } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
-
-export type Web3ContextType = {
-  connector: Connector
-  library?: (JsonRpcProvider & { provider?: ExternalProvider }) | Web3Provider
-  chainId?: ReturnType<Web3ReactHooks['useChainId']>
-  accounts?: ReturnType<Web3ReactHooks['useAccounts']>
-  account?: ReturnType<Web3ReactHooks['useAccount']>
-  active?: ReturnType<Web3ReactHooks['useIsActive']>
-  activating?: ReturnType<Web3ReactHooks['useIsActivating']>
-}
-
-const [EMPTY_CONNECTOR, EMPTY_HOOKS] = initializeConnector<Connector>(() => EMPTY)
-const EMPTY_WEB3: Web3ContextType = { connector: EMPTY }
-const EMPTY_CONTEXT = { web3: EMPTY_WEB3, updateWeb3: (updateContext: Web3ContextType) => console.log(updateContext) }
-const Web3Context = createContext(EMPTY_CONTEXT)
 
 export default function useActiveWeb3React() {
   return useWeb3React()
@@ -57,7 +40,7 @@ interface ActiveWeb3ProviderProps {
 
 export function ActiveWeb3Provider({
   jsonRpcEndpoint,
-  provider,
+  provider: propsProvider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const getWalletConnectConnection = useCallback((useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) => {
@@ -103,27 +86,28 @@ export function ActiveWeb3Provider({
     () => getWalletConnectConnection(true, jsonRpcEndpoint),
     [getWalletConnectConnection, jsonRpcEndpoint]
   ) // WC via built-in popup
-  const networkConnection = useMemo(() => {
-    let network
-    if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-      network = [jsonRpcEndpoint]
-    } else {
-      network = [jsonRpcEndpoint ?? '']
-    }
-    const urlMap = { [SupportedChainId.MAINNET]: network }
-    return toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
-  }, [jsonRpcEndpoint])
+  // const networkConnection = useMemo(() => {
+  //   let network
+  //   console.log(jsonRpcEndpoint)
+  //   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+  //     network = [jsonRpcEndpoint]
+  //   } else {
+  //     network = [jsonRpcEndpoint ?? '']
+  //   }
+  //   const urlMap = { [SupportedChainId.MAINNET]: network }
+  //   return toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
+  // }, [jsonRpcEndpoint])
 
-  if (provider) {
+  if (propsProvider) {
     connections = [
-      getWallet(provider),
+      getWallet(propsProvider),
       metaMaskConnection,
       walletConnectConnectionQR,
       walletConnectConnectionPopup,
-      networkConnection,
+      // networkConnection,
     ]
   } else {
-    connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
+    connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
   }
 
   return <Web3ReactProvider connectors={connections}>{children}</Web3ReactProvider>
