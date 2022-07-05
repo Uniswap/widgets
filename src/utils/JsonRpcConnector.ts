@@ -13,8 +13,7 @@ export default class JsonRpcConnector extends Connector {
         this.actions.update({ chainId: parseChainId(chainId) })
       })
       .on('disconnect', (error: ProviderRpcError): void => {
-        this.onError?.(error)
-        this.actions.resetState()
+        this.actions.reportError(error)
       })
       .on('chainChanged', (chainId: string): void => {
         this.actions.update({ chainId: parseChainId(chainId) })
@@ -34,8 +33,7 @@ export default class JsonRpcConnector extends Connector {
       ])
       this.actions.update({ chainId, accounts })
     } catch (e) {
-      this.actions.resetState()
-      throw e
+      this.actions.reportError(e)
     }
   }
 }

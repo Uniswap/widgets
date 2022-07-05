@@ -1,4 +1,4 @@
-import useActiveWeb3React, { connections } from 'hooks/connectWeb3/useActiveWeb3React'
+import { connections } from 'hooks/connectWeb3/useConnect'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
@@ -6,21 +6,20 @@ import ConnectWallet from './ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
-  onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
+  account?: string
+  onConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
+export default function Wallet({ disabled, account, onConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
-    connections.forEach(([wallet, _]) => wallet?.connectEagerly?.())
+    connections.forEach(([wallet, _]) => wallet.connectEagerly())
   }, [])
 
-  const { account, active } = useActiveWeb3React()
-
-  const isConnected = active && Boolean(account)
+  const isConnected = Boolean(account)
   return isConnected ? (
-    <ConnectedWalletChip disabled={disabled} />
+    <ConnectedWalletChip disabled={disabled} account={account} />
   ) : (
-    <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onClickConnectWallet} />
+    <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWallet} />
   )
 }
