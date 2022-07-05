@@ -1,10 +1,15 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { useIsPendingApproval } from 'components/Swap/SwapButton/useApprovalData'
+import { useSwapInfo } from 'hooks/swap'
+import { useSwapRouterAddress } from 'hooks/swap/useSwapApproval'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { ApprovalState, useApprovalStateForSpender } from 'hooks/useApproval'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -137,9 +142,25 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
     },
     [onSelect, setOpen]
   )
+
+  const {
+    [Field.INPUT]: { currency, amount: amountIn },
+    trade,
+  } = useSwapInfo()
+  const isInputToken = value && currency?.equals(value)
+  const approvalState = useApprovalStateForSpender(amountIn, useSwapRouterAddress(trade.trade), useIsPendingApproval)
+  const isUnapprovedToken =
+    isInputToken && (approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING)
+
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
+      <TokenButton
+        value={value}
+        collapsed={collapsed}
+        disabled={disabled}
+        isUnapprovedToken={isUnapprovedToken}
+        onClick={onOpen}
+      />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )
