@@ -63,20 +63,39 @@ interface ButtonProps {
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
 
+function toQrCodeSvg(qrUri: string): Promise<string> {
+  return QRCode.toString(qrUri, {
+    margin: 0,
+    // Use 53*2=106 for the width to prevent distortion. The generated viewbox is "0 0 53 53".
+    width: 106,
+    type: 'svg' as const,
+  })
+}
+
 function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
   const [error, setError] = useState(undefined)
 
-  const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
+  const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
 
   useEffect(() => {
-    if (QRUri) {
-      formatQrCodeImage(QRUri)
+    let stale = false
+    if (qrUri) {
+      toQrCodeSvg(qrUri).then((qrCodeSvg) => {
+        if (stale) return
+        setQrCodeSvg(qrCodeSvg)
+      })
     } else {
-      walletConnect.activate().catch(setError)
+      walletConnect.activate().catch((e) => {
+        if (stale) return
+        setError(e)
+      })
     }
-  }, [QRUri, walletConnect])
+    return () => {
+      stale = true
+    }
+  }, [qrUri, walletConnect])
 
   useEffect(() => {
     // Log web3 errors
@@ -89,7 +108,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     const disconnectListener = async (err: Error | null, _: any) => {
       if (err) console.warn(err)
       // Clear saved QR URI after disconnection
-      setQRUri(undefined)
+      setQrUri(undefined)
       walletConnect.deactivate()
     }
     walletConnect.provider?.connector.on('disconnect', disconnectListener)
@@ -97,8 +116,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     // Need both URI event listeners
     walletConnect.events.on(URI_AVAILABLE, async (uri: string) => {
       if (uri) {
-        setQRUri(uri)
-        await formatQrCodeImage(uri)
+        setQrUri(uri)
       }
     })
 
@@ -106,8 +124,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
       if (err) console.warn(err)
       const uri: string = payload.params[0]
       if (uri) {
-        setQRUri(uri)
-        await formatQrCodeImage(uri)
+        setQrUri(uri)
       }
     }
     walletConnect.provider?.connector.on('display_uri', uriListener)
@@ -117,16 +134,6 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
       ;(walletConnect.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', uriListener)
     }
   })
-
-  async function formatQrCodeImage(uri: string) {
-    const options = {
-      margin: 0,
-      width: 106,
-      type: 'svg' as const,
-    }
-    const dataString = await QRCode.toString(uri, options)
-    setQrCodeSvg(dataString)
-  }
 
   return (
     <StyledMainButton onClick={onClick}>
