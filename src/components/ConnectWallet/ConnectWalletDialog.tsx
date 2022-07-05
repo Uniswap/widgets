@@ -13,7 +13,7 @@ import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { Color, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
@@ -68,7 +68,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
   const [error, setError] = useState(undefined)
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
-  const [qrCodeSrc, setQrCodeSrc] = useState<string>('')
+  const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
 
   useEffect(() => {
     if (QRUri) {
@@ -118,16 +118,14 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     }
   })
 
-  function formatQrCodeImage(uri: string) {
+  async function formatQrCodeImage(uri: string) {
     const options = {
       margin: 0,
       width: 106,
-      quality: 1,
+      type: 'svg' as const,
     }
-    QRCode.toDataURL(uri, options, function (err, url) {
-      if (err) throw err
-      setQrCodeSrc(url)
-    })
+    const dataString = await QRCode.toString(uri, options)
+    setQrCodeSvg(dataString)
   }
 
   return (
@@ -142,7 +140,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
             <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
           </ThemedText.Caption>
         </ButtonContents>
-        <img src={qrCodeSrc}></img>
+        <div dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></div>
       </StyledMainButtonRow>
     </StyledMainButton>
   )
