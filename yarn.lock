@@ -4084,6 +4084,14 @@
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.0.19-beta.0"
 
+"@web3-react/network@8.0.26-beta.0":
+  version "8.0.26-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/network/-/network-8.0.26-beta.0.tgz#43582d7652ae3a3785df0d3c3e582b03e6672e72"
+  integrity sha512-8VSYbWYHpGvlJOSXgUduSp+UDUaUU1tx+/9ivMb96TOgeyUqmkbERJzzPiaE3d3Ehe+7y/uvu0+v20tQqlx8Uw==
+  dependencies:
+    "@ethersproject/providers" "^5"
+    "@web3-react/types" "^8.0.19-beta.0"
+
 "@web3-react/store@^8.0.24-beta.0":
   version "8.0.24-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/store/-/store-8.0.24-beta.0.tgz#fb7e25d8478fce8ae95e6f50d7310f97876dc591"
