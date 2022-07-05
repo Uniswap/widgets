@@ -1,6 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import { SupportedChainId } from 'constants/chains'
+import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
 import { TransactionsUpdater } from 'hooks/transactions'
@@ -87,6 +89,7 @@ export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
+  // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
   jsonRpcEndpoint?: string | JsonRpcProvider
   tokenList?: string | TokenInfo[]
   width?: string | number
@@ -96,7 +99,7 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, jsonRpcEndpoint, provider, dialog: userDialog, className, onError } = props
+  const { children, theme, provider, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -111,6 +114,10 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
+  const jsonRpcEndpoint = useMemo(
+    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET]?.[0],
+    [props.jsonRpcEndpoint]
+  )
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

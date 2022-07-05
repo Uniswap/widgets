@@ -7,6 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
+import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { PropsWithChildren, useMemo } from 'react'
 
 export let connections: [Connector, Web3ReactHooks][] = []
@@ -31,16 +32,18 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 }
 
 function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
-  // TODO(kristiehuang): implement RPC URL fallback, then jsonRpcEndpoint can be optional
-  let rpcUrl: string
-  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    rpcUrl = jsonRpcEndpoint.connection.url
-  } else {
-    // TODO(kristiehuang): temporarily needed to instantiate WC if integrator doesn't provide RPC
-    // replace logic when we add in fallback JSON RPC URL
-    rpcUrl = jsonRpcEndpoint ?? 'https://cloudflare-eth.com'
+  // WalletConnect relies on Buffer, so it must be polyfilled.
+  if (!('Buffer' in window)) {
+    window.Buffer = Buffer
   }
 
+  // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
+  let mainnetRpcUrl: string | undefined
+  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
+    mainnetRpcUrl = jsonRpcEndpoint.connection.url
+  } else {
+    mainnetRpcUrl = jsonRpcEndpoint
+  }
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
@@ -48,10 +51,14 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
           actions,
           options: {
             rpc: {
-              1: [rpcUrl].filter((url) => url !== undefined && url !== ''),
+              [SupportedChainId.MAINNET]: [
+                mainnetRpcUrl ?? '',
+                ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
+              ].filter((url) => url !== undefined && url !== ''),
+              [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
             },
             qrcode: useDefault,
-          }, // TODO(kristiehuang): WC only works on network chainid 1?
+          },
         })
     )
   )
