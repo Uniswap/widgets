@@ -17,7 +17,7 @@ const [walletConnect] = initializeConnector<WalletConnect>(
     new WalletConnect({
       actions,
       options: {
-        rpc: INFURA_NETWORK_URLS as { [chainId: number]: string | string[] },
+        rpc: INFURA_NETWORK_URLS as { [chainId: number]: string[] },
       },
     })
 )
@@ -33,7 +33,7 @@ export default function useProvider() {
     }
 
     async function activateConnector(connectorType: Wallet | undefined) {
-      let connector: Connector
+      let connector: Connector | undefined
       switch (connectorType) {
         case Wallet.MetaMask:
           await metaMask.activate()

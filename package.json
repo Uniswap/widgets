@@ -157,6 +157,7 @@
     "@uniswap/v3-periphery": "^1.1.1",
     "@walletconnect/ethereum-provider": "^1.7.1",
     "@web3-react/metamask": "8.0.26-beta.0",
+    "@web3-react/network": "8.0.26-beta.0",
     "@web3-react/walletconnect": "8.0.34-beta.0",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.5",

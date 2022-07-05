@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route, SwapQuoter } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/connectWeb3/useActiveWeb3React'
 import { useSingleContractWithCallData } from 'hooks/multicall'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -35,7 +35,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut)
 
   const quoter = useV3Quoter()
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const callData = useMemo(
     () =>
       amountSpecified
