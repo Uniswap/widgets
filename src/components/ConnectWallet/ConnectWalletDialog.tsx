@@ -98,7 +98,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     walletConnect.events.on(URI_AVAILABLE, async (uri: string) => {
       if (uri) {
         setQRUri(uri)
-        formatQrCodeImage(uri)
+        await formatQrCodeImage(uri)
       }
     })
 
@@ -107,7 +107,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
       const uri: string = payload.params[0]
       if (uri) {
         setQRUri(uri)
-        formatQrCodeImage(uri)
+        await formatQrCodeImage(uri)
       }
     }
     walletConnect.provider?.connector.on('display_uri', uriListener)
