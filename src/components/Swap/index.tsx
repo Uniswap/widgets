@@ -54,7 +54,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
 
-  const { active, account } = useActiveWeb3React()
+  const { active } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
@@ -71,7 +71,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={hideConnectionUI} account={account} onConnectWallet={props.onClickConnectWallet} />
+        <Wallet disabled={hideConnectionUI} onClickConnectWallet={props.onClickConnectWallet} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
