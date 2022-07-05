@@ -13,7 +13,7 @@ import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Color, ThemedText } from 'theme'
 
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
@@ -68,7 +68,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
   const [error, setError] = useState(undefined)
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
-  const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
+  const [qrCodeSrc, setQrCodeSrc] = useState<string>('')
 
   useEffect(() => {
     if (QRUri) {
@@ -98,7 +98,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     walletConnect.events.on(URI_AVAILABLE, async (uri: string) => {
       if (uri) {
         setQRUri(uri)
-        await formatQrCodeImage(uri)
+        formatQrCodeImage(uri)
       }
     })
 
@@ -107,7 +107,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
       const uri: string = payload.params[0]
       if (uri) {
         setQRUri(uri)
-        await formatQrCodeImage(uri)
+        formatQrCodeImage(uri)
       }
     }
     walletConnect.provider?.connector.on('display_uri', uriListener)
@@ -118,13 +118,16 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     }
   })
 
-  async function formatQrCodeImage(uri: string) {
-    let result = ''
-    const dataString = await QRCode.toString(uri, { margin: 0, type: 'svg' })
-    if (typeof dataString === 'string') {
-      result = dataString.replace('<svg', `<svg class="walletconnect-qrcode_tile" alt="WalletConnect" width="100"`)
+  function formatQrCodeImage(uri: string) {
+    const options = {
+      margin: 0,
+      width: 106,
+      quality: 1,
     }
-    setQrCodeSvg(result)
+    QRCode.toDataURL(uri, options, function (err, url) {
+      if (err) throw err
+      setQrCodeSrc(url)
+    })
   }
 
   return (
@@ -139,7 +142,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
             <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
           </ThemedText.Caption>
         </ButtonContents>
-        <div dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></div>
+        <img src={qrCodeSrc}></img>
       </StyledMainButtonRow>
     </StyledMainButton>
   )
@@ -163,7 +166,7 @@ function NoWalletButton() {
   return (
     <StyledSmallButton onClick={() => window.open(helpCenterUrl)}>
       <StyledNoWalletText>
-        <Trans>I don't have a wallet</Trans>
+        <Trans>I don&apos;t have a wallet</Trans>
       </StyledNoWalletText>
     </StyledSmallButton>
   )
