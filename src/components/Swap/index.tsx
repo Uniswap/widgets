@@ -41,6 +41,7 @@ function getTransactionFromMap(
 }
 
 export interface SwapProps extends TokenDefaults, FeeOptions {
+  routerAPIBase?: URL
   onConnectWallet?: () => void
 }
 
