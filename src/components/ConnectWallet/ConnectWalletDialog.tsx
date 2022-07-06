@@ -58,14 +58,14 @@ interface ButtonProps {
   walletName?: string
   logoSrc?: string
   connection?: Web3Connection
+  onError?: (e: Error | undefined) => void
   onClick: () => void
 }
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
 
-function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
+function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onError, onClick }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
-  const [error, setError] = useState(undefined)
 
   const [QRUri, setQRUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
@@ -74,16 +74,9 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     if (QRUri) {
       formatQrCodeImage(QRUri)
     } else {
-      walletConnect.activate().catch(setError)
+      walletConnect.activate().catch(onError)
     }
   }, [QRUri, walletConnect])
-
-  useEffect(() => {
-    // Log web3 errors
-    if (error) {
-      console.error('web3 error:', error)
-    }
-  }, [error])
 
   useEffect(() => {
     const disconnectListener = async (err: Error | null, _: any) => {
@@ -171,6 +164,14 @@ function NoWalletButton() {
 
 export function ConnectWalletDialog() {
   const [mmConnection, wcTileConnection, wcPopupConnection] = connections
+  const [error, setError] = useState<Error>()
+
+  useEffect(() => {
+    // Log web3 errors
+    if (error) {
+      console.error('web3 error:', error)
+    }
+  }, [error])
 
   return (
     <>
@@ -181,13 +182,14 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onClick={() => wcPopupConnection[0].activate()}
+            onError={setError}
+            onClick={() => wcPopupConnection[0].activate()?.catch(setError)}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton
               walletName="MetaMask"
               logoSrc={METAMASK_ICON_URL}
-              onClick={() => mmConnection[0].activate()}
+              onClick={() => mmConnection[0].activate()?.catch(setError)}
             />
             <NoWalletButton />
           </SecondaryOptionsRow>
