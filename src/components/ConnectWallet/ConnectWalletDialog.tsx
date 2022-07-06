@@ -13,7 +13,7 @@ import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { lightTheme, ThemedText } from 'theme'
 
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
@@ -54,6 +54,15 @@ const StyledNoWalletText = styled(ThemedText.Subhead1)`
   white-space: pre-wrap;
 `
 
+const QRCodeWrapper = styled.div`
+  height: 110px;
+  width: 110px;
+  path {
+    /* Maximize contrast: transparent in light theme, otherwise hard-coded to light theme. */
+    fill: ${({ theme }) => (theme.container === lightTheme.container ? '#00000000' : lightTheme.container)};
+  }
+`
+
 interface ButtonProps {
   walletName?: string
   logoSrc?: string
@@ -65,9 +74,10 @@ const wcQRUriAtom = atom<string | undefined>(undefined)
 
 function toQrCodeSvg(qrUri: string): Promise<string> {
   return QRCode.toString(qrUri, {
-    margin: 0,
-    // Use 53*2=106 for the width to prevent distortion. The generated viewbox is "0 0 53 53".
-    width: 106,
+    // Leave a margin to increase contrast in dark mode.
+    margin: 1,
+    // Use 55*2=110 for the width to prevent distortion. The generated viewbox is "0 0 55 55".
+    width: 110,
     type: 'svg' as const,
   })
 }
@@ -147,7 +157,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
             <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
           </ThemedText.Caption>
         </ButtonContents>
-        <div dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></div>
+        <QRCodeWrapper dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></QRCodeWrapper>
       </StyledMainButtonRow>
     </StyledMainButton>
   )
