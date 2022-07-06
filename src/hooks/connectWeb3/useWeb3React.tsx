@@ -8,7 +8,7 @@ import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 
 export let connections: [Connector, Web3ReactHooks][] = []
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -20,18 +20,22 @@ function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3React
   return [connector, hooks]
 }
 
-function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
+function getWallet(setError: (error: Error) => void, provider?: JsonRpcProvider | Eip1193Provider) {
   if (!provider) return
   if (JsonRpcProvider.isProvider(provider)) {
     return toWeb3Connection(initializeConnector((actions) => new Url({ actions, url: provider })))
   } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
     throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
   } else {
-    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider })))
+    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider, onError: setError })))
   }
 }
 
-function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: string | JsonRpcProvider) {
+function getWalletConnectConnection(
+  useDefault: boolean,
+  setError: (error: Error) => void,
+  jsonRpcEndpoint?: string | JsonRpcProvider
+) {
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
@@ -59,6 +63,7 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
             },
             qrcode: useDefault,
           },
+          onError: setError,
         })
     )
   )
@@ -74,14 +79,21 @@ export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
+  const [error, setError] = useState<Error>()
+
+  useEffect(() => error && console.warn(error), [error])
+
+  const integratorConnection = useMemo(() => getWallet(setError, propsProvider), [propsProvider])
   const metaMaskConnection = useMemo(
-    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
+    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError: setError }))),
     []
   )
-  const walletConnectConnectionQR = useMemo(() => getWalletConnectConnection(false, jsonRpcEndpoint), [jsonRpcEndpoint]) // WC via tile QR code scan
+  const walletConnectConnectionQR = useMemo(
+    () => getWalletConnectConnection(false, setError, jsonRpcEndpoint),
+    [jsonRpcEndpoint]
+  ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getWalletConnectConnection(true, jsonRpcEndpoint),
+    () => getWalletConnectConnection(true, setError, jsonRpcEndpoint),
     [jsonRpcEndpoint]
   ) // WC via built-in popup
 

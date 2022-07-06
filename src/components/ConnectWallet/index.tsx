@@ -13,7 +13,17 @@ interface WalletProps {
 export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
-    connections.forEach(([wallet, _]) => (wallet.connectEagerly ? wallet.connectEagerly() : wallet.activate()))
+    connections.forEach(([wallet, _]) => {
+      if (wallet.connectEagerly) {
+        wallet.connectEagerly()?.catch(() => {
+          console.debug('Failed to connect eagerly')
+        })
+      } else {
+        wallet.activate()?.catch(() => {
+          console.debug('Failed to activate')
+        })
+      }
+    })
   }, [])
 
   const { account, isActive } = useWeb3React()
