@@ -24,7 +24,7 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
         })
       }
     })
-  }, [])
+  }, [connections])
 
   const { account, isActive } = useWeb3React()
 
