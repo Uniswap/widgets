@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useClientSideV3Trade } from 'hooks/useClientSideV3Trade'
+import useAutoRouterSupported from 'hooks/routing/useAutoRouterSupported'
+import { useRoutingAPITrade } from 'hooks/routing/useRoutingAPITrade'
+import useDebounce from 'hooks/useDebounce'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import useLast from 'hooks/useLast'
 import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-
-import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
 
 export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 
@@ -16,24 +17,37 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  */
 export function useBestTrade(
   tradeType: TradeType,
-  routerAPIBaseURL?: URL,
+  routerApiBaseUrl?: URL,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
-  const clientSORTradeObject = useClientSideSmartOrderRouterTrade(tradeType, amountSpecified, otherCurrency)
+  const autoRouterSupported = useAutoRouterSupported()
+  const isWindowVisible = useIsWindowVisible()
 
-  const lastTrade = useLast(clientSORTradeObject.trade, Boolean) ?? undefined
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
+    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
+    200
+  )
+
+  const tradeObject = useRoutingAPITrade(
+    tradeType,
+    routerApiBaseUrl,
+    autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
+    debouncedOtherCurrency
+  )
+
+  const lastTrade = useLast(tradeObject.trade, Boolean) ?? undefined
 
   // Return the last trade while syncing/loading to avoid jank from clearing the last trade while loading.
   // If the trade is unsettled and not stale, return the last trade as a placeholder during settling.
   return useMemo(() => {
-    const { state, trade } = clientSORTradeObject
+    const { state, trade } = tradeObject
     // If the trade is in a settled state, return it.
     if (state === TradeState.INVALID) return INVALID_TRADE
-    if ((state !== TradeState.LOADING && state !== TradeState.SYNCING) || trade) return clientSORTradeObject
+    if ((state !== TradeState.LOADING && state !== TradeState.SYNCING) || trade) return tradeObject
 
     const [currencyIn, currencyOut] =
       tradeType === TradeType.EXACT_INPUT
@@ -44,8 +58,8 @@ export function useBestTrade(
     const isStale =
       (currencyIn && !lastTrade?.inputAmount?.currency.equals(currencyIn)) ||
       (currencyOut && !lastTrade?.outputAmount?.currency.equals(currencyOut))
-    if (isStale) return clientSORTradeObject
+    if (isStale) return tradeObject
 
     return { state, trade: lastTrade }
-  }, [amountSpecified?.currency, lastTrade, otherCurrency, clientSORTradeObject, tradeType])
+  }, [amountSpecified?.currency, lastTrade, otherCurrency, tradeObject, tradeType])
 }

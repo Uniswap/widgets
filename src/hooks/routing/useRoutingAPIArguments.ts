@@ -11,12 +11,14 @@ export function useRoutingAPIArguments({
   tokenOut,
   amount,
   tradeType,
+  baseUrl,
   useClientSideRouter,
 }: {
   tokenIn: Currency | undefined
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
+  baseUrl: URL | undefined
   useClientSideRouter: boolean
 }) {
   return useMemo(
@@ -33,6 +35,7 @@ export function useRoutingAPIArguments({
             tokenOutChainId: tokenOut.wrapped.chainId,
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
+            baseUrl,
             useClientSideRouter,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },

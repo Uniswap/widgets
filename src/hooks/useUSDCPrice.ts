@@ -27,6 +27,9 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
+  // TODO: deprecate useV2Quoter & useV3Quoter in favor of SOR.
+  // originally used V2/V3 bc SOR didn't support Polygon but now it does
+
   // TODO(#2808): remove dependency on useBestV2Trade
   const v2USDCTrade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountOut, currency, {
     maxHops: 2,
