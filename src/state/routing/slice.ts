@@ -96,8 +96,6 @@ export const routingApi = createApi({
             // fetch from baseUrl
             result = await fetch(`quote?${query}`)
           } catch (e) {
-            // TODO: fall back to client-side quoter when auto router fails.
-            // deprecate 'legacy' v2/v3 routers first.
             result = await getClientSideQuote()
           }
         }

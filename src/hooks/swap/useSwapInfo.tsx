@@ -9,7 +9,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import { INVALID_TRADE, useBestTrade } from './useBestTrade'
+import { INVALID_TRADE, useRouterTrade } from './useBestTrade'
 import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapField {
@@ -42,7 +42,7 @@ function useComputeSwapInfo(routerApiBaseUrl?: URL): SwapInfo {
     [amount, isExactIn, currencyIn, currencyOut]
   )
   const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
-  const trade = useBestTrade(
+  const trade = useRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     routerApiBaseUrl,
     hasAmounts ? parsedAmount : undefined,

@@ -23,6 +23,7 @@ const DEFAULT_GAS_QUOTE = 2_000_000
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
+// TODO: delete this function & deprecate it after swapping out USDC usage for SOR
 export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
