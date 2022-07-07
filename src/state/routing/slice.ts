@@ -53,12 +53,12 @@ export const routingApi = createApi({
         tokenOutDecimals: number
         tokenOutSymbol?: string
         amount: string
-        baseUrl?: URL
+        baseUrl?: string
         useClientSideRouter: boolean // included in key to invalidate on change
         type: 'exactIn' | 'exactOut'
       }
     >({
-      async queryFn(args, _api, _extraOptions, fetch) {
+      async queryFn(args, _api, _extraOptions) {
         const {
           tokenInAddress,
           tokenInChainId,
@@ -80,7 +80,7 @@ export const routingApi = createApi({
         }
 
         let result
-        if (false) {
+        if (useClientSideRouter) {
           // If integrator did not provide a routing API URL param, use SOR
           result = await getClientSideQuote()
           console.log('get clientside quote', result)
@@ -96,16 +96,21 @@ export const routingApi = createApi({
               amount,
               type,
             })
-            // fetch from baseUrl
-            result = await fetch(`quote?${query}`)
+            const response = await global.fetch(`${baseUrl}quote?${query}`)
+            if (!response.ok) {
+              throw new Error(`${response.statusText}: could not get quote from auto-router API`)
+            }
+            const data = await response.json()
+            result = { data }
             console.log('result from api', result)
           } catch (e) {
+            console.warn(e)
             result = await getClientSideQuote()
             console.log('result from error fallback client', result)
           }
         }
-        if (result.error) return { error: result.error as FetchBaseQueryError }
-        return { data: result.data as GetQuoteResult }
+        if (result?.error) return { error: result.error as FetchBaseQueryError }
+        return { data: result?.data as GetQuoteResult }
       },
       keepUnusedDataFor: ms`10s`,
       extraOptions: {
