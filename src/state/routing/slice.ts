@@ -10,14 +10,16 @@ import qs from 'qs'
 import { GetQuoteResult } from './types'
 
 const routerProviders = new Map<ChainId, BaseProvider>()
+// FIXME: use jsonRpcEndpoint prop & fallback jsonRpcEndpoints here
+
+// cloudflare-eth.com fallback does not support eth_feeHistory, which we need for the router :/
+// is there any downside to just using the (free) flashbots RPC endpoint instead?
 const jsonRpcProvider = new JsonRpcProvider('https://rpc.flashbots.net/')
 function getRouterProvider(chainId: ChainId): BaseProvider {
   const provider = routerProviders.get(chainId)
   if (provider) return provider
 
   if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    // FIXME: use jsonRpcEndpoint & fallback jsonRpcEndpoints here
-    // cloudflare-eth.com fallback does not support eth_feeHistory :///
     const provider = jsonRpcProvider
     routerProviders.set(chainId, provider)
     return provider
