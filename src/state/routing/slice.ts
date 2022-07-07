@@ -1,6 +1,7 @@
 import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+// eslint-disable-next-line no-restricted-imports
 import { ChainId } from '@uniswap/smart-order-router'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'

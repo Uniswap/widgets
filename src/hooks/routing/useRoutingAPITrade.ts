@@ -111,6 +111,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     currencyOut,
     quoteResult,
     isLoading,
+    isFetching,
     tradeType,
     isError,
     route,

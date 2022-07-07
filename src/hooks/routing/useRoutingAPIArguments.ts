@@ -39,6 +39,6 @@ export function useRoutingAPIArguments({
             useClientSideRouter,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },
-    [amount, tokenIn, tokenOut, tradeType, useClientSideRouter]
+    [amount, tokenIn, tokenOut, tradeType, baseUrl, useClientSideRouter]
   )
 }
