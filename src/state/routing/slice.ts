@@ -36,10 +36,7 @@ const DEFAULT_QUERY_PARAMS = {
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
-  // REMOVE BASEURL HERE
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v1/',
-  }),
+  baseQuery: fetchBaseQuery({}),
   endpoints: (build) => ({
     getQuote: build.query<
       GetQuoteResult,
@@ -66,13 +63,12 @@ export const routingApi = createApi({
           tokenOutChainId,
           amount,
           baseUrl,
-          useClientSideRouter, // TODO: remove this param? It simply checks if baseUrl is falsy
+          useClientSideRouter, // TODO(kristiehuang): check with Alex about enabling settings toggle? O/w - remove this param; rn it simply checks if baseUrl is falsy
           type,
         } = args
 
         async function getClientSideQuote() {
           const chainId = args.tokenInChainId
-          // fixme getRouterProvider
           const params = { chainId, provider: getRouterProvider(chainId) }
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
@@ -81,9 +77,8 @@ export const routingApi = createApi({
 
         let result
         if (useClientSideRouter) {
-          // If integrator did not provide a routing API URL param, use SOR
+          // If integrator did not provide a routing API URL param, use client-side SOR
           result = await getClientSideQuote()
-          console.log('get clientside quote', result)
         } else {
           // Try routing API, fallback to SOR
           try {
@@ -102,11 +97,9 @@ export const routingApi = createApi({
             }
             const data = await response.json()
             result = { data }
-            console.log('result from api', result)
           } catch (e) {
             console.warn(e)
             result = await getClientSideQuote()
-            console.log('result from error fallback client', result)
           }
         }
         if (result?.error) return { error: result.error as FetchBaseQueryError }
