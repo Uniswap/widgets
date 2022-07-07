@@ -16,6 +16,7 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  */
 export function useBestTrade(
   tradeType: TradeType,
+  routerAPIBaseURL?: URL,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {

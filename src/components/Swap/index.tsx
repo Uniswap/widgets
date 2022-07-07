@@ -41,7 +41,7 @@ function getTransactionFromMap(
 }
 
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  routerAPIBase?: URL
+  routerAPIBaseURL?: URL
   onConnectWallet?: () => void
 }
 
@@ -70,7 +70,7 @@ export default function Swap(props: SwapProps) {
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <SwapInfoProvider disabled={isDisabled}>
+          <SwapInfoProvider disabled={isDisabled} routerAPIBaseURL={props.routerAPIBaseURL}>
             <Input disabled={isDisabled} focused={focused} />
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
