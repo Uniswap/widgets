@@ -2,7 +2,6 @@ import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
-import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
@@ -10,13 +9,15 @@ import qs from 'qs'
 import { GetQuoteResult } from './types'
 
 const routerProviders = new Map<ChainId, BaseProvider>()
+const jsonRpcProvider = new JsonRpcProvider('https://rpc.flashbots.net/')
 function getRouterProvider(chainId: ChainId): BaseProvider {
   const provider = routerProviders.get(chainId)
   if (provider) return provider
 
   if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
     // FIXME: use jsonRpcEndpoint & fallback jsonRpcEndpoints here
-    const provider = new JsonRpcProvider(INFURA_NETWORK_URLS[chainId])
+    // cloudflare-eth.com fallback does not support eth_feeHistory :///
+    const provider = jsonRpcProvider
     routerProviders.set(chainId, provider)
     return provider
   }
@@ -35,6 +36,7 @@ const DEFAULT_QUERY_PARAMS = {
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
+  // REMOVE BASEURL HERE
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
@@ -78,9 +80,10 @@ export const routingApi = createApi({
         }
 
         let result
-        if (useClientSideRouter) {
+        if (false) {
           // If integrator did not provide a routing API URL param, use SOR
           result = await getClientSideQuote()
+          console.log('get clientside quote', result)
         } else {
           // Try routing API, fallback to SOR
           try {
@@ -95,8 +98,10 @@ export const routingApi = createApi({
             })
             // fetch from baseUrl
             result = await fetch(`quote?${query}`)
+            console.log('result from api', result)
           } catch (e) {
             result = await getClientSideQuote()
+            console.log('result from error fallback client', result)
           }
         }
         if (result.error) return { error: result.error as FetchBaseQueryError }

@@ -25,6 +25,7 @@ export default memo(function Toolbar() {
     trade: { trade, state },
     impact,
   } = useSwapInfo()
+  console.log('trade state is', TradeState[state])
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
