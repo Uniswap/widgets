@@ -20,7 +20,7 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   // TODO: fxn name is misleading: uses API & SOR
   tradeType: TTradeType,
-  routerApiBaseUrl?: URL,
+  routerApiBaseUrl?: string,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
@@ -35,7 +35,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const useClientSideRouter = Boolean(routerApiBaseUrl) // False if URL is '' or undefined
+  const useClientSideRouter = !Boolean(routerApiBaseUrl) // False if URL is '' or undefined
 
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,

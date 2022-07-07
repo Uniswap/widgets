@@ -18,7 +18,7 @@ export function useRoutingAPIArguments({
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
-  baseUrl: URL | undefined
+  baseUrl: string | undefined
   useClientSideRouter: boolean
 }) {
   return useMemo(

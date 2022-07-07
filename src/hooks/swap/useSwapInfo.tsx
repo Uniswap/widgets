@@ -31,7 +31,7 @@ interface SwapInfo {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-function useComputeSwapInfo(routerApiBaseUrl?: URL): SwapInfo {
+function useComputeSwapInfo(routerApiBaseUrl?: string): SwapInfo {
   const { type: wrapType } = useWrapCallback()
   const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
   const { independentField, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
@@ -116,7 +116,7 @@ export function SwapInfoProvider({
   children,
   disabled,
   routerApiBaseUrl,
-}: PropsWithChildren<{ disabled?: boolean; routerApiBaseUrl?: URL }>) {
+}: PropsWithChildren<{ disabled?: boolean; routerApiBaseUrl?: string }>) {
   const swapInfo = useComputeSwapInfo(routerApiBaseUrl)
   if (disabled) {
     return <SwapInfoContext.Provider value={DEFAULT_SWAP_INFO}>{children}</SwapInfoContext.Provider>
