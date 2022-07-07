@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
-import { AUTO_ROUTER_SUPPORTED_CHAINS, getClientSideQuote } from 'hooks/routing/clientSideSmartOrderRouter'
+import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
 
