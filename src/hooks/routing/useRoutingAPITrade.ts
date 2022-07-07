@@ -46,7 +46,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     useClientSideRouter,
   })
 
-  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isLoading, isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -71,8 +71,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
-    if (isLoading && !quoteResult) {
-      // only on first hook render
+    if (isFetching) {
       return {
         state: TradeState.LOADING,
         trade: undefined,
