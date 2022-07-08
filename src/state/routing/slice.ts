@@ -1,26 +1,26 @@
-import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider, JsonRpcBatchProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // eslint-disable-next-line no-restricted-imports
 import { ChainId } from '@uniswap/smart-order-router'
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'hooks/routing/clientSideSmartOrderRouter'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import ms from 'ms.macro'
 import qs from 'qs'
 
 import { GetQuoteResult } from './types'
 
 const routerProviders = new Map<ChainId, BaseProvider>()
-// FIXME: use jsonRpcEndpoint prop & fallback jsonRpcEndpoints here
-
-// cloudflare-eth.com fallback does not support eth_feeHistory, which we need for the router :/
-// is there any downside to just using the (free) flashbots RPC endpoint instead?
-const jsonRpcProvider = new JsonRpcProvider('https://rpc.flashbots.net/')
+// TODO: for fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
+// is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
 function getRouterProvider(chainId: ChainId): BaseProvider {
   const provider = routerProviders.get(chainId)
   if (provider) return provider
 
+  const { library } = useActiveWeb3React()
+
   if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    const provider = jsonRpcProvider
+    const provider = library as JsonRpcBatchProvider
     routerProviders.set(chainId, provider)
     return provider
   }
@@ -39,7 +39,7 @@ const DEFAULT_QUERY_PARAMS = {
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
-  baseQuery: fetchBaseQuery({}),
+  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: (build) => ({
     getQuote: build.query<
       GetQuoteResult,
