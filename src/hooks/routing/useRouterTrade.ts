@@ -29,7 +29,6 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  * @param otherCurrency the desired output/payment currency
  */
 export function useRouterTrade<TTradeType extends TradeType>(
-  // TODO: is function name confusing? We use both API & SOR in getQuote
   tradeType: TTradeType,
   routerApiBaseUrl?: string,
   amountSpecified?: CurrencyAmount<Currency>,
