@@ -35,6 +35,7 @@ export const routingApi = createApi({
         amount: string
         baseUrl?: string
         useClientSideRouter: boolean // included in key to invalidate on change
+        // need a router provider for getClientSideQuote, but we provider dynamically from useActiveWeb3React(), so we need to pass in the provider as arg to queryFn.. but provider (BaseProvider from @ethers) is non-serializable & redux doesn't like that
         provider: BaseProvider
         type: 'exactIn' | 'exactOut'
       }

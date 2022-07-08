@@ -41,17 +41,16 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         : [otherCurrency, amountSpecified?.currency],
     [amountSpecified, otherCurrency, tradeType]
   )
+  const chainId = currencyIn?.chainId as ChainId
+  if (chainId && !AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
+    throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+  }
 
   const useClientSideRouter = !Boolean(routerApiBaseUrl) // False if URL is '' or undefined
 
   // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
   // is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
   const { library } = useActiveWeb3React()
-  const chainId = currencyIn?.chainId as ChainId
-  if (!AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
-  }
-
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
