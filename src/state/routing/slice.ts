@@ -34,7 +34,6 @@ export const routingApi = createApi({
         amount: string
         baseUrl?: string
         useClientSideRouter: boolean // included in key to invalidate on change
-        // FIXME: need a router provider to instantiate a new clientside AlphaRouter, but we get our provider dynamically from useActiveWeb3React(), so we need to pass in the provider as arg to queryFn.. but provider (BaseProvider from @ethers) is non-serializable & redux doesn't like that
         providerUrl: string
         type: 'exactIn' | 'exactOut'
       }
