@@ -1,6 +1,10 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+// eslint-disable-next-line no-restricted-imports
+import { ChainId } from '@uniswap/smart-order-router'
 import { useRoutingAPIArguments } from 'hooks/routing/useRoutingAPIArguments'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 // import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 // import { sendTiming } from 'components/analytics'
@@ -10,6 +14,8 @@ import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
+
+import { AUTO_ROUTER_SUPPORTED_CHAINS } from './clientSideSmartOrderRouter'
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -37,6 +43,14 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   const useClientSideRouter = !Boolean(routerApiBaseUrl) // False if URL is '' or undefined
 
+  // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
+  // is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
+  const { library } = useActiveWeb3React()
+  const chainId = currencyIn?.chainId as ChainId
+  if (!AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
+    throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+  }
+
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -44,6 +58,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     tradeType,
     baseUrl: routerApiBaseUrl,
     useClientSideRouter,
+    provider: library as JsonRpcProvider,
   })
 
   const { isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {

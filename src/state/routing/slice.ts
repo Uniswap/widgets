@@ -1,32 +1,12 @@
-import { BaseProvider, JsonRpcBatchProvider } from '@ethersproject/providers'
+import { BaseProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // eslint-disable-next-line no-restricted-imports
 import { ChainId } from '@uniswap/smart-order-router'
-import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'hooks/routing/clientSideSmartOrderRouter'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import ms from 'ms.macro'
 import qs from 'qs'
 
 import { GetQuoteResult } from './types'
-
-const routerProviders = new Map<ChainId, BaseProvider>()
-// TODO: for fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
-// is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
-function getRouterProvider(chainId: ChainId): BaseProvider {
-  const provider = routerProviders.get(chainId)
-  if (provider) return provider
-
-  const { library } = useActiveWeb3React()
-
-  if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    const provider = library as JsonRpcBatchProvider
-    routerProviders.set(chainId, provider)
-    return provider
-  }
-
-  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
-}
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
@@ -55,6 +35,7 @@ export const routingApi = createApi({
         amount: string
         baseUrl?: string
         useClientSideRouter: boolean // included in key to invalidate on change
+        provider: BaseProvider
         type: 'exactIn' | 'exactOut'
       }
     >({
@@ -67,12 +48,12 @@ export const routingApi = createApi({
           amount,
           baseUrl,
           useClientSideRouter, // TODO(kristiehuang): check with Alex about enabling settings toggle? O/w - remove this param; rn it simply checks if baseUrl is falsy
+          provider,
           type,
         } = args
 
         async function getClientSideQuote() {
-          const chainId = args.tokenInChainId
-          const params = { chainId, provider: getRouterProvider(chainId) }
+          const params = { chainId: tokenInChainId, provider }
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
           ).getClientSideQuote(args, params, { protocols })

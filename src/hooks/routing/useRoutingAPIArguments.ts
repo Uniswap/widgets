@@ -1,3 +1,4 @@
+import { BaseProvider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
@@ -13,6 +14,7 @@ export function useRoutingAPIArguments({
   tradeType,
   baseUrl,
   useClientSideRouter,
+  provider,
 }: {
   tokenIn: Currency | undefined
   tokenOut: Currency | undefined
@@ -20,6 +22,7 @@ export function useRoutingAPIArguments({
   tradeType: TradeType
   baseUrl: string | undefined
   useClientSideRouter: boolean
+  provider: BaseProvider
 }) {
   return useMemo(
     () =>
@@ -37,8 +40,9 @@ export function useRoutingAPIArguments({
             tokenOutSymbol: tokenOut.wrapped.symbol,
             baseUrl,
             useClientSideRouter,
+            provider,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },
-    [amount, tokenIn, tokenOut, tradeType, baseUrl, useClientSideRouter]
+    [amount, tokenIn, tokenOut, tradeType, baseUrl, useClientSideRouter, provider]
   )
 }
