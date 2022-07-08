@@ -1,5 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
+import { EIP1193 } from '@web3-react/eip1193'
+import { Connector } from '@web3-react/types'
+import { Url } from '@web3-react/url'
 import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
@@ -170,7 +173,15 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  const [mmConnection, wcTileConnection, wcPopupConnection] = connections
+  let defaultConnections: [Connector, Web3ReactHooks][]
+  const firstConnector: Connector = connections[0][0]
+  if (firstConnector instanceof EIP1193 || firstConnector instanceof Url) {
+    // If first connector is the integrator-provided connector
+    defaultConnections = connections.slice(1)
+  } else {
+    defaultConnections = connections
+  }
+  const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
 
   return (
     <>

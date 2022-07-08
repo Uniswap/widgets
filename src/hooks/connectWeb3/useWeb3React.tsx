@@ -96,5 +96,9 @@ export function ActiveWeb3Provider({
   if (integratorConnection) connections = [integratorConnection, ...connections]
   if (networkConnection) connections.push(networkConnection)
 
-  return <Web3ReactProvider connectors={connections}>{children}</Web3ReactProvider>
+  return (
+    <Web3ReactProvider connectors={connections} key={connections.length}>
+      {children}
+    </Web3ReactProvider>
+  )
 }
