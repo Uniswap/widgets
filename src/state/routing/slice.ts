@@ -1,4 +1,4 @@
-import { BaseProvider, JsonRpcBatchProvider, JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider, JsonRpcBatchProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // eslint-disable-next-line no-restricted-imports
