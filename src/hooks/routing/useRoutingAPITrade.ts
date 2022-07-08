@@ -6,6 +6,7 @@ import { ChainId } from '@uniswap/smart-order-router'
 import { useRoutingAPIArguments } from 'hooks/routing/useRoutingAPIArguments'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useIsValidBlock from 'hooks/useIsValidBlock'
+// TODO: double-check that we're removing these analytics/metrics packages from widget?
 // import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 // import { sendTiming } from 'components/analytics'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
