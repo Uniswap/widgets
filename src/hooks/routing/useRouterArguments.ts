@@ -6,7 +6,7 @@ import { useMemo } from 'react'
  * query should be skipped. Input arguments do not need to be memoized, as they will
  * be destructured.
  */
-export function useRoutingAPIArguments({
+export function useRouterArguments({
   tokenIn,
   tokenOut,
   amount,

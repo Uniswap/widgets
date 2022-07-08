@@ -52,6 +52,7 @@ export const routingApi = createApi({
         } = args
 
         async function getClientSideQuote() {
+          // Lazy-load the smart order router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
           ).getClientSideQuote(args, providerUrl, { protocols })

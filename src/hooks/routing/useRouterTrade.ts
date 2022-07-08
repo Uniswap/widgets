@@ -2,9 +2,11 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { ChainId } from '@uniswap/smart-order-router'
-import { useRoutingAPIArguments } from 'hooks/routing/useRoutingAPIArguments'
+import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useDebounce from 'hooks/useDebounce'
 import useIsValidBlock from 'hooks/useIsValidBlock'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 // TODO: double-check that we're removing these analytics/metrics packages from widget?
 // import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 // import { sendTiming } from 'components/analytics'
@@ -16,6 +18,9 @@ import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from './clientSideSmartOrderRouter'
+import useAutoRouterSupported from './useAutoRouterSupported'
+
+export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -23,7 +28,7 @@ import { AUTO_ROUTER_SUPPORTED_CHAINS } from './clientSideSmartOrderRouter'
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useRoutingAPITrade<TTradeType extends TradeType>(
+export function useRouterTrade<TTradeType extends TradeType>(
   // TODO: is function name confusing? We use both API & SOR in getQuote
   tradeType: TTradeType,
   routerApiBaseUrl?: string,
@@ -33,31 +38,40 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
+  const autoRouterSupported = useAutoRouterSupported()
+  const isWindowVisible = useIsWindowVisible()
+  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
+  // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
+    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
+    200
+  )
+  const debouncedAmountSpecified = autoRouterSupported && isWindowVisible ? debouncedAmount : undefined
+
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
-        ? [amountSpecified?.currency, otherCurrency]
-        : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+        ? [debouncedAmountSpecified?.currency, debouncedOtherCurrency]
+        : [debouncedOtherCurrency, debouncedAmountSpecified?.currency],
+    [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
   )
+
   const chainId = currencyIn?.chainId as ChainId
   if (chainId && !AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
     throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
   }
 
-  const useClientSideRouter = !Boolean(routerApiBaseUrl) // False if URL is '' or undefined
-
   // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
   // is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
   const { library } = useActiveWeb3React()
   const providerUrl = library?.connection.url || `https://rpc.flashbots.net`
-  const queryArgs = useRoutingAPIArguments({
+  const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
-    amount: amountSpecified,
+    amount: debouncedAmountSpecified,
     tradeType,
     baseUrl: routerApiBaseUrl,
-    useClientSideRouter,
+    useClientSideRouter: !Boolean(routerApiBaseUrl), // False if URL is '' or undefined
     providerUrl,
   })
 

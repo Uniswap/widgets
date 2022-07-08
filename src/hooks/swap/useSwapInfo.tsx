@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { INVALID_TRADE, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
@@ -9,7 +10,6 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import { INVALID_TRADE, useRouterTrade } from './useRouterTrade'
 import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapField {
