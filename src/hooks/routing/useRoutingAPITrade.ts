@@ -18,7 +18,7 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
  * @param otherCurrency the desired output/payment currency
  */
 export function useRoutingAPITrade<TTradeType extends TradeType>(
-  // TODO: fxn name is misleading: uses API & SOR
+  // TODO: is function name confusing? We use both API & SOR in getQuote
   tradeType: TTradeType,
   routerApiBaseUrl?: string,
   amountSpecified?: CurrencyAmount<Currency>,
@@ -46,7 +46,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     useClientSideRouter,
   })
 
-  const { isLoading, isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -110,7 +110,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     currencyIn,
     currencyOut,
     quoteResult,
-    isLoading,
     isFetching,
     tradeType,
     isError,
