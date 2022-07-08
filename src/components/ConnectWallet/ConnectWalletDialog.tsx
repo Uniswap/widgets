@@ -166,7 +166,7 @@ function NoWalletButton() {
   return (
     <StyledSmallButton onClick={() => window.open(helpCenterUrl)}>
       <StyledNoWalletText>
-        <Trans>I don't have a wallet</Trans>
+        <Trans>I don&apos;t have a wallet</Trans>
       </StyledNoWalletText>
     </StyledSmallButton>
   )
