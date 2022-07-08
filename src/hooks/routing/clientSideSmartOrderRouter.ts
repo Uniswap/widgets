@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
@@ -25,9 +26,11 @@ async function getQuote(
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   },
-  routerParams: AlphaRouterParams,
+  providerUrl: string,
   routerConfig: Partial<AlphaRouterConfig>
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
+  const provider = new JsonRpcProvider(providerUrl)
+  const routerParams: AlphaRouterParams = { chainId, provider }
   const router = new AlphaRouter(routerParams)
 
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
@@ -76,7 +79,7 @@ export async function getClientSideQuote(
     amount,
     type,
   }: QuoteArguments,
-  routerParams: AlphaRouterParams,
+  providerUrl: string,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
@@ -97,7 +100,7 @@ export async function getClientSideQuote(
       },
       amount,
     },
-    routerParams,
+    providerUrl,
     routerConfig
   )
 }

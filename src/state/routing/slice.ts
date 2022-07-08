@@ -1,4 +1,3 @@
-import { BaseProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // eslint-disable-next-line no-restricted-imports
@@ -35,8 +34,8 @@ export const routingApi = createApi({
         amount: string
         baseUrl?: string
         useClientSideRouter: boolean // included in key to invalidate on change
-        // need a router provider for getClientSideQuote, but we provider dynamically from useActiveWeb3React(), so we need to pass in the provider as arg to queryFn.. but provider (BaseProvider from @ethers) is non-serializable & redux doesn't like that
-        provider: BaseProvider
+        // FIXME: need a router provider to instantiate a new clientside AlphaRouter, but we get our provider dynamically from useActiveWeb3React(), so we need to pass in the provider as arg to queryFn.. but provider (BaseProvider from @ethers) is non-serializable & redux doesn't like that
+        providerUrl: string
         type: 'exactIn' | 'exactOut'
       }
     >({
@@ -49,15 +48,14 @@ export const routingApi = createApi({
           amount,
           baseUrl,
           useClientSideRouter, // TODO(kristiehuang): check with Alex about enabling settings toggle? O/w - remove this param; rn it simply checks if baseUrl is falsy
-          provider,
+          providerUrl,
           type,
         } = args
 
         async function getClientSideQuote() {
-          const params = { chainId: tokenInChainId, provider }
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
-          ).getClientSideQuote(args, params, { protocols })
+          ).getClientSideQuote(args, providerUrl, { protocols })
         }
 
         let result

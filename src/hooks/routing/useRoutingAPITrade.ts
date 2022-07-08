@@ -1,4 +1,3 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
@@ -51,6 +50,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
   // is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
   const { library } = useActiveWeb3React()
+  const providerUrl = library?.connection.url || `https://rpc.flashbots.net`
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -58,7 +58,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     tradeType,
     baseUrl: routerApiBaseUrl,
     useClientSideRouter,
-    provider: library as JsonRpcProvider,
+    providerUrl,
   })
 
   const { isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
