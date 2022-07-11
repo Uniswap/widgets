@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/macro'
 import { Color } from 'theme'
 
-const Column = styled.div<{
+export interface ColumnProps {
   align?: string
   color?: Color
   justify?: string
@@ -10,7 +10,9 @@ const Column = styled.div<{
   flex?: true
   grow?: true
   css?: ReturnType<typeof css>
-}>`
+}
+
+const Column = styled.div<ColumnProps>`
   align-items: ${({ align }) => align ?? 'center'};
   color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};

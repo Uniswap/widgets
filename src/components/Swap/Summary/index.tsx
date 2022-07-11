@@ -5,7 +5,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
-import Expando from 'components/Expando'
+import BaseExpando from 'components/Expando'
 import Row from 'components/Row'
 import { Slippage } from 'hooks/useSlippage'
 import { PriceImpact } from 'hooks/useUSDCPriceImpact'
@@ -22,6 +22,10 @@ import Summary from './Summary'
 
 export default Summary
 
+const Expando = styled(BaseExpando)`
+  margin-bottom: 3em;
+  transition: gap 0.25s;
+`
 const Content = styled(Column)``
 const Heading = styled(Column)``
 const Footing = styled(Column)``
@@ -137,7 +141,17 @@ function ConfirmButton({
   }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
 
   return (
-    <ActionButton onClick={onClick} action={action}>
+    <ActionButton
+      onClick={onClick}
+      action={action}
+      wrapperProps={{
+        style: {
+          bottom: '0.5em',
+          position: 'absolute',
+          width: 'calc(100% - 1.5em)',
+        },
+      }}
+    >
       <Trans>Confirm swap</Trans>
     </ActionButton>
   )
@@ -175,13 +189,18 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           />
           <Price trade={trade} />
         </Heading>
-        <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
-          <Expando title={<Subhead impact={impact} slippage={slippage} />} open={open} onExpand={onExpand} height={6}>
-            <Details trade={trade} slippage={slippage} impact={impact} />
-            <Estimate trade={trade} slippage={slippage} />
-          </Expando>
-          <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
-        </Column>
+        <Expando
+          title={<Subhead impact={impact} slippage={slippage} />}
+          open={open}
+          onExpand={onExpand}
+          height={6}
+          gap={open ? 0 : 0.75}
+        >
+          <Details trade={trade} slippage={slippage} impact={impact} />
+          <Estimate trade={trade} slippage={slippage} />
+        </Expando>
+
+        <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
       </Body>
     </>
   )

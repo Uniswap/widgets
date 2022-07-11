@@ -7,11 +7,11 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { default as Col } from '../../Column'
+import Column from '../../Column'
 import Row from '../../Row'
 import TokenImg from '../../TokenImg'
 
-const Column = styled(Col)<{ collapsedDetails: boolean }>`
+const CollapsingColumn = styled(Column)<{ collapsedDetails: boolean }>`
   justify-items: ${({ collapsedDetails }) => (collapsedDetails ? 'center' : 'left')};
 `
 
@@ -24,7 +24,7 @@ interface TokenValueProps {
 function TokenValue({ input, usdc, collapsedDetails, children }: PropsWithChildren<TokenValueProps>) {
   const { i18n } = useLingui()
   return (
-    <Column justify="flex-start" collapsedDetails={collapsedDetails}>
+    <CollapsingColumn justify="flex-start" collapsedDetails={collapsedDetails} flex>
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2 userSelect>
@@ -39,7 +39,7 @@ function TokenValue({ input, usdc, collapsedDetails, children }: PropsWithChildr
           </Row>
         </ThemedText.Caption>
       )}
-    </Column>
+    </CollapsingColumn>
   )
 }
 
@@ -65,11 +65,10 @@ export default function Summary({ input, output, inputUSDC, outputUSDC, impact, 
 
   if (collapsedDetails) {
     return (
-      <Column collapsedDetails={collapsedDetails} gap={impact ? 1 : 0.25}>
+      <Column gap={impact ? 1 : 0.25} flex>
         {summaryContents}
       </Column>
     )
-  } else {
-    return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
   }
+  return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
 }
