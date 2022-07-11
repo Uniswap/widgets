@@ -8,9 +8,6 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-// TODO: double-check that we're removing these analytics/metrics packages from widget?
-// import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-// import { sendTiming } from 'components/analytics'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
@@ -61,16 +58,16 @@ export function useRouterTrade<TTradeType extends TradeType>(
   }
 
   // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
-  // is there any downside to just using the (free) flashbots RPC endpoints instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
+  // is there any downside to just using the (free) flashbots RPC endpoints (https://rpc.flashbots.net) instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
   const { library } = useActiveWeb3React()
-  const providerUrl = library?.connection.url || `https://rpc.flashbots.net`
+  const providerUrl = library?.connection.url || ''
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: debouncedAmountSpecified,
     tradeType,
     routerUrl,
-    useClientSideRouter: !Boolean(routerUrl), // False if URL is '' or undefined
+    useClientSideRouter: !Boolean(routerUrl),
     providerUrl,
   })
 
@@ -108,13 +105,10 @@ export function useRouterTrade<TTradeType extends TradeType>(
 
     let otherAmount = undefined
     if (quoteResult) {
-      if (tradeType === TradeType.EXACT_INPUT && currencyOut) {
-        otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-      }
-
-      if (tradeType === TradeType.EXACT_OUTPUT && currencyIn) {
-        otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
-      }
+      otherAmount = CurrencyAmount.fromRawAmount(
+        tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn,
+        quoteResult.quote
+      )
     }
 
     if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
@@ -147,18 +141,3 @@ export function useRouterTrade<TTradeType extends TradeType>(
     isSyncing,
   ])
 }
-
-// We want to remove this from widget right?
-
-// only want to enable this when app hook called
-// class GAMetric extends IMetric {
-//   putDimensions() {
-//     return
-//   }
-
-//   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-//     sendTiming('Routing API', `${key} | ${unit}`, value, 'client')
-//   }
-// }
-
-// setGlobalMetric(new GAMetric())
