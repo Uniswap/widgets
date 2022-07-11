@@ -23,27 +23,21 @@ import Summary from './Summary'
 export default Summary
 
 const Expando = styled(BaseExpando)`
-  margin-bottom: 3em;
+  margin-bottom: 3.2em;
   transition: gap 0.25s;
 `
-const Content = styled(Column)``
-const Heading = styled(Column)``
-const Footing = styled(Column)``
-const Body = styled(Column)<{ open: boolean }>`
+const Heading = styled(Column)`
+  flex-grow: 1;
+  transition: flex-grow 0.25s;
+`
+const Footing = styled(ThemedText.Caption)<{ open: boolean }>`
+  max-height: ${({ open }) => (open ? 0 : '3em')};
+  opacity: ${({ open }) => (open ? 0 : 1)};
+  transition: max-height 0.25s, opacity 0.15s 0.1s;
+  visibility: ${({ open }) => (open ? 'hidden' : undefined)};
+`
+const Body = styled(Column)`
   height: calc(100% - 2.5em);
-
-  ${Content}, ${Heading} {
-    flex-grow: 1;
-    transition: flex-grow 0.25s;
-  }
-
-  ${Footing} {
-    margin-bottom: ${({ open }) => (open ? '-0.75em' : undefined)};
-    max-height: ${({ open }) => (open ? 0 : '3em')};
-    opacity: ${({ open }) => (open ? 0 : 1)};
-    transition: max-height 0.25s, margin-bottom 0.25s, opacity 0.15s 0.1s;
-    visibility: ${({ open }) => (open ? 'hidden' : undefined)};
-  }
 `
 
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
@@ -67,7 +61,13 @@ function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippag
   )
 }
 
-function Estimate({ trade, slippage }: { trade: Trade<Currency, Currency, TradeType>; slippage: Slippage }) {
+interface EstimateProps {
+  open: boolean
+  slippage: Slippage
+  trade: Trade<Currency, Currency, TradeType>
+}
+
+function Estimate({ trade, slippage, open }: EstimateProps) {
   const { i18n } = useLingui()
   const text = useMemo(() => {
     switch (trade.tradeType) {
@@ -90,9 +90,9 @@ function Estimate({ trade, slippage }: { trade: Trade<Currency, Currency, TradeT
     }
   }, [i18n.locale, slippage.allowed, trade])
   return (
-    <ThemedText.Caption color="secondary" marginTop="0.5em" marginBottom="0.5em">
+    <Footing color="secondary" marginTop="0.5em" marginBottom="0.5em" open={open}>
       {text}
-    </ThemedText.Caption>
+    </Footing>
   )
 }
 
@@ -146,7 +146,7 @@ function ConfirmButton({
       action={action}
       wrapperProps={{
         style: {
-          bottom: '0.5em',
+          bottom: '0.25em',
           position: 'absolute',
           width: 'calc(100% - 1.5em)',
         },
@@ -177,7 +177,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
   return (
     <>
       <Header title={<Trans>Swap summary</Trans>} ruled />
-      <Body flex align="stretch" padded gap={0.75} open={open}>
+      <Body flex align="stretch" padded gap={0.75}>
         <Heading gap={0.75} flex justify="center">
           <Summary
             input={inputAmount}
@@ -197,7 +197,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           gap={open ? 0 : 0.75}
         >
           <Details trade={trade} slippage={slippage} impact={impact} />
-          <Estimate trade={trade} slippage={slippage} />
+          <Estimate trade={trade} slippage={slippage} open={open} />
         </Expando>
 
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
