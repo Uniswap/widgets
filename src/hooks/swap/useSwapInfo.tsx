@@ -31,7 +31,7 @@ interface SwapInfo {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-function useComputeSwapInfo(routerApiBaseUrl?: string): SwapInfo {
+function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const { type: wrapType } = useWrapCallback()
   const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
   const { independentField, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
@@ -44,7 +44,7 @@ function useComputeSwapInfo(routerApiBaseUrl?: string): SwapInfo {
   const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
   const trade = useRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    routerApiBaseUrl,
+    routerUrl,
     hasAmounts ? parsedAmount : undefined,
     hasAmounts ? (isExactIn ? currencyOut : currencyIn) : undefined
   )
@@ -115,9 +115,9 @@ const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 export function SwapInfoProvider({
   children,
   disabled,
-  routerApiBaseUrl,
-}: PropsWithChildren<{ disabled?: boolean; routerApiBaseUrl?: string }>) {
-  const swapInfo = useComputeSwapInfo(routerApiBaseUrl)
+  routerUrl,
+}: PropsWithChildren<{ disabled?: boolean; routerUrl?: string }>) {
+  const swapInfo = useComputeSwapInfo(routerUrl)
   if (disabled) {
     return <SwapInfoContext.Provider value={DEFAULT_SWAP_INFO}>{children}</SwapInfoContext.Provider>
   }

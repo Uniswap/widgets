@@ -11,7 +11,7 @@ export function useRouterArguments({
   tokenOut,
   amount,
   tradeType,
-  baseUrl,
+  routerUrl,
   useClientSideRouter,
   providerUrl,
 }: {
@@ -19,7 +19,7 @@ export function useRouterArguments({
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
-  baseUrl: string | undefined
+  routerUrl: string | undefined
   useClientSideRouter: boolean
   providerUrl: string
 }) {
@@ -37,11 +37,11 @@ export function useRouterArguments({
             tokenOutChainId: tokenOut.wrapped.chainId,
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
-            baseUrl,
+            routerUrl,
             useClientSideRouter,
             providerUrl,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },
-    [amount, tokenIn, tokenOut, tradeType, baseUrl, useClientSideRouter, providerUrl]
+    [amount, tokenIn, tokenOut, tradeType, routerUrl, useClientSideRouter, providerUrl]
   )
 }

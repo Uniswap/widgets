@@ -1,7 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-// eslint-disable-next-line no-restricted-imports
-import { ChainId } from '@uniswap/smart-order-router'
+import type { ChainId } from '@uniswap/smart-order-router'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
@@ -17,8 +16,7 @@ import { useGetQuoteQuery } from 'state/routing/slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
-import { AUTO_ROUTER_SUPPORTED_CHAINS } from './clientSideSmartOrderRouter'
-import useAutoRouterSupported from './useAutoRouterSupported'
+import { AUTO_ROUTER_SUPPORTED_CHAINS, useAutoRouterSupported } from './clientSideSmartOrderRouter'
 
 export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 
@@ -30,7 +28,7 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  */
 export function useRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
-  routerApiBaseUrl?: string,
+  routerUrl?: string,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
@@ -69,8 +67,8 @@ export function useRouterTrade<TTradeType extends TradeType>(
     tokenOut: currencyOut,
     amount: debouncedAmountSpecified,
     tradeType,
-    baseUrl: routerApiBaseUrl,
-    useClientSideRouter: !Boolean(routerApiBaseUrl), // False if URL is '' or undefined
+    routerUrl,
+    useClientSideRouter: !Boolean(routerUrl), // False if URL is '' or undefined
     providerUrl,
   })
 

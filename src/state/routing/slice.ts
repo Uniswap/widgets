@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-// eslint-disable-next-line no-restricted-imports
-import { ChainId } from '@uniswap/smart-order-router'
+import type { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -9,15 +8,13 @@ import { GetQuoteResult } from './types'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
+// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
-  // example other params
-  // forceCrossProtocol: 'true',
-  // minSplits: '5',
 }
 
-export const routingApi = createApi({
-  reducerPath: 'routingApi',
+export const routing = createApi({
+  reducerPath: 'routing',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: (build) => ({
     getQuote: build.query<
@@ -32,7 +29,7 @@ export const routingApi = createApi({
         tokenOutDecimals: number
         tokenOutSymbol?: string
         amount: string
-        baseUrl?: string
+        routerUrl?: string
         useClientSideRouter: boolean // included in key to invalidate on change
         providerUrl: string
         type: 'exactIn' | 'exactOut'
@@ -45,8 +42,8 @@ export const routingApi = createApi({
           tokenOutAddress,
           tokenOutChainId,
           amount,
-          baseUrl,
-          useClientSideRouter, // TODO(kristiehuang): check with Alex about enabling settings toggle? O/w - remove this param; rn it simply checks if baseUrl is falsy
+          routerUrl,
+          useClientSideRouter, // TODO(kristiehuang): check with Alex about enabling settings toggle? O/w - remove this param; rn it simply checks if routerUrl is falsy
           providerUrl,
           type,
         } = args
@@ -74,7 +71,7 @@ export const routingApi = createApi({
               amount,
               type,
             })
-            const response = await global.fetch(`${baseUrl}quote?${query}`)
+            const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {
               throw new Error(`${response.statusText}: could not get quote from auto-router API`)
             }
@@ -96,4 +93,4 @@ export const routingApi = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = routingApi
+export const { useGetQuoteQuery } = routing
