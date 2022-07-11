@@ -1,5 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+// Importing just the type, so smart-order-router is lazy-loaded
+// eslint-disable-next-line no-restricted-imports
 import type { ChainId } from '@uniswap/smart-order-router'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
