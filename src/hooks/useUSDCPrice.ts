@@ -2,11 +2,12 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { SupportedChainId } from 'constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from 'constants/tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 import { useBestV2Trade } from './useBestV2Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
+import useLast from './useLast'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -54,11 +55,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     return undefined
   }, [currency, stablecoin, v2USDCTrade, v3USDCTrade.trade])
 
-  const lastPrice = useRef(price)
-  if (!price || !lastPrice.current || !price.equalTo(lastPrice.current)) {
-    lastPrice.current = price
-  }
-  return lastPrice.current
+  return useLast(price, (value, current) => !value || !current || !value.equalTo(current))
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
