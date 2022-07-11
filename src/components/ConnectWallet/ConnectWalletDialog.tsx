@@ -78,7 +78,7 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
     margin: 1,
     // Use 55*2=110 for the width to prevent distortion. The generated viewbox is "0 0 55 55".
     width: 110,
-    type: 'svg' as const,
+    type: 'svg',
   })
 }
 
@@ -157,7 +157,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
             <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
           </ThemedText.Caption>
         </ButtonContents>
-        <QRCodeWrapper dangerouslySetInnerHTML={{ __html: qrCodeSvg }}></QRCodeWrapper>
+        <QRCodeWrapper dangerouslySetInnerHTML={{ __html: qrCodeSvg }} />
       </StyledMainButtonRow>
     </StyledMainButton>
   )
