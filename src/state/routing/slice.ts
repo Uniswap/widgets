@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
-import { SerializeQueryArgs } from '@reduxjs/toolkit/dist/query/defaultSerializeQueryArgs'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -18,7 +17,7 @@ const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
-const serializeRoutingCacheKey: SerializeQueryArgs<any> = ({ endpointName, queryArgs }) => {
+const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: string; queryArgs: any }) => {
   // same as default serializeQueryArgs, but we add extra case if key is our non-serializable JsonRpcProvider
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
     if (key === 'provider') {
