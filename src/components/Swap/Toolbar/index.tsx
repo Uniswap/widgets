@@ -28,6 +28,10 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
+    if (state === TradeState.SYNCING || state === TradeState.LOADING) {
+      return <Caption.LoadingTrade />
+    }
+
     if (!account || !chainId) {
       if (isActivating) return <Caption.Connecting />
       return <Caption.ConnectWallet />
@@ -38,9 +42,6 @@ export default memo(function Toolbar() {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
-        return <Caption.LoadingTrade />
-      }
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
