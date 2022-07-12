@@ -19,7 +19,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 const serializeRoutingCacheKey: SerializeQueryArgs<any> = ({ endpointName, queryArgs }) => {
-  // same as default serializeQueryArgs, but we add extra case for serialization if key is provider
+  // same as default serializeQueryArgs, but we add extra case if key is our non-serializable JsonRpcProvider
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
     if (key === 'provider') {
       return value?.connection?.url
@@ -64,7 +64,7 @@ export const routing = createApi({
           args
 
         async function getClientSideQuote() {
-          // Lazy-load the smart order router to improve initial pageload times.
+          // Lazy-load the clientside router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
           ).getClientSideQuote(args, provider, { protocols })
@@ -72,7 +72,7 @@ export const routing = createApi({
 
         let result
         if (Boolean(routerUrl)) {
-          // Try routing API, fallback to SOR
+          // Try routing API, fallback to clientside SOR
           try {
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
@@ -95,7 +95,7 @@ export const routing = createApi({
             result = await getClientSideQuote()
           }
         } else {
-          // If integrator did not provide a routing API URL param, use client-side SOR
+          // If integrator did not provide a routing API URL param, use clientside SOR
           result = await getClientSideQuote()
         }
         if (result?.error) return { error: result.error as FetchBaseQueryError }
