@@ -23,6 +23,7 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
+ * @param routerUrl the base URL of the integrator's auto router API
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
