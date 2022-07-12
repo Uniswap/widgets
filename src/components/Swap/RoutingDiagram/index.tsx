@@ -1,4 +1,4 @@
-import { Plural, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
@@ -22,7 +22,7 @@ const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
   }
 `
 
-function Header({ routes }: { routes: RoutingDiagramEntry[] }) {
+function Header() {
   return (
     <Row justify="space-between" gap={1}>
       <ThemedText.Subhead2>
@@ -33,9 +33,6 @@ function Header({ routes }: { routes: RoutingDiagramEntry[] }) {
           </StyledAutoRouterLabel>
         </Row>
       </ThemedText.Subhead2>
-      <ThemedText.Body2>
-        <Plural value={routes.length} _1="Best route via 1 hop" other="Best route via # hops" />
-      </ThemedText.Body2>
     </Row>
   )
 }
@@ -130,7 +127,7 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
 
   return (
     <Column gap={0.75}>
-      <Header routes={routes} />
+      <Header />
       <Rule />
       {routes.map((route, index) => (
         <Route key={index} route={route} />
