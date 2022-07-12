@@ -67,7 +67,6 @@ export function useRouterTrade<TTradeType extends TradeType>(
     amount: debouncedAmountSpecified,
     tradeType,
     routerUrl,
-    useClientSideRouter: !Boolean(routerUrl),
     providerUrl,
   })
 

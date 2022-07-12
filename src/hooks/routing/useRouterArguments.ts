@@ -12,7 +12,6 @@ export function useRouterArguments({
   amount,
   tradeType,
   routerUrl,
-  useClientSideRouter,
   providerUrl,
 }: {
   tokenIn: Currency | undefined
@@ -20,7 +19,6 @@ export function useRouterArguments({
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
   routerUrl: string | undefined
-  useClientSideRouter: boolean
   providerUrl: string
 }) {
   return useMemo(
@@ -38,10 +36,9 @@ export function useRouterArguments({
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerUrl,
-            useClientSideRouter,
             providerUrl,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },
-    [amount, tokenIn, tokenOut, tradeType, routerUrl, useClientSideRouter, providerUrl]
+    [amount, tokenIn, tokenOut, tradeType, routerUrl, providerUrl]
   )
 }

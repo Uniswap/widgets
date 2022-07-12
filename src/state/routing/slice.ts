@@ -32,7 +32,6 @@ export const routing = createApi({
         tokenOutSymbol?: string
         amount: string
         routerUrl?: string
-        useClientSideRouter: boolean // included in key to invalidate on change
         providerUrl: string
         type: 'exactIn' | 'exactOut'
       }
@@ -45,7 +44,6 @@ export const routing = createApi({
           tokenOutChainId,
           amount,
           routerUrl,
-          useClientSideRouter, // TODO(kristiehuang): check with Alex about enabling settings toggle? O/w - remove this param; rn it simply checks if routerUrl is falsy
           providerUrl,
           type,
         } = args
@@ -58,10 +56,7 @@ export const routing = createApi({
         }
 
         let result
-        if (useClientSideRouter) {
-          // If integrator did not provide a routing API URL param, use client-side SOR
-          result = await getClientSideQuote()
-        } else {
+        if (Boolean(routerUrl)) {
           // Try routing API, fallback to SOR
           try {
             const query = qs.stringify({
@@ -78,11 +73,15 @@ export const routing = createApi({
               throw new Error(`${response.statusText}: could not get quote from auto-router API`)
             }
             const data = await response.json()
+            console.log(data)
             result = { data }
           } catch (e) {
             console.warn(e)
             result = await getClientSideQuote()
           }
+        } else {
+          // If integrator did not provide a routing API URL param, use client-side SOR
+          result = await getClientSideQuote()
         }
         if (result?.error) return { error: result.error as FetchBaseQueryError }
         return { data: result?.data as GetQuoteResult }
