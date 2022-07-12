@@ -58,8 +58,6 @@ export function useRouterTrade<TTradeType extends TradeType>(
     throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
   }
 
-  // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
-  // is there any downside to just using the (free) flashbots RPC endpoints (https://rpc.flashbots.net) instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
   const { library } = useActiveWeb3React()
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
