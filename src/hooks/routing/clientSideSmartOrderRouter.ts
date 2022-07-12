@@ -32,10 +32,9 @@ async function getQuote(
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   },
-  providerUrl: string,
+  provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
-  const provider = new JsonRpcProvider(providerUrl)
   const routerParams: AlphaRouterParams = { chainId, provider }
   const router = new AlphaRouter(routerParams)
 
@@ -85,7 +84,7 @@ export async function getClientSideQuote(
     amount,
     type,
   }: QuoteArguments,
-  providerUrl: string,
+  provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
@@ -106,7 +105,7 @@ export async function getClientSideQuote(
       },
       amount,
     },
-    providerUrl,
+    provider,
     routerConfig
   )
 }

@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
@@ -12,14 +13,14 @@ export function useRouterArguments({
   amount,
   tradeType,
   routerUrl,
-  providerUrl,
+  provider,
 }: {
   tokenIn: Currency | undefined
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
   routerUrl: string | undefined
-  providerUrl: string
+  provider: JsonRpcProvider
 }) {
   return useMemo(
     () =>
@@ -36,9 +37,9 @@ export function useRouterArguments({
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerUrl,
-            providerUrl,
+            provider,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },
-    [amount, tokenIn, tokenOut, tradeType, routerUrl, providerUrl]
+    [amount, tokenIn, tokenOut, tradeType, routerUrl, provider]
   )
 }

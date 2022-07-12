@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -60,14 +61,13 @@ export function useRouterTrade<TTradeType extends TradeType>(
   // TODO(kristiehuang): after merging in fallback jsonRpcEndpoints, cloudflare-eth.com does not support eth_feeHistory, which we need for the router :/
   // is there any downside to just using the (free) flashbots RPC endpoints (https://rpc.flashbots.net) instead? https://docs.flashbots.net/flashbots-protect/rpc/ratelimiting
   const { library } = useActiveWeb3React()
-  const providerUrl = library?.connection.url || ''
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: debouncedAmountSpecified,
     tradeType,
     routerUrl,
-    providerUrl,
+    provider: library as JsonRpcProvider,
   })
 
   const { isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
