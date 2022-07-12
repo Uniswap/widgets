@@ -4,9 +4,7 @@ import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from 'constan
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo, useRef } from 'react'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
-
-import { useBestV2Trade } from './useBestV2Trade'
-import { useClientSideV3Trade } from './useClientSideV3Trade'
+import { useRouterTrade } from './routing/useRouterTrade'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -20,21 +18,16 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
+ * @param routerUrl the base URL of the integrator's auto router API
  */
-export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
+export default function useUSDCPrice(currency?: Currency, routerUrl?: string): Price<Currency, Token> | undefined {
   const chainId = currency?.chainId
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
-  // TODO: deprecate useV2Quoter & useV3Quoter in favor of SOR.
-  // originally used V2/V3 bc SOR didn't support Polygon but now it does
+  const trade = useRouterTrade(TradeType.EXACT_OUTPUT, routerUrl, amountOut, currency)
 
-  // TODO(#2808): remove dependency on useBestV2Trade
-  const v2USDCTrade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountOut, currency, {
-    maxHops: 2,
-  })
-  const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, currency)
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
@@ -45,17 +38,12 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    // use v2 price if available, v3 as fallback
-    if (v2USDCTrade) {
-      const { numerator, denominator } = v2USDCTrade.route.midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
-    } else if (v3USDCTrade.trade) {
-      const { numerator, denominator } = v3USDCTrade.trade.routes[0].midPrice
+    if (trade?.trade) {
+      const { numerator, denominator } = trade.trade.routes[0].midPrice
       return new Price(currency, stablecoin, denominator, numerator)
     }
-
     return undefined
-  }, [currency, stablecoin, v2USDCTrade, v3USDCTrade.trade])
+  }, [currency, stablecoin, trade.trade])
 
   const lastPrice = useRef(price)
   if (!price || !lastPrice.current || !price.equalTo(lastPrice.current)) {
@@ -64,8 +52,8 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   return lastPrice.current
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
-  const price = useUSDCPrice(currencyAmount?.currency)
+export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null, routerUrl?: string) {
+  const price = useUSDCPrice(currencyAmount?.currency, routerUrl)
 
   return useMemo(() => {
     if (!price || !currencyAmount) return null
