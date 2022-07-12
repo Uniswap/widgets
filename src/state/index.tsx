@@ -10,5 +10,8 @@ const reducer = combineReducers({
 })
 export const store = configureStore({
   reducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: true }).concat(routing.middleware),
+  middleware: (getDefaultMiddleware) =>
+    // in routing, we pass in a non-serializable provider object to queryFn to avoid re-instantiating on every query
+    // since we don't use time-travel debugging nor persistance, we can ignore the serializable check + store non-serializable items in state
+    getDefaultMiddleware({ thunk: true, serializableCheck: false }).concat(routing.middleware),
 })

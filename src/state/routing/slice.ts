@@ -1,3 +1,6 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { isPlainObject } from '@reduxjs/toolkit'
+import { SerializeQueryArgs } from '@reduxjs/toolkit/dist/query/defaultSerializeQueryArgs'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -15,9 +18,29 @@ const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
+const serializeRoutingCacheKey: SerializeQueryArgs<any> = ({ endpointName, queryArgs }) => {
+  // same as default serializeQueryArgs, but we add extra case if key is our non-serializable JsonRpcProvider
+  return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
+    if (key === 'provider') {
+      return value?.connection?.url
+    }
+    if (isPlainObject(value)) {
+      return Object.keys(value)
+        .sort()
+        .reduce<any>((acc, key) => {
+          acc[key] = (value as any)[key]
+          return acc
+        }, {})
+    } else {
+      return value
+    }
+  })})`
+}
+
 export const routing = createApi({
   reducerPath: 'routing',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
+  serializeQueryArgs: serializeRoutingCacheKey,
   endpoints: (build) => ({
     getQuote: build.query<
       GetQuoteResult,
@@ -32,32 +55,24 @@ export const routing = createApi({
         tokenOutSymbol?: string
         amount: string
         routerUrl?: string
-        providerUrl: string
+        provider: JsonRpcProvider
         type: 'exactIn' | 'exactOut'
       }
     >({
       async queryFn(args, _api, _extraOptions) {
-        const {
-          tokenInAddress,
-          tokenInChainId,
-          tokenOutAddress,
-          tokenOutChainId,
-          amount,
-          routerUrl,
-          providerUrl,
-          type,
-        } = args
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerUrl, provider, type } =
+          args
 
         async function getClientSideQuote() {
-          // Lazy-load the smart order router to improve initial pageload times.
+          // Lazy-load the clientside router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
-          ).getClientSideQuote(args, providerUrl, { protocols })
+          ).getClientSideQuote(args, provider, { protocols })
         }
 
         let result
         if (Boolean(routerUrl)) {
-          // Try routing API, fallback to SOR
+          // Try routing API, fallback to clientside SOR
           try {
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
@@ -80,7 +95,7 @@ export const routing = createApi({
             result = await getClientSideQuote()
           }
         } else {
-          // If integrator did not provide a routing API URL param, use client-side SOR
+          // If integrator did not provide a routing API URL param, use clientside SOR
           result = await getClientSideQuote()
         }
         if (result?.error) return { error: result.error as FetchBaseQueryError }
