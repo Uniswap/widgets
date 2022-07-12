@@ -30,11 +30,10 @@ const Heading = styled(Column)`
   flex-grow: 1;
   transition: flex-grow 0.25s;
 `
-const Footing = styled(ThemedText.Caption)<{ open: boolean }>`
-  max-height: ${({ open }) => (open ? 0 : '3em')};
-  opacity: ${({ open }) => (open ? 0 : 1)};
-  transition: max-height 0.25s, opacity 0.15s 0.1s;
-  visibility: ${({ open }) => (open ? 'hidden' : undefined)};
+const StyledEstimate = styled(ThemedText.Caption)`
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  max-height: 3em;
 `
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
@@ -62,12 +61,11 @@ function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippag
 }
 
 interface EstimateProps {
-  open: boolean
   slippage: Slippage
   trade: Trade<Currency, Currency, TradeType>
 }
 
-function Estimate({ trade, slippage, open }: EstimateProps) {
+function Estimate({ trade, slippage }: EstimateProps) {
   const { i18n } = useLingui()
   const text = useMemo(() => {
     switch (trade.tradeType) {
@@ -89,11 +87,7 @@ function Estimate({ trade, slippage, open }: EstimateProps) {
         )
     }
   }, [i18n.locale, slippage.allowed, trade])
-  return (
-    <Footing color="secondary" marginTop="0.5em" marginBottom="0.5em" open={open}>
-      {text}
-    </Footing>
-  )
+  return <StyledEstimate color="secondary">{text}</StyledEstimate>
 }
 
 function ConfirmButton({
@@ -185,7 +179,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
             impact={impact}
-            collapsedDetails={!open}
+            open={open}
           />
           <Price trade={trade} />
         </Heading>
@@ -197,7 +191,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           gap={open ? 0 : 0.75}
         >
           <Details trade={trade} slippage={slippage} impact={impact} />
-          <Estimate trade={trade} slippage={slippage} open={open} />
+          <Estimate trade={trade} slippage={slippage} />
         </Expando>
 
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />

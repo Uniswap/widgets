@@ -11,20 +11,20 @@ import Column from '../../Column'
 import Row from '../../Row'
 import TokenImg from '../../TokenImg'
 
-const CollapsingColumn = styled(Column)<{ collapsedDetails: boolean }>`
-  justify-items: ${({ collapsedDetails }) => (collapsedDetails ? 'center' : 'left')};
+const CollapsingColumn = styled(Column)<{ open: boolean }>`
+  justify-items: ${({ open }) => (open ? 'left' : 'center')};
 `
 
 interface TokenValueProps {
   input: CurrencyAmount<Currency>
   usdc?: CurrencyAmount<Currency>
-  collapsedDetails: boolean
+  open: boolean
 }
 
-function TokenValue({ input, usdc, collapsedDetails, children }: PropsWithChildren<TokenValueProps>) {
+function TokenValue({ input, usdc, open, children }: PropsWithChildren<TokenValueProps>) {
   const { i18n } = useLingui()
   return (
-    <CollapsingColumn justify="flex-start" collapsedDetails={collapsedDetails} flex>
+    <CollapsingColumn justify="flex-start" open={open} flex>
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2 userSelect>
@@ -49,26 +49,26 @@ interface SummaryProps {
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
-  collapsedDetails: boolean
+  open: boolean // if expando is open
 }
 
-export default function Summary({ input, output, inputUSDC, outputUSDC, impact, collapsedDetails }: SummaryProps) {
+export default function Summary({ input, output, inputUSDC, outputUSDC, impact, open }: SummaryProps) {
   const summaryContents = (
     <>
-      <TokenValue input={input} usdc={inputUSDC} collapsedDetails={collapsedDetails} />
-      {collapsedDetails ? <ArrowDown /> : <ArrowRight />}
-      <TokenValue input={output} usdc={outputUSDC} collapsedDetails={collapsedDetails}>
+      <TokenValue input={input} usdc={inputUSDC} open={open} />
+      {open ? <ArrowRight /> : <ArrowDown />}
+      <TokenValue input={output} usdc={outputUSDC} open={open}>
         {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
       </TokenValue>
     </>
   )
 
-  if (collapsedDetails) {
-    return (
-      <Column gap={impact ? 1 : 0.25} flex>
-        {summaryContents}
-      </Column>
-    )
+  if (open) {
+    return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
   }
-  return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
+  return (
+    <Column gap={impact ? 1 : 0.25} flex>
+      {summaryContents}
+    </Column>
+  )
 }
