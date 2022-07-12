@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
-import type { BaseQueryArg, BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { SerializeQueryArgs } from '@reduxjs/toolkit/dist/query/defaultSerializeQueryArgs'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
@@ -20,7 +19,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 const serializeRoutingCacheKey: SerializeQueryArgs<any> = ({ endpointName, queryArgs }) => {
-  // take the query arguments, sort object keys where applicable, stringify the result, and concatenate it with the endpoint name
+  // same as default serializeQueryArgs, but we add extra case for serialization if key is provider
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
     if (key === 'provider') {
       return value?.connection?.url
