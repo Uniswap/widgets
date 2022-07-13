@@ -56,7 +56,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
   )
 
   const currencyChainId = currencyIn?.chainId as ChainId
-  if (!isAutoRouterSupportedChain(currencyChainId)) {
+  if (currencyChainId && !isAutoRouterSupportedChain(currencyChainId)) {
     throw new Error(`Router does not support this token's chain (chainId: ${currencyChainId}).`)
   }
 
