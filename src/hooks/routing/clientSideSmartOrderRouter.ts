@@ -52,7 +52,9 @@ async function getQuote(
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
-  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
+  const data = transformSwapRouteToGetQuoteResult(type, amount, swapRoute)
+  data.isApiResult = false
+  return { data }
 }
 
 interface QuoteArguments {

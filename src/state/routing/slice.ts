@@ -87,6 +87,7 @@ export const routing = createApi({
               throw new Error(`${response.statusText}: could not get quote from auto-router API`)
             }
             const data = await response.json()
+            data.isApiResult = true
             result = { data }
           } catch (e) {
             console.warn(e)

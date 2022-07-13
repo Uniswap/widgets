@@ -66,6 +66,7 @@ export interface GetQuoteResult {
   quoteGasAdjustedDecimals: string
   route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
+  isApiResult?: boolean
 }
 
 export class InterfaceTrade<
