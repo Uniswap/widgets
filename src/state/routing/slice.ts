@@ -97,7 +97,6 @@ export const routing = createApi({
           result = await getClientSideQuote()
         }
         if (result?.error) return { error: result.error as FetchBaseQueryError }
-        console.log(result?.data)
         return { data: result?.data as GetQuoteResult }
       },
       keepUnusedDataFor: ms`10s`,
