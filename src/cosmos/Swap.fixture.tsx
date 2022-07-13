@@ -71,6 +71,7 @@ function Fixture() {
       theme={theme}
       tokenList={tokenList}
       width={width}
+      // onClickConnectWallet={false}
       onClickConnectWallet={() => {
         // e?.preventDefault()
         console.log('integrator provided a onConnectWallet')
