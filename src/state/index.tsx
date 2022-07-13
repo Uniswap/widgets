@@ -12,6 +12,7 @@ export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
     // in routing, we pass in a non-serializable provider object to queryFn to avoid re-instantiating on every query
-    // since we don't use time-travel debugging nor persistance, we can ignore the serializable check + store non-serializable items in state
+    // rtk-query stores original args in state, so we need to turn off serializableCheck
+    // this is OK because we don't use time-travel debugging nor persistance
     getDefaultMiddleware({ thunk: true, serializableCheck: false }).concat(routing.middleware),
 })
