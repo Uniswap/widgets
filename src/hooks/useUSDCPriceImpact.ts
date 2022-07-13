@@ -16,14 +16,15 @@ export interface PriceImpact {
  */
 export default function useUSDCPriceImpact(
   inputAmount: CurrencyAmount<Currency> | undefined,
-  outputAmount: CurrencyAmount<Currency> | undefined
+  outputAmount: CurrencyAmount<Currency> | undefined,
+  routerUrl?: string
 ): {
   inputUSDC?: CurrencyAmount<Token>
   outputUSDC?: CurrencyAmount<Token>
   impact?: PriceImpact
 } {
-  const inputUSDC = useUSDCValue(inputAmount) ?? undefined
-  const outputUSDC = useUSDCValue(outputAmount) ?? undefined
+  const inputUSDC = useUSDCValue(inputAmount, routerUrl) ?? undefined
+  const outputUSDC = useUSDCValue(outputAmount, routerUrl) ?? undefined
   return useMemo(() => {
     const priceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
     const impact = priceImpact
