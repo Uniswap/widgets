@@ -87,7 +87,6 @@ export const routing = createApi({
               throw new Error(`${response.statusText}: could not get quote from auto-router API`)
             }
             const data = await response.json()
-            console.log(data)
             result = { data }
           } catch (e) {
             console.warn(e)
@@ -98,6 +97,7 @@ export const routing = createApi({
           result = await getClientSideQuote()
         }
         if (result?.error) return { error: result.error as FetchBaseQueryError }
+        console.log(result?.data)
         return { data: result?.data as GetQuoteResult }
       },
       keepUnusedDataFor: ms`10s`,

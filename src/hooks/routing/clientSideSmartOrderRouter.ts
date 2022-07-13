@@ -3,18 +3,16 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
 
-export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
+const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
   Number.isInteger(chainId)
 )
 
-export function useAutoRouterSupported(): boolean {
-  const { chainId } = useActiveWeb3React()
+export function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
   return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
 }
 
@@ -44,7 +42,6 @@ async function getQuote(
   const baseCurrency = type === 'exactIn' ? currencyIn : currencyOut
   const quoteCurrency = type === 'exactIn' ? currencyOut : currencyIn
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
-
   const swapRoute = await router.route(
     amount,
     quoteCurrency,

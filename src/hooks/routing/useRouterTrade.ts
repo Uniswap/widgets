@@ -16,7 +16,7 @@ import { useGetQuoteQuery } from 'state/routing/slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
-import { AUTO_ROUTER_SUPPORTED_CHAINS, useAutoRouterSupported } from './clientSideSmartOrderRouter'
+import { isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 
 export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 
@@ -36,7 +36,8 @@ export function useRouterTrade<TTradeType extends TradeType>(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
-  const autoRouterSupported = useAutoRouterSupported()
+  const { chainId, library } = useActiveWeb3React()
+  const autoRouterSupported = isAutoRouterSupportedChain(chainId)
   const isWindowVisible = useIsWindowVisible()
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
   // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
@@ -54,12 +55,11 @@ export function useRouterTrade<TTradeType extends TradeType>(
     [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
   )
 
-  const chainId = currencyIn?.chainId as ChainId
-  if (chainId && !AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
-    throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+  const currencyChainId = currencyIn?.chainId as ChainId
+  if (!isAutoRouterSupportedChain(currencyChainId)) {
+    throw new Error(`Router does not support this token's chain (chainId: ${currencyChainId}).`)
   }
 
-  const { library } = useActiveWeb3React()
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
