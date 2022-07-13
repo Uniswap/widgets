@@ -9,7 +9,6 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { PropsWithChildren, useMemo } from 'react'
-import { json } from 'stream/consumers'
 
 export let connections: [Connector, Web3ReactHooks][] = []
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -99,15 +98,14 @@ export function ActiveWeb3Provider({
   if (networkConnection) {
     networkConnection[0].customProvider?.on('network', (newNetwork, oldNetwork) => {
       // When a Provider makes its initial connection, it emits a "network"
-        // event with a null oldNetwork along with the newNetwork. So, if the
-        // oldNetwork exists, it represents a changing network
-        if (oldNetwork) {
-          window.location.reload();
+      // event with a null oldNetwork along with the newNetwork. So, if the
+      // oldNetwork exists, it represents a changing network
+      if (oldNetwork) {
+        window.location.reload()
       }
     })
     connections.push(networkConnection)
   }
-
 
   return (
     <Web3ReactProvider connectors={connections} key={'' + connections.length + jsonRpcEndpoint}>
