@@ -4,6 +4,7 @@ import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from 'constan
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo, useRef } from 'react'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
+
 import { useRouterTrade } from './routing/useRouterTrade'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
