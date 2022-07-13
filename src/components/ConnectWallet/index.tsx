@@ -7,7 +7,7 @@ import ConnectWallet from './ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
-  onClickConnectWallet?: false | ((e?: React.MouseEvent<HTMLButtonElement>) => void)
+  onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
