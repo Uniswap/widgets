@@ -87,9 +87,12 @@ export function ActiveWeb3Provider({
 
   const networkConnection = useMemo(() => {
     if (!jsonRpcEndpoint) return
+    console.log('json', jsonRpcEndpoint)
     const networkRpc = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? [jsonRpcEndpoint] : [jsonRpcEndpoint]
     const urlMap = { [SupportedChainId.MAINNET]: networkRpc }
-    return toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
+    const c = toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
+    c[0].activate()
+    return c
   }, [jsonRpcEndpoint])
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
