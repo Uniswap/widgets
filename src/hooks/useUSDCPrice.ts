@@ -19,15 +19,14 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
- * @param routerUrl the base URL of the integrator's auto router API
  */
-export default function useUSDCPrice(currency?: Currency, routerUrl?: string): Price<Currency, Token> | undefined {
+export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const chainId = currency?.chainId
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
-  const trade = useRouterTrade(TradeType.EXACT_OUTPUT, routerUrl, amountOut, currency)
+  const trade = useRouterTrade(TradeType.EXACT_OUTPUT, undefined, amountOut, currency)
 
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
@@ -53,8 +52,8 @@ export default function useUSDCPrice(currency?: Currency, routerUrl?: string): P
   return lastPrice.current
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null, routerUrl?: string) {
-  const price = useUSDCPrice(currencyAmount?.currency, routerUrl)
+export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
+  const price = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {
     if (!price || !currencyAmount) return null
