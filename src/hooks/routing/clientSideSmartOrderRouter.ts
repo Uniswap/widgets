@@ -50,7 +50,8 @@ async function getQuote(
     routerConfig
   )
 
-  if (!swapRoute) throw new Error('Failed to generate client side quote')
+  if (!swapRoute)
+    throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
 
   return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
 }

@@ -45,6 +45,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
     200
   )
+  const isDebouncing = amountSpecified !== debouncedAmount && otherCurrency === debouncedOtherCurrency
   const debouncedAmountSpecified = autoRouterSupported && isWindowVisible ? debouncedAmount : undefined
 
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -69,7 +70,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     provider: library as JsonRpcProvider,
   })
 
-  const { isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -84,21 +85,25 @@ export function useRouterTrade<TTradeType extends TradeType>(
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
-  const isSyncing = currentData !== data
-
-  return useMemo(() => {
-    if (!currencyIn || !currencyOut) {
-      return {
-        state: TradeState.INVALID,
-        trade: undefined,
+  const trade = useMemo(() => {
+    if (route) {
+      try {
+        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+      } catch (e: unknown) {
+        console.debug('transformRoutesToTrade failed: ', e)
       }
     }
+    return
+  }, [gasUseEstimateUSD, route, tradeType])
 
-    if (isFetching) {
-      return {
-        state: TradeState.LOADING,
-        trade: undefined,
+  return useMemo(() => {
+    if (!currencyIn || !currencyOut) return INVALID_TRADE
+
+    if (!trade && !isError) {
+      if (isDebouncing) {
+        return { state: TradeState.SYNCING, trade: undefined }
       }
+      return { state: TradeState.LOADING, trade: undefined }
     }
 
     let otherAmount = undefined
@@ -116,26 +121,9 @@ export function useRouterTrade<TTradeType extends TradeType>(
       }
     }
 
-    try {
-      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      return {
-        // always return VALID regardless of isFetching status
-        state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
-        trade,
-      }
-    } catch (e) {
-      return { state: TradeState.INVALID, trade: undefined }
+    if (trade) {
+      return { state: TradeState.VALID, trade }
     }
-  }, [
-    currencyIn,
-    currencyOut,
-    quoteResult,
-    isFetching,
-    tradeType,
-    isError,
-    route,
-    queryArgs,
-    gasUseEstimateUSD,
-    isSyncing,
-  ])
+    return INVALID_TRADE
+  }, [currencyIn, currencyOut, quoteResult, isLoading, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
 }
