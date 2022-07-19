@@ -2,7 +2,6 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
-
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
@@ -39,7 +38,7 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
 
   // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
   if (jsonRpcEndpoint) {
-    let mainnetRpcUrl = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? jsonRpcEndpoint.connection.url : jsonRpcEndpoint
+    const mainnetRpcUrl = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? jsonRpcEndpoint.connection.url : jsonRpcEndpoint
   }
 
   const urlMap = {
