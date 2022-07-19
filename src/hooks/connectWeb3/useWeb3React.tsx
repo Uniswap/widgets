@@ -2,7 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
-import { Network } from '@web3-react/network'
+
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
@@ -38,25 +38,55 @@ function getWalletConnectConnection(useDefault: boolean, jsonRpcEndpoint?: strin
   }
 
   // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
-  let mainnetRpcUrl: string | undefined
-  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    mainnetRpcUrl = jsonRpcEndpoint.connection.url
-  } else {
-    mainnetRpcUrl = jsonRpcEndpoint
+  if (jsonRpcEndpoint) {
+    let mainnetRpcUrl = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? jsonRpcEndpoint.connection.url : jsonRpcEndpoint
   }
+
+  const urlMap = {
+    [SupportedChainId.MAINNET]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? [],
+    [SupportedChainId.ROPSTEN]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ROPSTEN] ?? [],
+    [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
+    [SupportedChainId.GOERLI]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.GOERLI] ?? [],
+    [SupportedChainId.ARBITRUM_ONE]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ARBITRUM_ONE] ?? [],
+    [SupportedChainId.OPTIMISM]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.OPTIMISM] ?? [],
+    [SupportedChainId.POLYGON]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.POLYGON] ?? [],
+  }
+  // const networkRpcs = [jsonRpcEndpoint] as string[] | JsonRpcProvider[]
+  // const urlMap = {
+  //   [SupportedChainId.MAINNET]: networkRpcs,
+  //   [SupportedChainId.ROPSTEN]: networkRpcs,
+  //   [SupportedChainId.RINKEBY]: networkRpcs,
+  //   [SupportedChainId.GOERLI]: networkRpcs,
+  //   [SupportedChainId.KOVAN]: networkRpcs,
+  //   [SupportedChainId.POLYGON]: networkRpcs,
+  //   [SupportedChainId.POLYGON_MUMBAI]: networkRpcs,
+  //   [SupportedChainId.ARBITRUM_ONE]: networkRpcs,
+  //   [SupportedChainId.ARBITRUM_RINKEBY]: networkRpcs,
+  //   [SupportedChainId.OPTIMISM]: networkRpcs,
+  //   [SupportedChainId.OPTIMISTIC_KOVAN]: networkRpcs,
+  // }
+
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
         new WalletConnect({
           actions,
           options: {
-            rpc: {
-              [SupportedChainId.MAINNET]: [
-                mainnetRpcUrl ?? '',
-                ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
-              ].filter((url) => url !== undefined && url !== ''),
-              [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
-            },
+            rpc: urlMap,
+            // rpc: jsonRpcEndpoint
+            //   ? {
+            //       [SupportedChainId.MAINNET]: JsonRpcProvider.isProvider(jsonRpcEndpoint)
+            //         ? jsonRpcEndpoint.connection.url
+            //         : jsonRpcEndpoint,
+            //     }
+            //   : urlMap,
+            // rpc: {
+            //   [SupportedChainId.MAINNET]: [
+            //     mainnetRpcUrl ?? '',
+            //     ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
+            //   ].filter((url) => url !== undefined && url !== ''),
+            //   [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
+            // },
             qrcode: useDefault,
           },
         })
@@ -87,20 +117,17 @@ export function ActiveWeb3Provider({
 
   const networkConnection = useMemo(() => {
     if (!jsonRpcEndpoint) return
-    console.log('json', jsonRpcEndpoint)
-    const networkRpc = JsonRpcProvider.isProvider(jsonRpcEndpoint) ? [jsonRpcEndpoint] : [jsonRpcEndpoint]
-    const urlMap = { [SupportedChainId.MAINNET]: networkRpc }
-    const c = toWeb3Connection(initializeConnector<Network>((actions) => new Network({ actions, urlMap })))
-    c[0].activate()
-    return c
+    return toWeb3Connection(initializeConnector<Url>((actions) => new Url({ actions, url: jsonRpcEndpoint })))
   }, [jsonRpcEndpoint])
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup]
   if (integratorConnection) connections = [integratorConnection, ...connections]
-  if (networkConnection) connections.push(networkConnection)
+  if (networkConnection) {
+    connections.push(networkConnection)
+  }
 
   return (
-    <Web3ReactProvider connectors={connections} key={connections.length}>
+    <Web3ReactProvider connectors={connections} key={'' + connections.length + jsonRpcEndpoint}>
       {children}
     </Web3ReactProvider>
   )
