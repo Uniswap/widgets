@@ -91,7 +91,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronRight color={contentColor} strokeWidth={3} />
+          <ChevronRight color={contentColor} strokeWidth={2} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>
