@@ -20,6 +20,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
   // TODO(kristiehuang): AccountDialog UI does not yet exist
   // const [open, setOpen] = useState(false)
 
+  // TODO: hover to see disconnect button is temporary; disconnection should live inside AccountDialog
   const [hover, setHover] = useState(false)
 
   const { account } = useWeb3React()
