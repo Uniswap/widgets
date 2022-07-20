@@ -14,7 +14,9 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
   // Attempt to connect eagerly on mount
   useEffect(() => {
     connections.forEach(([wallet, _]) =>
-      wallet.connectEagerly ? wallet.connectEagerly(defaultChainId) : wallet.activate(defaultChainId)
+      wallet.connectEagerly
+        ? wallet.connectEagerly(defaultChainId)?.catch((e) => console.log(e))
+        : wallet.activate(defaultChainId)
     )
   }, [connections, defaultChainId])
 
