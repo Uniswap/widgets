@@ -5,6 +5,7 @@ import { ReactComponent as InlineSpinnerIcon } from 'assets/svg/inline_spinner.s
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
+import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
 import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
 /* eslint-disable no-restricted-imports */
@@ -95,6 +96,7 @@ export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)
 export const Wallet = icon(WalletIcon)
+export const WalletDisconnect = icon(WalletDisconnectIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
 

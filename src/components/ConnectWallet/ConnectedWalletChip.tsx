@@ -5,7 +5,7 @@ import { Url } from '@web3-react/url'
 import { TextButton } from 'components/Button'
 import Row from 'components/Row'
 import { connections } from 'hooks/connectWeb3/useWeb3React'
-import { Wallet as WalletIcon } from 'icons'
+import { WalletDisconnect as WalletDisconnectIcon } from 'icons'
 import Identicon from 'icons/identicon'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
@@ -46,7 +46,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
         {hover ? (
           <ThemedText.Caption>
             <Row gap={0.5}>
-              <WalletIcon />
+              <WalletDisconnectIcon />
               <Trans>Disconnect wallet</Trans>
             </Row>
           </ThemedText.Caption>
