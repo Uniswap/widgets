@@ -70,7 +70,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     provider: library as JsonRpcProvider,
   })
 
-  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -123,16 +123,5 @@ export function useRouterTrade<TTradeType extends TradeType>(
       return { state: isSyncing ? TradeState.SYNCING : TradeState.VALID, trade }
     }
     return INVALID_TRADE
-  }, [
-    currencyIn,
-    currencyOut,
-    quoteResult,
-    isLoading,
-    tradeType,
-    isError,
-    route,
-    queryArgs,
-    gasUseEstimateUSD,
-    isSyncing,
-  ])
+  }, [currencyIn, currencyOut, quoteResult, trade, tradeType, isError, route, queryArgs, isDebouncing, isSyncing])
 }
