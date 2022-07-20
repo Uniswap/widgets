@@ -2,7 +2,7 @@ import { Children, ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { Color, Theme } from 'theme'
 
-const Row = styled.div<{
+export interface RowProps {
   color?: Color
   align?: string
   justify?: string
@@ -12,7 +12,9 @@ const Row = styled.div<{
   grow?: true | 'first' | 'last'
   children?: ReactNode
   theme: Theme
-}>`
+}
+
+const Row = styled.div<RowProps>`
   align-items: ${({ align }) => align ?? 'center'};
   color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
