@@ -76,8 +76,6 @@ export function ActiveWeb3Provider({
   defaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  console.log(defaultChainId)
-  console.log(jsonRpcEndpoint)
   const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
