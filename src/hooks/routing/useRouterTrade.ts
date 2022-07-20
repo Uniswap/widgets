@@ -70,7 +70,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     provider: library as JsonRpcProvider,
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -85,25 +85,23 @@ export function useRouterTrade<TTradeType extends TradeType>(
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
+  const isSyncing = currentData !== data
+
   const trade = useMemo(() => {
-    if (route) {
-      try {
-        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      } catch (e: unknown) {
-        console.debug('transformRoutesToTrade failed: ', e)
-      }
+    if (!route) return
+    try {
+      return transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+    } catch (e: unknown) {
+      console.debug('transformRoutesToTrade failed: ', e)
+      return
     }
-    return
   }, [gasUseEstimateUSD, route, tradeType])
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) return INVALID_TRADE
 
     if (!trade && !isError) {
-      if (isDebouncing) {
-        return { state: TradeState.SYNCING, trade: undefined }
-      }
-      return { state: TradeState.LOADING, trade: undefined }
+      return { state: isDebouncing ? TradeState.SYNCING : TradeState.LOADING, trade: undefined }
     }
 
     let otherAmount = undefined
@@ -122,8 +120,19 @@ export function useRouterTrade<TTradeType extends TradeType>(
     }
 
     if (trade) {
-      return { state: TradeState.VALID, trade }
+      return { state: isSyncing ? TradeState.SYNCING : TradeState.VALID, trade }
     }
     return INVALID_TRADE
-  }, [currencyIn, currencyOut, quoteResult, isLoading, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
+  }, [
+    currencyIn,
+    currencyOut,
+    quoteResult,
+    isLoading,
+    tradeType,
+    isError,
+    route,
+    queryArgs,
+    gasUseEstimateUSD,
+    isSyncing,
+  ])
 }
