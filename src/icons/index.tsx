@@ -96,9 +96,13 @@ export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)
 export const Wallet = icon(WalletIcon)
-export const WalletDisconnect = icon(WalletDisconnectIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
+
+export const WalletDisconnect = styled(icon(WalletDisconnectIcon))<{ color?: Color }>`
+  fill: currentColor;
+  stroke: none;
+`
 
 export const Check = styled(icon(CheckIcon))`
   circle {
