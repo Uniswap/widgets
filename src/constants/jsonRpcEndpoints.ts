@@ -3,7 +3,7 @@ import { SupportedChainId } from './chains'
 /**
  * Fallback JSON RPC endpoints if integrator does not provide one
  */
-export const JSON_RPC_FALLBACK_ENDPOINTS: { [key in SupportedChainId]?: string[] } = {
+export const JSON_RPC_FALLBACK_ENDPOINTS: { [chainId: number]: string[] } = {
   // KOVAN = 42,
   // OPTIMISTIC_KOVAN = 69,
   [SupportedChainId.MAINNET]: ['https://cloudflare-eth.com'],

@@ -38,13 +38,28 @@ function getWalletConnectConnection(
 ) {
   let urlMap: { [chainId: number]: string[] }
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    jsonRpcEndpoint.getNetwork().then((network) => {
-      urlMap = { [network.chainId]: [jsonRpcEndpoint.connection.url] }
-    })
-    // let chainId: number = (await jsonRpcEndpoint.getNetwork()).chainId
-    // urlMap = { [chainId]: [jsonRpcEndpoint.connection.url] }
+    jsonRpcEndpoint
+      .getNetwork()
+      .then((network) => {
+        urlMap = { [network.chainId]: [jsonRpcEndpoint.connection.url] }
+        return toWeb3Connection(
+          initializeConnector<WalletConnect>(
+            (actions) =>
+              new WalletConnect({
+                actions,
+                options: {
+                  rpc: urlMap,
+                  qrcode: useDefault,
+                },
+              })
+          )
+        )
+      })
+      .catch((e) => {
+        throw new Error('Could not connect WalletConnect: ', e)
+      })
   } else if (typeof jsonRpcEndpoint === 'string') {
-    // if integrator only provides 1 jsonRpcEndpoint, user switching networks on WC will not work as expected
+    // if integrator only provides a jsonRpcEndpoint string, user switching networks on their wallet will not work as expected
     urlMap = { [defaultChainId ?? SupportedChainId.MAINNET]: [jsonRpcEndpoint] }
   } else {
     urlMap = jsonRpcEndpoint

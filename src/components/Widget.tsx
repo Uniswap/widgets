@@ -115,17 +115,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
   const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(
-    () =>
-      props.jsonRpcEndpoint ?? {
-        [SupportedChainId.MAINNET]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? [],
-        [SupportedChainId.ROPSTEN]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ROPSTEN] ?? [],
-        [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
-        [SupportedChainId.GOERLI]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.GOERLI] ?? [],
-        [SupportedChainId.ARBITRUM_ONE]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ARBITRUM_ONE] ?? [],
-        [SupportedChainId.ARBITRUM_RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ARBITRUM_RINKEBY] ?? [],
-        [SupportedChainId.OPTIMISM]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.OPTIMISM] ?? [],
-        [SupportedChainId.POLYGON]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.POLYGON] ?? [],
-      },
+    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS,
     [props.jsonRpcEndpoint]
   )
 
