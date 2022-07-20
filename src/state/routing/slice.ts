@@ -38,7 +38,9 @@ const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: s
 
 export const routing = createApi({
   reducerPath: 'routing',
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
+  baseQuery: async () => {
+    return await (await global.fetch('/')).json()
+  },
   serializeQueryArgs: serializeRoutingCacheKey, // need to write custom cache key fxn to handle non-serializable JsonRpcProvider provider
   endpoints: (build) => ({
     getQuote: build.query<
@@ -100,9 +102,6 @@ export const routing = createApi({
         return { data: result?.data as GetQuoteResult }
       },
       keepUnusedDataFor: ms`10s`,
-      extraOptions: {
-        maxRetries: 0,
-      },
     }),
   }),
 })
