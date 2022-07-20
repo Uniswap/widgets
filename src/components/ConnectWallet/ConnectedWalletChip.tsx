@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { Wallet as WalletIcon } from 'icons'
 import { useWeb3React } from '@web3-react/core'
-import { TextButton } from 'components/Button'
-import Row from 'components/Row'
-import Identicon from 'icons/identicon'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
-import { useState } from 'react'
-import { connections } from 'hooks/connectWeb3/useWeb3React'
 import { Network } from '@web3-react/network'
 import { Url } from '@web3-react/url'
+import { TextButton } from 'components/Button'
+import Row from 'components/Row'
+import { connections } from 'hooks/connectWeb3/useWeb3React'
+import { Wallet as WalletIcon } from 'icons'
+import Identicon from 'icons/identicon'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const AccountButton = styled(TextButton)<{ hidden?: boolean }>`
   filter: none;
