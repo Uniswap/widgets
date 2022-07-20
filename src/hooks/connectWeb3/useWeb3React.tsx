@@ -2,16 +2,12 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
-<<<<<<< HEAD
 import { Network } from '@web3-react/network'
 
-=======
->>>>>>> 866840c2cc8a36be942195a4139cfbf77229379b
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { PropsWithChildren, useMemo } from 'react'
 
 export let connections: [Connector, Web3ReactHooks][] = []
@@ -37,9 +33,9 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 
 function getWalletConnectConnection(
   useDefault: boolean,
-  jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] }
+  jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] },
+  defaultChainId?: number
 ) {
-  // FIXME(kristiehuang): we don't know what the props.jsonRpcEndpoint chain is; assume mainnet for WC instantiation
   let urlMap: { [chainId: number]: string[] }
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
     jsonRpcEndpoint.getNetwork().then((network) => {
@@ -48,26 +44,11 @@ function getWalletConnectConnection(
     // let chainId: number = (await jsonRpcEndpoint.getNetwork()).chainId
     // urlMap = { [chainId]: [jsonRpcEndpoint.connection.url] }
   } else if (typeof jsonRpcEndpoint === 'string') {
-    urlMap = { [SupportedChainId.MAINNET]: [jsonRpcEndpoint] }
+    // if integrator only provides 1 jsonRpcEndpoint, user switching networks on WC will not work as expected
+    urlMap = { [defaultChainId ?? SupportedChainId.MAINNET]: [jsonRpcEndpoint] }
   } else {
     urlMap = jsonRpcEndpoint
   }
-
-  // const networkRpcs = [mainnetRpcUrl]
-  // const singleUrlMap = {
-  //   // this doesn't work if user switches in-chain
-  //   [SupportedChainId.MAINNET]: networkRpcs,
-  //   [SupportedChainId.ROPSTEN]: networkRpcs,
-  //   [SupportedChainId.RINKEBY]: networkRpcs,
-  //   [SupportedChainId.GOERLI]: networkRpcs,
-  //   [SupportedChainId.KOVAN]: networkRpcs,
-  //   [SupportedChainId.POLYGON]: networkRpcs,
-  //   [SupportedChainId.POLYGON_MUMBAI]: networkRpcs,
-  //   [SupportedChainId.ARBITRUM_ONE]: networkRpcs,
-  //   [SupportedChainId.ARBITRUM_RINKEBY]: networkRpcs,
-  //   [SupportedChainId.OPTIMISM]: networkRpcs,
-  //   [SupportedChainId.OPTIMISTIC_KOVAN]: networkRpcs,
-  // }
 
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
@@ -76,20 +57,6 @@ function getWalletConnectConnection(
           actions,
           options: {
             rpc: urlMap,
-            // rpc: jsonRpcEndpoint
-            //   ? {
-            //       [SupportedChainId.MAINNET]: JsonRpcProvider.isProvider(jsonRpcEndpoint)
-            //         ? jsonRpcEndpoint.connection.url
-            //         : jsonRpcEndpoint,
-            //     }
-            //   : fallbackUrlMap,
-            // rpc: {
-            //   [SupportedChainId.MAINNET]: [
-            //     mainnetRpcUrl ?? '',
-            //     ...(JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? []),
-            //   ].filter((url) => url !== undefined && url !== ''),
-            //   [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
-            // },
             qrcode: useDefault,
           },
         })
@@ -100,22 +67,29 @@ function getWalletConnectConnection(
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] }
+  defaultChainId?: number
 }
 
 export function ActiveWeb3Provider({
   provider: propsProvider,
   jsonRpcEndpoint,
+  defaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  console.log(defaultChainId)
+  console.log(jsonRpcEndpoint)
   const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
     []
   )
-  const walletConnectConnectionQR = useMemo(() => getWalletConnectConnection(false, jsonRpcEndpoint), [jsonRpcEndpoint]) // WC via tile QR code scan
+  const walletConnectConnectionQR = useMemo(
+    () => getWalletConnectConnection(false, jsonRpcEndpoint, defaultChainId),
+    [jsonRpcEndpoint, defaultChainId]
+  ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getWalletConnectConnection(true, jsonRpcEndpoint),
-    [jsonRpcEndpoint]
+    () => getWalletConnectConnection(true, jsonRpcEndpoint, defaultChainId),
+    [jsonRpcEndpoint, defaultChainId]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(() => {
@@ -123,10 +97,10 @@ export function ActiveWeb3Provider({
       return toWeb3Connection(initializeConnector<Url>((actions) => new Url({ actions, url: jsonRpcEndpoint })))
     } else {
       return toWeb3Connection(
-        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcEndpoint }))
+        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcEndpoint, defaultChainId }))
       )
     }
-  }, [jsonRpcEndpoint])
+  }, [jsonRpcEndpoint, defaultChainId])
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
   if (integratorConnection) connections = [integratorConnection, ...connections]

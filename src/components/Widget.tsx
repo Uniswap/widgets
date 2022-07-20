@@ -89,8 +89,8 @@ export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
   jsonRpcEndpoint?: string | JsonRpcProvider | { [chainId: number]: string[] }
+  defaultChainId?: number
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
@@ -99,7 +99,7 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, provider, dialog: userDialog, className, onError } = props
+  const { children, theme, defaultChainId, provider, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -140,7 +140,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
               <ErrorBoundary onError={onError}>
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
-                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    <ActiveWeb3Provider
+                      provider={provider}
+                      jsonRpcEndpoint={jsonRpcEndpoint}
+                      defaultChainId={defaultChainId}
+                    >
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater />

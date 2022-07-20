@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
-import useJsonRpcEndpoint from './useJsonRpcEndpoint'
+import { INFURA_NETWORK_URLS } from './useJsonRpcEndpoint'
 import useOption from './useOption'
 import useProvider from './useProvider'
 
@@ -47,7 +47,16 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  const jsonRpcEndpoint = useJsonRpcEndpoint()
+  const jsonRpcEndpoint = INFURA_NETWORK_URLS
+  const defaultNetwork: string | undefined = useOption('defaultChainId', {
+    options: Object.values(SupportedChainId).filter((id) => typeof id !== 'number') as string[],
+    defaultValue: 'MAINNET',
+  })
+  function getValueByKeyForNumberEnum(value: string): number {
+    return Object.entries(SupportedChainId).find(([key, val]) => key === value)?.[1] as number
+  }
+  const defaultChainId = defaultNetwork ? getValueByKeyForNumberEnum(defaultNetwork) : undefined
+
   const connector = useProvider()
 
   const tokenLists: Record<string, TokenInfo[]> = {
@@ -67,6 +76,7 @@ function Fixture() {
       defaultOutputAmount={defaultOutputAmount}
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint}
+      defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
       tokenList={tokenList}
