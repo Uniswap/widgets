@@ -90,7 +90,7 @@ export type WidgetProps = {
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
   // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
-  jsonRpcEndpoint?: string | JsonRpcProvider
+  jsonRpcEndpoint?: string | JsonRpcProvider | { [chainId: number]: string[] }
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
@@ -114,8 +114,18 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
-  const jsonRpcEndpoint = useMemo(
-    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET]?.[0],
+  const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(
+    () =>
+      props.jsonRpcEndpoint ?? {
+        [SupportedChainId.MAINNET]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET] ?? [],
+        [SupportedChainId.ROPSTEN]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ROPSTEN] ?? [],
+        [SupportedChainId.RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.RINKEBY] ?? [],
+        [SupportedChainId.GOERLI]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.GOERLI] ?? [],
+        [SupportedChainId.ARBITRUM_ONE]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ARBITRUM_ONE] ?? [],
+        [SupportedChainId.ARBITRUM_RINKEBY]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.ARBITRUM_RINKEBY] ?? [],
+        [SupportedChainId.OPTIMISM]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.OPTIMISM] ?? [],
+        [SupportedChainId.POLYGON]: JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.POLYGON] ?? [],
+      },
     [props.jsonRpcEndpoint]
   )
 

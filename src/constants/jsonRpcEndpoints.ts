@@ -5,14 +5,13 @@ import { SupportedChainId } from './chains'
  */
 export const JSON_RPC_FALLBACK_ENDPOINTS: { [key in SupportedChainId]?: string[] } = {
   // KOVAN = 42,
-  // ARBITRUM_RINKEBY = 421611,
   // OPTIMISTIC_KOVAN = 69,
-  // POLYGON = 137,
   [SupportedChainId.MAINNET]: ['https://cloudflare-eth.com'],
   [SupportedChainId.ROPSTEN]: ['https://rpc.ankr.com/eth_ropsten'],
   [SupportedChainId.RINKEBY]: ['https://rpc.ankr.com/eth_rinkeby'],
   [SupportedChainId.GOERLI]: ['https://rpc.ankr.com/eth_goerli'],
   [SupportedChainId.ARBITRUM_ONE]: ['https://arbitrum.public-rpc.com'],
+  [SupportedChainId.ARBITRUM_RINKEBY]: ['https://rinkeby.arbitrum.io/rpc'],
   [SupportedChainId.OPTIMISM]: ['https://rpc.ankr.com/optimism'],
   [SupportedChainId.POLYGON]: [
     'https://polygon-rpc.com',
