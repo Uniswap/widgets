@@ -99,11 +99,6 @@ export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
 
-export const WalletDisconnect = styled(icon(WalletDisconnectIcon))<{ color?: Color }>`
-  fill: currentColor;
-  stroke: none;
-`
-
 export const Check = styled(icon(CheckIcon))`
   circle {
     fill: ${({ theme }) => theme.active};
@@ -129,6 +124,11 @@ export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
 
 export const Logo = styled(icon(LogoIcon))`
   fill: ${({ theme }) => theme.secondary};
+  stroke: none;
+`
+
+export const WalletDisconnect = styled(icon(WalletDisconnectIcon))<{ color?: Color }>`
+  fill: currentColor;
   stroke: none;
 `
 
