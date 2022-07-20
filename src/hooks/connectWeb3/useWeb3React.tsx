@@ -2,8 +2,11 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
+<<<<<<< HEAD
 import { Network } from '@web3-react/network'
 
+=======
+>>>>>>> 866840c2cc8a36be942195a4139cfbf77229379b
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
