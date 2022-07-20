@@ -48,6 +48,7 @@ function Fixture() {
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
   const jsonRpcEndpoint = INFURA_NETWORK_URLS
+
   const defaultNetwork: string | undefined = useOption('defaultChainId', {
     options: Object.values(SupportedChainId).filter((id) => typeof id !== 'number') as string[],
     defaultValue: 'MAINNET',
@@ -57,7 +58,7 @@ function Fixture() {
   }
   const defaultChainId = defaultNetwork ? getValueByKeyForNumberEnum(defaultNetwork) : undefined
 
-  const connector = useProvider()
+  const connector = useProvider(defaultChainId)
 
   const tokenLists: Record<string, TokenInfo[]> = {
     Default: tokens,

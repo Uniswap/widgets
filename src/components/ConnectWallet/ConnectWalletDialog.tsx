@@ -11,7 +11,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
+import { connections, Web3Connection, defaultChainId } from 'hooks/connectWeb3/useWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
@@ -100,7 +100,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
         setQrCodeSvg(qrCodeSvg)
       })
     } else {
-      walletConnect.activate().catch((e) => {
+      walletConnect.activate(defaultChainId).catch((e) => {
         if (stale) return
         setError(e)
       })
@@ -210,13 +210,13 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onClick={() => wcPopupConnection[0].activate()}
+            onClick={() => wcPopupConnection[0].activate(defaultChainId)}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton
               walletName="MetaMask"
               logoSrc={METAMASK_ICON_URL}
-              onClick={() => mmConnection[0].activate()}
+              onClick={() => mmConnection[0].activate(defaultChainId)}
             />
             <NoWalletButton />
           </SecondaryOptionsRow>

@@ -11,6 +11,7 @@ import { SupportedChainId } from 'constants/chains'
 import { PropsWithChildren, useMemo } from 'react'
 
 export let connections: [Connector, Web3ReactHooks][] = []
+export let defaultChainId: number = 1
 export type Web3Connection = [Connector, Web3ReactHooks]
 
 function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
@@ -88,9 +89,11 @@ interface ActiveWeb3ProviderProps {
 export function ActiveWeb3Provider({
   provider: propsProvider,
   jsonRpcEndpoint,
-  defaultChainId,
+  defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  if (propsDefaultChainId) defaultChainId = propsDefaultChainId
+
   const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),

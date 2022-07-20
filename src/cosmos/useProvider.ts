@@ -22,7 +22,7 @@ const [walletConnect] = initializeConnector<WalletConnect>(
     })
 )
 
-export default function useProvider() {
+export default function useProvider(defaultChainId?: number) {
   const connectorType = useOption('provider', { options: [Wallet.MetaMask, Wallet.WalletConnect] })
   const [connector, setConnector] = useState<Connector>()
   useEffect(() => {
@@ -36,11 +36,11 @@ export default function useProvider() {
       let connector: Connector | undefined
       switch (connectorType) {
         case Wallet.MetaMask:
-          await metaMask.activate()
+          await metaMask.activate(defaultChainId)
           connector = metaMask
           break
         case Wallet.WalletConnect:
-          await walletConnect.activate()
+          await walletConnect.activate(defaultChainId)
           connector = walletConnect
       }
       if (!stale) {
