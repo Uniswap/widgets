@@ -8,6 +8,7 @@ import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 const HeaderColumn = styled(Column)`
+  cursor: pointer;
   transition: gap 0.25s;
 `
 
@@ -51,9 +52,9 @@ export default function Expando({ title, open, onExpand, height, children, ...re
   const scrollbar = useScrollbar(scrollingEl)
   return (
     <Column {...rest}>
-      <HeaderColumn gap={open ? 0.5 : 0.75}>
+      <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
         <Rule />
-        <TitleRow onClick={onExpand}>
+        <TitleRow>
           {title}
           <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
         </TitleRow>
