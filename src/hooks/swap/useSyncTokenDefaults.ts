@@ -2,9 +2,10 @@ import { Currency } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useToken } from 'hooks/useCurrency'
+import useLast from 'hooks/useLast'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Field, Swap, swapAtom } from 'state/swap'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
@@ -72,13 +73,11 @@ export default function useSyncTokenDefaults({
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
 
-  const lastChainId = useRef<number | undefined>(undefined)
   const isTokenListLoaded = useIsTokenListLoaded()
+  const lastChainId = useLast(chainId)
   useEffect(() => {
-    const shouldSync = isTokenListLoaded && chainId && chainId !== lastChainId.current
-    if (shouldSync) {
-      setToDefaults()
-      lastChainId.current = chainId
-    }
-  }, [isTokenListLoaded, chainId, setToDefaults])
+    if (!isTokenListLoaded) return
+    // Resets defaults only when switching to a new chain.
+    if (chainId && chainId !== lastChainId) setToDefaults()
+  }, [chainId, isTokenListLoaded, lastChainId, setToDefaults])
 }
