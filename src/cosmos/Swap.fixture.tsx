@@ -57,6 +57,8 @@ function Fixture() {
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
   console.log(tokenList)
 
+  const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
+
   return (
     <SwapWidget
       convenienceFee={convenienceFee}
@@ -71,6 +73,7 @@ function Fixture() {
       theme={theme}
       tokenList={tokenList}
       width={width}
+      routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
     />
   )

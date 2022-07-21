@@ -10,7 +10,8 @@ import { Provider as I18nProvider } from 'i18n'
 import { Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import { MulticallUpdater, store as multicallStore } from 'state/multicall'
+import { store } from 'state'
+import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 import { UNMOUNTING } from 'utils/animations'
@@ -121,7 +122,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={userDialog || dialog}>
               <ErrorBoundary onError={onError}>
-                <ReduxProvider store={multicallStore}>
+                <ReduxProvider store={store}>
                   <AtomProvider>
                     <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                       <BlockNumberProvider>
