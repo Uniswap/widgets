@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
@@ -133,7 +133,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
       }
     }
     return props.jsonRpcEndpoint
-  }, [props.jsonRpcEndpoint, defaultChainId])
+  }, [props.jsonRpcEndpoint])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

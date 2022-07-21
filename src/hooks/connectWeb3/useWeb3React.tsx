@@ -8,9 +8,9 @@ import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { PropsWithChildren, useMemo } from 'react'
 
-export let connections: [Connector, Web3ReactHooks][] = []
-export let defaultChainId = 1
 export type Web3Connection = [Connector, Web3ReactHooks]
+export let connections: Web3Connection[] = []
+export let defaultChainId = 1
 
 function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
   T,
@@ -33,7 +33,7 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 function getWalletConnectConnection(
   useDefault: boolean,
   jsonRpcEndpoint: { [chainId: number]: string[] },
-  defaultChainId?: number
+  defaultChainId: number
 ) {
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
@@ -53,7 +53,7 @@ function getWalletConnectConnection(
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcEndpoint: { [chainId: number]: string[] }
-  defaultChainId?: number
+  defaultChainId: number
 }
 
 export function ActiveWeb3Provider({
