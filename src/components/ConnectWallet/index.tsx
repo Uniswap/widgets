@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { connections } from 'hooks/connectWeb3/useWeb3React'
+import { connections, getConnectorName } from 'hooks/connectWeb3/useWeb3React'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
@@ -13,14 +13,14 @@ interface WalletProps {
 export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
   // Attempt to connect eagerly on mount
   useEffect(() => {
-    connections.forEach(([wallet, _]) => {
+    connections.forEach(([wallet]) => {
       if (wallet.connectEagerly) {
         wallet.connectEagerly()?.catch(() => {
-          console.debug('Failed to connect eagerly')
+          console.log('Could not connect eagerly to', getConnectorName(wallet))
         })
       } else {
         wallet.activate()?.catch(() => {
-          console.debug('Failed to activate')
+          console.log('Could not activate', getConnectorName(wallet))
         })
       }
     })

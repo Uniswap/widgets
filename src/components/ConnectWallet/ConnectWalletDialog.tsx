@@ -11,7 +11,7 @@ import EventEmitter from 'events'
 import { connections, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -164,15 +164,8 @@ function NoWalletButton() {
 
 export function ConnectWalletDialog() {
   const [mmConnection, wcTileConnection, wcPopupConnection] = connections
-  const [error, setError] = useState<Error>()
 
-  useEffect(() => {
-    // Log web3 errors
-    if (error) {
-      console.error('web3 error:', error)
-    }
-  }, [error])
-
+  const onError = (error: any) => error && console.error('web3 error:', error)
   return (
     <>
       <Header title={<Trans>Connect wallet</Trans>} />
@@ -182,14 +175,14 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onError={setError}
-            onClick={() => wcPopupConnection[0].activate()?.catch(setError)}
+            onError={onError}
+            onClick={() => wcPopupConnection[0].activate()?.catch(onError)}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton
               walletName="MetaMask"
               logoSrc={METAMASK_ICON_URL}
-              onClick={() => mmConnection[0].activate()?.catch(setError)}
+              onClick={() => mmConnection[0].activate()?.catch(onError)}
             />
             <NoWalletButton />
           </SecondaryOptionsRow>

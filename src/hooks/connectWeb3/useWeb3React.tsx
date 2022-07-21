@@ -8,34 +8,44 @@ import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 
-export let connections: [Connector, Web3ReactHooks][] = []
 export type Web3Connection = [Connector, Web3ReactHooks]
+export let connections: Web3Connection[] = []
 
-function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
+function toWeb3Connection<T extends Connector>([connector, hooks]: [
   T,
-  Web3ReactHooks
-] {
+  Web3ReactHooks,
+  Web3ReactStore
+]): Web3Connection {
   return [connector, hooks]
 }
 
-function getWallet(setError: (error: Error) => void, provider?: JsonRpcProvider | Eip1193Provider) {
+export function getConnectorName(connector: Connector) {
+  if (connector instanceof MetaMask) return 'MetaMask'
+  if (connector instanceof WalletConnect) return 'WalletConnect'
+  if (connector instanceof Network) return 'Network'
+  if (connector instanceof Url) return 'Url'
+  if (connector instanceof EIP1193) return 'EIP1193'
+  return 'Unknown'
+}
+
+function getWalletFromProvider(onError: (error: Error) => void, provider?: JsonRpcProvider | Eip1193Provider) {
   if (!provider) return
   if (JsonRpcProvider.isProvider(provider)) {
     return toWeb3Connection(initializeConnector((actions) => new Url({ actions, url: provider })))
   } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
     throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
   } else {
-    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider, onError: setError })))
+    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider, onError })))
   }
 }
 
-function getWalletConnectConnection(
+function getWalletFromWalletConnect(
   useDefault: boolean,
-  setError: (error: Error) => void,
+  onError: (error: Error) => void,
   jsonRpcEndpoint?: string | JsonRpcProvider
-) {
+): Web3Connection {
   // WalletConnect relies on Buffer, so it must be polyfilled.
   if (!('Buffer' in window)) {
     window.Buffer = Buffer
@@ -63,7 +73,7 @@ function getWalletConnectConnection(
             },
             qrcode: useDefault,
           },
-          onError: setError,
+          onError,
         })
     )
   )
@@ -79,21 +89,19 @@ export function ActiveWeb3Provider({
   jsonRpcEndpoint,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const [error, setError] = useState<Error>()
+  const onError = console.error
 
-  useEffect(() => error && console.warn(error), [error])
-
-  const integratorConnection = useMemo(() => getWallet(setError, propsProvider), [propsProvider])
+  const integratorConnection = useMemo(() => getWalletFromProvider(onError, propsProvider), [propsProvider])
   const metaMaskConnection = useMemo(
-    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError: setError }))),
+    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
     []
   )
   const walletConnectConnectionQR = useMemo(
-    () => getWalletConnectConnection(false, setError, jsonRpcEndpoint),
+    () => getWalletFromWalletConnect(false, onError, jsonRpcEndpoint),
     [jsonRpcEndpoint]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getWalletConnectConnection(true, setError, jsonRpcEndpoint),
+    () => getWalletFromWalletConnect(true, onError, jsonRpcEndpoint),
     [jsonRpcEndpoint]
   ) // WC via built-in popup
 
