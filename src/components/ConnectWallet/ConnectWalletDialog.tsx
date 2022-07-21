@@ -192,7 +192,7 @@ function NoWalletButton() {
 
 export function ConnectWalletDialog() {
   let defaultConnections: [Connector, Web3ReactHooks][]
-  const firstConnector: Connector = connections[0][0]
+  const [firstConnector] = connections[0]
   if (firstConnector instanceof EIP1193 || firstConnector instanceof Url) {
     // If first connector is the integrator-provided connector
     defaultConnections = connections.slice(1)
@@ -201,11 +201,14 @@ export function ConnectWalletDialog() {
   }
   const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
 
-  const activateWalletConnectPopup = useCallback(
-    () => wcPopupConnection[0].activate(defaultChainId),
-    [wcPopupConnection]
-  )
-  const activateMetaMask = useCallback(() => mmConnection[0].activate(defaultChainId), [mmConnection])
+  const activateWalletConnectPopup = useCallback(() => {
+    const [walletConnectPopup] = wcPopupConnection
+    walletConnectPopup.activate(defaultChainId)
+  }, [wcPopupConnection])
+  const activateMetaMask = useCallback(() => {
+    const [metamask] = mmConnection
+    metamask.activate(defaultChainId)
+  }, [mmConnection])
 
   return (
     <>

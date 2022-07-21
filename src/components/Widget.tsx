@@ -119,27 +119,20 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
       console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
       return 1
-    } else if (props.jsonRpcEndpoint && !Object.keys(props.jsonRpcEndpoint).includes(`${props.defaultChainId}`)) {
-      console.warn(
-        `Did not provide a jsonRpcEndpoint for default chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`
-      )
-      return 1
     }
     return props.defaultChainId
-  }, [props.defaultChainId, props.jsonRpcEndpoint])
+  }, [props.defaultChainId])
   const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
     if (!props.jsonRpcEndpoint) return JSON_RPC_FALLBACK_ENDPOINTS
-    const endpoints = props.jsonRpcEndpoint
-    for (const supportedChain of ALL_SUPPORTED_CHAIN_IDS) {
-      if (!Object.keys(props.jsonRpcEndpoint).includes(`${supportedChain}`)) {
+    for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
+      if (!Object.keys(props.jsonRpcEndpoint).includes(`${supportedChainId}`)) {
         console.warn(
-          `Did not provide a jsonRpcEndpoint for chainId: ${supportedChain}. Falling back to free public RPC endpoint.`
+          `Did not provide a jsonRpcEndpoint for chainId: ${supportedChainId}. Falling back to free public RPC endpoint.`
         )
-        const supportedChainId = supportedChain as number
-        endpoints[supportedChainId] = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId]
+        props.jsonRpcEndpoint[supportedChainId as number] = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
       }
     }
-    return endpoints
+    return props.jsonRpcEndpoint
   }, [props.jsonRpcEndpoint, defaultChainId])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
