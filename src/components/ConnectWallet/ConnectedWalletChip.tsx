@@ -37,7 +37,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
     <>
       <AccountButton
         hidden={disabled}
-        onClick={() => hover && disconnectWallet()}
+        onClick={disconnectWallet}
         color="secondary"
         data-testid="wallet"
         onMouseEnter={() => setHover(true)}
