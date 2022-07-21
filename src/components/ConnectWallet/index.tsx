@@ -18,7 +18,7 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
         ? wallet.connectEagerly(defaultChainId)?.catch((e) => console.log(e))
         : wallet.activate(defaultChainId)
     )
-  }, [connections, defaultChainId])
+  }, [])
 
   const { account, isActive } = useWeb3React()
 

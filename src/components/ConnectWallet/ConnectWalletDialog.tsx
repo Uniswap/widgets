@@ -11,10 +11,10 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, Web3Connection, defaultChainId } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainId, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { lightTheme, ThemedText } from 'theme'
 
@@ -201,6 +201,12 @@ export function ConnectWalletDialog() {
   }
   const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
 
+  const activateWalletConnectPopup = useCallback(
+    () => wcPopupConnection[0].activate(defaultChainId),
+    [wcPopupConnection]
+  )
+  const activateMetaMask = useCallback(() => mmConnection[0].activate(defaultChainId), [mmConnection])
+
   return (
     <>
       <Header title={<Trans>Connect wallet</Trans>} />
@@ -210,14 +216,10 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onClick={() => wcPopupConnection[0].activate(defaultChainId)}
+            onClick={activateWalletConnectPopup}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton
-              walletName="MetaMask"
-              logoSrc={METAMASK_ICON_URL}
-              onClick={() => mmConnection[0].activate(defaultChainId)}
-            />
+            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>

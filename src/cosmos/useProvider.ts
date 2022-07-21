@@ -71,7 +71,7 @@ export default function useProvider(defaultChainId?: number) {
         })
       }
     }
-  }, [connectorType])
+  }, [connectorType, defaultChainId])
 
   return connector?.provider
 }

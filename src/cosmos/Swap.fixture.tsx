@@ -9,6 +9,7 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
+import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
@@ -49,13 +50,10 @@ function Fixture() {
   const jsonRpcEndpoint = INFURA_NETWORK_URLS
 
   const defaultNetwork: string | undefined = useOption('defaultChainId', {
-    options: Object.values(SupportedChainId).filter((id) => typeof id !== 'number') as string[],
-    defaultValue: 'MAINNET',
+    options: Object.keys(CHAIN_NAMES_TO_IDS),
+    defaultValue: 'mainnet',
   })
-  function getValueByKeyForNumberEnum(value: string): number {
-    return Object.entries(SupportedChainId).find(([key, val]) => key === value)?.[1] as number
-  }
-  const defaultChainId = defaultNetwork ? getValueByKeyForNumberEnum(defaultNetwork) : undefined
+  const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
   const connector = useProvider(defaultChainId)
 

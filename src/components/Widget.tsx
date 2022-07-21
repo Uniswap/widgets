@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
@@ -126,7 +126,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
       return 1
     }
     return props.defaultChainId
-  }, [props.defaultChainId])
+  }, [props.defaultChainId, props.jsonRpcEndpoint])
   const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
     if (!props.jsonRpcEndpoint) return JSON_RPC_FALLBACK_ENDPOINTS
     if (!Object.keys(props.jsonRpcEndpoint).includes(`${defaultChainId}`)) {
