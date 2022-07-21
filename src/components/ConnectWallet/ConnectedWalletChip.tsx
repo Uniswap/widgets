@@ -22,7 +22,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
         hidden={disabled}
         // onClick={() => console.log('open account modal')}
         color="secondary"
-        data-testid="account"
+        data-testid="wallet"
       >
         <ThemedText.Subhead2>
           <Row gap={0.5}>
