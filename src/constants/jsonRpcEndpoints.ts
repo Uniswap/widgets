@@ -12,7 +12,7 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: { [chainId: number]: string[] } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: ['https://rinkeby.arbitrum.io/rpc'],
   [SupportedChainId.OPTIMISM]: ['https://rpc.ankr.com/optimism'],
   [SupportedChainId.POLYGON]: ['https://polygon-rpc.com', 'https://rpc-mainnet.matic.quiknode.pro'],
-  // [SupportedChainId.KOVAN]: ['https://kovan.poa.network'], // TODO: can't find a working public RPC for Kovan
+  [SupportedChainId.KOVAN]: ['https://kovan.poa.network'], // as of 7/21/22, this kovan endpoint is down :(
   [SupportedChainId.OPTIMISTIC_KOVAN]: ['https://kovan.optimism.io'],
   // [SupportedChainId.CELO]: ['https://rpc.ankr.com/celo'],
 }
