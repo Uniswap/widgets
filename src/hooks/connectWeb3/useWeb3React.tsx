@@ -34,30 +34,19 @@ function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
 
 function getWalletConnectConnection(
   useDefault: boolean,
-  jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] },
+  jsonRpcEndpoint: { [chainId: number]: string[] },
   defaultChainId?: number
 ) {
-  let urlMap: { [chainId: number]: string[] }
-  const chainId = defaultChainId ?? SupportedChainId.MAINNET
-  if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    urlMap = { [chainId]: [jsonRpcEndpoint.connection.url] }
-  } else if (typeof jsonRpcEndpoint === 'string') {
-    // if integrator only provides a jsonRpcEndpoint string, user switching networks on their wallet will not work as expected
-    console.warn('User may not be able to switch to network on WalletConnect other than ', chainId)
-    urlMap = { [chainId]: [jsonRpcEndpoint] }
-  } else {
-    urlMap = jsonRpcEndpoint
-  }
-
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
       (actions) =>
         new WalletConnect({
           actions,
           options: {
-            rpc: urlMap,
+            rpc: jsonRpcEndpoint,
             qrcode: useDefault,
           },
+          defaultChainId,
         })
     )
   )
@@ -65,7 +54,7 @@ function getWalletConnectConnection(
 
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] }
+  jsonRpcEndpoint: { [chainId: number]: string[] }
   defaultChainId?: number
 }
 
@@ -75,7 +64,6 @@ export function ActiveWeb3Provider({
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  console.log('etwr', propsDefaultChainId)
   if (propsDefaultChainId) defaultChainId = propsDefaultChainId
 
   const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
@@ -92,15 +80,13 @@ export function ActiveWeb3Provider({
     [jsonRpcEndpoint, defaultChainId]
   ) // WC via built-in popup
 
-  const networkConnection = useMemo(() => {
-    if (JsonRpcProvider.isProvider(jsonRpcEndpoint) || typeof jsonRpcEndpoint === 'string') {
-      return toWeb3Connection(initializeConnector<Url>((actions) => new Url({ actions, url: jsonRpcEndpoint })))
-    } else {
-      return toWeb3Connection(
+  const networkConnection = useMemo(
+    () =>
+      toWeb3Connection(
         initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcEndpoint, defaultChainId }))
-      )
-    }
-  }, [jsonRpcEndpoint, defaultChainId])
+      ),
+    [jsonRpcEndpoint, defaultChainId]
+  )
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
   if (integratorConnection) connections = [integratorConnection, ...connections]
