@@ -126,10 +126,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
     for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
       if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
+        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
         console.warn(
-          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to free public RPC endpoint.`
+          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to free public RPC endpoint ${fallbackRpc}.`
         )
-        props.jsonRpcUrlMap[supportedChainId as number] = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
+        props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
       }
     }
     return props.jsonRpcUrlMap
