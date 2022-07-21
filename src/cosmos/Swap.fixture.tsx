@@ -13,9 +13,8 @@ import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
-import { INFURA_NETWORK_URLS } from './useJsonRpcEndpoint'
 import useOption from './useOption'
-import useProvider from './useProvider'
+import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
 function Fixture() {
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
