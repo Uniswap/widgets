@@ -114,17 +114,34 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
-  const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(
-    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS,
-    [props.jsonRpcEndpoint]
-  )
+  const jsonRpcEndpointIsDict =
+    typeof props.jsonRpcEndpoint !== 'string' && !JsonRpcProvider.isProvider(props.jsonRpcEndpoint)
   const defaultChainId = useMemo(() => {
-    if (props.defaultChainId && !ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
-      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to Ethereum Mainnet.`)
+    if (!props.defaultChainId) return 1
+    if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
+      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
       return 1
     }
-    return props.defaultChainId ?? 1
+    if (props.jsonRpcEndpoint && jsonRpcEndpointIsDict) {
+      if (!Object.keys(props.jsonRpcEndpoint).includes(`${props.defaultChainId}`)) {
+        console.warn(
+          `Did not provide a jsonRpcEndpoint for default chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`
+        )
+        return 1
+      }
+    }
+    return props.defaultChainId
   }, [props.defaultChainId])
+  const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
+    if (!props.jsonRpcEndpoint) return JSON_RPC_FALLBACK_ENDPOINTS
+    if (jsonRpcEndpointIsDict && !Object.keys(props.jsonRpcEndpoint).includes(`${defaultChainId}`)) {
+      console.warn(
+        `Did not provide a jsonRpcEndpoint for default chainId: ${defaultChainId}. Falling back to free public endpoints.`
+      )
+      return JSON_RPC_FALLBACK_ENDPOINTS
+    }
+    return props.jsonRpcEndpoint
+  }, [props.jsonRpcEndpoint, defaultChainId])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (

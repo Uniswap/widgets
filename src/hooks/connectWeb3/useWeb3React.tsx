@@ -38,11 +38,13 @@ function getWalletConnectConnection(
   defaultChainId?: number
 ) {
   let urlMap: { [chainId: number]: string[] }
+  const chainId = defaultChainId ?? SupportedChainId.MAINNET
   if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-    urlMap = { [defaultChainId ?? SupportedChainId.MAINNET]: [jsonRpcEndpoint.connection.url] }
+    urlMap = { [chainId]: [jsonRpcEndpoint.connection.url] }
   } else if (typeof jsonRpcEndpoint === 'string') {
     // if integrator only provides a jsonRpcEndpoint string, user switching networks on their wallet will not work as expected
-    urlMap = { [defaultChainId ?? SupportedChainId.MAINNET]: [jsonRpcEndpoint] }
+    console.warn('User may not be able to switch to network on WalletConnect other than ', chainId)
+    urlMap = { [chainId]: [jsonRpcEndpoint] }
   } else {
     urlMap = jsonRpcEndpoint
   }
@@ -73,6 +75,7 @@ export function ActiveWeb3Provider({
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  console.log('etwr', propsDefaultChainId)
   if (propsDefaultChainId) defaultChainId = propsDefaultChainId
 
   const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
