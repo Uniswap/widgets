@@ -49,7 +49,7 @@ function Fixture() {
 
   const jsonRpcEndpoint = INFURA_NETWORK_URLS
 
-  const defaultNetwork: string | undefined = useOption('defaultChainId', {
+  const defaultNetwork = useOption('defaultChainId', {
     options: Object.keys(CHAIN_NAMES_TO_IDS),
     defaultValue: 'mainnet',
   })

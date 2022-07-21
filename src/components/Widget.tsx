@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
@@ -129,13 +129,17 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   }, [props.defaultChainId, props.jsonRpcEndpoint])
   const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
     if (!props.jsonRpcEndpoint) return JSON_RPC_FALLBACK_ENDPOINTS
-    if (!Object.keys(props.jsonRpcEndpoint).includes(`${defaultChainId}`)) {
-      console.warn(
-        `Did not provide a jsonRpcEndpoint for default chainId: ${defaultChainId}. Falling back to free public endpoints.`
-      )
-      return JSON_RPC_FALLBACK_ENDPOINTS
+    const endpoints = props.jsonRpcEndpoint
+    for (const supportedChain of ALL_SUPPORTED_CHAIN_IDS) {
+      if (!Object.keys(props.jsonRpcEndpoint).includes(`${supportedChain}`)) {
+        console.warn(
+          `Did not provide a jsonRpcEndpoint for chainId: ${supportedChain}. Falling back to free public RPC endpoint.`
+        )
+        const supportedChainId = supportedChain as number
+        endpoints[supportedChainId] = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId]
+      }
     }
-    return props.jsonRpcEndpoint
+    return endpoints
   }, [props.jsonRpcEndpoint, defaultChainId])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
