@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { SupportedChainId } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
@@ -99,7 +99,7 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, defaultChainId, provider, dialog: userDialog, className, onError } = props
+  const { children, theme, provider, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -118,6 +118,13 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS,
     [props.jsonRpcEndpoint]
   )
+  const defaultChainId = useMemo(() => {
+    if (props.defaultChainId && !ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
+      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to Ethereum Mainnet.`)
+      return 1
+    }
+    return props.defaultChainId ?? 1
+  }, [props.defaultChainId])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
