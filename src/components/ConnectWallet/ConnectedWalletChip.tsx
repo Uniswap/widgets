@@ -27,7 +27,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
   function disconnectWallet() {
     connections.forEach(([wallet, _]) => {
       if (!(wallet instanceof Network || wallet instanceof Url)) {
-        // Deactivate non-network wallet connector
+        // only deactivate non-network wallet connectors
         wallet.deactivate ? wallet.deactivate() : wallet.resetState()
       }
     })
