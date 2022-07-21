@@ -89,7 +89,7 @@ export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcEndpoint?: { [chainId: number]: string[] }
+  jsonRpcUrlMap?: { [chainId: number]: string[] }
   defaultChainId?: number
   tokenList?: string | TokenInfo[]
   width?: string | number
@@ -122,18 +122,18 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcEndpoint: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
-    if (!props.jsonRpcEndpoint) return JSON_RPC_FALLBACK_ENDPOINTS
+  const jsonRpcUrlMap: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
+    if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
     for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
-      if (!Object.keys(props.jsonRpcEndpoint).includes(`${supportedChainId}`)) {
+      if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
         console.warn(
-          `Did not provide a jsonRpcEndpoint for chainId: ${supportedChainId}. Falling back to free public RPC endpoint.`
+          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to free public RPC endpoint.`
         )
-        props.jsonRpcEndpoint[supportedChainId as number] = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
+        props.jsonRpcUrlMap[supportedChainId as number] = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
       }
     }
-    return props.jsonRpcEndpoint
-  }, [props.jsonRpcEndpoint])
+    return props.jsonRpcUrlMap
+  }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
@@ -148,7 +148,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                   <AtomProvider>
                     <ActiveWeb3Provider
                       provider={provider}
-                      jsonRpcEndpoint={jsonRpcEndpoint}
+                      jsonRpcUrlMap={jsonRpcUrlMap}
                       defaultChainId={defaultChainId}
                     >
                       <BlockNumberProvider>

@@ -26,9 +26,9 @@ describe('connect', () => {
     expect(toolbar.textContent).toBe('Connect wallet to swap')
   })
 
-  describe('with jsonRpcEndpoint', () => {
+  describe('with jsonRpcUrlMap', () => {
     it('prompts for wallet connection in the Wallet', async () => {
-      act(() => component.rerender(<SwapWidget tokenList={tokens} jsonRpcEndpoint={hardhat.url} />))
+      act(() => component.rerender(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />))
       expect(wallet.hidden).toBeTruthy()
       expect(toolbar.textContent).toBe('Connecting…')
 

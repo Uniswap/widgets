@@ -9,7 +9,7 @@ import useOption from './useOption'
 
 const INFURA_KEY = process.env.INFURA_KEY
 if (INFURA_KEY === undefined) {
-  console.warn(`INFURA_KEY must be a defined environment variable to use JsonRpcEndpoints in the cosmos viewer`)
+  console.warn(`INFURA_KEY must be a defined environment variable to use jsonRpcUrlMap in the cosmos viewer`)
 }
 
 export const INFURA_NETWORK_URLS: { [chainId: number]: string[] } = INFURA_KEY

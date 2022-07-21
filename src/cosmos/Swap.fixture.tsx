@@ -47,7 +47,7 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  const jsonRpcEndpoint = INFURA_NETWORK_URLS
+  const jsonRpcUrlMap = INFURA_NETWORK_URLS
 
   const defaultNetwork = useOption('defaultChainId', {
     options: Object.keys(CHAIN_NAMES_TO_IDS),
@@ -73,7 +73,7 @@ function Fixture() {
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
       locale={locale}
-      jsonRpcEndpoint={jsonRpcEndpoint}
+      jsonRpcUrlMap={jsonRpcUrlMap}
       defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
