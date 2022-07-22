@@ -12,7 +12,7 @@ import { TokenDefaults } from 'index'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
-import { displayTxHashAtom, feeOptionsAtom, Field } from 'state/swap'
+import { displayTxHashAtom, feeOptionsAtom, Field, swapAtom } from 'state/swap'
 import { TransactionType } from 'state/transactions'
 import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
@@ -43,6 +43,7 @@ export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonP
     impact,
   } = useSwapInfo()
   const feeOptions = useAtomValue(feeOptionsAtom)
+  const swap = useAtomValue(swapAtom)
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -64,10 +65,8 @@ export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonP
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
   useEffect(() => setOpen((open) => (trade.trade ? open : false)), [trade.trade])
-  // Close the review modal on chain change.
-  useEffect(() => setOpen(false), [chainId])
-  // Close the review modal on defaults change
-  useEffect(() => setOpen(false), [tokenDefaults])
+  // Close the review modal on chain or swap state change.
+  useEffect(() => setOpen(false), [chainId, swap])
 
   const addTransaction = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
