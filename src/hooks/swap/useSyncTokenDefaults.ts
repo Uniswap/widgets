@@ -4,7 +4,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useToken } from 'hooks/useCurrency'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Field, Swap, swapAtom } from 'state/swap'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
