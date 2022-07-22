@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { TokenInfo } from '@uniswap/token-lists'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -41,8 +42,10 @@ function getTransactionFromMap(
 }
 
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  routerUrl?: string
   onConnectWallet?: () => void
+  onTokenSelect?: () => TokenInfo
+  onTokenSelectorClick?: () => void
+  routerUrl?: string
 }
 
 export default function Swap(props: SwapProps) {
@@ -71,9 +74,19 @@ export default function Swap(props: SwapProps) {
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
           <SwapInfoProvider disabled={isDisabled} routerUrl={props.routerUrl}>
-            <Input disabled={isDisabled} focused={focused} />
+            <Input
+              disabled={isDisabled}
+              focused={focused}
+              onIntegratorTokenSelectorClick={props.onTokenSelectorClick}
+              onIntegratorTokenSelect={props.onTokenSelect}
+            />
             <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused}>
+            <Output
+              disabled={isDisabled}
+              focused={focused}
+              onIntegratorTokenSelectorClick={props.onTokenSelectorClick}
+              onIntegratorTokenSelect={props.onTokenSelect}
+            >
               <Toolbar />
               <SwapButton disabled={isDisabled} />
             </Output>

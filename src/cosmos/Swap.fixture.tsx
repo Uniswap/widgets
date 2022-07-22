@@ -69,12 +69,14 @@ function Fixture() {
       defaultOutputAmount={defaultOutputAmount}
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint}
+      onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onTokenSelect={() => tokens[0]}
+      onTokenSelectorClick={() => console.log('onTokenSelectorClick')}
       provider={connector}
+      routerUrl={routerUrl}
       theme={theme}
       tokenList={tokenList}
       width={width}
-      routerUrl={routerUrl}
-      onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
     />
   )
 }

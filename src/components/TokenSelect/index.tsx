@@ -1,5 +1,6 @@
 import { t, Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { TokenInfo } from '@uniswap/token-lists'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -123,11 +124,19 @@ interface TokenSelectProps {
   collapsed: boolean
   disabled?: boolean
   onSelect: (value: Currency) => void
+  onIntegratorTokenSelectorClick?: () => void | TokenInfo | undefined
 }
 
-export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({
+  value,
+  collapsed,
+  disabled,
+  onSelect,
+  onIntegratorTokenSelectorClick,
+}: TokenSelectProps) {
   usePrefetchBalances()
 
+  // opens our default token select dialog
   const [open, setOpen] = useState(false)
   const onOpen = useCallback(() => setOpen(true), [])
   const selectAndClose = useCallback(
@@ -137,9 +146,16 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
     },
     [onSelect, setOpen]
   )
+
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
+      {/* if integrator provides callback, onClick =  */}
+      <TokenButton
+        value={value}
+        collapsed={collapsed}
+        disabled={disabled}
+        onClick={onIntegratorTokenSelectorClick ?? onOpen}
+      />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )
