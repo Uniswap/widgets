@@ -40,19 +40,14 @@ function useDefaultToken(
   return token ?? undefined
 }
 
-export default function useSyncTokenDefaults({
-  defaultInputTokenAddress,
-  defaultInputAmount,
-  defaultOutputTokenAddress,
-  defaultOutputAmount,
-}: TokenDefaults) {
+export default function useSyncTokenDefaults(tokenDefaults: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
-  const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
+  const defaultOutputToken = useDefaultToken(tokenDefaults.defaultOutputTokenAddress, chainId)
   const defaultInputToken =
-    useDefaultToken(defaultInputTokenAddress, chainId) ??
+    useDefaultToken(tokenDefaults.defaultInputTokenAddress, chainId) ??
     // Default the input token to the native currency if it is not the output token.
     (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
 
@@ -63,43 +58,24 @@ export default function useSyncTokenDefaults({
       [Field.OUTPUT]: defaultOutputToken,
       independentField: Field.INPUT,
     }
-    if (defaultInputToken && defaultInputAmount) {
-      defaultSwapState.amount = defaultInputAmount.toString()
-    } else if (defaultOutputToken && defaultOutputAmount) {
+    if (defaultInputToken && tokenDefaults.defaultInputAmount) {
+      defaultSwapState.amount = tokenDefaults.defaultInputAmount.toString()
+    } else if (defaultOutputToken && tokenDefaults.defaultOutputAmount) {
       defaultSwapState.independentField = Field.OUTPUT
-      defaultSwapState.amount = defaultOutputAmount.toString()
+      defaultSwapState.amount = tokenDefaults.defaultOutputAmount.toString()
     }
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
-  }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
+  }, [
+    tokenDefaults.defaultInputAmount,
+    defaultInputToken,
+    tokenDefaults.defaultOutputAmount,
+    defaultOutputToken,
+    updateSwap,
+  ])
 
   const isTokenListLoaded = useIsTokenListLoaded()
-  const lastChainId = useRef<number | undefined>(undefined)
-  const lastDefaultInputAmount = useRef<number | string | undefined>(undefined)
-  const lastDefaultInputToken = useRef<Currency | undefined>(undefined)
-  const lastDefaultOutputAmount = useRef<number | string | undefined>(undefined)
-  const lastDefaultOutputToken = useRef<Currency | undefined>(undefined)
   useEffect(() => {
-    const isNewChain = chainId && chainId !== lastChainId.current
-    const isNewDefaultTokens =
-      (defaultInputAmount && defaultInputAmount !== lastDefaultInputAmount.current) ||
-      (defaultInputToken && defaultInputToken !== lastDefaultInputToken.current) ||
-      (defaultOutputAmount && defaultOutputAmount !== lastDefaultOutputAmount.current) ||
-      (defaultOutputToken && defaultOutputToken !== lastDefaultOutputToken.current)
-    if (isTokenListLoaded && (isNewChain || isNewDefaultTokens)) {
-      setToDefaults()
-      lastChainId.current = chainId
-      lastDefaultInputAmount.current = defaultInputAmount
-      lastDefaultInputToken.current = defaultInputToken
-      lastDefaultOutputAmount.current = defaultOutputAmount
-      lastDefaultOutputToken.current = defaultOutputToken
-    }
-  }, [
-    isTokenListLoaded,
-    chainId,
-    setToDefaults,
-    defaultInputAmount,
-    defaultInputToken,
-    defaultOutputAmount,
-    defaultOutputToken,
-  ])
+    if (!isTokenListLoaded) return
+    setToDefaults()
+  }, [chainId, tokenDefaults, setToDefaults])
 }
