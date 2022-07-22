@@ -25,7 +25,7 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
 interface SwapButtonProps {
   disabled?: boolean
-  tokenDefaults?: TokenDefaults
+  tokenDefaults: TokenDefaults
 }
 
 export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonProps) {
@@ -67,15 +67,7 @@ export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonP
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
   // Close the review modal on defaults change
-  useEffect(
-    () => setOpen(false),
-    [
-      tokenDefaults?.defaultInputAmount,
-      tokenDefaults?.defaultInputTokenAddress,
-      tokenDefaults?.defaultOutputAmount,
-      tokenDefaults?.defaultOutputTokenAddress,
-    ]
-  )
+  useEffect(() => setOpen(false), [tokenDefaults])
 
   const addTransaction = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)

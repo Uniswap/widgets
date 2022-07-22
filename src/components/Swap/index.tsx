@@ -49,7 +49,6 @@ export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
-  console.log('PROPS', props)
 
   const { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount } = props
   const { active, account } = useActiveWeb3React()
