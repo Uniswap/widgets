@@ -1,4 +1,4 @@
-name: "Semantic commit"
+name: Conventional commit
 
 on:
   pull_request_target:

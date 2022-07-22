@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { INVALID_TRADE, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
@@ -9,7 +10,6 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import { INVALID_TRADE, useBestTrade } from './useBestTrade'
 import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapField {
@@ -31,7 +31,7 @@ interface SwapInfo {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-function useComputeSwapInfo(): SwapInfo {
+function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const { type: wrapType } = useWrapCallback()
   const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
   const { independentField, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
@@ -42,8 +42,9 @@ function useComputeSwapInfo(): SwapInfo {
     [amount, isExactIn, currencyIn, currencyOut]
   )
   const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
-  const trade = useBestTrade(
+  const trade = useRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    routerUrl,
     hasAmounts ? parsedAmount : undefined,
     hasAmounts ? (isExactIn ? currencyOut : currencyIn) : undefined
   )
@@ -111,8 +112,12 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
-export function SwapInfoProvider({ children, disabled }: PropsWithChildren<{ disabled?: boolean }>) {
-  const swapInfo = useComputeSwapInfo()
+export function SwapInfoProvider({
+  children,
+  disabled,
+  routerUrl,
+}: PropsWithChildren<{ disabled?: boolean; routerUrl?: string }>) {
+  const swapInfo = useComputeSwapInfo(routerUrl)
   if (disabled) {
     return <SwapInfoContext.Provider value={DEFAULT_SWAP_INFO}>{children}</SwapInfoContext.Provider>
   }
