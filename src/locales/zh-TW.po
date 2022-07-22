@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-20 22:05\n"
+"PO-Revision-Date: 2022-07-22 20:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -379,10 +379,6 @@ msgstr "如果兌換率變動超過此百分比，則將還原該交易。"
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "分鐘"
-
-#: src/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {通過 1 跳的最佳路線} other {通過# hops 的最佳路線}}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

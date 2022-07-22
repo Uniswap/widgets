@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-20 22:04\n"
+"PO-Revision-Date: 2022-07-22 20:04\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -379,10 +379,6 @@ msgstr "Su transacción se revertirá si el precio cambia desfavorablemente más
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minutos"
-
-#: src/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {¡La mejor ruta a través de 1 salto} other {¡La mejor ruta a través de #hops}}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

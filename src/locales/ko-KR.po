@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-20 22:05\n"
+"PO-Revision-Date: 2022-07-22 20:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -379,10 +379,6 @@ msgstr "가격이 이 요율 이상으로 불리하게 변경되면 거래가 �
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "분"
-
-#: src/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {1 홉을 통한 최적의 경로} other {# 홉을 통한 최적의 경로}}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

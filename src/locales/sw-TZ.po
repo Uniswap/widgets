@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-20 22:05\n"
+"PO-Revision-Date: 2022-07-22 20:05\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -379,10 +379,6 @@ msgstr "Muamala wako utarejeshwa ikiwa bei itabadilika vibaya na zaidi ya asilim
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "dakika"
-
-#: src/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {Njia bora zaidi kupitia 1 hop} other {Njia bora zaidi kupitia miinuko #}}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"
