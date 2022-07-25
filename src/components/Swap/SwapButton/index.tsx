@@ -127,7 +127,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxSuccess, onT
       // completed trade's impact is reflected in future fetched trades.
       transaction.wait(1).then((receipt) => {
         if (receipt?.status === 0) {
-          onTxFail?.(new Error('smtn went wrong'), transaction)
+          onTxFail?.(new Error('smtn went wrong :('), transaction)
         } else {
           onTxSuccess?.(receipt.transactionHash, receipt)
         }
