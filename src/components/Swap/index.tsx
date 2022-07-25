@@ -7,7 +7,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
@@ -43,6 +43,9 @@ function getTransactionFromMap(
 export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWallet?: () => void
+  onTxSubmit?: (txHash: string, data: any) => void
+  onTxSuccess?: (txHash: string, data: any) => void
+  onTxFail?: (error: Error, data: any) => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -56,6 +59,10 @@ export default function Swap(props: SwapProps) {
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
   const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
+
+  useEffect(() => {
+    if (displayTx?.receipt?.status && displayTxHash) props.onTxSuccess?.(displayTxHash, displayTx.info)
+  }, [displayTx?.receipt?.status, displayTxHash])
 
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(active && onSupportedNetwork)
@@ -75,7 +82,7 @@ export default function Swap(props: SwapProps) {
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} />
+              <SwapButton disabled={isDisabled} onTxSubmit={props.onTxSubmit} onTxFail={props.onTxFail} />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>

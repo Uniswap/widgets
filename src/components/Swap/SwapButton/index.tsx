@@ -24,9 +24,11 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
 interface SwapButtonProps {
   disabled?: boolean
+  onTxSubmit?: (txHash: string, data: any) => void
+  onTxFail?: (error: Error, data: any) => void
 }
 
-export default memo(function SwapButton({ disabled }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: {
@@ -57,6 +59,8 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     signatureData,
     deadline,
     feeOptions,
+    onTxSubmit,
+    onTxFail,
   })
 
   const [open, setOpen] = useState(false)
