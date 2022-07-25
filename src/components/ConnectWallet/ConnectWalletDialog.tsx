@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
-import { Connector } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
@@ -11,7 +10,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainId, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
 import { atom, useAtom } from 'jotai'
 import QRCode from 'qrcode'
 import { useCallback, useEffect, useState } from 'react'
@@ -100,7 +99,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
         setQrCodeSvg(qrCodeSvg)
       })
     } else {
-      walletConnect.activate().catch((e) => {
+      walletConnect.activate(defaultChainId).catch((e) => {
         if (stale) return
         console.error(e)
       })
@@ -184,8 +183,8 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  let defaultConnections: [Connector, Web3ReactHooks][]
-  const firstConnector: Connector = connections[0][0]
+  let defaultConnections: Web3Connection[]
+  const [firstConnector] = connections[0]
   if (firstConnector instanceof EIP1193 || firstConnector instanceof Url) {
     // If first connector is the integrator-provided connector
     defaultConnections = connections.slice(1)
@@ -195,6 +194,15 @@ export function ConnectWalletDialog() {
   const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
 
   const onError = (error: any) => error && console.error('web3 error:', error)
+  const activateWalletConnectPopup = useCallback(() => {
+    const [walletConnectPopup] = wcPopupConnection
+    walletConnectPopup.activate(defaultChainId)?.catch(onError)
+  }, [wcPopupConnection])
+  const activateMetaMask = useCallback(() => {
+    const [metamask] = mmConnection
+    metamask.activate(defaultChainId)?.catch(onError)
+  }, [mmConnection])
+
   return (
     <>
       <Header title={<Trans>Connect wallet</Trans>} />
@@ -204,15 +212,10 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onError={onError}
-            onClick={() => wcPopupConnection[0].activate()?.catch(onError)}
+            onClick={activateWalletConnectPopup}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton
-              walletName="MetaMask"
-              logoSrc={METAMASK_ICON_URL}
-              onClick={() => mmConnection[0].activate()?.catch(onError)}
-            />
+            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>
