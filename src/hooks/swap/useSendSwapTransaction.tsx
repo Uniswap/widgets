@@ -140,5 +140,5 @@ export default function useSendSwapTransaction(
           })
       },
     }
-  }, [account, chainId, library, swapCalls, trade])
+  }, [account, chainId, library, swapCalls, trade, onTxFail, onTxSubmit])
 }

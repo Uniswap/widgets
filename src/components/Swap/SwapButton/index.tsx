@@ -149,7 +149,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxSuccess, onT
       // TODO(zzmp): Surface errors from swap.
       console.log(e)
     }
-  }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade])
+  }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade, onTxFail, onTxSuccess])
 
   const disableSwap = useMemo(
     () =>
