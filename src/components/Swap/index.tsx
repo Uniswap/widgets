@@ -60,10 +60,6 @@ export default function Swap(props: SwapProps) {
   const pendingTxs = usePendingTransactions()
   const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
-  useEffect(() => {
-    if (displayTx?.receipt?.status && displayTxHash) props.onTxSuccess?.(displayTxHash, displayTx.info)
-  }, [displayTx?.receipt?.status, displayTxHash])
-
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(active && onSupportedNetwork)
 
@@ -82,7 +78,12 @@ export default function Swap(props: SwapProps) {
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} onTxSubmit={props.onTxSubmit} onTxFail={props.onTxFail} />
+              <SwapButton
+                disabled={isDisabled}
+                onTxSubmit={props.onTxSubmit}
+                onTxSuccess={props.onTxSuccess}
+                onTxFail={props.onTxFail}
+              />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>

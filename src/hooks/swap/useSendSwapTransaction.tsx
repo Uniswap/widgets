@@ -116,14 +116,14 @@ export default function useSendSwapTransaction(
           .getSigner()
           .sendTransaction({
             from: account,
-            to: address,
+            to: address, // SwapRouter contract address
             data: calldata,
             // let the wallet try if we can't estimate the gas
             ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
-            onTxSubmit?.(response.hash, calldata)
+            onTxSubmit?.(response.hash, response)
             return response
           })
           .catch((error) => {
@@ -132,8 +132,8 @@ export default function useSendSwapTransaction(
               throw new Error(t`Transaction rejected.`)
             } else {
               // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
-              onTxFail?.(error, calldata)
+              console.error(`Swap failed`, error, calldata, value)
+              onTxFail?.(error, error?.transactionHash)
 
               throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)?.toString()}`)
             }

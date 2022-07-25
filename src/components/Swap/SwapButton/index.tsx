@@ -25,10 +25,11 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 interface SwapButtonProps {
   disabled?: boolean
   onTxSubmit?: (txHash: string, data: any) => void
+  onTxSuccess?: (txHash: string, data: any) => void
   onTxFail?: (error: Error, data: any) => void
 }
 
-export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled, onTxSubmit, onTxSuccess, onTxFail }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: {
@@ -125,6 +126,11 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: Swap
       // Set the block containing the response to the oldest valid block to ensure that the
       // completed trade's impact is reflected in future fetched trades.
       transaction.wait(1).then((receipt) => {
+        if (receipt?.status === 0) {
+          onTxFail?.(new Error('smtn went wrong'), transaction)
+        } else {
+          onTxSuccess?.(receipt.transactionHash, receipt)
+        }
         setOldestValidBlock(receipt.blockNumber)
       })
 
