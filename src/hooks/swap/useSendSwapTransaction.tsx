@@ -135,7 +135,7 @@ export default function useSendSwapTransaction(
               console.error(`Swap failed`, error, calldata, value)
               onTxFail?.(error, error?.transactionHash)
 
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)?.toString()}`)
+              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`) // FIXME: this prints to console as [object Object]
             }
           })
       },
