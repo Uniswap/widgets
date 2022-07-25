@@ -69,8 +69,8 @@ interface ButtonProps {
   walletName?: string
   logoSrc?: string
   connection?: Web3Connection
-  onError?: (e: Error | undefined) => void
   onClick: () => void
+  onError?: (e: Error | undefined) => void
 }
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
@@ -85,7 +85,7 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
   })
 }
 
-function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
+function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick, onError }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
 
   const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
@@ -101,7 +101,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     } else {
       walletConnect.activate(defaultChainId).catch((e) => {
         if (stale) return
-        console.error(e)
+        onError?.(e)
       })
     }
     return () => {
@@ -111,7 +111,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
 
   useEffect(() => {
     const disconnectListener = async (err: Error | null, _: any) => {
-      if (err) console.warn(err)
+      if (onError && err) onError(err)
       // Clear saved QR URI after disconnection
       setQrUri(undefined)
       walletConnect.deactivate()
@@ -126,7 +126,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     })
 
     const uriListener = async (err: Error | null, payload: any) => {
-      if (err) console.warn(err)
+      if (onError && err) onError(err)
       const uri: string = payload.params[0]
       if (uri) {
         setQrUri(uri)
@@ -213,6 +213,7 @@ export function ConnectWalletDialog() {
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
             onClick={activateWalletConnectPopup}
+            onError={onError}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />
