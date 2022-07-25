@@ -41,10 +41,11 @@ interface TokenButtonProps {
   value?: Currency
   collapsed: boolean
   disabled?: boolean
+  isUnapprovedToken?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, collapsed, disabled, isUnapprovedToken, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
   const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
 
@@ -85,7 +86,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
         >
           {value ? (
             <>
-              <TokenImg token={value} size={1.2} />
+              <TokenImg token={value} size={1.2} unapproved={isUnapprovedToken} />
               {value.symbol}
             </>
           ) : (

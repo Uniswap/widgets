@@ -43,7 +43,7 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
   return <img src={src} alt={alt} key={alt} onError={onError} {...rest} />
 }
 
-export default styled(TokenImg)<{ size?: number }>`
+export default styled(TokenImg)<{ size?: number; unapproved?: boolean }>`
   // radial-gradient calculates distance from the corner, not the edge: divide by sqrt(2)
   background: radial-gradient(
     ${({ theme }) => theme.module} calc(100% / ${Math.sqrt(2)} - 1.5px),
@@ -52,4 +52,6 @@ export default styled(TokenImg)<{ size?: number }>`
   border-radius: 100%;
   height: ${({ size }) => size || 1}em;
   width: ${({ size }) => size || 1}em;
+
+  ${({ unapproved }) => unapproved && 'filter: grayscale(100%) opacity(60%)'}
 `
