@@ -112,9 +112,6 @@ export default function useSendSwapTransaction(
           call: { address, calldata, value },
         } = bestCallOption
 
-        console.log('LIBRARY', library)
-        console.log('ACCOUNTS', account)
-
         return library
           .getSigner()
           .sendTransaction({
