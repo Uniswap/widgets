@@ -9,7 +9,7 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
-import { ChainName, CHAIN_NAMES_TO_IDS } from 'constants/chains'
+import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
@@ -54,8 +54,6 @@ function Fixture() {
     defaultValue: 'mainnet',
   })
   const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
-  console.log(defaultNetwork)
-  console.log(defaultChainId)
   const connector = useProvider(defaultChainId)
 
   const tokenLists: Record<string, TokenInfo[]> = {

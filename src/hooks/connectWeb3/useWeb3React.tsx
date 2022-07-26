@@ -6,11 +6,12 @@ import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { PropsWithChildren, useMemo } from 'react'
+import { atom, useAtom } from 'jotai'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
 export let connections: Web3Connection[] = []
-export let defaultChainId = 1
+export const defaultChainIdAtom = atom<number>(1)
 
 function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
   T,
@@ -57,14 +58,17 @@ interface ActiveWeb3ProviderProps {
 }
 
 export function ActiveWeb3Provider({
-  provider: propsProvider,
+  provider,
   jsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  if (propsDefaultChainId) defaultChainId = propsDefaultChainId
+  const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
+  useEffect(() => {
+    if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
+  }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
-  const integratorConnection = useMemo(() => getWallet(propsProvider), [propsProvider])
+  const integratorConnection = useMemo(() => getWallet(provider), [provider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
     []
@@ -81,9 +85,7 @@ export function ActiveWeb3Provider({
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
-        initializeConnector<Network>(
-          (actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId: propsDefaultChainId })
-        )
+        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcUrlMap, propsDefaultChainId }))
       ),
     [jsonRpcUrlMap, propsDefaultChainId]
   )

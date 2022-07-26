@@ -10,8 +10,9 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, defaultChainId, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainIdAtom, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
 import { atom, useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import QRCode from 'qrcode'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -87,6 +88,7 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
 function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
   const [error, setError] = useState(undefined)
+  const defaultChainId = useAtomValue(defaultChainIdAtom)
 
   const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
@@ -107,7 +109,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     return () => {
       stale = true
     }
-  }, [qrUri, walletConnect])
+  }, [qrUri, walletConnect, defaultChainId])
 
   useEffect(() => {
     // Log web3 errors
@@ -199,15 +201,16 @@ export function ConnectWalletDialog() {
     defaultConnections = connections
   }
   const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
+  const defaultChainId = useAtomValue(defaultChainIdAtom)
 
   const activateWalletConnectPopup = useCallback(() => {
     const [walletConnectPopup] = wcPopupConnection
     walletConnectPopup.activate(defaultChainId)
-  }, [wcPopupConnection])
+  }, [wcPopupConnection, defaultChainId])
   const activateMetaMask = useCallback(() => {
     const [metamask] = mmConnection
     metamask.activate(defaultChainId)
-  }, [mmConnection])
+  }, [mmConnection, defaultChainId])
 
   return (
     <>
