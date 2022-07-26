@@ -55,6 +55,10 @@ export const TextButton = transparentButton('accent')
 
 const SecondaryButton = transparentButton('secondary')
 
+const StyledIconButton = styled(SecondaryButton)`
+  transform: translateY(1.75px);
+`
+
 interface IconButtonProps {
   icon: Icon
   iconProps?: ComponentProps<Icon>
@@ -63,9 +67,9 @@ interface IconButtonProps {
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps & ComponentProps<typeof BaseButton>>(
   function IconButton({ icon: Icon, iconProps, ...props }: IconButtonProps & ComponentProps<typeof BaseButton>, ref) {
     return (
-      <SecondaryButton {...props} ref={ref}>
+      <StyledIconButton {...props} ref={ref}>
         <Icon {...iconProps} />
-      </SecondaryButton>
+      </StyledIconButton>
     )
   }
 )

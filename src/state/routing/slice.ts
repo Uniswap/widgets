@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
-import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { createApi, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // Importing just the type, so smart-order-router is lazy-loaded
 // eslint-disable-next-line no-restricted-imports
@@ -38,7 +38,9 @@ const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: s
 
 export const routing = createApi({
   reducerPath: 'routing',
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
+  baseQuery: async () => {
+    return await (await global.fetch('/')).json()
+  },
   serializeQueryArgs: serializeRoutingCacheKey, // need to write custom cache key fxn to handle non-serializable JsonRpcProvider provider
   endpoints: (build) => ({
     getQuote: build.query<
@@ -101,9 +103,6 @@ export const routing = createApi({
         return { data: result?.data as GetQuoteResult }
       },
       keepUnusedDataFor: ms`10s`,
-      extraOptions: {
-        maxRetries: 0,
-      },
     }),
   }),
 })

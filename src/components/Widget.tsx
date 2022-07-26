@@ -52,12 +52,12 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
 
 const slideIn = keyframes`
   from {
-    transform: translateY(calc(100% - 0.25em));
+    transform: translateX(calc(100% - 0.25em));
   }
 `
 const slideOut = keyframes`
   to {
-    transform: translateY(calc(100% - 0.25em));
+    transform: translateX(calc(100% - 0.25em));
   }
 `
 
