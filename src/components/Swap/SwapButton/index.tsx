@@ -123,16 +123,19 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxSuccess, onT
       })
       setDisplayTxHash(transaction.hash)
 
-      // Set the block containing the response to the oldest valid block to ensure that the
-      // completed trade's impact is reflected in future fetched trades.
-      transaction.wait(1).then((receipt) => {
-        if (receipt?.status === 0) {
-          onTxFail?.(new Error('Transaction failed'), receipt)
-        } else {
-          onTxSuccess?.(receipt.transactionHash, receipt)
-        }
-        setOldestValidBlock(receipt.blockNumber)
-      })
+      transaction
+        .wait(1)
+        .then((receipt) => {
+          if (receipt?.status === 0) {
+            onTxFail?.(new Error('Transaction failed'), receipt)
+          } else {
+            onTxSuccess?.(receipt.transactionHash, receipt)
+          }
+          // Set the block containing the response to the oldest valid block to ensure that the
+          // completed trade's impact is reflected in future fetched trades.
+          setOldestValidBlock(receipt.blockNumber)
+        })
+        .catch((e) => onTxFail?.(e, transaction.hash))
 
       // Only reset open after any queued animations to avoid layout thrashing, because a
       // successful swap will open the status dialog and immediately cover the summary dialog.
