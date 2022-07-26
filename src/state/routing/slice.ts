@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { isPlainObject } from '@reduxjs/toolkit'
+import { compose, isPlainObject } from '@reduxjs/toolkit'
 import { createApi, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -15,6 +15,46 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
+}
+
+export interface QuoteArguments {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  routerUrl?: string
+  provider: JsonRpcProvider
+  type: 'exactIn' | 'exactOut'
+}
+
+export async function getRouterApiQuote(args: QuoteArguments): Promise<{ data: GetQuoteResult; error?: unknown }> {
+  const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerUrl, type } = args
+  const query = qs.stringify({
+    ...DEFAULT_QUERY_PARAMS,
+    tokenInAddress,
+    tokenInChainId,
+    tokenOutAddress,
+    tokenOutChainId,
+    amount,
+    type,
+  })
+  const response = await global.fetch(`${routerUrl}quote?${query}`)
+  if (!response.ok) {
+    throw new Error(`${response.statusText}: could not get quote from auto-router API`)
+  }
+  const data = await response.json()
+  data.isApiResult = true
+  return { data }
+}
+
+export async function getClientSideQuote(args: QuoteArguments) {
+  // Lazy-load the clientside router to improve initial pageload times.
+  return await (await import('../../hooks/routing/clientSideSmartOrderRouter')).getClientSideQuote(args, { protocols })
 }
 
 const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: string; queryArgs: any }) => {
@@ -43,62 +83,23 @@ export const routing = createApi({
   },
   serializeQueryArgs: serializeRoutingCacheKey, // need to write custom cache key fxn to handle non-serializable JsonRpcProvider provider
   endpoints: (build) => ({
-    getQuote: build.query<
-      GetQuoteResult,
-      {
-        tokenInAddress: string
-        tokenInChainId: ChainId
-        tokenInDecimals: number
-        tokenInSymbol?: string
-        tokenOutAddress: string
-        tokenOutChainId: ChainId
-        tokenOutDecimals: number
-        tokenOutSymbol?: string
-        amount: string
-        routerUrl?: string
-        provider: JsonRpcProvider
-        type: 'exactIn' | 'exactOut'
-      }
-    >({
+    getQuote: build.query<GetQuoteResult, QuoteArguments>({
       async queryFn(args, _api, _extraOptions) {
-        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerUrl, provider, type } =
-          args
-
-        async function getClientSideQuote() {
-          // Lazy-load the clientside router to improve initial pageload times.
-          return await (
-            await import('../../hooks/routing/clientSideSmartOrderRouter')
-          ).getClientSideQuote(args, provider, { protocols })
-        }
-
+        const { routerUrl } = args
         let result
         if (Boolean(routerUrl)) {
           // Try routing API, fallback to clientside SOR
           try {
-            const query = qs.stringify({
-              ...DEFAULT_QUERY_PARAMS,
-              tokenInAddress,
-              tokenInChainId,
-              tokenOutAddress,
-              tokenOutChainId,
-              amount,
-              type,
-            })
-            const response = await global.fetch(`${routerUrl}quote?${query}`)
-            if (!response.ok) {
-              throw new Error(`${response.statusText}: could not get quote from auto-router API`)
-            }
-            const data = await response.json()
-            data.isApiResult = true
-            result = { data }
+            result = await getRouterApiQuote(args)
           } catch (e) {
             console.warn(e)
-            result = await getClientSideQuote()
+            result = await getClientSideQuote(args)
           }
         } else {
           // If integrator did not provide a routing API URL param, use clientside SOR
-          result = await getClientSideQuote()
+          result = await getClientSideQuote(args)
         }
+        console.log(result)
         if (result?.error) return { error: result.error as FetchBaseQueryError }
         return { data: result?.data as GetQuoteResult }
       },

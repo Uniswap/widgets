@@ -33,30 +33,29 @@ export function useRouterTrade<TTradeType extends TradeType>(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
+  isApiResult?: boolean
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
   const { chainId, library } = useActiveWeb3React()
   const autoRouterSupported = isAutoRouterSupportedChain(chainId)
   const isWindowVisible = useIsWindowVisible()
+  const useRouterApi = autoRouterSupported && isWindowVisible
+
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
   // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
     200
   )
-<<<<<<< HEAD
-=======
   const isDebouncing = amountSpecified !== debouncedAmount && otherCurrency === debouncedOtherCurrency
->>>>>>> main
-  const debouncedAmountSpecified = autoRouterSupported && isWindowVisible ? debouncedAmount : undefined
 
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
-        ? [debouncedAmountSpecified?.currency, debouncedOtherCurrency]
-        : [debouncedOtherCurrency, debouncedAmountSpecified?.currency],
-    [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
+        ? [debouncedAmount?.currency, debouncedOtherCurrency]
+        : [debouncedOtherCurrency, debouncedAmount?.currency],
+    [debouncedAmount, debouncedOtherCurrency, tradeType]
   )
 
   const currencyChainId = currencyIn?.chainId as ChainId
@@ -67,17 +66,13 @@ export function useRouterTrade<TTradeType extends TradeType>(
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
-    amount: debouncedAmountSpecified,
+    amount: debouncedAmount,
     tradeType,
-    routerUrl,
+    routerUrl: useRouterApi ? routerUrl : undefined,
     provider: library as JsonRpcProvider,
   })
 
-<<<<<<< HEAD
-  const { isFetching, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
-=======
   const { isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
->>>>>>> main
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -94,21 +89,6 @@ export function useRouterTrade<TTradeType extends TradeType>(
 
   const isSyncing = currentData !== data
 
-<<<<<<< HEAD
-  return useMemo(() => {
-    if (!currencyIn || !currencyOut) {
-      return {
-        state: TradeState.INVALID,
-        trade: undefined,
-      }
-    }
-
-    if (isFetching) {
-      return {
-        state: TradeState.LOADING,
-        trade: undefined,
-      }
-=======
   const trade = useMemo(() => {
     if (!route) return
     try {
@@ -119,12 +99,11 @@ export function useRouterTrade<TTradeType extends TradeType>(
     }
   }, [gasUseEstimateUSD, route, tradeType])
 
-  return useMemo(() => {
+  const result = useMemo(() => {
     if (!currencyIn || !currencyOut) return INVALID_TRADE
 
     if (!trade && !isError) {
       return { state: isDebouncing ? TradeState.SYNCING : TradeState.LOADING, trade: undefined }
->>>>>>> main
     }
 
     let otherAmount = undefined
@@ -142,34 +121,10 @@ export function useRouterTrade<TTradeType extends TradeType>(
       }
     }
 
-<<<<<<< HEAD
-    try {
-      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      return {
-        // always return VALID regardless of isFetching status
-        state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
-        trade,
-      }
-    } catch (e) {
-      return { state: TradeState.INVALID, trade: undefined }
-    }
-  }, [
-    currencyIn,
-    currencyOut,
-    quoteResult,
-    isFetching,
-    tradeType,
-    isError,
-    route,
-    queryArgs,
-    gasUseEstimateUSD,
-    isSyncing,
-  ])
-=======
     if (trade) {
       return { state: isSyncing ? TradeState.SYNCING : TradeState.VALID, trade }
     }
     return INVALID_TRADE
   }, [currencyIn, currencyOut, quoteResult, trade, tradeType, isError, route, queryArgs, isDebouncing, isSyncing])
->>>>>>> main
+  return { isApiResult: quoteResult?.isApiResult, ...result }
 }

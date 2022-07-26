@@ -4,6 +4,7 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
+import { QuoteArguments } from 'state/routing/slice'
 import { GetQuoteResult } from 'state/routing/types'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -58,19 +59,6 @@ async function getQuote(
   return { data }
 }
 
-interface QuoteArguments {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  type: 'exactIn' | 'exactOut'
-}
-
 export async function getClientSideQuote(
   {
     tokenInAddress,
@@ -82,9 +70,9 @@ export async function getClientSideQuote(
     tokenOutDecimals,
     tokenOutSymbol,
     amount,
+    provider,
     type,
   }: QuoteArguments,
-  provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
