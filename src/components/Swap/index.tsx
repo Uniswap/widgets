@@ -50,6 +50,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
 
+  const { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount } = props
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -75,7 +76,15 @@ export default function Swap(props: SwapProps) {
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} />
+              <SwapButton
+                disabled={isDisabled}
+                tokenDefaults={{
+                  defaultInputAmount,
+                  defaultInputTokenAddress,
+                  defaultOutputAmount,
+                  defaultOutputTokenAddress,
+                }}
+              />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>

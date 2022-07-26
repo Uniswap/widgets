@@ -8,10 +8,11 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { Spinner } from 'icons'
+import { TokenDefaults } from 'index'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
-import { displayTxHashAtom, feeOptionsAtom, Field } from 'state/swap'
+import { displayTxHashAtom, feeOptionsAtom, Field, swapAtom } from 'state/swap'
 import { TransactionType } from 'state/transactions'
 import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
@@ -24,9 +25,10 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
 interface SwapButtonProps {
   disabled?: boolean
+  tokenDefaults: TokenDefaults
 }
 
-export default memo(function SwapButton({ disabled }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled, tokenDefaults }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: {
@@ -41,6 +43,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     impact,
   } = useSwapInfo()
   const feeOptions = useAtomValue(feeOptionsAtom)
+  const swap = useAtomValue(swapAtom)
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -62,8 +65,8 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
   useEffect(() => setOpen((open) => (trade.trade ? open : false)), [trade.trade])
-  // Close the review modal on chain change.
-  useEffect(() => setOpen(false), [chainId])
+  // Close the review modal on chain or swap state change.
+  useEffect(() => setOpen(false), [chainId, swap])
 
   const addTransaction = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
