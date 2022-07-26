@@ -12,7 +12,7 @@ interface WalletProps {
 }
 
 export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
-  // Attempt to connect eagerly to current chainId on mount
+  // Attempt to connect eagerly on mount, and prompt switch networks when integrator's defaultChainId changes
   const defaultChainId = useAtomValue(defaultChainIdAtom)
   useEffect(() => {
     connections.forEach(([wallet, _]) =>
