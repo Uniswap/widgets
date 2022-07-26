@@ -60,7 +60,12 @@ export function usePendingApproval(token?: Token, spender?: string): string | un
   )?.info.response.hash
 }
 
-export function TransactionsUpdater() {
+interface TransactionsUpdaterProps {
+  onTxSuccess?: (txHash: string, data: any) => void
+  onTxFail?: (error: Error, data: any) => void
+}
+
+export function TransactionsUpdater({ onTxSuccess, onTxFail }: TransactionsUpdaterProps) {
   const pendingTransactions = usePendingTransactions()
 
   const updateTxs = useUpdateAtom(transactionsAtom)
@@ -79,6 +84,11 @@ export function TransactionsUpdater() {
   )
   const onReceipt = useCallback(
     ({ chainId, hash, receipt }) => {
+      if (receipt?.status === 0) {
+        onTxFail?.(new Error('Transaction failed'), receipt)
+      } else {
+        onTxSuccess?.(receipt.transactionHash, receipt)
+      }
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
@@ -86,7 +96,7 @@ export function TransactionsUpdater() {
         }
       })
     },
-    [updateTxs]
+    [updateTxs, onTxFail, onTxSuccess]
   )
 
   return <Updater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
