@@ -119,7 +119,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       setDisplayTxHash(transaction.hash)
 
       // Set the block containing the response to the oldest valid block to ensure that the
-      // completed trade's impact is reflected in future fetched trades
+      // completed trade's impact is reflected in future fetched trades.
       transaction.wait(1).then((receipt) => {
         setOldestValidBlock(receipt.blockNumber)
       })
