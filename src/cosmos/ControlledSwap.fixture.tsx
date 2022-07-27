@@ -1,4 +1,5 @@
 import { tokens } from '@uniswap/default-token-list'
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
@@ -12,7 +13,7 @@ import {
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
-import { DAI, USDC_MAINNET } from '../constants/tokens'
+import { UNI, USDC } from '../constants/tokens'
 import useJsonRpcEndpoint from './useJsonRpcEndpoint'
 import useOption from './useOption'
 import useProvider from './useProvider'
@@ -27,16 +28,16 @@ function Fixture() {
     ],
   })
 
-  // TODO(zzmp): Changing defaults has no effect if done after the first render.
-  const currencies: Record<string, string> = {
-    Native: 'NATIVE',
-    DAI: DAI.address,
-    USDC: USDC_MAINNET.address,
+  const currencies: Record<string, Token> = {
+    ...Object.entries(UNI).reduce(
+      ([chainId, token]: any, acc) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
+      {}
+    ),
+    ...Object.entries(USDC).reduce(
+      ([chainId, token]: any, acc) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
+      {}
+    ),
   }
-  const defaultInputToken = useOption('defaultInputToken', { options: currencies, defaultValue: 'Native' })
-  const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 1 })
-  const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
-  const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
   const [width] = useValue('width', { defaultValue: 360 })
 
@@ -59,14 +60,18 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
+  const inputToken = useOption('inputToken', {
+    options: currencies,
+    defaultValue: `${SupportedChainId.MAINNET}-${USDC[SupportedChainId.MAINNET].address}`,
+  })
+  const [inputTokenAmount] = useValue('inputTokenAmount', { defaultValue: 1 })
+  const outputToken = useOption('outputToken', { options: currencies })
+  const [outputTokenAmount] = useValue('outputTokenAmount', { defaultValue: 0 })
+
   return (
     <SwapWidget
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
-      defaultInputTokenAddress={defaultInputToken}
-      defaultInputAmount={defaultInputAmount}
-      defaultOutputTokenAddress={defaultOutputToken}
-      defaultOutputAmount={defaultOutputAmount}
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint}
       provider={connector}
@@ -75,6 +80,11 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      // controlled values
+      inputToken={inputToken}
+      inputTokenAmount={inputTokenAmount}
+      outputToken={outputToken}
+      outputTokenAmount={outputTokenAmount}
     />
   )
 }

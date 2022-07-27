@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Token } from '@uniswap/sdk-core'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -40,7 +41,15 @@ function getTransactionFromMap(
   return
 }
 
+export interface SwapProps extends FeeOptions {
+  // controlled
+  inputToken: Token
+  inputTokenAmount: number
+  outputToken: Token
+  outputTokenAmount: number
+}
 export interface SwapProps extends TokenDefaults, FeeOptions {
+  // uncontrolled
   routerUrl?: string
   onConnectWallet?: () => void
 }
