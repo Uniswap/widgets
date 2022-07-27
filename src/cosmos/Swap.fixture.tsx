@@ -9,13 +9,13 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
+import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
-import useJsonRpcEndpoint from './useJsonRpcEndpoint'
 import useOption from './useOption'
-import useProvider from './useProvider'
+import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
 function Fixture() {
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
@@ -47,8 +47,14 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  const jsonRpcEndpoint = useJsonRpcEndpoint()
-  const connector = useProvider()
+  const jsonRpcUrlMap = INFURA_NETWORK_URLS
+
+  const defaultNetwork = useOption('defaultChainId', {
+    options: Object.keys(CHAIN_NAMES_TO_IDS),
+    defaultValue: 'mainnet',
+  })
+  const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
+  const connector = useProvider(defaultChainId)
 
   const tokenLists: Record<string, TokenInfo[]> = {
     Default: tokens,
@@ -66,7 +72,8 @@ function Fixture() {
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
       locale={locale}
-      jsonRpcEndpoint={jsonRpcEndpoint}
+      jsonRpcUrlMap={jsonRpcUrlMap}
+      defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
       tokenList={tokenList}

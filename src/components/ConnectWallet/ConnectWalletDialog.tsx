@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
-import { Connector } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
@@ -11,10 +10,11 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
 import EventEmitter from 'events'
-import { connections, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainIdAtom, Web3Connection } from 'hooks/connectWeb3/useWeb3React'
 import { atom, useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import QRCode from 'qrcode'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { lightTheme, ThemedText } from 'theme'
 
@@ -88,6 +88,7 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
 function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
   const [error, setError] = useState(undefined)
+  const defaultChainId = useAtomValue(defaultChainIdAtom)
 
   const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
@@ -100,7 +101,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
         setQrCodeSvg(qrCodeSvg)
       })
     } else {
-      walletConnect.activate().catch((e) => {
+      walletConnect.activate(defaultChainId).catch((e) => {
         if (stale) return
         setError(e)
       })
@@ -108,7 +109,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     return () => {
       stale = true
     }
-  }, [qrUri, walletConnect])
+  }, [qrUri, walletConnect, defaultChainId])
 
   useEffect(() => {
     // Log web3 errors
@@ -191,8 +192,8 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  let defaultConnections: [Connector, Web3ReactHooks][]
-  const firstConnector: Connector = connections[0][0]
+  let defaultConnections: Web3Connection[]
+  const [firstConnector] = connections[0]
   if (firstConnector instanceof EIP1193 || firstConnector instanceof Url) {
     // If first connector is the integrator-provided connector
     defaultConnections = connections.slice(1)
@@ -200,6 +201,16 @@ export function ConnectWalletDialog() {
     defaultConnections = connections
   }
   const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
+  const defaultChainId = useAtomValue(defaultChainIdAtom)
+
+  const activateWalletConnectPopup = useCallback(() => {
+    const [walletConnectPopup] = wcPopupConnection
+    walletConnectPopup.activate(defaultChainId)
+  }, [wcPopupConnection, defaultChainId])
+  const activateMetaMask = useCallback(() => {
+    const [metamask] = mmConnection
+    metamask.activate(defaultChainId)
+  }, [mmConnection, defaultChainId])
 
   return (
     <>
@@ -210,14 +221,10 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
-            onClick={() => wcPopupConnection[0].activate()}
+            onClick={activateWalletConnectPopup}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton
-              walletName="MetaMask"
-              logoSrc={METAMASK_ICON_URL}
-              onClick={() => mmConnection[0].activate()}
-            />
+            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>
