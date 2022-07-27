@@ -83,7 +83,7 @@ export default function useSendSwapTransaction(
                   })
                   .catch((callError) => {
                     console.debug('Call threw error', call, callError)
-                    return { call, error: swapErrorToUserReadableMessage(callError) }
+                    return { call, error: <Trans>{swapErrorToUserReadableMessage(callError)}</Trans> }
                   })
               })
           })
