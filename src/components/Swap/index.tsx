@@ -44,7 +44,6 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWallet?: () => void
   onTxSubmit?: (txHash: string, data: any) => void
-  onTxFail?: (error: Error, data: any) => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -77,7 +76,7 @@ export default function Swap(props: SwapProps) {
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} onTxSubmit={props.onTxSubmit} onTxFail={props.onTxFail} />
+              <SwapButton disabled={isDisabled} onTxSubmit={props.onTxSubmit} />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>

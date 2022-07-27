@@ -19,7 +19,7 @@ export function usePendingTransactions() {
   return (chainId ? txs[chainId] : null) ?? {}
 }
 
-export function useAddTransaction() {
+export function useAddTransaction(onTxSubmit?: (txHash: string, data: any) => void) {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)
@@ -30,13 +30,14 @@ export function useAddTransaction() {
       const txChainId = chainId
       const { hash } = info.response
 
+      onTxSubmit?.(hash, info.response)
       updateTxs((chainTxs) => {
         const txs = chainTxs[txChainId] || {}
         txs[hash] = { addedTime: new Date().getTime(), lastCheckedBlockNumber: blockNumber, info }
         chainTxs[chainId] = txs
       })
     },
-    [blockNumber, chainId, updateTxs]
+    [blockNumber, chainId, onTxSubmit, updateTxs]
   )
 }
 

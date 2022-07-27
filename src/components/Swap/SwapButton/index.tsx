@@ -25,10 +25,9 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 interface SwapButtonProps {
   disabled?: boolean
   onTxSubmit?: (txHash: string, data: any) => void
-  onTxFail?: (error: Error, data: any) => void
 }
 
-export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled, onTxSubmit }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: {
@@ -51,7 +50,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: Swap
   const deadline = useTransactionDeadline()
 
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
-  const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
+  const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount, onTxSubmit)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
     allowedSlippage: slippage.allowed,
@@ -59,8 +58,6 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: Swap
     signatureData,
     deadline,
     feeOptions,
-    onTxSubmit,
-    onTxFail,
   })
 
   const [open, setOpen] = useState(false)
@@ -69,7 +66,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: Swap
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
 
-  const addTransaction = useAddTransaction()
+  const addTransaction = useAddTransaction(onTxSubmit)
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const setOldestValidBlock = useSetOldestValidBlock()
 
@@ -122,14 +119,11 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: Swap
       })
       setDisplayTxHash(transaction.hash)
 
-      transaction
-        .wait(1)
-        .then((receipt) => {
-          // Set the block containing the response to the oldest valid block to ensure that the
-          // completed trade's impact is reflected in future fetched trades.
-          setOldestValidBlock(receipt.blockNumber)
-        })
-        .catch((e) => onTxFail?.(e, transaction.hash)) // Do we run onTxFail on tx cancelled?
+      // Set the block containing the response to the oldest valid block to ensure that the
+      // completed trade's impact is reflected in future fetched trades
+      transaction.wait(1).then((receipt) => {
+        setOldestValidBlock(receipt.blockNumber)
+      })
 
       // Only reset open after any queued animations to avoid layout thrashing, because a
       // successful swap will open the status dialog and immediately cover the summary dialog.
@@ -146,7 +140,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit, onTxFail }: Swap
       // TODO(zzmp): Surface errors from swap.
       console.log(e)
     }
-  }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade, onTxFail])
+  }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade])
 
   const disableSwap = useMemo(
     () =>

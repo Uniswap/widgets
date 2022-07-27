@@ -42,9 +42,7 @@ export default function useSendSwapTransaction(
   chainId: number | undefined,
   library: JsonRpcProvider | undefined,
   trade: AnyTrade | undefined, // trade to execute, required
-  swapCalls: SwapCall[],
-  onTxSubmit?: (txHash: string, data: any) => void,
-  onTxFail?: (error: Error, data: any) => void
+  swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
@@ -123,7 +121,6 @@ export default function useSendSwapTransaction(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
-            onTxSubmit?.(response.hash, response)
             return response
           })
           .catch((error) => {
@@ -133,12 +130,10 @@ export default function useSendSwapTransaction(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, calldata, value)
-              onTxFail?.(error, error?.transactionHash)
-
               throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`) // FIXME: this prints to console as [object Object]
             }
           })
       },
     }
-  }, [account, chainId, library, swapCalls, trade, onTxFail, onTxSubmit])
+  }, [account, chainId, library, swapCalls, trade])
 }

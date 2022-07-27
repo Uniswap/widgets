@@ -30,8 +30,6 @@ interface UseSwapCallbackArgs {
   signatureData: SignatureData | null | undefined
   deadline: BigNumber | undefined
   feeOptions?: FeeOptions
-  onTxSubmit?: (txHash: string, data: any) => void
-  onTxFail?: (error: Error, data: any) => void
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -43,8 +41,6 @@ export function useSwapCallback({
   signatureData,
   deadline,
   feeOptions,
-  onTxSubmit,
-  onTxFail,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -56,7 +52,7 @@ export function useSwapCallback({
     deadline,
     feeOptions
   )
-  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls, onTxSubmit, onTxFail)
+  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress

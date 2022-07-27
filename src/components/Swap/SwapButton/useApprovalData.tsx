@@ -22,7 +22,8 @@ export function useIsPendingApproval(token?: Token, spender?: string): boolean {
 export default function useApprovalData(
   trade: ReturnType<typeof useSwapApprovalOptimizedTrade>,
   slippage: Slippage,
-  currencyAmount?: CurrencyAmount<Currency>
+  currencyAmount?: CurrencyAmount<Currency>,
+  onTxSubmit?: (txHash: string, data: any) => void
 ) {
   const currency = currencyAmount?.currency
   const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
@@ -33,7 +34,7 @@ export default function useApprovalData(
   )
 
   const [isPending, setIsPending] = useState(false)
-  const addTransaction = useAddTransaction()
+  const addTransaction = useAddTransaction(onTxSubmit)
   const onApprove = useCallback(async () => {
     setIsPending(true)
     const transaction = await handleApproveOrPermit()
