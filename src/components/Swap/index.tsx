@@ -43,7 +43,6 @@ function getTransactionFromMap(
 export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWallet?: () => void
-  onTxSubmit?: (txHash: string, data: any) => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -76,7 +75,7 @@ export default function Swap(props: SwapProps) {
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} onTxSubmit={props.onTxSubmit} />
+              <SwapButton disabled={isDisabled} />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>
