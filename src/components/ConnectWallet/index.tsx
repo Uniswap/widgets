@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { connections } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainIdAtom } from 'hooks/connectWeb3/useWeb3React'
+import { useAtomValue } from 'jotai/utils'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
@@ -11,10 +12,15 @@ interface WalletProps {
 }
 
 export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
-  // Attempt to connect eagerly on mount
+  // Attempt to connect eagerly on mount, and prompt switch networks when integrator's defaultChainId changes
+  const defaultChainId = useAtomValue(defaultChainIdAtom)
   useEffect(() => {
-    connections.forEach(([wallet, _]) => (wallet.connectEagerly ? wallet.connectEagerly() : wallet.activate()))
-  }, [])
+    connections.forEach(([wallet, _]) =>
+      wallet.connectEagerly
+        ? wallet.connectEagerly(defaultChainId)?.catch((e) => console.log(e))
+        : wallet.activate(defaultChainId)
+    )
+  }, [defaultChainId])
 
   const { account, isActive } = useWeb3React()
 

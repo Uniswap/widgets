@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { SupportedChainId } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
@@ -19,6 +19,8 @@ import { UNMOUNTING } from 'utils/animations'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+
+const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -89,8 +91,8 @@ export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  // TODO(kristiehuang): allow integrator to pass in {chainId: [rpcUrls]} for multichain jsonRpcEndpoints
-  jsonRpcEndpoint?: string | JsonRpcProvider
+  jsonRpcUrlMap?: { [chainId: number]: string[] }
+  defaultChainId?: number
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
@@ -114,10 +116,27 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
-  const jsonRpcEndpoint = useMemo(
-    () => props.jsonRpcEndpoint ?? JSON_RPC_FALLBACK_ENDPOINTS[SupportedChainId.MAINNET]?.[0],
-    [props.jsonRpcEndpoint]
-  )
+  const defaultChainId = useMemo(() => {
+    if (!props.defaultChainId) return DEFAULT_CHAIN_ID
+    if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
+      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
+      return DEFAULT_CHAIN_ID
+    }
+    return props.defaultChainId
+  }, [props.defaultChainId])
+  const jsonRpcUrlMap: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
+    if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
+    for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
+      if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
+        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
+        console.warn(
+          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to free public RPC endpoint ${fallbackRpc}.`
+        )
+        props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
+      }
+    }
+    return props.jsonRpcUrlMap
+  }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
@@ -130,7 +149,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
               <ErrorBoundary onError={onError}>
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
-                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    <ActiveWeb3Provider
+                      provider={provider}
+                      jsonRpcUrlMap={jsonRpcUrlMap}
+                      defaultChainId={defaultChainId}
+                    >
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater />
