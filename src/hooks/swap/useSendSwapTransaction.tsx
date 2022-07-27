@@ -130,7 +130,7 @@ export default function useSendSwapTransaction(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, calldata, value)
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`) // FIXME: this prints to console as [object Object]
+              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
             }
           })
       },
