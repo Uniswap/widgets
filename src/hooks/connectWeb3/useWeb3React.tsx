@@ -6,11 +6,12 @@ import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { PropsWithChildren, useMemo } from 'react'
+import { atom, useAtom } from 'jotai'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
 export let connections: Web3Connection[] = []
-export let defaultChainId = 1
+export const defaultChainIdAtom = atom<number>(1)
 
 function toWeb3Connection<T extends Connector>([connector, hooks]: [
   T,
@@ -75,20 +76,23 @@ export function ActiveWeb3Provider({
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const onError = console.error
-  if (propsDefaultChainId) defaultChainId = propsDefaultChainId
+  const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
+  useEffect(() => {
+    if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
+  }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
-  const integratorConnection = useMemo(() => getWalletFromProvider(onError, provider), [provider])
+  const integratorConnection = useMemo(() => getWalletFromProvider(onError, provider), [onError, provider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
-    []
+    [onError]
   )
   const walletConnectConnectionQR = useMemo(
     () => getWalletFromWalletConnect(false, jsonRpcUrlMap, propsDefaultChainId, onError),
-    [jsonRpcUrlMap, propsDefaultChainId]
+    [jsonRpcUrlMap, propsDefaultChainId, onError]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
     () => getWalletFromWalletConnect(true, jsonRpcUrlMap, propsDefaultChainId, onError),
-    [jsonRpcUrlMap, propsDefaultChainId]
+    [jsonRpcUrlMap, propsDefaultChainId, onError]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(

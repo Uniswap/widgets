@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
@@ -19,6 +19,8 @@ import { UNMOUNTING } from 'utils/animations'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+
+const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -115,10 +117,10 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
   const defaultChainId = useMemo(() => {
-    if (!props.defaultChainId) return 1
+    if (!props.defaultChainId) return DEFAULT_CHAIN_ID
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
       console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
-      return 1
+      return DEFAULT_CHAIN_ID
     }
     return props.defaultChainId
   }, [props.defaultChainId])
