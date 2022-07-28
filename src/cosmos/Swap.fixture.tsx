@@ -75,6 +75,13 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onReviewSwapClick={(openReviewScreen) => {
+        console.log('review swap clicked')
+        openReviewScreen()
+        // setTimeout(() => {
+        //   openReviewScreen()
+        // }, 3000) // mock external modal behavior
+      }}
     />
   )
 }
