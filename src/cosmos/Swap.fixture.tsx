@@ -67,24 +67,24 @@ function Fixture() {
 
   return (
     <SwapWidget
-      convenienceFee={convenienceFee}
-      convenienceFeeRecipient={convenienceFeeRecipient}
-      defaultInputTokenAddress={defaultInputToken}
-      defaultInputAmount={defaultInputAmount}
-      defaultOutputTokenAddress={defaultOutputToken}
-      defaultOutputAmount={defaultOutputAmount}
-      locale={locale}
-      jsonRpcUrlMap={jsonRpcUrlMap}
+      // convenienceFee={convenienceFee}
+      // convenienceFeeRecipient={convenienceFeeRecipient}
+      // defaultInputTokenAddress={defaultInputToken}
+      // defaultInputAmount={defaultInputAmount}
+      // defaultOutputTokenAddress={defaultOutputToken}
+      // defaultOutputAmount={defaultOutputAmount}
+      // locale={locale}
+      // jsonRpcUrlMap={jsonRpcUrlMap}
       defaultChainId={defaultChainId}
-      provider={connector}
-      theme={theme}
-      tokenList={tokenList}
-      width={width}
+      // provider={connector}
+      // theme={theme}
+      // tokenList={tokenList}
+      // width={width}
       routerUrl={routerUrl}
-      onClickConnectWallet={() => {
-        // e?.preventDefault()
-        console.log('integrator provided a onConnectWallet')
-      }}
+      // onClickConnectWallet={() => {
+      //   // e?.preventDefault()
+      //   console.log('integrator provided a onConnectWallet')
+      // }}
     />
   )
 }

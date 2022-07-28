@@ -4,11 +4,11 @@ import { SupportedChainId } from './chains'
  * Fallback JSON RPC endpoints if integrator does not provide one
  */
 export const JSON_RPC_FALLBACK_ENDPOINTS: { [chainId: number]: string[] } = {
-  [SupportedChainId.MAINNET]: ['https://cloudflare-eth.com'],
+  [SupportedChainId.MAINNET]: ['https://eth-mainnet.public.blastapi.io', 'https://cloudflare-eth.com'],
   [SupportedChainId.ROPSTEN]: ['https://rpc.ankr.com/eth_ropsten'],
   [SupportedChainId.RINKEBY]: ['https://rpc.ankr.com/eth_rinkeby'],
   [SupportedChainId.GOERLI]: ['https://rpc.ankr.com/eth_goerli'],
-  [SupportedChainId.KOVAN]: ['https://kovan.poa.network'], // as of 7/21/22, this kovan endpoint is down :(
+  [SupportedChainId.KOVAN]: ['https://eth-kovan.public.blastapi.io', 'https://kovan.poa.network'],
   [SupportedChainId.POLYGON]: ['https://polygon-rpc.com', 'https://rpc-mainnet.matic.quiknode.pro'],
   [SupportedChainId.POLYGON_MUMBAI]: ['https://rpc-mumbai.maticvigil.com'],
   [SupportedChainId.ARBITRUM_ONE]: ['https://arbitrum.public-rpc.com'],
