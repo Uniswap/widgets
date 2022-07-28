@@ -41,7 +41,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
         color="secondary"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        data-testid="connect-wallet"
+        data-testid="account"
       >
         {hover ? (
           <ThemedText.Caption>
