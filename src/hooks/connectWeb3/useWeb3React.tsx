@@ -74,28 +74,26 @@ export function ActiveWeb3Provider({
     []
   )
   const walletConnectConnectionQR = useMemo(
-    () => getWalletConnectConnection(false, jsonRpcUrlMap, propsDefaultChainId),
-    [jsonRpcUrlMap, propsDefaultChainId]
+    () => getWalletConnectConnection(false, jsonRpcUrlMap, defaultChainId),
+    [jsonRpcUrlMap, defaultChainId]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getWalletConnectConnection(true, jsonRpcUrlMap, propsDefaultChainId),
-    [jsonRpcUrlMap, propsDefaultChainId]
+    () => getWalletConnectConnection(true, jsonRpcUrlMap, defaultChainId),
+    [jsonRpcUrlMap, defaultChainId]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
-        initializeConnector<Network>(
-          (actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId: propsDefaultChainId })
-        )
+        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId }))
       ),
-    [jsonRpcUrlMap, propsDefaultChainId]
+    [jsonRpcUrlMap, defaultChainId]
   )
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
   if (integratorConnection) connections = [integratorConnection, ...connections]
 
-  const key = `${connections.length}+${Object.keys(jsonRpcUrlMap)}+${propsDefaultChainId}`
+  const key = `${connections.length}+${Object.keys(jsonRpcUrlMap)}+${propsDefaultChainId}+${defaultChainId}`
   return (
     <Web3ReactProvider connectors={connections} key={key}>
       {children}
