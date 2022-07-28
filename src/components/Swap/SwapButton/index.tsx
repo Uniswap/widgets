@@ -25,10 +25,9 @@ import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
 interface SwapButtonProps {
   disabled?: boolean
-  onTxSubmit?: (txHash: string, data: any) => void
 }
 
-export default memo(function SwapButton({ disabled, onTxSubmit }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
   const {
     [Field.INPUT]: {
@@ -51,7 +50,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit }: SwapButtonProp
   const deadline = useTransactionDeadline()
 
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
-  const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount, onTxSubmit)
+  const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
     allowedSlippage: slippage.allowed,
@@ -67,7 +66,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit }: SwapButtonProp
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
 
-  const addTransaction = useAddTransaction(onTxSubmit)
+  const addTransaction = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const setOldestValidBlock = useSetOldestValidBlock()
 
@@ -121,7 +120,7 @@ export default memo(function SwapButton({ disabled, onTxSubmit }: SwapButtonProp
       setDisplayTxHash(transaction.hash)
 
       // Set the block containing the response to the oldest valid block to ensure that the
-      // completed trade's impact is reflected in future fetched trades
+      // completed trade's impact is reflected in future fetched trades.
       transaction.wait(1).then((receipt) => {
         setOldestValidBlock(receipt.blockNumber)
       })
