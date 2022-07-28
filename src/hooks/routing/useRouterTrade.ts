@@ -1,10 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 // Importing just the type, so smart-order-router is lazy-loaded
 // eslint-disable-next-line no-restricted-imports
 import type { ChainId } from '@uniswap/smart-order-router'
+import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useDebounce from 'hooks/useDebounce'
 import useIsValidBlock from 'hooks/useIsValidBlock'
