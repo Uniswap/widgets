@@ -9,7 +9,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
-import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { swapErrorToUserReadableMessage, swapErrorToUserReadableTrans } from 'utils/swapErrorToUserReadableMessage'
 
 type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
@@ -83,7 +83,7 @@ export default function useSendSwapTransaction(
                   })
                   .catch((callError) => {
                     console.debug('Call threw error', call, callError)
-                    return { call, error: <Trans>{swapErrorToUserReadableMessage(callError)}</Trans> }
+                    return { call, error: swapErrorToUserReadableTrans(callError) }
                   })
               })
           })
