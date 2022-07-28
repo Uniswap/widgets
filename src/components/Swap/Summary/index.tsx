@@ -5,7 +5,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
-import Expando from 'components/Expando'
+import BaseExpando from 'components/Expando'
 import Row from 'components/Row'
 import { Slippage } from 'hooks/useSlippage'
 import { PriceImpact } from 'hooks/useUSDCPriceImpact'
@@ -22,24 +22,21 @@ import Summary from './Summary'
 
 export default Summary
 
-const Content = styled(Column)``
-const Heading = styled(Column)``
-const Footing = styled(Column)``
-const Body = styled(Column)<{ open: boolean }>`
+const Expando = styled(BaseExpando)`
+  margin-bottom: 3.2em;
+  transition: gap 0.25s;
+`
+const Heading = styled(Column)`
+  flex-grow: 1;
+  transition: flex-grow 0.25s;
+`
+const StyledEstimate = styled(ThemedText.Caption)`
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  max-height: 3em;
+`
+const Body = styled(Column)`
   height: calc(100% - 2.5em);
-
-  ${Content}, ${Heading} {
-    flex-grow: 1;
-    transition: flex-grow 0.25s;
-  }
-
-  ${Footing} {
-    margin-bottom: ${({ open }) => (open ? '-0.75em' : undefined)};
-    max-height: ${({ open }) => (open ? 0 : '3em')};
-    opacity: ${({ open }) => (open ? 0 : 1)};
-    transition: max-height 0.25s, margin-bottom 0.25s, opacity 0.15s 0.1s;
-    visibility: ${({ open }) => (open ? 'hidden' : undefined)};
-  }
 `
 
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
@@ -63,7 +60,12 @@ function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippag
   )
 }
 
-function Estimate({ trade, slippage }: { trade: Trade<Currency, Currency, TradeType>; slippage: Slippage }) {
+interface EstimateProps {
+  slippage: Slippage
+  trade: Trade<Currency, Currency, TradeType>
+}
+
+function Estimate({ trade, slippage }: EstimateProps) {
   const { i18n } = useLingui()
   const text = useMemo(() => {
     switch (trade.tradeType) {
@@ -85,7 +87,7 @@ function Estimate({ trade, slippage }: { trade: Trade<Currency, Currency, TradeT
         )
     }
   }, [i18n.locale, slippage.allowed, trade])
-  return <ThemedText.Caption color="secondary">{text}</ThemedText.Caption>
+  return <StyledEstimate color="secondary">{text}</StyledEstimate>
 }
 
 function ConfirmButton({
@@ -133,7 +135,17 @@ function ConfirmButton({
   }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
 
   return (
-    <ActionButton onClick={onClick} action={action}>
+    <ActionButton
+      onClick={onClick}
+      action={action}
+      wrapperProps={{
+        style: {
+          bottom: '0.25em',
+          position: 'absolute',
+          width: 'calc(100% - 1.5em)',
+        },
+      }}
+    >
       <Trans>Confirm swap</Trans>
     </ActionButton>
   )
@@ -152,12 +164,14 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
   const { inputAmount, outputAmount } = trade
 
   const [open, setOpen] = useState(false)
-  const onExpand = useCallback(() => setOpen((open) => !open), [])
+  const onExpand = useCallback(() => {
+    setOpen((open) => !open)
+  }, [])
 
   return (
     <>
       <Header title={<Trans>Swap summary</Trans>} ruled />
-      <Body flex align="stretch" padded gap={0.75} open={open}>
+      <Body flex align="stretch" padded gap={0.75}>
         <Heading gap={0.75} flex justify="center">
           <Summary
             input={inputAmount}
@@ -165,18 +179,22 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
             impact={impact}
+            open={open}
           />
           <Price trade={trade} />
         </Heading>
-        <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
-          <Expando title={<Subhead impact={impact} slippage={slippage} />} open={open} onExpand={onExpand} height={7}>
-            <Details trade={trade} slippage={slippage} impact={impact} />
-          </Expando>
-          <Footing>
-            <Estimate trade={trade} slippage={slippage} />
-          </Footing>
-          <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
-        </Column>
+        <Expando
+          title={<Subhead impact={impact} slippage={slippage} />}
+          open={open}
+          onExpand={onExpand}
+          height={6}
+          gap={open ? 0 : 0.75}
+        >
+          <Details trade={trade} slippage={slippage} impact={impact} />
+          <Estimate trade={trade} slippage={slippage} />
+        </Expando>
+
+        <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
       </Body>
     </>
   )

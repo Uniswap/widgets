@@ -85,7 +85,9 @@ export function ActiveWeb3Provider({
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
-        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcUrlMap, propsDefaultChainId }))
+        initializeConnector<Network>(
+          (actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId: propsDefaultChainId })
+        )
       ),
     [jsonRpcUrlMap, propsDefaultChainId]
   )
