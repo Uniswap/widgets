@@ -69,7 +69,7 @@ interface ActiveWeb3ProviderProps {
 }
 
 export function ActiveWeb3Provider({
-  provider: propsProvider,
+  provider,
   jsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
   children,
@@ -77,17 +77,17 @@ export function ActiveWeb3Provider({
   const onError = console.error
   if (propsDefaultChainId) defaultChainId = propsDefaultChainId
 
-  const integratorConnection = useMemo(() => getWalletFromProvider(onError, propsProvider), [propsProvider])
+  const integratorConnection = useMemo(() => getWalletFromProvider(onError, provider), [provider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
     []
   )
   const walletConnectConnectionQR = useMemo(
-    () => getWalletConnectConnection(false, jsonRpcUrlMap, propsDefaultChainId, onError),
+    () => getWalletFromWalletConnect(false, jsonRpcUrlMap, propsDefaultChainId, onError),
     [jsonRpcUrlMap, propsDefaultChainId]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getWalletConnectConnection(true, jsonRpcUrlMap, propsDefaultChainId, onError),
+    () => getWalletFromWalletConnect(true, jsonRpcUrlMap, propsDefaultChainId, onError),
     [jsonRpcUrlMap, propsDefaultChainId]
   ) // WC via built-in popup
 
