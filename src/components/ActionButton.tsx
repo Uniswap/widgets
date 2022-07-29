@@ -95,8 +95,7 @@ export default function ActionButton({
       {action && (
         <ActionRow gap={0.5}>
           <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
-          <ThemedText.Subhead2>HELLO THERE</ThemedText.Subhead2>
-          {/* <ThemedText.Subhead2>{action?.message}</ThemedText.Subhead2> */}
+          <ThemedText.Subhead2>{action?.message}</ThemedText.Subhead2>
         </ActionRow>
       )}
     </Overlay>
