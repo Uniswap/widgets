@@ -67,7 +67,7 @@ interface TransactionsUpdaterProps {
 }
 
 export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionsUpdaterProps) {
-  const pendingTransactions = usePendingTransactions()
+  const currentPendingTxs = usePendingTransactions()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
     ({ chainId, hash, blockNumber }) => {
@@ -99,20 +99,20 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
     [updateTxs, onTxFail, onTxSuccess]
   )
 
-  const oldTxs = useRef({})
+  const oldPendingTxs = useRef({})
   useEffect(() => {
-    const newTxHashes = Object.keys(pendingTransactions)
-    const oldTxHashes = Object.keys(oldTxs.current)
-    if (newTxHashes.length !== oldTxHashes.length) {
+    const newPendingTxHashes = Object.keys(currentPendingTxs)
+    const oldPendingTxHashes = new Set(Object.keys(oldPendingTxs.current))
+    if (newPendingTxHashes.length !== oldPendingTxHashes.size) {
       // if added new tx
-      newTxHashes.forEach((txHash) => {
-        if (!oldTxHashes.includes(txHash)) {
-          onTxSubmit?.(txHash, pendingTransactions[txHash])
+      newPendingTxHashes.forEach((txHash) => {
+        if (!oldPendingTxHashes.has(txHash)) {
+          onTxSubmit?.(txHash, currentPendingTxs[txHash])
         }
       })
-      oldTxs.current = pendingTransactions
+      oldPendingTxs.current = currentPendingTxs
     }
-  }, [pendingTransactions, onTxSubmit])
+  }, [currentPendingTxs, onTxSubmit])
 
-  return <Updater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
+  return <Updater pendingTransactions={currentPendingTxs} onCheck={onCheck} onReceipt={onReceipt} />
 }
