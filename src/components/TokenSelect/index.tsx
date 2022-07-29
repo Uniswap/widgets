@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'

@@ -2,6 +2,7 @@ import 'setimmediate'
 
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { TokenInfo } from '@uniswap/token-lists'
 import { loadingTransitionCss } from 'css/loading'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
@@ -12,7 +13,6 @@ import Column from '../Column'
 import { DecimalInput } from '../Input'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
-import { TokenInfo } from '@uniswap/token-lists'
 
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
