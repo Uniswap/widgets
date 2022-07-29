@@ -10,7 +10,7 @@ export default function useSwitchNetwork(inputCurrencyChainId?: number) {
   const [isPending, setIsPending] = useState(false)
   const onSwitchNetwork = useCallback(async () => {
     setIsPending(true)
-    connector.activate(chainId) // todo: check if connectEagerly works here?
+    await connector.activate(chainId) // todo: check if connectEagerly works here?
     setIsPending(false)
   }, [])
   const switchNetworkAction = useMemo((): Action | undefined => {
