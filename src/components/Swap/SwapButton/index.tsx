@@ -153,10 +153,10 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
   )
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (disableSwap) {
-      return { disabled: true }
-    } else if (switchNetworkAction) {
+    if (switchNetworkAction) {
       return { action: switchNetworkAction }
+    } else if (disableSwap) {
+      return { disabled: true }
     } else if (wrapType === WrapType.NONE) {
       return approvalAction
         ? { action: approvalAction }
@@ -168,7 +168,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
         : { onClick: onWrap }
     }
-  }, [approvalAction, disableSwap, isPending, onWrap, trade.state, wrapType])
+  }, [switchNetworkAction, approvalAction, disableSwap, isPending, onWrap, trade.state, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
