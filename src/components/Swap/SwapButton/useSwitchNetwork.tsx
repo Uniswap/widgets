@@ -1,16 +1,22 @@
 import { Trans } from '@lingui/macro'
 import { Action } from 'components/ActionButton'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
 export default function useSwitchNetwork(inputCurrencyChainId?: number) {
-  const { chainId, connector } = useActiveWeb3React()
+  const { chainId, connector } = useWeb3React()
 
   const [isPending, setIsPending] = useState(false)
   const onSwitchNetwork = useCallback(async () => {
     setIsPending(true)
-    connector.activate(inputCurrencyChainId)?.then(() => setIsPending(false)) // todo: check if connectEagerly works here?
+    try {
+      await connector.activate(inputCurrencyChainId)
+      setIsPending(false)
+    } catch {
+      // if user cancels switch network request in-wallet
+      setIsPending(false)
+    }
   }, [chainId, connector])
   const switchNetworkAction = useMemo((): Action | undefined => {
     if (chainId && inputCurrencyChainId && chainId !== inputCurrencyChainId) {
