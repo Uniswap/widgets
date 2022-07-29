@@ -21,6 +21,7 @@ import ActionButton, { ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import useApprovalData, { useIsPendingApproval } from './useApprovalData'
+import useSwitchNetwork from './useSwitchNetwork'
 
 interface SwapButtonProps {
   disabled?: boolean
@@ -49,6 +50,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const deadline = useTransactionDeadline()
 
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+  const switchNetworkAction = useSwitchNetwork(inputCurrency?.chainId)
   const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
@@ -153,6 +155,8 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
+    } else if (switchNetworkAction) {
+      return { action: switchNetworkAction }
     } else if (wrapType === WrapType.NONE) {
       return approvalAction
         ? { action: approvalAction }
