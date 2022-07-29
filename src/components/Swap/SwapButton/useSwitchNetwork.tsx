@@ -4,22 +4,28 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
-export default function useSwitchNetwork(inputCurrencyChainId?: number) {
+export default function useSwitchNetwork(desiredChainId?: number) {
   const { chainId, connector } = useActiveWeb3React()
 
   const [isPending, setIsPending] = useState(false)
   const onSwitchNetwork = useCallback(async () => {
     setIsPending(true)
     try {
-      await connector.activate(inputCurrencyChainId) // fixme: this current version of w3r may not support switching chains
+      const desiredChainIdHex = `0x${desiredChainId?.toString(16)}`
+      await connector.provider
+        ?.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: desiredChainIdHex }],
+        })
+        .then(() => connector.activate(desiredChainId))
       setIsPending(false)
     } catch {
       // if user cancels switch network request in-wallet
       setIsPending(false)
     }
-  }, [inputCurrencyChainId, connector])
+  }, [desiredChainId, connector])
   const switchNetworkAction = useMemo((): Action | undefined => {
-    if (chainId && inputCurrencyChainId && chainId !== inputCurrencyChainId) {
+    if (chainId && desiredChainId && chainId !== desiredChainId) {
       return isPending
         ? { message: <Trans>Switch network in your wallet</Trans>, icon: Spinner }
         : {
@@ -29,7 +35,7 @@ export default function useSwitchNetwork(inputCurrencyChainId?: number) {
           }
     }
     return undefined
-  }, [chainId, inputCurrencyChainId, isPending, onSwitchNetwork])
+  }, [chainId, desiredChainId, isPending, onSwitchNetwork])
 
   return switchNetworkAction
 }
