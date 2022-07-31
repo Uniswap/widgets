@@ -21,6 +21,7 @@ import ActionButton, { ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import useApprovalData, { useIsPendingApproval } from './useApprovalData'
+import useSwitchNetwork from './useSwitchNetwork'
 
 interface SwapButtonProps {
   disabled?: boolean
@@ -49,6 +50,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const deadline = useTransactionDeadline()
 
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+  const switchNetworkAction = useSwitchNetwork(inputCurrency?.chainId)
   const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
@@ -151,7 +153,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
   )
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (disableSwap) {
+    if (switchNetworkAction) {
+      return { action: switchNetworkAction }
+    } else if (disableSwap) {
       return { disabled: true }
     } else if (wrapType === WrapType.NONE) {
       return approvalAction
@@ -164,7 +168,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
         : { onClick: onWrap }
     }
-  }, [approvalAction, disableSwap, isPending, onWrap, trade.state, wrapType])
+  }, [switchNetworkAction, approvalAction, disableSwap, isPending, onWrap, trade.state, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
