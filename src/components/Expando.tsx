@@ -1,5 +1,5 @@
 import { IconButton } from 'components/Button'
-import Column from 'components/Column'
+import Column, { ColumnProps } from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import useScrollbar from 'hooks/useScrollbar'
@@ -8,7 +8,12 @@ import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 const HeaderColumn = styled(Column)`
+  cursor: pointer;
   transition: gap 0.25s;
+`
+
+const TitleRow = styled(Row)`
+  cursor: pointer;
 `
 
 const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
@@ -33,7 +38,7 @@ const InnerColumn = styled(Column)<{ height: number }>`
   padding: 0.5em 0;
 `
 
-interface ExpandoProps {
+interface ExpandoProps extends ColumnProps {
   title: ReactNode
   open: boolean
   onExpand: () => void
@@ -42,18 +47,18 @@ interface ExpandoProps {
 }
 
 /** A scrollable Expando with an absolute height. */
-export default function Expando({ title, open, onExpand, height, children }: PropsWithChildren<ExpandoProps>) {
+export default function Expando({ title, open, onExpand, height, children, ...rest }: PropsWithChildren<ExpandoProps>) {
   const [scrollingEl, setScrollingEl] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(scrollingEl)
   return (
-    <Column>
-      <HeaderColumn gap={open ? 0.5 : 0.75}>
+    <Column {...rest}>
+      <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
         <Rule />
-        <Row>
+        <TitleRow>
           {title}
-          <IconButton color="secondary" onClick={onExpand} icon={ExpandoIcon} iconProps={{ open }} />
-        </Row>
-        <Rule />
+          <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+        </TitleRow>
+        {open && <Rule />}
       </HeaderColumn>
       <ExpandoColumn open={open} height={height}>
         <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
@@ -62,5 +67,4 @@ export default function Expando({ title, open, onExpand, height, children }: Pro
       </ExpandoColumn>
     </Column>
   )
-  return null
 }

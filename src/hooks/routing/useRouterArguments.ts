@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
@@ -6,18 +7,20 @@ import { useMemo } from 'react'
  * query should be skipped. Input arguments do not need to be memoized, as they will
  * be destructured.
  */
-export function useRoutingAPIArguments({
+export function useRouterArguments({
   tokenIn,
   tokenOut,
   amount,
   tradeType,
-  useClientSideRouter,
+  routerUrl,
+  provider,
 }: {
   tokenIn: Currency | undefined
   tokenOut: Currency | undefined
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
-  useClientSideRouter: boolean
+  routerUrl: string | undefined
+  provider: JsonRpcProvider
 }) {
   return useMemo(
     () =>
@@ -33,9 +36,10 @@ export function useRoutingAPIArguments({
             tokenOutChainId: tokenOut.wrapped.chainId,
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
-            useClientSideRouter,
+            routerUrl,
+            provider,
             type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
           },
-    [amount, tokenIn, tokenOut, tradeType, useClientSideRouter]
+    [amount, tokenIn, tokenOut, tradeType, routerUrl, provider]
   )
 }

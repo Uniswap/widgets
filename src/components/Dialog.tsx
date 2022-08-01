@@ -1,15 +1,16 @@
 import 'wicg-inert'
 
-import { X } from 'icons'
+import { ChevronLeft } from 'icons'
+import { largeIconCss } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
-import { Color, Layer, ThemeProvider } from 'theme'
+import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
 import { delayUnmountForAnimation } from 'utils/animations'
 
 import { IconButton } from './Button'
 import Column from './Column'
-import { default as BaseHeader } from './Header'
+import Row from './Row'
 import Rule from './Rule'
 
 // Include inert from wicg-inert
@@ -52,6 +53,12 @@ export function Provider({ value, children }: ProviderProps) {
 
 const OnCloseContext = createContext<() => void>(() => void 0)
 
+const HeaderRow = styled(Row)`
+  height: 1.75em;
+  margin: 0 0.75em 0.75em;
+  padding-top: 0.5em;
+  ${largeIconCss}
+`
 interface HeaderProps {
   title?: ReactElement
   ruled?: boolean
@@ -62,10 +69,13 @@ export function Header({ title, children, ruled }: HeaderProps) {
   return (
     <>
       <Column>
-        <BaseHeader title={title}>
+        <HeaderRow iconSize={1.2}>
+          <Row justify="flex-start" gap={0.5}>
+            <IconButton color="primary" onClick={useContext(OnCloseContext)} icon={ChevronLeft} />
+            <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
+          </Row>
           {children}
-          <IconButton color="primary" onClick={useContext(OnCloseContext)} icon={X} />
-        </BaseHeader>
+        </HeaderRow>
         {ruled && <Rule padded />}
       </Column>
     </>

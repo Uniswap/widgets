@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
@@ -7,9 +8,13 @@ import { GetQuoteResult } from 'state/routing/types'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
 
-export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
+const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
   Number.isInteger(chainId)
 )
+
+export function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
+  return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
+}
 
 async function getQuote(
   {
@@ -25,9 +30,10 @@ async function getQuote(
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   },
-  routerParams: AlphaRouterParams,
+  provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
+  const routerParams: AlphaRouterParams = { chainId, provider }
   const router = new AlphaRouter(routerParams)
 
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
@@ -36,7 +42,6 @@ async function getQuote(
   const baseCurrency = type === 'exactIn' ? currencyIn : currencyOut
   const quoteCurrency = type === 'exactIn' ? currencyOut : currencyIn
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
-
   const swapRoute = await router.route(
     amount,
     quoteCurrency,
@@ -45,7 +50,8 @@ async function getQuote(
     routerConfig
   )
 
-  if (!swapRoute) throw new Error('Failed to generate client side quote')
+  if (!swapRoute)
+    throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
 
   return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
 }
@@ -76,7 +82,7 @@ export async function getClientSideQuote(
     amount,
     type,
   }: QuoteArguments,
-  routerParams: AlphaRouterParams,
+  provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
@@ -97,7 +103,7 @@ export async function getClientSideQuote(
       },
       amount,
     },
-    routerParams,
+    provider,
     routerConfig
   )
 }

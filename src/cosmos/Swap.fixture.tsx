@@ -64,25 +64,28 @@ function Fixture() {
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
   console.log(tokenList)
 
+  const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
+
   return (
     <SwapWidget
-      convenienceFee={convenienceFee}
-      convenienceFeeRecipient={convenienceFeeRecipient}
-      defaultInputTokenAddress={defaultInputToken}
-      defaultInputAmount={defaultInputAmount}
-      defaultOutputTokenAddress={defaultOutputToken}
-      defaultOutputAmount={defaultOutputAmount}
-      locale={locale}
-      jsonRpcUrlMap={jsonRpcUrlMap}
+      // convenienceFee={convenienceFee}
+      // convenienceFeeRecipient={convenienceFeeRecipient}
+      // defaultInputTokenAddress={defaultInputToken}
+      // defaultInputAmount={defaultInputAmount}
+      // defaultOutputTokenAddress={defaultOutputToken}
+      // defaultOutputAmount={defaultOutputAmount}
+      // locale={locale}
+      // jsonRpcUrlMap={jsonRpcUrlMap}
       defaultChainId={defaultChainId}
-      provider={connector}
-      theme={theme}
-      tokenList={tokenList}
-      width={width}
-      onClickConnectWallet={() => {
-        // e?.preventDefault()
-        console.log('integrator provided a onConnectWallet')
-      }}
+      // provider={connector}
+      // theme={theme}
+      // tokenList={tokenList}
+      // width={width}
+      // routerUrl={routerUrl}
+      // onClickConnectWallet={() => {
+      //   // e?.preventDefault()
+      //   console.log('integrator provided a onConnectWallet')
+      // }}
     />
   )
 }
