@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TokenInfo } from '@uniswap/token-lists'
 import { loadingTransitionCss } from 'css/loading'
 import {
   useIsSwapFieldIndependent,
@@ -44,6 +45,8 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 export interface InputProps {
   disabled: boolean
   focused: boolean
+  onIntegratorTokenSelect?: () => TokenInfo
+  onIntegratorTokenSelectorClick?: () => void
 }
 
 interface UseFormattedFieldAmountArguments {
@@ -67,7 +70,12 @@ export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount 
   }, [disabled, currencyAmount, fieldAmount])
 }
 
-export default function Input({ disabled, focused }: InputProps) {
+export default function Input({
+  disabled,
+  focused,
+  onIntegratorTokenSelect,
+  onIntegratorTokenSelectorClick,
+}: InputProps) {
   const { i18n } = useLingui()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
@@ -75,6 +83,7 @@ export default function Input({ disabled, focused }: InputProps) {
   } = useSwapInfo()
 
   const [inputAmount, updateInputAmount] = useSwapAmount(Field.INPUT)
+  // USE SWAP CURRENCY
   const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
   const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
@@ -116,6 +125,8 @@ export default function Input({ disabled, focused }: InputProps) {
         disabled={disabled}
         onChangeInput={updateInputAmount}
         onChangeCurrency={updateInputCurrency}
+        onIntegratorTokenSelect={onIntegratorTokenSelect}
+        onIntegratorTokenSelectorClick={onIntegratorTokenSelectorClick}
         loading={isLoading}
       >
         <ThemedText.Body2 color="secondary" userSelect>

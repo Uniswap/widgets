@@ -2,6 +2,7 @@ import 'setimmediate'
 
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { TokenInfo } from '@uniswap/token-lists'
 import { loadingTransitionCss } from 'css/loading'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
@@ -58,6 +59,8 @@ interface TokenInputProps {
   disabled?: boolean
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
+  onIntegratorTokenSelect?: () => TokenInfo
+  onIntegratorTokenSelectorClick?: () => void
   loading?: boolean
   children: ReactNode
 }
@@ -69,15 +72,23 @@ export default function TokenInput({
   disabled,
   onChangeInput,
   onChangeCurrency,
+  onIntegratorTokenSelect,
+  onIntegratorTokenSelectorClick,
   loading,
   children,
 }: TokenInputProps) {
   const input = useRef<HTMLInputElement>(null)
+  // ON SELECT
   const onSelect = useCallback(
-    (currency: Currency) => {
-      onChangeCurrency(currency)
-      setImmediate(() => input.current?.focus())
-    },
+    onIntegratorTokenSelect //
+      ? (currency: Currency) => {
+          onIntegratorTokenSelect(currency)
+          setImmediate(() => input.current?.focus())
+        }
+      : (currency: Currency) => {
+          onChangeCurrency(currency)
+          setImmediate(() => input.current?.focus())
+        },
     [onChangeCurrency]
   )
 
@@ -122,7 +133,13 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onSelect} />
+        <TokenSelect
+          value={currency}
+          collapsed={showMax}
+          disabled={disabled}
+          onSelect={onSelect}
+          onIntegratorTokenSelectorClick={onIntegratorTokenSelectorClick}
+        />
       </TokenInputRow>
       {children}
     </Column>
