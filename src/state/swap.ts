@@ -24,7 +24,7 @@ export const swapAtom = atomWithImmer<Swap>({
 })
 
 // If set, allows integrator to add behavior when 'Review swap' button is clicked
-export const onReviewSwapClickAtom = atom<(() => Promise<boolean>) | undefined>(undefined)
+export const onReviewSwapClickAtom = atom<(() => void | Promise<boolean>) | undefined>(undefined)
 
 // If set to a transaction hash, that transaction will display in a status dialog.
 export const displayTxHashAtom = atom<string | undefined>(undefined)

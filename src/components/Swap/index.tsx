@@ -43,7 +43,7 @@ function getTransactionFromMap(
 export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWallet?: () => void
-  onReviewSwapClick?: () => Promise<boolean>
+  onReviewSwapClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
