@@ -28,13 +28,13 @@ function Fixture() {
     ],
   })
 
-  const currencies: Record<string, Token> = {
+  const currencies = {
     ...Object.entries(UNI).reduce(
-      ([chainId, token]: any, acc) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
+      (acc, [chainId, token]: any) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
       {}
     ),
     ...Object.entries(USDC).reduce(
-      ([chainId, token]: any, acc) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
+      (acc, [chainId, token]: any) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
       {}
     ),
   }
@@ -61,11 +61,11 @@ function Fixture() {
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
   const inputToken = useOption('inputToken', {
-    options: currencies,
-    defaultValue: `${SupportedChainId.MAINNET}-${USDC[SupportedChainId.MAINNET].address}`,
+    options: Object.keys(currencies),
+    defaultValue: `${SupportedChainId.MAINNET}-${USDC[SupportedChainId.MAINNET].symbol}`,
   })
   const [inputTokenAmount] = useValue('inputTokenAmount', { defaultValue: 1 })
-  const outputToken = useOption('outputToken', { options: currencies })
+  const outputToken = useOption('outputToken', { options: Object.keys(currencies) })
   const [outputTokenAmount] = useValue('outputTokenAmount', { defaultValue: 0 })
 
   return (
