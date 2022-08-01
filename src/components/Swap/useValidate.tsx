@@ -1,8 +1,8 @@
 import { IntegrationError } from 'errors'
-import { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
-import { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
+import { DefaultAddress } from 'hooks/swap/useSyncTokenDefaults'
 import { PropsWithChildren, useEffect } from 'react'
 import { isAddress } from 'utils'
+import { SwapProps } from '.'
 
 function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
   if (typeof addressOrMap === 'object') {
@@ -14,7 +14,7 @@ function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
   return false
 }
 
-type ValidatorProps = PropsWithChildren<TokenDefaults & FeeOptions>
+type ValidatorProps = PropsWithChildren<SwapProps>
 
 export default function useValidate(props: ValidatorProps) {
   const { convenienceFee, convenienceFeeRecipient } = props
@@ -46,7 +46,54 @@ export default function useValidate(props: ValidatorProps) {
     }
   }, [convenienceFee, convenienceFeeRecipient])
 
-  const { defaultInputAmount, defaultOutputAmount } = props
+  const {
+    inputToken,
+    inputTokenOnChange,
+    inputTokenSelectorActive,
+    outputToken,
+    outputTokenOnChange,
+    outputTokenSelectorActive,
+    inputTokenAmount,
+    inputTokenAmountOnChange,
+    outputTokenAmount,
+    outputTokenAmountOnChange,
+    defaultInputAmount,
+    defaultOutputAmount,
+    defaultInputTokenAddress,
+    defaultOutputTokenAddress,
+  } = props
+  const uncontrolledStateProps = {
+    defaultInputAmount,
+    defaultOutputAmount,
+    defaultInputTokenAddress,
+    defaultOutputTokenAddress,
+  }
+  const controlledStateProps = {
+    inputToken,
+    inputTokenOnChange,
+    inputTokenSelectorActive,
+    outputToken,
+    outputTokenOnChange,
+    outputTokenSelectorActive,
+    inputTokenAmount,
+    inputTokenAmountOnChange,
+    outputTokenAmount,
+    outputTokenAmountOnChange,
+  }
+  useEffect(() => {
+    let controlledPropCount = 0
+    Object.keys(controlledStateProps).forEach((key) => {
+      if (controlledStateProps[key as keyof typeof controlledStateProps] !== undefined) controlledPropCount++
+    })
+    let uncontrolledPropCount = 0
+    Object.keys(uncontrolledStateProps).forEach((key) => {
+      if (uncontrolledStateProps[key as keyof typeof uncontrolledStateProps] !== undefined) uncontrolledPropCount++
+    })
+    if (controlledPropCount && uncontrolledPropCount) {
+      throw new IntegrationError('controlled & uncontrolled state props may not both be defined.')
+    }
+  }, [controlledStateProps, uncontrolledStateProps])
+
   useEffect(() => {
     if (defaultOutputAmount && defaultInputAmount) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
@@ -61,7 +108,6 @@ export default function useValidate(props: ValidatorProps) {
     }
   }, [defaultInputAmount, defaultOutputAmount])
 
-  const { defaultInputTokenAddress, defaultOutputTokenAddress } = props
   useEffect(() => {
     if (
       defaultInputTokenAddress &&
@@ -82,4 +128,41 @@ export default function useValidate(props: ValidatorProps) {
       )
     }
   }, [defaultInputTokenAddress, defaultOutputTokenAddress])
+
+  useEffect(() => {
+    if (outputTokenAmount && inputTokenAmount) {
+      throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
+    }
+    if (inputTokenAmount && (isNaN(+inputTokenAmount) || inputTokenAmount < 0)) {
+      throw new IntegrationError(`defaultInputAmount must be a positive number (you set it to ${inputTokenAmount})`)
+    }
+    if (outputTokenAmount && (isNaN(+outputTokenAmount) || outputTokenAmount < 0)) {
+      throw new IntegrationError(`defaultOutputAmount must be a positive number (you set it to ${outputTokenAmount}).`)
+    }
+  }, [inputTokenAmount, outputTokenAmount])
+
+  useEffect(() => {
+    if (
+      inputToken &&
+      !inputToken.isNative &&
+      inputToken.isToken &&
+      inputToken.address &&
+      !isAddressOrAddressMap(inputToken.address)
+    ) {
+      // fixme: do we only check for valid address? what else do we check for a valid token input?
+      throw new IntegrationError(`inputToken must be a valid token or "NATIVE" (you set it to ${inputToken.address}).`)
+    }
+    if (
+      outputToken &&
+      !outputToken.isNative &&
+      outputToken.isToken &&
+      outputToken.address &&
+      !isAddressOrAddressMap(outputToken.address)
+    ) {
+      throw new IntegrationError(
+        `defaultInputTokenAddress must be a valid address or "NATIVE" (you set it to ${outputToken.address}).`
+      )
+    }
+  }, [inputToken, outputToken])
+  // do we need to also validate input/outputTokenSelectorActive, outputTokenSelectorActive, onChange props?
 }

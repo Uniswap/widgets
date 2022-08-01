@@ -1,4 +1,5 @@
 import { tokens } from '@uniswap/default-token-list'
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
@@ -27,7 +28,7 @@ function Fixture() {
     ],
   })
 
-  const currencies = {
+  const currencies: { [tokenName: string]: Token } = {
     ...Object.entries(UNI).reduce(
       (acc, [chainId, token]: any) => ({ ...acc, [`${chainId}-${token.symbol}`]: token }),
       {}
@@ -67,6 +68,7 @@ function Fixture() {
   const outputToken = useOption('outputToken', { options: Object.keys(currencies) })
   const [outputTokenAmount] = useValue('outputTokenAmount', { defaultValue: 0 })
 
+  let integratorInputToken = inputToken
   return (
     <SwapWidget
       convenienceFee={convenienceFee}
@@ -80,10 +82,16 @@ function Fixture() {
       routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
       // controlled values
-      inputToken={inputToken}
+      inputToken={integratorInputToken ? currencies[integratorInputToken] : undefined}
+      inputTokenOnChange={() => console.log('inputTokenOnChange')}
+      inputTokenSelectorActive={false}
+      outputToken={outputToken ? currencies[outputToken] : undefined}
+      outputTokenOnChange={() => console.log('outputTokenOnChange')}
+      outputTokenSelectorActive={false}
       inputTokenAmount={inputTokenAmount}
-      outputToken={outputToken}
+      inputTokenAmountOnChange={() => console.log('inputTokenAmountOnChange')}
       outputTokenAmount={outputTokenAmount}
+      outputTokenAmountOnChange={() => console.log('outputTokenAmountOnChange')}
     />
   )
 }
