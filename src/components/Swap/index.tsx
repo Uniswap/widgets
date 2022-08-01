@@ -46,6 +46,7 @@ function getTransactionFromMap(
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
   provider?: Eip1193Provider | JsonRpcProvider
+  routerUrl?: string
   onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
@@ -76,7 +77,7 @@ export default function Swap(props: SwapProps) {
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <SwapInfoProvider disabled={isDisabled}>
+          <SwapInfoProvider disabled={isDisabled} routerUrl={props.routerUrl}>
             <Input disabled={isDisabled} focused={focused} />
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>

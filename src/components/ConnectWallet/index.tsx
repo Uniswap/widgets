@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { connections, defaultChainIdAtom } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainIdAtom, getConnectorName } from 'hooks/connectWeb3/useWeb3React'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect } from 'react'
 
@@ -17,8 +17,12 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
   useEffect(() => {
     connections.forEach(([wallet, _]) =>
       wallet.connectEagerly
-        ? wallet.connectEagerly(defaultChainId)?.catch((e) => console.log(e))
-        : wallet.activate(defaultChainId)
+        ? wallet.connectEagerly(defaultChainId)?.catch(() => {
+            console.log('Could not connect eagerly to', getConnectorName(wallet))
+          })
+        : wallet.activate(defaultChainId)?.catch(() => {
+            console.log('Could not activate', getConnectorName(wallet))
+          })
     )
   }, [defaultChainId])
 

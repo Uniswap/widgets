@@ -71,6 +71,7 @@ interface ButtonProps {
   logoSrc?: string
   connection?: Web3Connection
   onClick: () => void
+  onError?: (e: Error | undefined) => void
 }
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
@@ -85,9 +86,8 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
   })
 }
 
-function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
+function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick, onError }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
-  const [error, setError] = useState(undefined)
   const defaultChainId = useAtomValue(defaultChainIdAtom)
 
   const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
@@ -103,24 +103,17 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     } else {
       walletConnect.activate(defaultChainId).catch((e) => {
         if (stale) return
-        setError(e)
+        onError?.(e)
       })
     }
     return () => {
       stale = true
     }
-  }, [qrUri, walletConnect, defaultChainId])
-
-  useEffect(() => {
-    // Log web3 errors
-    if (error) {
-      console.error('web3 error:', error)
-    }
-  }, [error])
+  }, [qrUri, walletConnect, defaultChainId, onError])
 
   useEffect(() => {
     const disconnectListener = async (err: Error | null, _: any) => {
-      if (err) console.warn(err)
+      if (err) onError?.(err)
       // Clear saved QR URI after disconnection
       setQrUri(undefined)
       walletConnect.deactivate()
@@ -135,7 +128,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     })
 
     const uriListener = async (err: Error | null, payload: any) => {
-      if (err) console.warn(err)
+      if (err) onError?.(err)
       const uri: string = payload.params[0]
       if (uri) {
         setQrUri(uri)
@@ -203,13 +196,14 @@ export function ConnectWalletDialog() {
   const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
   const defaultChainId = useAtomValue(defaultChainIdAtom)
 
+  const onError = (error: any) => error && console.error('web3 error:', error)
   const activateWalletConnectPopup = useCallback(() => {
     const [walletConnectPopup] = wcPopupConnection
-    walletConnectPopup.activate(defaultChainId)
+    walletConnectPopup.activate(defaultChainId)?.catch(onError)
   }, [wcPopupConnection, defaultChainId])
   const activateMetaMask = useCallback(() => {
     const [metamask] = mmConnection
-    metamask.activate(defaultChainId)
+    metamask.activate(defaultChainId)?.catch(onError)
   }, [mmConnection, defaultChainId])
 
   return (
@@ -222,6 +216,7 @@ export function ConnectWalletDialog() {
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
             onClick={activateWalletConnectPopup}
+            onError={onError}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />
