@@ -47,7 +47,7 @@ function getTransactionFromMap(
 export interface SwapProps extends TokenDefaults, FeeOptions {
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
+  onConnectWalletClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -72,7 +72,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={hideConnectionUI} onClickConnectWallet={props.onClickConnectWallet} />
+        <Wallet disabled={hideConnectionUI} onConnectWalletClick={props.onConnectWalletClick} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

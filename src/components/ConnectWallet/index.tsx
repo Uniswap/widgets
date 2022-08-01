@@ -8,10 +8,10 @@ import ConnectWallet from './ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
-  onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
+  onConnectWalletClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) {
+export default function Wallet({ disabled, onConnectWalletClick }: WalletProps) {
   // Attempt to connect eagerly on mount, and prompt switch networks when integrator's defaultChainId changes
   const defaultChainId = useAtomValue(defaultChainIdAtom)
   useEffect(() => {
@@ -32,6 +32,6 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
   return isConnected ? (
     <ConnectedWalletChip disabled={disabled} />
   ) : (
-    <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onClickConnectWallet} />
+    <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWalletClick} />
   )
 }

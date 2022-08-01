@@ -82,9 +82,9 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      onClickConnectWallet={() => {
+      onConnectWalletClick={() => {
         // e?.preventDefault()
-        console.log('integrator provided a onConnectWallet')
+        console.log('integrator provided a onConnectWalletClick')
       }}
     />
   )
