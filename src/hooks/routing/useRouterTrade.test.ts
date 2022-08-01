@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
-import { GetQuoteResult, TradeState } from 'state/routing/types'
+import { GetQuoteResult, TradeState, V3PoolInRoute } from 'state/routing/types'
 
 import { getClientSideQuote, isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 import { useRouterTrade } from './useRouterTrade'
@@ -38,23 +38,84 @@ const mockGetClientSideQuote = getClientSideQuote as unknown as jest.MockInstanc
   [QuoteArguments, Partial<AlphaRouterConfig>]
 >
 
-const validQuoteResult: GetQuoteResult = {
-  amount: '100000000000',
-  amountDecimals: '100000',
-  blockNumber: '15220677',
-  gasPriceWei: '37477510620',
-  gasUseEstimate: '386000',
-  gasUseEstimateQuote: '214490841408308181',
-  gasUseEstimateQuoteDecimals: '0.214490841408308181',
-  gasUseEstimateUSD: '19.998844',
-  isApiResult: true,
-  methodParameters: undefined,
-  quote: '1294204987760689604911',
-  quoteDecimals: '1294.204987760689604911',
-  quoteGasAdjusted: '1294419478602097913092',
-  quoteGasAdjustedDecimals: '1294.419478602097913092',
-  route: [],
-  routeString: '',
+const v3route: V3PoolInRoute[] = [
+  {
+    address: '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640',
+    amountIn: '1000000000000000000',
+    fee: '500',
+    liquidity: '12738581417618102003',
+    sqrtRatioX96: '1971139529273279426574580565311255',
+    tickCurrent: '202445',
+    tokenIn: {
+      address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      chainId: 1,
+      decimals: 18,
+      symbol: 'WETH',
+    },
+    tokenOut: {
+      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      chainId: 1,
+      decimals: 6,
+      symbol: 'USDC',
+    },
+    type: 'v3-pool',
+  },
+  {
+    address: '0x3416cF6C708Da44DB2624D63ea0AAef7113527C6',
+    fee: '100',
+    liquidity: '174350695210591091',
+    sqrtRatioX96: '79215102732984553735141107646',
+    tickCurrent: '-4',
+    tokenIn: {
+      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      chainId: 1,
+      decimals: 6,
+      symbol: 'USDC',
+    },
+    tokenOut: {
+      address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      chainId: 1,
+      decimals: 6,
+      symbol: 'USDT',
+    },
+    type: 'v3-pool',
+  },
+  {
+    address: '0xbe3CD9b751360a8030770425AcF947c8cb4CaB38',
+    amountOut: '10367908097468',
+    fee: '10000',
+    liquidity: '5906469014943',
+    sqrtRatioX96: '6451784348376798895033490481915',
+    tickCurrent: '88000',
+    tokenIn: { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', chainId: 1, decimals: 6, symbol: 'USDT' },
+    tokenOut: {
+      address: '0xEd04915c23f00A313a544955524EB7DBD823143d',
+      chainId: 1,
+      decimals: 8,
+      symbol: 'ACH',
+    },
+    type: 'v3-pool',
+  },
+]
+const validQuoteResult = (isApiResult: boolean) => {
+  return {
+    amount: '1000000000000000000',
+    amountDecimals: '1',
+    blockNumber: '15259323',
+    gasPriceWei: '15662880037',
+    gasUseEstimate: '304000',
+    gasUseEstimateQuote: '53578254178',
+    gasUseEstimateQuoteDecimals: '535.78254178',
+    gasUseEstimateUSD: '7.731162',
+    isApiResult,
+    quote: '10377254302629',
+    quoteDecimals: '103772.54302629',
+    quoteGasAdjusted: '10323676048450',
+    quoteGasAdjustedDecimals: '103236.7604845',
+    quoteId: 'dfa8e',
+    route: [v3route],
+    routeString: '[V3] 100.00% = WETH -- 0.05% [0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640] --> USDC',
+  }
 }
 const error = new Error('Error')
 
@@ -80,7 +141,7 @@ describe('#useRouterTrade ExactIn', () => {
   it('does not compute routing api trade when routing API is not supported', () => {
     mockIsAutoRouterSupportedChain.mockReturnValue(false)
     expectRouterApiMock()
-    expectClientSideMock(validQuoteResult)
+    expectClientSideMock(validQuoteResult(false))
 
     const { result } = renderHook(() => useRouterTrade(TradeType.EXACT_INPUT, ROUTER_URL, USDCAmount, DAI))
     expect(result.current).toEqual({ isApiResult: false, state: TradeState.VALID, trade: undefined })

@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { compose, isPlainObject } from '@reduxjs/toolkit'
+import { isPlainObject } from '@reduxjs/toolkit'
 import { createApi, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 // Importing just the type, so smart-order-router is lazy-loaded
