@@ -3,13 +3,14 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { GetQuoteResult, TradeState } from 'state/routing/types'
 
-import { isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
+import { getClientSideQuote, isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 import { useRouterTrade } from './useRouterTrade'
-import { getClientSideQuote, getRouterApiQuote, QuoteArguments } from 'state/routing/slice'
+import { getRouterApiQuote, QuoteArguments } from 'state/routing/slice'
 
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { Trade } from 'components/Swap/Toolbar/Caption'
+import { AlphaRouterConfig } from '@uniswap/smart-order-router'
 
 const ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -28,59 +29,44 @@ const mockIsAutoRouterSupportedChain = isAutoRouterSupportedChain as jest.Mocked
 >
 const mockUseIsWindowVisible = useIsWindowVisible as jest.MockedFunction<typeof useIsWindowVisible>
 
-const mockUseRouterTrade = useRouterTrade as jest.MockedFunction<typeof useRouterTrade>
-const mockGetRouterApiQuote = getRouterApiQuote as jest.MockedFunction<typeof getRouterApiQuote>
-const mockGetClientSideQuote = getClientSideQuote as jest.MockedFunction<typeof getClientSideQuote>
+const mockGetRouterApiQuote = getRouterApiQuote as unknown as jest.MockInstance<
+  Promise<{ data: GetQuoteResult; error?: unknown }>,
+  [QuoteArguments, Partial<AlphaRouterConfig>]
+>
+const mockGetClientSideQuote = getClientSideQuote as unknown as jest.MockInstance<
+  Promise<{ data: GetQuoteResult; error?: unknown }>,
+  [QuoteArguments, Partial<AlphaRouterConfig>]
+>
 
-// helpers to set mock expectations
-// MOCK getRouterApiQuote and getClientSideQuote instead... how to do that
-// need to export these fxns
+const validQuoteResult: GetQuoteResult = {
+  amount: '100000000000',
+  amountDecimals: '100000',
+  blockNumber: '15220677',
+  gasPriceWei: '37477510620',
+  gasUseEstimate: '386000',
+  gasUseEstimateQuote: '214490841408308181',
+  gasUseEstimateQuoteDecimals: '0.214490841408308181',
+  gasUseEstimateUSD: '19.998844',
+  isApiResult: true,
+  methodParameters: undefined,
+  quote: '1294204987760689604911',
+  quoteDecimals: '1294.204987760689604911',
+  quoteGasAdjusted: '1294419478602097913092',
+  quoteGasAdjustedDecimals: '1294.419478602097913092',
+  route: [],
+  routeString: '',
+}
 const error = new Error('Error')
 
-const expectRouterApiMock = () => {
-  const data: GetQuoteResult = {
-    amount: '100000000000',
-    amountDecimals: '100000',
-    blockNumber: '15220677',
-    gasPriceWei: '37477510620',
-    gasUseEstimate: '386000',
-    gasUseEstimateQuote: '214490841408308181',
-    gasUseEstimateQuoteDecimals: '0.214490841408308181',
-    gasUseEstimateUSD: '19.998844',
-    isApiResult: true,
-    methodParameters: undefined,
-    quote: '1294204987760689604911',
-    quoteDecimals: '1294.204987760689604911',
-    quoteGasAdjusted: '1294419478602097913092',
-    quoteGasAdjustedDecimals: '1294.419478602097913092',
-    route: [],
-    routeString: '',
-  }
-  mockUseRouterTrade.mockReturnValue({ isApiResult: true, state: TradeState.VALID, trade: undefined })
-  mockGetRouterApiQuote.mockResolvedValue({ data })
-  mockGetRouterApiQuote.mockRejectedValue({ error: undefined })
+const expectRouterApiMock = (error?: Error) => {
+  // mockUseRouterTrade.mockReturnValue({ isApiResult: true, state: TradeState.VALID, trade: undefined })
+  mockGetRouterApiQuote.mockResolvedValue({ data: validQuoteResult })
+  mockGetRouterApiQuote.mockRejectedValue({ error })
 }
 
-const expectClientSideMock = (err?: Error) => {
-  const data: GetQuoteResult = {
-    amount: '100000000000',
-    amountDecimals: '100000',
-    blockNumber: '15220677',
-    gasPriceWei: '37477510620',
-    gasUseEstimate: '386000',
-    gasUseEstimateQuote: '214490841408308181',
-    gasUseEstimateQuoteDecimals: '0.214490841408308181',
-    gasUseEstimateUSD: '19.998844',
-    isApiResult: false,
-    methodParameters: undefined,
-    quote: '1294204987760689604911',
-    quoteDecimals: '1294.204987760689604911',
-    quoteGasAdjusted: '1294419478602097913092',
-    quoteGasAdjustedDecimals: '1294.419478602097913092',
-    route: [],
-    routeString: '',
-  }
-  mockGetClientSideQuote.mockResolvedValue({ data })
+const expectClientSideMock = (error?: Error) => {
+  mockGetClientSideQuote.mockResolvedValue({ data: validQuoteResult })
+  mockGetClientSideQuote.mockRejectedValue({ error })
   // mockUseRouterTrade.mockReturnValue({ isApiResult: false, state, trade: undefined })
 }
 

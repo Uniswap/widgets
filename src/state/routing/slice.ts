@@ -52,11 +52,6 @@ export async function getRouterApiQuote(args: QuoteArguments): Promise<{ data: G
   return { data }
 }
 
-export async function getClientSideQuote(args: QuoteArguments) {
-  // Lazy-load the clientside router to improve initial pageload times.
-  return await (await import('../../hooks/routing/clientSideSmartOrderRouter')).getClientSideQuote(args, { protocols })
-}
-
 const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: string; queryArgs: any }) => {
   // same as default serializeQueryArgs, but we add extra case if key is our non-serializable JsonRpcProvider
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
@@ -85,6 +80,13 @@ export const routing = createApi({
   endpoints: (build) => ({
     getQuote: build.query<GetQuoteResult, QuoteArguments>({
       async queryFn(args, _api, _extraOptions) {
+        async function getClientSideQuote(args: QuoteArguments) {
+          // Lazy-load the clientside router to improve initial pageload times.
+          return await (
+            await import('../../hooks/routing/clientSideSmartOrderRouter')
+          ).getClientSideQuote(args, { protocols })
+        }
+
         const { routerUrl } = args
         let result
         if (Boolean(routerUrl)) {
