@@ -1,5 +1,4 @@
 import { tokens } from '@uniswap/default-token-list'
-import { Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
