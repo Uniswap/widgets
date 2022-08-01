@@ -38,7 +38,7 @@ export default function ConnectWallet({ disabled, onIntegratorConnectWalletCallb
 
   return (
     <>
-      <WalletButton hidden={disabled} onClick={onClick} color="secondary" data-testid="wallet">
+      <WalletButton hidden={disabled} onClick={onClick} color="secondary" data-testid="connect-wallet">
         <ThemedText.Caption>
           <Row gap={0.5}>
             <WalletIcon />

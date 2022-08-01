@@ -72,6 +72,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
       style={style}
       transition={shouldTransition}
       onTransitionEnd={() => setShouldTransition(false)}
+      data-testid="token-select"
     >
       <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow
