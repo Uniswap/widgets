@@ -75,6 +75,12 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onReviewSwapClick={() => {
+        return new Promise((resolve) => {
+          console.log('review swap clicked... delaying 3 seconds')
+          setTimeout(() => resolve(true), 3000) // mock waiting for external modal behavior
+        })
+      }}
     />
   )
 }

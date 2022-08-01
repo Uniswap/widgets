@@ -11,7 +11,7 @@ import { Spinner } from 'icons'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
-import { displayTxHashAtom, feeOptionsAtom, Field } from 'state/swap'
+import { displayTxHashAtom, feeOptionsAtom, Field, onReviewSwapClickAtom } from 'state/swap'
 import { TransactionType } from 'state/transactions'
 import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
@@ -150,6 +150,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
   )
+  const onReviewSwapClick = useAtomValue(onReviewSwapClickAtom)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
@@ -157,14 +158,19 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       return approvalAction
         ? { action: approvalAction }
         : trade.state === TradeState.VALID
-        ? { onClick: () => setOpen(true) }
+        ? {
+            onClick: () => {
+              const promise = onReviewSwapClick && onReviewSwapClick()
+              return promise ? promise.then((open) => setOpen(open)) : setOpen(true)
+            },
+          }
         : { disabled: true }
     } else {
       return isPending
         ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
         : { onClick: onWrap }
     }
-  }, [approvalAction, disableSwap, isPending, onWrap, trade.state, wrapType])
+  }, [approvalAction, disableSwap, onReviewSwapClick, isPending, onWrap, trade.state, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
