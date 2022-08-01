@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react'
 import { Currency } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
@@ -87,7 +87,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.ref = ref.current ?? undefined
   }
 
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, value)
 
   return (

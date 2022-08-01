@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useToken } from 'hooks/useCurrency'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useUpdateAtom } from 'jotai/utils'
@@ -47,7 +47,7 @@ export default function useSyncTokenDefaults({
   defaultOutputAmount,
 }: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)

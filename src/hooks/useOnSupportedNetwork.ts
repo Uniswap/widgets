@@ -1,10 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useMemo } from 'react'
 
-import useActiveWeb3React from './useActiveWeb3React'
-
 function useOnSupportedNetwork() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   return useMemo(() => Boolean(chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId)), [chainId])
 }
 

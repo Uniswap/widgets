@@ -1,7 +1,7 @@
+import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { largeIconCss } from 'icons'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -18,7 +18,7 @@ const ToolbarRow = styled(Row)`
 `
 
 export default memo(function Toolbar() {
-  const { active, activating, chainId } = useActiveWeb3React()
+  const { account, isActivating, chainId } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
@@ -28,8 +28,12 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
-    if (!active || !chainId) {
-      if (activating) return <Caption.Connecting />
+    if (state === TradeState.SYNCING || state === TradeState.LOADING) {
+      return <Caption.LoadingTrade />
+    }
+
+    if (!account || !chainId) {
+      if (isActivating) return <Caption.Connecting />
       return <Caption.ConnectWallet />
     }
 
@@ -38,9 +42,6 @@ export default memo(function Toolbar() {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
-        return <Caption.LoadingTrade />
-      }
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
@@ -60,19 +61,19 @@ export default memo(function Toolbar() {
 
     return <Caption.Empty />
   }, [
-    activating,
-    active,
+    account,
     chainId,
-    impact,
-    inputAmount,
-    inputBalance,
     inputCurrency,
-    isAmountPopulated,
     outputCurrency,
-    outputUSDC,
+    isAmountPopulated,
+    isActivating,
     state,
-    trade,
+    inputBalance,
+    inputAmount,
     wrapType,
+    trade,
+    outputUSDC,
+    impact,
   ])
 
   return (

@@ -1,11 +1,11 @@
+import { useWeb3React } from '@web3-react/core'
 import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 
 import { useArgentWalletDetectorContract } from './useContract'
 
 export default function useIsArgentWallet(): boolean {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const argentWalletDetector = useArgentWalletDetectorContract()
   const inputs = useMemo(() => [account ?? undefined], [account])
   const call = useSingleCallResult(argentWalletDetector, 'isArgentWallet', inputs, NEVER_RELOAD)

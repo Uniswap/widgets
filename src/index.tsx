@@ -1,3 +1,5 @@
+import 'polyfills'
+
 import Swap, { SwapProps } from 'components/Swap'
 import Widget, { WidgetProps } from 'components/Widget'
 export type { Provider as EthersProvider } from '@ethersproject/abstract-provider'

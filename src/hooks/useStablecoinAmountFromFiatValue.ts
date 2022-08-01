@@ -1,7 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from 'constants/tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -20,7 +20,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
  * @returns CurrencyAmount where currency is stablecoin on active chain
  */
 export function useStablecoinAmountFromFiatValue(fiatValue: string | null | undefined) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
 
   return useMemo(() => {

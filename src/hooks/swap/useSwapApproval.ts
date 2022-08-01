@@ -2,8 +2,8 @@ import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'constants/addresses'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
@@ -18,7 +18,7 @@ function useSwapApprovalStates(
   allowedSlippage: Percent,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
 ): { v2: ApprovalState; v3: ApprovalState; v2V3: ApprovalState } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const amountToApprove = useMemo(
     () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
@@ -42,7 +42,7 @@ export function useSwapRouterAddress(
     | Trade<Currency, Currency, TradeType>
     | undefined
 ) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   return useMemo(
     () =>
       chainId

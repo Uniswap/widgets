@@ -1,4 +1,5 @@
 import { ContractTransaction } from '@ethersproject/contracts'
+import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useWETHContract } from 'hooks/useContract'
 import { useAtomValue } from 'jotai/utils'
@@ -6,7 +7,6 @@ import { useMemo } from 'react'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import useActiveWeb3React from '../useActiveWeb3React'
 import useCurrencyBalance from '../useCurrencyBalance'
 
 export enum WrapType {
@@ -20,7 +20,7 @@ interface UseWrapCallbackReturns {
 }
 
 export default function useWrapCallback(): UseWrapCallbackReturns {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
   const wrappedNativeCurrencyContract = useWETHContract()
   const { amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
 

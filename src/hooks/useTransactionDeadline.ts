@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -6,11 +7,9 @@ import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 import { transactionTtlAtom } from 'state/settings'
 
-import useActiveWeb3React from './useActiveWeb3React'
-
 /** Returns the default transaction TTL for the chain, in minutes. */
 export function useDefaultTransactionTtl(): number {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   if (chainId && L2_CHAIN_IDS.includes(chainId)) return L2_DEADLINE_FROM_NOW / 60
   return DEFAULT_DEADLINE_FROM_NOW / 60
 }
