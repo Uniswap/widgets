@@ -58,16 +58,14 @@ const validQuoteResult: GetQuoteResult = {
 }
 const error = new Error('Error')
 
-const expectRouterApiMock = (error?: Error) => {
-  // mockUseRouterTrade.mockReturnValue({ isApiResult: true, state: TradeState.VALID, trade: undefined })
-  mockGetRouterApiQuote.mockResolvedValue({ data: validQuoteResult })
-  mockGetRouterApiQuote.mockRejectedValue({ error })
+const expectRouterApiMock = (data?: GetQuoteResult, error?: Error) => {
+  if (data) mockGetRouterApiQuote.mockResolvedValue({ data })
+  if (error) mockGetRouterApiQuote.mockRejectedValue({ error })
 }
 
-const expectClientSideMock = (error?: Error) => {
-  mockGetClientSideQuote.mockResolvedValue({ data: validQuoteResult })
-  mockGetClientSideQuote.mockRejectedValue({ error })
-  // mockUseRouterTrade.mockReturnValue({ isApiResult: false, state, trade: undefined })
+const expectClientSideMock = (data?: GetQuoteResult, error?: Error) => {
+  if (data) mockGetClientSideQuote.mockResolvedValue({ data })
+  if (error) mockGetClientSideQuote.mockRejectedValue({ error })
 }
 
 beforeEach(() => {
@@ -82,7 +80,7 @@ describe('#useRouterTrade ExactIn', () => {
   it('does not compute routing api trade when routing API is not supported', () => {
     mockIsAutoRouterSupportedChain.mockReturnValue(false)
     expectRouterApiMock()
-    expectClientSideMock()
+    expectClientSideMock(validQuoteResult)
 
     const { result } = renderHook(() => useRouterTrade(TradeType.EXACT_INPUT, ROUTER_URL, USDCAmount, DAI))
     expect(result.current).toEqual({ isApiResult: false, state: TradeState.VALID, trade: undefined })
