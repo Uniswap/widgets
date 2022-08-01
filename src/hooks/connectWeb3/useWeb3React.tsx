@@ -13,28 +13,39 @@ export type Web3Connection = [Connector, Web3ReactHooks]
 export let connections: Web3Connection[] = []
 export const defaultChainIdAtom = atom<number>(1)
 
-function toWeb3Connection<T extends Connector>([connector, hooks]: [T, Web3ReactHooks, Web3ReactStore]): [
+function toWeb3Connection<T extends Connector>([connector, hooks]: [
   T,
-  Web3ReactHooks
-] {
+  Web3ReactHooks,
+  Web3ReactStore
+]): Web3Connection {
   return [connector, hooks]
 }
 
-function getWallet(provider?: JsonRpcProvider | Eip1193Provider) {
+export function getConnectorName(connector: Connector) {
+  if (connector instanceof MetaMask) return 'MetaMask'
+  if (connector instanceof WalletConnect) return 'WalletConnect'
+  if (connector instanceof Network) return 'Network'
+  if (connector instanceof Url) return 'Url'
+  if (connector instanceof EIP1193) return 'EIP1193'
+  return 'Unknown'
+}
+
+function getWalletFromProvider(onError: (error: Error) => void, provider?: JsonRpcProvider | Eip1193Provider) {
   if (!provider) return
   if (JsonRpcProvider.isProvider(provider)) {
     return toWeb3Connection(initializeConnector((actions) => new Url({ actions, url: provider })))
   } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
     throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
   } else {
-    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider })))
+    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider, onError })))
   }
 }
 
-function getWalletConnectConnection(
+function getWalletFromWalletConnect(
   useDefault: boolean,
   jsonRpcUrlMap: { [chainId: number]: string[] },
-  defaultChainId: number
+  defaultChainId: number,
+  onError: (error: Error) => void
 ) {
   return toWeb3Connection(
     initializeConnector<WalletConnect>(
@@ -45,6 +56,7 @@ function getWalletConnectConnection(
             rpc: jsonRpcUrlMap,
             qrcode: useDefault,
           },
+          onError,
           defaultChainId,
         })
     )
@@ -63,29 +75,32 @@ export function ActiveWeb3Provider({
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  const onError = console.error
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
   }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
-  const integratorConnection = useMemo(() => getWallet(provider), [provider])
+  const integratorConnection = useMemo(() => getWalletFromProvider(onError, provider), [onError, provider])
   const metaMaskConnection = useMemo(
-    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))),
-    []
+    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
+    [onError]
   )
   const walletConnectConnectionQR = useMemo(
-    () => getWalletConnectConnection(false, jsonRpcUrlMap, defaultChainId),
-    [jsonRpcUrlMap, defaultChainId]
+    () => getWalletFromWalletConnect(false, jsonRpcUrlMap, propsDefaultChainId, onError),
+    [jsonRpcUrlMap, propsDefaultChainId, onError]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getWalletConnectConnection(true, jsonRpcUrlMap, defaultChainId),
-    [jsonRpcUrlMap, defaultChainId]
+    () => getWalletFromWalletConnect(true, jsonRpcUrlMap, propsDefaultChainId, onError),
+    [jsonRpcUrlMap, propsDefaultChainId, onError]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
-        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId }))
+        initializeConnector<Network>(
+          (actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId: propsDefaultChainId })
+        )
       ),
     [jsonRpcUrlMap, defaultChainId]
   )

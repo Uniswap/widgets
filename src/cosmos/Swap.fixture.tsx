@@ -54,6 +54,7 @@ function Fixture() {
     defaultValue: 'mainnet',
   })
   const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
+
   const connector = useProvider(defaultChainId)
 
   const tokenLists: Record<string, TokenInfo[]> = {
