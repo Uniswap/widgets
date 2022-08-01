@@ -1,7 +1,0 @@
-{
-  "watchDirs": ["src/cosmos"],
-  "webpack": {
-    "overridePath": "webpack.cosmos.js"
-  },
-  "port": 3000
-}
