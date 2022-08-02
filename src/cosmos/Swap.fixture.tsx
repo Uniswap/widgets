@@ -75,6 +75,9 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
+      onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
+      onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
     />
   )
 }

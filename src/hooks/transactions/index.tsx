@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
 
@@ -60,9 +60,14 @@ export function usePendingApproval(token?: Token, spender?: string): string | un
   )?.info.response.hash
 }
 
-export function TransactionsUpdater() {
-  const pendingTransactions = usePendingTransactions()
+interface TransactionsUpdaterProps {
+  onTxSubmit?: (txHash: string, data: any) => void
+  onTxSuccess?: (txHash: string, data: any) => void
+  onTxFail?: (error: Error, data: any) => void
+}
 
+export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionsUpdaterProps) {
+  const currentPendingTxs = usePendingTransactions()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
     ({ chainId, hash, blockNumber }) => {
@@ -79,6 +84,11 @@ export function TransactionsUpdater() {
   )
   const onReceipt = useCallback(
     ({ chainId, hash, receipt }) => {
+      if (receipt?.status === 0) {
+        onTxFail?.(new Error('Transaction failed'), receipt)
+      } else {
+        onTxSuccess?.(receipt.transactionHash, receipt)
+      }
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
@@ -86,8 +96,23 @@ export function TransactionsUpdater() {
         }
       })
     },
-    [updateTxs]
+    [updateTxs, onTxFail, onTxSuccess]
   )
 
-  return <Updater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
+  const oldPendingTxs = useRef({})
+  useEffect(() => {
+    const newPendingTxHashes = Object.keys(currentPendingTxs)
+    const oldPendingTxHashes = new Set(Object.keys(oldPendingTxs.current))
+    if (newPendingTxHashes.length !== oldPendingTxHashes.size) {
+      // if added new tx
+      newPendingTxHashes.forEach((txHash) => {
+        if (!oldPendingTxHashes.has(txHash)) {
+          onTxSubmit?.(txHash, currentPendingTxs[txHash])
+        }
+      })
+      oldPendingTxs.current = currentPendingTxs
+    }
+  }, [currentPendingTxs, onTxSubmit])
+
+  return <Updater pendingTransactions={currentPendingTxs} onCheck={onCheck} onReceipt={onReceipt} />
 }
