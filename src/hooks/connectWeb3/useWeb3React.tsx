@@ -108,7 +108,7 @@ export function ActiveWeb3Provider({
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
   if (integratorConnection) connections = [integratorConnection, ...connections]
 
-  const key = `${connections.length}+${Object.keys(jsonRpcUrlMap)}+${propsDefaultChainId}+${defaultChainId}`
+  const key = `${connections.length}+${Object.entries(jsonRpcUrlMap)}+${propsDefaultChainId}+${defaultChainId}`
   return (
     <Web3ReactProvider connectors={connections} key={key}>
       {children}
