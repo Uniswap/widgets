@@ -4,6 +4,7 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
+import { QuoteArguments } from 'state/routing/slice'
 import { GetQuoteResult } from 'state/routing/types'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -53,20 +54,9 @@ async function getQuote(
   if (!swapRoute)
     throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
 
-  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
-}
-
-interface QuoteArguments {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  type: 'exactIn' | 'exactOut'
+  const data = transformSwapRouteToGetQuoteResult(type, amount, swapRoute)
+  data.isApiResult = false
+  return { data }
 }
 
 export async function getClientSideQuote(
@@ -80,9 +70,9 @@ export async function getClientSideQuote(
     tokenOutDecimals,
     tokenOutSymbol,
     amount,
+    provider,
     type,
   }: QuoteArguments,
-  provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   return getQuote(

@@ -33,12 +33,15 @@ export function useRouterTrade<TTradeType extends TradeType>(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
+  isApiResult?: boolean
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
   const { chainId, library } = useActiveWeb3React()
   const autoRouterSupported = isAutoRouterSupportedChain(chainId)
   const isWindowVisible = useIsWindowVisible()
+  const useRouterApi = autoRouterSupported && isWindowVisible
+
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
   // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
@@ -46,14 +49,13 @@ export function useRouterTrade<TTradeType extends TradeType>(
     200
   )
   const isDebouncing = amountSpecified !== debouncedAmount && otherCurrency === debouncedOtherCurrency
-  const debouncedAmountSpecified = autoRouterSupported && isWindowVisible ? debouncedAmount : undefined
 
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
-        ? [debouncedAmountSpecified?.currency, debouncedOtherCurrency]
-        : [debouncedOtherCurrency, debouncedAmountSpecified?.currency],
-    [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
+        ? [debouncedAmount?.currency, debouncedOtherCurrency]
+        : [debouncedOtherCurrency, debouncedAmount?.currency],
+    [debouncedAmount, debouncedOtherCurrency, tradeType]
   )
 
   const currencyChainId = currencyIn?.chainId as ChainId
@@ -64,9 +66,9 @@ export function useRouterTrade<TTradeType extends TradeType>(
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
-    amount: debouncedAmountSpecified,
+    amount: debouncedAmount,
     tradeType,
-    routerUrl,
+    routerUrl: useRouterApi ? routerUrl : undefined,
     provider: library as JsonRpcProvider,
   })
 
@@ -74,6 +76,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
+  console.log('data', data)
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
 
@@ -97,7 +100,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     }
   }, [gasUseEstimateUSD, route, tradeType])
 
-  return useMemo(() => {
+  const result = useMemo(() => {
     if (!currencyIn || !currencyOut) return INVALID_TRADE
 
     if (!trade && !isError) {
@@ -124,4 +127,5 @@ export function useRouterTrade<TTradeType extends TradeType>(
     }
     return INVALID_TRADE
   }, [currencyIn, currencyOut, quoteResult, trade, tradeType, isError, route, queryArgs, isDebouncing, isSyncing])
+  return { isApiResult: quoteResult?.isApiResult, ...result }
 }
