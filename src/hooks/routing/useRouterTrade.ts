@@ -76,6 +76,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
+  console.log('data', data)
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
 
