@@ -22,6 +22,7 @@ const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-
 const onError = (error: Error) => console.error('web3 error:', error)
 
 const Body = styled(Column)`
+  padding: 0em 0.75em 0.75em;
   height: calc(100% - 2.5em);
 `
 
@@ -31,7 +32,7 @@ const SecondaryOptionsRow = styled(Row)`
   height: fit-content;
 `
 
-const ButtonContents = styled(Column)`
+const StyledButtonContents = styled(Column)`
   gap: 0.75em;
   justify-items: center;
 `
@@ -39,7 +40,7 @@ const ButtonContents = styled(Column)`
 const StyledMainButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 183px;
+  height: 200px;
   padding: 22px;
 `
 
@@ -51,7 +52,7 @@ const StyledMainButtonRow = styled(Row)`
 const StyledSmallButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 90px;
+  height: 88px;
   padding: 16px;
 `
 
@@ -69,11 +70,26 @@ const QRCodeWrapper = styled.div`
   }
 `
 
+function ButtonContents({ walletName, logoSrc, caption }: ButtonProps) {
+  return (
+    <StyledButtonContents>
+      <img src={logoSrc} alt={walletName} width={26} />
+      <ThemedText.Subhead1>{walletName}</ThemedText.Subhead1>
+      {caption && (
+        <ThemedText.Caption color="secondary">
+          <Trans>{caption}</Trans>
+        </ThemedText.Caption>
+      )}
+    </StyledButtonContents>
+  )
+}
+
 interface ButtonProps {
   walletName?: string
   logoSrc?: string
+  caption?: string
   connection?: Web3Connection
-  onClick: () => void
+  onClick?: () => void
 }
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
@@ -147,13 +163,11 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
   return (
     <StyledMainButton onClick={onClick}>
       <StyledMainButtonRow>
-        <ButtonContents>
-          <img src={logoSrc} alt={walletName} width={32} />
-          <ThemedText.Subhead1>{walletName}</ThemedText.Subhead1>
-          <ThemedText.Caption color="secondary">
-            <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
-          </ThemedText.Caption>
-        </ButtonContents>
+        <ButtonContents
+          logoSrc={logoSrc}
+          walletName={walletName}
+          caption={'Scan to connect your wallet. Works with most wallets.'}
+        />
         <QRCodeWrapper dangerouslySetInnerHTML={{ __html: qrCodeSvg }} />
       </StyledMainButtonRow>
     </StyledMainButton>
@@ -163,10 +177,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
 function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
-      <ButtonContents>
-        <img src={logoSrc} alt={walletName} width={26} />
-        <ThemedText.Subhead1>{walletName}</ThemedText.Subhead1>
-      </ButtonContents>
+      <ButtonContents logoSrc={logoSrc} walletName={walletName} />
     </StyledSmallButton>
   )
 }
