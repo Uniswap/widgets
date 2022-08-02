@@ -1,16 +1,14 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { AlphaRouterConfig } from '@uniswap/smart-order-router'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
+import useDebounce from 'hooks/useDebounce'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { getRouterApiQuote, QuoteArguments } from 'state/routing/slice'
 import { GetQuoteResult, TradeState, V3PoolInRoute } from 'state/routing/types'
 
 import { getClientSideQuote, isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 import { useRouterTrade } from './useRouterTrade'
-import { getRouterApiQuote, QuoteArguments } from 'state/routing/slice'
-
-import useDebounce from 'hooks/useDebounce'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { Trade } from 'components/Swap/Toolbar/Caption'
-import { AlphaRouterConfig } from '@uniswap/smart-order-router'
 
 const ROUTER_URL = 'https://api.uniswap.org/v1/'
 
