@@ -83,7 +83,7 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       onConnectWalletClick={() => {
-        // e?.preventDefault()
+        // call `e?.preventDefault()` to disable built-in flow
         console.log('integrator provided a onConnectWalletClick')
       }}
     />

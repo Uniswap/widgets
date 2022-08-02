@@ -23,21 +23,13 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
   // TODO: hover to see disconnect button is temporary; disconnection should live inside AccountDialog
   const [hover, setHover] = useState(false)
 
-  const { account } = useWeb3React()
-  function disconnectWallet() {
-    connections.forEach(([wallet, _]) => {
-      if (!(wallet instanceof Network || wallet instanceof Url)) {
-        // only deactivate non-network wallet connectors
-        wallet.deactivate ? wallet.deactivate() : wallet.resetState()
-      }
-    })
-  }
+  const { account, connector } = useWeb3React()
 
   return (
     <>
       <AccountButton
         hidden={disabled}
-        onClick={disconnectWallet}
+        onClick={() => (connector.deactivate ? connector.deactivate() : connector.resetState())}
         color="secondary"
         data-testid="wallet"
         onMouseEnter={() => setHover(true)}

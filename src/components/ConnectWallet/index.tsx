@@ -28,8 +28,8 @@ export default function Wallet({ disabled, onConnectWalletClick }: WalletProps) 
 
   const { account, isActive } = useWeb3React()
 
-  const isConnected = isActive && Boolean(account)
-  return isConnected ? (
+  const isAccountConnected = isActive && Boolean(account)
+  return isAccountConnected ? (
     <ConnectedWalletChip disabled={disabled} />
   ) : (
     <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWalletClick} />
