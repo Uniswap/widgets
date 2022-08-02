@@ -45,6 +45,7 @@ function getTransactionFromMap(
 // SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
+  hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
   onConnectWalletClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
@@ -67,12 +68,10 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
-  const hideConnectionUI = false // TODO(kristiehuang): add new prop to allow integrator to hide entire connection UI
-
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={hideConnectionUI} onConnectWalletClick={props.onConnectWalletClick} />
+        <Wallet disabled={props.hideConnectionUI} onConnectWalletClick={props.onConnectWalletClick} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

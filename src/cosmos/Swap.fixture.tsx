@@ -38,6 +38,8 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
+  const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+
   const [width] = useValue('width', { defaultValue: 360 })
 
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
@@ -74,6 +76,7 @@ function Fixture() {
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
+      hideConnectionUI={hideConnectionUI}
       locale={locale}
       jsonRpcUrlMap={jsonRpcUrlMap}
       defaultChainId={defaultChainId}
