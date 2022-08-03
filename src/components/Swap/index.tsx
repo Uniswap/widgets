@@ -54,9 +54,7 @@ export default function Swap(props: SwapProps) {
   const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
   useEffect(() => {
     if (props.onReviewSwapClick !== onReviewSwapClick) {
-      setOnReviewSwapClick(
-        (old: ((openReviewScreen: () => void) => void) | undefined) => (old = props.onReviewSwapClick)
-      )
+      setOnReviewSwapClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onReviewSwapClick))
     }
   }, [props.onReviewSwapClick, onReviewSwapClick, setOnReviewSwapClick])
 
