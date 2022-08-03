@@ -48,7 +48,7 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onConnectWalletClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
+  onConnectWalletClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {

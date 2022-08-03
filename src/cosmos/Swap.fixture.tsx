@@ -85,10 +85,12 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      onConnectWalletClick={() => {
-        // call `e?.preventDefault()` to disable built-in flow
-        console.log('integrator provided a onConnectWalletClick')
-      }}
+      onConnectWalletClick={() =>
+        new Promise((resolve) => {
+          console.log('integrator provided a onConnectWalletClick')
+          resolve(true) // to open our built-in wallet connect flow
+        })
+      }
     />
   )
 }
