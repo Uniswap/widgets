@@ -12,6 +12,7 @@ export default function useSwitchNetwork(desiredChainId?: number) {
     setIsPending(true)
     try {
       const desiredChainIdHex = `0x${desiredChainId?.toString(16)}`
+      // FIXME: use connector.activate(desiredChainIdOrParams) like in interface's switchChain
       await connector.provider
         ?.request({
           method: 'wallet_switchEthereumChain',
