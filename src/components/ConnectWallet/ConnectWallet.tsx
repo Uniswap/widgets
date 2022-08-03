@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Wallet as WalletIcon } from 'icons'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { onConnectWalletClickAtom } from 'state/wallet'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -17,7 +17,7 @@ interface ConnectWalletProps {
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   filter: none;
-  visibility: ${({ hidden }) => hidden && 'hidden'};
+  visibility: ${({ hidden }) => (hidden ? 'hidden' : 'visible')};
 `
 
 export default function ConnectWallet({ disabled }: ConnectWalletProps) {

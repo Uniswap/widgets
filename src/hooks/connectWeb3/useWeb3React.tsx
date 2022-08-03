@@ -5,6 +5,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
+import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
@@ -44,7 +45,7 @@ function getConnectionFromProvider(onError: (error: Error) => void, provider?: J
 function getConnectionFromWalletConnect(
   useDefault: boolean,
   jsonRpcUrlMap: { [chainId: number]: string[] },
-  defaultChainId: number,
+  defaultChainId: SupportedChainId,
   onError: (error: Error) => void
 ) {
   return toWeb3Connection(
@@ -66,7 +67,7 @@ function getConnectionFromWalletConnect(
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcUrlMap: { [chainId: number]: string[] }
-  defaultChainId: number
+  defaultChainId: SupportedChainId
 }
 
 export function ActiveWeb3Provider({

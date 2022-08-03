@@ -93,7 +93,7 @@ export type WidgetProps = {
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcUrlMap?: { [chainId: number]: string[] }
-  defaultChainId?: number
+  defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null

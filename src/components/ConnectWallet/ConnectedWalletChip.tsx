@@ -10,16 +10,11 @@ import { ThemedText } from 'theme'
 
 const AccountButton = styled(TextButton)<{ hidden?: boolean }>`
   filter: none;
-  visibility: ${({ hidden }) => hidden && 'hidden'};
+  visibility: ${({ hidden }) => (hidden ? 'hidden' : 'visible')};
 `
 
 export default function ConnectedWalletChip({ disabled, account }: { disabled?: boolean; account?: string }) {
-  // TODO(kristiehuang): AccountDialog UI does not yet exist
-  // const [open, setOpen] = useState(false)
-
-  // TODO: hover to see disconnect button is temporary; disconnection should live inside AccountDialog
   const [hover, setHover] = useState(false)
-
   const { connector } = useWeb3React()
 
   return (
@@ -48,11 +43,6 @@ export default function ConnectedWalletChip({ disabled, account }: { disabled?: 
           </ThemedText.Subhead2>
         )}
       </AccountButton>
-      {/* {open && (
-        <Dialog color="module" onClose={() => setOpen(false)}>
-          <AccountDialog />
-        </Dialog>
-      )} */}
     </>
   )
 }
