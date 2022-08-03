@@ -28,7 +28,7 @@ const Body = styled(Column)`
 
 const SecondaryOptionsRow = styled(Row)`
   align-self: end;
-  grid-template-columns: repeat(2, calc(50% - 0.75em / 2));
+  grid-template-columns: repeat(2, calc(50% - 0.5em / 2));
   height: fit-content;
 `
 
