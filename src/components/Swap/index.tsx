@@ -1,8 +1,4 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Provider as Eip1193Provider } from '@web3-react/types'
-import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -10,17 +6,15 @@ import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
-import { useEffect, useState } from 'react'
-import { displayTxHashAtom, onConnectWalletClickAtom } from 'state/swap'
+import { useState } from 'react'
+import { displayTxHashAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
-import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
-import Settings from './Settings'
 import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
@@ -42,13 +36,8 @@ function getTransactionFromMap(
   return
 }
 
-// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
-// TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
-  hideConnectionUI?: boolean
-  provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onConnectWalletClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
@@ -68,19 +57,8 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
-  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
-  useEffect(() => {
-    if (props.onConnectWalletClick !== onConnectWalletClick) {
-      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
-    }
-  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
-
   return (
     <>
-      <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={props.hideConnectionUI} />
-        <Settings disabled={isDisabled} />
-      </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
           <SwapInfoProvider disabled={isDisabled} routerUrl={props.routerUrl}>
