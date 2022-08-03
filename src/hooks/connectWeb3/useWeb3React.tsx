@@ -87,22 +87,20 @@ export function ActiveWeb3Provider({
     [onError]
   )
   const walletConnectConnectionQR = useMemo(
-    () => getConnectionFromWalletConnect(false, jsonRpcUrlMap, propsDefaultChainId, onError),
-    [jsonRpcUrlMap, propsDefaultChainId, onError]
+    () => getConnectionFromWalletConnect(false, jsonRpcUrlMap, defaultChainId, onError),
+    [jsonRpcUrlMap, defaultChainId, onError]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getConnectionFromWalletConnect(true, jsonRpcUrlMap, propsDefaultChainId, onError),
-    [jsonRpcUrlMap, propsDefaultChainId, onError]
+    () => getConnectionFromWalletConnect(true, jsonRpcUrlMap, defaultChainId, onError),
+    [jsonRpcUrlMap, defaultChainId, onError]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
-        initializeConnector<Network>(
-          (actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId: propsDefaultChainId })
-        )
+        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId }))
       ),
-    [jsonRpcUrlMap, propsDefaultChainId]
+    [jsonRpcUrlMap, defaultChainId]
   )
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
