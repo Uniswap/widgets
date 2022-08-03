@@ -23,8 +23,7 @@ const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
 export default function ConnectWallet({ disabled }: ConnectWalletProps) {
   // Opens a dialog that initiates own wallet connection flow
   const [open, setOpen] = useState(false)
-
-  const onClose = useCallback(() => setOpen(false), [])
+  const onClose = () => setOpen(false)
 
   const onConnectWalletClick = useAtomValue(onConnectWalletClickAtom)
   const onClick = () => {
