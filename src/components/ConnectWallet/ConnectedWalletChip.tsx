@@ -13,14 +13,14 @@ const AccountButton = styled(TextButton)<{ hidden?: boolean }>`
   visibility: ${({ hidden }) => hidden && 'hidden'};
 `
 
-export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }) {
+export default function ConnectedWalletChip({ disabled, account }: { disabled?: boolean; account?: string }) {
   // TODO(kristiehuang): AccountDialog UI does not yet exist
   // const [open, setOpen] = useState(false)
 
   // TODO: hover to see disconnect button is temporary; disconnection should live inside AccountDialog
   const [hover, setHover] = useState(false)
 
-  const { account, connector } = useWeb3React()
+  const { connector } = useWeb3React()
 
   return (
     <>
@@ -43,7 +43,7 @@ export default function ConnectedWalletChip({ disabled }: { disabled?: boolean }
           <ThemedText.Subhead2>
             <Row gap={0.5}>
               <Identicon />
-              {account?.substring(0, 6)}...{account?.substring(account.length - 4)}
+              {account?.substring(0, 6)}...{account?.substring(account?.length - 4)}
             </Row>
           </ThemedText.Subhead2>
         )}

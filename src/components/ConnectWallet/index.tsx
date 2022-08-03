@@ -30,7 +30,7 @@ export default function Wallet({ disabled, onConnectWalletClick }: WalletProps) 
 
   const isAccountConnected = isActive && Boolean(account)
   return isAccountConnected ? (
-    <ConnectedWalletChip disabled={disabled} />
+    <ConnectedWalletChip disabled={disabled} account={account} />
   ) : (
     <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWalletClick} />
   )
