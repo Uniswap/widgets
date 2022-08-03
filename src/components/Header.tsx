@@ -20,7 +20,6 @@ const HeaderRow = styled(Row)`
 `
 
 export interface HeaderProps {
-  title?: string
   hideConnectionUI?: boolean
   onConnectWalletClick?: () => void | Promise<boolean>
 }
@@ -40,11 +39,9 @@ export default function Header(props: HeaderProps) {
   return (
     <HeaderRow iconSize={1.2}>
       <Row gap={0.5}>
-        {props.title && (
-          <ThemedText.Subhead1>
-            <Trans>{props.title}</Trans>
-          </ThemedText.Subhead1>
-        )}
+        <ThemedText.Subhead1>
+          <Trans>Swap</Trans>
+        </ThemedText.Subhead1>
       </Row>
       <Row gap={1}>
         <Wallet disabled={props.hideConnectionUI} />

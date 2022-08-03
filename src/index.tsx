@@ -20,7 +20,7 @@ export type SwapWidgetProps = HeaderProps & SwapProps & WidgetProps
 export function SwapWidget(props: SwapWidgetProps) {
   return (
     <Widget {...props}>
-      <Header title="Swap" {...props} />
+      <Header {...props} />
       <Swap {...props} />
     </Widget>
   )
