@@ -1,7 +1,7 @@
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
-import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import polygonMaticLogo from 'assets/svg/matic-token-logo.svg'
+import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
