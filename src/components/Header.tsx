@@ -1,9 +1,16 @@
+import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { largeIconCss } from 'icons'
-import { ReactElement, ReactNode } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect } from 'react'
+import { onConnectWalletClickAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
+import Wallet from './ConnectWallet'
 import Row from './Row'
+import Settings from './Swap/Settings'
 
 const HeaderRow = styled(Row)`
   height: 1.75em;
@@ -13,15 +20,33 @@ const HeaderRow = styled(Row)`
 `
 
 export interface HeaderProps {
-  title?: ReactElement
-  children: ReactNode
+  hideConnectionUI?: boolean
+  onConnectWalletClick?: () => void | Promise<boolean>
 }
 
-export default function Header({ title, children }: HeaderProps) {
+export default function Header(props: HeaderProps) {
+  const { isActive } = useWeb3React()
+  const onSupportedNetwork = useOnSupportedNetwork()
+  const isDisabled = !(isActive && onSupportedNetwork)
+
+  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
+  useEffect(() => {
+    if (props.onConnectWalletClick !== onConnectWalletClick) {
+      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
+    }
+  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
+
   return (
     <HeaderRow iconSize={1.2}>
-      <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
-      <Row gap={1}>{children}</Row>
+      <Row gap={0.5}>
+        <ThemedText.Subhead1>
+          <Trans>Swap</Trans>
+        </ThemedText.Subhead1>
+      </Row>
+      <Row gap={1}>
+        <Wallet disabled={props.hideConnectionUI} />
+        <Settings disabled={isDisabled} />
+      </Row>
     </HeaderRow>
   )
 }

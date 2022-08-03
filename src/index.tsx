@@ -1,5 +1,6 @@
 import 'polyfills'
 
+import Header, { HeaderProps } from 'components/Header'
 import Swap, { SwapProps } from 'components/Swap'
 import Widget, { WidgetProps } from 'components/Widget'
 export type { Provider as EthersProvider } from '@ethersproject/abstract-provider'
@@ -14,11 +15,12 @@ export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefau
 export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 
-export type SwapWidgetProps = SwapProps & WidgetProps
+export type SwapWidgetProps = HeaderProps & SwapProps & WidgetProps
 
 export function SwapWidget(props: SwapWidgetProps) {
   return (
     <Widget {...props}>
+      <Header {...props} />
       <Swap {...props} />
     </Widget>
   )
