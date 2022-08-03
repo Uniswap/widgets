@@ -22,8 +22,8 @@ const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-
 const onError = (error: Error) => console.error('web3 error:', error)
 
 const Body = styled(Column)`
-  padding: 0em 0.75em 0.75em;
   height: calc(100% - 2.5em);
+  padding: 0em 0.75em 0.75em;
 `
 
 const SecondaryOptionsRow = styled(Row)`

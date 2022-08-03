@@ -8,10 +8,9 @@ import ConnectWallet from './ConnectWallet'
 
 interface WalletProps {
   disabled?: boolean
-  onConnectWalletClick?: () => void | Promise<boolean>
 }
 
-export default function Wallet({ disabled, onConnectWalletClick }: WalletProps) {
+export default function Wallet({ disabled }: WalletProps) {
   // Attempt to connect eagerly on mount, and prompt switch networks when integrator's defaultChainId changes
   const defaultChainId = useAtomValue(defaultChainIdAtom)
   useEffect(() => {
@@ -32,6 +31,6 @@ export default function Wallet({ disabled, onConnectWalletClick }: WalletProps) 
   return isAccountConnected ? (
     <ConnectedWalletChip disabled={disabled} account={account} />
   ) : (
-    <ConnectWallet disabled={disabled} onIntegratorConnectWalletCallback={onConnectWalletClick} />
+    <ConnectWallet disabled={disabled} />
   )
 }

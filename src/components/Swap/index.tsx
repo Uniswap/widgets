@@ -10,8 +10,8 @@ import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
-import { displayTxHashAtom } from 'state/swap'
+import { useEffect, useState } from 'react'
+import { displayTxHashAtom, onConnectWalletClickAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
@@ -68,10 +68,17 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
+  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
+  useEffect(() => {
+    if (props.onConnectWalletClick !== onConnectWalletClick) {
+      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
+    }
+  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
+
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={props.hideConnectionUI} onConnectWalletClick={props.onConnectWalletClick} />
+        <Wallet disabled={props.hideConnectionUI} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
