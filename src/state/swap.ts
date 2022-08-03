@@ -27,6 +27,3 @@ export const swapAtom = atomWithImmer<Swap>({
 export const displayTxHashAtom = atom<string | undefined>(undefined)
 
 export const feeOptionsAtom = atom<FeeOptions | undefined>(undefined)
-
-// If set, allows integrator to add behavior when 'Connect wallet to swap' button is clicked
-export const onConnectWalletClickAtom = atom<(() => void | Promise<boolean>) | undefined>(undefined)

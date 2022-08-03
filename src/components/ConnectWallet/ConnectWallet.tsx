@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Wallet as WalletIcon } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useState } from 'react'
-import { onConnectWalletClickAtom } from 'state/swap'
+import { onConnectWalletClickAtom } from 'state/wallet'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
