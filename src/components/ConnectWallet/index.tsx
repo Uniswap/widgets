@@ -15,15 +15,18 @@ export default function Wallet({ disabled, onClickConnectWallet }: WalletProps) 
   // Attempt to connect eagerly on mount, and prompt switch networks when integrator's defaultChainId changes
   const defaultChainId = useAtomValue(defaultChainIdAtom)
   useEffect(() => {
-    connections.forEach(([wallet, _]) =>
-      wallet.connectEagerly
-        ? wallet.connectEagerly(defaultChainId)?.catch(() => {
-            console.log('Could not connect eagerly to', getConnectorName(wallet))
-          })
-        : wallet.activate(defaultChainId)?.catch(() => {
-            console.log('Could not activate', getConnectorName(wallet))
-          })
-    )
+    connections.forEach(([wallet, _]) => {
+      const success = wallet.connectEagerly ? wallet.connectEagerly(defaultChainId) : wallet.activate(defaultChainId)
+      success?.catch(() => {
+        if (stale) return
+        console.log(`Could not connect to ${getConnectorName(wallet)}`)
+      })
+    })
+
+    let stale = false
+    return () => {
+      stale = true
+    }
   }, [defaultChainId])
 
   const { account, isActive } = useWeb3React()
