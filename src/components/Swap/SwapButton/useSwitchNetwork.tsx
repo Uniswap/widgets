@@ -37,7 +37,7 @@ export default function useSwitchNetwork(inputCurrency?: Currency) {
           }
     }
     return undefined
-  }, [chainId, isPending, onSwitchNetwork])
+  }, [inputCurrency, chainId, isPending, onSwitchNetwork])
 
   return switchNetworkAction
 }
