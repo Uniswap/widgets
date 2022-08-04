@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:05\n"
+"PO-Revision-Date: 2022-08-04 19:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -26,7 +26,7 @@ msgstr "Mengakui"
 
 #: src/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
-msgstr "Mengizinkan"
+msgstr "Izinkan"
 
 #: src/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow in your wallet"
@@ -81,8 +81,12 @@ msgstr "Konfirmasi di dompet Anda"
 msgid "Confirm swap"
 msgstr "Konfirmasi pertukaran"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "Hubungkan dompet"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Hubungkan dompet untuk bertukar"
 
@@ -93,6 +97,10 @@ msgstr "Menghubungkan…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "Ubah {0} menjadi {1}"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "Putuskan sambungan dompet"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -130,6 +138,10 @@ msgstr "Slip tinggi"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "Slippage tinggi meningkatkan risiko pergerakan harga"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "Saya tidak punya dompet"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
@@ -239,7 +251,7 @@ msgstr "Pilih token"
 
 #: src/components/Swap/Settings/index.tsx
 msgid "Settings"
-msgstr "Pengaturan"
+msgstr "Setelan"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
@@ -379,6 +391,10 @@ msgstr "Transaksi Anda akan dikembalikan jika harga berubah lebih dari persentas
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "menit"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"
