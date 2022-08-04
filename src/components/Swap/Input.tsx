@@ -106,7 +106,7 @@ export default function Input({ disabled, focused }: InputProps) {
     currencyAmount: tradeCurrencyAmount,
     fieldAmount: inputAmount,
   })
-
+  console.log('inputcurr', inputCurrency?.symbol)
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput

@@ -1,4 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useEffect } from 'react'
+import { Field } from 'state/swap'
+import { useSwapAmount, useSwapCurrency } from 'hooks/swap'
+
+import useOnSupportedNetwork from '../useOnSupportedNetwork'
 
 export interface ControlledStateProps {
   inputToken?: Currency
@@ -16,45 +21,85 @@ export interface ControlledStateProps {
   outputTokenAmountOnChange?: (n: string) => void
 }
 
-// export default function useSyncTokenDefaults({
-//   defaultInputTokenAddress,
-//   defaultInputAmount,
-//   defaultOutputTokenAddress,
-//   defaultOutputAmount,
-// }: TokenDefaults) {
-//   const updateSwap = useUpdateAtom(swapAtom)
-//   const { chainId } = useActiveWeb3React()
-//   const onSupportedNetwork = useOnSupportedNetwork()
-//   const nativeCurrency = useNativeCurrency()
-//   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
-//   const defaultInputToken =
-//     useDefaultToken(defaultInputTokenAddress, chainId) ??
-//     // Default the input token to the native currency if it is not the output token.
-//     (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
+export function isControlledComponent({
+  inputToken,
+  inputTokenOnChange,
+  inputTokenSelectorActive,
+  outputToken,
+  outputTokenOnChange,
+  outputTokenSelectorActive,
+  inputTokenAmount,
+  inputTokenAmountOnChange,
+  outputTokenAmount,
+  outputTokenAmountOnChange,
+}: ControlledStateProps): boolean {
+  const controlledStateProps = {
+    inputToken,
+    inputTokenOnChange,
+    inputTokenSelectorActive,
+    outputToken,
+    outputTokenOnChange,
+    outputTokenSelectorActive,
+    inputTokenAmount,
+    inputTokenAmountOnChange,
+    outputTokenAmount,
+    outputTokenAmountOnChange,
+  }
+  let controlledPropCount = 0
+  Object.keys(controlledStateProps).forEach((key) => {
+    if (controlledStateProps[key as keyof typeof controlledStateProps] !== undefined) controlledPropCount++
+  })
+  return Boolean(controlledPropCount)
+}
 
-//   const setToDefaults = useCallback(() => {
-//     const defaultSwapState: Swap = {
-//       amount: '',
-//       [Field.INPUT]: defaultInputToken,
-//       [Field.OUTPUT]: defaultOutputToken,
-//       independentField: Field.INPUT,
-//     }
-//     if (defaultInputToken && defaultInputAmount) {
-//       defaultSwapState.amount = defaultInputAmount.toString()
-//     } else if (defaultOutputToken && defaultOutputAmount) {
-//       defaultSwapState.independentField = Field.OUTPUT
-//       defaultSwapState.amount = defaultOutputAmount.toString()
-//     }
-//     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
-//   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
+export default function useSyncControlledStateProps(controlledStateProps: ControlledStateProps) {
+  const {
+    inputToken,
+    inputTokenOnChange,
+    inputTokenSelectorActive,
+    outputToken,
+    outputTokenOnChange,
+    outputTokenSelectorActive,
+    inputTokenAmount,
+    inputTokenAmountOnChange,
+    outputTokenAmount,
+    outputTokenAmountOnChange,
+  } = controlledStateProps
 
-//   const lastChainId = useRef<number | undefined>(undefined)
-//   const isTokenListLoaded = useIsTokenListLoaded()
-//   useEffect(() => {
-//     const shouldSync = isTokenListLoaded && chainId && chainId !== lastChainId.current
-//     if (shouldSync) {
-//       setToDefaults()
-//       lastChainId.current = chainId
-//     }
-//   }, [isTokenListLoaded, chainId, setToDefaults])
-// }
+  // fixme handle for onChange fxns and selectorActive
+  const [, updateInputAmount] = useSwapAmount(Field.INPUT)
+  const [, updateOutputAmount] = useSwapAmount(Field.OUTPUT)
+  const [, updateInputCurrency] = useSwapCurrency(Field.INPUT)
+  const [, updateOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+
+  useEffect(() => {
+    inputTokenAmount && updateInputAmount(`${inputTokenAmount}`)
+    outputTokenAmount && updateOutputAmount(`${outputTokenAmount}`)
+    inputToken && updateInputCurrency(inputToken)
+    outputToken && updateOutputCurrency(outputToken)
+  }, [inputTokenAmount, outputTokenAmount, inputToken, outputToken])
+
+  // const setToDefaults = useCallback(() => {
+  //   const newSwapState: Swap = {
+  //     independentField: Field.INPUT,
+  //     amount: '',
+  //   }
+  //   if (inputToken && inputAmount) {
+  //     newSwapState.amount = inputAmount.toString()
+  //   } else if (outputToken && outputTokenAmount) {
+  //     newSwapState.independentField = Field.OUTPUT
+  //     newSwapState.amount = outputTokenAmount.toString()
+  //   }
+  //   updateSwap((swap) => ({ ...swap, ...newSwapState }))
+  // }, [inputAmount, inputToken, outputTokenAmount, outputToken, updateSwap])
+
+  // const lastChainId = useRef<number | undefined>(undefined)
+  // const isTokenListLoaded = useIsTokenListLoaded()
+  // useEffect(() => {
+  //   const shouldSync = isTokenListLoaded && chainId && chainId !== lastChainId.current
+  //   if (shouldSync) {
+  //     setToDefaults()
+  //     lastChainId.current = chainId
+  //   }
+  // }, [isTokenListLoaded, chainId, setToDefaults])
+}

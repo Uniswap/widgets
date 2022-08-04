@@ -19,9 +19,9 @@ function otherField(field: Field) {
 }
 
 export function useSwitchSwapCurrencies() {
-  const update = useUpdateAtom(swapAtom)
+  const updateSwap = useUpdateAtom(swapAtom)
   return useCallback(() => {
-    update((swap) => {
+    updateSwap((swap) => {
       const oldOutput = swap[Field.OUTPUT]
       swap[Field.OUTPUT] = swap[Field.INPUT]
       swap[Field.INPUT] = oldOutput
@@ -34,7 +34,7 @@ export function useSwitchSwapCurrencies() {
           break
       }
     })
-  }, [update])
+  }, [updateSwap])
 }
 
 export function useSwapCurrency(field: Field): [Currency | undefined, (currency?: Currency) => void] {

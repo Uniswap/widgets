@@ -1,6 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
-import { ControlledStateProps } from 'hooks/swap/useSyncControlledStateProps'
+import useSyncControlledStateProps, {
+  ControlledStateProps,
+  isControlledComponent,
+} from 'hooks/swap/useSyncControlledStateProps'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
@@ -49,7 +52,7 @@ export interface SwapProps extends ControlledStateProps, TokenDefaults, FeeOptio
 export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncConvenienceFee(props)
-  useSyncTokenDefaults(props)
+  isControlledComponent(props) ? useSyncControlledStateProps(props) : useSyncTokenDefaults(props)
 
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)

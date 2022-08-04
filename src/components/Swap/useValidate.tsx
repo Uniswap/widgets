@@ -1,4 +1,6 @@
+import { input } from '@testing-library/user-event/dist/types/utils'
 import { IntegrationError } from 'errors'
+import { isControlledComponent } from 'hooks/swap/useSyncControlledStateProps'
 import { DefaultAddress } from 'hooks/swap/useSyncTokenDefaults'
 import { PropsWithChildren, useEffect } from 'react'
 import { isAddress } from 'utils'
@@ -81,16 +83,12 @@ export default function useValidate(props: ValidatorProps) {
     outputTokenAmountOnChange,
   }
   useEffect(() => {
-    let controlledPropCount = 0
-    Object.keys(controlledStateProps).forEach((key) => {
-      if (controlledStateProps[key as keyof typeof controlledStateProps] !== undefined) controlledPropCount++
-    })
     let uncontrolledPropCount = 0
     Object.keys(uncontrolledStateProps).forEach((key) => {
       if (uncontrolledStateProps[key as keyof typeof uncontrolledStateProps] !== undefined) uncontrolledPropCount++
     })
-    if (controlledPropCount && uncontrolledPropCount) {
-      throw new IntegrationError('controlled & uncontrolled state props may not both be defined.')
+    if (isControlledComponent(props) && uncontrolledPropCount) {
+      throw new IntegrationError('Controlled & uncontrolled state props may not both be defined.')
     }
   }, [controlledStateProps, uncontrolledStateProps])
 
@@ -142,6 +140,16 @@ export default function useValidate(props: ValidatorProps) {
   }, [inputTokenAmount, outputTokenAmount])
 
   useEffect(() => {
+    if (inputToken && outputToken) {
+      if (inputToken === outputToken) {
+        throw new IntegrationError('inputToken and outputToken may not be the same token.')
+      }
+      if (inputToken.chainId !== outputToken.chainId) {
+        throw new IntegrationError(
+          `ChainIds for inputToken (${inputToken.chainId})) and outputToken (${outputToken.chainId})) must be the same.`
+        )
+      }
+    }
     if (
       inputToken &&
       !inputToken.isNative &&
