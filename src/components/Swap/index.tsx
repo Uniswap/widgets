@@ -11,7 +11,7 @@ import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
-import { displayTxHashAtom } from 'state/swap'
+import { displayTxHashAtom, onReviewSwapClickAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 import { onConnectWalletClickAtom } from 'state/wallet'
 
@@ -50,12 +50,27 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
   onConnectWalletClick?: () => void | Promise<boolean>
+  onReviewSwapClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
+
+  const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
+  useEffect(() => {
+    if (props.onReviewSwapClick !== onReviewSwapClick) {
+      setOnReviewSwapClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onReviewSwapClick))
+    }
+  }, [props.onReviewSwapClick, onReviewSwapClick, setOnReviewSwapClick])
+
+  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
+  useEffect(() => {
+    if (props.onConnectWalletClick !== onConnectWalletClick) {
+      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
+    }
+  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
@@ -68,13 +83,6 @@ export default function Swap(props: SwapProps) {
   const isDisabled = !(isActive && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
-
-  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
-  useEffect(() => {
-    if (props.onConnectWalletClick !== onConnectWalletClick) {
-      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
-    }
-  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
 
   return (
     <>

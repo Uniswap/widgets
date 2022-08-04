@@ -91,6 +91,12 @@ function Fixture() {
           resolve(true) // to open our built-in wallet connect flow
         })
       }
+      onReviewSwapClick={() => {
+        return new Promise((resolve) => resolve(true))
+      }}
+      onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
+      onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
+      onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
     />
   )
 }

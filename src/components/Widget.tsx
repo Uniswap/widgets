@@ -99,6 +99,9 @@ export type WidgetProps = {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
+  onTxSubmit?: (txHash: string, data: any) => void
+  onTxSuccess?: (txHash: string, data: any) => void
+  onTxFail?: (error: Error, data: any) => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
@@ -157,7 +160,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                     >
                       <BlockNumberProvider>
                         <MulticallUpdater />
-                        <TransactionsUpdater />
+                        <TransactionsUpdater
+                          onTxSubmit={props.onTxSubmit}
+                          onTxSuccess={props.onTxSuccess}
+                          onTxFail={props.onTxFail}
+                        />
                         <TokenListProvider list={props.tokenList}>{children}</TokenListProvider>
                       </BlockNumberProvider>
                     </ActiveWeb3Provider>
