@@ -25,14 +25,10 @@ describe('connect', () => {
   })
 
   describe('with no params, using fallback JSON RPC URL', () => {
-    it('prompts for wallet connection in the Wallet', async () => {
-      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-      expect(connectWallet.textContent).toBe('Connect wallet to swap')
-    })
-
-    it('prompts for wallet connection in the Toolbar', async () => {
+    it('prompts for wallet connection in the Wallet and Toolbar', async () => {
       expect(toolbar.textContent).toBe('Connecting…')
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
+      expect(connectWallet.textContent).toBe('Connect wallet to swap')
       expect(toolbar.textContent).toBe('Connect wallet to swap')
     })
 
@@ -43,18 +39,13 @@ describe('connect', () => {
     })
   })
 
-  describe('with valid integrator jsonRpcUrlMap', () => {
-    it('prompts for wallet connection in the Wallet', async () => {
+  describe('with valid jsonRpcUrlMap', () => {
+    it('prompts for wallet connection in the Wallet and Toolbar', async () => {
       component = render(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
       expect(connectWallet.textContent).toBe('Connect wallet to swap')
-      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-      expect(connectWallet.textContent).toBe('Connect wallet to swap')
-    })
-
-    it('prompts for wallet connection in the Toolbar', async () => {
-      component = render(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
       expect(toolbar.textContent).toBe('Connecting…')
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
+      expect(connectWallet.textContent).toBe('Connect wallet to swap')
       expect(toolbar.textContent).toBe('Connect wallet to swap')
     })
 
@@ -66,7 +57,7 @@ describe('connect', () => {
     })
   })
 
-  describe('with integrator wallet provider', () => {
+  describe('with wallet provider', () => {
     it('displays connected account chip', async () => {
       component = render(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
