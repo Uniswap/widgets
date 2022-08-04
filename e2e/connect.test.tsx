@@ -73,9 +73,13 @@ describe('connect', () => {
     it('does not prompt for wallet connection in toolbar', async () => {
       component = render(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
       expect(toolbar.textContent).toBe('Connecting…')
-      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-      toolbar = (await component.findAllByTestId('toolbar'))[1]
-      expect(toolbar.textContent).toBe('Enter an amount')
+      await waitFor(
+        async () => {
+          toolbar = (await component.findAllByTestId('toolbar'))[1]
+          expect(toolbar.textContent).toBe('Enter an amount')
+        },
+        { timeout: 10000 }
+      )
     })
 
     it('expects widget not to be disabled', async () => {
