@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
@@ -14,13 +14,13 @@ function isTransactionRecent(transaction: Transaction) {
 }
 
 export function usePendingTransactions() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const txs = useAtomValue(transactionsAtom)
   return (chainId ? txs[chainId] : null) ?? {}
 }
 
 export function useAddTransaction() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)
 
@@ -42,7 +42,7 @@ export function useAddTransaction() {
 
 /** Returns the hash of a pending approval transaction, if it exists. */
 export function usePendingApproval(token?: Token, spender?: string): string | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const txs = useAtomValue(transactionsAtom)
   if (!chainId || !token || !spender) return undefined
 

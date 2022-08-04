@@ -45,7 +45,7 @@ export default function usePoll<T>(
         if (isStale && entry?.result !== undefined ? isStale(entry.result) : false) {
           poll() // stale results should be refetched immediately
         } else if (entry.ttl && entry.ttl + keepUnusedDataFor > Date.now()) {
-          timeout = setTimeout(poll, Math.max(0, entry.ttl - Date.now()))
+          timeout = window.setTimeout(poll, Math.max(0, entry.ttl - Date.now()))
         }
       }
     } else {
@@ -60,7 +60,7 @@ export default function usePoll<T>(
     }
 
     async function poll(ttl = Date.now() + pollingInterval) {
-      timeout = setTimeout(poll, pollingInterval) // queue the next poll
+      timeout = window.setTimeout(poll, pollingInterval) // queue the next poll
       cache.set(key, { ttl: null, ...cache.get(key) }) // mark the entry as a pending fetch
 
       // Always set the result in the cache, but only set it as data if the key is still being queried.

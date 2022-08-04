@@ -18,18 +18,32 @@ export enum SupportedChainId {
   POLYGON_MUMBAI = 80001,
 }
 
-export const CHAIN_IDS_TO_NAMES = {
-  [SupportedChainId.MAINNET]: 'mainnet',
-  [SupportedChainId.ROPSTEN]: 'ropsten',
-  [SupportedChainId.RINKEBY]: 'rinkeby',
-  [SupportedChainId.GOERLI]: 'goerli',
-  [SupportedChainId.KOVAN]: 'kovan',
-  [SupportedChainId.POLYGON]: 'polygon',
-  [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
-  [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
-  [SupportedChainId.OPTIMISM]: 'optimism',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'optimistic_kovan',
+export enum ChainName {
+  MAINNET = 'mainnet',
+  ROPSTEN = 'ropsten',
+  RINKEBY = 'rinkeby',
+  GOERLI = 'goerli',
+  KOVAN = 'kovan',
+  OPTIMISM = 'optimism-mainnet',
+  OPTIMISTIC_KOVAN = 'optimism-kovan',
+  ARBITRUM_ONE = 'arbitrum-mainnet',
+  ARBITRUM_RINKEBY = 'arbitrum-rinkeby',
+  POLYGON = 'polygon-mainnet',
+  POLYGON_MUMBAI = 'polygon-mumbai',
+}
+
+export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
+  [ChainName.MAINNET]: SupportedChainId.MAINNET,
+  [ChainName.ROPSTEN]: SupportedChainId.ROPSTEN,
+  [ChainName.RINKEBY]: SupportedChainId.RINKEBY,
+  [ChainName.GOERLI]: SupportedChainId.GOERLI,
+  [ChainName.KOVAN]: SupportedChainId.KOVAN,
+  [ChainName.POLYGON]: SupportedChainId.POLYGON,
+  [ChainName.POLYGON_MUMBAI]: SupportedChainId.POLYGON_MUMBAI,
+  [ChainName.ARBITRUM_ONE]: SupportedChainId.ARBITRUM_ONE,
+  [ChainName.ARBITRUM_RINKEBY]: SupportedChainId.ARBITRUM_RINKEBY,
+  [ChainName.OPTIMISM]: SupportedChainId.OPTIMISM,
+  [ChainName.OPTIMISTIC_KOVAN]: SupportedChainId.OPTIMISTIC_KOVAN,
 }
 
 /**

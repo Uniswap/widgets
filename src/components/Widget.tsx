@@ -1,9 +1,11 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
 import { TransactionsUpdater } from 'hooks/transactions'
-import { ActiveWeb3Provider } from 'hooks/useActiveWeb3React'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
@@ -18,6 +20,8 @@ import { UNMOUNTING } from 'utils/animations'
 
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+
+const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -88,7 +92,8 @@ export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcEndpoint?: string | JsonRpcProvider
+  jsonRpcUrlMap?: { [chainId: number]: string[] }
+  defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
@@ -100,7 +105,7 @@ export type WidgetProps = {
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  const { children, theme, provider, jsonRpcEndpoint, dialog: userDialog, className, onError } = props
+  const { children, theme, provider, dialog: userDialog, className, onError } = props
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -115,6 +120,27 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
+  const defaultChainId = useMemo(() => {
+    if (!props.defaultChainId) return DEFAULT_CHAIN_ID
+    if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
+      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
+      return DEFAULT_CHAIN_ID
+    }
+    return props.defaultChainId
+  }, [props.defaultChainId])
+  const jsonRpcUrlMap: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
+    if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
+    for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
+      if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
+        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
+        console.warn(
+          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to public RPC endpoint ${fallbackRpc}, which may be unreliable and severly rate-limited.`
+        )
+        props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
+      }
+    }
+    return props.jsonRpcUrlMap
+  }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
@@ -127,7 +153,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
               <ErrorBoundary onError={onError}>
                 <ReduxProvider store={store}>
                   <AtomProvider>
-                    <ActiveWeb3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    <ActiveWeb3Provider
+                      provider={provider}
+                      jsonRpcUrlMap={jsonRpcUrlMap}
+                      defaultChainId={defaultChainId}
+                    >
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater

@@ -9,13 +9,13 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
+import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
-import useJsonRpcEndpoint from './useJsonRpcEndpoint'
 import useOption from './useOption'
-import useProvider from './useProvider'
+import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
 function Fixture() {
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
@@ -38,6 +38,8 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
+  const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+
   const [width] = useValue('width', { defaultValue: 360 })
 
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
@@ -47,8 +49,15 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  const jsonRpcEndpoint = useJsonRpcEndpoint()
-  const connector = useProvider()
+  const jsonRpcUrlMap = INFURA_NETWORK_URLS
+
+  const defaultNetwork = useOption('defaultChainId', {
+    options: Object.keys(CHAIN_NAMES_TO_IDS),
+    defaultValue: 'mainnet',
+  })
+  const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
+
+  const connector = useProvider(defaultChainId)
 
   const tokenLists: Record<string, TokenInfo[]> = {
     Default: tokens,
@@ -67,14 +76,21 @@ function Fixture() {
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
+      hideConnectionUI={hideConnectionUI}
       locale={locale}
-      jsonRpcEndpoint={jsonRpcEndpoint}
+      jsonRpcUrlMap={jsonRpcUrlMap}
+      defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onConnectWalletClick={() =>
+        new Promise((resolve) => {
+          console.log('integrator provided a onConnectWalletClick')
+          resolve(true) // to open our built-in wallet connect flow
+        })
+      }
       onReviewSwapClick={() => {
         return new Promise((resolve) => resolve(true))
       }}
