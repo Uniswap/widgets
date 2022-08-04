@@ -29,11 +29,13 @@ describe('connect', () => {
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
       expect(connectWallet.textContent).toBe('Connect wallet to swap')
     })
+
     it('prompts for wallet connection in the Toolbar', async () => {
       expect(toolbar.textContent).toBe('Connecting…')
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
       expect(toolbar.textContent).toBe('Connect wallet to swap')
     })
+
     it('expects widget not to be disabled', async () => {
       expect(tokenSelect).toHaveProperty('disabled', true)
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
@@ -48,12 +50,14 @@ describe('connect', () => {
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
       expect(connectWallet.textContent).toBe('Connect wallet to swap')
     })
+
     it('prompts for wallet connection in the Toolbar', async () => {
       component = render(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
       expect(toolbar.textContent).toBe('Connecting…')
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
       expect(toolbar.textContent).toBe('Connect wallet to swap')
     })
+
     it('expects widget not to be disabled', async () => {
       component = render(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
       expect(tokenSelect).toHaveProperty('disabled', true)
@@ -73,6 +77,7 @@ describe('connect', () => {
         )}`
       )
     })
+
     it('does not prompt for wallet connection in toolbar', async () => {
       component = render(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
       expect(toolbar.textContent).toBe('Connecting…')
@@ -80,6 +85,7 @@ describe('connect', () => {
       toolbar = (await component.findAllByTestId('toolbar'))[1]
       expect(toolbar.textContent).toBe('Enter an amount')
     })
+
     it('expects widget not to be disabled', async () => {
       component = render(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
       expect(tokenSelect).toHaveProperty('disabled', true)
