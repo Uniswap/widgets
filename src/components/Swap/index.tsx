@@ -7,8 +7,8 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
-import { displayTxHashAtom } from 'state/swap'
+import { useEffect, useState } from 'react'
+import { displayTxHashAtom, onReviewSwapClickAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
@@ -43,12 +43,20 @@ function getTransactionFromMap(
 export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWallet?: () => void
+  onReviewSwapClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
+
+  const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
+  useEffect(() => {
+    if (props.onReviewSwapClick !== onReviewSwapClick) {
+      setOnReviewSwapClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onReviewSwapClick))
+    }
+  }, [props.onReviewSwapClick, onReviewSwapClick, setOnReviewSwapClick])
 
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
