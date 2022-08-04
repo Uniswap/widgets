@@ -1,30 +1,25 @@
 import { Trans } from '@lingui/macro'
-import { Action } from 'components/ActionButton'
 import { useWeb3React } from '@web3-react/core'
+import { Action } from 'components/ActionButton'
+import { switchChain } from 'hooks/connectWeb3/useWeb3React'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
-export default function useSwitchNetwork(desiredChainId?: number) {
+export default function useSwitchNetwork(desiredChainId: number) {
   const { chainId, connector } = useWeb3React()
 
   const [isPending, setIsPending] = useState(false)
   const onSwitchNetwork = useCallback(async () => {
     setIsPending(true)
     try {
-      const desiredChainIdHex = `0x${desiredChainId?.toString(16)}`
-      // FIXME: use connector.activate(desiredChainIdOrParams) like in interface's switchChain
-      await connector.provider
-        ?.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: desiredChainIdHex }],
-        })
-        .then(() => connector.activate(desiredChainId))
+      await switchChain(connector, desiredChainId)
       setIsPending(false)
     } catch {
       // if user cancels switch network request in-wallet
       setIsPending(false)
     }
   }, [desiredChainId, connector])
+
   const switchNetworkAction = useMemo((): Action | undefined => {
     if (chainId && desiredChainId && chainId !== desiredChainId) {
       return isPending
