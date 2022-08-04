@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Wallet as WalletIcon } from 'icons'
-import { useCallback, useState } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { useState } from 'react'
+import { onConnectWalletClickAtom } from 'state/wallet'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -11,30 +13,23 @@ import { ConnectWalletDialog } from './ConnectWalletDialog'
 
 interface ConnectWalletProps {
   disabled?: boolean
-  onIntegratorConnectWalletCallback?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const WalletButton = styled(TextButton)<{ hidden?: boolean }>`
   filter: none;
-  visibility: ${({ hidden }) => hidden && 'hidden'};
+  visibility: ${({ hidden }) => (hidden ? 'hidden' : 'visible')};
 `
 
-export default function ConnectWallet({ disabled, onIntegratorConnectWalletCallback }: ConnectWalletProps) {
+export default function ConnectWallet({ disabled }: ConnectWalletProps) {
   // Opens a dialog that initiates own wallet connection flow
   const [open, setOpen] = useState(false)
+  const onClose = () => setOpen(false)
 
-  const onClose = useCallback(() => setOpen(false), [])
-
-  const onClick = useCallback(
-    (e?: React.MouseEvent<HTMLButtonElement>) => {
-      if (onIntegratorConnectWalletCallback) {
-        onIntegratorConnectWalletCallback(e)
-        if (e && e.defaultPrevented) return
-      }
-      setOpen(true) // Initiate our own wallet connection flow
-    },
-    [onIntegratorConnectWalletCallback]
-  )
+  const onConnectWalletClick = useAtomValue(onConnectWalletClickAtom)
+  const onClick = () => {
+    const promise = onConnectWalletClick && onConnectWalletClick()
+    return promise ? promise.then((open) => setOpen(open)) : setOpen(true)
+  }
 
   return (
     <>

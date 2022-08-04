@@ -38,6 +38,8 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
+  const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+
   const [width] = useValue('width', { defaultValue: 360 })
 
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
@@ -74,6 +76,7 @@ function Fixture() {
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
+      hideConnectionUI={hideConnectionUI}
       locale={locale}
       jsonRpcUrlMap={jsonRpcUrlMap}
       defaultChainId={defaultChainId}
@@ -82,10 +85,12 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      onClickConnectWallet={() => {
-        // e?.preventDefault()
-        console.log('integrator provided a onConnectWallet')
-      }}
+      onConnectWalletClick={() =>
+        new Promise((resolve) => {
+          console.log('integrator provided a onConnectWalletClick')
+          resolve(true) // to open our built-in wallet connect flow
+        })
+      }
     />
   )
 }

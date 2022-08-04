@@ -32,7 +32,7 @@ export enum ChainName {
   POLYGON_MUMBAI = 'polygon-mumbai',
 }
 
-export const CHAIN_NAMES_TO_IDS: { [ChainName: string]: SupportedChainId } = {
+export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
   [ChainName.MAINNET]: SupportedChainId.MAINNET,
   [ChainName.ROPSTEN]: SupportedChainId.ROPSTEN,
   [ChainName.RINKEBY]: SupportedChainId.RINKEBY,

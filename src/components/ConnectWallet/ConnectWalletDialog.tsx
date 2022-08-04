@@ -18,17 +18,21 @@ import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { lightTheme, ThemedText } from 'theme'
 
+const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
+const onError = (error: Error) => console.error('web3 error:', error)
+
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
+  padding: 0em 0.75em 0.75em;
 `
 
 const SecondaryOptionsRow = styled(Row)`
   align-self: end;
-  grid-template-columns: repeat(2, calc(50% - 0.75em / 2));
+  grid-template-columns: repeat(2, calc(50% - 0.5em / 2));
   height: fit-content;
 `
 
-const ButtonContents = styled(Column)`
+const StyledButtonContents = styled(Column)`
   gap: 0.75em;
   justify-items: center;
 `
@@ -36,7 +40,7 @@ const ButtonContents = styled(Column)`
 const StyledMainButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 183px;
+  height: 200px;
   padding: 22px;
 `
 
@@ -48,7 +52,7 @@ const StyledMainButtonRow = styled(Row)`
 const StyledSmallButton = styled(Button)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 90px;
+  height: 88px;
   padding: 16px;
 `
 
@@ -66,12 +70,26 @@ const QRCodeWrapper = styled.div`
   }
 `
 
+function ButtonContents({ walletName, logoSrc, caption }: ButtonProps) {
+  return (
+    <StyledButtonContents>
+      <img src={logoSrc} alt={walletName} width={26} />
+      <ThemedText.Subhead1>{walletName}</ThemedText.Subhead1>
+      {caption && (
+        <ThemedText.Caption color="secondary">
+          <Trans>{caption}</Trans>
+        </ThemedText.Caption>
+      )}
+    </StyledButtonContents>
+  )
+}
+
 interface ButtonProps {
   walletName?: string
   logoSrc?: string
+  caption?: string
   connection?: Web3Connection
-  onClick: () => void
-  onError?: (e: Error | undefined) => void
+  onClick?: () => void
 }
 
 const wcQRUriAtom = atom<string | undefined>(undefined)
@@ -86,7 +104,7 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
   })
 }
 
-function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick, onError }: ButtonProps) {
+function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection, onClick }: ButtonProps) {
   const [walletConnect] = wcTileConnection as [WalletConnect, Web3ReactHooks]
   const defaultChainId = useAtomValue(defaultChainIdAtom)
 
@@ -109,7 +127,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
     return () => {
       stale = true
     }
-  }, [qrUri, walletConnect, defaultChainId, onError])
+  }, [qrUri, walletConnect, defaultChainId])
 
   useEffect(() => {
     const disconnectListener = async (err: Error | null, _: any) => {
@@ -145,15 +163,11 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
   return (
     <StyledMainButton onClick={onClick}>
       <StyledMainButtonRow>
-        <ButtonContents>
-          <img src={logoSrc} alt={walletName} width={32} />
-          <ThemedText.Subhead1>
-            <Trans>{walletName}</Trans>
-          </ThemedText.Subhead1>
-          <ThemedText.Caption color="secondary">
-            <Trans>Scan to connect your wallet. Works with most wallets.</Trans>
-          </ThemedText.Caption>
-        </ButtonContents>
+        <ButtonContents
+          logoSrc={logoSrc}
+          walletName={walletName}
+          caption={'Scan to connect your wallet. Works with most wallets.'}
+        />
         <QRCodeWrapper dangerouslySetInnerHTML={{ __html: qrCodeSvg }} />
       </StyledMainButtonRow>
     </StyledMainButton>
@@ -163,40 +177,29 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
 function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
     <StyledSmallButton onClick={onClick}>
-      <ButtonContents>
-        <img src={logoSrc} alt={walletName} width={26} />
-        <ThemedText.Subhead1>
-          <Trans>{walletName}</Trans>
-        </ThemedText.Subhead1>
-      </ButtonContents>
+      <ButtonContents logoSrc={logoSrc} walletName={walletName} />
     </StyledSmallButton>
   )
 }
 
 function NoWalletButton() {
-  const helpCenterUrl = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
   return (
-    <StyledSmallButton onClick={() => window.open(helpCenterUrl)}>
+    <StyledSmallButton onClick={() => window.open(NO_WALLET_HELP_CENTER_URL)}>
       <StyledNoWalletText>
-        <Trans>I don&apos;t have a wallet</Trans>
+        <Trans>{`I don't have a wallet`}</Trans>
       </StyledNoWalletText>
     </StyledSmallButton>
   )
 }
 
 export function ConnectWalletDialog() {
-  let defaultConnections: Web3Connection[]
   const [firstConnector] = connections[0]
-  if (firstConnector instanceof EIP1193 || firstConnector instanceof Url) {
-    // If first connector is the integrator-provided connector
-    defaultConnections = connections.slice(1)
-  } else {
-    defaultConnections = connections
-  }
-  const [mmConnection, wcTileConnection, wcPopupConnection] = defaultConnections
+  const integratorProvidedConnector = firstConnector instanceof EIP1193 || firstConnector instanceof Url
+  const [mmConnection, wcTileConnection, wcPopupConnection]: Web3Connection[] = integratorProvidedConnector
+    ? connections.slice(1)
+    : connections
   const defaultChainId = useAtomValue(defaultChainIdAtom)
 
-  const onError = (error: any) => error && console.error('web3 error:', error)
   const activateWalletConnectPopup = useCallback(() => {
     const [walletConnectPopup] = wcPopupConnection
     walletConnectPopup.activate(defaultChainId)?.catch(onError)
@@ -216,7 +219,6 @@ export function ConnectWalletDialog() {
             logoSrc={WALLETCONNECT_ICON_URL}
             connection={wcTileConnection}
             onClick={activateWalletConnectPopup}
-            onError={onError}
           />
           <SecondaryOptionsRow>
             <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />

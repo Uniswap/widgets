@@ -93,7 +93,7 @@ export type WidgetProps = {
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcUrlMap?: { [chainId: number]: string[] }
-  defaultChainId?: number
+  defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLElement | null
@@ -131,7 +131,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
       if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
         const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
         console.warn(
-          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to free public RPC endpoint ${fallbackRpc}.`
+          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to public RPC endpoint ${fallbackRpc}, which may be unreliable and severly rate-limited.`
         )
         props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
       }

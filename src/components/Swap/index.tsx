@@ -10,9 +10,10 @@ import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
+import { onConnectWalletClickAtom } from 'state/wallet'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -45,9 +46,10 @@ function getTransactionFromMap(
 // SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends TokenDefaults, FeeOptions {
+  hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onClickConnectWallet?: (e?: React.MouseEvent<HTMLButtonElement>) => void
+  onConnectWalletClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
@@ -67,12 +69,17 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
-  const hideConnectionUI = false // TODO(kristiehuang): add new prop to allow integrator to hide entire connection UI
+  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
+  useEffect(() => {
+    if (props.onConnectWalletClick !== onConnectWalletClick) {
+      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
+    }
+  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
 
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={hideConnectionUI} onClickConnectWallet={props.onClickConnectWallet} />
+        <Wallet disabled={props.hideConnectionUI} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>
