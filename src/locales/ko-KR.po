@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:04\n"
+"PO-Revision-Date: 2022-08-04 19:04\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -81,8 +81,12 @@ msgstr "지갑에서 확인"
 msgid "Confirm swap"
 msgstr "스왑 확인"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "지갑 연결"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "교환에 지갑 연결"
 
@@ -93,6 +97,10 @@ msgstr "연결…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "{0} 을 {1}로 변환"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "지갑 연결 해제"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -130,6 +138,10 @@ msgstr "높은 미끄러짐"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "높은 미끄러짐은 가격 변동의 위험을 증가시킵니다."
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "지갑이 없어요"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
@@ -379,6 +391,10 @@ msgstr "가격이 이 요율 이상으로 불리하게 변경되면 거래가 �
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "분"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

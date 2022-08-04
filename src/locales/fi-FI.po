@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:04\n"
+"PO-Revision-Date: 2022-08-04 19:04\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -81,8 +81,12 @@ msgstr "Vahvista lompakossasi"
 msgid "Confirm swap"
 msgstr "Vahvista vaihto"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "Yhdistä lompakko"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Yhdistä lompakko vaihtaaksesi"
 
@@ -93,6 +97,10 @@ msgstr "Yhdistäminen…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "Muunna {0} {1}:ksi"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "Irrota lompakko"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -130,6 +138,10 @@ msgstr "Korkea luisto"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "Suuri lipsahdus lisää hintojen liikkeiden riskiä"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "Minulla ei ole lompakkoa"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
@@ -379,6 +391,10 @@ msgstr "Tapahtumasi peruuntuu, jos hinta muuttuu epäsuotuisasti tätä prosentt
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minuuttia"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

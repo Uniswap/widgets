@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:04\n"
+"PO-Revision-Date: 2022-08-04 19:04\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -81,8 +81,12 @@ msgstr "Confirma en tu billetera"
 msgid "Confirm swap"
 msgstr "Confirmar intercambio"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "Conectar cartera"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Conectar monedero para intercambiar"
 
@@ -93,6 +97,10 @@ msgstr "Conectando…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "Convertir {0} a {1}"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "Desconectar billetera"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -130,6 +138,10 @@ msgstr "Alto deslizamiento"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "Un alto deslizamiento aumenta el riesgo de movimiento de precios"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "no tengo billetera"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
@@ -379,6 +391,10 @@ msgstr "Su transacción se revertirá si el precio cambia desfavorablemente más
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minutos"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

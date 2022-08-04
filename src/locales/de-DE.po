@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:04\n"
+"PO-Revision-Date: 2022-08-04 19:04\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -81,8 +81,12 @@ msgstr "Bestätigen Sie in Ihrer Brieftasche"
 msgid "Confirm swap"
 msgstr "Tausch bestätigen"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "Wallet verbinden"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Wallet zum Tausch verbinden"
 
@@ -93,6 +97,10 @@ msgstr "…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "Wandle {0} in {1}um"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "Brieftasche trennen"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -130,6 +138,10 @@ msgstr "Hoher Schlupf"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "Eine hohe Slippage erhöht das Risiko von Preisbewegungen"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "Ich habe keine Brieftasche"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
@@ -379,6 +391,10 @@ msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sich der Preis ungünst
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "Minuten"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

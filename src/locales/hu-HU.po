@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:04\n"
+"PO-Revision-Date: 2022-08-04 19:04\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -81,8 +81,12 @@ msgstr "Erősítse meg pénztárcájában"
 msgid "Confirm swap"
 msgstr "Erősítse meg a cserét"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "Pénztárca csatlakoztatása"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "Csatlakoztassa a pénztárcát a cseréhez"
 
@@ -93,6 +97,10 @@ msgstr "Csatlakozás…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "Konvertálja {0} -t {1}-re"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "Válassza le a pénztárcát"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -130,6 +138,10 @@ msgstr "Magas csúszás"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "A nagy csúszás növeli az ármozgások kockázatát"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "Nincs pénztárcám"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
@@ -379,6 +391,10 @@ msgstr "A tranzakciója visszaáll, ha az ár ennél a százaléknál nagyobb m�
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "perc"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"
