@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Action } from 'components/ActionButton'
 import { useWeb3React } from '@web3-react/core'
+import { Action } from 'components/ActionButton'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
