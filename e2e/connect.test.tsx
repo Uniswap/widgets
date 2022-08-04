@@ -10,6 +10,11 @@ import { tokens } from '@uniswap/default-token-list'
 
 import { SwapWidget } from '../src'
 
+const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
+  0,
+  6
+)}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
+
 describe('connect', () => {
   let component: RenderResult
   let account: HTMLElement
@@ -62,11 +67,7 @@ describe('connect', () => {
       component = render(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
       account = await component.findByTestId('account')
-      expect(account.textContent?.toLowerCase()).toBe(
-        `${hardhat.account.address?.substring(0, 6)}...${hardhat.account.address?.substring(
-          hardhat.account.address.length - 4
-        )}`
-      )
+      expect(account.textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING)
     })
 
     it('does not prompt for wallet connection in toolbar', async () => {
