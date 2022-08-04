@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Action } from 'components/ActionButton'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
 export default function useSwitchNetwork(desiredChainId?: number) {
-  const { chainId, connector } = useActiveWeb3React()
+  const { chainId, connector } = useWeb3React()
 
   const [isPending, setIsPending] = useState(false)
   const onSwitchNetwork = useCallback(async () => {

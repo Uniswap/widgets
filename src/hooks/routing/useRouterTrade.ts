@@ -4,8 +4,8 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 // Importing just the type, so smart-order-router is lazy-loaded
 // eslint-disable-next-line no-restricted-imports
 import type { ChainId } from '@uniswap/smart-order-router'
+import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
@@ -36,7 +36,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, provider } = useWeb3React()
   const autoRouterSupported = isAutoRouterSupportedChain(chainId)
   const isWindowVisible = useIsWindowVisible()
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
@@ -67,7 +67,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     amount: debouncedAmountSpecified,
     tradeType,
     routerUrl,
-    provider: library as JsonRpcProvider,
+    provider: provider as JsonRpcProvider,
   })
 
   const { isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {

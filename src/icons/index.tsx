@@ -5,6 +5,7 @@ import { ReactComponent as InlineSpinnerIcon } from 'assets/svg/inline_spinner.s
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
+import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
 import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
 /* eslint-disable no-restricted-imports */
@@ -30,6 +31,9 @@ import {
 } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Color } from 'theme'
+
+import IdenticonIcon from './identicon'
+
 /* eslint-enable no-restricted-imports */
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
@@ -86,6 +90,7 @@ export const ChevronLeft = icon(ChevronLeftIcon)
 export const ChevronRight = icon(ChevronRightIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
+export const Identicon = icon(IdenticonIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
 export const AutoRouter = icon(RouterIcon)
@@ -121,6 +126,11 @@ export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
 
 export const Logo = styled(icon(LogoIcon))`
   fill: ${({ theme }) => theme.secondary};
+  stroke: none;
+`
+
+export const WalletDisconnect = styled(icon(WalletDisconnectIcon))<{ color?: Color }>`
+  fill: currentColor;
   stroke: none;
 `
 
