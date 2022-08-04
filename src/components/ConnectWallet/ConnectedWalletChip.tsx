@@ -23,9 +23,9 @@ export default function ConnectedWalletChip({ disabled, account }: { disabled?: 
         hidden={disabled}
         onClick={() => (connector.deactivate ? connector.deactivate() : connector.resetState())}
         color="secondary"
-        data-testid="wallet"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
+        data-testid="account"
       >
         {hover ? (
           <ThemedText.Caption>
