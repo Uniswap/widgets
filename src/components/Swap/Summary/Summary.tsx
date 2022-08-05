@@ -49,10 +49,10 @@ interface SummaryProps {
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
-  open: boolean // if expando is open
+  open?: boolean // if expando is open
 }
 
-export default function Summary({ input, output, inputUSDC, outputUSDC, impact, open }: SummaryProps) {
+export default function Summary({ input, output, inputUSDC, outputUSDC, impact, open = true }: SummaryProps) {
   const summaryContents = (
     <>
       <TokenValue input={input} usdc={inputUSDC} open={open} />
