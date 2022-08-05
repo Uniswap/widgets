@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 17:10\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -141,7 +141,7 @@ msgstr "Slippage tinggi meningkatkan risiko pergerakan harga"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "I don't have a wallet"
-msgstr "Saya tidak punya dompet"
+msgstr "Saya belum punya dompet"
 
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
