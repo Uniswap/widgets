@@ -95,7 +95,6 @@
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
     "setimmediate": "^1.0.5",
-    "styled-components": "^5.3.0",
     "tiny-invariant": "^1.2.0",
     "wcag-contrast": "^3.0.0",
     "wicg-inert": "^3.1.1"
@@ -105,7 +104,8 @@
     "react": ">=17.0.1",
     "react-dom": ">=17.0.1",
     "react-redux": ">=7.2.2",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "styled-components": ">=5"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.6",
@@ -197,6 +197,7 @@
     "rollup-plugin-scss": "^3.0.0",
     "sass": "^1.45.1",
     "semantic-release": "^19.0.2",
+    "styled-components": "^5.3.0",
     "typechain": "^5.0.0",
     "typescript": "^4.4.3",
     "wcag-contrast": "^3.0.0",
