@@ -2,6 +2,12 @@ name: Release
 
 on:
   workflow_dispatch: # manually
+    inputs:
+      dry_run:
+        description: Skip publishing
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   release:
@@ -25,7 +31,7 @@ jobs:
         env:
           JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
 
-      - run: yarn release
+      - run: yarn release --dry-run=${{ inputs.dry_run }}
         if: success()
         env:
           NPM_CONFIG_USERCONFIG: /dev/null
