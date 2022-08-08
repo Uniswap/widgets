@@ -7,6 +7,7 @@ import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
+import { useEventHandlers } from 'hooks/useEventHandlers'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
@@ -51,6 +52,7 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
+  onTokenSelectorClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
@@ -58,19 +60,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
 
-  const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
-  useEffect(() => {
-    if (props.onReviewSwapClick !== onReviewSwapClick) {
-      setOnReviewSwapClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onReviewSwapClick))
-    }
-  }, [props.onReviewSwapClick, onReviewSwapClick, setOnReviewSwapClick])
-
-  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
-  useEffect(() => {
-    if (props.onConnectWalletClick !== onConnectWalletClick) {
-      setOnConnectWalletClick((old: (() => void | Promise<boolean>) | undefined) => (old = props.onConnectWalletClick))
-    }
-  }, [props.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
+  useEventHandlers({ ...props })
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
