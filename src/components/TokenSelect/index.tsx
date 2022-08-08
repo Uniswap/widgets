@@ -4,7 +4,9 @@ import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { useAtomValue } from 'jotai/utils'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { onTokenSelectorClickAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -129,7 +131,11 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
-  const onOpen = useCallback(() => setOpen(true), [])
+  const onTokenSelectorClick = useAtomValue(onTokenSelectorClickAtom)
+  const onOpen = useCallback(() => {
+    const promise = onTokenSelectorClick?.()
+    promise ? promise.then((open) => setOpen(open)) : setOpen(true)
+  }, [])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)

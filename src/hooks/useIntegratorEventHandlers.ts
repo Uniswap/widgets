@@ -1,15 +1,15 @@
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
-import { onReviewSwapClickAtom } from 'state/swap'
+import { onReviewSwapClickAtom, onTokenSelectorClickAtom } from 'state/swap'
 import { onConnectWalletClickAtom } from 'state/wallet'
 
-interface UseEventHandlersArgs {
+interface UseIntegratorEventHandlersArgs {
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
   onTokenSelectorClick?: () => void | Promise<boolean>
 }
 
-export function useEventHandlers(handlers: UseEventHandlersArgs): void {
+export default function useIntegratorEventHandlers(handlers: UseIntegratorEventHandlersArgs): void {
   const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
   useEffect(() => {
     if (handlers.onReviewSwapClick !== onReviewSwapClick) {
