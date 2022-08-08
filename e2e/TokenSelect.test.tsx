@@ -5,10 +5,11 @@
 import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
-import React from 'react'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { USDC_GÖRLI } from '@uniswap/smart-order-router'
+import React from 'react'
+
 import TokenSelect from '../src/components/TokenSelect'
 
 fdescribe('TokenSelect.tsx', () => {
