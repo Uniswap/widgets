@@ -145,7 +145,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
+      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} data-testid="TokenButton" />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )
