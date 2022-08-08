@@ -23,6 +23,31 @@ export const swapAtom = atomWithImmer<Swap>({
   [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
 })
 
+export interface IsControlledSwapState {
+  isControlledAmount?: boolean
+  isControlledToken?: boolean
+}
+
+export const isControlledSwapStateAtom = atom<IsControlledSwapState>({
+  isControlledAmount: false,
+  isControlledToken: false,
+})
+export interface OnSwapChangeCallbacks {
+  inputTokenOnChange?: (t: Currency) => void
+  outputTokenOnChange?: (t: Currency) => void
+  amountOnChange?: (n: string) => void
+  independentFieldOnChange?: (f: Field) => void
+}
+
+export const onSwapChangeCallbacksAtom = atom<OnSwapChangeCallbacks>({
+  inputTokenOnChange: undefined,
+  outputTokenOnChange: undefined,
+  amountOnChange: undefined,
+  independentFieldOnChange: undefined,
+})
+
+export const defaultTokenSelectorDisabledAtom = atom<boolean>(false)
+
 // If set to a transaction hash, that transaction will display in a status dialog.
 export const displayTxHashAtom = atom<string | undefined>(undefined)
 

@@ -9,9 +9,15 @@ import {
   useSwapInfo,
 } from 'hooks/swap'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
-import { Field } from 'state/swap'
+import {
+  defaultTokenSelectorDisabledAtom,
+  Field,
+  isControlledSwapStateAtom,
+  onSwapChangeCallbacksAtom,
+} from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -78,6 +84,11 @@ export default function Input({ disabled, focused }: InputProps) {
   const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
   const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
+  const isControlledSwapState = useAtomValue(isControlledSwapStateAtom)
+  const defaultTokenSelectorDisabled = useAtomValue(defaultTokenSelectorDisabledAtom)
+  const onSwapChangeCallbacks = useAtomValue(onSwapChangeCallbacksAtom)
+  const { inputTokenOnChange, amountOnChange, independentFieldOnChange } = onSwapChangeCallbacks
+
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
 
@@ -106,7 +117,28 @@ export default function Input({ disabled, focused }: InputProps) {
     currencyAmount: tradeCurrencyAmount,
     fieldAmount: inputAmount,
   })
-  console.log('inputcurr', inputCurrency?.symbol)
+
+  const onControlledInputChange = (n: string) => {
+    console.log('input change', n)
+    independentFieldOnChange?.(Field.INPUT)
+    amountOnChange?.(n)
+  }
+  const onChangeInput =
+    isControlledSwapState && independentFieldOnChange && amountOnChange ? onControlledInputChange : updateInputAmount
+
+  const onChangeCurrency = isControlledSwapState
+    ? (!defaultTokenSelectorDisabled && inputTokenOnChange) || // useValidate validates that if isControlledSwapState & !defaultTokenSelectorDisabled, this should not be undefined
+      ((currency: Currency) =>
+        console.warn(
+          'if defaultTokenSelectorDisabled w/ controlled swap state, should not fire any onChange',
+          currency
+        ))
+    : updateInputCurrency
+
+  console.log('disabled', disabled)
+  console.log('amount', amount)
+  console.log('inputAmount', inputAmount)
+
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
@@ -114,8 +146,8 @@ export default function Input({ disabled, focused }: InputProps) {
         amount={amount}
         max={max}
         disabled={disabled}
-        onChangeInput={updateInputAmount}
-        onChangeCurrency={updateInputCurrency}
+        onChangeInput={onChangeInput}
+        onChangeCurrency={onChangeCurrency}
         loading={isLoading}
       >
         <ThemedText.Body2 color="secondary" userSelect>

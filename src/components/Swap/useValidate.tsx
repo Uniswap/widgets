@@ -1,9 +1,10 @@
-import { input } from '@testing-library/user-event/dist/types/utils'
 import { IntegrationError } from 'errors'
-import { isControlledComponent } from 'hooks/swap/useSyncControlledStateProps'
 import { DefaultAddress } from 'hooks/swap/useSyncTokenDefaults'
+import { useAtomValue } from 'jotai/utils'
 import { PropsWithChildren, useEffect } from 'react'
+import { isControlledSwapStateAtom } from 'state/swap'
 import { isAddress } from 'utils'
+
 import { SwapProps } from '.'
 
 function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
@@ -51,46 +52,44 @@ export default function useValidate(props: ValidatorProps) {
   const {
     inputToken,
     inputTokenOnChange,
-    inputTokenSelectorActive,
     outputToken,
     outputTokenOnChange,
-    outputTokenSelectorActive,
-    inputTokenAmount,
-    inputTokenAmountOnChange,
-    outputTokenAmount,
-    outputTokenAmountOnChange,
+    amount,
+    amountOnChange,
+    independentField,
+    independentFieldOnChange,
+    defaultTokenSelectorDisabled, // not related to controllability of swap state
     defaultInputAmount,
     defaultOutputAmount,
     defaultInputTokenAddress,
     defaultOutputTokenAddress,
   } = props
-  const uncontrolledStateProps = {
-    defaultInputAmount,
-    defaultOutputAmount,
-    defaultInputTokenAddress,
-    defaultOutputTokenAddress,
-  }
-  const controlledStateProps = {
-    inputToken,
-    inputTokenOnChange,
-    inputTokenSelectorActive,
-    outputToken,
-    outputTokenOnChange,
-    outputTokenSelectorActive,
-    inputTokenAmount,
-    inputTokenAmountOnChange,
-    outputTokenAmount,
-    outputTokenAmountOnChange,
-  }
+  const { isControlledAmount, isControlledToken } = useAtomValue(isControlledSwapStateAtom)
   useEffect(() => {
+    const uncontrolledStateProps = {
+      defaultInputAmount,
+      defaultOutputAmount,
+      defaultInputTokenAddress,
+      defaultOutputTokenAddress,
+    }
     let uncontrolledPropCount = 0
     Object.keys(uncontrolledStateProps).forEach((key) => {
       if (uncontrolledStateProps[key as keyof typeof uncontrolledStateProps] !== undefined) uncontrolledPropCount++
     })
-    if (isControlledComponent(props) && uncontrolledPropCount) {
-      throw new IntegrationError('Controlled & uncontrolled state props may not both be defined.')
+    if (isControlledToken && (defaultInputTokenAddress || defaultOutputTokenAddress)) {
+      throw new IntegrationError('Controlled & uncontrolled token props may not both be defined.')
     }
-  }, [controlledStateProps, uncontrolledStateProps])
+    if (isControlledAmount && (defaultInputAmount || defaultOutputAmount)) {
+      throw new IntegrationError('Controlled & uncontrolled token amount props may not both be defined.')
+    }
+  }, [
+    isControlledAmount,
+    isControlledToken,
+    defaultInputAmount,
+    defaultInputTokenAddress,
+    defaultOutputAmount,
+    defaultOutputTokenAddress,
+  ])
 
   useEffect(() => {
     if (defaultOutputAmount && defaultInputAmount) {
@@ -128,16 +127,15 @@ export default function useValidate(props: ValidatorProps) {
   }, [defaultInputTokenAddress, defaultOutputTokenAddress])
 
   useEffect(() => {
-    if (outputTokenAmount && inputTokenAmount) {
-      throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
+    if (isControlledAmount) {
+      if (amount && !amountOnChange) {
+        throw new IntegrationError(`If amount is controlled, you must provide both amount and amountOnChange.`)
+      }
+      if (amount && (isNaN(+amount) || amount < 0)) {
+        throw new IntegrationError(`Token amount must be a positive number (you set it to ${amount})`)
+      }
     }
-    if (inputTokenAmount && (isNaN(+inputTokenAmount) || inputTokenAmount < 0)) {
-      throw new IntegrationError(`defaultInputAmount must be a positive number (you set it to ${inputTokenAmount})`)
-    }
-    if (outputTokenAmount && (isNaN(+outputTokenAmount) || outputTokenAmount < 0)) {
-      throw new IntegrationError(`defaultOutputAmount must be a positive number (you set it to ${outputTokenAmount}).`)
-    }
-  }, [inputTokenAmount, outputTokenAmount])
+  }, [isControlledAmount, amount, amountOnChange])
 
   useEffect(() => {
     if (inputToken && outputToken) {
@@ -172,5 +170,31 @@ export default function useValidate(props: ValidatorProps) {
       )
     }
   }, [inputToken, outputToken])
-  // do we need to also validate input/outputTokenSelectorActive, outputTokenSelectorActive, onChange props?
+
+  useEffect(() => {
+    if (isControlledToken) {
+      const allTokenOnChangeProps = Boolean(inputTokenOnChange) && Boolean(outputTokenOnChange)
+      const anyTokenOnChangeProps = Boolean(inputTokenOnChange || outputTokenOnChange)
+      if (defaultTokenSelectorDisabled) {
+        if (anyTokenOnChangeProps) {
+          throw new IntegrationError(
+            'If using controlled token state & default token selector is disabled, you must provide inputToken and outputToken, and should not provide inputTokenOnChange nor outputTokenOnChange.'
+          )
+        }
+      } else {
+        if (!allTokenOnChangeProps) {
+          throw new IntegrationError(
+            'If using controlled token state & default token selector is enabled, you must provide inputToken, outputToken, inputTokenOnChange, and outputTokenOnChange.'
+          )
+        }
+      }
+    }
+  }, [
+    inputToken,
+    inputTokenOnChange,
+    outputToken,
+    outputTokenOnChange,
+    defaultTokenSelectorDisabled,
+    isControlledToken,
+  ])
 }

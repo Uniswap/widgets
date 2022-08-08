@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncControlledStateProps, {
   ControlledStateProps,
-  isControlledComponent,
+  getIsControlledSwapState,
 } from 'hooks/swap/useSyncControlledStateProps'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -11,8 +11,14 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
-import { displayTxHashAtom } from 'state/swap'
+import { useEffect, useState } from 'react'
+import {
+  defaultTokenSelectorDisabledAtom,
+  displayTxHashAtom,
+  isControlledSwapStateAtom,
+  OnSwapChangeCallbacks,
+  onSwapChangeCallbacksAtom,
+} from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
@@ -50,9 +56,49 @@ export interface SwapProps extends ControlledStateProps, TokenDefaults, FeeOptio
 }
 
 export default function Swap(props: SwapProps) {
+  const [, setIsControlledSwapState] = useAtom(isControlledSwapStateAtom)
+  const { isControlledAmount, isControlledToken } = getIsControlledSwapState(props)
+  useEffect(() => {
+    setIsControlledSwapState({ isControlledAmount, isControlledToken })
+  }, [isControlledAmount, isControlledToken, setIsControlledSwapState])
+
   useValidate(props)
   useSyncConvenienceFee(props)
-  isControlledComponent(props) ? useSyncControlledStateProps(props) : useSyncTokenDefaults(props)
+  // FIXME: possible to have controlled swap state
+  useSyncControlledStateProps(props)
+  useSyncTokenDefaults(props)
+
+  const [defaultTokenSelectorDisabled, setDefaultTokenSelectorDisabled] = useAtom(defaultTokenSelectorDisabledAtom)
+  useEffect(() => {
+    if (props.defaultTokenSelectorDisabled && props.defaultTokenSelectorDisabled !== defaultTokenSelectorDisabled) {
+      setDefaultTokenSelectorDisabled(props.defaultTokenSelectorDisabled)
+    }
+  }, [props.defaultTokenSelectorDisabled, defaultTokenSelectorDisabled, setDefaultTokenSelectorDisabled])
+
+  const [onSwapChangeCallbacks, setOnSwapChangeCallbacks] = useAtom(onSwapChangeCallbacksAtom)
+  useEffect(() => {
+    if (
+      props.inputTokenOnChange !== onSwapChangeCallbacks.inputTokenOnChange ||
+      props.outputTokenOnChange !== onSwapChangeCallbacks.outputTokenOnChange ||
+      props.amountOnChange !== onSwapChangeCallbacks.amountOnChange ||
+      props.independentFieldOnChange !== onSwapChangeCallbacks.independentFieldOnChange
+    ) {
+      setOnSwapChangeCallbacks((old: OnSwapChangeCallbacks) => {
+        old.inputTokenOnChange = props.inputTokenOnChange
+        old.outputTokenOnChange = props.outputTokenOnChange
+        old.amountOnChange = props.amountOnChange
+        old.independentFieldOnChange = props.independentFieldOnChange
+        return old
+      })
+    }
+  }, [
+    props.inputTokenOnChange,
+    props.outputTokenOnChange,
+    props.amountOnChange,
+    props.independentFieldOnChange,
+    onSwapChangeCallbacks,
+    setOnSwapChangeCallbacks,
+  ])
 
   const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)

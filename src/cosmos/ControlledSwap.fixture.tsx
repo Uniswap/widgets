@@ -1,5 +1,5 @@
 import { tokens } from '@uniswap/default-token-list'
-import { Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
@@ -10,8 +10,9 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { Field } from 'state/swap'
 
 import { UNI, USDC } from '../constants/tokens'
 import useJsonRpcEndpoint from './useJsonRpcEndpoint'
@@ -60,19 +61,57 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
-  const inputToken = useOption('inputToken', {
+  const [defaultTokenSelectorDisabled] = useValue('defaultTokenSelectorDisabled', { defaultValue: false })
+  const inputTokenName = useOption('inputToken', {
     options: Object.keys(currencies),
     defaultValue: `${SupportedChainId.MAINNET}-${USDC[SupportedChainId.MAINNET].symbol}`,
   })
-  const [inputTokenAmount] = useValue('inputTokenAmount', { defaultValue: 1 })
-  const outputToken = useOption('outputToken', { options: Object.keys(currencies) })
-  const [outputTokenAmount] = useValue('outputTokenAmount', { defaultValue: 0 })
+  const outputTokenName = useOption('outputToken', { options: Object.keys(currencies) })
 
-  let integratorInputToken = inputToken
+  let it: Currency | undefined = inputTokenName ? currencies[inputTokenName] : undefined
+  let ot: Currency | undefined = outputTokenName ? currencies[outputTokenName] : undefined
+  const [inputToken, setInputToken] = useState<Currency | undefined>(undefined)
+  // if (it !== inputToken) setInputToken(it)
+  const [outputToken, setOutputToken] = useState<Currency | undefined>(undefined)
+  // if (ot !== inputToken) setOutputToken(ot)
+
+  const inputTokenOnChange = (curr: Currency) => {
+    console.log('inputTokenOnChange', curr)
+    setInputToken(curr)
+  }
+  const outputTokenOnChange = (curr: Currency) => {
+    console.log('outputTokenOnChange', curr)
+    setOutputToken(curr)
+  }
+
+  const [amount, setAmount] = useState<string | number | undefined>(undefined)
+  const [amt] = useValue('amount', { defaultValue: 1 })
+  useEffect(() => {
+    if (amt !== amount) setAmount(amt)
+  }, [amt])
+  const amountOnChange = (amount: string | number) => {
+    console.log('amountOnChange', amount)
+    setAmount(amount)
+  }
+
+  const [independentField, setIndependentField] = useState<Field | undefined>(undefined)
+  const indptField = useOption<Field>('independentField', {
+    options: [Field.INPUT, Field.OUTPUT],
+    defaultValue: Field.INPUT,
+  })
+  useEffect(() => {
+    if (indptField !== independentField) setIndependentField(indptField)
+  }, [indptField])
+  const independentFieldOnChange = (f: Field) => {
+    console.log('independentFieldOnChange', f)
+    setIndependentField(f)
+  }
+
   return (
     <SwapWidget
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
+      defaultTokenSelectorDisabled={defaultTokenSelectorDisabled}
       locale={locale}
       jsonRpcEndpoint={jsonRpcEndpoint}
       provider={connector}
@@ -82,16 +121,14 @@ function Fixture() {
       routerUrl={routerUrl}
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
       // controlled values
-      inputToken={integratorInputToken ? currencies[integratorInputToken] : undefined}
-      inputTokenOnChange={() => console.log('inputTokenOnChange')}
-      inputTokenSelectorActive={false}
-      outputToken={outputToken ? currencies[outputToken] : undefined}
-      outputTokenOnChange={() => console.log('outputTokenOnChange')}
-      outputTokenSelectorActive={false}
-      inputTokenAmount={inputTokenAmount}
-      inputTokenAmountOnChange={() => console.log('inputTokenAmountOnChange')}
-      outputTokenAmount={outputTokenAmount}
-      outputTokenAmountOnChange={() => console.log('outputTokenAmountOnChange')}
+      inputToken={inputToken}
+      inputTokenOnChange={inputTokenOnChange}
+      outputToken={outputToken}
+      outputTokenOnChange={outputTokenOnChange}
+      amount={amount}
+      amountOnChange={amountOnChange}
+      independentField={independentField}
+      independentFieldOnChange={independentFieldOnChange}
     />
   )
 }

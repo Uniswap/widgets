@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { Currency } from '@uniswap/sdk-core'
 import BrandedFooter from 'components/BrandedFooter'
 import Rule from 'components/Rule'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
@@ -8,7 +9,12 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { PropsWithChildren } from 'react'
 import { TradeState } from 'state/routing/types'
-import { Field } from 'state/swap'
+import {
+  defaultTokenSelectorDisabledAtom,
+  Field,
+  isControlledSwapStateAtom,
+  onSwapChangeCallbacksAtom,
+} from 'state/swap'
 import styled from 'styled-components/macro'
 import { DynamicThemeProvider, ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -48,6 +54,11 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
+  const isControlledSwapState = useAtomValue(isControlledSwapStateAtom)
+  const defaultTokenSelectorDisabled = useAtomValue(defaultTokenSelectorDisabledAtom)
+  const onSwapChangeCallbacks = useAtomValue(onSwapChangeCallbacksAtom)
+  const { outputTokenOnChange, independentFieldOnChange, amountOnChange } = onSwapChangeCallbacks
+
   const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
   const isLoading = isRouteLoading && isDependentField
@@ -65,6 +76,22 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
     fieldAmount: swapOutputAmount,
   })
 
+  const onControlledOutputChange = (n: string) => {
+    console.log('OUTPUT change')
+
+    independentFieldOnChange?.(Field.OUTPUT)
+    amountOnChange?.(n)
+  }
+  const onChangeInput =
+    isControlledSwapState && independentFieldOnChange && amountOnChange
+      ? onControlledOutputChange
+      : updateSwapOutputAmount
+
+  const onChangeCurrency = isControlledSwapState
+    ? (!defaultTokenSelectorDisabled && outputTokenOnChange) || // useValidate validates that if isControlledSwapState & !defaultTokenSelectorDisabled, this should not be undefined
+      ((currency: Currency) => console.warn('controlled swap state with defaultTokenSelector disabled', currency))
+    : updateSwapOutputCurrency
+
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
@@ -77,8 +104,8 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           currency={swapOutputCurrency}
           amount={amount}
           disabled={disabled}
-          onChangeInput={updateSwapOutputAmount}
-          onChangeCurrency={updateSwapOutputCurrency}
+          onChangeInput={onChangeInput}
+          onChangeCurrency={onChangeCurrency}
           loading={isLoading}
         >
           <ThemedText.Body2 color="secondary" userSelect>

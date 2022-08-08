@@ -3,9 +3,10 @@ import { nativeOnChain } from 'constants/tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useToken } from 'hooks/useCurrency'
 import useNativeCurrency from 'hooks/useNativeCurrency'
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef } from 'react'
-import { Field, Swap, swapAtom } from 'state/swap'
+import { Field, isControlledSwapStateAtom, Swap, swapAtom } from 'state/swap'
+import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapCurrencyAmount } from 'hooks/swap'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
 import { useIsTokenListLoaded } from '../useTokenList'
@@ -56,21 +57,34 @@ export default function useSyncTokenDefaults({
     // Default the input token to the native currency if it is not the output token.
     (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
 
+  const { isControlledAmount, isControlledToken } = useAtomValue(isControlledSwapStateAtom)
+
   const setToDefaults = useCallback(() => {
-    const defaultSwapState: Swap = {
-      amount: '',
-      [Field.INPUT]: defaultInputToken,
-      [Field.OUTPUT]: defaultOutputToken,
-      independentField: Field.INPUT,
+    if (!isControlledAmount) {
+      const defaultSwapState: Swap = {
+        amount: '',
+        independentField: Field.INPUT,
+      }
+      if (defaultInputToken && defaultInputAmount) {
+        defaultSwapState.amount = defaultInputAmount.toString()
+      } else if (defaultOutputToken && defaultOutputAmount) {
+        defaultSwapState.independentField = Field.OUTPUT
+        defaultSwapState.amount = defaultOutputAmount.toString()
+      }
+      updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
     }
-    if (defaultInputToken && defaultInputAmount) {
-      defaultSwapState.amount = defaultInputAmount.toString()
-    } else if (defaultOutputToken && defaultOutputAmount) {
-      defaultSwapState.independentField = Field.OUTPUT
-      defaultSwapState.amount = defaultOutputAmount.toString()
+    if (!isControlledToken) {
+      updateSwap((swap) => ({ ...swap, [Field.INPUT]: defaultInputToken, [Field.OUTPUT]: defaultOutputToken }))
     }
-    updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
-  }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
+  }, [
+    isControlledAmount,
+    isControlledToken,
+    defaultInputAmount,
+    defaultInputToken,
+    defaultOutputAmount,
+    defaultOutputToken,
+    updateSwap,
+  ])
 
   const lastChainId = useRef<number | undefined>(undefined)
   const isTokenListLoaded = useIsTokenListLoaded()
