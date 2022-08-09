@@ -3,6 +3,7 @@ import { tokens } from '@uniswap/default-token-list'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import React, { ReactElement, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
+
 import { SUPPORTED_LOCALES, SwapWidgetProps } from '../src'
 import { Provider as DialogProvider } from '../src/components/Dialog'
 import { DialogWrapper } from '../src/components/Widget'

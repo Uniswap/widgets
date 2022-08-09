@@ -6,12 +6,11 @@ import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
 import userEvent from '@testing-library/user-event'
-import { onTokenSelectorClickAtom } from '../src/state/swap'
-import { render, waitFor } from '../test/test-utils'
-
 import React from 'react'
 
 import TokenSelect from '../src/components/TokenSelect'
+import { onTokenSelectorClickAtom } from '../src/state/swap'
+import { render, waitFor } from '../test/test-utils'
 
 describe('TokenSelect.tsx', () => {
   describe('onTokenSelectorClick', () => {
