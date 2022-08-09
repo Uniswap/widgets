@@ -67,11 +67,12 @@ interface HeaderProps {
 }
 
 export function Header({ title, children, ruled }: HeaderProps) {
+  const onClose = useContext(OnCloseContext)
   return (
     <>
       <Column>
         <HeaderRow iconSize={1.2}>
-          <TextButton color="primary" onClick={useContext(OnCloseContext)}>
+          <TextButton color="primary" onClick={onClose}>
             <Row justify="flex-start" gap={0.5}>
               <ChevronLeft />
               <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
