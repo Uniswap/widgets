@@ -134,7 +134,16 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   const onTokenSelectorClick = useAtomValue(onTokenSelectorClickAtom)
   const onOpen = useCallback(() => {
     const promise = onTokenSelectorClick?.()
-    promise ? promise.then((open) => setOpen(open)) : setOpen(true)
+    if (promise) {
+      return promise
+        .then((open) => {
+          setOpen(open)
+        })
+        .catch(() => {
+          setOpen(false)
+        })
+    }
+    return setOpen(true)
   }, [])
   const selectAndClose = useCallback(
     (value: Currency) => {
@@ -145,7 +154,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} data-testid="TokenButton" />
+      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )

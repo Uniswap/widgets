@@ -1,7 +1,8 @@
 import { RefObject } from 'react'
 
 export function isAnimating(node: Animatable | Document) {
-  return (node.getAnimations().length ?? 0) > 0
+  // ?. used here to support tests that call this function
+  return (node?.getAnimations?.().length ?? 0) > 0
 }
 
 export const UNMOUNTING = 'unmounting'
