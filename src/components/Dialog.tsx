@@ -104,9 +104,10 @@ interface DialogProps {
   color: Color
   children: ReactNode
   onClose?: () => void
+  ['data-testid']?: string
 }
 
-export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+export default function Dialog({ color, children, onClose = () => void 0, 'data-testid': testId }: DialogProps) {
   const context = useContext(Context)
   useEffect(() => {
     context.setActive(true)
@@ -126,7 +127,7 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     createPortal(
       <ThemeProvider>
         <OnCloseContext.Provider value={onClose}>
-          <Modal color={color} ref={modal}>
+          <Modal color={color} ref={modal} data-testid={testId}>
             {children}
           </Modal>
         </OnCloseContext.Provider>

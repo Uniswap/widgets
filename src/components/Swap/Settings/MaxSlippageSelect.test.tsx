@@ -1,5 +1,5 @@
 import { MAX_VALID_SLIPPAGE } from 'hooks/useSlippage'
-import { act, render, RenderResult, user } from 'test/utils'
+import { act, renderComponent, RenderResult, user } from 'test'
 
 import MaxSlippageSelect from './MaxSlippageSelect'
 
@@ -10,7 +10,7 @@ describe('MaxSlippageSelect', () => {
   let input: HTMLInputElement
 
   beforeEach(async () => {
-    el = render(<MaxSlippageSelect />)
+    el = renderComponent(<MaxSlippageSelect />)
     auto = (await el.findByTestId('auto')) as HTMLOptionElement
     custom = (await el.findByTestId('custom')) as HTMLOptionElement
     input = (await el.findByTestId('input')) as HTMLInputElement
