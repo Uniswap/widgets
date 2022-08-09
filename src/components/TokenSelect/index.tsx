@@ -71,7 +71,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
   const { chainId } = useWeb3React()
-  const listHasTokens = useMemo(() => list.some((token) => token.chainId === 137), [chainId, list])
+  const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
   if (!listHasTokens && isLoaded) {
     return (
