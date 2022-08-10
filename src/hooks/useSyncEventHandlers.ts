@@ -3,13 +3,13 @@ import { useEffect } from 'react'
 import { onReviewSwapClickAtom, onTokenSelectorClickAtom } from 'state/swap'
 import { onConnectWalletClickAtom } from 'state/wallet'
 
-interface UseIntegratorEventHandlersArgs {
+interface UseSyncEventHandlersArgs {
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
   onTokenSelectorClick?: () => void | Promise<boolean>
 }
 
-export default function useIntegratorEventHandlers(handlers: UseIntegratorEventHandlersArgs): void {
+export default function useSyncEventHandlers(handlers: UseSyncEventHandlersArgs): void {
   const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
   useEffect(() => {
     if (handlers.onReviewSwapClick !== onReviewSwapClick) {

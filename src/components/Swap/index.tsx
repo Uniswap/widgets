@@ -8,8 +8,8 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
-import useIntegratorEventHandlers from 'hooks/useIntegratorEventHandlers'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
+import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
@@ -58,7 +58,7 @@ export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncConvenienceFee(props)
   useSyncTokenDefaults(props)
-  useIntegratorEventHandlers(props)
+  useSyncEventHandlers(props)
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
