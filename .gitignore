@@ -35,3 +35,6 @@ notes.txt
 
 # tests
 /coverage
+
+# generated ajv schema
+/src/__generated__
