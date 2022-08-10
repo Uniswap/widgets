@@ -8,7 +8,7 @@ import styled from 'styled-components/macro'
 import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
 import { delayUnmountForAnimation } from 'utils/animations'
 
-import { IconButton } from './Button'
+import { TextButton } from './Button'
 import Column from './Column'
 import Row from './Row'
 import Rule from './Rule'
@@ -59,6 +59,7 @@ const HeaderRow = styled(Row)`
   padding-top: 0.5em;
   ${largeIconCss}
 `
+
 interface HeaderProps {
   title?: ReactElement
   ruled?: boolean
@@ -66,14 +67,17 @@ interface HeaderProps {
 }
 
 export function Header({ title, children, ruled }: HeaderProps) {
+  const onClose = useContext(OnCloseContext)
   return (
     <>
       <Column>
         <HeaderRow iconSize={1.2}>
-          <Row justify="flex-start" gap={0.5}>
-            <IconButton color="primary" onClick={useContext(OnCloseContext)} icon={ChevronLeft} />
-            <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
-          </Row>
+          <TextButton color="primary" onClick={onClose}>
+            <Row justify="flex-start" gap={0.5}>
+              <ChevronLeft />
+              <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
+            </Row>
+          </TextButton>
           {children}
         </HeaderRow>
         {ruled && <Rule padded />}
