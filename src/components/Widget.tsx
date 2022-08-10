@@ -1,7 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import assert from 'assert'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
@@ -114,10 +113,10 @@ export interface TestableWidgetProps extends WidgetProps {
 }
 
 export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
-  assert(
-    (props.initialAtomValues && process.env.NODE_ENV === 'test') ?? true,
-    'initialAtomValues may only be used for testing'
-  )
+  if (props.initialAtomValues && process.env.NODE_ENV !== 'test') {
+    throw new Error('initialAtomValues may only be used for testing')
+  }
+
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
