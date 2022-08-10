@@ -6,6 +6,7 @@ import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
 import userEvent from '@testing-library/user-event'
+
 import { onTokenSelectorClickAtom } from '../../state/swap'
 import { renderWidget, waitFor } from '../../test'
 import TokenSelect from './'
