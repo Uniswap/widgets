@@ -39,12 +39,9 @@ export interface Attributes {
 
 export interface Theme extends Partial<Attributes>, Partial<Colors> {}
 
-export interface ComputedTheme extends Omit<Attributes, 'borderRadius'>, Colors {
-  borderRadius: number
-  onHover: (color: string) => string
-}
-
 declare module 'styled-components/macro' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  export interface DefaultTheme extends ComputedTheme {}
+  export interface DefaultTheme extends Omit<Attributes, 'borderRadius'>, Colors {
+    borderRadius: number
+    onHover: (color: string) => string
+  }
 }

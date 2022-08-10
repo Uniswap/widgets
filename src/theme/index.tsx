@@ -2,9 +2,9 @@ import 'assets/fonts.scss'
 
 import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
-import { ThemeProvider as StyledProvider } from 'styled-components/macro'
+import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components/macro'
 
-import type { Colors, ComputedTheme, Theme } from './styled'
+import type { Colors, Theme } from './styled'
 
 export * from './dynamic'
 export * from './layer'
@@ -89,7 +89,7 @@ export function useSystemTheme() {
   return systemTheme
 }
 
-const ThemeContext = createContext<ComputedTheme>(toComputedTheme(defaultTheme))
+const ThemeContext = createContext<DefaultTheme>(toDefaultTheme(defaultTheme))
 
 interface ThemeProviderProps {
   theme?: Theme
@@ -99,7 +99,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({ theme, children }: ThemeProviderProps) {
   const contextTheme = useContext(ThemeContext)
   const value = useMemo(() => {
-    return toComputedTheme({
+    return toDefaultTheme({
       ...contextTheme,
       ...theme,
     } as Required<Theme>)
@@ -111,7 +111,7 @@ export function ThemeProvider({ theme, children }: ThemeProviderProps) {
   )
 }
 
-function toComputedTheme(theme: Required<Theme>): ComputedTheme {
+function toDefaultTheme(theme: Required<Theme>): DefaultTheme {
   return {
     ...theme,
     borderRadius: clamp(
