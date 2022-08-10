@@ -14,7 +14,7 @@ function getValidationErrors(validate: ValidateFunction | undefined): string {
 }
 
 async function loadValidator(schema: ValidationSchema): Promise<ValidateFunction> {
-  const [_ajv, validatorModule] = await Promise.all([
+  const [, validatorModule] = await Promise.all([
     import('ajv'),
     schema === ValidationSchema.LIST
       ? import('__generated__/validateTokenList')
