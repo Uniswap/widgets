@@ -77,14 +77,14 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 
   if (!listHasTokens && isLoaded) {
     return (
-      <Dialog color="module" onClose={onClose} data-testid="token-select-dialog">
+      <Dialog color="module" onClose={onClose}>
         <Header title={<Trans>Select a token</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )
   }
   return (
-    <Dialog color="module" onClose={onClose} data-testid="token-select-dialog">
+    <Dialog color="module" onClose={onClose}>
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
         <Row pad={0.75} grow>

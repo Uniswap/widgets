@@ -1,7 +1,7 @@
 import { RefObject } from 'react'
 
-export function isAnimating(node: Animatable | Document) {
-  // ?. used here to support tests that call this function
+// Some tests will pass undefined for the Document.
+export function isAnimating(node?: Animatable | Document) {
   return (node?.getAnimations?.().length ?? 0) > 0
 }
 

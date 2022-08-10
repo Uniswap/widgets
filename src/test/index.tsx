@@ -12,7 +12,6 @@ import { ThemeProvider } from 'theme'
 
 export type { RenderResult } from '@testing-library/react'
 export { act, waitFor } from '@testing-library/react'
-export { default as user } from '@testing-library/user-event'
 export { default as fetch } from 'jest-fetch-mock'
 
 fetch.enableMocks()

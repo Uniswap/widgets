@@ -114,7 +114,10 @@ export interface TestableWidgetProps extends WidgetProps {
 }
 
 export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
-  assert(props.initialAtomValues && process.env.NODE_ENV === 'test', 'initialAtomValues may only be used for testing')
+  assert(
+    (props.initialAtomValues && process.env.NODE_ENV === 'test') ?? true,
+    'initialAtomValues may only be used for testing'
+  )
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
