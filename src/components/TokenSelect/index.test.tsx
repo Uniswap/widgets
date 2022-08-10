@@ -5,10 +5,8 @@
 import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
-import userEvent from '@testing-library/user-event'
-
 import { onTokenSelectorClickAtom } from '../../state/swap'
-import { renderWidget, waitFor } from '../../test'
+import { renderWidget, userEvent } from '../../test'
 import TokenSelect from './'
 
 describe('TokenSelect.tsx', () => {
@@ -40,7 +38,7 @@ describe('TokenSelect.tsx', () => {
       )
 
       await user.click(component.getByRole('button'))
-      await waitFor(() => expect(component.getAllByText('Select a token').length).toBe(2))
+      expect(component.getByTestId('dialog-header').textContent).toBe('Select a token')
     })
     it('should halt if the handler promise resolves to false', async () => {
       const user = userEvent.setup()
@@ -55,7 +53,7 @@ describe('TokenSelect.tsx', () => {
       )
 
       await user.click(component.getByRole('button'))
-      await waitFor(() => expect(component.getAllByText('Select a token').length).toBe(1))
+      expect(() => component.getByTestId('dialog-header')).toThrow()
     })
     it('should halt if the handler promise rejects', async () => {
       const user = userEvent.setup()
@@ -70,7 +68,7 @@ describe('TokenSelect.tsx', () => {
       )
 
       await user.click(component.getByRole('button'))
-      await waitFor(() => expect(component.getAllByText('Select a token').length).toBe(1))
+      expect(() => component.getByTestId('dialog-header')).toThrow()
     })
   })
 })

@@ -10,6 +10,7 @@ import { Atom, Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, ReactElement } from 'react'
 import { ThemeProvider } from 'theme'
 
+export { default as userEvent } from '@testing-library/user-event'
 export type { RenderResult } from '@testing-library/react'
 export { act, waitFor } from '@testing-library/react'
 export { default as fetch } from 'jest-fetch-mock'
