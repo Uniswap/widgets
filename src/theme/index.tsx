@@ -1,14 +1,15 @@
 import 'assets/fonts.scss'
+import './external'
 
 import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components/macro'
 
-import type { Colors, Theme } from './styled'
+import type { Colors, Theme } from './theme'
 
 export * from './dynamic'
 export * from './layer'
-export type { Color, Colors, Theme } from './styled'
+export type { Color, Colors, Theme } from './theme'
 export * as ThemedText from './type'
 
 const white = 'hsl(0, 0%, 100%)'

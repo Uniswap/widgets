@@ -38,10 +38,3 @@ export interface Attributes {
 }
 
 export interface Theme extends Partial<Attributes>, Partial<Colors> {}
-
-declare module 'styled-components/macro' {
-  export interface DefaultTheme extends Omit<Attributes, 'borderRadius'>, Colors {
-    borderRadius: number
-    onHover: (color: string) => string
-  }
-}
