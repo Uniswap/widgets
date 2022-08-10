@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
-import { onReviewSwapClickAtom, onTokenSelectorClickAtom } from 'state/swap'
+import { Field, onReviewSwapClickAtom, onTokenSelectorClickAtom } from 'state/swap'
 import { onConnectWalletClickAtom } from 'state/wallet'
 
 interface UseSyncEventHandlersArgs {
@@ -30,7 +30,7 @@ export default function useSyncEventHandlers(handlers: UseSyncEventHandlersArgs)
   useEffect(() => {
     if (handlers.onTokenSelectorClick !== onTokenSelectorClick) {
       setOnTokenSelectorClick(
-        (old: (() => void | Promise<boolean>) | undefined) => (old = handlers.onTokenSelectorClick)
+        (old: ((f: Field) => void | Promise<boolean>) | undefined) => (old = handlers.onTokenSelectorClick)
       )
     }
   }, [handlers.onTokenSelectorClick, onTokenSelectorClick, setOnTokenSelectorClick])

@@ -5,7 +5,7 @@
 import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
-import { onTokenSelectorClickAtom } from '../../state/swap'
+import { Field, onTokenSelectorClickAtom } from '../../state/swap'
 import { renderWidget, userEvent } from '../../test'
 import TokenSelect from './'
 
@@ -16,14 +16,14 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn()
 
       const component = renderWidget(
-        <TokenSelect value={undefined} collapsed disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} collapsed disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
         }
       )
 
       await user.click(component.getByRole('button'))
-      expect(onTokenSelectorClick).toHaveBeenCalled()
+      expect(onTokenSelectorClick).toHaveBeenCalledWith(Field.INPUT)
     })
     it('should continue if the handler promise resolves to true', async () => {
       const user = userEvent.setup()
@@ -31,7 +31,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn().mockResolvedValueOnce(true)
 
       const component = renderWidget(
-        <TokenSelect value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
         }
@@ -46,7 +46,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn().mockResolvedValueOnce(false)
 
       const component = renderWidget(
-        <TokenSelect value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
         }
@@ -61,7 +61,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn().mockRejectedValueOnce(false)
 
       const component = renderWidget(
-        <TokenSelect value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
         }
