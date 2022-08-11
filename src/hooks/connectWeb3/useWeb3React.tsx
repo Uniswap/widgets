@@ -14,6 +14,7 @@ import JsonRpcConnector from 'utils/JsonRpcConnector'
 export type Web3Connection = [Connector, Web3ReactHooks]
 export let connections: Web3Connection[] = []
 export const defaultChainIdAtom = atom<number>(1)
+export let jsonRpcUrlMap: { [chainId: number]: string[] }
 
 function toWeb3Connection<T extends Connector>([connector, hooks]: [
   T,
@@ -64,52 +65,6 @@ function getConnectionFromWalletConnect(
     )
   )
 }
-
-let jsonRpcUrlMap: { [chainId: number]: string[] }
-function getRpcUrls(chainId: SupportedChainId): string[] {
-  switch (chainId) {
-    case SupportedChainId.MAINNET:
-    case SupportedChainId.RINKEBY:
-    case SupportedChainId.ROPSTEN:
-    case SupportedChainId.KOVAN:
-    case SupportedChainId.GOERLI:
-      return jsonRpcUrlMap[chainId]
-    case SupportedChainId.OPTIMISM:
-      return ['https://mainnet.optimism.io']
-    case SupportedChainId.OPTIMISTIC_KOVAN:
-      return ['https://kovan.optimism.io']
-    case SupportedChainId.ARBITRUM_ONE:
-      return ['https://arb1.arbitrum.io/rpc']
-    case SupportedChainId.ARBITRUM_RINKEBY:
-      return ['https://rinkeby.arbitrum.io/rpc']
-    case SupportedChainId.POLYGON:
-      return ['https://polygon-rpc.com/']
-    case SupportedChainId.POLYGON_MUMBAI:
-      return ['https://rpc-endpoints.superfluid.dev/mumbai']
-    default:
-  }
-  // Our API-keyed URLs will fail security checks when used with external wallets.
-  throw new Error('RPC URLs must use public endpoints')
-}
-
-export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
-  if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
-    throw new Error(`Chain ${chainId} not supported`)
-  } else if (connector instanceof WalletConnect || connector instanceof Network) {
-    await connector.activate(chainId)
-  } else {
-    const info = getChainInfo(chainId)
-    const addChainParameter = {
-      chainId,
-      chainName: info.label,
-      rpcUrls: getRpcUrls(chainId),
-      nativeCurrency: info.nativeCurrency,
-      blockExplorerUrls: [info.explorer],
-    }
-    await connector.activate(addChainParameter)
-  }
-}
-
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcUrlMap: { [chainId: number]: string[] }
