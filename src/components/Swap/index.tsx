@@ -16,14 +16,7 @@ import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
-import {
-  defaultTokenSelectorDisabledAtom,
-  displayTxHashAtom,
-  Field,
-  isControlledSwapStateAtom,
-  OnSwapChangeCallbacks,
-  onSwapChangeCallbacksAtom,
-} from 'state/swap'
+import { defaultTokenSelectorDisabledAtom, displayTxHashAtom, Field, isControlledSwapStateAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
