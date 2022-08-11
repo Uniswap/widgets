@@ -85,31 +85,6 @@ export default function Swap(props: SwapProps) {
     }
   }, [props.defaultTokenSelectorDisabled, defaultTokenSelectorDisabled, setDefaultTokenSelectorDisabled])
 
-  const [onSwapChangeCallbacks, setOnSwapChangeCallbacks] = useAtom(onSwapChangeCallbacksAtom)
-  useEffect(() => {
-    if (
-      props.inputTokenOnChange !== onSwapChangeCallbacks.inputTokenOnChange ||
-      props.outputTokenOnChange !== onSwapChangeCallbacks.outputTokenOnChange ||
-      props.amountOnChange !== onSwapChangeCallbacks.amountOnChange ||
-      props.independentFieldOnChange !== onSwapChangeCallbacks.independentFieldOnChange
-    ) {
-      setOnSwapChangeCallbacks((old: OnSwapChangeCallbacks) => {
-        old.inputTokenOnChange = props.inputTokenOnChange
-        old.outputTokenOnChange = props.outputTokenOnChange
-        old.amountOnChange = props.amountOnChange
-        old.independentFieldOnChange = props.independentFieldOnChange
-        return old
-      })
-    }
-  }, [
-    props.inputTokenOnChange,
-    props.outputTokenOnChange,
-    props.amountOnChange,
-    props.independentFieldOnChange,
-    onSwapChangeCallbacks,
-    setOnSwapChangeCallbacks,
-  ])
-
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 

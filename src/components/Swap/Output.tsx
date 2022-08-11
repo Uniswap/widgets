@@ -57,7 +57,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const isControlledSwapState = useAtomValue(isControlledSwapStateAtom)
   const defaultTokenSelectorDisabled = useAtomValue(defaultTokenSelectorDisabledAtom)
   const onSwapChangeCallbacks = useAtomValue(onSwapChangeCallbacksAtom)
-  const { outputTokenOnChange, independentFieldOnChange, amountOnChange } = onSwapChangeCallbacks
+  const { onOutputTokenChange, onIndependentFieldChange, onAmountChange } = onSwapChangeCallbacks
 
   const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
@@ -79,16 +79,16 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const onControlledOutputChange = (n: string) => {
     console.log('OUTPUT change')
 
-    independentFieldOnChange?.(Field.OUTPUT)
-    amountOnChange?.(n)
+    onIndependentFieldChange?.(Field.OUTPUT)
+    onAmountChange?.(n)
   }
   const onChangeInput =
-    isControlledSwapState && independentFieldOnChange && amountOnChange
+    isControlledSwapState && onIndependentFieldChange && onAmountChange
       ? onControlledOutputChange
       : updateSwapOutputAmount
 
   const onChangeCurrency = isControlledSwapState
-    ? (!defaultTokenSelectorDisabled && outputTokenOnChange) || // useValidate validates that if isControlledSwapState & !defaultTokenSelectorDisabled, this should not be undefined
+    ? (!defaultTokenSelectorDisabled && onOutputTokenChange) || // useValidate validates that if isControlledSwapState & !defaultTokenSelectorDisabled, this should not be undefined
       ((currency: Currency) => console.warn('controlled swap state with defaultTokenSelector disabled', currency))
     : updateSwapOutputCurrency
 

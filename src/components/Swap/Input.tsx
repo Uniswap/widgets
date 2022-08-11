@@ -87,7 +87,7 @@ export default function Input({ disabled, focused }: InputProps) {
   const isControlledSwapState = useAtomValue(isControlledSwapStateAtom)
   const defaultTokenSelectorDisabled = useAtomValue(defaultTokenSelectorDisabledAtom)
   const onSwapChangeCallbacks = useAtomValue(onSwapChangeCallbacksAtom)
-  const { inputTokenOnChange, amountOnChange, independentFieldOnChange } = onSwapChangeCallbacks
+  const { onInputTokenChange, onAmountChange, onIndependentFieldChange } = onSwapChangeCallbacks
 
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
@@ -119,14 +119,14 @@ export default function Input({ disabled, focused }: InputProps) {
   })
 
   const onControlledInputChange = (n: string) => {
-    independentFieldOnChange?.(Field.INPUT)
-    amountOnChange?.(n)
+    onIndependentFieldChange?.(Field.INPUT)
+    onAmountChange?.(n)
   }
   const onChangeInput =
-    isControlledSwapState && independentFieldOnChange && amountOnChange ? onControlledInputChange : updateInputAmount
+    isControlledSwapState && onIndependentFieldChange && onAmountChange ? onControlledInputChange : updateInputAmount
 
   const onChangeCurrency = isControlledSwapState
-    ? (!defaultTokenSelectorDisabled && inputTokenOnChange) || // useValidate validates that if isControlledSwapState & !defaultTokenSelectorDisabled, this should not be undefined
+    ? (!defaultTokenSelectorDisabled && onInputTokenChange) || // useValidate validates that if isControlledSwapState & !defaultTokenSelectorDisabled, this should not be undefined
       ((currency: Currency) =>
         console.warn(
           'if defaultTokenSelectorDisabled w/ controlled swap state, should not fire any onChange',

@@ -33,17 +33,17 @@ export const isControlledSwapStateAtom = atom<IsControlledSwapState>({
   isControlledToken: false,
 })
 export interface OnSwapChangeCallbacks {
-  inputTokenOnChange?: (t: Currency) => void
-  outputTokenOnChange?: (t: Currency) => void
-  amountOnChange?: (n: string) => void
-  independentFieldOnChange?: (f: Field) => void
+  onInputTokenChange?: (t: Currency) => void
+  onOutputTokenChange?: (t: Currency) => void
+  onAmountChange?: (n: string) => void
+  onIndependentFieldChange?: (f: Field) => void
 }
 
 export const onSwapChangeCallbacksAtom = atom<OnSwapChangeCallbacks>({
-  inputTokenOnChange: undefined,
-  outputTokenOnChange: undefined,
-  amountOnChange: undefined,
-  independentFieldOnChange: undefined,
+  onInputTokenChange: undefined,
+  onOutputTokenChange: undefined,
+  onAmountChange: undefined,
+  onIndependentFieldChange: undefined,
 })
 
 export const defaultTokenSelectorDisabledAtom = atom<boolean>(false)

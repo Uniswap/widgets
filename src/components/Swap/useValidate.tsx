@@ -51,13 +51,13 @@ export default function useValidate(props: ValidatorProps) {
 
   const {
     inputToken,
-    inputTokenOnChange,
+    onInputTokenChange,
     outputToken,
-    outputTokenOnChange,
+    onOutputTokenChange,
     amount,
-    amountOnChange,
+    onAmountChange,
     independentField,
-    independentFieldOnChange,
+    onIndependentFieldChange,
     defaultTokenSelectorDisabled, // not related to controllability of swap state
     defaultInputAmount,
     defaultOutputAmount,
@@ -128,14 +128,14 @@ export default function useValidate(props: ValidatorProps) {
 
   useEffect(() => {
     if (isControlledAmount) {
-      if (amount && !amountOnChange) {
-        throw new IntegrationError(`If amount is controlled, you must provide both amount and amountOnChange.`)
+      if (amount && !onAmountChange) {
+        throw new IntegrationError(`If amount is controlled, you must provide both amount and onAmountChange.`)
       }
       if (amount && (isNaN(+amount) || amount < 0)) {
         throw new IntegrationError(`Token amount must be a positive number (you set it to ${amount})`)
       }
     }
-  }, [isControlledAmount, amount, amountOnChange])
+  }, [isControlledAmount, amount, onAmountChange])
 
   useEffect(() => {
     if (inputToken && outputToken) {
@@ -173,27 +173,27 @@ export default function useValidate(props: ValidatorProps) {
 
   useEffect(() => {
     if (isControlledToken) {
-      const allTokenOnChangeProps = Boolean(inputTokenOnChange) && Boolean(outputTokenOnChange)
-      const anyTokenOnChangeProps = Boolean(inputTokenOnChange || outputTokenOnChange)
+      const allTokenOnChangeProps = Boolean(onInputTokenChange) && Boolean(onOutputTokenChange)
+      const anyTokenOnChangeProps = Boolean(onInputTokenChange || onOutputTokenChange)
       if (defaultTokenSelectorDisabled) {
         if (anyTokenOnChangeProps) {
           throw new IntegrationError(
-            'If using controlled token state & default token selector is disabled, you must provide inputToken and outputToken, and should not provide inputTokenOnChange nor outputTokenOnChange.'
+            'If using controlled token state & default token selector is disabled, you must provide inputToken and outputToken, and should not provide onInputTokenChange nor onOutputTokenChange.'
           )
         }
       } else {
         if (!allTokenOnChangeProps) {
           throw new IntegrationError(
-            'If using controlled token state & default token selector is enabled, you must provide inputToken, outputToken, inputTokenOnChange, and outputTokenOnChange.'
+            'If using controlled token state & default token selector is enabled, you must provide inputToken, outputToken, onInputTokenChange, and onOutputTokenChange.'
           )
         }
       }
     }
   }, [
     inputToken,
-    inputTokenOnChange,
+    onInputTokenChange,
     outputToken,
-    outputTokenOnChange,
+    onOutputTokenChange,
     defaultTokenSelectorDisabled,
     isControlledToken,
   ])

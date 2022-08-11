@@ -75,12 +75,12 @@ function Fixture() {
   const [outputToken, setOutputToken] = useState<Currency | undefined>(undefined)
   // if (ot !== inputToken) setOutputToken(ot)
 
-  const inputTokenOnChange = (curr: Currency) => {
-    console.log('inputTokenOnChange', curr)
+  const onInputTokenChange = (curr: Currency) => {
+    console.log('onInputTokenChange', curr)
     setInputToken(curr)
   }
-  const outputTokenOnChange = (curr: Currency) => {
-    console.log('outputTokenOnChange', curr)
+  const onOutputTokenChange = (curr: Currency) => {
+    console.log('onOutputTokenChange', curr)
     setOutputToken(curr)
   }
 
@@ -89,8 +89,8 @@ function Fixture() {
   useEffect(() => {
     if (amt !== amount) setAmount(amt)
   }, [amt, amount])
-  const amountOnChange = (amount: string | number) => {
-    console.log('amountOnChange', amount)
+  const onAmountChange = (amount: string | number) => {
+    console.log('onAmountChange', amount)
     setAmount(amount)
   }
 
@@ -102,8 +102,8 @@ function Fixture() {
   useEffect(() => {
     if (indptField !== independentField) setIndependentField(indptField)
   }, [indptField, independentField])
-  const independentFieldOnChange = (f: Field) => {
-    console.log('independentFieldOnChange', f)
+  const onIndependentFieldChange = (f: Field) => {
+    console.log('onIndependentFieldChange', f)
     setIndependentField(f)
   }
 
@@ -122,13 +122,13 @@ function Fixture() {
       onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
       // controlled values
       inputToken={inputToken}
-      inputTokenOnChange={inputTokenOnChange}
+      onInputTokenChange={onInputTokenChange}
       outputToken={outputToken}
-      outputTokenOnChange={outputTokenOnChange}
+      onOutputTokenChange={onOutputTokenChange}
       amount={amount}
-      amountOnChange={amountOnChange}
+      onAmountChange={onAmountChange}
       independentField={independentField}
-      independentFieldOnChange={independentFieldOnChange}
+      onIndependentFieldChange={onIndependentFieldChange}
     />
   )
 }

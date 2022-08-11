@@ -14,33 +14,33 @@ export interface ControlledStateProps extends OnSwapChangeCallbacks {
 
 export function getIsControlledSwapState({
   inputToken,
-  inputTokenOnChange,
+  onInputTokenChange,
   outputToken,
-  outputTokenOnChange,
+  onOutputTokenChange,
   amount,
-  amountOnChange,
+  onAmountChange,
   independentField,
-  independentFieldOnChange,
+  onIndependentFieldChange,
   defaultTokenSelectorDisabled,
 }: ControlledStateProps): IsControlledSwapState {
   return {
     isControlledAmount:
-      amount !== undefined || Boolean(amountOnChange) || Boolean(independentField) || Boolean(independentFieldOnChange),
+      amount !== undefined || Boolean(onAmountChange) || Boolean(independentField) || Boolean(onIndependentFieldChange),
     isControlledToken:
-      Boolean(inputToken) || Boolean(inputTokenOnChange) || Boolean(outputToken) || Boolean(outputTokenOnChange),
+      Boolean(inputToken) || Boolean(onInputTokenChange) || Boolean(outputToken) || Boolean(onOutputTokenChange),
   }
 }
 
 export default function useSyncControlledStateProps(controlledStateProps: ControlledStateProps) {
   const {
     inputToken,
-    inputTokenOnChange,
+    onInputTokenChange,
     outputToken,
-    outputTokenOnChange,
+    onOutputTokenChange,
     amount,
-    amountOnChange,
+    onAmountChange,
     independentField,
-    independentFieldOnChange,
+    onIndependentFieldChange,
     defaultTokenSelectorDisabled,
   } = controlledStateProps
 
