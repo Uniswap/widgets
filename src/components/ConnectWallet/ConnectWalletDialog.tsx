@@ -38,7 +38,6 @@ const StyledButtonContents = styled(Column)`
 `
 
 const StyledMainButton = styled(Button)`
-  background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 200px;
   padding: 22px;
@@ -50,7 +49,6 @@ const StyledMainButtonRow = styled(Row)`
 `
 
 const StyledSmallButton = styled(Button)`
-  background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 88px;
   padding: 16px;
@@ -161,7 +159,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
   })
 
   return (
-    <StyledMainButton onClick={onClick}>
+    <StyledMainButton color="container" onClick={onClick}>
       <StyledMainButtonRow>
         <ButtonContents
           logoSrc={logoSrc}
@@ -176,7 +174,7 @@ function WalletConnectButton({ walletName, logoSrc, connection: wcTileConnection
 
 function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
   return (
-    <StyledSmallButton onClick={onClick}>
+    <StyledSmallButton color="container" onClick={onClick}>
       <ButtonContents logoSrc={logoSrc} walletName={walletName} />
     </StyledSmallButton>
   )
@@ -184,7 +182,7 @@ function MetaMaskButton({ walletName, logoSrc, onClick }: ButtonProps) {
 
 function NoWalletButton() {
   return (
-    <StyledSmallButton onClick={() => window.open(NO_WALLET_HELP_CENTER_URL)}>
+    <StyledSmallButton color="container" onClick={() => window.open(NO_WALLET_HELP_CENTER_URL)}>
       <StyledNoWalletText>
         <Trans>{`I don't have a wallet`}</Trans>
       </StyledNoWalletText>
