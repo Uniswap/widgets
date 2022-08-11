@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { transformSwapRouteToGetQuoteResult } from 'hooks/routing/transformSwapRouteToGetQuoteResult'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
