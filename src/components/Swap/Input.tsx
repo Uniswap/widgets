@@ -110,10 +110,11 @@ export default function Input({ disabled, focused }: InputProps) {
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
-        currency={inputCurrency}
         amount={amount}
-        max={max}
+        currency={inputCurrency}
         disabled={disabled}
+        field={Field.INPUT}
+        max={max}
         onChangeInput={updateInputAmount}
         onChangeCurrency={updateInputCurrency}
         loading={isLoading}
