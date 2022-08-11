@@ -5,6 +5,7 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useCallback, useState } from 'react'
+
 import { jsonRpcUrlMap } from './useWeb3React'
 
 // when adding a new chain, Metamask makes a eth_chainId check from its background page, which is not on our Infura RPC origin allowlist
