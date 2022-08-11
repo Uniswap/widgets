@@ -18,13 +18,13 @@ You can customize the theme (colors, fonts, border radius, and more) to match th
 
 ## Installation
 
-Install the widgets library via `npm` or `yarn`. If you do not already use the widget's peerDependencies `redux`, `react-redux`, and `styled-components`, then you'll need to add them as well. 
+Install the widgets library via `npm` or `yarn`.
 
 ```js
-yarn add @uniswap/widgets redux react-redux styled-components
+yarn add @uniswap/widgets
 ```
 ```js
-npm i --save @uniswap/widgets redux react-redux styled-components
+npm i --save @uniswap/widgets
 ```
 
 ## Documentation
