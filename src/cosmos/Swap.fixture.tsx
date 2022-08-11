@@ -95,7 +95,7 @@ function Fixture() {
       onReviewSwapClick={() => new Promise((resolve) => resolve(true))}
       onTokenSelectorClick={(f: Field) =>
         new Promise((resolve) => {
-          console.log('onTokenSelectorClicked', f)
+          console.log('onTokenSelectorClick', f)
           resolve(true)
         })
       }
