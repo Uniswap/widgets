@@ -12,7 +12,7 @@ import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
-import { displayTxHashAtom } from 'state/swap'
+import { displayTxHashAtom, Field } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
@@ -51,7 +51,7 @@ export interface SwapProps extends TokenDefaults, FeeOptions {
   routerUrl?: string
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: () => void | Promise<boolean>
+  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
