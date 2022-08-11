@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react'
 import {
   defaultTokenSelectorDisabledAtom,
   displayTxHashAtom,
+  Field,
   isControlledSwapStateAtom,
   OnSwapChangeCallbacks,
   onSwapChangeCallbacksAtom,
@@ -61,7 +62,7 @@ export interface SwapProps extends ControlledStateProps, TokenDefaults, FeeOptio
   routerUrl?: string
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: () => void | Promise<boolean>
+  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
