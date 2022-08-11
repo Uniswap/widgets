@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import useSwitchChain from 'hooks/connectWeb3/useSwitchChain'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
@@ -21,7 +22,6 @@ import ActionButton, { Action, ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import useApprovalData, { useIsPendingApproval } from './useApprovalData'
-import useSwitchChain from 'hooks/connectWeb3/useSwitchChain'
 
 interface SwapButtonProps {
   disabled?: boolean
