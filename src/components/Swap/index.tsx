@@ -1,4 +1,8 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import { Provider as Eip1193Provider } from '@web3-react/types'
+import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncControlledStateProps, {
   ControlledStateProps,
@@ -7,9 +11,9 @@ import useSyncControlledStateProps, {
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
+import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import {
@@ -24,7 +28,6 @@ import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo 
 import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
-import Wallet from '../Wallet'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -50,9 +53,15 @@ function getTransactionFromMap(
   return
 }
 
+// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
+// TODO(kristiehuang): refactor WalletConnection outside of Swap component
 export interface SwapProps extends ControlledStateProps, TokenDefaults, FeeOptions {
+  hideConnectionUI?: boolean
+  provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onConnectWallet?: () => void
+  onConnectWalletClick?: () => void | Promise<boolean>
+  onReviewSwapClick?: () => void | Promise<boolean>
+  onTokenSelectorClick?: () => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
@@ -66,6 +75,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
   useSyncControlledStateProps(props)
   useSyncTokenDefaults(props)
+  useSyncEventHandlers(props)
 
   const [defaultTokenSelectorDisabled, setDefaultTokenSelectorDisabled] = useAtom(defaultTokenSelectorDisabledAtom)
   useEffect(() => {
@@ -99,7 +109,7 @@ export default function Swap(props: SwapProps) {
     setOnSwapChangeCallbacks,
   ])
 
-  const { active, account } = useActiveWeb3React()
+  const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
@@ -107,14 +117,14 @@ export default function Swap(props: SwapProps) {
   const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
   const onSupportedNetwork = useOnSupportedNetwork()
-  const isDisabled = !(active && onSupportedNetwork)
+  const isDisabled = !(isActive && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
 
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={!active || Boolean(account)} onClick={props.onConnectWallet} />
+        <Wallet disabled={props.hideConnectionUI} />
         <Settings disabled={isDisabled} />
       </Header>
       <div ref={setWrapper}>

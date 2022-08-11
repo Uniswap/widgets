@@ -1,10 +1,12 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { useAtomValue } from 'jotai/utils'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Field, onTokenSelectorClickAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -23,7 +25,7 @@ const SearchInput = styled(StringInput)`
 `
 
 function usePrefetchBalances() {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const tokenList = useTokenList()
   const prefetchedTokenList = useRef<typeof tokenList>()
   useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
@@ -31,7 +33,7 @@ function usePrefetchBalances() {
 }
 
 function useAreBalancesLoaded(): boolean {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const tokens = useTokenList()
   const native = useNativeCurrency()
   const currencies = useMemo(() => [native, ...tokens], [native, tokens])
@@ -70,7 +72,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
   if (!listHasTokens && isLoaded) {
@@ -119,17 +121,31 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 }
 
 interface TokenSelectProps {
-  value?: Currency
   collapsed: boolean
   disabled?: boolean
+  field: Field
   onSelect: (value: Currency) => void
+  value?: Currency
 }
 
-export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({ collapsed, disabled, field, onSelect, value }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
-  const onOpen = useCallback(() => setOpen(true), [])
+  const onTokenSelectorClick = useAtomValue(onTokenSelectorClickAtom)
+  const onOpen = useCallback(() => {
+    const promise = onTokenSelectorClick?.(field)
+    if (promise) {
+      return promise
+        .then((open) => {
+          setOpen(open)
+        })
+        .catch(() => {
+          setOpen(false)
+        })
+    }
+    return setOpen(true)
+  }, [field, onTokenSelectorClick])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)

@@ -1,5 +1,5 @@
 import defaultTokenList from '@uniswap/default-token-list'
-import { fetch } from 'test/utils'
+import { fetch } from 'test'
 
 import fetchTokenList from './fetchTokenList'
 

@@ -3,9 +3,9 @@ import { BigintIsh, Currency, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { computePoolAddress } from '@uniswap/v3-sdk'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { useMultipleContractSingleData } from 'hooks/multicall'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { IUniswapV3PoolStateInterface } from 'types/v3/IUniswapV3PoolState'
@@ -85,7 +85,7 @@ export enum PoolState {
 export function usePools(
   poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][]
 ): [PoolState, Pool | null][] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
 
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
     if (!chainId) return new Array(poolKeys.length)
