@@ -1,10 +1,10 @@
 import { darken, lighten, opacify, transparentize } from 'polished'
 import { readableColor } from 'polished'
 import { ReactNode, useMemo } from 'react'
-import { ThemeProvider as StyledProvider, useTheme } from 'styled-components/macro'
+import { DefaultTheme, ThemeProvider as StyledProvider, useTheme } from 'styled-components/macro'
 import { hex } from 'wcag-contrast'
 
-import type { Colors, ComputedTheme } from './styled'
+import type { Colors } from './theme'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
 
@@ -33,7 +33,7 @@ const dark: DynamicColors = {
   onInteractive: black,
 }
 
-export function getDynamicTheme(theme: ComputedTheme, color: string): ComputedTheme {
+export function getDynamicTheme(theme: DefaultTheme, color: string): DefaultTheme {
   const colors = { light, dark }[readableColor(color, 'light', 'dark', false) as 'light' | 'dark']
   return {
     ...theme,
@@ -43,7 +43,7 @@ export function getDynamicTheme(theme: ComputedTheme, color: string): ComputedTh
   }
 }
 
-function getAccessibleColor(theme: ComputedTheme, color: string) {
+function getAccessibleColor(theme: DefaultTheme, color: string) {
   const dynamic = getDynamicTheme(theme, color)
   let { primary } = dynamic
   let AAscore = hex(color, primary)

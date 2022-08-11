@@ -98,7 +98,7 @@ const cjs = {
 const types = {
   input: 'dts/index.d.ts',
   output: { file: 'dist/index.d.ts' },
-  external: (source) => source.endsWith('.scss'),
+  external: (source) => source.endsWith('.scss') || source.endsWith('/external.d.ts'),
   plugins: [dts({ compilerOptions: { baseUrl: 'dts' } })],
   watch: false,
 }
