@@ -6,7 +6,7 @@ import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { useAtomValue } from 'jotai/utils'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Field, onTokenSelectorClickAtom } from 'state/swap'
+import { defaultTokenSelectorDisabledAtom, Field, onTokenSelectorClickAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -133,19 +133,20 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
 
   const [open, setOpen] = useState(false)
   const onTokenSelectorClick = useAtomValue(onTokenSelectorClickAtom)
+  const defaultTokenSelectorDisabled = useAtomValue(defaultTokenSelectorDisabledAtom)
   const onOpen = useCallback(() => {
     const promise = onTokenSelectorClick?.(field)
     if (promise) {
       return promise
         .then((open) => {
-          setOpen(open)
+          !defaultTokenSelectorDisabled && setOpen(open)
         })
         .catch(() => {
           setOpen(false)
         })
     }
-    return setOpen(true)
-  }, [field, onTokenSelectorClick])
+    return !defaultTokenSelectorDisabled ? setOpen(open) : undefined
+  }, [field, onTokenSelectorClick, defaultTokenSelectorDisabled])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)

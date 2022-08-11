@@ -10,14 +10,14 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
+import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 import { Field } from 'state/swap'
 
 import { UNI, USDC } from '../constants/tokens'
-import useJsonRpcEndpoint from './useJsonRpcEndpoint'
 import useOption from './useOption'
-import useProvider from './useProvider'
+import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
 function Fixture() {
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
@@ -40,6 +40,8 @@ function Fixture() {
     ),
   }
 
+  const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+
   const [width] = useValue('width', { defaultValue: 360 })
 
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
@@ -49,7 +51,14 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  const jsonRpcEndpoint = useJsonRpcEndpoint()
+  const jsonRpcUrlMap = INFURA_NETWORK_URLS
+
+  const defaultNetwork = useOption('defaultChainId', {
+    options: Object.keys(CHAIN_NAMES_TO_IDS),
+    defaultValue: 'mainnet',
+  })
+  const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
+
   const connector = useProvider()
 
   const tokenLists: Record<string, TokenInfo[]> = {
@@ -111,15 +120,30 @@ function Fixture() {
     <SwapWidget
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
+      defaultChainId={defaultChainId}
       defaultTokenSelectorDisabled={defaultTokenSelectorDisabled}
+      hideConnectionUI={hideConnectionUI}
       locale={locale}
-      jsonRpcEndpoint={jsonRpcEndpoint}
+      jsonRpcUrlMap={jsonRpcUrlMap}
       provider={connector}
       theme={theme}
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      onConnectWallet={() => console.log('onConnectWallet')} // this handler is included as a test of functionality, but only logs
+      onConnectWalletClick={() =>
+        new Promise((resolve) => {
+          console.log('integrator provided a onConnectWalletClick')
+          resolve(true) // to open our built-in wallet connect flow
+        })
+      }
+      onReviewSwapClick={() => new Promise((resolve) => resolve(true))}
+      onTokenSelectorClick={(field: Field) => {
+        console.log('onTokenSelectorClick')
+        return new Promise((resolve) => resolve(true))
+      }}
+      onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
+      onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
+      onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
       // controlled values
       inputToken={inputToken}
       onInputTokenChange={onInputTokenChange}
