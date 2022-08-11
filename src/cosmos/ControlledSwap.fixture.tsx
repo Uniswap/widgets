@@ -70,15 +70,15 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
-  const [defaultTokenSelectorDisabled] = useValue('defaultTokenSelectorDisabled', { defaultValue: false })
   const inputTokenName = useOption('inputToken', {
     options: Object.keys(currencies),
     defaultValue: `${SupportedChainId.MAINNET}-${USDC[SupportedChainId.MAINNET].symbol}`,
   })
   const outputTokenName = useOption('outputToken', { options: Object.keys(currencies) })
 
-  const it: Currency | undefined = inputTokenName ? currencies[inputTokenName] : undefined
-  const ot: Currency | undefined = outputTokenName ? currencies[outputTokenName] : undefined
+  const disabledInputToken: Currency | undefined = inputTokenName ? currencies[inputTokenName] : undefined
+  const disabledOutputToken: Currency | undefined = outputTokenName ? currencies[outputTokenName] : undefined
+
   const [inputToken, setInputToken] = useState<Currency | undefined>(undefined)
   // if (it !== inputToken) setInputToken(it)
   const [outputToken, setOutputToken] = useState<Currency | undefined>(undefined)
@@ -121,7 +121,6 @@ function Fixture() {
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
       defaultChainId={defaultChainId}
-      defaultTokenSelectorDisabled={defaultTokenSelectorDisabled}
       hideConnectionUI={hideConnectionUI}
       locale={locale}
       jsonRpcUrlMap={jsonRpcUrlMap}
@@ -144,11 +143,16 @@ function Fixture() {
       onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
       onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
       onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
-      // controlled values
-      inputToken={inputToken}
-      onInputTokenChange={onInputTokenChange}
-      outputToken={outputToken}
-      onOutputTokenChange={onOutputTokenChange}
+      // controlled token state
+      // defaultTokenSelectorDisabled={false}
+      // inputToken={inputToken}
+      // onInputTokenChange={onInputTokenChange}
+      // outputToken={outputToken}
+      // onOutputTokenChange={onOutputTokenChange}
+      defaultTokenSelectorDisabled={true}
+      inputToken={disabledInputToken}
+      outputToken={disabledOutputToken}
+      // controlled amount state
       amount={amount}
       onAmountChange={onAmountChange}
       independentField={independentField}

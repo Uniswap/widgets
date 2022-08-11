@@ -173,16 +173,14 @@ export default function useValidate(props: ValidatorProps) {
 
   useEffect(() => {
     if (isControlledToken) {
-      const allTokenOnChangeProps = Boolean(onInputTokenChange) && Boolean(onOutputTokenChange)
-      const anyTokenOnChangeProps = Boolean(onInputTokenChange || onOutputTokenChange)
       if (defaultTokenSelectorDisabled) {
-        if (anyTokenOnChangeProps) {
+        if (onInputTokenChange || onOutputTokenChange) {
           throw new IntegrationError(
             'If using controlled token state & default token selector is disabled, you must provide inputToken and outputToken, and should not provide onInputTokenChange nor onOutputTokenChange.'
           )
         }
       } else {
-        if (!allTokenOnChangeProps) {
+        if (!(onInputTokenChange && onOutputTokenChange)) {
           throw new IntegrationError(
             'If using controlled token state & default token selector is enabled, you must provide inputToken, outputToken, onInputTokenChange, and onOutputTokenChange.'
           )

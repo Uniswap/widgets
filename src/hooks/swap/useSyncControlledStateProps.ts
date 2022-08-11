@@ -23,11 +23,15 @@ export function getIsControlledSwapState({
   onIndependentFieldChange,
   defaultTokenSelectorDisabled,
 }: ControlledStateProps): IsControlledSwapState {
+  console.log(
+    'iscontrolled token',
+    inputToken,
+    Boolean(inputToken || outputToken || onInputTokenChange || onOutputTokenChange)
+  )
   return {
     isControlledAmount:
       amount !== undefined || Boolean(onAmountChange) || Boolean(independentField) || Boolean(onIndependentFieldChange),
-    isControlledToken:
-      Boolean(inputToken) || Boolean(onInputTokenChange) || Boolean(outputToken) || Boolean(onOutputTokenChange),
+    isControlledToken: Boolean(inputToken || outputToken || onInputTokenChange || onOutputTokenChange),
   }
 }
 
