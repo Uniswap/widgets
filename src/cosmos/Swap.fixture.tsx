@@ -12,6 +12,7 @@ import {
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { Field } from 'state/swap'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import useOption from './useOption'
@@ -92,6 +93,12 @@ function Fixture() {
         })
       }
       onReviewSwapClick={() => new Promise((resolve) => resolve(true))}
+      onTokenSelectorClick={(f: Field) =>
+        new Promise((resolve) => {
+          console.log('onTokenSelectorClick', f)
+          resolve(true)
+        })
+      }
       onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
       onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
       onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
