@@ -6,7 +6,6 @@ import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef } from 'react'
 import { Field, isControlledSwapStateAtom, Swap, swapAtom } from 'state/swap'
-import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapCurrencyAmount } from 'hooks/swap'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
 import { useIsTokenListLoaded } from '../useTokenList'

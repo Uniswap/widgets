@@ -64,7 +64,6 @@ export default function Swap(props: SwapProps) {
 
   useValidate(props)
   useSyncConvenienceFee(props)
-  // FIXME: possible to have controlled swap state
   useSyncControlledStateProps(props)
   useSyncTokenDefaults(props)
 

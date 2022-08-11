@@ -68,8 +68,8 @@ function Fixture() {
   })
   const outputTokenName = useOption('outputToken', { options: Object.keys(currencies) })
 
-  let it: Currency | undefined = inputTokenName ? currencies[inputTokenName] : undefined
-  let ot: Currency | undefined = outputTokenName ? currencies[outputTokenName] : undefined
+  const it: Currency | undefined = inputTokenName ? currencies[inputTokenName] : undefined
+  const ot: Currency | undefined = outputTokenName ? currencies[outputTokenName] : undefined
   const [inputToken, setInputToken] = useState<Currency | undefined>(undefined)
   // if (it !== inputToken) setInputToken(it)
   const [outputToken, setOutputToken] = useState<Currency | undefined>(undefined)
@@ -88,7 +88,7 @@ function Fixture() {
   const [amt] = useValue('amount', { defaultValue: 1 })
   useEffect(() => {
     if (amt !== amount) setAmount(amt)
-  }, [amt])
+  }, [amt, amount])
   const amountOnChange = (amount: string | number) => {
     console.log('amountOnChange', amount)
     setAmount(amount)
@@ -101,7 +101,7 @@ function Fixture() {
   })
   useEffect(() => {
     if (indptField !== independentField) setIndependentField(indptField)
-  }, [indptField])
+  }, [indptField, independentField])
   const independentFieldOnChange = (f: Field) => {
     console.log('independentFieldOnChange', f)
     setIndependentField(f)

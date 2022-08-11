@@ -119,7 +119,6 @@ export default function Input({ disabled, focused }: InputProps) {
   })
 
   const onControlledInputChange = (n: string) => {
-    console.log('input change', n)
     independentFieldOnChange?.(Field.INPUT)
     amountOnChange?.(n)
   }
@@ -134,10 +133,6 @@ export default function Input({ disabled, focused }: InputProps) {
           currency
         ))
     : updateInputCurrency
-
-  console.log('disabled', disabled)
-  console.log('amount', amount)
-  console.log('inputAmount', inputAmount)
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
