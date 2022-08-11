@@ -6,7 +6,7 @@ import { onConnectWalletClickAtom } from 'state/wallet'
 interface UseSyncEventHandlersArgs {
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: () => void | Promise<boolean>
+  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
 }
 
 export default function useSyncEventHandlers(handlers: UseSyncEventHandlersArgs): void {
