@@ -65,7 +65,6 @@ function Fixture() {
     'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
   }
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
-  console.log(tokenList)
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
@@ -88,20 +87,24 @@ function Fixture() {
       routerUrl={routerUrl}
       onConnectWalletClick={() =>
         new Promise((resolve) => {
-          console.log('integrator provided a onConnectWalletClick')
+          alert('integrator provided a onConnectWalletClick')
           resolve(true) // to open our built-in wallet connect flow
         })
       }
       onReviewSwapClick={() => new Promise((resolve) => resolve(true))}
       onTokenSelectorClick={(f: Field) =>
         new Promise((resolve) => {
-          console.log('onTokenSelectorClick', f)
+          alert(`onTokenSelectorClick ${f}`)
           resolve(true)
         })
       }
-      onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
-      onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
-      onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
+      onTxSubmit={(txHash: string, data: any) =>
+        alert(`tx submitted: error-${txHash}, data-${JSON.stringify(data, null, 2)}`)
+      }
+      onTxSuccess={(txHash: string, data: any) =>
+        alert(`tx success: error-${txHash}, data-${JSON.stringify(data, null, 2)}`)
+      }
+      onTxFail={(error: Error, data: any) => alert(`tx fail: error-${error}, data-${JSON.stringify(data, null, 2)}`)}
     />
   )
 }
