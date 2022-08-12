@@ -7,7 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -83,8 +83,6 @@ export function ActiveWeb3Provider({
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
   }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
-  const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [provider])
-
   // we're abusing useState a bit to ensure that `metaMaskConnection` is only ever computed once, i.e. is referentially static
   const [metaMaskConnection] = useState(() =>
     toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError })))
@@ -97,7 +95,6 @@ export function ActiveWeb3Provider({
     () => getConnectionFromWalletConnect(true, jsonRpcUrlMap, defaultChainId, onError),
     [jsonRpcUrlMap, defaultChainId]
   ) // WC via built-in popup
-
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
@@ -106,12 +103,28 @@ export function ActiveWeb3Provider({
     [jsonRpcUrlMap, defaultChainId]
   )
 
+  const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [provider])
+
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
   if (integratorConnection) connections = [integratorConnection, ...connections]
+  const connectionsLast = useRef(connections)
 
-  const key = `${connections.length}+${Object.entries(jsonRpcUrlMap)}+${propsDefaultChainId}+${defaultChainId}`
+  const key = useRef(0)
+  // connections at this point is up-to-date, and connectionsLast is either (on the first render), equal to connections,
+  // or (on subsequent renders), equal to the previous value.
+  if (
+    connectionsLast.current.length !== connections.length ||
+    connectionsLast.current.some((connectionLast, i) => {
+      return connectionLast[0] !== connections[i][0]
+    })
+  ) {
+    key.current = key.current + 1
+  }
+  // ensure that connectionsLast is updated to the current value of connections
+  connectionsLast.current = connections
+
   return (
-    <Web3ReactProvider connectors={connections} key={key}>
+    <Web3ReactProvider connectors={connections} key={key.current}>
       {children}
     </Web3ReactProvider>
   )
