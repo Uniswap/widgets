@@ -8,7 +8,7 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
-import JsonRpcConnector from 'utils/JsonRpcConnector'
+import Eip1193ProviderFromEthers from 'utils/Eip1193ProviderFromEthers'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
 export let connections: Web3Connection[] = []
@@ -26,20 +26,23 @@ export function getConnectorName(connector: Connector) {
   if (connector instanceof MetaMask) return 'MetaMask'
   if (connector instanceof WalletConnect) return 'WalletConnect'
   if (connector instanceof Network) return 'Network'
-  if (connector instanceof JsonRpcConnector) return 'JsonRpcConnector'
   if (connector instanceof EIP1193) return 'EIP1193'
   return 'Unknown'
 }
 
 function getConnectionFromProvider(onError: (error: Error) => void, provider?: JsonRpcProvider | Eip1193Provider) {
   if (!provider) return
+  let eip1193Provider: Eip1193Provider
   if (JsonRpcProvider.isProvider(provider)) {
-    return toWeb3Connection(initializeConnector((actions) => new JsonRpcConnector(actions, provider)))
+    eip1193Provider = new Eip1193ProviderFromEthers(provider)
   } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
     throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
   } else {
-    return toWeb3Connection(initializeConnector((actions) => new EIP1193({ actions, provider, onError })))
+    eip1193Provider = provider
   }
+  return toWeb3Connection(
+    initializeConnector((actions) => new EIP1193({ actions, provider: eip1193Provider, onError }))
+  )
 }
 
 function getConnectionFromWalletConnect(
