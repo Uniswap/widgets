@@ -7,7 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
-import { PropsWithChildren, useEffect, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -70,30 +70,32 @@ interface ActiveWeb3ProviderProps {
   defaultChainId: SupportedChainId
 }
 
+const onError = console.error
+
 export function ActiveWeb3Provider({
   provider,
   jsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const onError = console.error
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
   }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
-  const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [onError, provider])
-  const metaMaskConnection = useMemo(
-    () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
-    [onError]
+  const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [provider])
+
+  // we're abusing useState a bit to ensure that `metaMaskConnection` is only ever computed once, i.e. is referentially static
+  const [metaMaskConnection] = useState(() =>
+    toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError })))
   )
   const walletConnectConnectionQR = useMemo(
     () => getConnectionFromWalletConnect(false, jsonRpcUrlMap, defaultChainId, onError),
-    [jsonRpcUrlMap, defaultChainId, onError]
+    [jsonRpcUrlMap, defaultChainId]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
     () => getConnectionFromWalletConnect(true, jsonRpcUrlMap, defaultChainId, onError),
-    [jsonRpcUrlMap, defaultChainId, onError]
+    [jsonRpcUrlMap, defaultChainId]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(
