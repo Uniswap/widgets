@@ -13,7 +13,7 @@ import JsonRpcConnector from 'utils/JsonRpcConnector'
 export type Web3Connection = [Connector, Web3ReactHooks]
 export let connections: Web3Connection[] = []
 export const defaultChainIdAtom = atom<number>(1)
-export let jsonRpcUrlMap: { [chainId: number]: string[] }
+export const jsonRpcUrlMapAtom = atom<{ [chainId: number]: string[] }>({})
 
 function toWeb3Connection<T extends Connector>([connector, hooks]: [
   T,
@@ -77,11 +77,15 @@ export function ActiveWeb3Provider({
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const onError = console.error
-  jsonRpcUrlMap = propsJsonRpcUrlMap
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
   }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
+
+  const [jsonRpcUrlMap, setJsonRpcUrlMap] = useAtom(jsonRpcUrlMapAtom)
+  useEffect(() => {
+    setJsonRpcUrlMap(propsJsonRpcUrlMap)
+  }, [propsJsonRpcUrlMap, jsonRpcUrlMap, setJsonRpcUrlMap])
 
   const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [onError, provider])
   const metaMaskConnection = useMemo(
@@ -89,26 +93,28 @@ export function ActiveWeb3Provider({
     [onError]
   )
   const walletConnectConnectionQR = useMemo(
-    () => getConnectionFromWalletConnect(false, propsJsonRpcUrlMap, defaultChainId, onError),
-    [propsJsonRpcUrlMap, defaultChainId, onError]
+    () => getConnectionFromWalletConnect(false, jsonRpcUrlMap, defaultChainId, onError),
+    [jsonRpcUrlMap, defaultChainId, onError]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
-    () => getConnectionFromWalletConnect(true, propsJsonRpcUrlMap, defaultChainId, onError),
-    [propsJsonRpcUrlMap, defaultChainId, onError]
+    () => getConnectionFromWalletConnect(true, jsonRpcUrlMap, defaultChainId, onError),
+    [jsonRpcUrlMap, defaultChainId, onError]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(
     () =>
       toWeb3Connection(
-        initializeConnector<Network>((actions) => new Network({ actions, urlMap: propsJsonRpcUrlMap, defaultChainId }))
+        initializeConnector<Network>((actions) => new Network({ actions, urlMap: jsonRpcUrlMap, defaultChainId }))
       ),
-    [propsJsonRpcUrlMap, defaultChainId]
+    [jsonRpcUrlMap, defaultChainId]
   )
 
   connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
   if (integratorConnection) connections = [integratorConnection, ...connections]
 
-  const key = `${connections.length}+${Object.entries(propsJsonRpcUrlMap)}+${propsDefaultChainId}+${defaultChainId}`
+  const key = `${connections.length}+${Object.entries(propsJsonRpcUrlMap)}+${Object.entries(
+    jsonRpcUrlMap
+  )}+${propsDefaultChainId}+${defaultChainId}`
   return (
     <Web3ReactProvider connectors={connections} key={key}>
       {children}

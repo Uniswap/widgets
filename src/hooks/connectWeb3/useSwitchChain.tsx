@@ -4,13 +4,15 @@ import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 
-import { jsonRpcUrlMap } from './useWeb3React'
+import { jsonRpcUrlMapAtom } from './useWeb3React'
 
 // when adding a new chain, Metamask makes a eth_chainId check from its background page, which is not on our Infura RPC origin allowlist
 // so we need to use public RPC endpoints to add a new chain
-function getRpcUrlsForAddChain(chainId: SupportedChainId): string[] {
+function useRpcUrlsForAddChain(chainId: SupportedChainId): string[] {
+  const jsonRpcUrlMap = useAtomValue(jsonRpcUrlMapAtom)
   switch (chainId) {
     case SupportedChainId.MAINNET:
     case SupportedChainId.RINKEBY:
@@ -36,7 +38,7 @@ function getRpcUrlsForAddChain(chainId: SupportedChainId): string[] {
   throw new Error('RPC URLs must use public endpoints')
 }
 
-export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
+const switchChain = async (connector: Connector, rpcUrls: string[], chainId: SupportedChainId) => {
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
     throw new Error(`Chain ${chainId} not supported`)
   } else if (connector instanceof WalletConnect || connector instanceof Network) {
@@ -46,7 +48,7 @@ export const switchChain = async (connector: Connector, chainId: SupportedChainI
     const addChainParameter = {
       chainId,
       chainName: info.label,
-      rpcUrls: getRpcUrlsForAddChain(chainId),
+      rpcUrls,
       nativeCurrency: info.nativeCurrency,
       blockExplorerUrls: [info.explorer],
     }
@@ -54,22 +56,20 @@ export const switchChain = async (connector: Connector, chainId: SupportedChainI
   }
 }
 
-export default function useSwitchChain(): [(desiredChainId: number) => Promise<void>, boolean] {
+export default function useSwitchChain(desiredChainId: number): [(desiredChainId: number) => Promise<void>, boolean] {
   const { connector } = useWeb3React()
+  const rpcUrls = useRpcUrlsForAddChain(desiredChainId)
 
   const [isPending, setIsPending] = useState(false)
-  const onSwitchChain = useCallback(
-    async (desiredChainId: number) => {
-      setIsPending(true)
-      try {
-        await switchChain(connector, desiredChainId)
-        setIsPending(false)
-      } catch {
-        setIsPending(false)
-      }
-    },
-    [connector]
-  )
+  const onSwitchChain = useCallback(async () => {
+    setIsPending(true)
+    try {
+      await switchChain(connector, rpcUrls, desiredChainId)
+      setIsPending(false)
+    } catch {
+      setIsPending(false)
+    }
+  }, [connector, rpcUrls, desiredChainId])
 
   return [onSwitchChain, isPending]
 }
