@@ -7,7 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
-import { PropsWithChildren, useEffect, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -104,12 +104,22 @@ export function ActiveWeb3Provider({
     [jsonRpcUrlMap, defaultChainId]
   )
 
-  connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
-  if (integratorConnection) connections = [integratorConnection, ...connections]
+  const key = useRef(0)
+  connections = useMemo(() => {
+    key.current += 1
+    let connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
+    if (integratorConnection) connections = [integratorConnection, ...connections]
+    return connections
+  }, [
+    integratorConnection,
+    metaMaskConnection,
+    walletConnectConnectionQR,
+    walletConnectConnectionPopup,
+    networkConnection,
+  ])
 
-  const key = `${connections.length}+${Object.entries(jsonRpcUrlMap)}+${propsDefaultChainId}+${defaultChainId}`
   return (
-    <Web3ReactProvider connectors={connections} key={key}>
+    <Web3ReactProvider connectors={connections} key={key.current}>
       {children}
     </Web3ReactProvider>
   )
