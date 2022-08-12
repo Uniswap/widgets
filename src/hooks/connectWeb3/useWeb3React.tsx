@@ -70,14 +70,14 @@ interface ActiveWeb3ProviderProps {
   defaultChainId: SupportedChainId
 }
 
-const onError = console.error
-
 export function ActiveWeb3Provider({
   provider,
   jsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  const onError = console.error
+
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
