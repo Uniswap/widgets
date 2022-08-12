@@ -50,20 +50,21 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const deadline = useTransactionDeadline()
 
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+
+  const desiredChainId = inputCurrency?.chainId
   const [onSwitchChain, isPendingSwitchChain] = useSwitchChain(desiredChainId)
   const switchChainAction = useMemo((): Action | undefined => {
-    const desiredChainId = inputCurrency?.chainId
     if (chainId && desiredChainId && chainId !== desiredChainId) {
       return isPendingSwitchChain
         ? { message: <Trans>Switch network in your wallet</Trans>, icon: Spinner }
         : {
             message: <Trans>Switch network</Trans>,
-            onClick: () => onSwitchChain(),
+            onClick: () => onSwitchChain?.(),
             children: <Trans>Switch</Trans>,
           }
     }
     return undefined
-  }, [inputCurrency, chainId, isPendingSwitchChain, onSwitchChain])
+  }, [desiredChainId, chainId, isPendingSwitchChain, onSwitchChain])
 
   const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({

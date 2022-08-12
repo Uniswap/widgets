@@ -11,8 +11,9 @@ import { jsonRpcUrlMapAtom } from './useWeb3React'
 
 // when adding a new chain, Metamask makes a eth_chainId check from its background page, which is not on our Infura RPC origin allowlist
 // so we need to use public RPC endpoints to add a new chain
-function useRpcUrlsForAddChain(chainId: SupportedChainId): string[] {
+function useRpcUrlsForAddChain(chainId?: SupportedChainId): string[] {
   const jsonRpcUrlMap = useAtomValue(jsonRpcUrlMapAtom)
+  if (!chainId) return []
   switch (chainId) {
     case SupportedChainId.MAINNET:
     case SupportedChainId.RINKEBY:
@@ -56,18 +57,20 @@ const switchChain = async (connector: Connector, rpcUrls: string[], chainId: Sup
   }
 }
 
-export default function useSwitchChain(desiredChainId: number): [(desiredChainId: number) => Promise<void>, boolean] {
+export default function useSwitchChain(desiredChainId?: number): [(() => Promise<void>) | undefined, boolean] {
   const { connector } = useWeb3React()
   const rpcUrls = useRpcUrlsForAddChain(desiredChainId)
 
   const [isPending, setIsPending] = useState(false)
   const onSwitchChain = useCallback(async () => {
-    setIsPending(true)
-    try {
-      await switchChain(connector, rpcUrls, desiredChainId)
-      setIsPending(false)
-    } catch {
-      setIsPending(false)
+    if (desiredChainId) {
+      setIsPending(true)
+      try {
+        await switchChain(connector, rpcUrls, desiredChainId)
+        setIsPending(false)
+      } catch {
+        setIsPending(false)
+      }
     }
   }, [connector, rpcUrls, desiredChainId])
 
