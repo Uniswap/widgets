@@ -105,8 +105,8 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           currency={swapOutputCurrency}
           disabled={disabled}
           field={Field.OUTPUT}
-          onChangeInput={updateSwapOutputAmount}
-          onChangeCurrency={updateSwapOutputCurrency}
+          onChangeInput={onChangeInput}
+          onChangeCurrency={onChangeCurrency}
           loading={isLoading}
         >
           <ThemedText.Body2 color="secondary" userSelect>

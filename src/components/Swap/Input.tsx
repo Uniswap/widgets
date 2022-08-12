@@ -141,8 +141,8 @@ export default function Input({ disabled, focused }: InputProps) {
         currency={inputCurrency}
         disabled={disabled}
         field={Field.INPUT}
-        onChangeInput={updateInputAmount}
-        onChangeCurrency={updateInputCurrency}
+        onChangeInput={onChangeInput}
+        onChangeCurrency={onChangeCurrency}
         loading={isLoading}
         max={max}
       >

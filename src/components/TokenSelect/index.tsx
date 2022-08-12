@@ -146,7 +146,7 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
         })
     }
     return !defaultTokenSelectorDisabled ? setOpen(open) : undefined
-  }, [field, onTokenSelectorClick, defaultTokenSelectorDisabled])
+  }, [open, field, onTokenSelectorClick, defaultTokenSelectorDisabled])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)
