@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -79,11 +79,11 @@ export default function useSendSwapTransaction(
                   .call(tx)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: <Trans>Unexpected issue with estimating the gas. Please try again.</Trans> }
+                    return { call, error: new Error(t`Unexpected issue with estimating the gas. Please try again.`) }
                   })
                   .catch((callError) => {
                     console.debug('Call threw error', call, callError)
-                    return { call, error: swapErrorToUserReadableMessage(callError) }
+                    return { call, error: new Error(swapErrorToUserReadableMessage(callError)) }
                   })
               })
           })
@@ -130,7 +130,7 @@ export default function useSendSwapTransaction(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, calldata, value)
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`) // FIXME: this prints to console as [object Object]
+              throw new Error(t`Swap failed: ` + swapErrorToUserReadableMessage(error))
             }
           })
       },
