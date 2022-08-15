@@ -106,10 +106,18 @@ export function ActiveWeb3Provider({
 
   const key = useRef(0)
   connections = useMemo(() => {
+    // while react warns against triggering side effects in useMemo,
+    // in this instance we're only using the mutated value to generate a key,
+    // so tightly coupling the key update with the memo update shouldn't cause any issues,
+    // and most clearly expresses the intent
     key.current += 1
-    let connections = [metaMaskConnection, walletConnectConnectionQR, walletConnectConnectionPopup, networkConnection]
-    if (integratorConnection) connections = [integratorConnection, ...connections]
-    return connections
+    return [
+      integratorConnection,
+      metaMaskConnection,
+      walletConnectConnectionQR,
+      walletConnectConnectionPopup,
+      networkConnection,
+    ].filter((connection): connection is Web3Connection => Boolean(connection))
   }, [
     integratorConnection,
     metaMaskConnection,
