@@ -8,9 +8,9 @@ import 'jest-environment-hardhat'
 import { waitFor } from '@testing-library/react'
 import { tokens } from '@uniswap/default-token-list'
 import React from 'react'
-import { renderWidget } from '../src/test'
 
 import { SwapWidget } from '../src'
+import { renderWidget } from '../src/test'
 
 const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
   0,
