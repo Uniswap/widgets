@@ -2,11 +2,11 @@ import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
-  DEFAULT_LOCALE,
   defaultTheme,
+  DEFAULT_LOCALE,
   lightTheme,
-  SUPPORTED_LOCALES,
   SupportedChainId,
+  SUPPORTED_LOCALES,
   SwapWidget,
 } from '@uniswap/widgets'
 import Row from 'components/Row'
@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { H2, H3 } from 'theme/type'
+import * as Type from 'theme/type'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import useOption from './useOption'
@@ -24,6 +24,7 @@ import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 const EventFeedWrapper = styled.div`
   background-color: ${defaultTheme.container};
   border-radius: ${defaultTheme.borderRadius}em;
+  box-sizing: border-box;
   font-family: ${defaultTheme.fontFamily.font};
   padding: 1em;
   width: 360px;
@@ -31,6 +32,9 @@ const EventFeedWrapper = styled.div`
 const EventData = styled.div`
   height: 80vh;
   overflow: auto;
+`
+const EventJSON = styled.pre`
+  margin-top: 1em;
 `
 const EventRow = styled.div`
   background-color: ${defaultTheme.module};
@@ -42,7 +46,10 @@ const Message = styled.pre`
   margin: 0;
 `
 
-type HandlerEventMessage = { message: string; data: Record<string, any> }
+type HandlerEventMessage = {
+  message: string
+  data: Record<string, any>
+}
 
 function Fixture() {
   const [events, setEvents] = useState<HandlerEventMessage[]>([])
@@ -102,7 +109,7 @@ function Fixture() {
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
   return (
-    <Row align="baseline" justify="space-around">
+    <Row align="start" justify="space-around">
       <SwapWidget
         convenienceFee={convenienceFee}
         convenienceFeeRecipient={convenienceFeeRecipient}
@@ -119,39 +126,26 @@ function Fixture() {
         tokenList={tokenList}
         width={width}
         routerUrl={routerUrl}
-        onConnectWalletClick={() =>
-          new Promise((resolve) => {
-            addEvent({ message: 'onConnectWalletClick', data: {} })
-            resolve(true) // to open our built-in wallet connect flow
-          })
-        }
-        onReviewSwapClick={() =>
-          new Promise((resolve) => {
-            addEvent({ message: 'onReviewSwapClick', data: {} })
-            resolve(true)
-          })
-        }
-        onTokenSelectorClick={(f: Field) =>
-          new Promise((resolve) => {
-            addEvent({ message: `onTokenSelectorClick`, data: { field: f } })
-            resolve(true)
-          })
-        }
-        onTxSubmit={(txHash: string, data: any) => addEvent({ message: `onTxSubmit`, data: { ...data, txHash } })}
-        onTxSuccess={(txHash: string, data: any) => addEvent({ message: `onTxSuccess`, data: { ...data, txHash } })}
-        onTxFail={(error: Error, data: any) => addEvent({ message: `onTxFail`, data: { ...data, error } })}
+        onConnectWalletClick={() => addEvent({ message: 'onConnectWalletClick', data: {} })}
+        onReviewSwapClick={() => addEvent({ message: 'onReviewSwapClick', data: {} })}
+        onTokenSelectorClick={(f: Field) => addEvent({ message: `onTokenSelectorClick`, data: { field: f } })}
+        onTxSubmit={(_txHash: string, data: any) => addEvent({ message: `onTxSubmit`, data })}
+        onTxSuccess={(_txHash: string, data: any) => addEvent({ message: `onTxSuccess`, data })}
+        onTxFail={(error: Error) => addEvent({ message: `onTxFail`, data: error })}
       />
       <EventFeedWrapper>
-        <H2>Event Feed</H2>
-        {events.length > 0 && <button onClick={() => setEvents([])}>clear</button>}
+        <Type.H2>Event Feed</Type.H2>
+        <button onClick={() => setEvents([])} disabled={events.length === 0}>
+          clear
+        </button>
         <EventData>
           {events?.map(({ message, data }, i) => (
             <EventRow key={i}>
               <div>
-                <H3 padding={0}>
+                <Type.H3 padding={0}>
                   <Message>{message}</Message>
-                </H3>
-                <pre>{JSON.stringify(data, null, 2)}</pre>
+                </Type.H3>
+                <EventJSON>{JSON.stringify(data, null, 2)}</EventJSON>
               </div>
             </EventRow>
           ))}
