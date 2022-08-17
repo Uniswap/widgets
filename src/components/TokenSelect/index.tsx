@@ -4,7 +4,9 @@ import { useWeb3React } from '@web3-react/core'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { useAtomValue } from 'jotai/utils'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Field, onTokenSelectorClickAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -119,17 +121,31 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 }
 
 interface TokenSelectProps {
-  value?: Currency
   collapsed: boolean
   disabled?: boolean
+  field: Field
   onSelect: (value: Currency) => void
+  value?: Currency
 }
 
-export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({ collapsed, disabled, field, onSelect, value }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
-  const onOpen = useCallback(() => setOpen(true), [])
+  const onTokenSelectorClick = useAtomValue(onTokenSelectorClickAtom)
+  const onOpen = useCallback(() => {
+    const promise = onTokenSelectorClick?.(field)
+    if (promise) {
+      return promise
+        .then((open) => {
+          setOpen(open)
+        })
+        .catch(() => {
+          setOpen(false)
+        })
+    }
+    return setOpen(true)
+  }, [field, onTokenSelectorClick])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)
