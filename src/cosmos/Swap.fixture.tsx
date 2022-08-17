@@ -2,11 +2,11 @@ import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
-  defaultTheme,
   DEFAULT_LOCALE,
+  defaultTheme,
   lightTheme,
-  SupportedChainId,
   SUPPORTED_LOCALES,
+  SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
 import Row from 'components/Row'
