@@ -25,6 +25,7 @@ export default function useUSDCPriceImpact(
   const inputUSDC = useUSDCValue(inputAmount) ?? undefined
   const outputUSDC = useUSDCValue(outputAmount) ?? undefined
   return useMemo(() => {
+    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
     const priceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
     const impact = priceImpact
       ? {
