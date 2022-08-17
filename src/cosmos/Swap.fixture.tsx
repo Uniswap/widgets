@@ -9,16 +9,55 @@ import {
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
+import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 import { Field } from 'state/swap'
+import styled from 'styled-components/macro'
+import * as Type from 'theme/type'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
+const EventFeedWrapper = styled.div`
+  background-color: ${defaultTheme.container};
+  border-radius: ${defaultTheme.borderRadius}em;
+  box-sizing: border-box;
+  font-family: ${defaultTheme.fontFamily.font};
+  padding: 1em;
+  width: 360px;
+`
+const EventData = styled.div`
+  height: 80vh;
+  overflow: auto;
+`
+const EventJSON = styled.pre`
+  margin-top: 1em;
+`
+const EventRow = styled.div`
+  background-color: ${defaultTheme.module};
+  border-radius: ${defaultTheme.borderRadius / 2}em;
+  margin: 1em 0;
+  padding: 0.2em;
+`
+const Message = styled.pre`
+  margin: 0;
+`
+interface HandlerEventMessage {
+  message: string
+  data: Record<string, any>
+}
+
 function Fixture() {
+  const [events, setEvents] = useState<HandlerEventMessage[]>([])
+  const addEvent = useCallback(
+    (event: HandlerEventMessage) => {
+      setEvents(events.concat(event))
+    },
+    [events]
+  )
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
   const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
     options: [
@@ -65,44 +104,53 @@ function Fixture() {
     'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
   }
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
-  console.log(tokenList)
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
   return (
-    <SwapWidget
-      convenienceFee={convenienceFee}
-      convenienceFeeRecipient={convenienceFeeRecipient}
-      defaultInputTokenAddress={defaultInputToken}
-      defaultInputAmount={defaultInputAmount}
-      defaultOutputTokenAddress={defaultOutputToken}
-      defaultOutputAmount={defaultOutputAmount}
-      hideConnectionUI={hideConnectionUI}
-      locale={locale}
-      jsonRpcUrlMap={jsonRpcUrlMap}
-      defaultChainId={defaultChainId}
-      provider={connector}
-      theme={theme}
-      tokenList={tokenList}
-      width={width}
-      routerUrl={routerUrl}
-      onConnectWalletClick={() =>
-        new Promise((resolve) => {
-          console.log('integrator provided a onConnectWalletClick')
-          resolve(true) // to open our built-in wallet connect flow
-        })
-      }
-      onReviewSwapClick={() => new Promise((resolve) => resolve(true))}
-      onTokenSelectorClick={(f: Field) =>
-        new Promise((resolve) => {
-          console.log('onTokenSelectorClick', f)
-          resolve(true)
-        })
-      }
-      onTxSubmit={(txHash: string, data: any) => console.log('tx submitted:', txHash, data)}
-      onTxSuccess={(txHash: string, data: any) => console.log('tx success:', txHash, data)}
-      onTxFail={(error: Error, data: any) => console.log('tx fail:', error, data)}
-    />
+    <Row align="start" justify="space-around">
+      <SwapWidget
+        convenienceFee={convenienceFee}
+        convenienceFeeRecipient={convenienceFeeRecipient}
+        defaultInputTokenAddress={defaultInputToken}
+        defaultInputAmount={defaultInputAmount}
+        defaultOutputTokenAddress={defaultOutputToken}
+        defaultOutputAmount={defaultOutputAmount}
+        hideConnectionUI={hideConnectionUI}
+        locale={locale}
+        jsonRpcUrlMap={jsonRpcUrlMap}
+        defaultChainId={defaultChainId}
+        provider={connector}
+        theme={theme}
+        tokenList={tokenList}
+        width={width}
+        routerUrl={routerUrl}
+        onConnectWalletClick={() => addEvent({ message: 'onConnectWalletClick', data: {} })}
+        onReviewSwapClick={() => addEvent({ message: 'onReviewSwapClick', data: {} })}
+        onTokenSelectorClick={(f: Field) => addEvent({ message: `onTokenSelectorClick`, data: { field: f } })}
+        onTxSubmit={(_txHash: string, data: any) => addEvent({ message: `onTxSubmit`, data })}
+        onTxSuccess={(_txHash: string, data: any) => addEvent({ message: `onTxSuccess`, data })}
+        onTxFail={(error: Error) => addEvent({ message: `onTxFail`, data: error })}
+      />
+      <EventFeedWrapper>
+        <Type.H2>Event Feed</Type.H2>
+        <button onClick={() => setEvents([])} disabled={events.length === 0}>
+          clear
+        </button>
+        <EventData>
+          {events?.map(({ message, data }, i) => (
+            <EventRow key={i}>
+              <div>
+                <Type.H3 padding={0}>
+                  <Message>{message}</Message>
+                </Type.H3>
+                <EventJSON>{JSON.stringify(data, null, 2)}</EventJSON>
+              </div>
+            </EventRow>
+          ))}
+        </EventData>
+      </EventFeedWrapper>
+    </Row>
   )
 }
 
