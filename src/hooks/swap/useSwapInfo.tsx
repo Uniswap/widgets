@@ -68,13 +68,13 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
   const { inputUSDC, outputUSDC, impact } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
-  
+
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
     const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
   }, [stablecoinPriceImpact, trade])
-  
+
   return useMemo(
     () => ({
       [Field.INPUT]: {
