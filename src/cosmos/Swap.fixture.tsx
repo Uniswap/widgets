@@ -2,11 +2,11 @@ import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
-  DEFAULT_LOCALE,
   defaultTheme,
+  DEFAULT_LOCALE,
   lightTheme,
-  SUPPORTED_LOCALES,
   SupportedChainId,
+  SUPPORTED_LOCALES,
   SwapWidget,
 } from '@uniswap/widgets'
 import Row from 'components/Row'
@@ -45,8 +45,7 @@ const EventRow = styled.div`
 const Message = styled.pre`
   margin: 0;
 `
-
-type HandlerEventMessage = {
+interface HandlerEventMessage {
   message: string
   data: Record<string, any>
 }
