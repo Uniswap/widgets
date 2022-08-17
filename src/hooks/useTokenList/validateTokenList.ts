@@ -13,14 +13,26 @@ function getValidationErrors(validate: ValidateFunction | undefined): string {
   )
 }
 
-async function loadValidator(schema: ValidationSchema): Promise<ValidateFunction> {
-  const [, validatorModule] = await Promise.all([
-    import('ajv'),
-    schema === ValidationSchema.LIST
-      ? import('__generated__/validateTokenList')
-      : import('__generated__/validateTokens'),
-  ])
-  return (await validatorModule.default) as ValidateFunction
+async function validate(schema: ValidationSchema, data: unknown): Promise<unknown> {
+  let validatorImport
+  switch (schema) {
+    case ValidationSchema.LIST:
+      validatorImport = import('__generated__/validateTokenList')
+      break
+    case ValidationSchema.TOKENS:
+      validatorImport = import('__generated__/validateTokens')
+      break
+    default:
+      throw new Error('No validation function specified for schema')
+      break
+  }
+
+  const [, validatorModule] = await Promise.all([import('ajv'), validatorImport])
+  const validator = (await validatorModule.default) as ValidateFunction
+  if (validator?.(data)) {
+    return data
+  }
+  throw new Error(getValidationErrors(validator))
 }
 
 /**
@@ -28,11 +40,11 @@ async function loadValidator(schema: ValidationSchema): Promise<ValidateFunction
  * @param json the TokenInfo[] to validate
  */
 export async function validateTokens(json: TokenInfo[]): Promise<TokenInfo[]> {
-  const validate = await loadValidator(ValidationSchema.TOKENS)
-  if (validate?.({ tokens: json })) {
-    return json
+  try {
+    return (await validate(ValidationSchema.TOKENS, { tokens: json })) as TokenInfo[]
+  } catch (err) {
+    throw new Error(`Tokens failed validation: ${err.message}`)
   }
-  throw new Error(`Token list failed validation: ${getValidationErrors(validate)}`)
 }
 
 /**
@@ -40,9 +52,9 @@ export async function validateTokens(json: TokenInfo[]): Promise<TokenInfo[]> {
  * @param json the TokenList to validate
  */
 export default async function validateTokenList(json: TokenList): Promise<TokenList> {
-  const validate = await loadValidator(ValidationSchema.LIST)
-  if (validate?.(json)) {
-    return json
+  try {
+    return (await validate(ValidationSchema.LIST, json)) as TokenList
+  } catch (err) {
+    throw new Error(`Token list failed validation: ${err.message}`)
   }
-  throw new Error(`Token list failed validation: ${getValidationErrors(validate)}`)
 }
