@@ -104,13 +104,9 @@ export function ActiveWeb3Provider({
     [jsonRpcUrlMap, defaultChainId]
   )
 
-  const key = useRef(0)
-  connections = useMemo(() => {
-    // while react warns against triggering side effects in useMemo,
-    // in this instance we're only using the mutated value to generate a key,
-    // so tightly coupling the key update with the memo update shouldn't cause any issues,
-    // and most clearly expresses the intent
-    key.current += 1
+  // TODO(zzmp): Only expose connections through hooks. For now, it is aliased to connections to export it.
+  // It must also be a local variable (connectors) to satisfy the react-hooks/exhaustive-deps check.
+  const connectors = (connections = useMemo(() => {
     return [
       integratorConnection,
       metaMaskConnection,
@@ -124,10 +120,20 @@ export function ActiveWeb3Provider({
     walletConnectConnectionQR,
     walletConnectConnectionPopup,
     networkConnection,
-  ])
+  ]))
+
+  const key = useRef(0)
+  useEffect(() => {
+    // Re-key Web3ReactProvider if connectors change, to force a re-render.
+    // This is necessary because Web3ReactProvider expects connectors to be constant, so
+    // changing the passed connectors requires a new instance of Web3ReactProvider.
+    // This *must* be done in a useEffect so that it does not run on mount when parent components update.
+    void connectors
+    key.current += 1
+  }, [connectors])
 
   return (
-    <Web3ReactProvider connectors={connections} key={key.current}>
+    <Web3ReactProvider connectors={connectors} key={key.current}>
       {children}
     </Web3ReactProvider>
   )
