@@ -13,7 +13,6 @@ import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useCallback, useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import * as Type from 'theme/type'
 
@@ -45,19 +44,20 @@ const EventRow = styled.div`
 const Message = styled.pre`
   margin: 0;
 `
-interface HandlerEventMessage {
-  message: string
-  data: Record<string, any>
+interface Event {
+  name: string
+  data: unknown
 }
 
 function Fixture() {
-  const [events, setEvents] = useState<HandlerEventMessage[]>([])
-  const addEvent = useCallback(
-    (event: HandlerEventMessage) => {
-      setEvents(events.concat(event))
-    },
-    [events]
+  const [events, setEvents] = useState<Event[]>([])
+  const useHandleEvent = useCallback(
+    (name: string) =>
+      (...data: unknown[]) =>
+        setEvents((events) => [...events, { name, data }]),
+    []
   )
+
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
   const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
     options: [
@@ -85,11 +85,9 @@ function Fixture() {
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
   const locale = useOption('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })
 
-  const [theme, setTheme] = useValue('theme', { defaultValue: { ...defaultTheme } })
+  const [theme, setTheme] = useValue('theme', { defaultValue: defaultTheme })
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
-
-  const jsonRpcUrlMap = INFURA_NETWORK_URLS
 
   const defaultNetwork = useOption('defaultChainId', {
     options: Object.keys(CHAIN_NAMES_TO_IDS),
@@ -118,19 +116,19 @@ function Fixture() {
         defaultOutputAmount={defaultOutputAmount}
         hideConnectionUI={hideConnectionUI}
         locale={locale}
-        jsonRpcUrlMap={jsonRpcUrlMap}
+        jsonRpcUrlMap={INFURA_NETWORK_URLS}
         defaultChainId={defaultChainId}
         provider={connector}
         theme={theme}
         tokenList={tokenList}
         width={width}
         routerUrl={routerUrl}
-        onConnectWalletClick={() => addEvent({ message: 'onConnectWalletClick', data: {} })}
-        onReviewSwapClick={() => addEvent({ message: 'onReviewSwapClick', data: {} })}
-        onTokenSelectorClick={(f: Field) => addEvent({ message: `onTokenSelectorClick`, data: { field: f } })}
-        onTxSubmit={(_txHash: string, data: any) => addEvent({ message: `onTxSubmit`, data })}
-        onTxSuccess={(_txHash: string, data: any) => addEvent({ message: `onTxSuccess`, data })}
-        onTxFail={(error: Error) => addEvent({ message: `onTxFail`, data: error })}
+        onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
+        onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
+        onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
+        onTxSubmit={useHandleEvent('onTxSubmit')}
+        onTxSuccess={useHandleEvent('onTxSuccess')}
+        onTxFail={useHandleEvent('onTxFail')}
       />
       <EventFeedWrapper>
         <Type.H2>Event Feed</Type.H2>
@@ -138,11 +136,11 @@ function Fixture() {
           clear
         </button>
         <EventData>
-          {events?.map(({ message, data }, i) => (
+          {events?.map(({ name, data }, i) => (
             <EventRow key={i}>
               <div>
                 <Type.H3 padding={0}>
-                  <Message>{message}</Message>
+                  <Message>{name}</Message>
                 </Type.H3>
                 <EventJSON>{JSON.stringify(data, null, 2)}</EventJSON>
               </div>
