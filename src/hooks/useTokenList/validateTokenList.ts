@@ -41,7 +41,8 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
  */
 export async function validateTokens(json: TokenInfo[]): Promise<TokenInfo[]> {
   try {
-    return (await validate(ValidationSchema.TOKENS, { tokens: json })) as TokenInfo[]
+    await validate(ValidationSchema.TOKENS, { tokens: json })
+    return json
   } catch (err) {
     throw new Error(`Tokens failed validation: ${err.message}`)
   }
@@ -53,7 +54,8 @@ export async function validateTokens(json: TokenInfo[]): Promise<TokenInfo[]> {
  */
 export default async function validateTokenList(json: TokenList): Promise<TokenList> {
   try {
-    return (await validate(ValidationSchema.LIST, json)) as TokenList
+    await validate(ValidationSchema.LIST, json)
+    return json
   } catch (err) {
     throw new Error(`Token list failed validation: ${err.message}`)
   }
