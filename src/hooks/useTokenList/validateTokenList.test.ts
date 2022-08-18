@@ -1,6 +1,6 @@
 import { TokenInfo } from '@uniswap/token-lists'
 
-import { validateTokens } from './validateTokenList'
+import { validateTokens, validateTokenList } from './validateTokenList'
 
 const INVALID_TOKEN: TokenInfo = {
   name: 'Dai Stablecoin',
@@ -33,7 +33,7 @@ const INLINE_TOKEN_LIST = [
 
 describe('validateTokens', () => {
   it('throws on invalid tokens', async () => {
-    await expect(validateTokens([INVALID_TOKEN])).rejects.toThrowError(/^Token list failed validation:.*address/)
+    await expect(validateTokens([INVALID_TOKEN])).rejects.toThrowError(/^Tokens failed validation:.*address/)
   })
 
   it('validates the passed token info', async () => {
