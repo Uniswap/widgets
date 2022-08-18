@@ -46,7 +46,7 @@ function getTransactionFromMap(
 
 // SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
-export interface SwapProps extends EventHandlers, FeeOptions, TokenDefaults, Partial<Controller> {
+export interface SwapProps extends EventHandlers, FeeOptions, TokenDefaults, Controller {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
@@ -54,7 +54,7 @@ export interface SwapProps extends EventHandlers, FeeOptions, TokenDefaults, Par
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncController(props as Partial<Controller>)
+  useSyncController(props as Controller)
   useSyncEventHandlers(props as EventHandlers)
   useSyncConvenienceFee(props as FeeOptions)
   useSyncTokenDefaults(props as TokenDefaults)
