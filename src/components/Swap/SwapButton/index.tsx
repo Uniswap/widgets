@@ -160,7 +160,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         : trade.state === TradeState.VALID
         ? {
             onClick: async () => {
-              setOpen((await onReviewSwapClick?.()) ?? true)
+              setOpen((await onReviewSwapClick?.()?.catch(() => true)) ?? true)
             },
           }
         : { disabled: true }
