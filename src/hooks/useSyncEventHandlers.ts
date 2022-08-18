@@ -1,37 +1,31 @@
-import { useAtom } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { Field, onReviewSwapClickAtom, onTokenSelectorClickAtom } from 'state/swap'
 import { onConnectWalletClickAtom } from 'state/wallet'
 
-interface UseSyncEventHandlersArgs {
+export interface EventHandlers {
   onConnectWalletClick?: () => void | Promise<boolean>
   onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
+  onTokenSelectorClick?: (field: Field) => void | Promise<boolean>
 }
 
-export default function useSyncEventHandlers(handlers: UseSyncEventHandlersArgs): void {
-  const [onReviewSwapClick, setOnReviewSwapClick] = useAtom(onReviewSwapClickAtom)
-  useEffect(() => {
-    if (handlers.onReviewSwapClick !== onReviewSwapClick) {
-      setOnReviewSwapClick((old: (() => void | Promise<boolean>) | undefined) => (old = handlers.onReviewSwapClick))
-    }
-  }, [handlers.onReviewSwapClick, onReviewSwapClick, setOnReviewSwapClick])
+export default function useSyncEventHandlers({
+  onConnectWalletClick,
+  onReviewSwapClick,
+  onTokenSelectorClick,
+}: EventHandlers): void {
+  const setOnReviewSwapClick = useUpdateAtom(onReviewSwapClickAtom)
+  useEffect(() => setOnReviewSwapClick((old) => (old = onReviewSwapClick)), [onReviewSwapClick, setOnReviewSwapClick])
 
-  const [onConnectWalletClick, setOnConnectWalletClick] = useAtom(onConnectWalletClickAtom)
-  useEffect(() => {
-    if (handlers.onConnectWalletClick !== onConnectWalletClick) {
-      setOnConnectWalletClick(
-        (old: (() => void | Promise<boolean>) | undefined) => (old = handlers.onConnectWalletClick)
-      )
-    }
-  }, [handlers.onConnectWalletClick, onConnectWalletClick, setOnConnectWalletClick])
+  const setOnConnectWalletClick = useUpdateAtom(onConnectWalletClickAtom)
+  useEffect(
+    () => setOnConnectWalletClick((old) => (old = onConnectWalletClick)),
+    [onConnectWalletClick, setOnConnectWalletClick]
+  )
 
-  const [onTokenSelectorClick, setOnTokenSelectorClick] = useAtom(onTokenSelectorClickAtom)
-  useEffect(() => {
-    if (handlers.onTokenSelectorClick !== onTokenSelectorClick) {
-      setOnTokenSelectorClick(
-        (old: ((f: Field) => void | Promise<boolean>) | undefined) => (old = handlers.onTokenSelectorClick)
-      )
-    }
-  }, [handlers.onTokenSelectorClick, onTokenSelectorClick, setOnTokenSelectorClick])
+  const setOnTokenSelectorClick = useUpdateAtom(onTokenSelectorClickAtom)
+  useEffect(
+    () => setOnTokenSelectorClick((old: typeof onTokenSelectorClick) => (old = onTokenSelectorClick)),
+    [onTokenSelectorClick, setOnTokenSelectorClick]
+  )
 }

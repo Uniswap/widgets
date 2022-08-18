@@ -9,10 +9,10 @@ import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefa
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
+import useSyncEventHandlers, { EventHandlers } from 'hooks/useSyncEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
-import { displayTxHashAtom, Field } from 'state/swap'
+import { displayTxHashAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
@@ -45,20 +45,17 @@ function getTransactionFromMap(
 
 // SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
 // TODO(kristiehuang): refactor WalletConnection outside of Swap component
-export interface SwapProps extends TokenDefaults, FeeOptions {
+export interface SwapProps extends EventHandlers, FeeOptions, TokenDefaults {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onConnectWalletClick?: () => void | Promise<boolean>
-  onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncConvenienceFee(props)
-  useSyncTokenDefaults(props)
-  useSyncEventHandlers(props)
+  useSyncEventHandlers(props as EventHandlers)
+  useSyncConvenienceFee(props as FeeOptions)
+  useSyncTokenDefaults(props as TokenDefaults)
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
