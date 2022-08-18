@@ -27,7 +27,7 @@ export default function ConnectWallet({ disabled }: ConnectWalletProps) {
 
   const onConnectWalletClick = useAtomValue(onConnectWalletClickAtom)
   const onClick = useCallback(async () => {
-    setOpen((await onConnectWalletClick?.()?.catch(() => true)) ?? true)
+    setOpen((await onConnectWalletClick?.()?.catch(() => false)) ?? true)
   }, [onConnectWalletClick])
 
   return (
