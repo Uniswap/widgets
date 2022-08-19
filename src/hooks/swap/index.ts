@@ -55,18 +55,19 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency:
   const onTokenChange = useAtomValue(controlledAtom)?.onTokenChange
   const switchSwapCurrencies = useSwitchSwapCurrencies()
   const setOrSwitchCurrency = useCallback(
-    (currency: Currency) => {
-      if (currency === otherCurrency) {
+    (update: Currency) => {
+      if (update === currency) return
+      if (update === otherCurrency) {
         switchSwapCurrencies()
       } else {
         if (onTokenChange) {
-          onTokenChange(field, currency)
+          onTokenChange(field, update)
         } else {
-          setCurrency(currency)
+          setCurrency(update)
         }
       }
     },
-    [field, onTokenChange, otherCurrency, setCurrency, switchSwapCurrencies]
+    [currency, field, onTokenChange, otherCurrency, setCurrency, switchSwapCurrencies]
   )
   return [currency, setOrSwitchCurrency]
 }
@@ -86,26 +87,27 @@ export function useIsAmountPopulated() {
 }
 
 export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
-  const amount = useAtomValue(amountAtom)
+  const value = useAtomValue(amountAtom)
   const isFieldIndependent = useIsSwapFieldIndependent(field)
-  const value = isFieldIndependent ? amount : undefined
+  const amount = isFieldIndependent ? value : undefined
 
   const onAmountChange = useAtomValue(controlledAtom)?.onAmountChange
   const setSwap = useUpdateAtom(swapAtom)
   const updateAmount = useCallback(
-    (amount: string) => {
+    (update: string) => {
+      if (update === amount) return
       if (onAmountChange) {
-        onAmountChange(field, amount)
+        onAmountChange(field, update)
       } else {
         setSwap((swap) => {
           swap.independentField = field
-          swap.amount = amount
+          swap.amount = update
         })
       }
     },
-    [field, onAmountChange, setSwap]
+    [amount, field, onAmountChange, setSwap]
   )
-  return [value, updateAmount]
+  return [amount, updateAmount]
 }
 
 export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | undefined {

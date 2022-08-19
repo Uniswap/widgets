@@ -17,7 +17,7 @@ export interface Swap {
   [Field.OUTPUT]?: Currency
 }
 
-const stateAtom = atomWithImmer<Swap>({
+export const stateAtom = atomWithImmer<Swap>({
   independentField: Field.INPUT,
   amount: '',
   [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
