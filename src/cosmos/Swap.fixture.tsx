@@ -75,31 +75,40 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
-  return (
+  const widget = (
+    <SwapWidget
+      convenienceFee={convenienceFee}
+      convenienceFeeRecipient={convenienceFeeRecipient}
+      defaultInputTokenAddress={defaultInputToken}
+      defaultInputAmount={defaultInputAmount}
+      defaultOutputTokenAddress={defaultOutputToken}
+      defaultOutputAmount={defaultOutputAmount}
+      hideConnectionUI={hideConnectionUI}
+      locale={locale}
+      jsonRpcUrlMap={INFURA_NETWORK_URLS}
+      defaultChainId={defaultChainId}
+      provider={connector}
+      theme={theme}
+      tokenList={tokenList}
+      width={width}
+      routerUrl={routerUrl}
+      onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
+      onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
+      onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
+      onTxSubmit={useHandleEvent('onTxSubmit')}
+      onTxSuccess={useHandleEvent('onTxSuccess')}
+      onTxFail={useHandleEvent('onTxFail')}
+    />
+  )
+
+  // If iframed, only display the SwapWidget, without any Chrome.
+  // This is done to faciliate iframing in the documentation (https://docs.uniswap.org).
+  const isIframed = window.location.origin !== window.parent.location.origin
+  return isIframed ? (
+    widget
+  ) : (
     <Row align="start" justify="space-around">
-      <SwapWidget
-        convenienceFee={convenienceFee}
-        convenienceFeeRecipient={convenienceFeeRecipient}
-        defaultInputTokenAddress={defaultInputToken}
-        defaultInputAmount={defaultInputAmount}
-        defaultOutputTokenAddress={defaultOutputToken}
-        defaultOutputAmount={defaultOutputAmount}
-        hideConnectionUI={hideConnectionUI}
-        locale={locale}
-        jsonRpcUrlMap={INFURA_NETWORK_URLS}
-        defaultChainId={defaultChainId}
-        provider={connector}
-        theme={theme}
-        tokenList={tokenList}
-        width={width}
-        routerUrl={routerUrl}
-        onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
-        onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
-        onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
-        onTxSubmit={useHandleEvent('onTxSubmit')}
-        onTxSuccess={useHandleEvent('onTxSuccess')}
-        onTxFail={useHandleEvent('onTxFail')}
-      />
+      {widget}
       <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>
   )
