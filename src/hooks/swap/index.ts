@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
-import { Field, swapEventHandlersAtom, swapAtom } from 'state/swap'
+import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 export { default as useSwapInfo } from './useSwapInfo'
 
