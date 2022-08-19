@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
@@ -17,11 +17,33 @@ export interface Swap {
   [Field.OUTPUT]?: Currency
 }
 
-export const swapAtom = atomWithImmer<Swap>({
+export const stateAtom = atomWithImmer<Swap>({
   independentField: Field.INPUT,
   amount: '',
   [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
 })
+
+export interface ControlledValues {
+  type?: TradeType
+  amount?: string
+  inputToken?: Currency
+  outputToken?: Currency
+}
+
+export interface ControllerHandlers {
+  onTokenChange: (field: Field, token: Currency) => void
+  onAmountChange: (field: Field, amount: string) => void
+  onSwitchTokens: (values: ControlledValues) => void
+}
+
+export interface Controlled extends Swap, ControllerHandlers {}
+
+export const controlledAtom = atom<Controlled | undefined>(undefined)
+
+export const swapAtom = atom((get) => {
+  const controlled = get(controlledAtom)
+  return controlled ? controlled : get(stateAtom)
+}, stateAtom.write)
 
 // If set, allows integrator to add behavior when 'Review swap' button is clicked
 export const onReviewSwapClickAtom = atom<(() => void | Promise<boolean>) | undefined>(undefined)

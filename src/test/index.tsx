@@ -7,7 +7,7 @@ import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { dynamicActivate } from 'i18n'
 import fetch from 'jest-fetch-mock'
 import { Atom, Provider as AtomProvider } from 'jotai'
-import { PropsWithChildren, ReactElement } from 'react'
+import { createRef, MutableRefObject, PropsWithChildren, ReactElement, RefObject, useEffect } from 'react'
 import { ThemeProvider } from 'theme'
 
 export type { RenderResult } from '@testing-library/react'
@@ -21,10 +21,6 @@ beforeAll(async () => {
   await dynamicActivate('en-US')
 })
 
-export interface ComponentRenderOptions extends RenderOptions {
-  initialAtomValues?: Iterable<readonly [Atom<unknown>, unknown]>
-}
-
 function TestProvider({ initialAtomValues, children }: PropsWithChildren<ComponentRenderOptions>) {
   return (
     <ThemeProvider>
@@ -33,6 +29,60 @@ function TestProvider({ initialAtomValues, children }: PropsWithChildren<Compone
       </I18nProvider>
     </ThemeProvider>
   )
+}
+
+export interface HookRenderOptions extends RenderOptions {
+  initialAtomValues?: Iterable<readonly [Atom<unknown>, unknown]>
+}
+
+export interface HookRenderResult<T> {
+  result: RefObject<T>
+  rerender: (hook: () => T) => HookRenderResult<T>
+}
+
+export function renderHook<T>(hook: () => T, options?: HookRenderOptions): HookRenderResult<T> {
+  const result = createRef<T>() as MutableRefObject<T>
+
+  function TestComponent() {
+    const value = hook()
+    useEffect(() => {
+      result.current = value
+    })
+
+    return null
+  }
+
+  const rendered = render(
+    <TestProvider initialAtomValues={options?.initialAtomValues}>
+      <TestComponent />
+    </TestProvider>,
+    options
+  )
+
+  const rerender = function (hook: () => T) {
+    function TestComponent() {
+      const value = hook()
+      useEffect(() => {
+        result.current = value
+      })
+
+      return null
+    }
+
+    rendered.rerender(
+      <TestProvider>
+        <TestComponent />
+      </TestProvider>
+    )
+
+    return { result, rerender }
+  }
+
+  return { result, rerender }
+}
+
+export interface ComponentRenderOptions extends RenderOptions {
+  initialAtomValues?: Iterable<readonly [Atom<unknown>, unknown]>
 }
 
 export function renderComponent(ui: ReactElement, options?: ComponentRenderOptions): RenderResult {

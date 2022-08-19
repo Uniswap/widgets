@@ -13,41 +13,11 @@ import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useCallback, useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import styled from 'styled-components/macro'
-import * as Type from 'theme/type'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
+import EventFeed, { Event } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
-
-const EventFeedWrapper = styled.div`
-  background-color: ${defaultTheme.container};
-  border-radius: ${defaultTheme.borderRadius}em;
-  box-sizing: border-box;
-  font-family: ${defaultTheme.fontFamily.font};
-  padding: 1em;
-  width: 360px;
-`
-const EventData = styled.div`
-  height: 80vh;
-  overflow: auto;
-`
-const EventJSON = styled.pre`
-  margin-top: 1em;
-`
-const EventRow = styled.div`
-  background-color: ${defaultTheme.module};
-  border-radius: ${defaultTheme.borderRadius / 2}em;
-  margin: 1em 0;
-  padding: 0.2em;
-`
-const Message = styled.pre`
-  margin: 0;
-`
-interface Event {
-  name: string
-  data: unknown
-}
 
 function Fixture() {
   const [events, setEvents] = useState<Event[]>([])
@@ -130,24 +100,7 @@ function Fixture() {
         onTxSuccess={useHandleEvent('onTxSuccess')}
         onTxFail={useHandleEvent('onTxFail')}
       />
-      <EventFeedWrapper>
-        <Type.H2>Event Feed</Type.H2>
-        <button onClick={() => setEvents([])} disabled={events.length === 0}>
-          clear
-        </button>
-        <EventData>
-          {events?.map(({ name, data }, i) => (
-            <EventRow key={i}>
-              <div>
-                <Type.H3 padding={0}>
-                  <Message>{name}</Message>
-                </Type.H3>
-                <EventJSON>{JSON.stringify(data, null, 2)}</EventJSON>
-              </div>
-            </EventRow>
-          ))}
-        </EventData>
-      </EventFeedWrapper>
+      <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>
   )
 }
