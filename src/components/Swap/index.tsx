@@ -4,13 +4,14 @@ import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
-import useSyncController, { Controller } from 'hooks/swap/useSyncController'
+import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
+import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import useSyncEventHandlers, { EventHandlers } from 'hooks/useSyncEventHandlers'
+import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
@@ -44,9 +45,11 @@ function getTransactionFromMap(
   return
 }
 
-// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
-// TODO(kristiehuang): refactor WalletConnection outside of Swap component
-export interface SwapProps extends EventHandlers, FeeOptions, TokenDefaults, Controller {
+// SwapProps also currently includes props needed for wallet connection,
+// since the wallet connection component exists within the Swap component.
+// This includes useSyncWidgetEventHandlers.
+// TODO(zzmp): refactor WalletConnection outside of Swap component
+export interface SwapProps extends FeeOptions, TokenDefaults, SwapController, SwapEventHandlers, WidgetEventHandlers {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
@@ -54,10 +57,11 @@ export interface SwapProps extends EventHandlers, FeeOptions, TokenDefaults, Con
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncController(props as Controller)
-  useSyncEventHandlers(props as EventHandlers)
+  useSyncController(props as SwapController)
   useSyncConvenienceFee(props as FeeOptions)
+  useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
+  useSyncWidgetEventHandlers(props as WidgetEventHandlers)
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)

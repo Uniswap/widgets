@@ -6,7 +6,7 @@ import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { useAtomValue } from 'jotai/utils'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Field, onTokenSelectorClickAtom } from 'state/swap'
+import { Field, swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -132,7 +132,7 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
-  const onTokenSelectorClick = useAtomValue(onTokenSelectorClickAtom)
+  const { onTokenSelectorClick } = useAtomValue(swapEventHandlersAtom)
   const onOpen = useCallback(async () => {
     const open = await onTokenSelectorClick?.(field)?.catch(() => false)
     setOpen(open ?? true)
