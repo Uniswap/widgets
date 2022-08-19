@@ -3,7 +3,7 @@ import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSl
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { autoSlippageAtom, maxSlippageAtom } from 'state/settings'
+import { autoSlippageAtom, maxSlippageAtom } from 'state/swap/settings'
 
 export function toPercent(maxSlippage: number | undefined): Percent | undefined {
   if (!maxSlippage) return undefined

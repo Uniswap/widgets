@@ -1,6 +1,6 @@
 import { atomWithReset } from 'jotai/utils'
 
-import { pickAtom, setTogglable } from './atoms'
+import { pickAtom, setTogglable } from '../atoms'
 
 interface Settings {
   autoSlippage: boolean // if true, slippage will use the default calculation

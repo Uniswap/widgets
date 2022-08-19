@@ -3,7 +3,7 @@ import useScrollbar from 'hooks/useScrollbar'
 import { Settings as SettingsIcon } from 'icons'
 import { useResetAtom } from 'jotai/utils'
 import React, { useState } from 'react'
-import { settingsAtom } from 'state/settings'
+import { settingsAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
