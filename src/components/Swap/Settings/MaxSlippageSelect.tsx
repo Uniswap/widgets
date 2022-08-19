@@ -5,7 +5,7 @@ import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
 import { useAtom } from 'jotai'
 import { forwardRef, memo, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
-import { autoSlippageAtom, maxSlippageAtom } from 'state/settings'
+import { autoSlippageAtom, maxSlippageAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 

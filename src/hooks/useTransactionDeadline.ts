@@ -5,7 +5,7 @@ import { DEFAULT_DEADLINE_FROM_NOW, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
-import { transactionTtlAtom } from 'state/settings'
+import { transactionTtlAtom } from 'state/swap/settings'
 
 /** Returns the default transaction TTL for the chain, in minutes. */
 export function useDefaultTransactionTtl(): number {
