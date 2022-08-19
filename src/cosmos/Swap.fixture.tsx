@@ -101,9 +101,16 @@ function Fixture() {
     />
   )
 
-  // If iframed, only display the SwapWidget, without any Chrome.
+  // If iframed, only display the SwapWidget, without any chrome.
   // This is done to faciliate iframing in the documentation (https://docs.uniswap.org).
-  const isIframed = window.location.origin !== window.parent.location.origin
+  let isIframed = false
+  try {
+    // If the origin's differ, this will throw a DOMException due to the cross-origin frame.
+    void window.parent.location.origin
+  } catch {
+    isIframed = true
+  }
+
   return isIframed ? (
     widget
   ) : (
