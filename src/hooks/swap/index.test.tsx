@@ -17,13 +17,6 @@ const INITIAL_SWAP: Swap = {
   [Field.OUTPUT]: USDC_MAINNET,
 }
 
-const INITIAL_CONTROLLED: Controlled = {
-  ...INITIAL_SWAP,
-  onAmountChange: () => void 0,
-  onTokenChange: () => void 0,
-  onSwitchTokens: () => void 0,
-}
-
 describe('swap state', () => {
   describe('useSwitchSwapCurrencies', () => {
     const SWITCHED_SWAP = {
