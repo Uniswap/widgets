@@ -15,11 +15,11 @@ function Fixture() {
   const useHandleEvent = useCallback(
     (name: string) =>
       (...data: unknown[]) =>
-        setEvents((events) => [...events, { name, data }]),
+        setEvents((events) => [{ name, data }, ...events]),
     []
   )
 
-  const tradeType = useOption('tradeType', {
+  const type = useOption('type', {
     nullable: false,
     defaultValue: 'Exact Input',
     options: {
@@ -41,10 +41,15 @@ function Fixture() {
   return (
     <Row align="start" justify="space-around">
       <SwapWidget
-        type={tradeType}
-        amount={amount}
-        inputToken={inputToken}
-        outputToken={outputToken}
+        value={{
+          type,
+          amount,
+          inputToken,
+          outputToken,
+        }}
+        onSettingsReset={useHandleEvent('onSettingsReset')}
+        onSlippageChange={useHandleEvent('onSlippageChange')}
+        onTransactionDeadlineChange={useHandleEvent('onTransactionDeadlineChange')}
         onTokenChange={useHandleEvent('onTokenChange')}
         onAmountChange={useHandleEvent('onAmountChange')}
         onSwitchTokens={useHandleEvent('onSwitchTokens')}
