@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
-import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
+import useSyncController, { SwapController, SwapSettingsController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -49,15 +49,17 @@ function getTransactionFromMap(
 // since the wallet connection component exists within the Swap component.
 // This includes useSyncWidgetEventHandlers.
 // TODO(zzmp): refactor WalletConnection outside of Swap component
-export interface SwapProps extends FeeOptions, TokenDefaults, SwapController, SwapEventHandlers, WidgetEventHandlers {
+export interface SwapProps extends FeeOptions, TokenDefaults, SwapEventHandlers, WidgetEventHandlers {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
+  settings?: SwapSettingsController
+  value?: SwapController
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncController(props as SwapController)
+  useSyncController(props)
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
