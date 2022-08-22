@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
-import { controlledAtom, Field, swapAtom } from 'state/swap'
+import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 export { default as useSwapInfo } from './useSwapInfo'
 
@@ -19,29 +19,26 @@ function otherField(field: Field) {
 }
 
 export function useSwitchSwapCurrencies() {
-  const onSwitchTokens = useAtomValue(controlledAtom)?.onSwitchTokens
+  const { onSwitchTokens } = useAtomValue(swapEventHandlersAtom)
   const setSwap = useUpdateAtom(swapAtom)
   return useCallback(() => {
     setSwap((swap) => {
-      if (onSwitchTokens) {
-        onSwitchTokens({
-          type: swap.independentField === Field.INPUT ? TradeType.EXACT_OUTPUT : TradeType.EXACT_INPUT,
-          amount: swap.amount,
-          inputToken: swap[Field.OUTPUT],
-          outputToken: swap[Field.INPUT],
-        })
-      } else {
-        const oldOutput = swap[Field.OUTPUT]
-        swap[Field.OUTPUT] = swap[Field.INPUT]
-        swap[Field.INPUT] = oldOutput
-        switch (swap.independentField) {
-          case Field.INPUT:
-            swap.independentField = Field.OUTPUT
-            break
-          case Field.OUTPUT:
-            swap.independentField = Field.INPUT
-            break
-        }
+      onSwitchTokens?.({
+        type: swap.independentField === Field.INPUT ? TradeType.EXACT_OUTPUT : TradeType.EXACT_INPUT,
+        amount: swap.amount,
+        inputToken: swap[Field.OUTPUT],
+        outputToken: swap[Field.INPUT],
+      })
+      const oldOutput = swap[Field.OUTPUT]
+      swap[Field.OUTPUT] = swap[Field.INPUT]
+      swap[Field.INPUT] = oldOutput
+      switch (swap.independentField) {
+        case Field.INPUT:
+          swap.independentField = Field.OUTPUT
+          break
+        case Field.OUTPUT:
+          swap.independentField = Field.INPUT
+          break
       }
     })
   }, [onSwitchTokens, setSwap])
@@ -52,7 +49,7 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency:
   const [currency, setCurrency] = useAtom(currencyAtom)
   const otherCurrencyAtom = useMemo(() => pickAtom(swapAtom, otherField(field)), [field])
   const otherCurrency = useAtomValue(otherCurrencyAtom)
-  const onTokenChange = useAtomValue(controlledAtom)?.onTokenChange
+  const { onTokenChange } = useAtomValue(swapEventHandlersAtom)
   const switchSwapCurrencies = useSwitchSwapCurrencies()
   const setOrSwitchCurrency = useCallback(
     (update: Currency) => {
@@ -60,11 +57,8 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency:
       if (update === otherCurrency) {
         switchSwapCurrencies()
       } else {
-        if (onTokenChange) {
-          onTokenChange(field, update)
-        } else {
-          setCurrency(update)
-        }
+        onTokenChange?.(field, update)
+        setCurrency(update)
       }
     },
     [currency, field, onTokenChange, otherCurrency, setCurrency, switchSwapCurrencies]
@@ -91,19 +85,16 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
   const isFieldIndependent = useIsSwapFieldIndependent(field)
   const amount = isFieldIndependent ? value : undefined
 
-  const onAmountChange = useAtomValue(controlledAtom)?.onAmountChange
+  const { onAmountChange } = useAtomValue(swapEventHandlersAtom)
   const setSwap = useUpdateAtom(swapAtom)
   const updateAmount = useCallback(
     (update: string) => {
       if (update === amount) return
-      if (onAmountChange) {
-        onAmountChange(field, update)
-      } else {
-        setSwap((swap) => {
-          swap.independentField = field
-          swap.amount = update
-        })
-      }
+      onAmountChange?.(field, update)
+      setSwap((swap) => {
+        swap.independentField = field
+        swap.amount = update
+      })
     },
     [amount, field, onAmountChange, setSwap]
   )

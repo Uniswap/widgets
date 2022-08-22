@@ -2,7 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
-import { Controlled, controlledAtom, Field, stateAtom, Swap, swapAtom } from 'state/swap'
+import { controlledAtom, Field, stateAtom, Swap, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { renderHook } from 'test'
 
 import { useSwapAmount, useSwapCurrency, useSwitchSwapCurrencies } from './'
@@ -17,23 +17,30 @@ const INITIAL_SWAP: Swap = {
   [Field.OUTPUT]: USDC_MAINNET,
 }
 
-const INITIAL_CONTROLLED: Controlled = {
-  ...INITIAL_SWAP,
-  onAmountChange: () => void 0,
-  onTokenChange: () => void 0,
-  onSwitchTokens: () => void 0,
-}
-
 describe('swap state', () => {
   describe('useSwitchSwapCurrencies', () => {
-    it('swaps swap state currencies', () => {
+    const SWITCHED_SWAP = {
+      amount: INITIAL_SWAP.amount,
+      type: TradeType.EXACT_OUTPUT,
+      inputToken: INITIAL_SWAP[Field.OUTPUT],
+      outputToken: INITIAL_SWAP[Field.INPUT],
+    }
+
+    it('swaps currencies', () => {
+      const spy = jest.fn()
       const { rerender } = renderHook(
         () => {
           const switchSwapCurrencies = useSwitchSwapCurrencies()
           switchSwapCurrencies()
         },
-        { initialAtomValues: [[stateAtom, INITIAL_SWAP]] }
+        {
+          initialAtomValues: [
+            [stateAtom, INITIAL_SWAP],
+            [swapEventHandlersAtom, { onSwitchTokens: spy }],
+          ],
+        }
       )
+      expect(spy).toHaveBeenCalledWith(SWITCHED_SWAP)
 
       const { result } = rerender(() => useAtomValue(swapAtom))
       expect(result.current).toMatchObject({
@@ -44,7 +51,7 @@ describe('swap state', () => {
       })
     })
 
-    it('calls onSwitchTokens if present', () => {
+    it('does not swap if controlled', () => {
       const spy = jest.fn()
       const { rerender } = renderHook(
         () => {
@@ -54,16 +61,12 @@ describe('swap state', () => {
         {
           initialAtomValues: [
             [stateAtom, INITIAL_SWAP],
-            [controlledAtom, { ...INITIAL_CONTROLLED, onSwitchTokens: spy }],
+            [swapEventHandlersAtom, { onSwitchTokens: spy }],
+            [controlledAtom, INITIAL_SWAP],
           ],
         }
       )
-      expect(spy).toHaveBeenCalledWith({
-        amount: INITIAL_SWAP.amount,
-        type: TradeType.EXACT_OUTPUT,
-        inputToken: INITIAL_SWAP[Field.OUTPUT],
-        outputToken: INITIAL_SWAP[Field.INPUT],
-      })
+      expect(spy).toHaveBeenCalledWith(SWITCHED_SWAP)
 
       const { result } = rerender(() => useAtomValue(swapAtom))
       expect(result.current).toMatchObject(INITIAL_SWAP)
@@ -72,19 +75,6 @@ describe('swap state', () => {
 
   describe('useSwapCurrency', () => {
     it('sets currency', () => {
-      const { rerender } = renderHook(
-        () => {
-          const [, setCurrency] = useSwapCurrency(Field.INPUT)
-          setCurrency(UNI_MAINNET)
-        },
-        { initialAtomValues: [[stateAtom, INITIAL_SWAP]] }
-      )
-
-      const { result } = rerender(() => useAtomValue(swapAtom))
-      expect(result.current).toMatchObject({ ...INITIAL_SWAP, [Field.INPUT]: UNI_MAINNET })
-    })
-
-    it('calls onTokenChange if present', () => {
       const spy = jest.fn()
       const { rerender } = renderHook(
         () => {
@@ -94,7 +84,28 @@ describe('swap state', () => {
         {
           initialAtomValues: [
             [stateAtom, INITIAL_SWAP],
-            [controlledAtom, { ...INITIAL_CONTROLLED, onTokenChange: spy }],
+            [swapEventHandlersAtom, { onTokenChange: spy }],
+          ],
+        }
+      )
+      expect(spy).toHaveBeenCalledWith(Field.INPUT, UNI_MAINNET)
+
+      const { result } = rerender(() => useAtomValue(swapAtom))
+      expect(result.current).toMatchObject({ ...INITIAL_SWAP, [Field.INPUT]: UNI_MAINNET })
+    })
+
+    it('does not set currency if controlled', () => {
+      const spy = jest.fn()
+      const { rerender } = renderHook(
+        () => {
+          const [, setCurrency] = useSwapCurrency(Field.INPUT)
+          setCurrency(UNI_MAINNET)
+        },
+        {
+          initialAtomValues: [
+            [stateAtom, INITIAL_SWAP],
+            [swapEventHandlersAtom, { onTokenChange: spy }],
+            [controlledAtom, INITIAL_SWAP],
           ],
         }
       )
@@ -107,13 +118,20 @@ describe('swap state', () => {
 
   describe('useSwapAmount', () => {
     it('sets currency amount', () => {
+      const spy = jest.fn()
       const { rerender } = renderHook(
         () => {
           const [, setAmount] = useSwapAmount(Field.OUTPUT)
           setAmount('123')
         },
-        { initialAtomValues: [[stateAtom, INITIAL_SWAP]] }
+        {
+          initialAtomValues: [
+            [stateAtom, INITIAL_SWAP],
+            [swapEventHandlersAtom, { onAmountChange: spy }],
+          ],
+        }
       )
+      expect(spy).toHaveBeenCalledWith(Field.OUTPUT, '123')
 
       const { result } = rerender(() => useAtomValue(swapAtom))
       expect(result.current).toMatchObject({ ...INITIAL_SWAP, amount: '123', independentField: Field.OUTPUT })
@@ -129,7 +147,8 @@ describe('swap state', () => {
         {
           initialAtomValues: [
             [stateAtom, INITIAL_SWAP],
-            [controlledAtom, { ...INITIAL_CONTROLLED, onAmountChange: spy }],
+            [swapEventHandlersAtom, { onAmountChange: spy }],
+            [controlledAtom, INITIAL_SWAP],
           ],
         }
       )

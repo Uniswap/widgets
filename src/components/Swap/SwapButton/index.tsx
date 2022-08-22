@@ -11,7 +11,7 @@ import { Spinner } from 'icons'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
-import { displayTxHashAtom, feeOptionsAtom, Field, onReviewSwapClickAtom } from 'state/swap'
+import { displayTxHashAtom, feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
 import { TransactionType } from 'state/transactions'
 import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
@@ -150,7 +150,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
   )
-  const onReviewSwapClick = useAtomValue(onReviewSwapClickAtom)
+  const { onReviewSwapClick } = useAtomValue(swapEventHandlersAtom)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
