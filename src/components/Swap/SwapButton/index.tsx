@@ -96,7 +96,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       }
     } catch (e) {
       // TODO(zzmp): Surface errors from wrap.
-      console.log(e)
+      console.error(e)
     } finally {
       setIsPending(false)
     }
@@ -137,7 +137,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       }
     } catch (e) {
       // TODO(zzmp): Surface errors from swap.
-      console.log(e)
+      console.error(e)
     }
   }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade])
 

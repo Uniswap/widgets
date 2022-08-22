@@ -1,6 +1,8 @@
+import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
-import { disableBrandingAtom } from 'state/widget'
+
+export const disableBrandingAtom = atom<boolean>(false)
 
 export interface BrandingSetting {
   disableBranding?: boolean

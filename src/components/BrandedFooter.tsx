@@ -29,10 +29,6 @@ const UniswapA = styled(ExternalLink)`
 `
 
 export default memo(function BrandedFooter() {
-  const disableBranding = useAtomValue(disableBrandingAtom)
-  if (disableBranding) {
-    return null
-  }
   return (
     <Row justify="center">
       <UniswapA href={`https://uniswap.org/`}>
