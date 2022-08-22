@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
 import useScrollbar from 'hooks/useScrollbar'
 import { Settings as SettingsIcon } from 'icons'
-import { useResetAtom } from 'jotai/utils'
-import React, { useState } from 'react'
-import { settingsAtom } from 'state/settings'
+import { useAtomValue, useResetAtom } from 'jotai/utils'
+import React, { useCallback, useState } from 'react'
+import { swapEventHandlersAtom } from 'state/swap'
+import { settingsAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -17,7 +18,12 @@ import TransactionTtlInput from './TransactionTtlInput'
 export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(boundary, { padded: true })
-  const resetSettings = useResetAtom(settingsAtom)
+  const { onSettingsReset } = useAtomValue(swapEventHandlersAtom)
+  const resetSettingsBase = useResetAtom(settingsAtom)
+  const resetSettings = useCallback(() => {
+    onSettingsReset?.()
+    resetSettingsBase()
+  }, [onSettingsReset, resetSettingsBase])
   return (
     <>
       <Header title={<Trans>Settings</Trans>} ruled>

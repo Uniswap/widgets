@@ -4,8 +4,10 @@ import { useTooltip } from 'components/Tooltip'
 import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
 import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { forwardRef, memo, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
-import { autoSlippageAtom, maxSlippageAtom } from 'state/settings'
+import { swapEventHandlersAtom } from 'state/swap'
+import { slippageAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -79,9 +81,17 @@ const Warning = memo(function Warning({ state, showTooltip }: { state?: 'warning
 })
 
 export default function MaxSlippageSelect() {
-  const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
-  const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
-  const [maxSlippageInput, setMaxSlippageInput] = useState(maxSlippage?.toString() || '')
+  const { onSlippageChange } = useAtomValue(swapEventHandlersAtom)
+  const [slippage, setSlippageBase] = useAtom(slippageAtom)
+  const setSlippage = useCallback(
+    (update: typeof slippage) => {
+      onSlippageChange?.(update)
+      setSlippageBase(update)
+    },
+    [onSlippageChange, setSlippageBase]
+  )
+  const setAutoSlippage = useCallback(() => setSlippage({ ...slippage, auto: true }), [setSlippage, slippage])
+  const [maxSlippageInput, setMaxSlippageInput] = useState(slippage.max?.toString() || '')
 
   const option = useRef<HTMLButtonElement>(null)
   const showTooltip = useTooltip(option.current)
@@ -89,29 +99,30 @@ export default function MaxSlippageSelect() {
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
 
-  const [warning, setWarning] = useState<'warning' | 'error' | undefined>(getSlippageWarning(toPercent(maxSlippage)))
+  const [warning, setWarning] = useState<'warning' | 'error' | undefined>(getSlippageWarning(toPercent(slippage.max)))
   useEffect(() => {
-    setMaxSlippageInput(maxSlippage?.toString() || '')
-    setWarning(getSlippageWarning(toPercent(maxSlippage)))
-  }, [maxSlippage])
+    setMaxSlippageInput(slippage.max?.toString() || '')
+    setWarning(getSlippageWarning(toPercent(slippage.max)))
+  }, [slippage.max])
 
   const onInputSelect = useCallback(() => {
     focus()
-    const percent = toPercent(maxSlippage)
+    const percent = toPercent(slippage.max)
     const warning = getSlippageWarning(percent)
-    setAutoSlippage(!percent || warning === 'error')
-  }, [focus, maxSlippage, setAutoSlippage])
+    const auto = !percent || warning === 'error'
+    setSlippage({ ...slippage, auto })
+  }, [focus, slippage, setSlippage])
 
   const processInput = useCallback(
     (input: string | undefined) => {
       setMaxSlippageInput(input || '')
-      const value = input ? +input : undefined
-      const percent = toPercent(value)
+      const max = input ? +input : undefined
+      const percent = toPercent(max)
       const warning = getSlippageWarning(percent)
-      setMaxSlippage(value)
-      setAutoSlippage(!percent || warning === 'error')
+      const auto = !percent || warning === 'error'
+      setSlippage({ auto, max })
     },
-    [setAutoSlippage, setMaxSlippage]
+    [setSlippage]
   )
 
   return (
@@ -123,14 +134,14 @@ export default function MaxSlippageSelect() {
         }
       />
       <Row gap={0.5} grow="last">
-        <Option wrapper={Button} selected={autoSlippage} onSelect={() => setAutoSlippage(true)} data-testid="auto">
+        <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto">
           <ThemedText.ButtonMedium>
             <Trans>Auto</Trans>
           </ThemedText.ButtonMedium>
         </Option>
         <Option
           wrapper={Custom}
-          selected={!autoSlippage}
+          selected={!slippage.auto}
           onSelect={onInputSelect}
           icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
           ref={option}
