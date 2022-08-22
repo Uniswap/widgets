@@ -97,6 +97,7 @@ export interface WidgetProps {
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLDivElement | null
+  disableBranding?: boolean
   className?: string
   onError?: ErrorHandler
   onTxSubmit?: (txHash: string, data: any) => void

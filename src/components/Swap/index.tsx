@@ -11,6 +11,7 @@ import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefa
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
+import useSyncBrandingSetting, { BrandingSetting } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
@@ -62,6 +63,7 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
+  useSyncBrandingSetting(props as BrandingSetting)
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)

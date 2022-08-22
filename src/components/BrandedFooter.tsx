@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { Logo } from 'icons'
+import { useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
+import { disableBrandingAtom } from 'state/widget'
 import styled from 'styled-components/macro'
 import { brand, ThemedText } from 'theme'
 
@@ -27,6 +29,10 @@ const UniswapA = styled(ExternalLink)`
 `
 
 export default memo(function BrandedFooter() {
+  const disableBranding = useAtomValue(disableBrandingAtom)
+  if (disableBranding) {
+    return null
+  }
   return (
     <Row justify="center">
       <UniswapA href={`https://uniswap.org/`}>
