@@ -5,7 +5,7 @@
 import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
-import { Field, onTokenSelectorClickAtom } from '../../state/swap'
+import { Field, swapEventHandlersAtom } from '../../state/swap'
 import { renderWidget, userEvent } from '../../test'
 import TokenSelect from './'
 
@@ -18,7 +18,7 @@ describe('TokenSelect.tsx', () => {
       const component = renderWidget(
         <TokenSelect field={Field.INPUT} value={undefined} collapsed disabled={false} onSelect={jest.fn()} />,
         {
-          initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
+          initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
       )
 
@@ -33,7 +33,7 @@ describe('TokenSelect.tsx', () => {
       const component = renderWidget(
         <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
         {
-          initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
+          initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
       )
 
@@ -48,7 +48,7 @@ describe('TokenSelect.tsx', () => {
       const component = renderWidget(
         <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
         {
-          initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
+          initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
       )
 
@@ -63,7 +63,7 @@ describe('TokenSelect.tsx', () => {
       const component = renderWidget(
         <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
         {
-          initialAtomValues: [[onTokenSelectorClickAtom, onTokenSelectorClick]],
+          initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
       )
 

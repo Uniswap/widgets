@@ -4,15 +4,17 @@ import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
+import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
+import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
+import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
-import { displayTxHashAtom, Field } from 'state/swap'
+import { displayTxHashAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
@@ -43,22 +45,23 @@ function getTransactionFromMap(
   return
 }
 
-// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
-// TODO(kristiehuang): refactor WalletConnection outside of Swap component
-export interface SwapProps extends TokenDefaults, FeeOptions {
+// SwapProps also currently includes props needed for wallet connection,
+// since the wallet connection component exists within the Swap component.
+// This includes useSyncWidgetEventHandlers.
+// TODO(zzmp): refactor WalletConnection outside of Swap component
+export interface SwapProps extends FeeOptions, TokenDefaults, SwapController, SwapEventHandlers, WidgetEventHandlers {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onConnectWalletClick?: () => void | Promise<boolean>
-  onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncConvenienceFee(props)
-  useSyncTokenDefaults(props)
-  useSyncEventHandlers(props)
+  useSyncController(props as SwapController)
+  useSyncConvenienceFee(props as FeeOptions)
+  useSyncSwapEventHandlers(props as SwapEventHandlers)
+  useSyncTokenDefaults(props as TokenDefaults)
+  useSyncWidgetEventHandlers(props as WidgetEventHandlers)
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
