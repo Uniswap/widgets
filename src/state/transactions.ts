@@ -19,7 +19,6 @@ export interface ApprovalTransactionInfo extends BaseTransactionInfo {
   spenderAddress: string
 }
 
-// TODO(zzmp): Trade
 export interface SwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType

@@ -90,6 +90,7 @@ export default function MaxSlippageSelect() {
     },
     [onSlippageChange, setSlippageBase]
   )
+  const setAutoSlippage = useCallback(() => setSlippage({ ...slippage, auto: true }), [setSlippage, slippage])
   const [maxSlippageInput, setMaxSlippageInput] = useState(slippage.max?.toString() || '')
 
   const option = useRef<HTMLButtonElement>(null)
@@ -133,12 +134,7 @@ export default function MaxSlippageSelect() {
         }
       />
       <Row gap={0.5} grow="last">
-        <Option
-          wrapper={Button}
-          selected={slippage.auto}
-          onSelect={() => setSlippage({ ...slippage, auto: true })}
-          data-testid="auto"
-        >
+        <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto">
           <ThemedText.ButtonMedium>
             <Trans>Auto</Trans>
           </ThemedText.ButtonMedium>
