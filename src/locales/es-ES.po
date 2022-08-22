@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-22 21:06\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -178,10 +178,6 @@ msgstr "Mínimo recibido"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dependencias faltantes"
-
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Cambio simulado"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
