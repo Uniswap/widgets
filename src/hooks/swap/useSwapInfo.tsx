@@ -3,11 +3,12 @@ import { useWeb3React } from '@web3-react/core'
 import { INVALID_TRADE, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import useUSDCPriceImpact, { PriceImpact } from 'hooks/useUSDCPriceImpact'
+import useUSDCPriceImpact, { PriceImpact, toHumanReadablePercent } from 'hooks/useUSDCPriceImpact'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
+import { computeRealizedPriceImpact, getPriceImpactWarning, largerPercentValue } from 'utils/prices'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 import useWrapCallback, { WrapType } from './useWrapCallback'
@@ -64,10 +65,27 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
   )
 
-  // Compute slippage and impact off of the trade so that it refreshes with the trade.
-  // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
-  const { inputUSDC, outputUSDC, impact } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
+  const {
+    inputUSDC,
+    outputUSDC,
+    impact: stablecoinPriceImpact,
+  } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
+
+  const impact: PriceImpact | undefined = useMemo(() => {
+    const marketPriceImpact = trade.trade ? computeRealizedPriceImpact(trade.trade) : undefined
+    if (!stablecoinPriceImpact && !marketPriceImpact) {
+      return undefined
+    }
+    const percent = largerPercentValue(marketPriceImpact, stablecoinPriceImpact?.percent)
+    return percent
+      ? {
+          percent,
+          warning: getPriceImpactWarning(percent),
+          toString: () => toHumanReadablePercent(percent),
+        }
+      : undefined
+  }, [stablecoinPriceImpact, trade])
 
   return useMemo(
     () => ({

@@ -30,14 +30,14 @@ export default function useUSDCPriceImpact(
       ? {
           percent: priceImpact,
           warning: getPriceImpactWarning(priceImpact),
-          toString: () => toHumanReadablePriceImpact(priceImpact),
+          toString: () => toHumanReadablePercent(priceImpact),
         }
       : undefined
     return { inputUSDC, outputUSDC, impact }
   }, [inputUSDC, outputUSDC])
 }
 
-function toHumanReadablePriceImpact(priceImpact: Percent): string {
+export function toHumanReadablePercent(priceImpact: Percent): string {
   const sign = priceImpact.lessThan(0) ? '+' : ''
   const number = parseFloat(priceImpact.multiply(-1)?.toSignificant(3))
   return `${sign}${number}%`
