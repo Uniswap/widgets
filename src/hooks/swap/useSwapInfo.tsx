@@ -11,7 +11,7 @@ import { Field, swapAtom } from 'state/swap'
 import { computeRealizedPriceImpact, getPriceImpactWarning, largerPercentValue } from 'utils/prices'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import useWrapCallback, { WrapType } from './useWrapCallback'
+import { useIsWrap } from './useWrapCallback'
 
 interface SwapField {
   currency?: Currency
@@ -33,8 +33,7 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const { type: wrapType } = useWrapCallback()
-  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
+  const isWrap = useIsWrap()
   const { independentField, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isExactIn = independentField === Field.INPUT
 
@@ -42,7 +41,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     () => tryParseCurrencyAmount(amount, (isExactIn ? currencyIn : currencyOut) ?? undefined),
     [amount, isExactIn, currencyIn, currencyOut]
   )
-  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
+  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrap
   const trade = useRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     routerUrl,
@@ -51,12 +50,12 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   )
 
   const amountIn = useMemo(
-    () => (isWrapping || isExactIn ? parsedAmount : trade.trade?.inputAmount),
-    [isExactIn, isWrapping, parsedAmount, trade.trade?.inputAmount]
+    () => (isWrap || isExactIn ? parsedAmount : trade.trade?.inputAmount),
+    [isExactIn, isWrap, parsedAmount, trade.trade?.inputAmount]
   )
   const amountOut = useMemo(
-    () => (isWrapping || !isExactIn ? parsedAmount : trade.trade?.outputAmount),
-    [isExactIn, isWrapping, parsedAmount, trade.trade?.outputAmount]
+    () => (isWrap || !isExactIn ? parsedAmount : trade.trade?.outputAmount),
+    [isExactIn, isWrap, parsedAmount, trade.trade?.outputAmount]
   )
 
   const { account } = useWeb3React()

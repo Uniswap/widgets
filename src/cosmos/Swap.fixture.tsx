@@ -24,7 +24,7 @@ function Fixture() {
   const useHandleEvent = useCallback(
     (name: string) =>
       (...data: unknown[]) =>
-        setEvents((events) => [...events, { name, data }]),
+        setEvents((events) => [{ name, data }, ...events]),
     []
   )
 

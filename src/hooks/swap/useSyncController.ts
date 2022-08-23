@@ -1,41 +1,50 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useUpdateAtom } from 'jotai/utils'
-import { useEffect, useMemo, useRef } from 'react'
-import { controlledAtom, Field, Swap, SwapController } from 'state/swap'
+import { useEffect, useRef } from 'react'
+import { controlledAtom as swapAtom, Field, Swap, SwapController } from 'state/swap'
+import { controlledAtom as settingsAtom, Settings } from 'state/swap/settings'
 export type { SwapController } from 'state/swap'
 
-export default function useSyncController({ type, amount, inputToken, outputToken }: SwapController): void {
-  const controlled = useMemo<Swap | undefined>(() => {
-    if ([type, amount, inputToken, outputToken].every((prop) => prop === undefined)) {
-      // Component is uncontrolled
-      return undefined
-    }
+export type SwapSettingsController = Settings
 
-    // Component is controlled
-    return {
-      independentField: type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT,
-      amount: amount || '',
-      [Field.INPUT]: inputToken,
-      [Field.OUTPUT]: outputToken,
-    }
-  }, [amount, inputToken, outputToken, type])
-
+export default function useSyncController({
+  value,
+  settings,
+}: {
+  value?: SwapController
+  settings?: SwapSettingsController
+}): void {
   // Log an error if the component changes from uncontrolled to controlled (or vice versa).
-  const isControlled = useRef(Boolean(controlled))
+  const isSwapControlled = useRef(Boolean(value))
+  const isSettingsControlled = useRef(Boolean(settings))
   useEffect(() => {
-    if (Boolean(controlled) !== isControlled.current) {
-      const article = (isControlled: boolean) => (isControlled ? 'a ' : 'an un')
-      console.error(
-        `Warning: The SwapWidget component is changing from ${article(
-          isControlled.current
-        )}controlled component to ${article(
-          Boolean(controlled)
-        )}controlled component. The SwapWidget should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled SwapWidget for the lifetime of the component.`
-      )
+    if (Boolean(value) !== isSwapControlled.current) {
+      warnOnControlChange({ state: 'swap', prop: 'value' })
     }
-    isControlled.current = Boolean(controlled)
-  }, [controlled])
+    if (Boolean(settings) !== isSettingsControlled.current) {
+      warnOnControlChange({ state: 'settings', prop: 'settings' })
+    }
+  }, [settings, value])
 
-  const setControlled = useUpdateAtom(controlledAtom)
-  useEffect(() => setControlled((old) => (old = controlled)), [controlled, setControlled])
+  const setSwap = useUpdateAtom(swapAtom)
+  useEffect(() => setSwap(toSwap(value)), [value, setSwap])
+  const setSettings = useUpdateAtom(settingsAtom)
+  useEffect(() => setSettings(settings), [settings, setSettings])
+}
+
+function toSwap(value?: SwapController): Swap | undefined {
+  if (!value) return undefined
+
+  return {
+    independentField: value.type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT,
+    amount: value.amount || '',
+    [Field.INPUT]: value.inputToken,
+    [Field.OUTPUT]: value.outputToken,
+  }
+}
+
+function warnOnControlChange({ state, prop }: { state: string; prop: string }) {
+  console.error(
+    `Warning: The SwapWidget component's ${state} state (controlled by the '${prop}' prop) is changing from uncontrolled to controlled (or vice versa). This should not happen. Decide between using a controlled or uncontrolled state for the lifetime of the component.`
+  )
 }
