@@ -1,3 +1,4 @@
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -60,13 +61,13 @@ export function usePendingApproval(token?: Token, spender?: string): string | un
   )?.info.response.hash
 }
 
-interface TransactionsUpdaterProps {
-  onTxSubmit?: (txHash: string, data: any) => void
-  onTxSuccess?: (txHash: string, data: any) => void
-  onTxFail?: (error: Error, data: any) => void
+export interface TransactionEventHandlers {
+  onTxSubmit?: (txHash: string, tx: Transaction) => void
+  onTxSuccess?: (txHash: string, receipt: TransactionReceipt) => void
+  onTxFail?: (error: Error, receipt: TransactionReceipt) => void
 }
 
-export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionsUpdaterProps) {
+export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionEventHandlers) {
   const currentPendingTxs = usePendingTransactions()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
@@ -84,17 +85,17 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
   )
   const onReceipt = useCallback(
     ({ chainId, hash, receipt }) => {
-      if (receipt?.status === 0) {
-        onTxFail?.(new Error('Transaction failed'), receipt)
-      } else {
-        onTxSuccess?.(receipt.transactionHash, receipt)
-      }
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
           tx.receipt = receipt
         }
       })
+      if (receipt?.status === 0) {
+        onTxFail?.(new Error('Transaction failed'), receipt)
+      } else {
+        onTxSuccess?.(receipt.transactionHash, receipt)
+      }
     },
     [updateTxs, onTxFail, onTxSuccess]
   )
