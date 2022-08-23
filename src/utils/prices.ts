@@ -18,12 +18,8 @@ const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 export function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
     return a.greaterThan(b) ? a : b
-  } else if (a) {
-    return a
-  } else if (b) {
-    return b
   }
-  return undefined
+  return a || b
 }
 
 export function computeRealizedPriceImpact(trade: Trade<Currency, Currency, TradeType>): Percent {
