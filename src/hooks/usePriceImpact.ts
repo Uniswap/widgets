@@ -31,7 +31,7 @@ export function usePriceImpact(
           toString: () => toHumanReadablePercent(percent),
         }
       : undefined
-  }, [trade])
+  }, [inputUSDCValue, outputUSDCValue, trade])
 }
 
 export function toHumanReadablePercent(priceImpact: Percent): string {

@@ -64,6 +64,8 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
   )
 
+  // Compute slippage and impact off of the trade so that it refreshes with the trade.
+  // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
   const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
   const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
