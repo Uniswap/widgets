@@ -58,6 +58,10 @@ const HeaderRow = styled(Row)`
   margin: 0 0.75em 0.75em;
   padding-top: 0.5em;
   ${largeIconCss}
+
+  button {
+    height: ${({ iconSize }) => iconSize}em;
+  }
 `
 
 interface HeaderProps {

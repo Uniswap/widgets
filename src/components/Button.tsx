@@ -56,7 +56,7 @@ export const TextButton = transparentButton('accent')
 const SecondaryButton = transparentButton('secondary')
 
 const StyledIconButton = styled(SecondaryButton)`
-  transform: translateY(1.75px);
+  height: 1em;
 `
 
 interface IconButtonProps {
