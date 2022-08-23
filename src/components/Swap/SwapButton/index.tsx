@@ -50,7 +50,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
   const deadline = useTransactionDeadline()
 
-  const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+  const { type: wrapType, callback: wrapCallback, isWrap } = useWrapCallback()
   const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
@@ -76,9 +76,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const onWrap = useCallback(async () => {
     setIsPending(true)
     try {
-      const transaction = await wrapCallback?.()
+      const transaction = await wrapCallback()
       if (!transaction) return
-      invariant(wrapType)
+      invariant(wrapType !== undefined)
       addTransaction({
         response: transaction,
         type: wrapType,
@@ -145,17 +145,22 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const disableSwap = useMemo(
     () =>
       disabled ||
+      isWrap ||
       !chainId ||
-      !(wrapType || optimizedTrade) ||
+      !optimizedTrade ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
+    [disabled, isWrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
   )
   const { onReviewSwapClick } = useAtomValue(swapEventHandlersAtom)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
-    } else if (!wrapType) {
+    } else if (isWrap) {
+      return isPending
+        ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
+        : { onClick: onWrap }
+    } else {
       return approvalAction
         ? { action: approvalAction }
         : trade.state === TradeState.VALID
@@ -166,19 +171,15 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
             },
           }
         : { disabled: true }
-    } else {
-      return isPending
-        ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
-        : { onClick: onWrap }
     }
-  }, [approvalAction, disableSwap, onReviewSwapClick, isPending, onWrap, trade.state, wrapType])
+  }, [disableSwap, isWrap, isPending, onWrap, approvalAction, trade.state, onReviewSwapClick])
   const Label = useCallback(() => {
     switch (wrapType) {
       case TransactionType.WRAP:
         return <Trans>Wrap {inputCurrency?.symbol}</Trans>
       case TransactionType.UNWRAP:
         return <Trans>Unwrap {inputCurrency?.symbol}</Trans>
-      default:
+      case undefined:
         return <Trans>Review swap</Trans>
     }
   }, [inputCurrency?.symbol, wrapType])

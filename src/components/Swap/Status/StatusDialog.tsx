@@ -7,13 +7,7 @@ import useInterval from 'hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'icons'
 import ms from 'ms.macro'
 import { useCallback, useMemo, useState } from 'react'
-import {
-  SwapTransactionInfo,
-  Transaction,
-  TransactionType,
-  UnwrapTransactionInfo,
-  WrapTransactionInfo,
-} from 'state/transactions'
+import { Transaction, TransactionType } from 'state/transactions'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
@@ -26,9 +20,7 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-type PendingTransaction = Transaction<SwapTransactionInfo | WrapTransactionInfo | UnwrapTransactionInfo>
-
-function ElapsedTime({ tx }: { tx: PendingTransaction }) {
+function ElapsedTime({ tx }: { tx: Transaction }) {
   const [elapsedMs, setElapsedMs] = useState(0)
 
   useInterval(() => setElapsedMs(Date.now() - tx.addedTime), tx.receipt ? null : ms`1s`)
@@ -56,7 +48,7 @@ function ElapsedTime({ tx }: { tx: PendingTransaction }) {
 }
 
 interface TransactionStatusProps {
-  tx: PendingTransaction
+  tx: Transaction
   onClose: () => void
 }
 
