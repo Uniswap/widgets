@@ -24,7 +24,6 @@ const Button = styled(TextButton)<{ selected: boolean }>`
 const Custom = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
-  padding: calc(0.75em - 3px) 0.625em;
 `
 
 interface OptionProps {
