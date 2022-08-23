@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { Logo } from 'icons'
-import { useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
-import { disableBrandingAtom } from 'state/widget'
 import styled from 'styled-components/macro'
 import { brand, ThemedText } from 'theme'
 
