@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 21:06\n"
+"PO-Revision-Date: 2022-08-23 18:05\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -349,9 +349,11 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "Nie-ondersteunde netwerk - skakel oor na 'n ander om handel te dryf"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "Ontwikkel bevestig"
 
+#: src/components/Swap/Status/StatusDialog.tsx
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Ontwikkel hangende"
@@ -363,14 +365,6 @@ msgstr "Ontwikkel {0}"
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Uitsig op Etherscan"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Wrap bevestig"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Wikkel hangende"
 
 #: src/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"

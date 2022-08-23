@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 21:06\n"
+"PO-Revision-Date: 2022-08-23 18:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -349,9 +349,11 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "شبكة غير مدعومة - قم بالتبديل إلى شبكة أخرى للتداول"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "أكد Unwrap"
 
+#: src/components/Swap/Status/StatusDialog.tsx
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "فك التفاف معلق"
@@ -363,14 +365,6 @@ msgstr "فك {0}"
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "عرض على Etherscan"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "أكد التفاف"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "التفاف معلق"
 
 #: src/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"

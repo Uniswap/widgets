@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 21:06\n"
+"PO-Revision-Date: 2022-08-23 18:05\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -349,9 +349,11 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "Xarxa no compatible: canvieu a una altra per operar"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "Desembolcall confirmat"
 
+#: src/components/Swap/Status/StatusDialog.tsx
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Desembolcall pendent"
@@ -363,14 +365,6 @@ msgstr "Desembolica {0}"
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Veure a Etherscan"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Embolcall confirmat"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Embolcall pendent"
 
 #: src/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"

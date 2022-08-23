@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 21:06\n"
+"PO-Revision-Date: 2022-08-23 18:05\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -349,9 +349,11 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "Nicht unterstütztes Netzwerk - Wechseln Sie zu einem anderen, um zu handeln"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "Auspacken bestätigt"
 
+#: src/components/Swap/Status/StatusDialog.tsx
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Auspacken steht an"
@@ -363,14 +365,6 @@ msgstr "{0}auspacken"
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Auf Etherscan ansehen"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Wrap bestätigt"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Umbruch ausstehend"
 
 #: src/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
