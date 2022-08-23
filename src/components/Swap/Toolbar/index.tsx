@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
-import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
+import useWrapCallback from 'hooks/swap/useWrapCallback'
 import { largeIconCss } from 'icons'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -45,7 +45,7 @@ export default memo(function Toolbar() {
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
-      if (wrapType !== WrapType.NONE) {
+      if (wrapType) {
         return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {

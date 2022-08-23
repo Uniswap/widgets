@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
-import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
+import useWrapCallback from 'hooks/swap/useWrapCallback'
 import { useAddTransaction } from 'hooks/transactions'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
+import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { Spinner } from 'icons'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -70,17 +72,17 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const setOldestValidBlock = useSetOldestValidBlock()
 
   const [isPending, setIsPending] = useState(false)
+  const native = useNativeCurrency()
   const onWrap = useCallback(async () => {
     setIsPending(true)
     try {
       const transaction = await wrapCallback?.()
       if (!transaction) return
+      invariant(wrapType)
       addTransaction({
         response: transaction,
-        type: TransactionType.WRAP,
-        unwrapped: wrapType === WrapType.UNWRAP,
-        currencyAmountRaw: transaction.value?.toString() ?? '0',
-        chainId,
+        type: wrapType,
+        amount: CurrencyAmount.fromRawAmount(native, transaction.value?.toString() ?? '0'),
       })
       setDisplayTxHash(transaction.hash)
       // Only reset pending after any queued animations to avoid layout thrashing, because a
@@ -100,7 +102,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     } finally {
       setIsPending(false)
     }
-  }, [addTransaction, chainId, setDisplayTxHash, wrapCallback, wrapType])
+  }, [addTransaction, native, setDisplayTxHash, wrapCallback, wrapType])
   // Reset the pending state if user updates the swap.
   useEffect(() => setIsPending(false), [inputCurrencyAmount, trade])
 
@@ -110,11 +112,10 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       if (!transaction) return
       invariant(trade.trade)
       addTransaction({
-        response: transaction,
         type: TransactionType.SWAP,
+        response: transaction,
         tradeType: trade.trade.tradeType,
-        inputCurrencyAmount: trade.trade.inputAmount,
-        outputCurrencyAmount: trade.trade.outputAmount,
+        trade: trade.trade,
       })
       setDisplayTxHash(transaction.hash)
 
@@ -145,7 +146,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     () =>
       disabled ||
       !chainId ||
-      (wrapType === WrapType.NONE && !optimizedTrade) ||
+      !(wrapType || optimizedTrade) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
@@ -154,7 +155,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
-    } else if (wrapType === WrapType.NONE) {
+    } else if (!wrapType) {
       return approvalAction
         ? { action: approvalAction }
         : trade.state === TradeState.VALID
@@ -173,11 +174,10 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   }, [approvalAction, disableSwap, onReviewSwapClick, isPending, onWrap, trade.state, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
-      case WrapType.UNWRAP:
-        return <Trans>Unwrap {inputCurrency?.symbol}</Trans>
-      case WrapType.WRAP:
+      case TransactionType.WRAP:
         return <Trans>Wrap {inputCurrency?.symbol}</Trans>
-      case WrapType.NONE:
+      case TransactionType.UNWRAP:
+        return <Trans>Unwrap {inputCurrency?.symbol}</Trans>
       default:
         return <Trans>Review swap</Trans>
     }
