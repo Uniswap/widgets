@@ -45,7 +45,7 @@ const actionCss = css`
   ${StyledButton} {
     border-radius: ${({ theme }) => theme.borderRadius}em;
     flex-grow: 0;
-    padding: 1em;
+    padding: 0 1em;
   }
 `
 
