@@ -53,17 +53,17 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-const slideIn = keyframes`
+const slideInLeft = keyframes`
   from {
     transform: translateX(calc(100% - 0.25em));
   }
 `
-const slideBack = keyframes`
+const slideOutLeft = keyframes`
   to {
     transform: translateX(calc(0.25em - 100%));
   }
 `
-const slideOut = keyframes`
+const slideOutRight = keyframes`
   to {
     transform: translateX(calc(100% - 0.25em));
   }
@@ -84,13 +84,13 @@ export const DialogWrapper = styled.div`
   }
 
   ${Modal} {
-    animation: ${slideIn} 0.25s ease-in;
+    animation: ${slideInLeft} 0.25s ease-in;
 
     &.${Animation.PAGING} {
-      animation: ${slideBack} 0.25s ease-in;
+      animation: ${slideOutLeft} 0.25s ease-in;
     }
     &.${Animation.CLOSING} {
-      animation: ${slideOut} 0.25s ease-out;
+      animation: ${slideOutRight} 0.25s ease-out;
     }
   }
 `
