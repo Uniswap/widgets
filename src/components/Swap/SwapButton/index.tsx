@@ -72,30 +72,33 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const [, setSwapAmount] = useSwapAmount(Field.INPUT)
   const resetSwapAmount = useCallback(() => setSwapAmount(''), [setSwapAmount])
 
+  // Submits a transaction. Returns true if the transaction was submitted.
   const onSubmit = useCallback(
-    async (submit: () => Promise<TransactionInfo | undefined>): Promise<void> => {
+    async (submit: () => Promise<TransactionInfo | undefined>): Promise<boolean> => {
+      let info: TransactionInfo | undefined
       try {
-        const info = await submit()
-        if (!info) return
-
-        resetSwapAmount()
-        addTransactionInfo(info)
-        setDisplayTxHash(info.response.hash)
-
-        if (isAnimating(document)) {
-          // Only return after any queued animations to avoid layout thrashing, because a successful
-          // submit will open the status dialog and immediately cover the animating button.
-          return new Promise((resolve) => {
-            const onAnimationEnd = () => {
-              document.removeEventListener('animationend', onAnimationEnd)
-              resolve()
-            }
-            document.addEventListener('animationend', onAnimationEnd)
-          })
-        }
+        info = await submit()
       } catch (e) {
         console.error('Failed to submit', e)
       }
+      if (!info) return false
+
+      resetSwapAmount()
+      addTransactionInfo(info)
+      setDisplayTxHash(info.response.hash)
+
+      if (isAnimating(document)) {
+        // Only return after any queued animations to avoid layout thrashing, because a successful
+        // submit will open the status dialog and immediately cover the animating button.
+        return new Promise((resolve) => {
+          const onAnimationEnd = () => {
+            document.removeEventListener('animationend', onAnimationEnd)
+            resolve(true)
+          }
+          document.addEventListener('animationend', onAnimationEnd)
+        })
+      }
+      return true
     },
     [addTransactionInfo, resetSwapAmount, setDisplayTxHash]
   )
@@ -112,6 +115,8 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       const amount = CurrencyAmount.fromRawAmount(native, response.value?.toString() ?? '0')
       return { response, type: wrapType, amount }
     })
+
+    // Whether or not the transaction submits, we should still reset the pending state.
     setIsPending(false)
   }, [native, onSubmit, wrapCallback, wrapType])
   // Reset the pending state if user updates the swap.
@@ -119,7 +124,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
 
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSwap = useCallback(async () => {
-    await onSubmit(async () => {
+    const submitted = await onSubmit(async () => {
       const response = await swapCallback?.()
       if (!response) return
 
@@ -132,7 +137,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       invariant(trade.trade)
       return { type: TransactionType.SWAP, response, tradeType: trade.trade.tradeType, trade: trade.trade }
     })
-    setOpen(false)
+
+    // Only close the review modal if the transaction has submitted.
+    if (submitted) {
+      setOpen(false)
+    }
   }, [onSubmit, setOldestValidBlock, swapCallback, trade.trade])
 
   const disableSwap = useMemo(
