@@ -111,7 +111,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       const response = await wrapCallback()
       if (!response) return
 
-      invariant(wrapType)
+      invariant(wrapType !== undefined)
       const amount = CurrencyAmount.fromRawAmount(native, response.value?.toString() ?? '0')
       return { response, type: wrapType, amount }
     })
