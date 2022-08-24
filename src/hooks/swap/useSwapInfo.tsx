@@ -2,15 +2,16 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { INVALID_TRADE, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
+import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import useUSDCPriceImpact, { PriceImpact } from 'hooks/useUSDCPriceImpact'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import useWrapCallback, { WrapType } from './useWrapCallback'
+import { useIsWrap } from './useWrapCallback'
 
 interface SwapField {
   currency?: Currency
@@ -32,8 +33,7 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const { type: wrapType } = useWrapCallback()
-  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
+  const isWrap = useIsWrap()
   const { independentField, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isExactIn = independentField === Field.INPUT
 
@@ -41,7 +41,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     () => tryParseCurrencyAmount(amount, (isExactIn ? currencyIn : currencyOut) ?? undefined),
     [amount, isExactIn, currencyIn, currencyOut]
   )
-  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrapping
+  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrap
   const trade = useRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     routerUrl,
@@ -50,12 +50,12 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   )
 
   const amountIn = useMemo(
-    () => (isWrapping || isExactIn ? parsedAmount : trade.trade?.inputAmount),
-    [isExactIn, isWrapping, parsedAmount, trade.trade?.inputAmount]
+    () => (isWrap || isExactIn ? parsedAmount : trade.trade?.inputAmount),
+    [isExactIn, isWrap, parsedAmount, trade.trade?.inputAmount]
   )
   const amountOut = useMemo(
-    () => (isWrapping || !isExactIn ? parsedAmount : trade.trade?.outputAmount),
-    [isExactIn, isWrapping, parsedAmount, trade.trade?.outputAmount]
+    () => (isWrap || !isExactIn ? parsedAmount : trade.trade?.outputAmount),
+    [isExactIn, isWrap, parsedAmount, trade.trade?.outputAmount]
   )
 
   const { account } = useWeb3React()
@@ -67,7 +67,10 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
-  const { inputUSDC, outputUSDC, impact } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
+  const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
+  const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
+
+  const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
 
   return useMemo(
     () => ({
@@ -75,13 +78,13 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
         currency: currencyIn,
         amount: amountIn,
         balance: balanceIn,
-        usdc: inputUSDC,
+        usdc: inputUSDCValue,
       },
       [Field.OUTPUT]: {
         currency: currencyOut,
         amount: amountOut,
         balance: balanceOut,
-        usdc: outputUSDC,
+        usdc: outputUSDCValue,
       },
       trade,
       slippage,
@@ -95,8 +98,8 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       currencyIn,
       currencyOut,
       impact,
-      inputUSDC,
-      outputUSDC,
+      inputUSDCValue,
+      outputUSDCValue,
       slippage,
       trade,
     ]

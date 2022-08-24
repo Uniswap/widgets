@@ -4,8 +4,10 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useAtom } from 'jotai'
-import { useMemo } from 'react'
-import { transactionTtlAtom } from 'state/settings'
+import { useAtomValue } from 'jotai/utils'
+import { useCallback, useMemo } from 'react'
+import { swapEventHandlersAtom } from 'state/swap'
+import { transactionTtlAtom } from 'state/swap/settings'
 
 /** Returns the default transaction TTL for the chain, in minutes. */
 export function useDefaultTransactionTtl(): number {
@@ -16,7 +18,16 @@ export function useDefaultTransactionTtl(): number {
 
 /** Returns the user-inputted transaction TTL, in minutes. */
 export function useTransactionTtl(): [number | undefined, (ttl?: number) => void] {
-  return useAtom(transactionTtlAtom)
+  const { onTransactionDeadlineChange } = useAtomValue(swapEventHandlersAtom)
+  const [ttl, setTtlBase] = useAtom(transactionTtlAtom)
+  const setTtl = useCallback(
+    (ttl?: number) => {
+      onTransactionDeadlineChange?.(ttl)
+      setTtlBase(ttl)
+    },
+    [onTransactionDeadlineChange, setTtlBase]
+  )
+  return [ttl, setTtl]
 }
 
 // combines the block timestamp with the user setting to give the deadline that should be used for any submitted transaction

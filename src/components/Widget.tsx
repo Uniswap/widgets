@@ -3,9 +3,9 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
-import { TransactionsUpdater } from 'hooks/transactions'
+import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
@@ -89,7 +89,7 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends BrandingSettings {
+export interface WidgetProps extends BrandingSettings, TransactionEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
@@ -101,9 +101,6 @@ export interface WidgetProps extends BrandingSettings {
   disableBranding?: boolean
   className?: string
   onError?: ErrorHandler
-  onTxSubmit?: (txHash: string, data: any) => void
-  onTxSuccess?: (txHash: string, data: any) => void
-  onTxFail?: (error: Error, data: any) => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
@@ -173,11 +170,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                     >
                       <BlockNumberProvider>
                         <MulticallUpdater />
-                        <TransactionsUpdater
-                          onTxSubmit={props.onTxSubmit}
-                          onTxSuccess={props.onTxSuccess}
-                          onTxFail={props.onTxFail}
-                        />
+                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
                     </ActiveWeb3Provider>

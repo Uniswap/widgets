@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PriceImpact } from 'hooks/useUSDCPriceImpact'
+import { PriceImpact } from 'hooks/usePriceImpact'
 import { ArrowDown, ArrowRight } from 'icons'
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'

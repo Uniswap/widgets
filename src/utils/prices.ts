@@ -15,6 +15,13 @@ import JSBI from 'jsbi'
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 
+export function largerPercentValue(a?: Percent, b?: Percent) {
+  if (a && b) {
+    return a.greaterThan(b) ? a : b
+  }
+  return a || b
+}
+
 export function computeRealizedPriceImpact(trade: Trade<Currency, Currency, TradeType>): Percent {
   const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
   return trade.priceImpact.subtract(realizedLpFeePercent)

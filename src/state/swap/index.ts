@@ -5,9 +5,18 @@ import { nativeOnChain } from 'constants/tokens'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 
+import { Slippage } from './settings'
+
 export enum Field {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
+}
+
+export interface SwapController {
+  type?: TradeType
+  amount?: string
+  inputToken?: Currency
+  outputToken?: Currency
 }
 
 export interface Swap {
@@ -17,21 +26,14 @@ export interface Swap {
   [Field.OUTPUT]?: Currency
 }
 
-export const stateAtom = atomWithImmer<Swap>({
+const initialSwap: Swap = {
   independentField: Field.INPUT,
   amount: '',
   [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
-})
-
-export interface SwapController {
-  type?: TradeType
-  amount?: string
-  inputToken?: Currency
-  outputToken?: Currency
 }
 
 export const controlledAtom = atom<Swap | undefined>(undefined)
-
+export const stateAtom = atomWithImmer(initialSwap)
 export const swapAtom = atom((get) => {
   const controlled = get(controlledAtom)
   return controlled ? controlled : get(stateAtom)
@@ -41,6 +43,15 @@ export const swapAtom = atom((get) => {
 export const displayTxHashAtom = atom<string | undefined>(undefined)
 
 export const feeOptionsAtom = atom<FeeOptions | undefined>(undefined)
+
+/** An integration hook called when the user resets settings. */
+export type OnSettingsReset = () => void
+
+/** An integration hook called when the user changes slippage settings. */
+export type OnSlippageChange = (slippage: Slippage) => void
+
+/** An integration hook called when the user changes transaction deadline settings. */
+export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
 
 /** An integration hook called when the user selects a new token. */
 export type OnTokenChange = (field: Field, token: Currency) => void
@@ -67,6 +78,9 @@ export type OnReviewSwapClick = () => void | Promise<boolean>
 export type OnTokenSelectorClick = (field: Field) => void | Promise<boolean>
 
 export interface SwapEventHandlers {
+  onSettingsReset?: OnSettingsReset
+  onSlippageChange?: OnSlippageChange
+  onTransactionDeadlineChange?: OnTransactionDeadlineChange
   onTokenChange?: OnTokenChange
   onAmountChange?: OnAmountChange
   onSwitchTokens?: OnSwitchTokens
