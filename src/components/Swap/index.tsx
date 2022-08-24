@@ -11,7 +11,7 @@ import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefa
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import useSyncBrandingSetting, { BrandingSetting } from 'hooks/useSyncBrandingSetting'
+import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
@@ -50,7 +50,13 @@ function getTransactionFromMap(
 // since the wallet connection component exists within the Swap component.
 // This includes useSyncWidgetEventHandlers.
 // TODO(zzmp): refactor WalletConnection outside of Swap component
-export interface SwapProps extends FeeOptions, TokenDefaults, SwapController, SwapEventHandlers, WidgetEventHandlers {
+export interface SwapProps
+  extends FeeOptions,
+    TokenDefaults,
+    SwapController,
+    SwapEventHandlers,
+    WidgetEventHandlers,
+    BrandingSettings {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
@@ -63,7 +69,7 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
-  useSyncBrandingSetting(props as BrandingSetting)
+  useSyncBrandingSetting(props as BrandingSettings)
 
   const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)

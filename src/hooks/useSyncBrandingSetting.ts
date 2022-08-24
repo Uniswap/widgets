@@ -1,14 +1,18 @@
 import { atom } from 'jotai'
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 
-export const disableBrandingAtom = atom<boolean>(false)
+const disableBrandingAtom = atom<boolean>(false)
 
-export interface BrandingSetting {
+export function useBrandingSetting() {
+  return useAtomValue(disableBrandingAtom)
+}
+
+export interface BrandingSettings {
   disableBranding?: boolean
 }
 
-export default function useSyncBrandingSetting({ disableBranding }: BrandingSetting): void {
+export default function useSyncBrandingSetting({ disableBranding }: BrandingSettings): void {
   const setDisableBranding = useUpdateAtom(disableBrandingAtom)
   useEffect(() => setDisableBranding(disableBranding ?? false), [disableBranding, setDisableBranding])
 }

@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/lo
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
 import { TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
+import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
@@ -88,7 +89,7 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps {
+export interface WidgetProps extends BrandingSettings {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider

@@ -4,7 +4,7 @@ import BrandedFooter from 'components/BrandedFooter'
 import Rule from 'components/Rule'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
-import { disableBrandingAtom } from 'hooks/useSyncBrandingSetting'
+import { useBrandingSetting } from 'hooks/useSyncBrandingSetting'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { PropsWithChildren } from 'react'
@@ -40,7 +40,7 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
 export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
   const { i18n } = useLingui()
 
-  const disableBranding = useAtomValue(disableBrandingAtom)
+  const disableBranding = useBrandingSetting()
 
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
@@ -101,7 +101,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
         </TokenInput>
         <Rule />
         {children}
-        {!disableBranding && <BrandedFooter />}
+        {disableBranding ? null : <BrandedFooter />}
       </OutputColumn>
     </DynamicThemeProvider>
   )
