@@ -6,7 +6,7 @@ import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, 
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
 import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
-import { delayUnmountForAnimation } from 'utils/animations'
+import { useUnmountingAnimation } from 'utils/animations'
 
 import { TextButton } from './Button'
 import Column from './Column'
@@ -18,6 +18,13 @@ declare global {
   interface HTMLElement {
     inert?: boolean
   }
+}
+
+export enum Animation {
+  /** Used when the Dialog is closing. */
+  CLOSING = 'closing',
+  /** Used when the Dialog is paging to another Dialog screen. */
+  PAGING = 'paging',
 }
 
 const Context = createContext({
@@ -51,7 +58,7 @@ export function Provider({ value, children }: ProviderProps) {
   )
 }
 
-const OnCloseContext = createContext<() => void>(() => void 0)
+const OnCloseContext = createContext<(() => void) | undefined>(undefined)
 
 const HeaderRow = styled(Row)`
   height: 1.75em;
@@ -108,7 +115,7 @@ interface DialogProps {
   onClose?: () => void
 }
 
-export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+export default function Dialog({ color, children, onClose }: DialogProps) {
   const context = useContext(Context)
   useEffect(() => {
     context.setActive(true)
@@ -116,7 +123,9 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
   }, [context])
 
   const modal = useRef<HTMLDivElement>(null)
-  useEffect(() => delayUnmountForAnimation(modal), [])
+  useUnmountingAnimation(modal, () => {
+    return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
+  })
 
   useEffect(() => {
     const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
