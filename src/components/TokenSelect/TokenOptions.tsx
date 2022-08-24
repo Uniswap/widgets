@@ -12,6 +12,7 @@ import {
   memo,
   SyntheticEvent,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -135,7 +136,6 @@ areEqual)
 
 interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
-  blur: () => void
 }
 
 interface TokenOptionsProps {
@@ -148,8 +148,11 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   ref
 ) {
   const [focused, setFocused] = useState(false)
-  const [selected, setSelected] = useState<Currency>()
-  const hover = useMemo(() => (selected ? tokens.indexOf(selected) : -1), [selected, tokens])
+  const [selected, setSelected] = useState<Currency>(tokens[0])
+  useEffect(() => {
+    setSelected((selected) => (tokens.includes(selected) ? selected : tokens[0]))
+  }, [tokens, setSelected])
+  const hover = useMemo(() => tokens.indexOf(selected), [selected, tokens])
 
   const list = useRef<FixedSizeList>(null)
   const [element, setElement] = useState<HTMLElement | null>(null)
@@ -186,8 +189,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
     },
     [hover, onSelect, scrollTo, tokens]
   )
-  const blur = useCallback(() => setSelected(undefined), [])
-  useImperativeHandle(ref, () => ({ onKeyDown, blur }), [blur, onKeyDown])
+  useImperativeHandle(ref, () => ({ onKeyDown }), [onKeyDown])
 
   const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
   const onFocus = useCallback(

@@ -94,7 +94,6 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
               onChange={setQuery}
               placeholder={t`Search by token name or address`}
               onKeyDown={options?.onKeyDown}
-              onBlur={options?.blur}
               ref={input}
             />
           </ThemedText.Body1>
