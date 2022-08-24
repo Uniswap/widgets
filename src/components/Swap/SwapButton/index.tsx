@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useSwapInfo } from 'hooks/swap'
+import { useSwapAmount, useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import useWrapCallback from 'hooks/swap/useWrapCallback'
@@ -69,12 +69,16 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
 
   const addTransactionInfo = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
+  const [, setSwapAmount] = useSwapAmount(Field.INPUT)
+  const resetSwapAmount = useCallback(() => setSwapAmount(''), [setSwapAmount])
 
   const onSubmit = useCallback(
     async (submit: () => Promise<TransactionInfo | undefined>): Promise<void> => {
       try {
         const info = await submit()
         if (!info) return
+
+        resetSwapAmount()
         addTransactionInfo(info)
         setDisplayTxHash(info.response.hash)
 
@@ -93,7 +97,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         console.error('Failed to submit', e)
       }
     },
-    [addTransactionInfo, setDisplayTxHash]
+    [addTransactionInfo, resetSwapAmount, setDisplayTxHash]
   )
 
   const [isPending, setIsPending] = useState(false)
