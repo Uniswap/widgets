@@ -129,6 +129,9 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
 
   const modal = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(modal, () => {
+    // Returns the context element's child count at the time of unmounting.
+    // This cannot be done through state because the count is updated outside of React's lifecycle -
+    // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
     return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
   })
 
