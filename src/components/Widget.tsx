@@ -98,7 +98,6 @@ export interface WidgetProps extends BrandingSettings, TransactionEventHandlers 
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLDivElement | null
-  disableBranding?: boolean
   className?: string
   onError?: ErrorHandler
 }
