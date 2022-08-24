@@ -145,9 +145,8 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const disableSwap = useMemo(
     () =>
       disabled ||
-      isWrap ||
       !chainId ||
-      !optimizedTrade ||
+      (!isWrap && !optimizedTrade) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
     [disabled, isWrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
