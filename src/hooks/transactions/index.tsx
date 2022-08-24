@@ -20,7 +20,7 @@ export function usePendingTransactions() {
   return (chainId ? txs[chainId] : null) ?? {}
 }
 
-export function useAddTransaction() {
+export function useAddTransactionInfo() {
   const { chainId } = useWeb3React()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)

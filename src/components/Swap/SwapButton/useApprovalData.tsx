@@ -8,7 +8,7 @@ import {
   useSwapApprovalOptimizedTrade,
   useSwapRouterAddress,
 } from 'hooks/swap/useSwapApproval'
-import { useAddTransaction, usePendingApproval } from 'hooks/transactions'
+import { useAddTransactionInfo, usePendingApproval } from 'hooks/transactions'
 import { Slippage } from 'hooks/useSlippage'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -33,15 +33,15 @@ export default function useApprovalData(
   )
 
   const [isPending, setIsPending] = useState(false)
-  const addTransaction = useAddTransaction()
+  const addTransactionInfo = useAddTransactionInfo()
   const onApprove = useCallback(async () => {
     setIsPending(true)
     const transaction = await handleApproveOrPermit()
     if (transaction) {
-      addTransaction({ type: TransactionType.APPROVAL, ...transaction })
+      addTransactionInfo({ type: TransactionType.APPROVAL, ...transaction })
     }
     setIsPending(false)
-  }, [addTransaction, handleApproveOrPermit])
+  }, [addTransactionInfo, handleApproveOrPermit])
   // Reset the pending state if currency changes.
   useEffect(() => setIsPending(false), [currency])
 
