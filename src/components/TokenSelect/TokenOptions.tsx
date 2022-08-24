@@ -148,11 +148,15 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   ref
 ) {
   const [focused, setFocused] = useState(false)
+
   const [selected, setSelected] = useState<Currency>(tokens[0])
+  const hover = useMemo(() => tokens.indexOf(selected), [selected, tokens])
+
+  // If tokens updates (eg from searching), always default to selecting the first token.
+  // As long as tokens.length >= 1, a token should be selected.
   useEffect(() => {
     setSelected((selected) => (tokens.includes(selected) ? selected : tokens[0]))
   }, [tokens, setSelected])
-  const hover = useMemo(() => tokens.indexOf(selected), [selected, tokens])
 
   const list = useRef<FixedSizeList>(null)
   const [element, setElement] = useState<HTMLElement | null>(null)
