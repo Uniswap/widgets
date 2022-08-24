@@ -2,8 +2,9 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { INVALID_TRADE, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
+import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import useUSDCPriceImpact, { PriceImpact } from 'hooks/useUSDCPriceImpact'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -66,7 +67,10 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
-  const { inputUSDC, outputUSDC, impact } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
+  const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
+  const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
+
+  const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
 
   return useMemo(
     () => ({
@@ -74,13 +78,13 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
         currency: currencyIn,
         amount: amountIn,
         balance: balanceIn,
-        usdc: inputUSDC,
+        usdc: inputUSDCValue,
       },
       [Field.OUTPUT]: {
         currency: currencyOut,
         amount: amountOut,
         balance: balanceOut,
-        usdc: outputUSDC,
+        usdc: outputUSDCValue,
       },
       trade,
       slippage,
@@ -94,8 +98,8 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       currencyIn,
       currencyOut,
       impact,
-      inputUSDC,
-      outputUSDC,
+      inputUSDCValue,
+      outputUSDCValue,
       slippage,
       trade,
     ]

@@ -40,15 +40,17 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   return lastPrice.current
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
+export function useUSDCValue(
+  currencyAmount: CurrencyAmount<Currency> | undefined | null
+): CurrencyAmount<Token> | undefined {
   const price = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {
-    if (!price || !currencyAmount) return null
+    if (!price || !currencyAmount) return
     try {
       return price.quote(currencyAmount)
     } catch (error) {
-      return null
+      return
     }
   }, [currencyAmount, price])
 }
