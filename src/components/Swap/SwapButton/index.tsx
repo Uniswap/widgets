@@ -5,7 +5,7 @@ import { useSwapAmount, useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import useWrapCallback from 'hooks/swap/useWrapCallback'
-import { useAddTransaction } from 'hooks/transactions'
+import { useAddTransactionInfo } from 'hooks/transactions'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -67,7 +67,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
 
-  const addTransactionInfo = useAddTransaction()
+  const addTransactionInfo = useAddTransactionInfo()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const [, setSwapAmount] = useSwapAmount(Field.INPUT)
   const resetSwapAmount = useCallback(() => setSwapAmount(''), [setSwapAmount])
