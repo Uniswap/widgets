@@ -6,7 +6,7 @@ import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, 
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
 import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
-import { delayUnmountForAnimation } from 'utils/animations'
+import { useUnmountingAnimation } from 'utils/animations'
 
 import { TextButton } from './Button'
 import Column from './Column'
@@ -18,6 +18,18 @@ declare global {
   interface HTMLElement {
     inert?: boolean
   }
+}
+
+export enum Animation {
+  /** Used when the Dialog is closing. */
+  CLOSING = 'closing',
+  /**
+   * Used when the Dialog is paging to another Dialog screen.
+   * Paging occurs when multiple screens are sequenced in the Dialog, so that an action that closes
+   * one will simultaneously open the next. Special-casing paging animations can make the user feel
+   * like they are not leaving the Dialog, despite the initial screen closing.
+   */
+  PAGING = 'paging',
 }
 
 const Context = createContext({
@@ -51,7 +63,7 @@ export function Provider({ value, children }: ProviderProps) {
   )
 }
 
-const OnCloseContext = createContext<() => void>(() => void 0)
+const OnCloseContext = createContext<(() => void) | undefined>(undefined)
 
 const HeaderRow = styled(Row)`
   height: 1.75em;
@@ -108,7 +120,7 @@ interface DialogProps {
   onClose?: () => void
 }
 
-export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+export default function Dialog({ color, children, onClose }: DialogProps) {
   const context = useContext(Context)
   useEffect(() => {
     context.setActive(true)
@@ -116,7 +128,12 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
   }, [context])
 
   const modal = useRef<HTMLDivElement>(null)
-  useEffect(() => delayUnmountForAnimation(modal), [])
+  useUnmountingAnimation(modal, () => {
+    // Returns the context element's child count at the time of unmounting.
+    // This cannot be done through state because the count is updated outside of React's lifecycle -
+    // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
+    return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
+  })
 
   useEffect(() => {
     const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()

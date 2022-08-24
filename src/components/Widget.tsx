@@ -16,9 +16,8 @@ import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
-import { UNMOUNTING } from 'utils/animations'
 
-import { Modal, Provider as DialogProvider } from './Dialog'
+import { Animation, Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 
 const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
@@ -54,12 +53,17 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-const slideIn = keyframes`
+const slideInLeft = keyframes`
   from {
     transform: translateX(calc(100% - 0.25em));
   }
 `
-const slideOut = keyframes`
+const slideOutLeft = keyframes`
+  to {
+    transform: translateX(calc(0.25em - 100%));
+  }
+`
+const slideOutRight = keyframes`
   to {
     transform: translateX(calc(100% - 0.25em));
   }
@@ -80,10 +84,13 @@ export const DialogWrapper = styled.div`
   }
 
   ${Modal} {
-    animation: ${slideIn} 0.25s ease-in;
+    animation: ${slideInLeft} 0.25s ease-in;
 
-    &.${UNMOUNTING} {
-      animation: ${slideOut} 0.25s ease-out;
+    &.${Animation.PAGING} {
+      animation: ${slideOutLeft} 0.25s ease-in;
+    }
+    &.${Animation.CLOSING} {
+      animation: ${slideOutRight} 0.25s ease-out;
     }
   }
 `

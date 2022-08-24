@@ -82,21 +82,23 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       }
       if (!info) return false
 
-      setInputAmount('')
       addTransactionInfo(info)
       setDisplayTxHash(info.response.hash)
 
       if (isAnimating(document)) {
-        // Only return after any queued animations to avoid layout thrashing, because a successful
-        // submit will open the status dialog and immediately cover the animating button.
+        // Only reset the input amount after any queued animations to avoid layout thrashing,
+        // because a successful submit will open the status dialog and immediately cover input.
         return new Promise((resolve) => {
           const onAnimationEnd = () => {
             document.removeEventListener('animationend', onAnimationEnd)
-            resolve(true)
+            setInputAmount('')
           }
           document.addEventListener('animationend', onAnimationEnd)
         })
+      } else {
+        setInputAmount('')
       }
+
       return true
     },
     [addTransactionInfo, setDisplayTxHash, setInputAmount]
