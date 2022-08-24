@@ -61,7 +61,7 @@ const slideIn = keyframes`
 `
 const slideOut = keyframes`
   to {
-    transform: translateX(calc(100% - 0.25em));
+    transform: translateX(calc(0.25em - 100%));
   }
 `
 
