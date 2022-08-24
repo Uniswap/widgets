@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useSwapInfo } from 'hooks/swap'
+import { useSwapAmount, useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import useWrapCallback from 'hooks/swap/useWrapCallback'
-import { useAddTransaction } from 'hooks/transactions'
+import { useAddTransactionInfo } from 'hooks/transactions'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -14,7 +14,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { displayTxHashAtom, feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
-import { TransactionType } from 'state/transactions'
+import { TransactionInfo, TransactionType } from 'state/transactions'
 import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
 import { isAnimating } from 'utils/animations'
@@ -67,80 +67,81 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
 
-  const addTransaction = useAddTransaction()
+  const addTransactionInfo = useAddTransactionInfo()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
-  const setOldestValidBlock = useSetOldestValidBlock()
+  const [, setInputAmount] = useSwapAmount(Field.INPUT)
+
+  // Submits a transaction. Returns true if the transaction was submitted.
+  const onSubmit = useCallback(
+    async (submit: () => Promise<TransactionInfo | undefined>): Promise<boolean> => {
+      let info: TransactionInfo | undefined
+      try {
+        info = await submit()
+      } catch (e) {
+        console.error('Failed to submit', e)
+      }
+      if (!info) return false
+
+      setInputAmount('')
+      addTransactionInfo(info)
+      setDisplayTxHash(info.response.hash)
+
+      if (isAnimating(document)) {
+        // Only return after any queued animations to avoid layout thrashing, because a successful
+        // submit will open the status dialog and immediately cover the animating button.
+        return new Promise((resolve) => {
+          const onAnimationEnd = () => {
+            document.removeEventListener('animationend', onAnimationEnd)
+            resolve(true)
+          }
+          document.addEventListener('animationend', onAnimationEnd)
+        })
+      }
+      return true
+    },
+    [addTransactionInfo, setDisplayTxHash, setInputAmount]
+  )
 
   const [isPending, setIsPending] = useState(false)
   const native = useNativeCurrency()
   const onWrap = useCallback(async () => {
     setIsPending(true)
-    try {
-      const transaction = await wrapCallback()
-      if (!transaction) return
-      invariant(wrapType !== undefined)
-      addTransaction({
-        response: transaction,
-        type: wrapType,
-        amount: CurrencyAmount.fromRawAmount(native, transaction.value?.toString() ?? '0'),
-      })
-      setDisplayTxHash(transaction.hash)
-      // Only reset pending after any queued animations to avoid layout thrashing, because a
-      // successful wrap will open the status dialog and immediately cover the button.
-      const postWrap = () => {
-        setIsPending(false)
-        document.removeEventListener('animationend', postWrap)
-      }
-      if (isAnimating(document)) {
-        document.addEventListener('animationend', postWrap)
-      } else {
-        setIsPending(false)
-      }
-    } catch (e) {
-      // TODO(zzmp): Surface errors from wrap.
-      console.log(e)
-    } finally {
-      setIsPending(false)
-    }
-  }, [addTransaction, native, setDisplayTxHash, wrapCallback, wrapType])
+    await onSubmit(async () => {
+      const response = await wrapCallback()
+      if (!response) return
+
+      invariant(wrapType !== undefined) // if response is valid, then so is wrapType
+      const amount = CurrencyAmount.fromRawAmount(native, response.value?.toString() ?? '0')
+      return { response, type: wrapType, amount }
+    })
+
+    // Whether or not the transaction submits, we should still reset the pending state.
+    setIsPending(false)
+  }, [native, onSubmit, wrapCallback, wrapType])
   // Reset the pending state if user updates the swap.
   useEffect(() => setIsPending(false), [inputCurrencyAmount, trade])
 
+  const setOldestValidBlock = useSetOldestValidBlock()
   const onSwap = useCallback(async () => {
-    try {
-      const transaction = await swapCallback?.()
-      if (!transaction) return
-      invariant(trade.trade)
-      addTransaction({
-        type: TransactionType.SWAP,
-        response: transaction,
-        tradeType: trade.trade.tradeType,
-        trade: trade.trade,
-      })
-      setDisplayTxHash(transaction.hash)
+    const submitted = await onSubmit(async () => {
+      const response = await swapCallback?.()
+      if (!response) return
 
       // Set the block containing the response to the oldest valid block to ensure that the
       // completed trade's impact is reflected in future fetched trades.
-      transaction.wait(1).then((receipt) => {
+      response.wait(1).then((receipt) => {
         setOldestValidBlock(receipt.blockNumber)
       })
 
-      // Only reset open after any queued animations to avoid layout thrashing, because a
-      // successful swap will open the status dialog and immediately cover the summary dialog.
-      const postSwap = () => {
-        setOpen(false)
-        document.removeEventListener('animationend', postSwap)
-      }
-      if (isAnimating(document)) {
-        document.addEventListener('animationend', postSwap)
-      } else {
-        setOpen(false)
-      }
-    } catch (e) {
-      // TODO(zzmp): Surface errors from swap.
-      console.log(e)
+      invariant(trade.trade)
+      return { type: TransactionType.SWAP, response, tradeType: trade.trade.tradeType, trade: trade.trade }
+    })
+
+    // Only close the review modal if the transaction has submitted.
+    if (submitted) {
+      setOpen(false)
     }
-  }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade])
+  }, [onSubmit, setOldestValidBlock, swapCallback, trade.trade])
 
   const disableSwap = useMemo(
     () =>
