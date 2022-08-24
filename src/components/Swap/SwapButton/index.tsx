@@ -69,8 +69,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
 
   const addTransactionInfo = useAddTransactionInfo()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
-  const [, setSwapAmount] = useSwapAmount(Field.INPUT)
-  const resetSwapAmount = useCallback(() => setSwapAmount(''), [setSwapAmount])
+  const [, setInputAmount] = useSwapAmount(Field.INPUT)
 
   // Submits a transaction. Returns true if the transaction was submitted.
   const onSubmit = useCallback(
@@ -83,7 +82,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       }
       if (!info) return false
 
-      resetSwapAmount()
+      setInputAmount('')
       addTransactionInfo(info)
       setDisplayTxHash(info.response.hash)
 
@@ -100,7 +99,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       }
       return true
     },
-    [addTransactionInfo, resetSwapAmount, setDisplayTxHash]
+    [addTransactionInfo, setDisplayTxHash, setInputAmount]
   )
 
   const [isPending, setIsPending] = useState(false)
