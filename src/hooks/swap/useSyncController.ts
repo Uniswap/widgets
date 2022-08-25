@@ -9,8 +9,8 @@ export type SwapSettingsController = Settings
 export interface SwapController {
   type?: TradeType
   amount?: string
-  inputToken?: Currency
-  outputToken?: Currency
+  [Field.INPUT]?: Currency
+  [Field.OUTPUT]?: Currency
 }
 
 export default function useSyncController({
@@ -42,10 +42,9 @@ function toSwap(value?: SwapController): Swap | undefined {
   if (!value) return undefined
 
   return {
+    ...value,
     independentField: value.type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT,
     amount: value.amount || '',
-    [Field.INPUT]: value.inputToken,
-    [Field.OUTPUT]: value.outputToken,
   }
 }
 
