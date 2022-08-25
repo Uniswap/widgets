@@ -5,7 +5,7 @@ import { pickAtom } from '../atoms'
 
 export interface Slippage {
   auto: boolean // if true, slippage will use the default calculation
-  max: number | undefined // expressed as a percent (eg 0.42 is 0.42%)
+  max: string | undefined // expressed as a percent (eg '0.42' is 0.42%)
 }
 
 export interface Settings {
