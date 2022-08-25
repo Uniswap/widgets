@@ -99,7 +99,7 @@ export interface WidgetProps extends TransactionEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap?: { [chainId: number]: string[] }
+  jsonRpcUrlMap?: { [chainId: number]: string | string[] }
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
@@ -154,7 +154,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
         props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
       }
     }
-    return props.jsonRpcUrlMap
+    return Object.entries(jsonRpcUrlMap).reduce((urls, [id, url]) => ({ ...urls, [id]: [url] }), {})
   }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
