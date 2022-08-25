@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/lo
 import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
+import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
@@ -95,7 +96,7 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends TransactionEventHandlers {
+export interface WidgetProps extends BrandingSettings, TransactionEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider

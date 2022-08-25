@@ -18,7 +18,7 @@ export default function Wallet({ disabled }: WalletProps) {
       const success = wallet.connectEagerly ? wallet.connectEagerly(defaultChainId) : wallet.activate(defaultChainId)
       success?.catch(() => {
         if (stale) return
-        console.log(`Could not connect to ${getConnectorName(wallet)}`)
+        console.error(`Could not connect to ${getConnectorName(wallet)}`)
       })
     })
 
