@@ -14,9 +14,8 @@ import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
-import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -29,22 +28,6 @@ import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
-
-function getTransactionFromMap(
-  txs: { [hash: string]: Transaction },
-  hash?: string
-): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
-  if (hash) {
-    const tx = txs[hash]
-    if (tx?.info?.type === TransactionType.SWAP) {
-      return tx as Transaction<SwapTransactionInfo>
-    }
-    if (tx?.info?.type === TransactionType.WRAP) {
-      return tx as Transaction<WrapTransactionInfo>
-    }
-  }
-  return
-}
 
 // SwapProps also currently includes props needed for wallet connection,
 // since the wallet connection component exists within the Swap component.
@@ -78,7 +61,7 @@ export default function Swap(props: SwapProps) {
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
+  const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(isActive && onSupportedNetwork)
