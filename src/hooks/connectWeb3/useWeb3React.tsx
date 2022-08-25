@@ -64,6 +64,8 @@ function getConnectionFromWalletConnect(
   )
 }
 
+const onError = (error: Error) => console.error(error)
+
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcUrlMap: { [chainId: number]: string[] }
@@ -76,24 +78,23 @@ export function ActiveWeb3Provider({
   defaultChainId: propsDefaultChainId,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
-  const onError = console.error
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
   }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
-  const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [onError, provider])
+  const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [provider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
-    [onError]
+    []
   )
   const walletConnectConnectionQR = useMemo(
     () => getConnectionFromWalletConnect(false, jsonRpcUrlMap, defaultChainId, onError),
-    [jsonRpcUrlMap, defaultChainId, onError]
+    [jsonRpcUrlMap, defaultChainId]
   ) // WC via tile QR code scan
   const walletConnectConnectionPopup = useMemo(
     () => getConnectionFromWalletConnect(true, jsonRpcUrlMap, defaultChainId, onError),
-    [jsonRpcUrlMap, defaultChainId, onError]
+    [jsonRpcUrlMap, defaultChainId]
   ) // WC via built-in popup
 
   const networkConnection = useMemo(
