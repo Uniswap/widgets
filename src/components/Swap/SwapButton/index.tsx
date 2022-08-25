@@ -99,7 +99,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         setInputAmount('')
       }
 
-
       return true
     },
     [addTransactionInfo, setDisplayTxHash, setInputAmount]
