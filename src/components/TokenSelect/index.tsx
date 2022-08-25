@@ -133,7 +133,7 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
   const [open, setOpen] = useState(false)
   const { onTokenSelectorClick } = useAtomValue(swapEventHandlersAtom)
   const onOpen = useCallback(async () => {
-    const open = await onTokenSelectorClick?.(field)?.catch(() => false)
+    const open = await Promise.resolve(onTokenSelectorClick?.(field)).catch(() => false)
     setOpen(open ?? true)
   }, [field, onTokenSelectorClick])
   const selectAndClose = useCallback(

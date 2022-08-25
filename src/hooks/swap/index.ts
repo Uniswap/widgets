@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
@@ -23,12 +23,7 @@ export function useSwitchSwapCurrencies() {
   const setSwap = useUpdateAtom(swapAtom)
   return useCallback(() => {
     setSwap((swap) => {
-      onSwitchTokens?.({
-        type: swap.independentField === Field.INPUT ? TradeType.EXACT_OUTPUT : TradeType.EXACT_INPUT,
-        amount: swap.amount,
-        inputToken: swap[Field.OUTPUT],
-        outputToken: swap[Field.INPUT],
-      })
+      onSwitchTokens?.()
       const oldOutput = swap[Field.OUTPUT]
       swap[Field.OUTPUT] = swap[Field.INPUT]
       swap[Field.INPUT] = oldOutput
