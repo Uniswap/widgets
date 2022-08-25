@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
@@ -10,13 +10,6 @@ import { Slippage } from './settings'
 export enum Field {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-}
-
-export interface SwapController {
-  type?: TradeType
-  amount?: string
-  inputToken?: Currency
-  outputToken?: Currency
 }
 
 export interface Swap {
@@ -59,11 +52,8 @@ export type OnTokenChange = (field: Field, token: Currency) => void
 /** An integration hook called when the user enters a new amount. */
 export type OnAmountChange = (field: Field, amount: string) => void
 
-/**
- * An integration hook called when the user switches the tokens.
- * The values represent already-switched state, to make it easier to update controlled state.
- */
-export type OnSwitchTokens = (values: SwapController) => void
+/** An integration hook called when the user switches the tokens. */
+export type OnSwitchTokens = () => void
 
 /**
  * An integration hook called when the user clicks 'Review swap'.

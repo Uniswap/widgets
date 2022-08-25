@@ -1,11 +1,17 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect, useRef } from 'react'
-import { controlledAtom as swapAtom, Field, Swap, SwapController } from 'state/swap'
+import { controlledAtom as swapAtom, Field, Swap } from 'state/swap'
 import { controlledAtom as settingsAtom, Settings } from 'state/swap/settings'
-export type { SwapController } from 'state/swap'
 
 export type SwapSettingsController = Settings
+
+export interface SwapController {
+  type?: TradeType
+  amount?: string
+  inputToken?: Currency
+  outputToken?: Currency
+}
 
 export default function useSyncController({
   value,
