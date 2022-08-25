@@ -100,7 +100,7 @@ export interface WidgetProps extends BrandingSettings, TransactionEventHandlers 
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap?: { [chainId: number]: string[] }
+  jsonRpcUrlMap?: { [chainId: number]: string | string[] }
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
@@ -139,21 +139,29 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
   const defaultChainId = useMemo(() => {
     if (!props.defaultChainId) return DEFAULT_CHAIN_ID
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
-      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
+      console.warn(
+        `Unsupported chainId: ${props.defaultChainId}. Falling back to ${DEFAULT_CHAIN_ID} (${SupportedChainId[DEFAULT_CHAIN_ID]}).`
+      )
       return DEFAULT_CHAIN_ID
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcUrlMap: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
+  const jsonRpcUrlMapWithFallbacks = useMemo(() => {
     if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
+    const fallbackChains: [string, string[]][] = []
     for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
       if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
-        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
-        console.warn(
-          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to public RPC endpoint ${fallbackRpc}, which may be unreliable and severly rate-limited.`
-        )
+        const chainId: number = supportedChainId
+        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[chainId]
+        fallbackChains.push([SupportedChainId[chainId], fallbackRpc])
         props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
       }
+    }
+    if (fallbackChains.length) {
+      console.warn(
+        `jsonRpcUrlMap is missing urls for some chains. Falling back to public endpoints, which may be unreliable and severely rate-limited:`,
+        ...fallbackChains.map(([chain, urls]) => `${chain}: ${urls}`)
+      )
     }
     return props.jsonRpcUrlMap
   }, [props.jsonRpcUrlMap])
@@ -171,7 +179,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                   <AtomProvider initialValues={props.initialAtomValues}>
                     <ActiveWeb3Provider
                       provider={props.provider}
-                      jsonRpcUrlMap={jsonRpcUrlMap}
+                      jsonRpcUrlMap={jsonRpcUrlMapWithFallbacks}
                       defaultChainId={defaultChainId}
                     >
                       <BlockNumberProvider>

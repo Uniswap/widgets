@@ -113,9 +113,8 @@ export default function MaxSlippageSelect() {
   }, [focus, slippage, setSlippage])
 
   const processInput = useCallback(
-    (input: string | undefined) => {
-      setMaxSlippageInput(input || '')
-      const max = input ? +input : undefined
+    (max: string | undefined) => {
+      setMaxSlippageInput(max || '')
       const percent = toPercent(max)
       const warning = getSlippageWarning(percent)
       const auto = !percent || warning === 'error'

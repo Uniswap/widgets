@@ -61,10 +61,14 @@ export function usePendingApproval(token?: Token, spender?: string): string | un
   )?.info.response.hash
 }
 
+export type OnTxSubmit = (hash: string, tx: Transaction) => void
+export type OnTxSuccess = (hash: string, receipt: TransactionReceipt) => void
+export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void
+
 export interface TransactionEventHandlers {
-  onTxSubmit?: (txHash: string, tx: Transaction) => void
-  onTxSuccess?: (txHash: string, receipt: TransactionReceipt) => void
-  onTxFail?: (error: Error, receipt: TransactionReceipt) => void
+  onTxSubmit?: OnTxSubmit
+  onTxSuccess?: OnTxSuccess
+  onTxFail?: OnTxFail
 }
 
 export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionEventHandlers) {
@@ -91,10 +95,10 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
           tx.receipt = receipt
         }
       })
-      if (receipt?.status === 0) {
-        onTxFail?.(new Error('Transaction failed'), receipt)
+      if (receipt.status === 0) {
+        onTxFail?.(hash, receipt)
       } else {
-        onTxSuccess?.(receipt.transactionHash, receipt)
+        onTxSuccess?.(hash, receipt)
       }
     },
     [updateTxs, onTxFail, onTxSuccess]

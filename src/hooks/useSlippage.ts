@@ -5,9 +5,10 @@ import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { slippageAtom } from 'state/swap/settings'
 
-export function toPercent(maxSlippage: number | undefined): Percent | undefined {
+export function toPercent(maxSlippage: string | undefined): Percent | undefined {
   if (!maxSlippage) return undefined
-  const numerator = Math.floor(maxSlippage * 100)
+  if (Number.isNaN(maxSlippage)) return undefined
+  const numerator = Math.floor(Number(maxSlippage) * 100)
   return new Percent(numerator, 10_000)
 }
 
