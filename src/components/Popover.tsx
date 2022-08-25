@@ -113,9 +113,10 @@ export default function Popover({ content, show, children, placement, offset, co
           requires: ['maxSize'],
           fn({ state }) {
             const { width } = state.modifiersData.maxSize
+            const maxWidth = Math.max(width, (boundary?.clientWidth ?? 16) - 16)
             state.styles.popper = {
               ...state.styles.popper,
-              maxWidth: `${width}px`,
+              maxWidth: `${maxWidth}px`,
             }
           },
         }
