@@ -143,7 +143,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcUrlMap: { [chainId: number]: string[] } = useMemo(() => {
+  const jsonRpcUrlMap = useMemo(() => {
     if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
     for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
       if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
