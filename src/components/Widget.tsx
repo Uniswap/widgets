@@ -145,7 +145,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcUrlMap = useMemo(() => {
+  const jsonRpcUrlMapWithFallbacks = useMemo(() => {
     if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
     const fallbackChains: [string, string[]][] = []
     for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
@@ -162,10 +162,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
         ...fallbackChains.map(([chain, urls]) => `${chain}: ${urls}`)
       )
     }
-    return Object.entries(props.jsonRpcUrlMap).reduce(
-      (urlMap, [id, urls]) => ({ ...urlMap, [id]: Array.isArray(urls) ? urls : [urls] }),
-      {}
-    )
+    return props.jsonRpcUrlMap
   }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
@@ -181,7 +178,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                   <AtomProvider initialValues={props.initialAtomValues}>
                     <ActiveWeb3Provider
                       provider={props.provider}
-                      jsonRpcUrlMap={jsonRpcUrlMap}
+                      jsonRpcUrlMap={jsonRpcUrlMapWithFallbacks}
                       defaultChainId={defaultChainId}
                     >
                       <BlockNumberProvider>

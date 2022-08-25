@@ -68,16 +68,25 @@ const onError = (error: Error) => console.error(error)
 
 interface ActiveWeb3ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap: { [chainId: number]: string[] }
+  jsonRpcUrlMap: { [chainId: number]: string | string[] }
   defaultChainId: SupportedChainId
 }
 
 export function ActiveWeb3Provider({
-  provider,
-  jsonRpcUrlMap,
+  jsonRpcUrlMap: propsJsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
+  provider,
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
+  const jsonRpcUrlMap = useMemo(
+    () =>
+      Object.entries(propsJsonRpcUrlMap).reduce(
+        (urlMap, [id, urls]) => ({ ...urlMap, [id]: Array.isArray(urls) ? urls : [urls] }),
+        {}
+      ),
+    [propsJsonRpcUrlMap]
+  )
+
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
