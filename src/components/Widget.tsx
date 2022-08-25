@@ -143,7 +143,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcUrlMap: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
+  const jsonRpcUrlMap: { [chainId: number]: string[] } = useMemo(() => {
     if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
     for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
       if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
@@ -154,7 +154,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
         props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
       }
     }
-    return Object.entries(jsonRpcUrlMap).reduce((urls, [id, url]) => ({ ...urls, [id]: [url] }), {})
+    return Object.entries(props.jsonRpcUrlMap).reduce((urls, [id, url]) => ({ ...urls, [id]: [url] }), {})
   }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
