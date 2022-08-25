@@ -154,7 +154,10 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
         props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
       }
     }
-    return Object.entries(props.jsonRpcUrlMap).reduce((urls, [id, url]) => ({ ...urls, [id]: [url] }), {})
+    return Object.entries(props.jsonRpcUrlMap).reduce(
+      (urlMap, [id, urls]) => ({ ...urlMap, [id]: Array.isArray(urls) ? urls : [urls] }),
+      {}
+    )
   }, [props.jsonRpcUrlMap])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)

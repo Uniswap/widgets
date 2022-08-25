@@ -46,6 +46,16 @@ describe('connect', () => {
     })
 
     it('expects widget not to be disabled', async () => {
+      const component = renderWidget(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: hardhat.url }} />)
+      let tokenSelect = (await component.findAllByTestId('token-select'))[0]
+      expect(tokenSelect).toHaveProperty('disabled', true)
+      const toolbar = await component.findByTestId('toolbar')
+      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
+      tokenSelect = (await component.findAllByTestId('token-select'))[0]
+      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', false))
+    })
+
+    it('expects widget not to be disabled', async () => {
       const component = renderWidget(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
       let tokenSelect = (await component.findAllByTestId('token-select'))[0]
       expect(tokenSelect).toHaveProperty('disabled', true)
