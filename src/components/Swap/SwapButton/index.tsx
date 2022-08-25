@@ -168,7 +168,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         : trade.state === TradeState.VALID
         ? {
             onClick: async () => {
-              const open = await onReviewSwapClick?.()?.catch(() => false)
+              const open = await Promise.resolve(onReviewSwapClick?.())?.catch(() => false)
               setOpen(open ?? true)
             },
           }

@@ -59,13 +59,13 @@ export type OnSwitchTokens = () => void
  * An integration hook called when the user clicks 'Review swap'.
  * If the hook resolves to false or rejects, the review dialog will not open.
  */
-export type OnReviewSwapClick = () => void | Promise<boolean>
+export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
 /**
  * An integration hook called when the user clicks the token selector.
  * If the hook resolve to false or rejects, the token selector will not open.
  */
-export type OnTokenSelectorClick = (field: Field) => void | Promise<boolean>
+export type OnTokenSelectorClick = (field: Field) => void | boolean | Promise<boolean>
 
 export interface SwapEventHandlers {
   onSettingsReset?: OnSettingsReset
