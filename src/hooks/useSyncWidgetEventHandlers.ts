@@ -2,8 +2,10 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { onConnectWalletClickAtom } from 'state/wallet'
 
+export type OnConnectWalletClick = () => void | Promise<boolean>
+
 export interface WidgetEventHandlers {
-  onConnectWalletClick?: () => void | Promise<boolean>
+  onConnectWalletClick?: OnConnectWalletClick
 }
 
 export default function useSyncWidgetEventHandlers({ onConnectWalletClick }: WidgetEventHandlers): void {
