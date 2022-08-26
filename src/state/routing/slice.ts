@@ -2,11 +2,13 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { createApi, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+import { TradeType } from '@uniswap/sdk-core'
 // Importing just the type, so smart-order-router is lazy-loaded
 // eslint-disable-next-line no-restricted-imports
 import type { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
+import { isExactInput } from 'utils/tradeType'
 
 import { GetQuoteResult } from './types'
 
@@ -57,18 +59,28 @@ export const routing = createApi({
         amount: string
         routerUrl?: string
         provider: JsonRpcProvider
-        type: 'exactIn' | 'exactOut'
+        tradeType: TradeType
       }
     >({
       async queryFn(args, _api, _extraOptions) {
-        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerUrl, provider, type } =
-          args
+        const {
+          tokenInAddress,
+          tokenInChainId,
+          tokenOutAddress,
+          tokenOutChainId,
+          amount,
+          routerUrl,
+          provider,
+          tradeType,
+        } = args
 
         async function getClientSideQuote() {
           // Lazy-load the clientside router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
-          ).getClientSideQuote(args, provider, { protocols })
+          ).getClientSideQuote({ ...args, type: isExactInput(tradeType) ? 'exactIn' : 'exactOut' }, provider, {
+            protocols,
+          })
         }
 
         let result
@@ -82,7 +94,7 @@ export const routing = createApi({
               tokenOutAddress,
               tokenOutChainId,
               amount,
-              type,
+              tradeType,
             })
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {

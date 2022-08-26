@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
@@ -13,14 +13,14 @@ export enum Field {
 }
 
 export interface Swap {
-  independentField: Field
+  type: TradeType
   amount: string
   [Field.INPUT]?: Currency
   [Field.OUTPUT]?: Currency
 }
 
 const initialSwap: Swap = {
-  independentField: Field.INPUT,
+  type: TradeType.EXACT_INPUT,
   amount: '',
   [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
 }

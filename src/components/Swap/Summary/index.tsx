@@ -15,6 +15,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
+import { isExactInput } from 'utils/tradeType'
 
 import Price from '../Price'
 import Details from './Details'
@@ -67,26 +68,23 @@ interface EstimateProps {
 
 function Estimate({ trade, slippage }: EstimateProps) {
   const { i18n } = useLingui()
-  const text = useMemo(() => {
-    switch (trade.tradeType) {
-      case TradeType.EXACT_INPUT:
-        return (
-          <Trans>
-            Output is estimated. You will receive at least{' '}
-            {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)}{' '}
-            {trade.outputAmount.currency.symbol} or the transaction will revert.
-          </Trans>
-        )
-      case TradeType.EXACT_OUTPUT:
-        return (
-          <Trans>
-            Output is estimated. You will send at most{' '}
-            {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
-            {trade.inputAmount.currency.symbol} or the transaction will revert.
-          </Trans>
-        )
-    }
-  }, [i18n.locale, slippage.allowed, trade])
+  const text = useMemo(
+    () =>
+      isExactInput(trade.tradeType) ? (
+        <Trans>
+          Output is estimated. You will receive at least{' '}
+          {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)}{' '}
+          {trade.outputAmount.currency.symbol} or the transaction will revert.
+        </Trans>
+      ) : (
+        <Trans>
+          Output is estimated. You will send at most{' '}
+          {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
+          {trade.inputAmount.currency.symbol} or the transaction will revert.
+        </Trans>
+      ),
+    [i18n.locale, slippage.allowed, trade]
+  )
   return <StyledEstimate color="secondary">{text}</StyledEstimate>
 }
 
