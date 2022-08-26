@@ -9,5 +9,7 @@ export interface WidgetEventHandlers {
 
 export default function useSyncWidgetEventHandlers({ onConnectWalletClick }: WidgetEventHandlers): void {
   const setOnConnectWalletClick = useUpdateAtom(onConnectWalletClickAtom)
-  useEffect(() => setOnConnectWalletClick(onConnectWalletClick), [onConnectWalletClick, setOnConnectWalletClick])
+  useEffect(() => {
+    setOnConnectWalletClick(() => onConnectWalletClick)
+  }, [onConnectWalletClick, setOnConnectWalletClick])
 }
