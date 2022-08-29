@@ -28,6 +28,7 @@ export type {
   OnTransactionDeadlineChange,
   SwapEventHandlers,
 } from 'state/swap'
+export type { Transaction, TransactionInfo, TransactionType } from 'state/transactions'
 export { Field } from 'state/swap'
 export type { Slippage } from 'state/swap/settings'
 export type { Theme } from 'theme'
