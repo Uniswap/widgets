@@ -4,6 +4,7 @@ import { SupportedChainId, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { useCallback, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { Field } from 'state/swap'
 
 import { DAI, nativeOnChain, USDC_MAINNET } from '../constants/tokens'
 import EventFeed, { Event } from './EventFeed'
@@ -44,8 +45,8 @@ function Fixture() {
         value={{
           type,
           amount,
-          inputToken,
-          outputToken,
+          [Field.INPUT]: inputToken,
+          [Field.OUTPUT]: outputToken,
         }}
         onSettingsReset={useHandleEvent('onSettingsReset')}
         onSlippageChange={useHandleEvent('onSlippageChange')}

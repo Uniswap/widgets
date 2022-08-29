@@ -1,3 +1,14 @@
+import {
+  ArgentWalletDetector,
+  EnsPublicResolver,
+  EnsRegistrar,
+  Erc20,
+  Erc721,
+  Erc1155,
+  Weth,
+} from '__generated__/abis/types'
+import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from '__generated__/types/v3'
+import { V3Migrator } from '__generated__/types/v3/V3Migrator'
 import { Contract } from '@ethersproject/contracts'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
@@ -26,11 +37,8 @@ import ERC20_ABI from 'lib/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'lib/abis/erc20_bytes32.json'
 import ERC721_ABI from 'lib/abis/erc721.json'
 import ERC1155_ABI from 'lib/abis/erc1155.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'lib/abis/types'
 import WETH_ABI from 'lib/abis/weth.json'
 import { useMemo } from 'react'
-import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from 'types/v3'
-import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson

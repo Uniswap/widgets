@@ -1,3 +1,4 @@
+import { Erc20Interface } from '__generated__/abis/types/Erc20'
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -6,7 +7,6 @@ import { useMultipleContractSingleData, useSingleContractMultipleData } from 'ho
 import { useInterfaceMulticall } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import ERC20ABI from 'lib/abis/erc20.json'
-import { Erc20Interface } from 'lib/abis/types/Erc20'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
