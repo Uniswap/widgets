@@ -10,6 +10,7 @@ const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
   transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
+  max-height: 56px;
 
   :disabled {
     margin: -1px;
