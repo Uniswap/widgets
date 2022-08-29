@@ -7,16 +7,6 @@ import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contr
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import { useWeb3React } from '@web3-react/core'
-import ARGENT_WALLET_DETECTOR_ABI from 'lib/abis/argent-wallet-detector.json'
-import EIP_2612 from 'lib/abis/eip_2612.json'
-import ENS_PUBLIC_RESOLVER_ABI from 'lib/abis/ens-public-resolver.json'
-import ENS_ABI from 'lib/abis/ens-registrar.json'
-import ERC20_ABI from 'lib/abis/erc20.json'
-import ERC20_BYTES32_ABI from 'lib/abis/erc20_bytes32.json'
-import ERC721_ABI from 'lib/abis/erc721.json'
-import ERC1155_ABI from 'lib/abis/erc1155.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'lib/abis/types'
-import WETH_ABI from 'lib/abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
@@ -28,6 +18,16 @@ import {
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import ARGENT_WALLET_DETECTOR_ABI from 'lib/abis/argent-wallet-detector.json'
+import EIP_2612 from 'lib/abis/eip_2612.json'
+import ENS_PUBLIC_RESOLVER_ABI from 'lib/abis/ens-public-resolver.json'
+import ENS_ABI from 'lib/abis/ens-registrar.json'
+import ERC20_ABI from 'lib/abis/erc20.json'
+import ERC20_BYTES32_ABI from 'lib/abis/erc20_bytes32.json'
+import ERC721_ABI from 'lib/abis/erc721.json'
+import ERC1155_ABI from 'lib/abis/erc1155.json'
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'lib/abis/types'
+import WETH_ABI from 'lib/abis/weth.json'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
