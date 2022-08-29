@@ -3,6 +3,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { InterfaceTrade } from 'state/routing/types'
+import { isExactInput } from 'utils/tradeType'
 
 export interface RoutingDiagramEntry {
   percent: Percent
@@ -17,10 +18,9 @@ const V2_DEFAULT_FEE_TIER = 3000
  */
 export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
-    const portion =
-      trade.tradeType === TradeType.EXACT_INPUT
-        ? inputAmount.divide(trade.inputAmount)
-        : outputAmount.divide(trade.outputAmount)
+    const portion = isExactInput(trade.tradeType)
+      ? inputAmount.divide(trade.inputAmount)
+      : outputAmount.divide(trade.outputAmount)
     const percent = new Percent(portion.numerator, portion.denominator)
     const path: RoutingDiagramEntry['path'] = []
     for (let i = 0; i < pools.length; i++) {

@@ -1,17 +1,10 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect, useRef } from 'react'
-import { controlledAtom as swapAtom, Field, Swap } from 'state/swap'
+import { controlledAtom as swapAtom, Swap } from 'state/swap'
 import { controlledAtom as settingsAtom, Settings } from 'state/swap/settings'
 
 export type SwapSettingsController = Settings
-
-export interface SwapController {
-  type?: TradeType
-  amount?: string
-  [Field.INPUT]?: Currency
-  [Field.OUTPUT]?: Currency
-}
+export type SwapController = Swap
 
 export default function useSyncController({
   value,
@@ -33,19 +26,9 @@ export default function useSyncController({
   }, [settings, value])
 
   const setSwap = useUpdateAtom(swapAtom)
-  useEffect(() => setSwap(toSwap(value)), [value, setSwap])
+  useEffect(() => setSwap(value), [value, setSwap])
   const setSettings = useUpdateAtom(settingsAtom)
   useEffect(() => setSettings(settings), [settings, setSettings])
-}
-
-function toSwap(value?: SwapController): Swap | undefined {
-  if (!value) return undefined
-
-  return {
-    ...value,
-    independentField: value.type === TradeType.EXACT_INPUT ? Field.INPUT : Field.OUTPUT,
-    amount: value.amount || '',
-  }
 }
 
 function warnOnControlChange({ state, prop }: { state: string; prop: string }) {

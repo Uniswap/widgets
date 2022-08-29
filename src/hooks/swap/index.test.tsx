@@ -1,3 +1,4 @@
+import { TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -10,7 +11,7 @@ const DAI_MAINNET = DAI
 const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
 
 const INITIAL_SWAP: Swap = {
-  independentField: Field.INPUT,
+  type: TradeType.EXACT_INPUT,
   amount: '42',
   [Field.INPUT]: DAI_MAINNET,
   [Field.OUTPUT]: USDC_MAINNET,
@@ -37,7 +38,7 @@ describe('swap state', () => {
       const { result } = rerender(() => useAtomValue(swapAtom))
       expect(result.current).toMatchObject({
         ...INITIAL_SWAP,
-        independentField: Field.OUTPUT,
+        type: TradeType.EXACT_OUTPUT,
         [Field.INPUT]: INITIAL_SWAP[Field.OUTPUT],
         [Field.OUTPUT]: INITIAL_SWAP[Field.INPUT],
       })
@@ -126,7 +127,7 @@ describe('swap state', () => {
       expect(spy).toHaveBeenCalledWith(Field.OUTPUT, '123')
 
       const { result } = rerender(() => useAtomValue(swapAtom))
-      expect(result.current).toMatchObject({ ...INITIAL_SWAP, amount: '123', independentField: Field.OUTPUT })
+      expect(result.current).toMatchObject({ ...INITIAL_SWAP, amount: '123', type: TradeType.EXACT_OUTPUT })
     })
 
     it('calls onAmountChange if present', () => {

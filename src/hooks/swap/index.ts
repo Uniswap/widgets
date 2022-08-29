@@ -4,6 +4,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
+import { invertTradeType, toTradeType } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 export { default as useSwapInfo } from './useSwapInfo'
 
@@ -24,17 +25,10 @@ export function useSwitchSwapCurrencies() {
   return useCallback(() => {
     setSwap((swap) => {
       onSwitchTokens?.()
+      swap.type = invertTradeType(swap.type)
       const oldOutput = swap[Field.OUTPUT]
       swap[Field.OUTPUT] = swap[Field.INPUT]
       swap[Field.INPUT] = oldOutput
-      switch (swap.independentField) {
-        case Field.INPUT:
-          swap.independentField = Field.OUTPUT
-          break
-        case Field.OUTPUT:
-          swap.independentField = Field.INPUT
-          break
-      }
     })
   }, [onSwitchTokens, setSwap])
 }
@@ -61,11 +55,11 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency:
   return [currency, setOrSwitchCurrency]
 }
 
-const independentFieldAtom = pickAtom(swapAtom, 'independentField')
+const tradeTypeAtom = pickAtom(swapAtom, 'type')
 
 export function useIsSwapFieldIndependent(field: Field): boolean {
-  const independentField = useAtomValue(independentFieldAtom)
-  return independentField === field
+  const type = useAtomValue(tradeTypeAtom)
+  return type === toTradeType(field)
 }
 
 const amountAtom = pickAtom(swapAtom, 'amount')
@@ -87,7 +81,7 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
       if (update === amount) return
       onAmountChange?.(field, update)
       setSwap((swap) => {
-        swap.independentField = field
+        swap.type = toTradeType(field)
         swap.amount = update
       })
     },

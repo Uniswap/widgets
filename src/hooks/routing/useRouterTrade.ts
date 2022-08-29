@@ -15,6 +15,7 @@ import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
+import { isExactInput } from 'utils/tradeType'
 
 import { isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 
@@ -50,7 +51,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
 
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
-      tradeType === TradeType.EXACT_INPUT
+      isExactInput(tradeType)
         ? [debouncedAmountSpecified?.currency, debouncedOtherCurrency]
         : [debouncedOtherCurrency, debouncedAmountSpecified?.currency],
     [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
@@ -106,10 +107,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
 
     let otherAmount = undefined
     if (quoteResult) {
-      otherAmount = CurrencyAmount.fromRawAmount(
-        tradeType === TradeType.EXACT_INPUT ? currencyOut : currencyIn,
-        quoteResult.quote
-      )
+      otherAmount = CurrencyAmount.fromRawAmount(isExactInput(tradeType) ? currencyOut : currencyIn, quoteResult.quote)
     }
 
     if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {

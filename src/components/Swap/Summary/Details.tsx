@@ -14,6 +14,7 @@ import { Color, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { computeRealizedLPFeeAmount } from 'utils/prices'
+import { isExactInput } from 'utils/tradeType'
 
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
@@ -73,14 +74,12 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
       rows.push([t`Liquidity provider fee`, `${parsedLpFee} ${inputCurrency.symbol || currencyId(inputCurrency)}`])
     }
 
-    if (trade.tradeType === TradeType.EXACT_OUTPUT) {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)
-      rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
-    }
-
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+    if (isExactInput(trade.tradeType)) {
       const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
+    } else {
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)
+      rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
     rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])

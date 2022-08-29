@@ -38,7 +38,7 @@ export function useRouterArguments({
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerUrl,
             provider,
-            type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
+            tradeType,
           },
     [amount, tokenIn, tokenOut, tradeType, routerUrl, provider]
   )

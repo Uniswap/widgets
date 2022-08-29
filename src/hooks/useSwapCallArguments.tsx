@@ -7,6 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
 import { useMemo } from 'react'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
+import { isExactInput } from 'utils/tradeType'
 
 import { useArgentWalletContract } from './useArgentWalletContract'
 import { useV2RouterContract } from './useContract'
@@ -62,7 +63,7 @@ export function useSwapCallArguments(
         })
       )
 
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
+      if (isExactInput(trade.tradeType)) {
         swapMethods.push(
           V2SwapRouter.swapCallParameters(trade, {
             feeOnTransfer: true,
