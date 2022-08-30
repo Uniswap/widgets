@@ -8,7 +8,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
-import { isExactInput } from 'utils/tradeType'
 
 import { GetQuoteResult } from './types'
 
@@ -78,9 +77,7 @@ export const routing = createApi({
           // Lazy-load the clientside router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
-          ).getClientSideQuote({ ...args, type: isExactInput(tradeType) ? 'exactIn' : 'exactOut' }, provider, {
-            protocols,
-          })
+          ).getClientSideQuote(args, provider, { protocols })
         }
 
         let result
