@@ -26,7 +26,8 @@ function Fixture() {
       'Exact Input': TradeType.EXACT_INPUT,
       'Exact Output': TradeType.EXACT_OUTPUT,
     },
-  })
+  }) as TradeType
+
   const [amount] = useValue('amount', { defaultValue: '0' })
   const currencies: Record<string, Currency> = {
     ETH: nativeOnChain(SupportedChainId.MAINNET),
@@ -42,7 +43,7 @@ function Fixture() {
     <Row align="start" justify="space-around">
       <SwapWidget
         value={{
-          type: type || TradeType.EXACT_INPUT,
+          type,
           amount,
           [Field.INPUT]: inputToken,
           [Field.OUTPUT]: outputToken,
