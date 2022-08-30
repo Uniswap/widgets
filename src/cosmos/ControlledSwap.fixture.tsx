@@ -1,6 +1,6 @@
 import { tokens } from '@uniswap/default-token-list'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { SupportedChainId, SwapWidget } from '@uniswap/widgets'
+import { Field, SupportedChainId, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { useCallback, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
@@ -42,10 +42,10 @@ function Fixture() {
     <Row align="start" justify="space-around">
       <SwapWidget
         value={{
-          type,
+          type: type || TradeType.EXACT_INPUT,
           amount,
-          inputToken,
-          outputToken,
+          [Field.INPUT]: inputToken,
+          [Field.OUTPUT]: outputToken,
         }}
         onSettingsReset={useHandleEvent('onSettingsReset')}
         onSlippageChange={useHandleEvent('onSlippageChange')}
