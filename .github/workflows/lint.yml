@@ -17,14 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org
-          cache: 'yarn'
-
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - uses: ./.github/actions/setup
 
       - uses: wearerequired/lint-action@v2
         with:
