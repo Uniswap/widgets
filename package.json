@@ -36,6 +36,7 @@
     "prepare": "yarn contracts:compile && yarn i18n:compile && yarn ajv:compile",
     "prepublishOnly": "yarn build",
     "start": "cosmos",
+    "typecheck": "tsc -p tsconfig.json",
     "prebuild": "tsc -p tsconfig.build.json",
     "build": "rollup --config --failAfterWarnings",
     "release": "semantic-release",
