@@ -26,9 +26,8 @@ export const USDC = styled(Row)`
   ${loadingTransitionCss};
 `
 
-export const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
-  opacity: ${({ focused }) => (focused ? 1 : 0)};
-  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
+export const Balance = styled(ThemedText.Body2)`
+  transition: color 0.25s ease-in-out;
 `
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
@@ -94,12 +93,12 @@ export default function Input({ disabled, focused }: InputProps) {
     return maxAmount?.greaterThan(0) ? maxAmount.toExact() : undefined
   }, [balance])
 
-  const balanceColor = useMemo(() => {
-    const insufficientBalance =
+  const insufficientBalance = useMemo(
+    () =>
       balance &&
-      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : tradeCurrencyAmount?.greaterThan(balance))
-    return insufficientBalance ? 'error' : undefined
-  }, [balance, inputCurrencyAmount, tradeCurrencyAmount])
+      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : tradeCurrencyAmount?.greaterThan(balance)),
+    [balance, inputCurrencyAmount, tradeCurrencyAmount]
+  )
 
   const amount = useFormattedFieldAmount({
     disabled,
@@ -123,7 +122,7 @@ export default function Input({ disabled, focused }: InputProps) {
           <Row>
             <USDC isLoading={isRouteLoading}>{usdc ? `$${formatCurrencyAmount(usdc, 6, 'en', 2)}` : '-'}</USDC>
             {balance && (
-              <Balance color={balanceColor} focused={focused}>
+              <Balance color={insufficientBalance ? 'error' : focused ? 'secondary' : 'hint'}>
                 Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </Balance>
             )}
