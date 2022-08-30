@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
@@ -61,12 +61,12 @@ export default function useSyncTokenDefaults({
       amount: '',
       [Field.INPUT]: defaultInputToken,
       [Field.OUTPUT]: defaultOutputToken,
-      independentField: Field.INPUT,
+      type: TradeType.EXACT_INPUT,
     }
     if (defaultInputToken && defaultInputAmount) {
       defaultSwapState.amount = defaultInputAmount.toString()
     } else if (defaultOutputToken && defaultOutputAmount) {
-      defaultSwapState.independentField = Field.OUTPUT
+      defaultSwapState.type = TradeType.EXACT_OUTPUT
       defaultSwapState.amount = defaultOutputAmount.toString()
     }
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
