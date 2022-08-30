@@ -78,13 +78,7 @@ export const routing = createApi({
           // Lazy-load the clientside router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
-          ).getClientSideQuote(
-            { ...args, tradeType: isExactInput(tradeType) ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT },
-            provider,
-            {
-              protocols,
-            }
-          )
+          ).getClientSideQuote(args, provider, { protocols })
         }
 
         let result
