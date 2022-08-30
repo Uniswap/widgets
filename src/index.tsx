@@ -11,8 +11,7 @@ export type { ErrorHandler } from 'components/Error/ErrorBoundary'
 export { SupportedChainId } from 'constants/chains'
 export type { SupportedLocale } from 'constants/locales'
 export { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
-export type { SwapController } from 'hooks/swap/useSyncController'
-export type { SwapSettingsController } from 'hooks/swap/useSyncController'
+export type { SwapController, SwapSettingsController } from 'hooks/swap/useSyncController'
 export type { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 export type { OnTxFail, OnTxSubmit, OnTxSuccess, TransactionEventHandlers } from 'hooks/transactions'
@@ -30,6 +29,17 @@ export type {
 } from 'state/swap'
 export { Field } from 'state/swap'
 export type { Slippage } from 'state/swap/settings'
+export type {
+  ApprovalTransactionInfo,
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  SwapTransactionInfo,
+  Transaction,
+  TransactionInfo,
+  TransactionType,
+  UnwrapTransactionInfo,
+  WrapTransactionInfo,
+} from 'state/transactions'
 export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 export { invertTradeType, toTradeType } from 'utils/tradeType'
