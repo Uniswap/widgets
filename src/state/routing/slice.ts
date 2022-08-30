@@ -8,7 +8,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
-import { isExactInput } from 'utils/tradeType'
 
 import { GetQuoteResult } from './types'
 
