@@ -1,6 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
@@ -131,10 +132,9 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
-  const { onTokenSelectorClick } = useAtomValue(swapEventHandlersAtom)
+  const onTokenSelectorClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onTokenSelectorClick)
   const onOpen = useCallback(async () => {
-    const open = await Promise.resolve(onTokenSelectorClick?.(field)).catch(() => false)
-    setOpen(open ?? true)
+    setOpen(await onTokenSelectorClick(field))
   }, [field, onTokenSelectorClick])
   const selectAndClose = useCallback(
     (value: Currency) => {
