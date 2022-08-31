@@ -33,7 +33,7 @@ export function SettingsDialog() {
           </ThemedText.ButtonSmall>
         </TextButton>
       </Header>
-      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded css={scrollbar}>
+      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
         <BoundaryProvider value={boundary}>
           <MaxSlippageSelect />
           <TransactionTtlInput />
