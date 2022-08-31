@@ -36,10 +36,10 @@ export type {
   SwapTransactionInfo,
   Transaction,
   TransactionInfo,
-  TransactionType,
   UnwrapTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions'
+export { TransactionType } from 'state/transactions'
 export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 export { invertTradeType, toTradeType } from 'utils/tradeType'
