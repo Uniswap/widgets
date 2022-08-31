@@ -137,14 +137,20 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       })
 
       invariant(trade.trade)
-      return { type: TransactionType.SWAP, response, tradeType: trade.trade.tradeType, trade: trade.trade }
+      return {
+        type: TransactionType.SWAP,
+        response,
+        tradeType: trade.trade.tradeType,
+        trade: trade.trade,
+        slippageTolerance: slippage.allowed,
+      }
     })
 
     // Only close the review modal if the transaction has submitted.
     if (submitted) {
       setOpen(false)
     }
-  }, [onSubmit, setOldestValidBlock, swapCallback, trade.trade])
+  }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade.trade])
 
   const disableSwap = useMemo(
     () =>
