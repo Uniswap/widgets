@@ -17,7 +17,6 @@ import TransactionTtlInput from './TransactionTtlInput'
 
 export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(boundary, { padded: true })
   const { onSettingsReset } = useAtomValue(swapEventHandlersAtom)
   const resetSettingsBase = useResetAtom(settingsAtom)
   const resetSettings = useCallback(() => {
