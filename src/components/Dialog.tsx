@@ -5,7 +5,7 @@ import { largeIconCss } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
-import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
+import { Color, ThemedText, ThemeProvider } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
 import { TextButton } from './Button'
