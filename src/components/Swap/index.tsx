@@ -33,13 +33,7 @@ import useValidate from './useValidate'
 // since the wallet connection component exists within the Swap component.
 // This includes useSyncWidgetEventHandlers.
 // TODO(zzmp): refactor WalletConnection outside of Swap component
-export interface SwapProps
-  extends BrandingSettings,
-    FeeOptions,
-    SwapController,
-    SwapEventHandlers,
-    TokenDefaults,
-    WidgetEventHandlers {
+export interface SwapProps extends BrandingSettings, FeeOptions, SwapEventHandlers, TokenDefaults, WidgetEventHandlers {
   hideConnectionUI?: boolean
   provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string

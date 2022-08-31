@@ -6,6 +6,7 @@ import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import useWrapCallback from 'hooks/swap/useWrapCallback'
 import { useAddTransactionInfo } from 'hooks/transactions'
+import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -154,7 +155,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
     [disabled, isWrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
   )
-  const { onReviewSwapClick } = useAtomValue(swapEventHandlersAtom)
+  const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
@@ -168,8 +169,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         : trade.state === TradeState.VALID
         ? {
             onClick: async () => {
-              const open = await Promise.resolve(onReviewSwapClick?.())?.catch(() => false)
-              setOpen(open ?? true)
+              setOpen(await onReviewSwapClick())
             },
           }
         : { disabled: true }

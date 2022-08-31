@@ -92,7 +92,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
                 {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
-                <Balance focused={focused}>
+                <Balance color={focused ? 'secondary' : 'hint'}>
                   Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </Balance>
               )}
