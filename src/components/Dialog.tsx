@@ -111,7 +111,7 @@ export const Modal = styled.div<{ color: Color }>`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: ${Layer.DIALOG};
+  z-index: 1;
 `
 
 interface DialogProps {
