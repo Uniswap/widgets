@@ -25,7 +25,7 @@ import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
-import SwapButton from './SwapButton'
+import SwapActionButton from './SwapActionButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
@@ -75,7 +75,7 @@ export default function Swap(props: SwapProps) {
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused}>
               <Toolbar />
-              <SwapButton disabled={isDisabled} />
+              <SwapActionButton disabled={isDisabled} />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>
