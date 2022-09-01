@@ -13,15 +13,12 @@ import useCurrencyBalance from '../useCurrencyBalance'
 interface UseWrapCallbackReturns {
   callback: () => Promise<ContractTransaction | void>
   type?: TransactionType.WRAP | TransactionType.UNWRAP
-  isWrap: boolean
 }
 
-export default function useWrapCallback(): UseWrapCallbackReturns {
-  const { account, chainId } = useWeb3React()
-  const wrappedNativeCurrencyContract = useWETHContract()
-  const { amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
-
-  const type = useMemo(() => {
+export function useWrapType(): TransactionType.WRAP | TransactionType.UNWRAP | undefined {
+  const { chainId } = useWeb3React()
+  const { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
+  return useMemo(() => {
     if (chainId && inputCurrency && outputCurrency) {
       if (inputCurrency.isNative && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(outputCurrency)) {
         return TransactionType.WRAP
@@ -32,6 +29,17 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     }
     return undefined
   }, [chainId, inputCurrency, outputCurrency])
+}
+
+export function useIsWrap(): boolean {
+  return useWrapType() !== undefined
+}
+
+export default function useWrapCallback(): UseWrapCallbackReturns {
+  const { account } = useWeb3React()
+  const wrappedNativeCurrencyContract = useWETHContract()
+  const { amount, [Field.INPUT]: inputCurrency } = useAtomValue(swapAtom)
+  const wrapType = useWrapType()
 
   const parsedAmountIn = useMemo(
     () => tryParseCurrencyAmount(amount, inputCurrency ?? undefined),
@@ -45,7 +53,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     }
 
     return async () => {
-      switch (type) {
+      switch (wrapType) {
         case TransactionType.WRAP:
           return wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
         case TransactionType.UNWRAP:
@@ -54,11 +62,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
           return undefined
       }
     }
-  }, [type, parsedAmountIn, balanceIn, wrappedNativeCurrencyContract])
+  }, [parsedAmountIn, balanceIn, wrappedNativeCurrencyContract, wrapType])
 
-  return useMemo(() => ({ callback, type, isWrap: type !== undefined }), [callback, type])
-}
-
-export function useIsWrap() {
-  return useWrapCallback().isWrap
+  return useMemo(() => ({ callback, type: wrapType }), [callback, wrapType])
 }

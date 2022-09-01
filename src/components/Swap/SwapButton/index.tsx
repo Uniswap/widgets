@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
+import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -19,7 +20,7 @@ import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 import useOnSubmit from './useOnSubmit'
-import useWrapButton from './useWrapButton'
+import WrapButton from './WrapButton'
 
 interface SwapButtonProps {
   disabled?: boolean
@@ -87,15 +88,14 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade.trade])
 
-  const wrap = useWrapButton(onSubmit)
-
+  const isWrap = useIsWrap()
   const isDisabled = useMemo(
     () =>
       !chainId ||
-      (!wrap && !optimizedTrade) ||
+      (!isWrap && !optimizedTrade) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [wrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
+    [isWrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
   )
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
@@ -120,7 +120,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     )
   }
 
-  if (wrap) return wrap
+  if (isWrap) return <WrapButton onSubmit={onSubmit} />
 
   return (
     <>

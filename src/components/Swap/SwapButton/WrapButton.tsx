@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import useWrapCallback from 'hooks/swap/useWrapCallback'
+import useWrapCallback, { useIsWrap } from 'hooks/swap/useWrapCallback'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -11,13 +11,16 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 
 /**
- * Returns a wrapping ActionButton if appropriate.
- * Does not check for edge cases which would disable the button.
+ * A wrapping ActionButton.
+ * May only be rendered if a valid wrap exists.
  */
-export default function useWrapButton(
+export default function WrapButton({
+  onSubmit,
+}: {
   onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
-) {
-  const { type: wrapType, callback: wrapCallback, isWrap } = useWrapCallback()
+}) {
+  invariant(useIsWrap())
+  const { type: wrapType, callback: wrapCallback } = useWrapCallback()
 
   const [isPending, setIsPending] = useState(false)
   // Reset the pending state if user updates the wrap.
@@ -47,7 +50,6 @@ export default function useWrapButton(
     [isPending, onWrap]
   )
 
-  if (!isWrap) return null
   return (
     <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} {...actionProps}>
       <Trans>
