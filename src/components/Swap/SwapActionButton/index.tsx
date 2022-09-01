@@ -9,7 +9,7 @@ import { useTheme } from 'styled-components/macro'
 
 import ActionButton from '../../ActionButton'
 import ApproveButton, { useIsPendingApproval } from './ApproveButton'
-import SwapActionButton from './SwapButton'
+import SwapButton from './SwapButton'
 import useOnSubmit from './useOnSubmit'
 import WrapButton from './WrapButton'
 
@@ -17,7 +17,7 @@ interface SwapButtonProps {
   disabled?: boolean
 }
 
-export default memo(function SwapButton({ disabled }: SwapButtonProps) {
+export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { chainId } = useWeb3React()
   const {
     [Field.INPUT]: { amount: inputCurrencyAmount, balance: inputCurrencyBalance },
@@ -56,8 +56,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   } else if (approval.approvalState !== ApproveOrPermitState.APPROVED) {
     return <ApproveButton onSubmit={onSubmit} trade={trade.trade} {...approval} />
   } else {
-    return (
-      <SwapActionButton onSubmit={onSubmit} optimizedTrade={optimizedTrade} signatureData={approval.signatureData} />
-    )
+    return <SwapButton onSubmit={onSubmit} optimizedTrade={optimizedTrade} signatureData={approval.signatureData} />
   }
 })
