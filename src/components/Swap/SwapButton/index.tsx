@@ -1,29 +1,25 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useSwapAmount, useSwapInfo } from 'hooks/swap'
+import { useSwapInfo } from 'hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
-import useWrapCallback from 'hooks/swap/useWrapCallback'
-import { useAddTransactionInfo } from 'hooks/transactions'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
-import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { Spinner } from 'icons'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
-import { displayTxHashAtom, feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
-import { TransactionInfo, TransactionType } from 'state/transactions'
+import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
+import { TransactionType } from 'state/transactions'
 import { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
-import { isAnimating } from 'utils/animations'
 
 import ActionButton, { ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import useApprovalData, { useIsPendingApproval } from './useApprovalData'
+import useOnSubmit from './useOnSubmit'
+import useWrapButton from './useWrapButton'
 
 interface SwapButtonProps {
   disabled?: boolean
@@ -32,12 +28,7 @@ interface SwapButtonProps {
 export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useWeb3React()
   const {
-    [Field.INPUT]: {
-      currency: inputCurrency,
-      amount: inputCurrencyAmount,
-      balance: inputCurrencyBalance,
-      usdc: inputUSDC,
-    },
+    [Field.INPUT]: { amount: inputCurrencyAmount, balance: inputCurrencyBalance, usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade,
     slippage,
@@ -51,7 +42,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
   const deadline = useTransactionDeadline()
 
-  const { type: wrapType, callback: wrapCallback, isWrap } = useWrapCallback()
   const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
@@ -68,62 +58,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
 
-  const addTransactionInfo = useAddTransactionInfo()
-  const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
-  const [, setInputAmount] = useSwapAmount(Field.INPUT)
-
-  // Submits a transaction. Returns true if the transaction was submitted.
-  const onSubmit = useCallback(
-    async (submit: () => Promise<TransactionInfo | undefined>): Promise<boolean> => {
-      let info: TransactionInfo | undefined
-      try {
-        info = await submit()
-      } catch (e) {
-        console.error('Failed to submit', e)
-      }
-      if (!info) return false
-
-      addTransactionInfo(info)
-      setDisplayTxHash(info.response.hash)
-
-      if (isAnimating(document)) {
-        // Only reset the input amount after any queued animations to avoid layout thrashing,
-        // because a successful submit will open the status dialog and immediately cover input.
-        return new Promise((resolve) => {
-          const onAnimationEnd = () => {
-            document.removeEventListener('animationend', onAnimationEnd)
-            setInputAmount('')
-          }
-          document.addEventListener('animationend', onAnimationEnd)
-        })
-      } else {
-        setInputAmount('')
-      }
-
-      return true
-    },
-    [addTransactionInfo, setDisplayTxHash, setInputAmount]
-  )
-
-  const [isPending, setIsPending] = useState(false)
-  const native = useNativeCurrency()
-  const onWrap = useCallback(async () => {
-    setIsPending(true)
-    await onSubmit(async () => {
-      const response = await wrapCallback()
-      if (!response) return
-
-      invariant(wrapType !== undefined) // if response is valid, then so is wrapType
-      const amount = CurrencyAmount.fromRawAmount(native, response.value?.toString() ?? '0')
-      return { response, type: wrapType, amount }
-    })
-
-    // Whether or not the transaction submits, we should still reset the pending state.
-    setIsPending(false)
-  }, [native, onSubmit, wrapCallback, wrapType])
-  // Reset the pending state if user updates the swap.
-  useEffect(() => setIsPending(false), [inputCurrencyAmount, trade])
-
+  const onSubmit = useOnSubmit()
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSwap = useCallback(async () => {
     const submitted = await onSubmit(async () => {
@@ -152,55 +87,48 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade.trade])
 
-  const disableSwap = useMemo(
+  const wrap = useWrapButton(onSubmit)
+
+  const isDisabled = useMemo(
     () =>
-      disabled ||
       !chainId ||
-      (!isWrap && !optimizedTrade) ||
+      (!wrap && !optimizedTrade) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [disabled, isWrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
+    [wrap, chainId, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
   )
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (disableSwap) {
-      return { disabled: true }
-    } else if (isWrap) {
-      return isPending
-        ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
-        : { onClick: onWrap }
-    } else {
-      return approvalAction
-        ? { action: approvalAction }
-        : trade.state === TradeState.VALID
-        ? {
-            onClick: async () => {
-              setOpen(await onReviewSwapClick())
-            },
-          }
-        : { disabled: true }
-    }
-  }, [disableSwap, isWrap, isPending, onWrap, approvalAction, trade.state, onReviewSwapClick])
-  const Label = useCallback(() => {
-    switch (wrapType) {
-      case TransactionType.WRAP:
-        return <Trans>Wrap {inputCurrency?.symbol}</Trans>
-      case TransactionType.UNWRAP:
-        return <Trans>Unwrap {inputCurrency?.symbol}</Trans>
-      case undefined:
-        return <Trans>Review swap</Trans>
-    }
-  }, [inputCurrency?.symbol, wrapType])
-  const onClose = useCallback(() => setOpen(false), [])
+    return approvalAction
+      ? { action: approvalAction }
+      : trade.state === TradeState.VALID
+      ? {
+          onClick: async () => {
+            setOpen(await onReviewSwapClick())
+          },
+        }
+      : { disabled: true }
+  }, [approvalAction, trade.state, onReviewSwapClick])
 
   const { tokenColorExtraction } = useTheme()
+
+  if (disabled || isDisabled) {
+    return (
+      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} disabled={true}>
+        <Trans>Review swap</Trans>
+      </ActionButton>
+    )
+  }
+
+  if (wrap) return wrap
+
   return (
     <>
       <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} {...actionProps}>
-        <Label />
+        <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade.trade && (
-        <Dialog color="dialog" onClose={onClose}>
+        <Dialog color="dialog" onClose={() => setOpen(false)}>
           <SummaryDialog
             trade={trade.trade}
             slippage={slippage}
