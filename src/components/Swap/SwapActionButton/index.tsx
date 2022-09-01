@@ -10,6 +10,7 @@ import { useTheme } from 'styled-components/macro'
 import ActionButton from '../../ActionButton'
 import ApproveButton, { useIsPendingApproval } from './ApproveButton'
 import SwapButton from './SwapButton'
+import SwitchChainButton from './SwitchChainButton'
 import useOnSubmit from './useOnSubmit'
 import WrapButton from './WrapButton'
 
@@ -20,10 +21,11 @@ interface SwapButtonProps {
 export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { chainId } = useWeb3React()
   const {
-    [Field.INPUT]: { amount: inputCurrencyAmount, balance: inputCurrencyBalance },
+    [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
     trade,
     slippage,
   } = useSwapInfo()
+  const inputChainId = inputCurrency?.chainId
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -46,7 +48,9 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
   const color = tokenColorExtraction ? 'interactive' : 'accent'
 
-  if (isDisabled) {
+  if (inputChainId && chainId && inputChainId !== chainId) {
+    return <SwitchChainButton color={color} chainId={inputChainId} />
+  } else if (isDisabled) {
     return (
       <ActionButton color={color} disabled={true}>
         <Trans>Review swap</Trans>
