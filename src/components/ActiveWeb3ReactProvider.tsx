@@ -66,18 +66,18 @@ function getConnectionFromWalletConnect(
 
 const onError = (error: Error) => console.error(error)
 
-interface ActiveWeb3ProviderProps {
+interface ActiveWeb3ReactProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
   jsonRpcUrlMap: { [chainId: number]: string | string[] }
   defaultChainId: SupportedChainId
 }
 
-export function ActiveWeb3Provider({
+export default function ActiveWeb3ReactProvider({
   jsonRpcUrlMap: propsJsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
   provider,
   children,
-}: PropsWithChildren<ActiveWeb3ProviderProps>) {
+}: PropsWithChildren<ActiveWeb3ReactProviderProps>) {
   const jsonRpcUrlMap = useMemo(
     () =>
       Object.entries(propsJsonRpcUrlMap).reduce(

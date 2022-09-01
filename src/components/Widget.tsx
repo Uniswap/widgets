@@ -1,10 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import ActiveWeb3ReactProvider from 'components/ActiveWeb3ReactProvider'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
-import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
@@ -177,7 +177,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
               <ErrorBoundary onError={props.onError}>
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
-                    <ActiveWeb3Provider
+                    <ActiveWeb3ReactProvider
                       provider={props.provider}
                       jsonRpcUrlMap={jsonRpcUrlMapWithFallbacks}
                       defaultChainId={defaultChainId}
@@ -187,7 +187,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                         <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
-                    </ActiveWeb3Provider>
+                    </ActiveWeb3ReactProvider>
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>
