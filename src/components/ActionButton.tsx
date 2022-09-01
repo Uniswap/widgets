@@ -11,10 +11,6 @@ const StyledButton = styled(Button)`
   flex-grow: 1;
   max-height: 56px;
   transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
-
-  :disabled {
-    margin: -1px;
-  }
 `
 
 const ActionRow = styled(Row)``
