@@ -7,12 +7,10 @@ export type JsonRpcUrlMap = { [chainId: number]: string | string[] }
 
 const jsonRpcUrlMapAtom = atom<Record<SupportedChainId, string[]>>(JSON_RPC_FALLBACK_ENDPOINTS)
 
-export default function useJsonRpcEndpoints(chainId: SupportedChainId) {
-  const [map] = useJsonRpcUrlMap()
-  return map[chainId]
-}
-
-export function useJsonRpcUrlMap(): [Record<SupportedChainId, string[]>, (jsonRpcUrlMap?: JsonRpcUrlMap) => void] {
+export default function useJsonRpcUrlMap(): [
+  Record<SupportedChainId, string[]>,
+  (jsonRpcUrlMap?: JsonRpcUrlMap) => void
+] {
   const [jsonRpcUrlMap, setJsonRpcUrlMap] = useAtom(jsonRpcUrlMapAtom)
   const setJsonRpcUrlMapWithFallbacks = useCallback(
     (jsonRpcUrlMap?: JsonRpcUrlMap) => {
