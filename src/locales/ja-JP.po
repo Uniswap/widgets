@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-01 18:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -24,19 +24,19 @@ msgstr "同意する"
 msgid "Acknowledge"
 msgstr "認めます"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "許可する"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "ウォレットで許可する"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "最初に {0} を許可する"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "最初に {symbol} を許可"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "保留中の手当"
 
@@ -44,21 +44,21 @@ msgstr "保留中の手当"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "承認待ち"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "承認"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "ウォレットで承認する"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "最初に {0} を承認する"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "最初に {symbol} を承認"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -73,7 +73,7 @@ msgid "Close"
 msgstr "閉じる"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "ウォレットで確認する"
 
@@ -231,7 +231,8 @@ msgstr "ページを再読み込みする"
 msgid "Reset"
 msgstr "リセット"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "スワップを確認する"
 
@@ -358,17 +359,9 @@ msgstr "開封確認済み"
 msgid "Unwrap pending"
 msgstr "保留中のアンラップ"
 
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "{0}をアンラップ"
-
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Etherscanで見る"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "ラップ {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -381,6 +374,10 @@ msgstr "価格が設定したパーセンテージよりも不利な価格に変
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "分"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

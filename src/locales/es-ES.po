@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-01 18:05\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -24,19 +24,19 @@ msgstr "Aceptar"
 msgid "Acknowledge"
 msgstr "Reconocer"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "Permitir"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "Permitir en su billetera"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Permitir {0} primero"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "Permitir {symbol} primero"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "Asignación pendiente"
 
@@ -44,21 +44,21 @@ msgstr "Asignación pendiente"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Se produjo un error al intentar ejecutar este intercambio. Es posible que deba aumentar su tolerancia al deslizamiento. Si eso no funciona, puede haber una incompatibilidad con el token que está negociando. Nota: la tarifa de transferencia y los tokens de rebase son incompatibles con Uniswap V3."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "Aprobación pendiente"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "Aprobar"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "Aprueba en tu billetera"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Aprobar {0} primero"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "Aprobar {symbol} primero"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -73,7 +73,7 @@ msgid "Close"
 msgstr "Cerrar"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "Confirma en tu billetera"
 
@@ -231,7 +231,8 @@ msgstr "recargar la pagina"
 msgid "Reset"
 msgstr "Reiniciar"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "Intercambio de opiniones"
 
@@ -358,17 +359,9 @@ msgstr "Desenvolver confirmado"
 msgid "Unwrap pending"
 msgstr "Desenvolver pendiente"
 
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Desenvolver {0}"
-
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Ver en Etherscan"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Envolver {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -381,6 +374,10 @@ msgstr "Su transacción se revertirá si el precio cambia desfavorablemente más
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minutos"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

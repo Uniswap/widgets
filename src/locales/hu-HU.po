@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-01 18:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -24,19 +24,19 @@ msgstr "Elfogadás"
 msgid "Acknowledge"
 msgstr "elismerni"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "Lehetővé teszi"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "Engedd be a pénztárcádba"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Először engedélyezze a {0} -t"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "Először engedélyezze a {symbol} -t"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "A juttatás függőben van"
 
@@ -44,21 +44,21 @@ msgstr "A juttatás függőben van"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "Kérelem folyamatban"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "Jóváhagyás"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "Jóváhagyja a pénztárcájában"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Először hagyja jóvá a {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "Először hagyja jóvá a {symbol} -t"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -73,7 +73,7 @@ msgid "Close"
 msgstr "Bezárás"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "Erősítse meg pénztárcájában"
 
@@ -231,7 +231,8 @@ msgstr "Töltse be újra az oldalt"
 msgid "Reset"
 msgstr "Visszaállítás"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "Véleménycsere"
 
@@ -358,17 +359,9 @@ msgstr "Kibontás megerősítve"
 msgid "Unwrap pending"
 msgstr "Felbontás függőben"
 
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Kicsomagolás {0}"
-
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Nézd meg az Etherscan webhelyen"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Tekercs {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -381,6 +374,10 @@ msgstr "A tranzakciója visszaáll, ha az ár ennél a százaléknál nagyobb m�
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "perc"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

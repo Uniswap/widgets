@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-01 18:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -24,19 +24,19 @@ msgstr "قبول"
 msgid "Acknowledge"
 msgstr "يقر"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "السماح"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "السماح في محفظتك"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "اسمح بـ {0} أولاً"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "اسمح بـ {symbol} أولاً"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "البدل معلق"
 
@@ -44,21 +44,21 @@ msgstr "البدل معلق"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "حدث خطأ أثناء محاولة تنفيذ هذا التبادل. قد تحتاج إلى زيادة تحملك للانزلاق. إذا لم يفلح ذلك ، فقد يكون هناك عدم توافق مع الرمز الذي تتداوله. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "في انتظار الموافقة"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "الموافقة"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "الموافقة في محفظتك"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "الموافقة على {0} أولاً"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "الموافقة على {symbol} أولاً"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -73,7 +73,7 @@ msgid "Close"
 msgstr "إغلاق"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "قم بالتأكيد في محفظتك"
 
@@ -231,7 +231,8 @@ msgstr "خذ المخاطر. لا شيء يمكن أن يحل محل التجر�
 msgid "Reset"
 msgstr "إعادة ضبط"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "مراجعة المبادلة"
 
@@ -358,17 +359,9 @@ msgstr "أكد Unwrap"
 msgid "Unwrap pending"
 msgstr "فك التفاف معلق"
 
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "فك {0}"
-
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "عرض على Etherscan"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "التفاف {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -381,6 +374,10 @@ msgstr "سيتم عودة معاملتك إذا تغير السعر بشكل غ�
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "دقائق"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"
