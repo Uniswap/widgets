@@ -6,6 +6,7 @@ import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
+import { useJsonRpcUrlMap } from 'hooks/useJsonRpcEndpoints'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
@@ -68,30 +69,20 @@ const onError = (error: Error) => console.error(error)
 
 interface ActiveWeb3ReactProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap: { [chainId: number]: string | string[] }
   defaultChainId: SupportedChainId
 }
 
 export default function ActiveWeb3ReactProvider({
-  jsonRpcUrlMap: propsJsonRpcUrlMap,
   defaultChainId: propsDefaultChainId,
   provider,
   children,
 }: PropsWithChildren<ActiveWeb3ReactProviderProps>) {
-  const jsonRpcUrlMap = useMemo(
-    () =>
-      Object.entries(propsJsonRpcUrlMap).reduce(
-        (urlMap, [id, urls]) => ({ ...urlMap, [id]: Array.isArray(urls) ? urls : [urls] }),
-        {}
-      ),
-    [propsJsonRpcUrlMap]
-  )
-
   const [defaultChainId, setDefaultChainId] = useAtom(defaultChainIdAtom)
   useEffect(() => {
     if (propsDefaultChainId !== defaultChainId) setDefaultChainId(propsDefaultChainId)
   }, [propsDefaultChainId, defaultChainId, setDefaultChainId])
 
+  const [jsonRpcUrlMap] = useJsonRpcUrlMap()
   const integratorConnection = useMemo(() => getConnectionFromProvider(onError, provider), [provider])
   const metaMaskConnection = useMemo(
     () => toWeb3Connection(initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))),
