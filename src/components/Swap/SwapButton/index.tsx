@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
-import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
+import { ApproveOrPermitState, useApproveOrPermit, useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
@@ -18,7 +18,7 @@ import invariant from 'tiny-invariant'
 import ActionButton, { ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
-import useApprovalData, { useIsPendingApproval } from './useApprovalData'
+import ApproveButton, { useIsPendingApproval } from './ApproveButton'
 import useOnSubmit from './useOnSubmit'
 import WrapButton from './WrapButton'
 
@@ -43,12 +43,12 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
   const deadline = useTransactionDeadline()
 
-  const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
+  const approval = useApproveOrPermit(optimizedTrade, slippage.allowed, useIsPendingApproval, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
-    signatureData,
+    signatureData: approval.signatureData,
     deadline,
     feeOptions,
   })
@@ -99,16 +99,14 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   )
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    return approvalAction
-      ? { action: approvalAction }
-      : trade.state === TradeState.VALID
+    return trade.state === TradeState.VALID
       ? {
           onClick: async () => {
             setOpen(await onReviewSwapClick())
           },
         }
       : { disabled: true }
-  }, [approvalAction, trade.state, onReviewSwapClick])
+  }, [trade.state, onReviewSwapClick])
 
   const { tokenColorExtraction } = useTheme()
 
@@ -121,6 +119,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   }
 
   if (isWrap) return <WrapButton onSubmit={onSubmit} />
+  if (approval.approvalState !== ApproveOrPermitState.APPROVED) {
+    return <ApproveButton onSubmit={onSubmit} trade={trade.trade} {...approval} />
+  }
 
   return (
     <>

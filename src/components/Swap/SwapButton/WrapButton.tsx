@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import useWrapCallback, { useIsWrap } from 'hooks/swap/useWrapCallback'
+import useWrapCallback from 'hooks/swap/useWrapCallback'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -12,14 +12,13 @@ import ActionButton from '../../ActionButton'
 
 /**
  * A wrapping ActionButton.
- * May only be rendered if a valid wrap exists.
+ * Should only be rendered if a valid wrap exists.
  */
 export default function WrapButton({
   onSubmit,
 }: {
   onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
 }) {
-  invariant(useIsWrap())
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
 
   const [isPending, setIsPending] = useState(false)
