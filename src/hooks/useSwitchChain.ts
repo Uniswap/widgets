@@ -15,6 +15,10 @@ async function switchChain(connector: Connector, chainId: SupportedChainId, rpcU
     const addChainParameter: AddEthereumChainParameter = {
       chainId,
       chainName,
+      // NB: Some providers (eg MetaMask) make test calls from a background page before switching,
+      // so fallback endpoints which are publicly available must be provided.
+      // Otherwise, the chain switch will fail if the background page origin is blocked.
+      // (This is automatically done by useJsonRpcUrls.)
       rpcUrls,
       nativeCurrency,
       blockExplorerUrls: [explorer],
