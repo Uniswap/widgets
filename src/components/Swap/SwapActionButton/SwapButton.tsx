@@ -11,21 +11,27 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
 import { SwapTransactionInfo, TransactionType } from 'state/transactions'
-import { useTheme } from 'styled-components/macro'
+import { Colors } from 'theme'
 import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 
+/**
+ * A swapping ActionButton.
+ * Should only be rendered if a valid swap exists.
+ */
 export default function SwapButton({
-  onSubmit,
+  color,
   optimizedTrade,
   signatureData,
+  onSubmit,
 }: {
-  onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
+  color: keyof Colors
   optimizedTrade: ReturnType<typeof useSwapApprovalOptimizedTrade>
   signatureData: SignatureData | null
+  onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const { account, chainId } = useWeb3React()
   const {
@@ -86,11 +92,9 @@ export default function SwapButton({
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
 
-  const { tokenColorExtraction } = useTheme()
-
   return (
     <>
-      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} onClick={onClick}>
+      <ActionButton color={color} onClick={onClick}>
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade && (
