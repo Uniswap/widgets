@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import ActionButton from 'components/ActionButton'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import useSwitchChain from 'hooks/useSwitchChain'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 import { Colors } from 'theme'
@@ -8,15 +8,15 @@ import { Colors } from 'theme'
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ color, chainId }: { color: keyof Colors; chainId: number }) {
   const [isPending, setIsPending] = useState(false)
-  const switchNetwork = useSwitchNetwork()
-  const onSwitchNetwork = useCallback(async () => {
+  const switchChain = useSwitchChain()
+  const onSwitchChain = useCallback(async () => {
     setIsPending(true)
     try {
-      await switchNetwork(chainId)
+      await switchChain(chainId)
     } finally {
       setIsPending(false)
     }
-  }, [chainId, switchNetwork])
+  }, [chainId, switchChain])
 
   const actionProps = useMemo(
     () =>
@@ -27,10 +27,10 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
           }
         : {
             message: <Trans>Switch network</Trans>,
-            onClick: onSwitchNetwork,
+            onClick: onSwitchChain,
             children: <Trans>Switch</Trans>,
           },
-    [isPending, onSwitchNetwork]
+    [isPending, onSwitchChain]
   )
 
   return <ActionButton color={color} {...actionProps}></ActionButton>

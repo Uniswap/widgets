@@ -28,7 +28,7 @@ async function switchChain(connector: Connector, chainId: SupportedChainId): Pro
   }
 }
 
-export default function useSwitchNetwork(): (chainId: SupportedChainId) => Promise<void> {
+export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
   const { connector } = useWeb3React()
   return useCallback((chainId: SupportedChainId) => switchChain(connector, chainId), [connector])
 }
