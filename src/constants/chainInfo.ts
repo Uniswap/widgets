@@ -25,7 +25,7 @@ interface BaseChainInfo {
   readonly nativeCurrency: {
     name: string // e.g. 'Goerli ETH',
     symbol: string // e.g. 'gorETH',
-    decimals: number // e.g. 18,
+    decimals: 18 // e.g. 18,
   }
 }
 
