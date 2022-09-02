@@ -1,19 +1,77 @@
 import { SupportedChainId } from './chains'
 
 /**
- * Fallback JSON RPC endpoints if integrator does not provide one
+ * Fallback JSON RPC endpoints.
+ * These are used if the integrator does not provide an endpoint, or if the endpoint does not work.
+ *
+ * MetaMask allows switching to any URL, but displays a warning if it is not on the "Safe" list:
+ * https://github.com/MetaMask/metamask-mobile/blob/bdb7f37c90e4fc923881a07fca38d4e77c73a579/app/core/RPCMethods/wallet_addEthereumChain.js#L228-L235
+ * https://chainid.network/chains.json
+ *
+ * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
 export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
-  [SupportedChainId.MAINNET]: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
-  [SupportedChainId.ROPSTEN]: ['https://rpc.ankr.com/eth_ropsten'],
-  [SupportedChainId.RINKEBY]: ['https://rinkeby-light.eth.linkpool.io/'],
-  [SupportedChainId.GOERLI]: ['https://rpc.ankr.com/eth_goerli'],
-  [SupportedChainId.KOVAN]: ['https://eth-kovan.public.blastapi.io', 'https://kovan.poa.network'],
-  [SupportedChainId.POLYGON]: ['https://rpc-mainnet.matic.quiknode.pro', 'https://polygon-rpc.com'],
-  [SupportedChainId.POLYGON_MUMBAI]: ['https://matic-mumbai.chainstacklabs.com'],
-  [SupportedChainId.ARBITRUM_ONE]: ['https://arbitrum.public-rpc.com'],
-  [SupportedChainId.ARBITRUM_RINKEBY]: ['https://rinkeby.arbitrum.io/rpc'],
-  [SupportedChainId.OPTIMISM]: ['https://rpc.ankr.com/optimism'],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: ['https://kovan.optimism.io'],
-  // [SupportedChainId.CELO]: ['https://rpc.ankr.com/celo'], // TODO: need to add support for Celo
+  [SupportedChainId.MAINNET]: [
+    // "Safe" URLs
+    'https://api.mycryptoapi.com/eth',
+    'https://cloudflare-eth.com',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth',
+    'https://eth-mainnet.public.blastapi.io',
+  ],
+  [SupportedChainId.ROPSTEN]: [
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth_ropsten',
+  ],
+  [SupportedChainId.RINKEBY]: [
+    // "Fallback" URLs
+    'https://rinkeby-light.eth.linkpool.io/',
+  ],
+  [SupportedChainId.GOERLI]: [
+    // "Safe" URLs
+    'https://rpc.goerli.mudit.blog/',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth_goerli',
+  ],
+  [SupportedChainId.KOVAN]: [
+    // "Safe" URLs
+    'https://kovan.poa.network',
+    // "Fallback" URLs
+    'https://eth-kovan.public.blastapi.io',
+  ],
+  [SupportedChainId.POLYGON]: [
+    // "Safe" URLs
+    'https://polygon-rpc.com/',
+    'https://rpc-mainnet.matic.network',
+    'https://matic-mainnet.chainstacklabs.com',
+    'https://rpc-mainnet.maticvigil.com',
+    'https://rpc-mainnet.matic.quiknode.pro',
+    'https://matic-mainnet-full-rpc.bwarelabs.com',
+  ],
+  [SupportedChainId.POLYGON_MUMBAI]: [
+    // "Safe" URLs
+    'https://matic-mumbai.chainstacklabs.com',
+    'https://rpc-mumbai.maticvigil.com',
+    'https://matic-testnet-archive-rpc.bwarelabs.com',
+  ],
+  [SupportedChainId.ARBITRUM_ONE]: [
+    // "Safe" URLs
+    'https://arb1.arbitrum.io/rpc',
+    // "Fallback" URLs
+    'https://arbitrum.public-rpc.com',
+  ],
+  [SupportedChainId.ARBITRUM_RINKEBY]: [
+    // "Safe" URLs
+    'https://rinkeby.arbitrum.io/rpc',
+  ],
+  [SupportedChainId.OPTIMISM]: [
+    // "Safe" URLs
+    'https://mainnet.optimism.io/',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/optimism',
+  ],
+  [SupportedChainId.OPTIMISTIC_KOVAN]: [
+    // "Safe" URLs
+    'https://kovan.optimism.io',
+  ],
 }
