@@ -19,28 +19,16 @@ export default function useJsonRpcUrlMap(): [
         return
       }
 
-      const fallbackChains: [string, string[]][] = []
       const jsonRpcUrlMapWithFallbacks: Record<SupportedChainId, string[]> = ALL_SUPPORTED_CHAIN_IDS.reduce(
         (map, chainId) => {
           const value = jsonRpcUrlMap[chainId]
           const urls = (Array.isArray(value) ? value : [value]).filter(Boolean)
           const fallbackUrls = JSON_RPC_FALLBACK_ENDPOINTS[chainId]
-          if (urls.length === 0) {
-            fallbackChains.push([SupportedChainId[chainId], fallbackUrls])
-            map[chainId] = fallbackUrls
-          } else {
-            map[chainId] = [...urls, ...fallbackUrls]
-          }
+          map[chainId] = [...urls, ...fallbackUrls]
           return map
         },
         {} as Record<SupportedChainId, string[]>
       )
-      if (fallbackChains.length) {
-        console.warn(
-          `jsonRpcUrlMap is missing urls for some chains. Falling back to public endpoints, which may be unreliable and severely rate-limited:`,
-          ...fallbackChains.map(([chain, urls]) => `\n\t${chain}:\t${urls}`)
-        )
-      }
       setJsonRpcUrlMap(jsonRpcUrlMapWithFallbacks)
     },
     [setJsonRpcUrlMap]
