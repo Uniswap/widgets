@@ -7,7 +7,7 @@ import { Connector, Provider as Eip1193Provider, Web3ReactStore } from '@web3-re
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
-import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
 export type Web3Connection = [Connector, Web3ReactHooks]
@@ -114,36 +114,42 @@ export function ActiveWeb3Provider({
     [jsonRpcUrlMap, defaultChainId]
   )
 
-  // TODO(zzmp): Only expose connections through hooks. For now, it is aliased to connections to export it.
-  // It must also be a local variable (connectors) to satisfy the react-hooks/exhaustive-deps check.
-  const connectors = (connections = useMemo(() => {
-    return [
+  const getConnectors = useCallback(
+    () =>
+      [
+        integratorConnection,
+        metaMaskConnection,
+        walletConnectConnectionQR,
+        walletConnectConnectionPopup,
+        networkConnection,
+      ].filter((connection): connection is Web3Connection => Boolean(connection)),
+    [
       integratorConnection,
       metaMaskConnection,
-      walletConnectConnectionQR,
-      walletConnectConnectionPopup,
       networkConnection,
-    ].filter((connection): connection is Web3Connection => Boolean(connection))
-  }, [
-    integratorConnection,
-    metaMaskConnection,
-    walletConnectConnectionQR,
-    walletConnectConnectionPopup,
-    networkConnection,
-  ]))
-
+      walletConnectConnectionPopup,
+      walletConnectConnectionQR,
+    ]
+  )
+  const connectors = useRef(getConnectors())
   const key = useRef(0)
+
+  // TODO(zzmp): Only expose connections through hooks. For now, it is aliased to connections to export it.
+  connections = connectors.current
+
   useEffect(() => {
-    // Re-key Web3ReactProvider if connectors change, to force a re-render.
-    // This is necessary because Web3ReactProvider expects connectors to be constant, so
-    // changing the passed connectors requires a new instance of Web3ReactProvider.
-    // This *must* be done in a useEffect so that it does not run on mount when parent components update.
-    void connectors
+    // Re-key Web3ReactProvider when connectors change, to force a re-render.
+    // This is necessary because Web3ReactProvider expects connectors to be referentially static, so
+    // changing the passed connectors requires a new keyed instanceof Web3ReactProvider.
+    //
+    // Both updating connectors and updating key *must* be done in a useEffect so that it does not
+    // run on mount when parent components update.
+    connectors.current = getConnectors()
     key.current += 1
-  }, [connectors])
+  }, [getConnectors])
 
   return (
-    <Web3ReactProvider connectors={connectors} key={key.current}>
+    <Web3ReactProvider connectors={connectors.current} key={key.current}>
       {children}
     </Web3ReactProvider>
   )
