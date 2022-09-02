@@ -4,6 +4,7 @@ import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'constants/addresses'
+import { ErrorCode } from 'constants/eip1193'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
@@ -174,7 +175,7 @@ export const useApproveOrPermit = (
           return await gatherPermitSignature()
         } catch (error) {
           // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
-          if (error?.code !== 4001) {
+          if (error?.code !== ErrorCode.USER_REJECTED_REQUEST) {
             return await getApproval()
           }
         }

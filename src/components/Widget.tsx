@@ -1,17 +1,17 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import ActiveWeb3ReactProvider from 'components/ActiveWeb3ReactProvider'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
-import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
+import useJsonRpcUrlMap, { JsonRpcUrlMap } from 'hooks/useJsonRpcUrlMap'
 import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
-import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
+import { PropsWithChildren, StrictMode, useEffect, useMemo, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
@@ -100,7 +100,7 @@ export interface WidgetProps extends BrandingSettings, TransactionEventHandlers 
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap?: { [chainId: number]: string | string[] }
+  jsonRpcUrlMap?: JsonRpcUrlMap
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
@@ -146,26 +146,6 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcUrlMapWithFallbacks = useMemo(() => {
-    if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
-    const fallbackChains: [string, string[]][] = []
-    for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
-      if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
-        const chainId: number = supportedChainId
-        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[chainId]
-        fallbackChains.push([SupportedChainId[chainId], fallbackRpc])
-        props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
-      }
-    }
-    if (fallbackChains.length) {
-      console.warn(
-        `jsonRpcUrlMap is missing urls for some chains. Falling back to public endpoints, which may be unreliable and severely rate-limited:`,
-        ...fallbackChains.map(([chain, urls]) => `${chain}: ${urls}`)
-      )
-    }
-    return props.jsonRpcUrlMap
-  }, [props.jsonRpcUrlMap])
-
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
   return (
     <StrictMode>
@@ -177,17 +157,14 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
               <ErrorBoundary onError={props.onError}>
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
-                    <ActiveWeb3Provider
-                      provider={props.provider}
-                      jsonRpcUrlMap={jsonRpcUrlMapWithFallbacks}
-                      defaultChainId={defaultChainId}
-                    >
+                    <WidgetUpdater {...props} />
+                    <ActiveWeb3ReactProvider provider={props.provider} defaultChainId={defaultChainId}>
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
-                    </ActiveWeb3Provider>
+                    </ActiveWeb3ReactProvider>
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>
@@ -197,4 +174,12 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
       </ThemeProvider>
     </StrictMode>
   )
+}
+
+/** A component in the scope of AtomProvider to set Widget-scoped state. */
+function WidgetUpdater(props: WidgetProps) {
+  const [, setJsonRpcUrlMap] = useJsonRpcUrlMap()
+  useEffect(() => setJsonRpcUrlMap(props.jsonRpcUrlMap), [props.jsonRpcUrlMap, setJsonRpcUrlMap])
+
+  return null
 }

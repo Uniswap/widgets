@@ -5,7 +5,7 @@ import useNativeCurrency from 'hooks/useNativeCurrency'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TransactionType, UnwrapTransactionInfo, WrapTransactionInfo } from 'state/transactions'
-import { useTheme } from 'styled-components/macro'
+import { Colors } from 'theme'
 import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
@@ -15,8 +15,10 @@ import ActionButton from '../../ActionButton'
  * Should only be rendered if a valid wrap exists.
  */
 export default function WrapButton({
+  color,
   onSubmit,
 }: {
+  color: keyof Colors
   onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
@@ -42,7 +44,6 @@ export default function WrapButton({
     setIsPending(false)
   }, [native, onSubmit, wrapCallback, wrapType])
 
-  const { tokenColorExtraction } = useTheme()
   const actionProps = useMemo(
     () =>
       isPending ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } } : { onClick: onWrap },
@@ -50,7 +51,7 @@ export default function WrapButton({
   )
 
   return (
-    <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} {...actionProps}>
+    <ActionButton color={color} {...actionProps}>
       <Trans>
         {wrapType === TransactionType.WRAP ? 'WRAP' : 'UNWRAP'} {inputCurrency?.symbol}
       </Trans>

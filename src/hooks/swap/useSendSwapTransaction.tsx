@@ -6,6 +6,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { ErrorCode } from 'constants/eip1193'
 import { useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
@@ -125,7 +126,7 @@ export default function useSendSwapTransaction(
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
+            if (error?.code === ErrorCode.USER_REJECTED_REQUEST) {
               throw new Error(t`Transaction rejected.`)
             } else {
               // otherwise, the error was unexpected and we need to convey that

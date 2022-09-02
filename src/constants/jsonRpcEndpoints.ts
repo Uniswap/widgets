@@ -3,7 +3,7 @@ import { SupportedChainId } from './chains'
 /**
  * Fallback JSON RPC endpoints if integrator does not provide one
  */
-export const JSON_RPC_FALLBACK_ENDPOINTS: { [chainId: number]: string[] } = {
+export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
   [SupportedChainId.MAINNET]: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
   [SupportedChainId.ROPSTEN]: ['https://rpc.ankr.com/eth_ropsten'],
   [SupportedChainId.RINKEBY]: ['https://rinkeby-light.eth.linkpool.io/'],

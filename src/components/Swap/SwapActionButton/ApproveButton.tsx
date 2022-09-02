@@ -8,7 +8,7 @@ import { usePendingApproval } from 'hooks/transactions'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
-import { useTheme } from 'styled-components/macro'
+import { Colors } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 export function useIsPendingApproval(token?: Token, spender?: string): boolean {
@@ -20,12 +20,13 @@ export function useIsPendingApproval(token?: Token, spender?: string): boolean {
  * Should only be rendered if a valid trade exists that is not yet approved.
  */
 export default function ApproveButton({
-  onSubmit,
+  color,
   trade,
   approvalState,
   handleApproveOrPermit,
+  onSubmit,
 }: {
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | undefined>) => Promise<boolean>
+  color: keyof Colors
   trade: ReturnType<typeof useSwapApprovalOptimizedTrade>
   approvalState: ApproveOrPermitState
   handleApproveOrPermit: () => Promise<{
@@ -33,6 +34,7 @@ export default function ApproveButton({
     tokenAddress: string
     spenderAddress: string
   } | void>
+  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const [isPending, setIsPending] = useState(false)
   const onApprove = useCallback(async () => {
@@ -54,7 +56,6 @@ export default function ApproveButton({
 
   const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined, useSwapRouterAddress(trade))
 
-  const { tokenColorExtraction } = useTheme()
   const actionProps = useMemo(() => {
     switch (approvalState) {
       case ApproveOrPermitState.REQUIRES_APPROVAL:
@@ -91,5 +92,5 @@ export default function ApproveButton({
     }
   }, [approvalState, symbol, isPending, onApprove, pendingApprovalHash])
 
-  return <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} {...actionProps} />
+  return <ActionButton color={color} action={actionProps} />
 }

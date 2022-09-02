@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { connections, defaultChainIdAtom, getConnectorName } from 'hooks/connectWeb3/useWeb3React'
+import { connections, defaultChainIdAtom, getConnectorName } from 'components/ActiveWeb3ReactProvider'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect } from 'react'
 

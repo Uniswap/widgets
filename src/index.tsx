@@ -2,7 +2,9 @@ import 'polyfills'
 
 import Swap, { SwapProps } from 'components/Swap'
 import Widget, { WidgetProps } from 'components/Widget'
+
 export type { Provider as EthersProvider } from '@ethersproject/abstract-provider'
+export type { JsonRpcProvider } from '@ethersproject/providers'
 export type { Currency } from '@uniswap/sdk-core'
 export { TradeType } from '@uniswap/sdk-core'
 export type { TokenInfo } from '@uniswap/token-lists'
@@ -15,6 +17,7 @@ export type { SwapController, SwapSettingsController } from 'hooks/swap/useSyncC
 export type { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 export type { OnTxFail, OnTxSubmit, OnTxSuccess, TransactionEventHandlers } from 'hooks/transactions'
+export type { JsonRpcUrlMap } from 'hooks/useJsonRpcUrlMap'
 export type { OnConnectWalletClick, WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 export type {
   OnAmountChange,
