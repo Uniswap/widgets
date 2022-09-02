@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { useCallback, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
-import { DAI, nativeOnChain, USDC_MAINNET } from '../constants/tokens'
+import { DAI, nativeOnChain, USDC } from '../constants/tokens'
 import EventFeed, { Event } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
@@ -32,7 +32,14 @@ function Fixture() {
   const currencies: Record<string, Currency> = {
     ETH: nativeOnChain(SupportedChainId.MAINNET),
     DAI,
-    USDC: USDC_MAINNET,
+    // Include USDC from each chain
+    ...Object.values(USDC).reduce(
+      (usdc, chainUsdc) => ({
+        ...usdc,
+        [`${SupportedChainId[chainUsdc.chainId]} USDC`]: chainUsdc,
+      }),
+      {}
+    ),
   }
   const inputToken = useOption('input', { options: currencies })
   const outputToken = useOption('output', { options: currencies })
