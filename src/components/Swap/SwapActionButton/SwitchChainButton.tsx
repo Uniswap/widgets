@@ -33,5 +33,5 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
     [isPending, onSwitchChain]
   )
 
-  return <ActionButton color={color} {...actionProps}></ActionButton>
+  return <ActionButton color={color} action={actionProps} />
 }

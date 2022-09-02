@@ -92,5 +92,5 @@ export default function ApproveButton({
     }
   }, [approvalState, symbol, isPending, onApprove, pendingApprovalHash])
 
-  return <ActionButton color={color} {...actionProps} />
+  return <ActionButton color={color} action={actionProps} />
 }

@@ -4,6 +4,7 @@ import { AddEthereumChainParameter, Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { ErrorCode } from 'constants/errors'
 import useJsonRpcUrls from 'hooks/useJsonRpcUrlMap'
 import { useCallback } from 'react'
 
@@ -12,18 +13,23 @@ async function switchChain(connector: Connector, chainId: SupportedChainId, rpcU
     await connector.activate(chainId)
   } else {
     const { label: chainName, nativeCurrency, explorer } = getChainInfo(chainId)
-    const addChainParameter: AddEthereumChainParameter = {
-      chainId,
-      chainName,
-      // NB: Some providers (eg MetaMask) make test calls from a background page before switching,
-      // so fallback endpoints which are publicly available must be provided.
-      // Otherwise, the chain switch will fail if the background page origin is blocked.
-      // (This is automatically done by useJsonRpcUrls.)
-      rpcUrls,
-      nativeCurrency,
-      blockExplorerUrls: [explorer],
+    try {
+      const addChainParameter: AddEthereumChainParameter = {
+        chainId,
+        chainName,
+        rpcUrls,
+        nativeCurrency,
+        blockExplorerUrls: [explorer],
+      }
+      await connector.activate(addChainParameter)
+    } catch (error) {
+      // Some providers (eg MetaMask) make test calls from a background page before switching,
+      // so fallback urls which are publicly available must be used. Otherwise, the switch will fail
+      // if the background page origin is blocked.
+      if (error?.code !== ErrorCode.USER_REJECTED && rpcUrls.length > 1) {
+        await switchChain(connector, chainId, rpcUrls.slice(1))
+      }
     }
-    await connector.activate(addChainParameter)
   }
 }
 
