@@ -5,7 +5,7 @@ import { largeIconCss } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
-import { Color, ThemedText, ThemeProvider } from 'theme'
+import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
 import { TextButton } from './Button'
@@ -111,7 +111,7 @@ export const Modal = styled.div<{ color: Color }>`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: ${Layer.DIALOG};
 `
 
 interface DialogProps {
