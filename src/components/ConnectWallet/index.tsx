@@ -1,6 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { connections, defaultChainIdAtom, getConnectorName } from 'components/ActiveWeb3ReactProvider'
-import { useAtomValue } from 'jotai/utils'
+import { useConnectors } from 'components/ActiveWeb3ReactProvider'
 import { useEffect } from 'react'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
@@ -12,26 +11,16 @@ interface WalletProps {
 
 export default function Wallet({ disabled }: WalletProps) {
   // Attempt to connect eagerly on mount
-  const defaultChainId = useAtomValue(defaultChainIdAtom)
+  const connectors = useConnectors()
   useEffect(() => {
-    connections.forEach(([wallet, _]) => {
-      const success = wallet.connectEagerly ? wallet.connectEagerly(defaultChainId) : wallet.activate(defaultChainId)
-      success?.catch(() => {
-        if (stale) return
-        console.error(`Could not connect to ${getConnectorName(wallet)}`)
-      })
-    })
-
-    let stale = false
-    return () => {
-      stale = true
+    if (connectors.user) return
+    for (const connector of [connectors.metaMask, connectors.walletConnect]) {
+      connector.connectEagerly()
     }
-  }, [defaultChainId])
+  }, [connectors.metaMask, connectors.user, connectors.walletConnect])
 
   const { account, isActive } = useWeb3React()
-
-  const isAccountConnected = isActive && Boolean(account)
-  return isAccountConnected ? (
+  return isActive && Boolean(account) ? (
     <ConnectedWalletChip disabled={disabled} account={account} />
   ) : (
     <ConnectWallet disabled={disabled} />
