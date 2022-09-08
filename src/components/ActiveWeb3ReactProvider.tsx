@@ -42,6 +42,8 @@ interface ActiveWeb3ReactProviderProps {
   defaultChainId: SupportedChainId
 }
 
+// TODO(zzmp): Test different workflows for proper connection logic.
+
 export default function ActiveWeb3ReactProvider({
   provider,
   defaultChainId,
@@ -116,7 +118,7 @@ function useWeb3ReactConnectors({ provider, defaultChainId }: ActiveWeb3ReactPro
   const metaMask = useMemo(() => initializeWeb3ReactConnector(MetaMask), [])
   const walletConnect = useMemo(
     () =>
-      initializeWeb3ReactConnector(WalletConnect, { options: { rpc: jsonRpcUrlMap, qrcode: false }, defaultChainId }),
+      initializeWeb3ReactConnector(WalletConnect, { options: { rpc: jsonRpcUrlMap, qrcode: true }, defaultChainId }),
     [defaultChainId, jsonRpcUrlMap]
   ) // WC via built-in popup
   const walletConnectQR = useMemo(

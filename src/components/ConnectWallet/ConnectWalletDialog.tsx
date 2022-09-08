@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
@@ -104,7 +103,6 @@ function WalletConnectButton({
   walletConnect,
   onClick,
 }: ButtonProps & { walletConnect: WalletConnect }) {
-  const { chainId } = useWeb3React()
   const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
 
@@ -116,12 +114,12 @@ function WalletConnectButton({
         setQrCodeSvg(qrCodeSvg)
       })
     } else {
-      walletConnect.activate(chainId)
+      walletConnect.activate()
     }
     return () => {
       stale = true
     }
-  }, [chainId, qrUri, walletConnect])
+  }, [qrUri, walletConnect])
 
   useEffect(() => {
     const disconnectListener = async (err: Error | null, _: any) => {
@@ -187,15 +185,10 @@ function NoWalletButton() {
 }
 
 export function ConnectWalletDialog() {
-  const { chainId } = useWeb3React()
   const connectors = useConnectors()
-
-  const activateWalletConnectPopup = useCallback(() => {
-    connectors.walletConnect.activate(chainId)
-  }, [chainId, connectors.walletConnect])
-  const activateMetaMask = useCallback(() => {
-    connectors.metaMask.activate(chainId)
-  }, [chainId, connectors.metaMask])
+  const onActivate = useCallback(async (connector) => {
+    connector.activate()
+  }, [])
 
   return (
     <>
@@ -206,10 +199,14 @@ export function ConnectWalletDialog() {
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
             walletConnect={connectors.walletConnectQR}
-            onClick={activateWalletConnectPopup}
+            onClick={() => onActivate(connectors.walletConnect)}
           />
           <SecondaryOptionsRow>
-            <MetaMaskButton walletName="MetaMask" logoSrc={METAMASK_ICON_URL} onClick={activateMetaMask} />
+            <MetaMaskButton
+              walletName="MetaMask"
+              logoSrc={METAMASK_ICON_URL}
+              onClick={() => onActivate(connectors.metaMask)}
+            />
             <NoWalletButton />
           </SecondaryOptionsRow>
         </Column>
