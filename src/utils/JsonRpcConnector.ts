@@ -6,9 +6,19 @@ function parseChainId(chainId: string) {
 }
 
 export default class JsonRpcConnector extends Connector {
-  constructor(actions: Actions, public customProvider: JsonRpcProvider) {
-    super(actions)
-    customProvider
+  public customProvider: JsonRpcProvider
+
+  constructor({
+    actions,
+    provider,
+    onError,
+  }: {
+    actions: Actions
+    provider: JsonRpcProvider
+    onError?: (error: Error) => void
+  }) {
+    super(actions, onError)
+    this.customProvider = provider
       .on('connect', ({ chainId }: ProviderConnectInfo): void => {
         this.actions.update({ chainId: parseChainId(chainId) })
       })

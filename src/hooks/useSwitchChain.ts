@@ -5,7 +5,7 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ErrorCode } from 'constants/eip1193'
-import useJsonRpcUrls from 'hooks/useJsonRpcUrlMap'
+import useJsonRpcUrlMap from 'hooks/web3/useJsonRpcUrlMap'
 import { useCallback } from 'react'
 
 async function switchChain(connector: Connector, chainId: SupportedChainId, rpcUrls: string[]): Promise<void> {
@@ -35,9 +35,9 @@ async function switchChain(connector: Connector, chainId: SupportedChainId, rpcU
 
 export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
   const { connector } = useWeb3React()
-  const [rpcUrls] = useJsonRpcUrls()
+  const urlMap = useJsonRpcUrlMap()
   return useCallback(
-    (chainId: SupportedChainId) => switchChain(connector, chainId, rpcUrls[chainId]),
-    [connector, rpcUrls]
+    (chainId: SupportedChainId) => switchChain(connector, chainId, urlMap[chainId]),
+    [connector, urlMap]
   )
 }

@@ -1,17 +1,17 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
-import ActiveWeb3ReactProvider from 'components/ActiveWeb3ReactProvider'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
-import useJsonRpcUrlMap, { JsonRpcUrlMap } from 'hooks/useJsonRpcUrlMap'
 import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
+import { Provider as Web3ReactProvider } from 'hooks/web3'
+import { JsonRpcUrlMap } from 'hooks/web3/useJsonRpcUrlMap'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
-import { PropsWithChildren, StrictMode, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
@@ -158,13 +158,13 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
                     <WidgetUpdater {...props} />
-                    <ActiveWeb3ReactProvider provider={props.provider} defaultChainId={defaultChainId}>
+                    <Web3ReactProvider provider={props.provider} defaultChainId={defaultChainId}>
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
-                    </ActiveWeb3ReactProvider>
+                    </Web3ReactProvider>
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>
@@ -178,8 +178,5 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
 
 /** A component in the scope of AtomProvider to set Widget-scoped state. */
 function WidgetUpdater(props: WidgetProps) {
-  const [, setJsonRpcUrlMap] = useJsonRpcUrlMap()
-  useEffect(() => setJsonRpcUrlMap(props.jsonRpcUrlMap), [props.jsonRpcUrlMap, setJsonRpcUrlMap])
-
   return null
 }
