@@ -43,14 +43,14 @@ export function Provider({
     // referentially static.
     key.current += 1
 
-    const priotiziedConnectors: (Web3ReactConnector | undefined)[] = [
+    const prioritizedConnectors: (Web3ReactConnector | undefined)[] = [
       web3ReactConnectors.user,
       web3ReactConnectors.metaMask,
       web3ReactConnectors.walletConnectQR,
       web3ReactConnectors.walletConnect,
       web3ReactConnectors.network,
     ]
-    return priotiziedConnectors.filter((connector): connector is Web3ReactConnector => Boolean(connector))
+    return prioritizedConnectors.filter((connector): connector is Web3ReactConnector => Boolean(connector))
   }, [web3ReactConnectors])
 
   const connectors = useMemo(
@@ -66,9 +66,13 @@ export function Provider({
 
   // Attempt to connect eagerly if there is no user-provided provider.
   useEffect(() => {
-    if (connectors.user) return
+    // Ignore any errors during connection so they do not propagate to the widget.
+    if (connectors.user) {
+      connectors.user.activate().catch(() => undefined)
+      return
+    }
     for (const connector of [connectors.metaMask, connectors.walletConnect]) {
-      connector.connectEagerly()
+      connector.connectEagerly().catch(() => undefined)
     }
   }, [connectors.metaMask, connectors.user, connectors.walletConnect])
 
