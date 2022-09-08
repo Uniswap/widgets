@@ -7,7 +7,7 @@ import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import useJsonRpcUrlMap from 'hooks/useJsonRpcUrlMap'
-import { createContext, PropsWithChildren, useContext, useLayoutEffect, useMemo, useRef } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import invariant from 'tiny-invariant'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
@@ -49,14 +49,12 @@ export default function ActiveWeb3ReactProvider({
 }: PropsWithChildren<ActiveWeb3ReactProviderProps>) {
   const web3ReactConnectors = useWeb3ReactConnectors({ provider, defaultChainId })
 
-  // Re-key Web3ReactProvider before rendering new connectors, as it expects connectors to be
-  // referentially static. This must be done in a layout effect so it occurs *before* render.
   const key = useRef(0)
-  useLayoutEffect(() => {
-    key.current += 1
-  }, [web3ReactConnectors])
-
   const prioritizedConnectors = useMemo(() => {
+    // Re-key Web3ReactProvider before rendering new connectors, as it expects connectors to be
+    // referentially static.
+    key.current += 1
+
     const priotiziedConnectors: (Web3ReactConnector | undefined)[] = [
       web3ReactConnectors.user,
       web3ReactConnectors.metaMask,
@@ -77,6 +75,14 @@ export default function ActiveWeb3ReactProvider({
     }),
     [web3ReactConnectors]
   )
+
+  // Attempt to connect eagerly if there is no user-provided provider.
+  useEffect(() => {
+    if (connectors.user) return
+    for (const connector of [connectors.metaMask, connectors.walletConnect]) {
+      connector.connectEagerly()
+    }
+  }, [connectors.metaMask, connectors.user, connectors.walletConnect])
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
