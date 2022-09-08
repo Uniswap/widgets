@@ -5,4 +5,7 @@ export enum ErrorCode {
   UNSUPPORTED_METHOD = 4200,
   DISCONNECTED = 4900,
   CHAIN_DISCONNECTED = 4901,
+
+  // https://docs.metamask.io/guide/rpc-api.html#unrestricted-methods
+  CHAIN_NOT_ADDED = 4902,
 }

@@ -12,14 +12,18 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
   const [isPending, setIsPending] = useState(!account)
 
   const switchChain = useSwitchChain()
+  const [error, setError] = useState()
   const onSwitchChain = useCallback(async () => {
     setIsPending(true)
     try {
       await switchChain(chainId)
+    } catch (error) {
+      setError(error)
     } finally {
       setIsPending(false)
     }
   }, [chainId, switchChain])
+  if (error) throw error
 
   // If there is no account (ie no wallet to take agency), switch chains automatically
   useEffect(() => {

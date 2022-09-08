@@ -61,7 +61,6 @@ function Fixture() {
         onTokenChange={useHandleEvent('onTokenChange')}
         onAmountChange={useHandleEvent('onAmountChange')}
         onSwitchTokens={useHandleEvent('onSwitchTokens')}
-        hideConnectionUI={true}
         jsonRpcUrlMap={INFURA_NETWORK_URLS}
         provider={connector}
         tokenList={tokens}

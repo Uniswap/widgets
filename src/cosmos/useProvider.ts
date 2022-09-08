@@ -30,7 +30,7 @@ export const INFURA_NETWORK_URLS: { [chainId: number]: string[] } = INFURA_KEY
 
 enum Wallet {
   MetaMask = 'MetaMask',
-  WalletConnect = 'WalletConenct',
+  WalletConnect = 'WalletConnect',
 }
 const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))
 const [walletConnect] = initializeConnector<WalletConnect>(
