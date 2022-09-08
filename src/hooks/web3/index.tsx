@@ -6,26 +6,11 @@ import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
-import useJsonRpcUrlMap from 'hooks/useJsonRpcUrlMap'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
-import invariant from 'tiny-invariant'
+import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 
-export interface Connectors {
-  user: EIP1193 | JsonRpcConnector | undefined
-  metaMask: MetaMask
-  walletConnect: WalletConnect
-  walletConnectQR: WalletConnect
-  network: Network
-}
-
-const ConnectorsContext = createContext<Connectors | null>(null)
-
-export function useConnectors(): Connectors {
-  const connectors = useContext(ConnectorsContext)
-  invariant(connectors)
-  return connectors
-}
+import { Provider as ConnectorsProvider } from './useConnectors'
+import { JsonRpcUrlMap, Provider as JsonRpcUrlMapProvider, toJsonRpcUrlMap } from './useJsonRpcUrlMap'
 
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 
@@ -37,19 +22,20 @@ interface Web3ReactConnectors {
   network: Web3ReactConnector<Network>
 }
 
-interface ActiveWeb3ReactProviderProps {
+interface ProviderProps {
+  defaultChainId?: SupportedChainId
+  jsonRpcUrlMap?: JsonRpcUrlMap
   provider?: Eip1193Provider | JsonRpcProvider
-  defaultChainId: SupportedChainId
 }
 
-// TODO(zzmp): Test different workflows for proper connection logic.
-
-export default function ActiveWeb3ReactProvider({
+export function Provider({
+  defaultChainId = SupportedChainId.MAINNET,
+  jsonRpcUrlMap: propsJsonRpcUrlMap,
   provider,
-  defaultChainId,
   children,
-}: PropsWithChildren<ActiveWeb3ReactProviderProps>) {
-  const web3ReactConnectors = useWeb3ReactConnectors({ provider, defaultChainId })
+}: PropsWithChildren<ProviderProps>) {
+  const jsonRpcUrlMap = useMemo(() => toJsonRpcUrlMap(propsJsonRpcUrlMap), [propsJsonRpcUrlMap])
+  const web3ReactConnectors = useWeb3ReactConnectors(defaultChainId, jsonRpcUrlMap, provider)
 
   const key = useRef(0)
   const prioritizedConnectors = useMemo(() => {
@@ -88,7 +74,9 @@ export default function ActiveWeb3ReactProvider({
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
-      <ConnectorsContext.Provider value={connectors}>{children}</ConnectorsContext.Provider>
+      <JsonRpcUrlMapProvider value={jsonRpcUrlMap}>
+        <ConnectorsProvider value={connectors}>{children}</ConnectorsProvider>
+      </JsonRpcUrlMapProvider>
     </Web3ReactProvider>
   )
 }
@@ -103,8 +91,11 @@ function initializeWeb3ReactConnector<T extends Connector, P extends object>(
   return [connector, hooks]
 }
 
-function useWeb3ReactConnectors({ provider, defaultChainId }: ActiveWeb3ReactProviderProps) {
-  const [jsonRpcUrlMap] = useJsonRpcUrlMap()
+function useWeb3ReactConnectors(
+  defaultChainId: SupportedChainId,
+  jsonRpcUrlMap: JsonRpcUrlMap,
+  provider?: Eip1193Provider | JsonRpcProvider
+) {
   const user = useMemo(() => {
     if (!provider) return
     if (JsonRpcProvider.isProvider(provider)) {
