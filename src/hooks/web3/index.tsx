@@ -74,7 +74,8 @@ export function Provider({
     for (const connector of [connectors.metaMask, connectors.walletConnect]) {
       connector.connectEagerly().catch(() => undefined)
     }
-  }, [connectors.metaMask, connectors.user, connectors.walletConnect])
+    connectors.network.activate().catch(() => undefined)
+  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect])
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
