@@ -1,23 +1,40 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import useSwitchChain from 'hooks/useSwitchChain'
 import { Spinner } from 'icons'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Colors } from 'theme'
 
 interface ChainIds {
-  chainId?: number
   inputChainId?: number
   outputChainId?: number
 }
 
-export function useDesiredChainId({ chainId, inputChainId, outputChainId }: ChainIds): number | undefined {
+function useDesiredChainId({ inputChainId, outputChainId }: ChainIds): number | undefined {
+  const { chainId } = useWeb3React()
   if (chainId === undefined) return
 
   const desiredChainId = inputChainId ?? outputChainId
   if (desiredChainId === chainId) return
 
   return desiredChainId
+}
+
+export function useSwitchChainId(chainIds: ChainIds): number | undefined {
+  const { account } = useWeb3React()
+  const chainId = useDesiredChainId(chainIds)
+  const switchChain = useSwitchChain()
+
+  // If using a provider with no accounts (eg network), switch the chain immediately.
+  useEffect(() => {
+    if (!account && chainId !== undefined) {
+      switchChain(chainId)
+    }
+  }, [account, chainId, switchChain])
+  if (!account) return
+
+  return chainId
 }
 
 /** A chain-switching ActionButton. */

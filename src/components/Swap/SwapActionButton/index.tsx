@@ -10,7 +10,7 @@ import { useTheme } from 'styled-components/macro'
 import ActionButton from '../../ActionButton'
 import ApproveButton, { useIsPendingApproval } from './ApproveButton'
 import SwapButton from './SwapButton'
-import SwitchChainButton, { useDesiredChainId } from './SwitchChainButton'
+import SwitchChainButton, { useSwitchChainId } from './SwitchChainButton'
 import useOnSubmit from './useOnSubmit'
 import WrapButton from './WrapButton'
 
@@ -27,8 +27,7 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
     slippage,
   } = useSwapInfo()
 
-  const desiredChainId = useDesiredChainId({
-    chainId,
+  const switchChainId = useSwitchChainId({
     inputChainId: inputCurrency?.chainId,
     outputChainId: outputCurrency?.chainId,
   })
@@ -54,8 +53,8 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
   const color = tokenColorExtraction ? 'interactive' : 'accent'
 
-  if (desiredChainId !== undefined) {
-    return <SwitchChainButton color={color} chainId={desiredChainId} />
+  if (switchChainId !== undefined) {
+    return <SwitchChainButton color={color} chainId={switchChainId} />
   } else if (isDisabled) {
     return (
       <ActionButton color={color} disabled={true}>
