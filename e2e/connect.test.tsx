@@ -11,6 +11,10 @@ import { SwapWidget } from '../src'
 import { render, RenderResult, waitFor } from '../src/test'
 
 describe('connect', () => {
+  // MetaMask uses a 3000ms timeout to detect window.ethereum.
+  // Use fake timers to prevent this from slowing tests (without configuring a test-only timeout value).
+  jest.useFakeTimers()
+
   function itPromptsForWalletConnection(renderWidget: () => RenderResult) {
     it('prompts for wallet connection', async () => {
       const widget = renderWidget()
@@ -53,6 +57,9 @@ describe('connect', () => {
   })
 
   describe('with provider', () => {
+    // The real hardhat.provider relies on real timeouts when providing data.
+    jest.useRealTimers()
+
     const renderWidget = () => render(<SwapWidget provider={hardhat.provider} />)
 
     it('displays connected account chip', async () => {
