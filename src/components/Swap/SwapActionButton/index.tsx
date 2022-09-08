@@ -10,7 +10,7 @@ import { useTheme } from 'styled-components/macro'
 import ActionButton from '../../ActionButton'
 import ApproveButton, { useIsPendingApproval } from './ApproveButton'
 import SwapButton from './SwapButton'
-import SwitchChainButton from './SwitchChainButton'
+import SwitchChainButton, { useDesiredChainId } from './SwitchChainButton'
 import useOnSubmit from './useOnSubmit'
 import WrapButton from './WrapButton'
 
@@ -22,10 +22,16 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { chainId } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
+    [Field.OUTPUT]: { currency: outputCurrency },
     trade,
     slippage,
   } = useSwapInfo()
-  const inputChainId = inputCurrency?.chainId
+
+  const desiredChainId = useDesiredChainId({
+    chainId,
+    inputChainId: inputCurrency?.chainId,
+    outputChainId: outputCurrency?.chainId,
+  })
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -48,8 +54,8 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
   const color = tokenColorExtraction ? 'interactive' : 'accent'
 
-  if (inputChainId && chainId && inputChainId !== chainId) {
-    return <SwitchChainButton color={color} chainId={inputChainId} />
+  if (desiredChainId !== undefined) {
+    return <SwitchChainButton color={color} chainId={desiredChainId} />
   } else if (isDisabled) {
     return (
       <ActionButton color={color} disabled={true}>

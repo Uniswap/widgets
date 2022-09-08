@@ -5,6 +5,21 @@ import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 import { Colors } from 'theme'
 
+interface ChainIds {
+  chainId?: number
+  inputChainId?: number
+  outputChainId?: number
+}
+
+export function useDesiredChainId({ chainId, inputChainId, outputChainId }: ChainIds): number | undefined {
+  if (chainId === undefined) return
+
+  const desiredChainId = inputChainId ?? outputChainId
+  if (desiredChainId === chainId) return
+
+  return desiredChainId
+}
+
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ color, chainId }: { color: keyof Colors; chainId: number }) {
   const [isPending, setIsPending] = useState(false)
