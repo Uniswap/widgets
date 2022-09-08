@@ -71,9 +71,8 @@ export function Provider({
       connectors.user.activate().catch(() => undefined)
       return
     }
-    for (const connector of [connectors.metaMask, connectors.walletConnect]) {
-      connector.connectEagerly().catch(() => undefined)
-    }
+    const eagerConnectors = [connectors.metaMask, connectors.walletConnect]
+    eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
     connectors.network.activate().catch(() => undefined)
   }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect])
 
