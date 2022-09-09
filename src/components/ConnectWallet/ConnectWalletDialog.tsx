@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
+import { URI_AVAILABLE } from '@web3-react/walletconnect'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
@@ -13,6 +13,7 @@ import QRCode from 'qrcode'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { lightTheme, ThemedText } from 'theme'
+import { WalletConnectURL } from 'utils/WalletConnect'
 
 const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
 const onError = (error: Error) => console.error('web3 error:', error)
@@ -100,9 +101,9 @@ function toQrCodeSvg(qrUri: string): Promise<string> {
 function WalletConnectButton({
   walletName,
   logoSrc,
-  walletConnect,
+  walletConnectURL: walletConnect,
   onClick,
-}: ButtonProps & { walletConnect: WalletConnect }) {
+}: ButtonProps & { walletConnectURL: WalletConnectURL }) {
   const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
   const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
 
@@ -198,7 +199,7 @@ export function ConnectWalletDialog() {
           <WalletConnectButton
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
-            walletConnect={connectors.walletConnectQR}
+            walletConnectURL={connectors.walletConnectURL}
             onClick={() => onActivate(connectors.walletConnect)}
           />
           <SecondaryOptionsRow>
