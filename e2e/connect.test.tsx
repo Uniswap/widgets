@@ -5,84 +5,78 @@
 import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
-import { waitFor } from '@testing-library/react'
-import { tokens } from '@uniswap/default-token-list'
 import React from 'react'
 
 import { SwapWidget } from '../src'
-import { renderWidget } from '../src/test'
-
-const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
-  0,
-  6
-)}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
+import { render, RenderResult, waitFor } from '../src/test'
 
 describe('connect', () => {
-  describe('with no params, using fallback JSON RPC URL', () => {
-    it('prompts for wallet connection in the Wallet and Toolbar', async () => {
-      const component = renderWidget(<SwapWidget tokenList={tokens} />)
-      const toolbar = await component.findByTestId('toolbar')
-      expect(toolbar.textContent).toBe('Connect wallet to swap')
-      const connectWallet = await component.findByTestId('connect-wallet')
+  // MetaMask uses a 3000ms timeout to detect window.ethereum.
+  // Use fake timers to prevent this from slowing tests (without configuring a test-only timeout value).
+  jest.useFakeTimers()
+
+  function itPromptsForWalletConnection(renderWidget: () => RenderResult) {
+    it('prompts for wallet connection', async () => {
+      const widget = renderWidget()
+      const connectWallet = await widget.findByTestId('connect-wallet')
       expect(connectWallet.textContent).toBe('Connect wallet to swap')
+
+      const toolbar = await widget.findByTestId('toolbar')
+      // The toolbar will reflect eager connection until it fails.
+      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'), { timeout: 10000 })
+      expect(toolbar.textContent).toBe('Connect wallet to swap')
+    })
+  }
+
+  function itExpectsWidgetToBeDisabled(renderWidget: () => RenderResult, disabled = true) {
+    it(`expects widget to be ${disabled ? 'disabled' : 'enabled'}`, async () => {
+      const widget = renderWidget()
+      const tokenSelect = (await widget.findAllByTestId('token-select'))[0]
+      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', disabled))
+    })
+  }
+
+  describe('with no params', () => {
+    const renderWidget = () => render(<SwapWidget />)
+    itPromptsForWalletConnection(renderWidget)
+    itExpectsWidgetToBeDisabled(renderWidget)
+  })
+
+  describe('with jsonRpcUrlMap', () => {
+    describe('with an array', () => {
+      const renderWidget = () => render(<SwapWidget jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
+      itPromptsForWalletConnection(renderWidget)
+      itExpectsWidgetToBeDisabled(renderWidget)
     })
 
-    it('expects widget not to be disabled', async () => {
-      const component = renderWidget(<SwapWidget tokenList={tokens} />)
-      const tokenSelect = (await component.findAllByTestId('token-select'))[0]
-      await waitFor(() => {
-        expect(tokenSelect).toHaveProperty('disabled', false)
-      })
+    describe('with a singleton', () => {
+      const renderWidget = () => render(<SwapWidget jsonRpcUrlMap={{ 1: hardhat.url }} />)
+      itPromptsForWalletConnection(renderWidget)
+      itExpectsWidgetToBeDisabled(renderWidget)
     })
   })
 
-  describe('with valid jsonRpcUrlMap', () => {
-    it('prompts for wallet connection in the Wallet and Toolbar', async () => {
-      const component = renderWidget(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
-      const connectWallet = await component.findByTestId('connect-wallet')
-      const toolbar = await component.findByTestId('toolbar')
-      expect(connectWallet.textContent).toBe('Connect wallet to swap')
-      expect(toolbar.textContent).toBe('Connect wallet to swap')
-    })
+  describe('with provider', () => {
+    // The real hardhat.provider relies on real timeouts when providing data.
+    jest.useRealTimers()
 
-    it('expects widget not to be disabled', async () => {
-      const component = renderWidget(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
-      let tokenSelect = (await component.findAllByTestId('token-select'))[0]
-      expect(tokenSelect).toHaveProperty('disabled', true)
-      const toolbar = await component.findByTestId('toolbar')
-      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-      tokenSelect = (await component.findAllByTestId('token-select'))[0]
-      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', false))
-    })
+    const renderWidget = () => render(<SwapWidget provider={hardhat.provider} />)
 
-    describe('with singleton jsonRpcUrlMap', () => {
-      it('expects widget not to be disabled', async () => {
-        const component = renderWidget(<SwapWidget tokenList={tokens} jsonRpcUrlMap={{ 1: hardhat.url }} />)
-        let tokenSelect = (await component.findAllByTestId('token-select'))[0]
-        expect(tokenSelect).toHaveProperty('disabled', true)
-        const toolbar = await component.findByTestId('toolbar')
-        await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-        tokenSelect = (await component.findAllByTestId('token-select'))[0]
-        await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', false))
-      })
-    })
-  })
-
-  describe('with wallet provider', () => {
     it('displays connected account chip', async () => {
-      const component = renderWidget(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
-      const toolbar = await component.findByTestId('toolbar')
-      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-      const account = await component.findByTestId('account')
+      const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
+        0,
+        6
+      )}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
+
+      const widget = renderWidget()
+      const toolbar = await widget.findByTestId('toolbar')
+      // The toolbar will reflect a pending connection until it connects.
+      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'), { timeout: 10000 })
+
+      const account = await widget.findByTestId('account')
       await waitFor(() => expect(account.textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING))
     })
 
-    it('expects widget not to be disabled', async () => {
-      const component = renderWidget(<SwapWidget tokenList={tokens} provider={hardhat.provider} />)
-      const toolbar = await component.findByTestId('toolbar')
-      await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'))
-      const tokenSelect = (await component.findAllByTestId('token-select'))[0]
-      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', false))
-    })
+    itExpectsWidgetToBeDisabled(renderWidget, false)
   })
 })
