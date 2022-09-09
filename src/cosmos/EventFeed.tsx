@@ -12,7 +12,7 @@ const EventFeedWrapper = styled.div`
   width: 360px;
 `
 const EventColumn = styled.div`
-  height: 80vh;
+  height: 306px;
   overflow: auto;
 `
 const EventRow = styled.div`

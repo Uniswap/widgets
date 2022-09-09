@@ -109,7 +109,7 @@ function Fixture() {
   if (!window.frameElement) return widget
 
   return (
-    <Row align="start" justify="space-around">
+    <Row flex align="start" justify="start" gap={0.5}>
       {widget}
       <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>

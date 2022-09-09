@@ -47,7 +47,7 @@ function Fixture() {
   const connector = useProvider(SupportedChainId.MAINNET)
 
   return (
-    <Row align="start" justify="space-around">
+    <Row flex align="start" justify="start" gap={0.5}>
       <SwapWidget
         value={{
           type,
