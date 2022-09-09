@@ -22,10 +22,12 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { chainId } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
+    [Field.OUTPUT]: { currency: outputCurrency },
     trade,
     slippage,
   } = useSwapInfo()
-  const inputChainId = inputCurrency?.chainId
+
+  const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -48,8 +50,8 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
   const color = tokenColorExtraction ? 'interactive' : 'accent'
 
-  if (inputChainId && chainId && inputChainId !== chainId) {
-    return <SwitchChainButton color={color} chainId={inputChainId} />
+  if (chainId && tokenChainId && chainId !== tokenChainId) {
+    return <SwitchChainButton color={color} chainId={tokenChainId} />
   } else if (isDisabled) {
     return (
       <ActionButton color={color} disabled={true}>
