@@ -30,7 +30,7 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
     () =>
       isPending
         ? {
-            message: <Trans>Switch network in your wallet</Trans>,
+            message: account ? <Trans>Switch network in your wallet</Trans> : <Trans>Switching network</Trans>,
             icon: Spinner,
           }
         : {
@@ -38,7 +38,7 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
             onClick: onSwitchChain,
             children: <Trans>Switch</Trans>,
           },
-    [isPending, onSwitchChain]
+    [account, isPending, onSwitchChain]
   )
 
   return <ActionButton color={color} action={actionProps} />
