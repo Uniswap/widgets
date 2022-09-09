@@ -1,21 +1,18 @@
 import { Trans } from '@lingui/macro'
-import { URI_AVAILABLE, WalletConnect } from '@web3-react/walletconnect'
+import { Connector } from '@web3-react/types'
 import METAMASK_ICON_URL from 'assets/images/metamaskIcon.png'
 import WALLETCONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
 import Button from 'components/Button'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import Row from 'components/Row'
-import EventEmitter from 'events'
 import useConnectors from 'hooks/web3/useConnectors'
-import { atom, useAtom } from 'jotai'
-import QRCode from 'qrcode'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { lightTheme, ThemedText } from 'theme'
+import { WalletConnectQR } from 'utils/WalletConnect'
 
 const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
-const onError = (error: Error) => console.error('web3 error:', error)
 
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
@@ -85,72 +82,19 @@ interface ButtonProps {
   onClick?: () => void
 }
 
-const wcQRUriAtom = atom<string | undefined>(undefined)
-
-function toQrCodeSvg(qrUri: string): Promise<string> {
-  return QRCode.toString(qrUri, {
-    // Leave a margin to increase contrast in dark mode.
-    margin: 1,
-    // Use 55*2=110 for the width to prevent distortion. The generated viewbox is "0 0 55 55".
-    width: 110,
-    type: 'svg',
-  })
-}
-
 function WalletConnectButton({
   walletName,
   logoSrc,
-  walletConnect,
+  walletConnectQR: walletConnect,
   onClick,
-}: ButtonProps & { walletConnect: WalletConnect }) {
-  const [qrUri, setQrUri] = useAtom(wcQRUriAtom)
-  const [qrCodeSvg, setQrCodeSvg] = useState<string>('')
-
+}: ButtonProps & { walletConnectQR: WalletConnectQR }) {
+  const [svg, setSvg] = useState(walletConnect.svg)
   useEffect(() => {
-    let stale = false
-    if (qrUri) {
-      toQrCodeSvg(qrUri).then((qrCodeSvg) => {
-        if (stale) return
-        setQrCodeSvg(qrCodeSvg)
-      })
-    } else {
-      walletConnect.activate()
-    }
+    walletConnect.events.on(WalletConnectQR.SVG_AVAILABLE, setSvg)
     return () => {
-      stale = true
+      walletConnect.events.off(WalletConnectQR.SVG_AVAILABLE, setSvg)
     }
-  }, [qrUri, walletConnect])
-
-  useEffect(() => {
-    const disconnectListener = async (err: Error | null, _: any) => {
-      if (err) onError?.(err)
-      // Clear saved QR URI after disconnection
-      setQrUri(undefined)
-      walletConnect.deactivate()
-    }
-    walletConnect.provider?.connector.on('disconnect', disconnectListener)
-
-    // Need both URI event listeners
-    walletConnect.events.on(URI_AVAILABLE, async (uri: string) => {
-      if (uri) {
-        setQrUri(uri)
-      }
-    })
-
-    const uriListener = async (err: Error | null, payload: any) => {
-      if (err) onError?.(err)
-      const uri: string = payload.params[0]
-      if (uri) {
-        setQrUri(uri)
-      }
-    }
-    walletConnect.provider?.connector.on('display_uri', uriListener)
-
-    return () => {
-      walletConnect.events.off(URI_AVAILABLE)
-      ;(walletConnect.provider?.connector as unknown as EventEmitter | undefined)?.off('display_uri', uriListener)
-    }
-  })
+  }, [svg, walletConnect])
 
   return (
     <StyledMainButton color="container" onClick={onClick}>
@@ -160,7 +104,7 @@ function WalletConnectButton({
           walletName={walletName}
           caption={'Scan to connect your wallet. Works with most wallets.'}
         />
-        <QRCodeWrapper dangerouslySetInnerHTML={{ __html: qrCodeSvg }} />
+        {svg && <QRCodeWrapper dangerouslySetInnerHTML={{ __html: svg }} />}
       </StyledMainButtonRow>
     </StyledMainButton>
   )
@@ -186,8 +130,10 @@ function NoWalletButton() {
 
 export function ConnectWalletDialog() {
   const connectors = useConnectors()
-  const onActivate = useCallback(async (connector) => {
-    connector.activate()
+  const onActivate = useCallback(async (connector: Connector) => {
+    try {
+      await connector.activate()
+    } catch (error) {}
   }, [])
 
   return (
@@ -198,7 +144,7 @@ export function ConnectWalletDialog() {
           <WalletConnectButton
             walletName="WalletConnect"
             logoSrc={WALLETCONNECT_ICON_URL}
-            walletConnect={connectors.walletConnectQR}
+            walletConnectQR={connectors.walletConnectQR}
             onClick={() => onActivate(connectors.walletConnect)}
           />
           <SecondaryOptionsRow>

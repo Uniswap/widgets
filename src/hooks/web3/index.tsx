@@ -4,10 +4,10 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
-import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
+import { WalletConnectPopup, WalletConnectQR } from 'utils/WalletConnect'
 
 import { Provider as ConnectorsProvider } from './useConnectors'
 import { JsonRpcUrlMap, Provider as JsonRpcUrlMapProvider, toJsonRpcUrlMap } from './useJsonRpcUrlMap'
@@ -17,8 +17,8 @@ type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 interface Web3ReactConnectors {
   user: Web3ReactConnector<EIP1193 | JsonRpcConnector> | undefined
   metaMask: Web3ReactConnector<MetaMask>
-  walletConnect: Web3ReactConnector<WalletConnect>
-  walletConnectQR: Web3ReactConnector<WalletConnect>
+  walletConnect: Web3ReactConnector<WalletConnectPopup>
+  walletConnectQR: Web3ReactConnector<WalletConnectQR>
   network: Web3ReactConnector<Network>
 }
 
@@ -46,8 +46,8 @@ export function Provider({
     const prioritizedConnectors: (Web3ReactConnector | undefined)[] = [
       web3ReactConnectors.user,
       web3ReactConnectors.metaMask,
-      web3ReactConnectors.walletConnectQR,
       web3ReactConnectors.walletConnect,
+      web3ReactConnectors.walletConnectQR,
       web3ReactConnectors.network,
     ]
     return prioritizedConnectors.filter((connector): connector is Web3ReactConnector => Boolean(connector))
@@ -112,15 +112,13 @@ function useWeb3ReactConnectors(
   }, [provider])
   const metaMask = useMemo(() => initializeWeb3ReactConnector(MetaMask), [])
   const walletConnect = useMemo(
-    () =>
-      initializeWeb3ReactConnector(WalletConnect, { options: { rpc: jsonRpcUrlMap, qrcode: true }, defaultChainId }),
+    () => initializeWeb3ReactConnector(WalletConnectPopup, { options: { rpc: jsonRpcUrlMap }, defaultChainId }),
     [defaultChainId, jsonRpcUrlMap]
-  ) // WC via built-in popup
+  )
   const walletConnectQR = useMemo(
-    () =>
-      initializeWeb3ReactConnector(WalletConnect, { options: { rpc: jsonRpcUrlMap, qrcode: false }, defaultChainId }),
+    () => initializeWeb3ReactConnector(WalletConnectQR, { options: { rpc: jsonRpcUrlMap }, defaultChainId }),
     [jsonRpcUrlMap, defaultChainId]
-  ) // WC via tile QR code scan
+  )
   const network = useMemo(
     () => initializeWeb3ReactConnector(Network, { urlMap: jsonRpcUrlMap, defaultChainId }),
     [jsonRpcUrlMap, defaultChainId]

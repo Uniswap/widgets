@@ -1,16 +1,16 @@
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
-import { WalletConnect } from '@web3-react/walletconnect'
 import { createContext, useContext } from 'react'
 import invariant from 'tiny-invariant'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
+import { WalletConnectPopup, WalletConnectQR } from 'utils/WalletConnect'
 
 export interface Connectors {
   user: EIP1193 | JsonRpcConnector | undefined
   metaMask: MetaMask
-  walletConnect: WalletConnect
-  walletConnectQR: WalletConnect
+  walletConnect: WalletConnectPopup
+  walletConnectQR: WalletConnectQR
   network: Network
 }
 
