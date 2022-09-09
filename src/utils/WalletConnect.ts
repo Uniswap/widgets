@@ -1,23 +1,49 @@
-import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect'
+import 'setimmediate'
+
+import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect'
+import QRCode from 'qrcode'
 
 export class WalletConnectPopup extends WalletConnect {
   constructor({ actions, options, defaultChainId, timeout, onError }: WalletConnectConstructorArgs) {
     super({ actions, options: { ...options, qrcode: true }, defaultChainId, timeout, onError })
-    this.provider?.connector.on('display_uri', (e) => console.log('ZZMP:display_uri', e))
-    this.provider?.connector.on('session_delete', (e) => console.log('ZZMP:session_delete', e))
   }
 }
 
-export class WalletConnectURL extends WalletConnect {
-  private _url?: string
+export class WalletConnectQR extends WalletConnect {
+  static SVG_AVAILABLE = 'svg_available'
 
-  get url() {
-    // TODO(zzmp): Fetch the URL, and setup appropriate listeners.
-    return this._url
+  private _svg?: string
+  get svg() {
+    if (!this._svg) setImmediate(() => this.activate().catch(() => undefined))
+    return this._svg
   }
 
   constructor({ actions, options, defaultChainId, timeout, onError }: WalletConnectConstructorArgs) {
     super({ actions, options: { ...options, qrcode: false }, defaultChainId, timeout, onError })
-    void this.url
+
+    this.events.once(URI_AVAILABLE, () => {
+      this.provider?.connector.on('disconnect', () => {
+        this.deactivate()
+      })
+    })
+
+    this.events.on(URI_AVAILABLE, async (uri) => {
+      this._svg = undefined
+      if (!uri) return
+
+      this._svg = await QRCode.toString(uri, {
+        // Leave a margin to increase contrast in dark mode.
+        margin: 1,
+        // Use 55*2=110 for the width to prevent distortion. The generated viewbox is "0 0 55 55".
+        width: 110,
+        type: 'svg',
+      })
+      this.events.emit(WalletConnectQR.SVG_AVAILABLE, this.svg)
+    })
+  }
+
+  deactivate() {
+    this.events.emit(URI_AVAILABLE)
+    return super.deactivate()
   }
 }
