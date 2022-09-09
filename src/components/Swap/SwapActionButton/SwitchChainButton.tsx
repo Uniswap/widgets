@@ -6,40 +6,11 @@ import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Colors } from 'theme'
 
-interface ChainIds {
-  inputChainId?: number
-  outputChainId?: number
-}
-
-function useDesiredChainId({ inputChainId, outputChainId }: ChainIds): number | undefined {
-  const { chainId } = useWeb3React()
-  if (chainId === undefined) return
-
-  const desiredChainId = inputChainId ?? outputChainId
-  if (desiredChainId === chainId) return
-
-  return desiredChainId
-}
-
-export function useSwitchChainId(chainIds: ChainIds): number | undefined {
-  const { account } = useWeb3React()
-  const chainId = useDesiredChainId(chainIds)
-  const switchChain = useSwitchChain()
-
-  // If using a provider with no accounts (eg network), switch the chain immediately.
-  useEffect(() => {
-    if (!account && chainId !== undefined) {
-      switchChain(chainId)
-    }
-  }, [account, chainId, switchChain])
-  if (!account) return
-
-  return chainId
-}
-
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ color, chainId }: { color: keyof Colors; chainId: number }) {
-  const [isPending, setIsPending] = useState(false)
+  const { account } = useWeb3React()
+  const [isPending, setIsPending] = useState(!account)
+
   const switchChain = useSwitchChain()
   const onSwitchChain = useCallback(async () => {
     setIsPending(true)
@@ -49,6 +20,11 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
       setIsPending(false)
     }
   }, [chainId, switchChain])
+
+  // If there is no account (ie no wallet to take agency), switch chains automatically
+  useEffect(() => {
+    if (!account) onSwitchChain()
+  }, [account, onSwitchChain])
 
   const actionProps = useMemo(
     () =>
