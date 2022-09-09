@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-06 16:04\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -295,6 +295,10 @@ msgstr "Van netwerk wisselen"
 #: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
 msgid "Switch network in your wallet"
 msgstr "Wissel van netwerk in je portemonnee"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "Wisselend netwerk"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
