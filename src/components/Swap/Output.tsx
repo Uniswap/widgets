@@ -63,7 +63,6 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const hasColor = swapOutputCurrency ? Boolean(color) || null : false
 
   const amount = useFormattedFieldAmount({
-    disabled,
     currencyAmount: outputCurrencyAmount,
     fieldAmount: swapOutputAmount,
   })

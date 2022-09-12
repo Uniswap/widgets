@@ -115,15 +115,8 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
-export function SwapInfoProvider({
-  children,
-  disabled,
-  routerUrl,
-}: PropsWithChildren<{ disabled?: boolean; routerUrl?: string }>) {
+export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
   const swapInfo = useComputeSwapInfo(routerUrl)
-  if (disabled) {
-    return <SwapInfoContext.Provider value={DEFAULT_SWAP_INFO}>{children}</SwapInfoContext.Provider>
-  }
   return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
 

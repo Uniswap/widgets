@@ -46,16 +46,12 @@ export interface InputProps {
 }
 
 interface UseFormattedFieldAmountArguments {
-  disabled: boolean
   currencyAmount?: CurrencyAmount<Currency>
   fieldAmount?: string
 }
 
-export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount }: UseFormattedFieldAmountArguments) {
+export function useFormattedFieldAmount({ currencyAmount, fieldAmount }: UseFormattedFieldAmountArguments) {
   return useMemo(() => {
-    if (disabled) {
-      return ''
-    }
     if (fieldAmount !== undefined) {
       return fieldAmount
     }
@@ -63,7 +59,7 @@ export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount 
       return currencyAmount.toSignificant(6)
     }
     return ''
-  }, [disabled, currencyAmount, fieldAmount])
+  }, [currencyAmount, fieldAmount])
 }
 
 export default function Input({ disabled, focused }: InputProps) {
@@ -101,7 +97,6 @@ export default function Input({ disabled, focused }: InputProps) {
   )
 
   const amount = useFormattedFieldAmount({
-    disabled,
     currencyAmount: tradeCurrencyAmount,
     fieldAmount: inputAmount,
   })
