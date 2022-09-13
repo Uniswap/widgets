@@ -1,3 +1,4 @@
+import { JsonRpcProvider, StaticJsonRpcProvider } from '@ethersproject/providers'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { createContext, useContext } from 'react'
@@ -19,6 +20,18 @@ export function toJsonRpcUrlMap(jsonRpcUrlMap?: JsonRpcUrlMap): Record<Supported
     {} as Record<SupportedChainId, string[]>
   )
   return jsonRpcUrlMapWithFallbacks
+}
+
+export function toJsonRpcConnectorMap(
+  jsonRpcUrlMap: Record<SupportedChainId, string[]>
+): Record<SupportedChainId, JsonRpcProvider> {
+  return ALL_SUPPORTED_CHAIN_IDS.reduce(
+    (map, chainId) => ({
+      ...map,
+      [chainId]: new StaticJsonRpcProvider(jsonRpcUrlMap[chainId][0]),
+    }),
+    {} as Record<SupportedChainId, JsonRpcProvider>
+  )
 }
 
 const JsonRpcUrlMapContext = createContext<Record<SupportedChainId, string[]> | null>(null)
