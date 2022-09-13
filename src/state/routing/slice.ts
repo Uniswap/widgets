@@ -91,7 +91,7 @@ export const routing = createApi({
               tokenOutAddress,
               tokenOutChainId,
               amount,
-              tradeType,
+              type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
             })
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {
