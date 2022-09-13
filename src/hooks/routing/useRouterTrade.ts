@@ -21,6 +21,11 @@ import { isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 
 export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 
+export enum RouterPreference {
+  PRICE,
+  TRADE,
+}
+
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
@@ -30,9 +35,10 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  */
 export function useRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
-  routerUrl?: string,
-  amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: RouterPreference,
+  routerUrl?: string
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
@@ -72,8 +78,8 @@ export function useRouterTrade<TTradeType extends TradeType>(
   })
 
   const { isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`15s`,
-    refetchOnFocus: true,
+    // Price-fetching is informational and costly, so it's done less frequently.
+    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
   })
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
