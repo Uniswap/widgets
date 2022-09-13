@@ -13,7 +13,7 @@ const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((c
   Number.isInteger(chainId)
 )
 
-export function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
+function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
   return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
 }
 
@@ -45,8 +45,9 @@ async function getQuote(
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
   const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (!swapRoute)
+  if (!swapRoute) {
     throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
+  }
 
   return { data: transformSwapRouteToGetQuoteResult(tradeType, amount, swapRoute) }
 }
@@ -80,6 +81,11 @@ export async function getClientSideQuote(
   provider: JsonRpcProvider,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
+  const chainId = tokenInChainId
+  if (!isAutoRouterSupportedChain(chainId)) {
+    throw new Error(`Router does not support this token's chain (chainId: ${chainId}).`)
+  }
+
   return getQuote(
     {
       tradeType,

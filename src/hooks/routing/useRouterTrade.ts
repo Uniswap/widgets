@@ -1,9 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-// Importing just the type, so smart-order-router is lazy-loaded
-// eslint-disable-next-line no-restricted-imports
-import type { ChainId } from '@uniswap/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useDebounce from 'hooks/useDebounce'
@@ -16,8 +13,6 @@ import { useGetQuoteQuery } from 'state/routing/slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 import { isExactInput } from 'utils/tradeType'
-
-import { isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
 
 export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
 
@@ -43,8 +38,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
-  const { chainId, provider } = useWeb3React()
-  const autoRouterSupported = isAutoRouterSupportedChain(chainId)
+  const { provider } = useWeb3React()
   const isWindowVisible = useIsWindowVisible()
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
   // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
@@ -53,7 +47,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     200
   )
   const isDebouncing = amountSpecified !== debouncedAmount && otherCurrency === debouncedOtherCurrency
-  const debouncedAmountSpecified = autoRouterSupported && isWindowVisible ? debouncedAmount : undefined
+  const debouncedAmountSpecified = isWindowVisible ? debouncedAmount : undefined
 
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -62,11 +56,6 @@ export function useRouterTrade<TTradeType extends TradeType>(
         : [debouncedOtherCurrency, debouncedAmountSpecified?.currency],
     [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
   )
-
-  const currencyChainId = currencyIn?.chainId as ChainId
-  if (currencyChainId && !isAutoRouterSupportedChain(currencyChainId)) {
-    throw new Error(`Router does not support this token's chain (chainId: ${currencyChainId}).`)
-  }
 
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
