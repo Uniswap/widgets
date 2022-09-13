@@ -4,35 +4,7 @@ import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { createContext, useContext } from 'react'
 import invariant from 'tiny-invariant'
 
-export type JsonRpcUrlMap = { [chainId: number]: string | string[] }
-
-export function toJsonRpcUrlMap(jsonRpcUrlMap?: JsonRpcUrlMap): Record<SupportedChainId, string[]> {
-  if (!jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
-
-  const jsonRpcUrlMapWithFallbacks: Record<SupportedChainId, string[]> = ALL_SUPPORTED_CHAIN_IDS.reduce(
-    (map, chainId) => {
-      const value = jsonRpcUrlMap[chainId]
-      const urls = (Array.isArray(value) ? value : [value]).filter(Boolean)
-      const fallbackUrls = JSON_RPC_FALLBACK_ENDPOINTS[chainId]
-      map[chainId] = [...urls, ...fallbackUrls]
-      return map
-    },
-    {} as Record<SupportedChainId, string[]>
-  )
-  return jsonRpcUrlMapWithFallbacks
-}
-
-export function toJsonRpcConnectorMap(
-  jsonRpcUrlMap: Record<SupportedChainId, string[]>
-): Record<SupportedChainId, JsonRpcProvider> {
-  return ALL_SUPPORTED_CHAIN_IDS.reduce(
-    (map, chainId) => ({
-      ...map,
-      [chainId]: new StaticJsonRpcProvider(jsonRpcUrlMap[chainId][0]),
-    }),
-    {} as Record<SupportedChainId, JsonRpcProvider>
-  )
-}
+export type JsonRpcConnectionMap = { [chainId: number]: string | string[] | JsonRpcProvider | JsonRpcProvider[] }
 
 const JsonRpcUrlMapContext = createContext<Record<SupportedChainId, string[]> | null>(null)
 
@@ -42,4 +14,37 @@ export default function useJsonRpcUrlMap(): Record<SupportedChainId, string[]> {
   const jsonRpcUrlMap = useContext(JsonRpcUrlMapContext)
   invariant(jsonRpcUrlMap, 'useJsonRpcUrlMap used without initializing the context')
   return jsonRpcUrlMap
+}
+
+function toJsonRpcMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, (JsonRpcProvider | string)[]> {
+  return ALL_SUPPORTED_CHAIN_IDS.reduce((map, chainId) => {
+    const value = connectionMap?.[chainId]
+    const connections = (Array.isArray(value) ? value : [value])
+      .filter((value): value is string | JsonRpcProvider => Boolean(value))
+      .concat(...JSON_RPC_FALLBACK_ENDPOINTS[chainId])
+    return {
+      ...map,
+      [chainId]: connections,
+    }
+  }, {} as Record<SupportedChainId, (JsonRpcProvider | string)[]>)
+}
+
+export function toJsonRpcConnectionMap(
+  connectionMap?: JsonRpcConnectionMap
+): Record<SupportedChainId, [JsonRpcProvider]> {
+  return Object.entries(toJsonRpcMap(connectionMap)).reduce((map, [chainId, connections]) => {
+    const connection = connections[0]
+    const provider = JsonRpcProvider.isProvider(connection) ? connection : new StaticJsonRpcProvider(connection)
+    return { ...map, [chainId]: [provider] }
+  }, {} as Record<SupportedChainId, [JsonRpcProvider]>)
+}
+
+export function toJsonRpcUrlMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, string[]> {
+  return Object.entries(toJsonRpcMap(connectionMap)).reduce(
+    (urlMap, [chainId, connections]) => ({
+      ...urlMap,
+      [chainId]: connections.map((value) => (JsonRpcProvider.isProvider(value) ? value.connection.url : value)),
+    }),
+    {} as Record<SupportedChainId, string[]>
+  )
 }

@@ -8,7 +8,7 @@ import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as Web3ReactProvider } from 'hooks/web3'
-import { JsonRpcUrlMap } from 'hooks/web3/useJsonRpcUrlMap'
+import { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlMap'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
@@ -100,7 +100,7 @@ export interface WidgetProps extends BrandingSettings, TransactionEventHandlers 
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap?: JsonRpcUrlMap
+  jsonRpcUrlMap?: JsonRpcConnectionMap
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
