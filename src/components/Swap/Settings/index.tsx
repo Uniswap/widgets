@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
-import useScrollbar from 'hooks/useScrollbar'
 import { Settings as SettingsIcon } from 'icons'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { swapEventHandlersAtom } from 'state/swap'
 import { settingsAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
@@ -17,7 +16,6 @@ import TransactionTtlInput from './TransactionTtlInput'
 
 export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(boundary, { padded: true })
   const { onSettingsReset } = useAtomValue(swapEventHandlersAtom)
   const resetSettingsBase = useResetAtom(settingsAtom)
   const resetSettings = useCallback(() => {
@@ -33,7 +31,7 @@ export function SettingsDialog() {
           </ThemedText.ButtonSmall>
         </TextButton>
       </Header>
-      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded css={scrollbar}>
+      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
         <BoundaryProvider value={boundary}>
           <MaxSlippageSelect />
           <TransactionTtlInput />
