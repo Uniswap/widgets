@@ -15,7 +15,7 @@ export function Provider({ jsonRpcMap, children }: PropsWithChildren<{ jsonRpcMa
 export default function useJsonRpcUrlMap(): Record<SupportedChainId, string[]> {
   const jsonRpcMap = useContext(JsonRpcUrlMapContext)
   invariant(jsonRpcMap, 'useJsonRpcUrlMap used without initializing the context')
-  return useMemo(() => toJsonRpcUrlMap(jsonRpcMap), [jsonRpcMap])
+  return useMemo(() => toJsonRpcUrlsMap(jsonRpcMap), [jsonRpcMap])
 }
 
 function toJsonRpcMap<T>(getChainConnections: (chainId: SupportedChainId) => T): Record<SupportedChainId, T> {
@@ -46,18 +46,23 @@ function getChainConnections(
 
 export function toJsonRpcConnectionMap(
   connectionMap?: JsonRpcConnectionMap
-): Record<SupportedChainId, [JsonRpcProvider]> {
-  function getJsonRpcProvider(chainId: SupportedChainId): [JsonRpcProvider] {
+): Record<SupportedChainId, JsonRpcProvider> {
+  function getJsonRpcProvider(chainId: SupportedChainId): JsonRpcProvider {
     const [connection] = getChainConnections(connectionMap, chainId)
-    const provider = JsonRpcProvider.isProvider(connection)
-      ? connection
-      : new StaticJsonRpcProvider(connection, Number(chainId))
-    return [provider]
+    return JsonRpcProvider.isProvider(connection) ? connection : new StaticJsonRpcProvider(connection, Number(chainId))
   }
   return toJsonRpcMap(getJsonRpcProvider)
 }
 
-export function toJsonRpcUrlMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, string[]> {
+export function toJsonRpcUrlMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, string> {
+  function getJsonRpcUrl(chainId: SupportedChainId): string {
+    const [connection] = getChainConnections(connectionMap, chainId)
+    return JsonRpcProvider.isProvider(connection) ? connection.connection.url : connection
+  }
+  return toJsonRpcMap(getJsonRpcUrl)
+}
+
+export function toJsonRpcUrlsMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, string[]> {
   function getJsonRpcUrls(chainId: SupportedChainId): string[] {
     const connections = getChainConnections(connectionMap, chainId)
     return connections.map((connection) =>
