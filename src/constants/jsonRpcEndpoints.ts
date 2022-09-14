@@ -33,8 +33,6 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     'https://rpc.ankr.com/eth_goerli',
   ],
   [SupportedChainId.KOVAN]: [
-    // "Safe" URLs
-    'https://kovan.poa.network',
     // "Fallback" URLs
     'https://eth-kovan.public.blastapi.io',
   ],
