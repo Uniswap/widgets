@@ -12,11 +12,7 @@ export class WalletConnectPopup extends WalletConnect {
 export class WalletConnectQR extends WalletConnect {
   static SVG_AVAILABLE = 'svg_available'
 
-  private _svg?: string
-  get svg() {
-    if (!this._svg) setImmediate(() => this.activate().catch(() => undefined))
-    return this._svg
-  }
+  svg?: string
 
   constructor({ actions, options, defaultChainId, timeout, onError }: WalletConnectConstructorArgs) {
     super({ actions, options: { ...options, qrcode: false }, defaultChainId, timeout, onError })
@@ -28,10 +24,10 @@ export class WalletConnectQR extends WalletConnect {
     })
 
     this.events.on(URI_AVAILABLE, async (uri) => {
-      this._svg = undefined
+      this.svg = undefined
       if (!uri) return
 
-      this._svg = await QRCode.toString(uri, {
+      this.svg = await QRCode.toString(uri, {
         // Leave a margin to increase contrast in dark mode.
         margin: 1,
         // Use 55*2=110 for the width to prevent distortion. The generated viewbox is "0 0 55 55".
