@@ -17,16 +17,16 @@ export interface Connectors {
 
 const ConnectorsContext = createContext<Connectors | null>(null)
 
-export function Provider({ value, children }: PropsWithChildren<{ value: Connectors }>) {
+export function Provider({ connectors, children }: PropsWithChildren<{ connectors: Connectors }>) {
   const { chainId, connector } = useWeb3React()
   // The network chainId must be kept synchronized to avoid a loop when disconnecting and for a better UX.
   useEffect(() => {
-    if (connector !== value.network) {
-      value.network.activate(chainId)
+    if (connector !== connectors.network) {
+      connectors.network.activate(chainId)
     }
-  }, [chainId, connector, value.network])
+  }, [chainId, connector, connectors.network])
 
-  return <ConnectorsContext.Provider value={value}>{children}</ConnectorsContext.Provider>
+  return <ConnectorsContext.Provider value={connectors}>{children}</ConnectorsContext.Provider>
 }
 
 export default function useConnectors() {
