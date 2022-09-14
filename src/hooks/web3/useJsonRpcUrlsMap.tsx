@@ -12,7 +12,7 @@ export function Provider({ jsonRpcMap, children }: PropsWithChildren<{ jsonRpcMa
   return <JsonRpcUrlMapContext.Provider value={jsonRpcMap}>{children}</JsonRpcUrlMapContext.Provider>
 }
 
-export default function useJsonRpcUrlMap(): Record<SupportedChainId, string[]> {
+export default function useJsonRpcUrlsMap(): Record<SupportedChainId, string[]> {
   const jsonRpcMap = useContext(JsonRpcUrlMapContext)
   invariant(jsonRpcMap, 'useJsonRpcUrlMap used without initializing the context')
   return useMemo(() => toJsonRpcUrlsMap(jsonRpcMap), [jsonRpcMap])

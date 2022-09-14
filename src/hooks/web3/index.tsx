@@ -10,8 +10,12 @@ import JsonRpcConnector from 'utils/JsonRpcConnector'
 import { WalletConnectPopup, WalletConnectQR } from 'utils/WalletConnect'
 
 import { Provider as ConnectorsProvider } from './useConnectors'
-import { toJsonRpcConnectionMap, toJsonRpcUrlMap } from './useJsonRpcUrlMap'
-import { JsonRpcConnectionMap, Provider as JsonRpcUrlMapProvider } from './useJsonRpcUrlMap'
+import {
+  JsonRpcConnectionMap,
+  Provider as JsonRpcUrlMapProvider,
+  toJsonRpcConnectionMap,
+  toJsonRpcUrlMap,
+} from './useJsonRpcUrlsMap'
 
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 
