@@ -18,7 +18,7 @@ export type { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 export type { OnTxFail, OnTxSubmit, OnTxSuccess, TransactionEventHandlers } from 'hooks/transactions'
 export type { OnConnectWalletClick, WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
-export type { JsonRpcUrlMap } from 'hooks/web3/useJsonRpcUrlMap'
+export type { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 export type {
   OnAmountChange,
   OnReviewSwapClick,
