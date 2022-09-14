@@ -36,7 +36,7 @@ export function toJsonRpcConnectionMap(
     const connection = connections[0]
     const provider = JsonRpcProvider.isProvider(connection)
       ? connection
-      : new StaticJsonRpcProvider(connection, chainId)
+      : new StaticJsonRpcProvider(connection, Number(chainId))
     return { ...map, [chainId]: [provider] }
   }, {} as Record<SupportedChainId, [JsonRpcProvider]>)
 }
