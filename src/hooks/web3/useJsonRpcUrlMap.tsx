@@ -1,5 +1,5 @@
 import { JsonRpcProvider, StaticJsonRpcProvider } from '@ethersproject/providers'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { createContext, useContext } from 'react'
 import invariant from 'tiny-invariant'
@@ -16,37 +16,51 @@ export default function useJsonRpcUrlMap(): Record<SupportedChainId, string[]> {
   return jsonRpcUrlMap
 }
 
-function toJsonRpcMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, (JsonRpcProvider | string)[]> {
-  return ALL_SUPPORTED_CHAIN_IDS.reduce((map, chainId) => {
-    const value = connectionMap?.[chainId]
-    const connections = (Array.isArray(value) ? value : [value])
-      .filter((value): value is string | JsonRpcProvider => Boolean(value))
-      .concat(...JSON_RPC_FALLBACK_ENDPOINTS[chainId])
-    return {
-      ...map,
-      [chainId]: connections,
-    }
-  }, {} as Record<SupportedChainId, (JsonRpcProvider | string)[]>)
+function toJsonRpcMap<T>(getChainConnections: (chainId: SupportedChainId) => T): Record<SupportedChainId, T> {
+  return {
+    [SupportedChainId.MAINNET]: getChainConnections(SupportedChainId.MAINNET),
+    [SupportedChainId.ROPSTEN]: getChainConnections(SupportedChainId.ROPSTEN),
+    [SupportedChainId.RINKEBY]: getChainConnections(SupportedChainId.RINKEBY),
+    [SupportedChainId.GOERLI]: getChainConnections(SupportedChainId.GOERLI),
+    [SupportedChainId.KOVAN]: getChainConnections(SupportedChainId.KOVAN),
+    [SupportedChainId.POLYGON]: getChainConnections(SupportedChainId.POLYGON),
+    [SupportedChainId.POLYGON_MUMBAI]: getChainConnections(SupportedChainId.POLYGON_MUMBAI),
+    [SupportedChainId.ARBITRUM_ONE]: getChainConnections(SupportedChainId.ARBITRUM_ONE),
+    [SupportedChainId.ARBITRUM_RINKEBY]: getChainConnections(SupportedChainId.ARBITRUM_RINKEBY),
+    [SupportedChainId.OPTIMISM]: getChainConnections(SupportedChainId.OPTIMISM),
+    [SupportedChainId.OPTIMISTIC_KOVAN]: getChainConnections(SupportedChainId.OPTIMISTIC_KOVAN),
+  }
+}
+
+function getChainConnections(
+  connectionMap: JsonRpcConnectionMap | undefined,
+  chainId: SupportedChainId
+): (string | JsonRpcProvider)[] {
+  const value = connectionMap?.[chainId]
+  return (Array.isArray(value) ? value : [value])
+    .filter((value): value is string | JsonRpcProvider => Boolean(value))
+    .concat(...JSON_RPC_FALLBACK_ENDPOINTS[chainId])
 }
 
 export function toJsonRpcConnectionMap(
   connectionMap?: JsonRpcConnectionMap
 ): Record<SupportedChainId, [JsonRpcProvider]> {
-  return Object.entries(toJsonRpcMap(connectionMap)).reduce((map, [chainId, connections]) => {
-    const connection = connections[0]
+  function getJsonRpcProvider(chainId: SupportedChainId): [JsonRpcProvider] {
+    const [connection] = getChainConnections(connectionMap, chainId)
     const provider = JsonRpcProvider.isProvider(connection)
       ? connection
       : new StaticJsonRpcProvider(connection, Number(chainId))
-    return { ...map, [chainId]: [provider] }
-  }, {} as Record<SupportedChainId, [JsonRpcProvider]>)
+    return [provider]
+  }
+  return toJsonRpcMap(getJsonRpcProvider)
 }
 
 export function toJsonRpcUrlMap(connectionMap?: JsonRpcConnectionMap): Record<SupportedChainId, string[]> {
-  return Object.entries(toJsonRpcMap(connectionMap)).reduce(
-    (urlMap, [chainId, connections]) => ({
-      ...urlMap,
-      [chainId]: connections.map((value) => (JsonRpcProvider.isProvider(value) ? value.connection.url : value)),
-    }),
-    {} as Record<SupportedChainId, string[]>
-  )
+  function getJsonRpcUrls(chainId: SupportedChainId): string[] {
+    const connections = getChainConnections(connectionMap, chainId)
+    return connections.map((connection) =>
+      JsonRpcProvider.isProvider(connection) ? connection.connection.url : connection
+    )
+  }
+  return toJsonRpcMap(getJsonRpcUrls)
 }
