@@ -37,6 +37,10 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
+const Footer = styled(Row)`
+  height: 1em;
+`
+
 export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
   const { i18n } = useLingui()
 
@@ -100,7 +104,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
         </TokenInput>
         <Rule />
         {children}
-        {disableBranding ? null : <BrandedFooter />}
+        {disableBranding ? <Footer /> : <BrandedFooter />}
       </OutputColumn>
     </DynamicThemeProvider>
   )
