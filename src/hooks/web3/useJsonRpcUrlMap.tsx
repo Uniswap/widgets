@@ -1,19 +1,21 @@
 import { JsonRpcProvider, StaticJsonRpcProvider } from '@ethersproject/providers'
 import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
-import { createContext, useContext } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import invariant from 'tiny-invariant'
 
 export type JsonRpcConnectionMap = { [chainId: number]: string | string[] | JsonRpcProvider | JsonRpcProvider[] }
 
-const JsonRpcUrlMapContext = createContext<Record<SupportedChainId, string[]> | null>(null)
+const JsonRpcUrlMapContext = createContext<JsonRpcConnectionMap | undefined>(undefined)
 
-export const Provider = JsonRpcUrlMapContext.Provider
+export function Provider({ jsonRpcMap, children }: PropsWithChildren<{ jsonRpcMap?: JsonRpcConnectionMap }>) {
+  return <JsonRpcUrlMapContext.Provider value={jsonRpcMap}>{children}</JsonRpcUrlMapContext.Provider>
+}
 
 export default function useJsonRpcUrlMap(): Record<SupportedChainId, string[]> {
-  const jsonRpcUrlMap = useContext(JsonRpcUrlMapContext)
-  invariant(jsonRpcUrlMap, 'useJsonRpcUrlMap used without initializing the context')
-  return jsonRpcUrlMap
+  const jsonRpcMap = useContext(JsonRpcUrlMapContext)
+  invariant(jsonRpcMap, 'useJsonRpcUrlMap used without initializing the context')
+  return useMemo(() => toJsonRpcUrlMap(jsonRpcMap), [jsonRpcMap])
 }
 
 function toJsonRpcMap<T>(getChainConnections: (chainId: SupportedChainId) => T): Record<SupportedChainId, T> {

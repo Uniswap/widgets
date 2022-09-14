@@ -158,7 +158,11 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
                     <WidgetUpdater {...props} />
-                    <Web3ReactProvider provider={props.provider} defaultChainId={defaultChainId}>
+                    <Web3ReactProvider
+                      provider={props.provider}
+                      jsonRpcMap={props.jsonRpcUrlMap}
+                      defaultChainId={defaultChainId}
+                    >
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater {...(props as TransactionEventHandlers)} />

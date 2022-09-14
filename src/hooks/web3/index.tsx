@@ -24,20 +24,18 @@ interface Web3ReactConnectors {
 }
 
 interface ProviderProps {
-  defaultChainId?: SupportedChainId
-  jsonRpcUrlMap?: JsonRpcConnectionMap
   provider?: Eip1193Provider | JsonRpcProvider
+  jsonRpcMap?: JsonRpcConnectionMap
+  defaultChainId?: SupportedChainId
 }
 
 export function Provider({
   defaultChainId = SupportedChainId.MAINNET,
-  jsonRpcUrlMap,
+  jsonRpcMap,
   provider,
   children,
 }: PropsWithChildren<ProviderProps>) {
-  const connectionMap = useMemo(() => toJsonRpcConnectionMap(jsonRpcUrlMap), [jsonRpcUrlMap])
-  const urlMap = useMemo(() => toJsonRpcUrlMap(connectionMap), [connectionMap])
-  const web3ReactConnectors = useWeb3ReactConnectors(defaultChainId, provider, connectionMap, urlMap)
+  const web3ReactConnectors = useWeb3ReactConnectors({ provider, jsonRpcMap, defaultChainId })
 
   const key = useRef(0)
   const prioritizedConnectors = useMemo(() => {
@@ -80,8 +78,8 @@ export function Provider({
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
-      <JsonRpcUrlMapProvider value={urlMap}>
-        <ConnectorsProvider value={connectors}>{children}</ConnectorsProvider>
+      <JsonRpcUrlMapProvider jsonRpcMap={jsonRpcMap}>
+        <ConnectorsProvider connectors={connectors}>{children}</ConnectorsProvider>
       </JsonRpcUrlMapProvider>
     </Web3ReactProvider>
   )
@@ -97,12 +95,12 @@ function initializeWeb3ReactConnector<T extends Connector, P extends object>(
   return [connector, hooks]
 }
 
-function useWeb3ReactConnectors(
-  defaultChainId: SupportedChainId,
-  provider: Eip1193Provider | JsonRpcProvider | undefined,
-  connectionMap: Record<SupportedChainId, JsonRpcProvider[]>,
-  urlMap: Record<SupportedChainId, string[]>
-) {
+function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcMap }: ProviderProps) {
+  const [urlMap, connectionMap] = useMemo(
+    () => [toJsonRpcUrlMap(jsonRpcMap), toJsonRpcConnectionMap(jsonRpcMap)],
+    [jsonRpcMap]
+  )
+
   const user = useMemo(() => {
     if (!provider) return
     if (JsonRpcProvider.isProvider(provider)) {
@@ -126,6 +124,7 @@ function useWeb3ReactConnectors(
     () => initializeWeb3ReactConnector(Network, { urlMap: connectionMap, defaultChainId }),
     [connectionMap, defaultChainId]
   )
+
   return useMemo<Web3ReactConnectors>(
     () => ({
       user,
