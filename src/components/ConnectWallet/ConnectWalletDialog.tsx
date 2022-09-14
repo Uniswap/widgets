@@ -90,6 +90,8 @@ function WalletConnectButton({
 }: ButtonProps & { walletConnectQR: WalletConnectQR }) {
   const [svg, setSvg] = useState(walletConnect.svg)
   useEffect(() => {
+    if (!svg) walletConnect.activate()
+
     walletConnect.events.on(WalletConnectQR.SVG_AVAILABLE, setSvg)
     return () => {
       walletConnect.events.off(WalletConnectQR.SVG_AVAILABLE, setSvg)
