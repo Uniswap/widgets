@@ -2,7 +2,6 @@ import { JsonRpcProvider, StaticJsonRpcProvider } from '@ethersproject/providers
 import { SupportedChainId } from 'constants/chains'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
-import invariant from 'tiny-invariant'
 
 export type JsonRpcConnectionMap = { [chainId: number]: string | string[] | JsonRpcProvider | JsonRpcProvider[] }
 
@@ -14,7 +13,6 @@ export function Provider({ jsonRpcMap, children }: PropsWithChildren<{ jsonRpcMa
 
 export default function useJsonRpcUrlsMap(): Record<SupportedChainId, string[]> {
   const jsonRpcMap = useContext(JsonRpcUrlMapContext)
-  invariant(jsonRpcMap, 'useJsonRpcUrlMap used without initializing the context')
   return useMemo(() => toJsonRpcUrlsMap(jsonRpcMap), [jsonRpcMap])
 }
 
