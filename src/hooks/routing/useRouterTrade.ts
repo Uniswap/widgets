@@ -1,9 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-// Importing just the type, so smart-order-router is lazy-loaded
-// eslint-disable-next-line no-restricted-imports
-import type { ChainId } from '@uniswap/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useDebounce from 'hooks/useDebounce'
@@ -17,9 +14,12 @@ import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 import { isExactInput } from 'utils/tradeType'
 
-import { isAutoRouterSupportedChain } from './clientSideSmartOrderRouter'
-
 export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
+
+export enum RouterPreference {
+  PRICE,
+  TRADE,
+}
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -30,15 +30,15 @@ export const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  */
 export function useRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
-  routerUrl?: string,
-  amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: RouterPreference,
+  routerUrl?: string
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
-  const { chainId, provider } = useWeb3React()
-  const autoRouterSupported = isAutoRouterSupportedChain(chainId)
+  const { provider } = useWeb3React()
   const isWindowVisible = useIsWindowVisible()
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
   // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
@@ -47,7 +47,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     200
   )
   const isDebouncing = amountSpecified !== debouncedAmount && otherCurrency === debouncedOtherCurrency
-  const debouncedAmountSpecified = autoRouterSupported && isWindowVisible ? debouncedAmount : undefined
+  const debouncedAmountSpecified = isWindowVisible ? debouncedAmount : undefined
 
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -56,11 +56,6 @@ export function useRouterTrade<TTradeType extends TradeType>(
         : [debouncedOtherCurrency, debouncedAmountSpecified?.currency],
     [debouncedAmountSpecified, debouncedOtherCurrency, tradeType]
   )
-
-  const currencyChainId = currencyIn?.chainId as ChainId
-  if (currencyChainId && !isAutoRouterSupportedChain(currencyChainId)) {
-    throw new Error(`Router does not support this token's chain (chainId: ${currencyChainId}).`)
-  }
 
   const queryArgs = useRouterArguments({
     tokenIn: currencyIn,
@@ -72,8 +67,8 @@ export function useRouterTrade<TTradeType extends TradeType>(
   })
 
   const { isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`15s`,
-    refetchOnFocus: true,
+    // Price-fetching is informational and costly, so it's done less frequently.
+    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
   })
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined

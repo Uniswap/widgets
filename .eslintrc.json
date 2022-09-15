@@ -62,6 +62,10 @@
           {
             "group": ["**/dist"],
             "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking."
+          },
+          {
+            "group": ["*clientSideSmartOrderRouter"],
+            "message": "Forbidden import; smart-order-router is lazy-loaded."
           }
         ]
       }

@@ -19,10 +19,10 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: string; queryArgs: any }) => {
-  // same as default serializeQueryArgs, but we add extra case if key is our non-serializable JsonRpcProvider
+  // same as default serializeQueryArgs, but ignoring the non-serializable (and interchangeable) provider.
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
     if (key === 'provider') {
-      return value?.connection?.url
+      return undefined
     }
     if (isPlainObject(value)) {
       return Object.keys(value)
@@ -74,7 +74,7 @@ export const routing = createApi({
         } = args
 
         async function getClientSideQuote() {
-          // Lazy-load the clientside router to improve initial pageload times.
+          // Lazy-load the client-side router to improve initial pageload times.
           return await (
             await import('../../hooks/routing/clientSideSmartOrderRouter')
           ).getClientSideQuote(args, provider, { protocols })
@@ -91,7 +91,7 @@ export const routing = createApi({
               tokenOutAddress,
               tokenOutChainId,
               amount,
-              tradeType,
+              type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
             })
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {

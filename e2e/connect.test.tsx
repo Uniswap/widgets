@@ -28,31 +28,31 @@ describe('connect', () => {
     })
   }
 
-  function itExpectsWidgetToBeDisabled(renderWidget: () => RenderResult, disabled = true) {
-    it(`expects widget to be ${disabled ? 'disabled' : 'enabled'}`, async () => {
+  function itExpectsWidgetToBeEnabled(renderWidget: () => RenderResult) {
+    it('widget is enabled', async () => {
       const widget = renderWidget()
       const tokenSelect = (await widget.findAllByTestId('token-select'))[0]
-      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', disabled))
+      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', false))
     })
   }
 
   describe('with no params', () => {
     const renderWidget = () => render(<SwapWidget />)
     itPromptsForWalletConnection(renderWidget)
-    itExpectsWidgetToBeDisabled(renderWidget)
+    itExpectsWidgetToBeEnabled(renderWidget)
   })
 
   describe('with jsonRpcUrlMap', () => {
     describe('with an array', () => {
       const renderWidget = () => render(<SwapWidget jsonRpcUrlMap={{ 1: [hardhat.url] }} />)
       itPromptsForWalletConnection(renderWidget)
-      itExpectsWidgetToBeDisabled(renderWidget)
+      itExpectsWidgetToBeEnabled(renderWidget)
     })
 
     describe('with a singleton', () => {
       const renderWidget = () => render(<SwapWidget jsonRpcUrlMap={{ 1: hardhat.url }} />)
       itPromptsForWalletConnection(renderWidget)
-      itExpectsWidgetToBeDisabled(renderWidget)
+      itExpectsWidgetToBeEnabled(renderWidget)
     })
   })
 
@@ -77,6 +77,6 @@ describe('connect', () => {
       await waitFor(() => expect(account.textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING))
     })
 
-    itExpectsWidgetToBeDisabled(renderWidget, false)
+    itExpectsWidgetToBeEnabled(renderWidget)
   })
 })

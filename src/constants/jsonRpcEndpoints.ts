@@ -13,7 +13,6 @@ import { SupportedChainId } from './chains'
 export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
   [SupportedChainId.MAINNET]: [
     // "Safe" URLs
-    'https://api.mycryptoapi.com/eth',
     'https://cloudflare-eth.com',
     // "Fallback" URLs
     'https://rpc.ankr.com/eth',
@@ -34,8 +33,6 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     'https://rpc.ankr.com/eth_goerli',
   ],
   [SupportedChainId.KOVAN]: [
-    // "Safe" URLs
-    'https://kovan.poa.network',
     // "Fallback" URLs
     'https://eth-kovan.public.blastapi.io',
   ],

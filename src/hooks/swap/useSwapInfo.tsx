@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { INVALID_TRADE, useRouterTrade } from 'hooks/routing/useRouterTrade'
+import { INVALID_TRADE, RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
@@ -44,9 +44,10 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrap
   const trade = useRouterTrade(
     type,
-    routerUrl,
     hasAmounts ? parsedAmount : undefined,
-    hasAmounts ? (isExactInput(type) ? currencyOut : currencyIn) : undefined
+    hasAmounts ? (isExactInput(type) ? currencyOut : currencyIn) : undefined,
+    RouterPreference.TRADE,
+    routerUrl
   )
 
   const amountIn = useMemo(
