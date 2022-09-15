@@ -19,7 +19,6 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
 import Row from '../Row'
-import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
 export const USDC = styled(Row)`
@@ -30,14 +29,9 @@ export const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)<{ approved?: boolean }>`
+const InputColumn = styled(Column)`
   margin: 0.75em;
   position: relative;
-
-  ${TokenImg} {
-    filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.4)')};
-    transition: filter 0.25s;
-  }
 `
 
 export interface InputProps {
@@ -80,9 +74,6 @@ export default function Input({ disabled, focused }: InputProps) {
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 
-  //TODO(ianlapham): mimic logic from app swap page
-  const mockApproved = true
-
   // account for gas needed if using max on native token
   const max = useMemo(() => {
     const maxAmount = maxAmountSpend(balance)
@@ -102,7 +93,7 @@ export default function Input({ disabled, focused }: InputProps) {
   })
 
   return (
-    <InputColumn gap={0.5} approved={mockApproved}>
+    <InputColumn gap={0.5}>
       <TokenInput
         amount={amount}
         currency={inputCurrency}
