@@ -3,6 +3,7 @@ import 'setimmediate'
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { loadingTransitionCss } from 'css/loading'
+import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field } from 'state/swap'
 import styled, { keyframes } from 'styled-components/macro'
@@ -56,6 +57,7 @@ interface TokenInputProps {
   amount: string
   currency?: Currency
   disabled?: boolean
+  approval?: ApproveOrPermitState
   field: Field
   max?: string
   onChangeInput: (input: string) => void
@@ -67,6 +69,7 @@ export default function TokenInput({
   amount,
   currency,
   disabled,
+  approval,
   field,
   max,
   onChangeInput,
@@ -124,7 +127,14 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onSelect} field={field} />
+        <TokenSelect
+          value={currency}
+          collapsed={showMax}
+          disabled={disabled}
+          approval={approval}
+          onSelect={onSelect}
+          field={field}
+        />
       </TokenInputRow>
       {children}
     </Column>

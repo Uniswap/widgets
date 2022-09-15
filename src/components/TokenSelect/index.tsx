@@ -1,6 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -126,9 +127,10 @@ interface TokenSelectProps {
   field: Field
   onSelect: (value: Currency) => void
   value?: Currency
+  approval?: ApproveOrPermitState
 }
 
-export default memo(function TokenSelect({ collapsed, disabled, field, onSelect, value }: TokenSelectProps) {
+export default memo(function TokenSelect({ collapsed, disabled, field, onSelect, value, approval }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
@@ -143,9 +145,10 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
     },
     [onSelect, setOpen]
   )
+
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
+      <TokenButton value={value} collapsed={collapsed} disabled={disabled} approval={approval} onClick={onOpen} />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )

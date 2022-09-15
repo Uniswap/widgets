@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import missingTokenSrc from 'assets/missing-token-image.png'
+import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
 import { useToken } from 'hooks/useCurrency'
 import useCurrencyLogoURIs from 'hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState } from 'react'
@@ -43,7 +44,7 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
   return <img src={src} alt={alt} key={alt} onError={onError} {...rest} />
 }
 
-export default styled(TokenImg)<{ size?: number }>`
+export default styled(TokenImg)<{ size?: number; approval?: ApproveOrPermitState }>`
   // radial-gradient calculates distance from the corner, not the edge: divide by sqrt(2)
   background: radial-gradient(
     ${({ theme }) => theme.module} calc(100% / ${Math.sqrt(2)} - 1.5px),
@@ -52,4 +53,5 @@ export default styled(TokenImg)<{ size?: number }>`
   border-radius: 100%;
   height: ${({ size }) => size || 1}em;
   width: ${({ size }) => size || 1}em;
+  filter: ${({ approval }) => approval !== undefined && approval !== ApproveOrPermitState.APPROVED && 'opacity(0.4)'};
 `

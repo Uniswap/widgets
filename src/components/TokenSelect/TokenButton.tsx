@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
 import { ChevronRight } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
@@ -41,10 +42,11 @@ interface TokenButtonProps {
   value?: Currency
   collapsed: boolean
   disabled?: boolean
+  approval?: ApproveOrPermitState
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, collapsed, disabled, approval, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = value ? 'interactive' : 'accent'
   const contentColor = buttonBackgroundColor === 'accent' ? 'onAccent' : 'currentColor'
 
@@ -86,7 +88,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
         >
           {value ? (
             <>
-              <TokenImg token={value} size={1.2} />
+              <TokenImg token={value} size={1.2} approval={approval} />
               {value.symbol}
             </>
           ) : (
