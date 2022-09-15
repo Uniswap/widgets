@@ -1,5 +1,9 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useIsPendingApproval } from 'components/Swap/SwapActionButton/ApproveButton'
 import { INVALID_TRADE, RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
@@ -7,11 +11,12 @@ import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
+import { useSwapApprovalOptimizedTrade } from './useSwapApproval'
 import { useIsWrap } from './useWrapCallback'
 
 interface SwapField {
@@ -25,8 +30,12 @@ interface SwapInfo {
   [Field.INPUT]: SwapField
   [Field.OUTPUT]: SwapField
   trade: {
-    trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
+    trade?:
+      | Trade<Currency, Currency, TradeType>
+      | V2Trade<Currency, Currency, TradeType>
+      | V3Trade<Currency, Currency, TradeType>
+    gasUseEstimateUSD?: CurrencyAmount<Token>
   }
   slippage: Slippage
   impact?: PriceImpact
@@ -49,7 +58,6 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     RouterPreference.TRADE,
     routerUrl
   )
-
   const amountIn = useMemo(
     () => (isWrap || isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
     [isWrap, parsedAmount, trade.trade?.inputAmount, type]
@@ -68,8 +76,11 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
-  const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
-  const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
+  const optimizedTrade =
+    useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
+
+  const inputUSDCValue = useUSDCValue(optimizedTrade?.inputAmount)
+  const outputUSDCValue = useUSDCValue(optimizedTrade?.outputAmount)
 
   const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
 
@@ -87,7 +98,10 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
         balance: balanceOut,
         usdc: outputUSDCValue,
       },
-      trade,
+      trade: {
+        ...trade,
+        trade: optimizedTrade,
+      },
       slippage,
       impact,
     }),
@@ -103,6 +117,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       outputUSDCValue,
       slippage,
       trade,
+      optimizedTrade,
     ]
   )
 }

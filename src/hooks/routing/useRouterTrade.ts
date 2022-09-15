@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useDebounce from 'hooks/useDebounce'
@@ -10,7 +11,7 @@ import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromF
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
+import { GetQuoteResult, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 import { isExactInput } from 'utils/tradeType'
 
@@ -28,15 +29,16 @@ export enum RouterPreference {
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useRouterTrade<TTradeType extends TradeType>(
-  tradeType: TTradeType,
+export function useRouterTrade(
+  tradeType: TradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference,
   routerUrl?: string
 ): {
   state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
+  trade?: Trade<Currency, Currency, TradeType>
+  gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
   const isWindowVisible = useIsWindowVisible()
@@ -79,19 +81,19 @@ export function useRouterTrade<TTradeType extends TradeType>(
   )
 
   // get USD gas cost of trade in active chains stablecoin amount
-  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD)
 
   const isSyncing = currentData !== data
 
   const trade = useMemo(() => {
     if (!route) return
     try {
-      return transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+      return transformRoutesToTrade(route, tradeType)
     } catch (e: unknown) {
       console.debug('transformRoutesToTrade failed: ', e)
       return
     }
-  }, [gasUseEstimateUSD, route, tradeType])
+  }, [route, tradeType])
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) return INVALID_TRADE
@@ -113,8 +115,20 @@ export function useRouterTrade<TTradeType extends TradeType>(
     }
 
     if (trade) {
-      return { state: isSyncing ? TradeState.SYNCING : TradeState.VALID, trade }
+      return { state: isSyncing ? TradeState.SYNCING : TradeState.VALID, trade, gasUseEstimateUSD }
     }
     return INVALID_TRADE
-  }, [currencyIn, currencyOut, quoteResult, trade, tradeType, isError, route, queryArgs, isDebouncing, isSyncing])
+  }, [
+    currencyIn,
+    currencyOut,
+    trade,
+    isError,
+    quoteResult,
+    route,
+    queryArgs,
+    isDebouncing,
+    tradeType,
+    isSyncing,
+    gasUseEstimateUSD,
+  ])
 }
