@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
@@ -11,6 +10,7 @@ import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, BarChart, Info, Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -63,7 +63,7 @@ function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippag
 
 interface EstimateProps {
   slippage: Slippage
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
 }
 
 function Estimate({ trade, slippage }: EstimateProps) {
@@ -93,7 +93,7 @@ function ConfirmButton({
   highPriceImpact,
   onConfirm,
 }: {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   highPriceImpact: boolean
   onConfirm: () => Promise<void>
 }) {
@@ -150,7 +150,7 @@ function ConfirmButton({
 }
 
 interface SummaryDialogProps {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   slippage: Slippage
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>

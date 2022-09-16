@@ -1,15 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -261,23 +259,12 @@ export function useERC20Permit(
 }
 
 export function useERC20PermitFromTrade(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
+  trade: InterfaceTrade | undefined,
   allowedSlippage: Percent,
   transactionDeadline: BigNumber | undefined
 ) {
   const { chainId } = useWeb3React()
-  const swapRouterAddress = chainId
-    ? // v2 router does not support
-      trade instanceof V2Trade
-      ? undefined
-      : trade instanceof V3Trade
-      ? V3_ROUTER_ADDRESS[chainId]
-      : SWAP_ROUTER_ADDRESSES[chainId]
-    : undefined
+  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]

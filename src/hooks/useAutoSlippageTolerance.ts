@@ -1,5 +1,4 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { L2_CHAIN_IDS } from 'constants/chains'
@@ -19,7 +18,7 @@ export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
  * Return a guess of the gas cost used in computing slippage tolerance for a given trade
  * @param trade the trade for which to _guess_ the amount of gas it would cost to execute
  */
-function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined): number | undefined {
+function guesstimateGas(trade: InterfaceTrade | undefined): number | undefined {
   if (!!trade) {
     return 100_000 + trade.swaps.reduce((memo, swap) => swap.route.pools.length + memo, 0) * 30_000
   }

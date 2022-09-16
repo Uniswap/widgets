@@ -1,6 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
@@ -42,8 +43,9 @@ export function useAddTransactionInfo() {
 }
 
 /** Returns the hash of a pending approval transaction, if it exists. */
-export function usePendingApproval(token?: Token, spender?: string): string | undefined {
+export function usePendingApproval(token?: Token): string | undefined {
   const { chainId } = useWeb3React()
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const txs = useAtomValue(transactionsAtom)
   if (!chainId || !token || !spender) return undefined
 

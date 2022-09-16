@@ -1,7 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { InterfaceTrade } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
@@ -30,7 +29,7 @@ export function getTokenPath(trade: InterfaceTrade): RoutingDiagramEntry[] {
       const entry: RoutingDiagramEntry['path'][0] = [
         tokenIn,
         tokenOut,
-        nextPool instanceof Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee,
+        nextPool instanceof Pool ? nextPool.fee : V2_DEFAULT_FEE_TIER,
       ]
       path.push(entry)
     }

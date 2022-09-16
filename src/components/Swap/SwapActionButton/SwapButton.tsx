@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
-import { useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { SignatureData } from 'hooks/useERC20Permit'
@@ -24,12 +23,10 @@ import { SummaryDialog } from '../Summary'
  */
 export default function SwapButton({
   color,
-  optimizedTrade,
   signatureData,
   onSubmit,
 }: {
   color: keyof Colors
-  optimizedTrade: ReturnType<typeof useSwapApprovalOptimizedTrade>
   signatureData: SignatureData | null
   onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
 }) {
@@ -45,7 +42,7 @@ export default function SwapButton({
   const deadline = useTransactionDeadline()
 
   const { callback: swapCallback } = useSwapCallback({
-    trade: optimizedTrade,
+    trade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
     signatureData,
