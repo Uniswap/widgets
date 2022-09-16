@@ -61,7 +61,7 @@ export const routing = createApi({
         tradeType: TradeType
       }
     >({
-      async queryFn(args, _api, _extraOptions) {
+      async queryFn(args, { signal }) {
         const {
           tokenInAddress,
           tokenInChainId,
@@ -80,6 +80,12 @@ export const routing = createApi({
           ).getClientSideQuote(args, provider, { protocols })
         }
 
+        // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        if (signal.aborted) {
+          return { error: { status: 'FETCH_ERROR', error: 'query aborted' } as FetchBaseQueryError }
+        }
+
         let result
         if (Boolean(routerUrl)) {
           // Try routing API, fallback to clientside SOR
@@ -93,10 +99,13 @@ export const routing = createApi({
               amount,
               type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
             })
+            // We explicitly do *not* abort an ongoing fetch, because the server will not recognize/react to it.
+            // It is better to just cache the result to avoid refetching it in the near future.
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {
-              throw new Error(`${response.statusText}: could not get quote from auto-router API`)
+              return { error: { status: response.status, data: await response.text() } as FetchBaseQueryError }
             }
+
             const data = await response.json()
             result = { data }
           } catch (e) {
@@ -115,4 +124,4 @@ export const routing = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = routing
+export const { useLazyGetQuoteQuery } = routing
