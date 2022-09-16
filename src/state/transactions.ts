@@ -1,7 +1,7 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { atomWithImmer } from 'jotai/immer'
+import { InterfaceTrade } from 'state/routing/types'
 
 export enum TransactionType {
   APPROVAL,
@@ -24,7 +24,7 @@ export interface ApprovalTransactionInfo extends BaseTransactionInfo {
 export interface SwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   slippageTolerance: Percent
 }
 

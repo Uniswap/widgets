@@ -1,7 +1,4 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useIsPendingApproval } from 'components/Swap/SwapActionButton/ApproveButton'
 import { INVALID_TRADE, RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
@@ -11,7 +8,7 @@ import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
@@ -31,10 +28,7 @@ interface SwapInfo {
   [Field.OUTPUT]: SwapField
   trade: {
     state: TradeState
-    trade?:
-      | Trade<Currency, Currency, TradeType>
-      | V2Trade<Currency, Currency, TradeType>
-      | V3Trade<Currency, Currency, TradeType>
+    trade?: InterfaceTrade
     gasUseEstimateUSD?: CurrencyAmount<Token>
   }
   slippage: Slippage
@@ -75,14 +69,14 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
-  const slippage = useSlippage(trade.trade)
+  const slippage = useSlippage(trade.trade, trade.gasUseEstimateUSD)
   const optimizedTrade =
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
 
   const inputUSDCValue = useUSDCValue(optimizedTrade?.inputAmount)
   const outputUSDCValue = useUSDCValue(optimizedTrade?.outputAmount)
 
-  const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
+  const impact = usePriceImpact(optimizedTrade, { inputUSDCValue, outputUSDCValue })
 
   return useMemo(
     () => ({

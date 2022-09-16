@@ -1,8 +1,8 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
 import { slippageAtom } from 'state/swap/settings'
 
 export function toPercent(maxSlippage: string | undefined): Percent | undefined {
@@ -21,9 +21,12 @@ export interface Slippage {
 export const DEFAULT_SLIPPAGE = { auto: true, allowed: DEFAULT_AUTO_SLIPPAGE }
 
 /** Returns the allowed slippage, and whether it is auto-slippage. */
-export default function useSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Slippage {
+export default function useSlippage(
+  trade: Trade<Currency, Currency, TradeType> | undefined,
+  gasUseEstimateUSD: CurrencyAmount<Token> | undefined
+): Slippage {
   const slippage = useAtomValue(slippageAtom)
-  const autoSlippage = useAutoSlippageTolerance(slippage.auto ? trade : undefined)
+  const autoSlippage = useAutoSlippageTolerance(slippage.auto ? trade : undefined, gasUseEstimateUSD)
   const maxSlippage = useMemo(() => toPercent(slippage.max), [slippage.max])
   return useMemo(() => {
     const auto = slippage.auto || !slippage.max

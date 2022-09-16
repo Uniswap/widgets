@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { SwapRouter, Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { SwapRouter } from '@uniswap/router-sdk'
+import { Percent } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
 import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
 import { isExactInput } from 'utils/tradeType'
 
@@ -13,11 +14,6 @@ import { useArgentWalletContract } from './useArgentWalletContract'
 import { useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
-
-export type AnyTrade =
-  | V2Trade<Currency, Currency, TradeType>
-  | V3Trade<Currency, Currency, TradeType>
-  | Trade<Currency, Currency, TradeType>
 
 interface SwapCall {
   address: string
@@ -33,7 +29,7 @@ interface SwapCall {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 export function useSwapCallArguments(
-  trade: AnyTrade | undefined,
+  trade: InterfaceTrade | undefined,
   allowedSlippage: Percent,
   recipientAddressOrName: string | null | undefined,
   signatureData: SignatureData | null | undefined,

@@ -1,7 +1,6 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
+import { Pair, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -11,9 +10,10 @@ import {
   ZERO_PERCENT,
 } from 'constants/misc'
 import JSBI from 'jsbi'
+import { InterfaceTrade } from 'state/routing/types'
 
-const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
-const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
+const V2_FEE_PERCENT = new Percent(FeeAmount.MEDIUM, JSBI.BigInt(1_000_000))
+const V2_INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(V2_FEE_PERCENT)
 
 export function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
@@ -22,7 +22,7 @@ export function largerPercentValue(a?: Percent, b?: Percent) {
   return a || b
 }
 
-export function computeRealizedPriceImpact(trade: Trade<Currency, Currency, TradeType>): Percent {
+export function computeRealizedPriceImpact(trade: InterfaceTrade): Percent {
   const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
   return trade.priceImpact.subtract(realizedLpFeePercent)
 }
@@ -34,16 +34,15 @@ export function getPriceImpactWarning(priceImpact?: Percent): 'warning' | 'error
 }
 
 // computes realized lp fee as a percent
-export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>): Percent {
+export function computeRealizedLPFeePercent(trade: InterfaceTrade): Percent {
   let percent: Percent
 
-  // Since routes are either all v2 or all v3 right now, calculate separately
-  if (trade.swaps[0].route.pools instanceof Pair) {
+  if (trade instanceof V2Trade) {
     // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
     // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
     percent = ONE_HUNDRED_PERCENT.subtract(
-      trade.swaps.reduce<Percent>(
-        (currentFee: Percent): Percent => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
+      trade.route.pairs.reduce<Percent>(
+        (currentFee: Percent): Percent => currentFee.multiply(V2_INPUT_FRACTION_AFTER_FEE),
         ONE_HUNDRED_PERCENT
       )
     )
@@ -55,12 +54,8 @@ export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, Tra
 
       const routeRealizedLPFeePercent = overallPercent.multiply(
         ONE_HUNDRED_PERCENT.subtract(
-          swap.route.pools.reduce<Percent>((currentFee: Percent, pool): Percent => {
-            const fee =
-              pool instanceof Pair
-                ? // not currently possible given protocol check above, but not fatal
-                  FeeAmount.MEDIUM
-                : pool.fee
+          (swap.route.pools as (Pair | Pool)[]).reduce<Percent>((currentFee: Percent, pool: Pair | Pool): Percent => {
+            const fee = pool instanceof Pair ? FeeAmount.MEDIUM : pool.fee
             return currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(fee, 1_000_000)))
           }, ONE_HUNDRED_PERCENT)
         )
@@ -74,9 +69,7 @@ export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, Tra
 }
 
 // computes price breakdown for the trade
-export function computeRealizedLPFeeAmount(
-  trade?: Trade<Currency, Currency, TradeType> | null
-): CurrencyAmount<Currency> | undefined {
+export function computeRealizedLPFeeAmount(trade?: InterfaceTrade): CurrencyAmount<Currency> | undefined {
   if (trade) {
     const realizedLPFee = computeRealizedLPFeePercent(trade)
 

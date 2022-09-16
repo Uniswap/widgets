@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
@@ -11,7 +11,7 @@ export interface PriceImpact {
 }
 
 export function usePriceImpact(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  trade: InterfaceTrade | undefined,
   {
     inputUSDCValue,
     outputUSDCValue,

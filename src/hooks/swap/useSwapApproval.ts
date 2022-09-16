@@ -8,6 +8,7 @@ import { ErrorCode } from 'constants/eip1193'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
@@ -36,13 +37,7 @@ function useSwapApprovalStates(
   return useMemo(() => ({ v2, v3, v2V3 }), [v2, v2V3, v3])
 }
 
-export function useSwapRouterAddress(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined
-) {
+export function useSwapRouterAddress(trade: InterfaceTrade | undefined) {
   const { chainId } = useWeb3React()
   return useMemo(
     () =>
@@ -59,11 +54,7 @@ export function useSwapRouterAddress(
 
 // wraps useApproveCallback in the context of a swap
 export default function useSwapApproval(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
+  trade: InterfaceTrade | undefined,
   allowedSlippage: Percent,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
   amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
@@ -82,11 +73,7 @@ export function useSwapApprovalOptimizedTrade(
   trade: Trade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
-):
-  | V2Trade<Currency, Currency, TradeType>
-  | V3Trade<Currency, Currency, TradeType>
-  | Trade<Currency, Currency, TradeType>
-  | undefined {
+): InterfaceTrade | undefined {
   const onlyV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
   const onlyV3Routes = trade?.routes.every((route) => route.protocol === Protocol.V3)
   const tradeHasSplits = (trade?.routes.length ?? 0) > 1
@@ -146,11 +133,7 @@ export enum ApproveOrPermitState {
  * Considers both standard approval and ERC20 permit.
  */
 export const useApproveOrPermit = (
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
+  trade: InterfaceTrade | undefined,
   allowedSlippage: Percent,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
   amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)

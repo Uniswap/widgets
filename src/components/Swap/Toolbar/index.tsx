@@ -48,7 +48,7 @@ export default memo(function Toolbar() {
       if (isWrap) {
         return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
       }
-      if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
+      if (state === TradeState.NO_ROUTE_FOUND) {
         return <Caption.InsufficientLiquidity />
       }
       if (trade?.inputAmount && trade.outputAmount) {
