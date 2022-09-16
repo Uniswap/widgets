@@ -58,9 +58,8 @@ export function computeRoutes(
 
 export function transformRoutesToTrade<TTradeType extends TradeType>(
   route: ReturnType<typeof computeRoutes>,
-  tradeType: TTradeType,
-  gasUseEstimateUSD?: CurrencyAmount<Token> | null
-): InterfaceTrade<Currency, Currency, TTradeType> {
+  tradeType: TTradeType
+): InterfaceTrade {
   return new InterfaceTrade({
     v2Routes:
       route
@@ -71,7 +70,6 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
         ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
         .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
     tradeType,
-    gasUseEstimateUSD,
   })
 }
 
