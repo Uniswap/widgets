@@ -1,8 +1,8 @@
 import { useLingui } from '@lingui/react'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
 import formatLocaleNumber from 'utils/formatLocaleNumber'
@@ -10,7 +10,7 @@ import formatLocaleNumber from 'utils/formatLocaleNumber'
 import { TextButton } from '../Button'
 
 interface PriceProps {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
 }
 

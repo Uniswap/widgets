@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
-import { ApproveOrPermitState, useApproveOrPermit, useSwapApprovalOptimizedTrade } from 'hooks/swap/useSwapApproval'
+import { ApproveOrPermitState, useApproveOrPermit } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { memo, useMemo } from 'react'
 import { Field } from 'state/swap'
@@ -23,17 +23,13 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const {
     [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
     [Field.OUTPUT]: { currency: outputCurrency },
-    trade,
+    trade: { trade },
     slippage,
   } = useSwapInfo()
 
   const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
 
-  // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
-  const optimizedTrade =
-    // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
-    useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
-  const approval = useApproveOrPermit(optimizedTrade, slippage.allowed, useIsPendingApproval, inputCurrencyAmount)
+  const approval = useApproveOrPermit(trade, slippage.allowed, useIsPendingApproval, inputCurrencyAmount)
   const onSubmit = useOnSubmit()
 
   const isWrap = useIsWrap()
@@ -41,10 +37,10 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
     () =>
       disabled ||
       !chainId ||
-      (!isWrap && !optimizedTrade) ||
+      (!isWrap && !trade) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [disabled, chainId, isWrap, optimizedTrade, inputCurrencyAmount, inputCurrencyBalance]
+    [disabled, chainId, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
   )
 
   const { tokenColorExtraction } = useTheme()
@@ -61,15 +57,8 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   } else if (isWrap) {
     return <WrapButton color={color} onSubmit={onSubmit} />
   } else if (approval.approvalState !== ApproveOrPermitState.APPROVED) {
-    return <ApproveButton color={color} onSubmit={onSubmit} trade={trade.trade} {...approval} />
+    return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
   } else {
-    return (
-      <SwapButton
-        color={color}
-        onSubmit={onSubmit}
-        optimizedTrade={optimizedTrade}
-        signatureData={approval.signatureData}
-      />
-    )
+    return <SwapButton color={color} onSubmit={onSubmit} signatureData={approval.signatureData} />
   }
 })
