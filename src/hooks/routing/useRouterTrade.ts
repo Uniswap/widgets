@@ -26,8 +26,8 @@ const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useRouterTrade<TTradeType extends TradeType>(
-  tradeType: TTradeType,
+export function useRouterTrade(
+  tradeType: TradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference,
