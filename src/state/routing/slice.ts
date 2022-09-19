@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
-import { createApi, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -83,12 +83,11 @@ export const routing = createApi({
         // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
         await new Promise((resolve) => setTimeout(resolve, 200))
         if (signal.aborted) {
-          return { error: { status: 'FETCH_ERROR', error: 'query aborted' } as FetchBaseQueryError }
+          return { error: { status: 'FETCH_ERROR', error: 'query aborted' } }
         }
 
-        let result
+        // If enabled, try routing API, falling back to clientside SOR.
         if (Boolean(routerUrl)) {
-          // Try routing API, fallback to clientside SOR
           try {
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
@@ -103,21 +102,21 @@ export const routing = createApi({
             // It is better to just cache the result to avoid refetching it in the near future.
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {
-              return { error: { status: response.status, data: await response.text() } as FetchBaseQueryError }
+              return { error: { status: response.status, data: await response.text() } }
             }
 
-            const data = await response.json()
-            result = { data }
+            return response.json() as Promise<{ data: GetQuoteResult }>
           } catch (e) {
             console.warn(e)
-            result = await getClientSideQuote()
           }
-        } else {
-          // If integrator did not provide a routing API URL param, use clientside SOR
-          result = await getClientSideQuote()
         }
-        if (result?.error) return { error: result.error as FetchBaseQueryError }
-        return { data: result?.data as GetQuoteResult }
+
+        // If integrator did not provide a routing API URL param, use clientside SOR
+        try {
+          return getClientSideQuote()
+        } catch (e) {
+          return { error: { status: 'CUSTOM_ERROR', error: e.message } }
+        }
       },
       keepUnusedDataFor: ms`10s`,
     }),
