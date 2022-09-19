@@ -44,7 +44,7 @@ async function getQuote(
   },
   router: AlphaRouter,
   routerConfig: Partial<AlphaRouterConfig>
-): Promise<{ data: GetQuoteResult; error?: unknown }> {
+): Promise<{ data: GetQuoteResult }> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 

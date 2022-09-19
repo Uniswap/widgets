@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useIsValidBlock from 'hooks/useIsValidBlock'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import ms from 'ms.macro'
 import { useEffect, useMemo } from 'react'
@@ -59,20 +58,16 @@ export function useRouterTrade(
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
   const isSyncing = currentData !== data || !isValidBlock
 
-  const isWindowVisible = useIsWindowVisible()
   useEffect(() => {
-    if (!isWindowVisible) return
-    if (!queryArgs) return
-    const preferCacheValue = !(routerPreference === RouterPreference.TRADE && !isValidBlock)
+    const preferCacheValue = routerPreference === RouterPreference.PRICE
     const { abort } = trigger(queryArgs, preferCacheValue)
     return abort
-  }, [isValidBlock, isWindowVisible, queryArgs, routerPreference, trigger])
+  }, [queryArgs, routerPreference, trigger])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, data),
     [currencyIn, currencyOut, data, tradeType]
   )
-
   const trade = useMemo(() => {
     if (!route || route.length === 0) return
     try {
@@ -82,8 +77,6 @@ export function useRouterTrade(
       return
     }
   }, [route, tradeType])
-
-  // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(data?.gasUseEstimateUSD)
 
   return useMemo(() => {
