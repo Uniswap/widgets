@@ -34,7 +34,7 @@ export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
   provider: JsonRpcProvider | undefined,
-  trade: InterfaceTrade | undefined, // trade to execute, required
+  trade: InterfaceTrade | undefined,
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {

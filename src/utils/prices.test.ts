@@ -33,10 +33,6 @@ const currencyAmount = (token: Token, amount: number) => CurrencyAmount.fromRawA
 
 describe('prices', () => {
   describe('#computeRealizedLPFeeAmount', () => {
-    it('returns undefined for undefined', () => {
-      expect(computeRealizedLPFeeAmount(undefined)).toEqual(undefined)
-    })
-
     it('correct realized lp fee for single hop on v2', () => {
       // v2
       expect(

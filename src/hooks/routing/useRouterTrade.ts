@@ -70,6 +70,7 @@ export function useRouterTrade<TTradeType extends TradeType>(
     () => computeRoutes(currencyIn, currencyOut, tradeType, data),
     [currencyIn, currencyOut, data, tradeType]
   )
+
   const trade = useMemo(() => {
     if (!route || route.length === 0) return
     try {
