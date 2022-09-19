@@ -17,7 +17,9 @@ export enum RouterPreference {
   TRADE,
 }
 
-const INVALID_TRADE = { state: TradeState.INVALID, trade: undefined }
+const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
+const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
+const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -85,22 +87,15 @@ export function useRouterTrade(
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(data?.gasUseEstimateUSD)
 
   return useMemo(() => {
-    if (!currencyIn || !currencyOut) return INVALID_TRADE
-
-    if (!trade && !isError) {
-      return { state: TradeState.LOADING, trade: undefined }
-    }
+    if (!currencyIn || !currencyOut) return TRADE_INVALID
+    if (!trade && !isError) return TRADE_LOADING
 
     const otherAmount = data
       ? CurrencyAmount.fromRawAmount(isExactInput(tradeType) ? currencyOut : currencyIn, data.quote)
       : undefined
-    if (!trade || !otherAmount || isError) {
-      return {
-        state: TradeState.NO_ROUTE_FOUND,
-        trade: undefined,
-      }
-    }
+    if (!trade || !otherAmount || isError) return TRADE_NOT_FOUND
 
-    return { state: isSyncing ? TradeState.SYNCING : TradeState.VALID, trade, gasUseEstimateUSD }
+    const state = isSyncing ? TradeState.SYNCING : TradeState.VALID
+    return { state, trade, gasUseEstimateUSD }
   }, [currencyIn, currencyOut, trade, isError, data, tradeType, isSyncing, gasUseEstimateUSD])
 }
