@@ -62,7 +62,7 @@ export const routing = createApi({
   serializeQueryArgs: serializeGetQuoteArgs, // need to write custom cache key fn to handle non-serializable JsonRpcProvider provider
   endpoints: (build) => ({
     getQuote: build.query({
-      async queryFn(args, { signal }) {
+      async queryFn(args) {
         const {
           tokenInAddress,
           tokenInChainId,
@@ -81,12 +81,6 @@ export const routing = createApi({
           ).getClientSideQuote(args, provider, { protocols })
         }
 
-        // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
-        await new Promise((resolve) => setTimeout(resolve, 200))
-        if (signal.aborted) {
-          return { error: { status: 'FETCH_ERROR', error: 'query aborted' } }
-        }
-
         // If enabled, try routing API, falling back to clientside SOR.
         if (Boolean(routerUrl)) {
           try {
@@ -99,8 +93,6 @@ export const routing = createApi({
               amount,
               type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
             })
-            // We explicitly do *not* abort an ongoing fetch, because the server will not recognize/react to it.
-            // It is better to just cache the result to avoid refetching it in the near future.
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {
               return { error: { status: response.status, data: await response.text() } }

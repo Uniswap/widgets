@@ -6,9 +6,9 @@ import { useMemo } from 'react'
 import { GetQuoteArgs } from 'state/routing/slice'
 
 /**
- * Returns query arguments for the Routing API query or undefined if the
- * query should be skipped. Input arguments do not need to be memoized, as they will
- * be destructured.
+ * Returns GetQuoteArgs for the Routing API query or SkipToken if the query should be skipped
+ * (this includes if the window is not visible).
+ * NB: Input arguments do not need to be memoized, as they will be destructured.
  */
 export function useRouterArguments({
   tokenIn,
