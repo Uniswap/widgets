@@ -7,26 +7,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
-import { ApprovalState, useApproval } from '../useApproval'
-export { ApprovalState } from '../useApproval'
-
-// wraps useApproveCallback in the context of a swap
-export default function useSwapApproval(
-  trade: InterfaceTrade | undefined,
-  allowedSlippage: Percent,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-  amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
-) {
-  const { chainId } = useWeb3React()
-  const amountToApprove = useMemo(
-    () => amount || (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [amount, trade, allowedSlippage]
-  )
-  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-
-  const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
-  return approval
-}
+import { AllowanceState, useAllowanceCallback, useAllowanceState } from '../useAllowance'
 
 export enum ApproveOrPermitState {
   REQUIRES_APPROVAL,
@@ -49,7 +30,14 @@ export const useApproveOrPermit = (
   const deadline = useTransactionDeadline()
 
   // Check approvals on ERC20 contract based on amount.
-  const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useIsPendingApproval, amount)
+  const { chainId } = useWeb3React()
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+  const amountToAllow = useMemo(
+    () => amount || (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [amount, trade, allowedSlippage]
+  )
+  const allowance = useAllowanceState(amountToAllow, spender, useIsPendingApproval)
+  const getAllowance = useAllowanceCallback(amountToAllow, spender, allowance)
 
   // Check status of permit and whether token supports it.
   const {
@@ -67,30 +55,30 @@ export const useApproveOrPermit = (
         } catch (error) {
           // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
           if (error?.code !== ErrorCode.USER_REJECTED_REQUEST) {
-            return await getApproval()
+            return await getAllowance()
           }
         }
       } else {
-        return await getApproval()
+        return await getAllowance()
       }
     } catch (e) {
       // Swallow approval errors - user rejections do not need to be displayed.
     }
-  }, [signatureState, gatherPermitSignature, getApproval])
+  }, [signatureState, gatherPermitSignature, getAllowance])
 
   const approvalState = useMemo(() => {
-    if (approval === ApprovalState.PENDING) {
+    if (allowance === AllowanceState.PENDING) {
       return ApproveOrPermitState.PENDING_APPROVAL
     } else if (signatureState === UseERC20PermitState.LOADING) {
       return ApproveOrPermitState.PENDING_SIGNATURE
-    } else if (approval !== ApprovalState.NOT_APPROVED || signatureState === UseERC20PermitState.SIGNED) {
+    } else if (allowance !== AllowanceState.NOT_ALLOWED || signatureState === UseERC20PermitState.SIGNED) {
       return ApproveOrPermitState.APPROVED
     } else if (gatherPermitSignature) {
       return ApproveOrPermitState.REQUIRES_SIGNATURE
     } else {
       return ApproveOrPermitState.REQUIRES_APPROVAL
     }
-  }, [approval, gatherPermitSignature, signatureState])
+  }, [allowance, gatherPermitSignature, signatureState])
 
   return {
     approvalState,
