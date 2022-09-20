@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
-import { createApi, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -18,10 +18,28 @@ const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
-const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: string; queryArgs: any }) => {
-  // same as default serializeQueryArgs, but ignoring the non-serializable (and interchangeable) provider.
+export interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  routerUrl?: string
+  tradeType: TradeType
+  provider: JsonRpcProvider
+}
+
+const NON_SERIALIZABLE_KEYS = ['provider']
+
+/** Omits the non-serializable keys from GetQuoteArgs' cache key. */
+function serializeGetQuoteArgs({ endpointName, queryArgs }: { endpointName: string; queryArgs: GetQuoteArgs }) {
+  // same as default serializeQueryArgs, but ignoring non-serializable keys.
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
-    if (key === 'provider') {
+    if (NON_SERIALIZABLE_KEYS.includes(key)) {
       return undefined
     }
     if (isPlainObject(value)) {
@@ -37,31 +55,17 @@ const serializeRoutingCacheKey = ({ endpointName, queryArgs }: { endpointName: s
   })})`
 }
 
+const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
+  return { error: { reason: 'Unimplemented baseQuery' } }
+}
+
 export const routing = createApi({
   reducerPath: 'routing',
-  baseQuery: async () => {
-    return await (await global.fetch('/')).json()
-  },
-  serializeQueryArgs: serializeRoutingCacheKey, // need to write custom cache key fxn to handle non-serializable JsonRpcProvider provider
+  baseQuery,
+  serializeQueryArgs: serializeGetQuoteArgs,
   endpoints: (build) => ({
-    getQuote: build.query<
-      GetQuoteResult,
-      {
-        tokenInAddress: string
-        tokenInChainId: ChainId
-        tokenInDecimals: number
-        tokenInSymbol?: string
-        tokenOutAddress: string
-        tokenOutChainId: ChainId
-        tokenOutDecimals: number
-        tokenOutSymbol?: string
-        amount: string
-        routerUrl?: string
-        provider: JsonRpcProvider
-        tradeType: TradeType
-      }
-    >({
-      async queryFn(args, _api, _extraOptions) {
+    getQuote: build.query({
+      async queryFn(args) {
         const {
           tokenInAddress,
           tokenInChainId,
@@ -69,8 +73,8 @@ export const routing = createApi({
           tokenOutChainId,
           amount,
           routerUrl,
-          provider,
           tradeType,
+          provider,
         } = args
 
         async function getClientSideQuote() {
@@ -80,9 +84,8 @@ export const routing = createApi({
           ).getClientSideQuote(args, provider, { protocols })
         }
 
-        let result
+        // If enabled, try routing API, falling back to clientside SOR.
         if (Boolean(routerUrl)) {
-          // Try routing API, fallback to clientside SOR
           try {
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
@@ -95,24 +98,29 @@ export const routing = createApi({
             })
             const response = await global.fetch(`${routerUrl}quote?${query}`)
             if (!response.ok) {
-              throw new Error(`${response.statusText}: could not get quote from auto-router API`)
+              return { error: { status: response.status, data: await response.text() } }
             }
-            const data = await response.json()
-            result = { data }
-          } catch (e) {
-            console.warn(e)
-            result = await getClientSideQuote()
+
+            const data: GetQuoteResult = await response.json()
+            return { data }
+          } catch (error) {
+            console.warn(`GetQuote failed, falling back to client: ${error}`)
           }
-        } else {
-          // If integrator did not provide a routing API URL param, use clientside SOR
-          result = await getClientSideQuote()
         }
-        if (result?.error) return { error: result.error as FetchBaseQueryError }
-        return { data: result?.data as GetQuoteResult }
+
+        // If integrator did not provide a routing API URL param, use clientside SOR
+        try {
+          const result = await getClientSideQuote()
+          return result
+        } catch (error) {
+          console.warn(`GetQuote failed on client: ${error}`)
+          return { error: { status: 'CUSTOM_ERROR', error: error.message } }
+        }
       },
       keepUnusedDataFor: ms`10s`,
     }),
   }),
 })
 
-export const { useGetQuoteQuery } = routing
+export const { useLazyGetQuoteQuery } = routing
+export const useGetQuoteQueryState = routing.endpoints.getQuote.useQueryState
