@@ -1,6 +1,8 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
+import { usePendingApproval } from 'hooks/transactions'
+import { AllowanceState } from 'hooks/useAllowance'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
@@ -12,6 +14,7 @@ import { Field, swapAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
+import { Approval, ApprovalState, useApproval } from './useApproval'
 import { useIsWrap } from './useWrapCallback'
 
 interface SwapField {
@@ -24,6 +27,7 @@ interface SwapField {
 interface SwapInfo {
   [Field.INPUT]: SwapField
   [Field.OUTPUT]: SwapField
+  approval: Approval
   trade: {
     state: TradeState
     trade?: InterfaceTrade
@@ -31,6 +35,10 @@ interface SwapInfo {
   }
   slippage: Slippage
   impact?: PriceImpact
+}
+
+function useIsPendingApproval(token?: Token): boolean {
+  return Boolean(usePendingApproval(token))
 }
 
 // from the current swap inputs, compute the best trade and return it.
@@ -72,6 +80,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
   const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
 
+  const approval = useApproval(trade.trade, slippage.allowed, useIsPendingApproval)
   const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
 
   return useMemo(
@@ -88,6 +97,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
         balance: balanceOut,
         usdc: outputUSDCValue,
       },
+      approval,
       trade,
       slippage,
       impact,
@@ -95,6 +105,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     [
       amountIn,
       amountOut,
+      approval,
       balanceIn,
       balanceOut,
       currencyIn,
@@ -111,6 +122,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
 const DEFAULT_SWAP_INFO: SwapInfo = {
   [Field.INPUT]: {},
   [Field.OUTPUT]: {},
+  approval: { state: ApprovalState.REQUIRES_ALLOWANCE, allowance: AllowanceState.UNKNOWN },
   trade: { state: TradeState.INVALID, trade: undefined },
   slippage: DEFAULT_SLIPPAGE,
 }

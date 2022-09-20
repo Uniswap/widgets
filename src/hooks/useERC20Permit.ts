@@ -121,8 +121,8 @@ export function useERC20Permit(
   overridePermitInfo: PermitInfo | undefined | null
 ): {
   state: PermitState
-  signatureData: SignatureData | null
-  gatherPermitSignature: null | (() => Promise<void>)
+  signatureData?: SignatureData
+  gatherPermitSignature?: () => Promise<void>
 } {
   const { account, chainId, provider } = useWeb3React()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
@@ -151,8 +151,6 @@ export function useERC20Permit(
     ) {
       return {
         state: PermitState.NOT_APPLICABLE,
-        signatureData: null,
-        gatherPermitSignature: null,
       }
     }
 
@@ -160,8 +158,6 @@ export function useERC20Permit(
     if (tokenNonceState.loading || typeof nonceNumber !== 'number') {
       return {
         state: PermitState.LOADING,
-        signatureData: null,
-        gatherPermitSignature: null,
       }
     }
 
@@ -177,7 +173,7 @@ export function useERC20Permit(
 
     return {
       state: isSignatureDataValid ? PermitState.SIGNED : PermitState.NOT_SIGNED,
-      signatureData: isSignatureDataValid ? signatureData : null,
+      signatureData: isSignatureDataValid ? signatureData : undefined,
       gatherPermitSignature: async function gatherPermitSignature() {
         const allowed = permitInfo.type === PermitType.ALLOWED
         const signatureDeadline = transactionDeadline.toNumber() + PERMIT_VALIDITY_BUFFER

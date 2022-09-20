@@ -3,7 +3,7 @@ import 'setimmediate'
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { loadingTransitionCss } from 'css/loading'
-import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
+import { ApprovalState } from 'hooks/swap/useApproval'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field } from 'state/swap'
 import styled, { keyframes } from 'styled-components/macro'
@@ -57,7 +57,7 @@ interface TokenInputProps {
   amount: string
   currency?: Currency
   disabled?: boolean
-  approval?: ApproveOrPermitState
+  approval?: ApprovalState
   field: Field
   max?: string
   onChangeInput: (input: string) => void

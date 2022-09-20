@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
+import { ApprovalState } from 'hooks/swap/useApproval'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -127,7 +127,7 @@ interface TokenSelectProps {
   field: Field
   onSelect: (value: Currency) => void
   value?: Currency
-  approval?: ApproveOrPermitState
+  approval?: ApprovalState
 }
 
 export default memo(function TokenSelect({ collapsed, disabled, field, onSelect, value, approval }: TokenSelectProps) {

@@ -3,7 +3,6 @@ import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
-import { SignatureData } from 'hooks/useERC20Permit'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useAtomValue } from 'jotai/utils'
@@ -23,17 +22,16 @@ import { SummaryDialog } from '../Summary'
  */
 export default function SwapButton({
   color,
-  signatureData,
   onSubmit,
 }: {
   color: keyof Colors
-  signatureData: SignatureData | null
   onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const { account, chainId } = useWeb3React()
   const {
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
+    approval: { signatureData },
     trade: { trade },
     slippage,
     impact,
