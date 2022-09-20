@@ -2,8 +2,8 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { ApproveOrPermitState, useApproveOrPermit } from 'hooks/swap/useSwapApproval'
-import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { memo, useMemo } from 'react'
+import { isValidTradeState, TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import { useTheme } from 'styled-components/macro'
 
@@ -23,7 +23,7 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const {
     [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
     [Field.OUTPUT]: { currency: outputCurrency },
-    trade: { trade },
+    trade: { trade, state },
     slippage,
   } = useSwapInfo()
 
@@ -32,15 +32,14 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const approval = useApproveOrPermit(trade, slippage.allowed, useIsPendingApproval, inputCurrencyAmount)
   const onSubmit = useOnSubmit()
 
-  const isWrap = useIsWrap()
   const isDisabled = useMemo(
     () =>
       disabled ||
       !chainId ||
-      (!isWrap && !trade) ||
+      !isValidTradeState(state) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [disabled, chainId, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
+    [disabled, chainId, state, inputCurrencyAmount, inputCurrencyBalance]
   )
 
   const { tokenColorExtraction } = useTheme()
@@ -54,7 +53,7 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
         <Trans>Review swap</Trans>
       </ActionButton>
     )
-  } else if (isWrap) {
+  } else if (state === TradeState.WRAP) {
     return <WrapButton color={color} onSubmit={onSubmit} />
   } else if (approval.approvalState !== ApproveOrPermitState.APPROVED) {
     return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />

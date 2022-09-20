@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
-import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { largeIconCss } from 'icons'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -26,7 +25,6 @@ export default memo(function Toolbar() {
     impact,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
-  const isWrap = useIsWrap()
   const caption = useMemo(() => {
     if (state === TradeState.SYNCING || state === TradeState.LOADING) {
       return <Caption.LoadingTrade />
@@ -45,7 +43,7 @@ export default memo(function Toolbar() {
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
-      if (isWrap) {
+      if (state === TradeState.WRAP) {
         return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
@@ -70,7 +68,6 @@ export default memo(function Toolbar() {
     isActivating,
     inputBalance,
     inputAmount,
-    isWrap,
     trade,
     outputUSDC,
     impact,

@@ -2,11 +2,20 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Token, TradeType } from '@uniswap/sdk-core'
 
 export enum TradeState {
-  LOADING,
   INVALID,
+  LOADING,
   NO_ROUTE_FOUND,
+  /**
+   * Only valid states should be listed after VALID.
+   * This simplifies validity checks to state >= TradeState.VALID
+   */
   VALID,
   SYNCING,
+  WRAP,
+}
+
+export function isValidTradeState(state: TradeState) {
+  return state >= TradeState.VALID
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts

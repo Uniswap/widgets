@@ -12,7 +12,9 @@ import { Field, swapAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import { useIsWrap } from './useWrapCallback'
+import { useIsWrap } from './useWrapInfo'
+
+const TRADE_WRAP = { state: TradeState.WRAP }
 
 interface SwapField {
   currency?: Currency
@@ -88,7 +90,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
         balance: balanceOut,
         usdc: outputUSDCValue,
       },
-      trade,
+      trade: isWrap ? TRADE_WRAP : trade,
       slippage,
       impact,
     }),
@@ -101,6 +103,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       currencyOut,
       impact,
       inputUSDCValue,
+      isWrap,
       outputUSDCValue,
       slippage,
       trade,

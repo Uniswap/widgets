@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import useWrapCallback from 'hooks/swap/useWrapCallback'
+import { useWrapType } from 'hooks/swap/useWrapInfo'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -21,7 +22,8 @@ export default function WrapButton({
   color: keyof Colors
   onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
 }) {
-  const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+  const wrapType = useWrapType()
+  const wrapCallback = useWrapCallback(wrapType)
 
   const [isPending, setIsPending] = useState(false)
   // Reset the pending state if user updates the wrap.
