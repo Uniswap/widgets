@@ -66,7 +66,7 @@ export const routing = createApi({
   endpoints: (build) => ({
     getQuote: build.query({
       async queryFn(args) {
-        if (args === skipToken) return {}
+        if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
         const {
           tokenInAddress,
