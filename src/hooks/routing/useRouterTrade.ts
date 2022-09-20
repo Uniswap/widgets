@@ -4,8 +4,9 @@ import { useWeb3React } from '@web3-react/core'
 import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
+import useTimeout from 'hooks/useTimeout'
 import ms from 'ms.macro'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
@@ -61,12 +62,12 @@ export function useRouterTrade(
     // PRICE fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
   })
-  useEffect(() => {
+  const request = useCallback(() => {
     // TRADE fetching should be up-to-date, so an already-fetched value should be updated if re-queried.
     const eagerlyFetchValue = routerPreference === RouterPreference.TRADE
-    const timeout = setTimeout(() => trigger(queryArgs, /*preferCacheValue=*/ !eagerlyFetchValue), 200)
-    return () => clearTimeout(timeout)
+    trigger(queryArgs, /*preferCacheValue=*/ !eagerlyFetchValue)
   }, [queryArgs, routerPreference, trigger])
+  useTimeout(request, 200)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, data),
