@@ -6,7 +6,7 @@ import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import ms from 'ms.macro'
 import { useEffect, useMemo } from 'react'
-import { useLazyGetQuoteQuery } from 'state/routing/slice'
+import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 import { isExactInput } from 'utils/tradeType'
@@ -51,17 +51,19 @@ export function useRouterTrade(
     provider: provider as JsonRpcProvider,
   })
 
-  const [trigger, { isError, data, currentData }] = useLazyGetQuoteQuery({
-    // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
-  })
+  const { isError, data, currentData } = useGetQuoteQueryState(queryArgs)
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
   const isSyncing = currentData !== data || !isValidBlock
 
+  const [trigger] = useLazyGetQuoteQuery({
+    // PRICE fetching is informational and costly, so it's done less frequently.
+    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
+  })
   useEffect(() => {
-    const preferCacheValue = routerPreference === RouterPreference.PRICE
-    const { abort } = trigger(queryArgs, preferCacheValue)
-    return abort
+    // TRADE fetching should be up-to-date, so an already-fetched value should be updated if re-queried.
+    const preferCacheValue = routerPreference !== RouterPreference.TRADE
+    const timeout = setTimeout(() => trigger(queryArgs, preferCacheValue), 200)
+    return () => clearTimeout(timeout)
   }, [queryArgs, routerPreference, trigger])
 
   const route = useMemo(

@@ -128,3 +128,4 @@ export const routing = createApi({
 })
 
 export const { useLazyGetQuoteQuery } = routing
+export const useGetQuoteQueryState = routing.endpoints.getQuote.useQueryState
