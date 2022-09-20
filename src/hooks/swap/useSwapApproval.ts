@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
-import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
+import { PermitState, useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -49,7 +49,7 @@ export const useApproveOrPermit = (
   // If permit is supported, trigger a signature, if not create approval transaction.
   const handleApproveOrPermit = useCallback(async () => {
     try {
-      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+      if (signatureState === PermitState.NOT_SIGNED && gatherPermitSignature) {
         try {
           return await gatherPermitSignature()
         } catch (error) {
@@ -69,9 +69,9 @@ export const useApproveOrPermit = (
   const approvalState = useMemo(() => {
     if (allowance === AllowanceState.PENDING) {
       return ApproveOrPermitState.PENDING_APPROVAL
-    } else if (signatureState === UseERC20PermitState.LOADING) {
+    } else if (signatureState === PermitState.LOADING) {
       return ApproveOrPermitState.PENDING_SIGNATURE
-    } else if (allowance !== AllowanceState.NOT_ALLOWED || signatureState === UseERC20PermitState.SIGNED) {
+    } else if (allowance !== AllowanceState.NOT_ALLOWED || signatureState === PermitState.SIGNED) {
       return ApproveOrPermitState.APPROVED
     } else if (gatherPermitSignature) {
       return ApproveOrPermitState.REQUIRES_SIGNATURE

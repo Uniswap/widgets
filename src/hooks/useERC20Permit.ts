@@ -54,7 +54,7 @@ const PERMITTABLE_TOKENS: {
   },
 }
 
-export enum UseERC20PermitState {
+export enum PermitState {
   // returned for any reason, e.g. it is an argent wallet, or the currency does not support it
   NOT_APPLICABLE,
   LOADING,
@@ -120,8 +120,8 @@ export function useERC20Permit(
   transactionDeadline: BigNumber | undefined,
   overridePermitInfo: PermitInfo | undefined | null
 ): {
+  state: PermitState
   signatureData: SignatureData | null
-  state: UseERC20PermitState
   gatherPermitSignature: null | (() => Promise<void>)
 } {
   const { account, chainId, provider } = useWeb3React()
@@ -150,7 +150,7 @@ export function useERC20Permit(
       !permitInfo
     ) {
       return {
-        state: UseERC20PermitState.NOT_APPLICABLE,
+        state: PermitState.NOT_APPLICABLE,
         signatureData: null,
         gatherPermitSignature: null,
       }
@@ -159,7 +159,7 @@ export function useERC20Permit(
     const nonceNumber = tokenNonceState.result?.[0]?.toNumber()
     if (tokenNonceState.loading || typeof nonceNumber !== 'number') {
       return {
-        state: UseERC20PermitState.LOADING,
+        state: PermitState.LOADING,
         signatureData: null,
         gatherPermitSignature: null,
       }
@@ -176,7 +176,7 @@ export function useERC20Permit(
         JSBI.greaterThanOrEqual(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
 
     return {
-      state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
+      state: isSignatureDataValid ? PermitState.SIGNED : PermitState.NOT_SIGNED,
       signatureData: isSignatureDataValid ? signatureData : null,
       gatherPermitSignature: async function gatherPermitSignature() {
         const allowed = permitInfo.type === PermitType.ALLOWED
