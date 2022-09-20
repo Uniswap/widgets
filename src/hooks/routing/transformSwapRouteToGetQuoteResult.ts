@@ -1,27 +1,21 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-// This file is lazy-loaded, so the import of smart-order-router is intentional.
-// eslint-disable-next-line no-restricted-imports
-import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
+import type { SwapRoute } from '@uniswap/smart-order-router'
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
-export function transformSwapRouteToGetQuoteResult(
-  tradeType: TradeType,
-  amount: CurrencyAmount<Currency>,
-  {
-    quote,
-    quoteGasAdjusted,
-    route,
-    estimatedGasUsed,
-    estimatedGasUsedQuoteToken,
-    estimatedGasUsedUSD,
-    gasPriceWei,
-    methodParameters,
-    blockNumber,
-  }: SwapRoute
-): GetQuoteResult {
+export function transformSwapRouteToGetQuoteResult({
+  quote,
+  quoteGasAdjusted,
+  route,
+  estimatedGasUsed,
+  estimatedGasUsedQuoteToken,
+  estimatedGasUsedUSD,
+  gasPriceWei,
+  methodParameters,
+  blockNumber,
+  trade: { tradeType, inputAmount, outputAmount },
+}: SwapRoute): Omit<GetQuoteResult, 'routeString'> {
   const routeResponse: Array<V3PoolInRoute[] | V2PoolInRoute[]> = []
 
   for (const subRoute of route) {
@@ -131,7 +125,8 @@ export function transformSwapRouteToGetQuoteResult(
     }
   }
 
-  const result: GetQuoteResult = {
+  const amount = isExactInput(tradeType) ? inputAmount : outputAmount
+  return {
     methodParameters,
     blockNumber: blockNumber.toString(),
     amount: amount.quotient.toString(),
@@ -146,8 +141,5 @@ export function transformSwapRouteToGetQuoteResult(
     gasUseEstimateUSD: estimatedGasUsedUSD.toExact(),
     gasPriceWei: gasPriceWei.toString(),
     route: routeResponse,
-    routeString: routeAmountsToString(route),
   }
-
-  return result
 }
