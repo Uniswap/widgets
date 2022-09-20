@@ -54,19 +54,21 @@ export function useRouterTrade(
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
-  const { isError, data, currentData } = useGetQuoteQueryState(queryArgs)
+  const { isError, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
   const isSyncing = currentData !== data || !isValidBlock
 
-  const [trigger] = useLazyGetQuoteQuery({
-    // PRICE fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
-  })
+  // PRICE fetching is informational and costly, so it's done less frequently.
+  const pollingInterval = routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`
+  const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
-    // TRADE fetching should be up-to-date, so an already-fetched value should be updated if re-queried.
-    const eagerlyFetchValue = routerPreference === RouterPreference.TRADE
-    trigger(queryArgs, /*preferCacheValue=*/ !eagerlyFetchValue)
-  }, [queryArgs, routerPreference, trigger])
+    const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
+    // An already-fetched value should be refetched if it is older than the pollingInterval.
+    // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
+    if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
+      refetch()
+    }
+  }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
   const route = useMemo(

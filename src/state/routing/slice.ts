@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
-import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react'
+import { BaseQueryFn, createApi, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 // Importing just the type, so smart-order-router is lazy-loaded
@@ -66,6 +66,8 @@ export const routing = createApi({
   endpoints: (build) => ({
     getQuote: build.query({
       async queryFn(args) {
+        if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
+
         const {
           tokenInAddress,
           tokenInChainId,
