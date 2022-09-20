@@ -33,10 +33,13 @@ export interface GetQuoteArgs {
   provider: JsonRpcProvider
 }
 
+const NON_SERIALIZABLE_KEYS = ['provider']
+
+/** Omits the non-serializable keys from GetQuoteArgs' cache key. */
 function serializeGetQuoteArgs({ endpointName, queryArgs }: { endpointName: string; queryArgs: GetQuoteArgs }) {
-  // same as default serializeQueryArgs, but ignoring the non-serializable keys.
+  // same as default serializeQueryArgs, but ignoring non-serializable keys.
   return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
-    if (key === 'provider') {
+    if (NON_SERIALIZABLE_KEYS.includes(key)) {
       return undefined
     }
     if (isPlainObject(value)) {
@@ -59,7 +62,7 @@ const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
 export const routing = createApi({
   reducerPath: 'routing',
   baseQuery,
-  serializeQueryArgs: serializeGetQuoteArgs, // need to write custom cache key fn to handle non-serializable JsonRpcProvider provider
+  serializeQueryArgs: serializeGetQuoteArgs,
   endpoints: (build) => ({
     getQuote: build.query({
       async queryFn(args) {

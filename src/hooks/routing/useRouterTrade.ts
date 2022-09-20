@@ -51,7 +51,8 @@ export function useRouterTrade(
     provider: provider as JsonRpcProvider,
   })
 
-  // Get the cached state *immediately* to update the UI.
+  // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
+  // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
   const { isError, data, currentData } = useGetQuoteQueryState(queryArgs)
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
   const isSyncing = currentData !== data || !isValidBlock
@@ -60,11 +61,10 @@ export function useRouterTrade(
     // PRICE fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
   })
-  // Debounce actual requests to avoid flooding the router / JSON-RPC endpoints.
   useEffect(() => {
     // TRADE fetching should be up-to-date, so an already-fetched value should be updated if re-queried.
-    const preferCacheValue = routerPreference !== RouterPreference.TRADE
-    const timeout = setTimeout(() => trigger(queryArgs, preferCacheValue), 200)
+    const eagerlyFetchValue = routerPreference === RouterPreference.TRADE
+    const timeout = setTimeout(() => trigger(queryArgs, /*preferCacheValue=*/ !eagerlyFetchValue), 200)
     return () => clearTimeout(timeout)
   }, [queryArgs, routerPreference, trigger])
 
