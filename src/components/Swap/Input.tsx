@@ -60,6 +60,7 @@ export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
+    approval,
     trade: { state: tradeState },
   } = useSwapInfo()
 
@@ -98,6 +99,7 @@ export default function Input({ disabled, focused }: InputProps) {
         amount={amount}
         currency={inputCurrency}
         disabled={disabled}
+        approval={approval.state}
         field={Field.INPUT}
         max={max}
         onChangeInput={updateInputAmount}
