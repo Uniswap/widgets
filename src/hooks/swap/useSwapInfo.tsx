@@ -12,7 +12,7 @@ import { Field, swapAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import { useIsWrap } from './useWrapInfo'
+import { useIsWrap } from './useWrap'
 
 const TRADE_WRAP = { state: TradeState.WRAP }
 

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import useWrapCallback from 'hooks/swap/useWrapCallback'
-import { useWrapType } from 'hooks/swap/useWrapInfo'
+import { useWrapCallback, useWrapType } from 'hooks/swap/useWrap'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
