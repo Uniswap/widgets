@@ -58,11 +58,8 @@ export function useRouterTrade(
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
   const isSyncing = currentData !== data || !isValidBlock
 
-  const pollingInterval = useMemo(
-    // PRICE fetching is informational and costly, so it's done less frequently.
-    () => (routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`),
-    [routerPreference]
-  )
+  // PRICE fetching is informational and costly, so it's done less frequently.
+  const pollingInterval = routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`
   const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
