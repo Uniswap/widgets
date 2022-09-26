@@ -1,13 +1,12 @@
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
@@ -39,7 +38,7 @@ function Detail({ label, value, color }: DetailProps) {
 }
 
 interface DetailsProps {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   slippage: Slippage
   impact?: PriceImpact
 }

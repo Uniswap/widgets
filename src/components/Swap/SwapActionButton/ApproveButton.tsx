@@ -3,16 +3,17 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
-import { ApproveOrPermitState, useSwapApprovalOptimizedTrade, useSwapRouterAddress } from 'hooks/swap/useSwapApproval'
+import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { Colors } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
-export function useIsPendingApproval(token?: Token, spender?: string): boolean {
-  return Boolean(usePendingApproval(token, spender))
+export function useIsPendingApproval(token?: Token): boolean {
+  return Boolean(usePendingApproval(token))
 }
 
 /**
@@ -27,7 +28,7 @@ export default function ApproveButton({
   onSubmit,
 }: {
   color: keyof Colors
-  trade: ReturnType<typeof useSwapApprovalOptimizedTrade>
+  trade?: InterfaceTrade
   approvalState: ApproveOrPermitState
   handleApproveOrPermit: () => Promise<{
     response: TransactionResponse
@@ -54,7 +55,7 @@ export default function ApproveButton({
   // Reset the pending state if currency changes.
   useEffect(() => setIsPending(false), [currency])
 
-  const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined, useSwapRouterAddress(trade))
+  const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined)
 
   const actionProps = useMemo(() => {
     switch (approvalState) {

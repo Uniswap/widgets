@@ -7,8 +7,9 @@ import { FeeOptions } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
-import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
+import { useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import useSendSwapTransaction from './useSendSwapTransaction'
 
@@ -24,7 +25,7 @@ interface UseSwapCallbackReturns {
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
-  trade: AnyTrade | undefined // trade to execute, required
+  trade: InterfaceTrade | undefined // trade to execute, required
   allowedSlippage: Percent // in bips
   recipientAddressOrName: string | null | undefined // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined

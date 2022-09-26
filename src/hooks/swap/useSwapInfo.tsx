@@ -1,6 +1,6 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { INVALID_TRADE, RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
+import { RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
@@ -25,8 +25,9 @@ interface SwapInfo {
   [Field.INPUT]: SwapField
   [Field.OUTPUT]: SwapField
   trade: {
-    trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
+    trade?: InterfaceTrade
+    gasUseEstimateUSD?: CurrencyAmount<Token>
   }
   slippage: Slippage
   impact?: PriceImpact
@@ -67,7 +68,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
-  const slippage = useSlippage(trade.trade)
+  const slippage = useSlippage(trade)
   const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
   const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
 
@@ -110,7 +111,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
 const DEFAULT_SWAP_INFO: SwapInfo = {
   [Field.INPUT]: {},
   [Field.OUTPUT]: {},
-  trade: INVALID_TRADE,
+  trade: { state: TradeState.INVALID, trade: undefined },
   slippage: DEFAULT_SLIPPAGE,
 }
 
