@@ -2,10 +2,11 @@ import { StrictMode } from 'react'
 import styled from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 
-import Column from './Column'
-import Row from './Row'
-import ReverseButton from './Swap/ReverseButton'
-import { WidgetWrapper } from './Widget'
+import Column from '../Column'
+import Row from '../Row'
+import Rule from '../Rule'
+import { WidgetWrapper } from '../Widget'
+import ReverseButton from './ReverseButton'
 
 const LoadingWrapper = styled.div`
   display: flex;
@@ -13,8 +14,8 @@ const LoadingWrapper = styled.div`
   height: 100%;
   justify-content: space-between;
 `
-const Blob = styled.div<{ height: string; width: string; radius?: number; darker?: boolean }>`
-  background-color: ${({ darker, theme }) => (darker ? theme.outline : theme.module)};
+const Blob = styled.div<{ height: string; width: string; radius?: number; isModule?: boolean }>`
+  background-color: ${({ isModule, theme }) => (isModule ? theme.outline : theme.module)};
   border-radius: ${({ theme, radius }) => (radius ?? 0.25 * theme.borderRadius) + 'em'};
   height: ${({ height }) => height};
   width: ${({ width }) => width};
@@ -23,15 +24,15 @@ const WideColumn = styled(Column)`
   width: 100%;
 `
 
-function FloatingDetails({ darker }: { darker?: boolean }) {
+function FloatingDetails({ isModule }: { isModule?: boolean }) {
   return (
     <WideColumn gap={0.75}>
       <Row>
-        <Blob height="16px" width="40px" darker={darker} />
+        <Blob height="1em" width="2.5em" isModule={isModule} />
       </Row>
       <Row>
-        <Blob height="32px" width="60px" darker={darker} />
-        <Blob height="32px" width="117px" darker={darker} />
+        <Blob height="2em" width="3.75em" isModule={isModule} />
+        <Blob height="2em" width="7.25em" isModule={isModule} />
       </Row>
     </WideColumn>
   )
@@ -40,9 +41,9 @@ function FloatingDetails({ darker }: { darker?: boolean }) {
 function FloatingButton() {
   return (
     <WideColumn gap={0.875}>
-      <Blob height="1px" width="100%" darker />
-      <Blob height="16px" width="120px" darker />
-      <Blob height="56px" width="100%" radius={0.75} darker />
+      <Rule />
+      <Blob height="1em" width="7.5em" isModule />
+      <Blob height="3.5em" width="100%" radius={0.75} isModule />
     </WideColumn>
   )
 }
@@ -51,7 +52,7 @@ export const OutputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   display: flex;
-  height: 234px;
+  gap: 1.875em;
   padding: 0.75em;
   padding-bottom: 2em;
 `
@@ -77,7 +78,7 @@ export function SwapWidgetSkeleton({ theme, width }: SwapWidgetSkeletonProps) {
             <div>
               <ReverseButton disabled={true} />
               <OutputColumn>
-                <FloatingDetails darker />
+                <FloatingDetails isModule />
                 <FloatingButton />
               </OutputColumn>
             </div>
