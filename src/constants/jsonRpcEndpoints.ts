@@ -67,8 +67,8 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Fallback" URLs
     'https://rpc.ankr.com/optimism',
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [
+  [SupportedChainId.OPTIMISM_GOERLI]: [
     // "Safe" URLs
-    'https://kovan.optimism.io',
+    'https://goerli.optimism.io',
   ],
 }
