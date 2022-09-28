@@ -3,8 +3,6 @@ import { isPlainObject } from '@reduxjs/toolkit'
 import { BaseQueryFn, createApi, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
-// Importing just the type, so smart-order-router is lazy-loaded
-// eslint-disable-next-line no-restricted-imports
 import type { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'

@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
