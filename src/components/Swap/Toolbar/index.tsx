@@ -70,6 +70,7 @@ export default memo(function Toolbar() {
     isActivating,
     inputBalance,
     inputAmount,
+    isWrap,
     trade,
     outputUSDC,
     impact,
