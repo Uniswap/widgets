@@ -11,7 +11,6 @@ export enum TradeState {
    */
   VALID,
   SYNCING,
-  WRAP,
 }
 
 export function isValidTradeState(state: TradeState) {

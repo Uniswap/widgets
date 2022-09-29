@@ -15,6 +15,7 @@ import { isExactInput } from 'utils/tradeType'
 export enum RouterPreference {
   PRICE,
   TRADE,
+  SKIP,
 }
 
 const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
@@ -62,13 +63,15 @@ export function useRouterTrade(
   const pollingInterval = routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`
   const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
+    if (routerPreference === RouterPreference.SKIP) return
+
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
     // An already-fetched value should be refetched if it is older than the pollingInterval.
     // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
     if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
       refetch()
     }
-  }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
+  }, [fulfilledTimeStamp, pollingInterval, queryArgs, routerPreference, trigger])
   useTimeout(request, 200)
 
   const route = useMemo(

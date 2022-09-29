@@ -14,8 +14,6 @@ import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 import { useIsWrap } from './useWrap'
 
-const TRADE_WRAP = { state: TradeState.WRAP }
-
 interface SwapField {
   currency?: Currency
   amount?: CurrencyAmount<Currency>
@@ -37,39 +35,37 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const isWrap = useIsWrap()
-  const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
+  const { type, amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
 
   const parsedAmount = useMemo(
-    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),
-    [amount, type, currencyIn, currencyOut]
+    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? inputCurrency : outputCurrency) ?? undefined),
+    [amount, inputCurrency, outputCurrency, type]
   )
-  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrap
   const trade = useRouterTrade(
     type,
-    hasAmounts ? parsedAmount : undefined,
-    hasAmounts ? (isExactInput(type) ? currencyOut : currencyIn) : undefined,
-    RouterPreference.TRADE,
+    parsedAmount,
+    isExactInput(type) ? outputCurrency : inputCurrency,
+    useIsWrap() ? RouterPreference.SKIP : RouterPreference.TRADE,
     routerUrl
   )
 
-  const amountIn = useMemo(
-    () => (isWrap || isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
-    [isWrap, parsedAmount, trade.trade?.inputAmount, type]
+  const inputAmount = useMemo(
+    () => (isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
+    [parsedAmount, trade.trade?.inputAmount, type]
   )
-  const amountOut = useMemo(
-    () => (isWrap || !isExactInput(type) ? parsedAmount : trade.trade?.outputAmount),
-    [isWrap, parsedAmount, trade.trade?.outputAmount, type]
+  const outputAmount = useMemo(
+    () => (!isExactInput(type) ? parsedAmount : trade.trade?.outputAmount),
+    [parsedAmount, trade.trade?.outputAmount, type]
   )
 
   const { account } = useWeb3React()
-  const [balanceIn, balanceOut] = useCurrencyBalances(
+  const [inputBalance, outputBalance] = useCurrencyBalances(
     account,
-    useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
+    useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
   )
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
-  // (Using amountIn/amountOut would show (incorrect) intermediate values.)
+  // (Using inputAmount/outputAmount would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade)
   const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
   const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
@@ -79,31 +75,30 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   return useMemo(
     () => ({
       [Field.INPUT]: {
-        currency: currencyIn,
-        amount: amountIn,
-        balance: balanceIn,
+        currency: inputCurrency,
+        amount: inputAmount,
+        balance: inputBalance,
         usdc: inputUSDCValue,
       },
       [Field.OUTPUT]: {
-        currency: currencyOut,
-        amount: amountOut,
-        balance: balanceOut,
+        currency: outputCurrency,
+        amount: outputAmount,
+        balance: outputBalance,
         usdc: outputUSDCValue,
       },
-      trade: isWrap ? TRADE_WRAP : trade,
+      trade,
       slippage,
       impact,
     }),
     [
-      amountIn,
-      amountOut,
-      balanceIn,
-      balanceOut,
-      currencyIn,
-      currencyOut,
       impact,
+      inputAmount,
+      inputBalance,
+      inputCurrency,
       inputUSDCValue,
-      isWrap,
+      outputAmount,
+      outputBalance,
+      outputCurrency,
       outputUSDCValue,
       slippage,
       trade,
