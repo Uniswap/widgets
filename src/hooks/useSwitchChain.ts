@@ -34,18 +34,13 @@ async function addChain(provider: Web3Provider, chainId: SupportedChainId, rpcUr
 
 async function switchChain(provider: Web3Provider, chainId: SupportedChainId, rpcUrls: string[] = []): Promise<void> {
   try {
-    try {
-      await provider.send('wallet_switchEthereumChain', [{ chainId: toHex(chainId) }]) // EIP-3326 (used by MetaMask)
-    } catch (error) {
-      if (error?.code === ErrorCode.CHAIN_NOT_ADDED && rpcUrls.length) {
-        await addChain(provider, chainId, rpcUrls)
-        return switchChain(provider, chainId)
-      }
-      throw error
-    }
+    await provider.send('wallet_switchEthereumChain', [{ chainId: toHex(chainId) }]) // EIP-3326 (used by MetaMask)
   } catch (error) {
-    if (error?.code === ErrorCode.USER_REJECTED_REQUEST) return
-    throw new Error(`Failed to switch network: ${error}`)
+    if (error?.code === ErrorCode.CHAIN_NOT_ADDED && rpcUrls.length) {
+      await addChain(provider, chainId, rpcUrls)
+      return switchChain(provider, chainId)
+    }
+    throw error
   }
 }
 
@@ -55,10 +50,18 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
   return useCallback(
     async (chainId: SupportedChainId) => {
       try {
-        if (!provider) throw new Error()
-        await switchChain(provider, chainId, urlMap[chainId])
-      } catch {
-        await connector.activate(chainId)
+        try {
+          if (!provider) throw new Error()
+          await Promise.all([
+            new Promise((resolve) => provider.once('chainChanged', resolve)),
+            switchChain(provider, chainId, urlMap[chainId]),
+          ])
+        } catch (error) {
+          if (error?.code === ErrorCode.USER_REJECTED_REQUEST) return
+          await connector.activate(chainId)
+        }
+      } catch (error) {
+        throw new Error(`Failed to switch network: ${error}`)
       }
     },
     [connector, provider, urlMap]
