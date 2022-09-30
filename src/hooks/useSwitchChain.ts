@@ -1,13 +1,10 @@
 import type { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
-import { Network } from '@web3-react/network'
-import { WalletConnect } from '@web3-react/walletconnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ErrorCode } from 'constants/eip1193'
 import useJsonRpcUrlsMap from 'hooks/web3/useJsonRpcUrlsMap'
 import { useCallback } from 'react'
-import invariant from 'tiny-invariant'
 
 function toHex(chainId: SupportedChainId): string {
   return `0x${chainId.toString(16)}`
@@ -56,13 +53,13 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
   const { connector, provider } = useWeb3React()
   const urlMap = useJsonRpcUrlsMap()
   return useCallback(
-    (chainId: SupportedChainId) => {
-      if (connector instanceof WalletConnect || connector instanceof Network) {
-        return connector.activate(chainId)
+    async (chainId: SupportedChainId) => {
+      try {
+        if (!provider) throw new Error()
+        await switchChain(provider, chainId, urlMap[chainId])
+      } catch {
+        await connector.activate(chainId)
       }
-
-      invariant(provider)
-      return switchChain(provider, chainId, urlMap[chainId])
     },
     [connector, provider, urlMap]
   )
