@@ -25,11 +25,16 @@ export default memo(function Toolbar() {
     trade: { trade, state },
     impact,
   } = useSwapInfo()
+  const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const caption = useMemo(() => {
     if (state === TradeState.SYNCING || state === TradeState.LOADING) {
       return <Caption.LoadingTrade />
+    }
+
+    if (chainId && tokenChainId && chainId !== tokenChainId) {
+      return <Caption.Empty />
     }
 
     if (!account || !chainId) {
@@ -62,8 +67,9 @@ export default memo(function Toolbar() {
     return <Caption.Empty />
   }, [
     state,
-    account,
     chainId,
+    tokenChainId,
+    account,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
