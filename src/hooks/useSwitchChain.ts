@@ -51,8 +51,12 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
     async (chainId: SupportedChainId) => {
       try {
         try {
+          // A custom Connector may use a customProvider, in which case it should handle its own chain switching.
           if (!provider) throw new Error()
+
           await Promise.all([
+            // Await both the user action (switchChain) and its result (chainChanged)
+            // so that the callback does not resolve before the chain switch has visibly occured.
             new Promise((resolve) => provider.once('chainChanged', resolve)),
             switchChain(provider, chainId, urlMap[chainId]),
           ])
