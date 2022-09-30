@@ -2,14 +2,16 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import useSwitchChain from 'hooks/useSwitchChain'
+import useConnectors from 'hooks/web3/useConnectors'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Colors } from 'theme'
 
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ color, chainId }: { color: keyof Colors; chainId: number }) {
-  const { account } = useWeb3React()
-  const [isPending, setIsPending] = useState(!account)
+  const { connector } = useWeb3React()
+  const isNetwork = connector === useConnectors().network
+  const [isPending, setIsPending] = useState(false)
 
   const switchChain = useSwitchChain()
   const [error, setError] = useState()
@@ -25,16 +27,17 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
   }, [chainId, switchChain])
   if (error) throw error
 
-  // If there is no account (ie no wallet to take agency), switch chains automatically
   useEffect(() => {
-    if (!account) onSwitchChain()
-  }, [account, onSwitchChain])
+    if (isNetwork && !isPending) {
+      onSwitchChain()
+    }
+  }, [isNetwork, isPending, onSwitchChain])
 
   const actionProps = useMemo(
     () =>
       isPending
         ? {
-            message: account ? <Trans>Switch network in your wallet</Trans> : <Trans>Switching network</Trans>,
+            message: isNetwork ? <Trans>Switching network</Trans> : <Trans>Switch network in your wallet</Trans>,
             icon: Spinner,
           }
         : {
@@ -42,7 +45,7 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
             onClick: onSwitchChain,
             children: <Trans>Switch</Trans>,
           },
-    [account, isPending, onSwitchChain]
+    [isNetwork, isPending, onSwitchChain]
   )
 
   return <ActionButton color={color} action={actionProps} />
