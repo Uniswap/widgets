@@ -37,7 +37,7 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
     () =>
       isPending
         ? {
-            message: isNetwork ? <Trans>Switch network in your wallet</Trans> : <Trans>Switching network</Trans>,
+            message: isNetwork ? <Trans>Switching network</Trans> : <Trans>Switch network in your wallet</Trans>,
             icon: Spinner,
           }
         : {
