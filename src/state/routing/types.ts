@@ -13,6 +13,10 @@ export enum TradeState {
   SYNCING,
 }
 
+/**
+ * Returns true if state is not valid.
+ * A "not valid" state is one in which the UI should be disabled.
+ */
 export function isValidTradeState(state: TradeState) {
   return state >= TradeState.VALID
 }
