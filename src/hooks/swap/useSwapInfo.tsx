@@ -33,7 +33,7 @@ interface SwapInfo {
   impact?: PriceImpact
 }
 
-// from the current swap inputs, compute the best trade and return it.
+/** Returns the best computed trade. */
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const { type, amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
 
@@ -49,42 +49,41 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     routerUrl
   )
 
-  const inputAmount = useMemo(
-    () => (isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
-    [parsedAmount, trade.trade?.inputAmount, type]
-  )
-  const outputAmount = useMemo(
-    () => (!isExactInput(type) ? parsedAmount : trade.trade?.outputAmount),
-    [parsedAmount, trade.trade?.outputAmount, type]
-  )
-
   const { account } = useWeb3React()
   const [inputBalance, outputBalance] = useCurrencyBalances(
     account,
     useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
   )
-
-  // Compute slippage and impact off of the trade so that it refreshes with the trade.
-  // (Using inputAmount/outputAmount would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade)
   const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
   const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
-
   const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
+
+  // Use the parsed amount for the exact amount for an immediately responsive UI.
+  const inputAmountResponsive = useMemo(
+    () => (isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
+    [parsedAmount, trade.trade?.inputAmount, type]
+  )
+  const outputAmountResponsive = useMemo(
+    () => (!isExactInput(type) ? parsedAmount : trade.trade?.outputAmount),
+    [parsedAmount, trade.trade?.outputAmount, type]
+  )
+  const inputUSDCValueResponsive = useUSDCValue(inputAmountResponsive)
+  const outputUSDCValueResponsive = useUSDCValue(outputAmountResponsive)
 
   return useMemo(
     () => ({
       [Field.INPUT]: {
         currency: inputCurrency,
-        amount: inputAmount,
+        amount: inputAmountResponsive,
         balance: inputBalance,
-        usdc: inputUSDCValue,
+        usdc: inputUSDCValueResponsive,
       },
       [Field.OUTPUT]: {
         currency: outputCurrency,
-        amount: outputAmount,
+        amount: outputAmountResponsive,
         balance: outputBalance,
-        usdc: outputUSDCValue,
+        usdc: outputUSDCValueResponsive,
       },
       trade,
       slippage,
@@ -92,14 +91,14 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     }),
     [
       impact,
-      inputAmount,
+      inputAmountResponsive,
       inputBalance,
       inputCurrency,
-      inputUSDCValue,
-      outputAmount,
+      inputUSDCValueResponsive,
+      outputAmountResponsive,
       outputBalance,
       outputCurrency,
-      outputUSDCValue,
+      outputUSDCValueResponsive,
       slippage,
       trade,
     ]
