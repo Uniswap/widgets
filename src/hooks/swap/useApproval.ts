@@ -1,14 +1,15 @@
-import { Percent, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
-import { PermitState, SignatureData, useERC20PermitFromTrade } from 'hooks/useERC20Permit'
+import { PermitState, SignatureData, useERC20Permit } from 'hooks/useERC20Permit'
+import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
-import { AllowanceState, useAllowanceCallback, useAllowanceState } from '../useAllowance'
+import { useAllowanceCallback } from '../useAllowance'
 
 export enum ApprovalState {
   REQUIRES_ALLOWANCE,
@@ -20,55 +21,50 @@ export enum ApprovalState {
 
 export interface Approval {
   state: ApprovalState
-  allowance: AllowanceState
+  allowance?: CurrencyAmount<Token>
   signatureData?: SignatureData
   gatherPermitSignature?: () => Promise<void>
 }
 
-function useSwapSpender() {
-  const { chainId } = useWeb3React()
-  return chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-}
-
-function useAmountToAllow(trade: InterfaceTrade | undefined, allowedSlippage: Percent) {
+function useAmountToAllow(
+  trade: InterfaceTrade | undefined,
+  allowedSlippage: Percent
+): CurrencyAmount<Token> | undefined {
   return useMemo(() => {
-    if (!trade) return undefined
+    if (!trade?.inputAmount.currency.isToken) return undefined
+
     if (isExactInput(trade.tradeType)) return trade.inputAmount
-    if (!trade.inputAmount.currency.isToken) return undefined
     return trade.maximumAmountIn(allowedSlippage)
-  }, [allowedSlippage, trade])
+  }, [allowedSlippage, trade]) as CurrencyAmount<Token>
 }
 
 export function useApproval(
   trade: InterfaceTrade | undefined,
   allowedSlippage: Percent,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+  usePendingAllowance: (token?: Token, spender?: string) => string | undefined
 ): Approval {
+  const { chainId } = useWeb3React()
+  const amount = useAmountToAllow(trade, allowedSlippage)
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const deadline = useTransactionDeadline()
 
-  // Check allowance on ERC20 contract based on amount.
-  const allowance = useAllowanceState(useAmountToAllow(trade, allowedSlippage), useSwapSpender(), useIsPendingApproval)
-
-  // Check permit if token supports it.
-  const {
-    state: permitState,
-    signatureData,
-    gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
+  const allowance = useTokenAllowance(amount?.currency, spender)
+  const { state: permitState, signatureData, gatherPermitSignature } = useERC20Permit(amount, spender, deadline)
+  const pendingAllowance = usePendingAllowance(amount?.currency, spender)
 
   const state = useMemo(() => {
-    if (allowance === AllowanceState.PENDING) {
+    if (pendingAllowance) {
       return ApprovalState.PENDING_ALLOWANCE
     } else if (permitState === PermitState.LOADING) {
       return ApprovalState.PENDING_SIGNATURE
-    } else if (allowance !== AllowanceState.NOT_ALLOWED || permitState === PermitState.SIGNED) {
+    } else if ((amount && allowance && !allowance.lessThan(amount)) || permitState === PermitState.SIGNED) {
       return ApprovalState.APPROVED
     } else if (gatherPermitSignature) {
       return ApprovalState.REQUIRES_SIGNATURE
     } else {
       return ApprovalState.REQUIRES_ALLOWANCE
     }
-  }, [allowance, permitState, gatherPermitSignature])
+  }, [pendingAllowance, permitState, allowance, amount, gatherPermitSignature])
   return {
     state,
     allowance,
@@ -82,7 +78,10 @@ export function useApprovalCallback(
   allowedSlippage: Percent,
   { allowance, gatherPermitSignature }: Approval
 ) {
-  const getAllowance = useAllowanceCallback(useAmountToAllow(trade, allowedSlippage), useSwapSpender(), allowance)
+  const { chainId } = useWeb3React()
+  const amount = useAmountToAllow(trade, allowedSlippage)
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+  const getAllowance = useAllowanceCallback(amount, spender, allowance)
   return useCallback(async () => {
     try {
       if (gatherPermitSignature) {

@@ -1,13 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
 
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -118,7 +116,7 @@ export function useERC20Permit(
   currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
   transactionDeadline: BigNumber | undefined,
-  overridePermitInfo: PermitInfo | undefined | null
+  overridePermitInfo?: PermitInfo | null
 ): {
   state: PermitState
   signatureData?: SignatureData
@@ -252,19 +250,4 @@ export function useERC20Permit(
     permitInfo,
     signatureData,
   ])
-}
-
-export function useERC20PermitFromTrade(
-  trade: InterfaceTrade | undefined,
-  allowedSlippage: Percent,
-  transactionDeadline: BigNumber | undefined
-) {
-  const { chainId } = useWeb3React()
-  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-  const amountToApprove = useMemo(
-    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage]
-  )
-
-  return useERC20Permit(amountToApprove, swapRouterAddress, transactionDeadline, null)
 }
