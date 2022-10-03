@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
+import { ZERO_PERCENT } from 'constants/misc'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useCallback, useMemo } from 'react'
@@ -42,21 +43,21 @@ export enum ApproveOrPermitState {
  */
 export const useApproveOrPermit = (
   trade: InterfaceTrade | undefined,
-  allowedSlippage: Percent,
+  allowedSlippage: Percent | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
   amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
 ) => {
   const deadline = useTransactionDeadline()
 
   // Check approvals on ERC20 contract based on amount.
-  const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useIsPendingApproval, amount)
+  const [approval, getApproval] = useSwapApproval(trade, allowedSlippage ?? ZERO_PERCENT, useIsPendingApproval, amount)
 
   // Check status of permit and whether token supports it.
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
+  } = useERC20PermitFromTrade(trade, allowedSlippage ?? ZERO_PERCENT, deadline)
 
   // If permit is supported, trigger a signature, if not create approval transaction.
   const handleApproveOrPermit = useCallback(async () => {

@@ -66,7 +66,7 @@ export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
-    trade: { state: tradeState },
+    trade,
   } = useSwapInfo()
 
   const [inputAmount, updateInputAmount] = useSwapAmount(Field.INPUT)
@@ -76,7 +76,7 @@ export default function Input({ disabled, focused }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
 
-  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isRouteLoading = disabled || trade?.state === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 

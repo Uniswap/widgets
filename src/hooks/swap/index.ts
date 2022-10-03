@@ -64,11 +64,6 @@ export function useIsSwapFieldIndependent(field: Field): boolean {
 
 const amountAtom = pickAtom(swapAtom, 'amount')
 
-// check if any amount has been entered by user
-export function useIsAmountPopulated() {
-  return Boolean(useAtomValue(amountAtom))
-}
-
 export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
   const value = useAtomValue(amountAtom)
   const isFieldIndependent = useIsSwapFieldIndependent(field)
@@ -92,12 +87,8 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
 
 export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | undefined {
   const isFieldIndependent = useIsSwapFieldIndependent(field)
-  const isAmountPopulated = useIsAmountPopulated()
   const [swapAmount] = useSwapAmount(field)
   const [swapCurrency] = useSwapCurrency(field)
   const currencyAmount = useMemo(() => tryParseCurrencyAmount(swapAmount, swapCurrency), [swapAmount, swapCurrency])
-  if (isFieldIndependent && isAmountPopulated) {
-    return currencyAmount
-  }
-  return
+  return isFieldIndependent ? currencyAmount : undefined
 }

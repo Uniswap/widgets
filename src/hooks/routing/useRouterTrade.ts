@@ -19,8 +19,8 @@ export enum RouterPreference {
 }
 
 const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
-const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
+const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -57,22 +57,20 @@ export function useRouterTrade(
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
   const { isError, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
-  const isSyncing = currentData !== data || !isValidBlock
+  const isLoading = currentData !== data || !isValidBlock
 
   // PRICE fetching is informational and costly, so it's done less frequently.
   const pollingInterval = routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`
   const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
-    if (routerPreference === RouterPreference.SKIP) return
-
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
     // An already-fetched value should be refetched if it is older than the pollingInterval.
     // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
     if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
       refetch()
     }
-  }, [fulfilledTimeStamp, pollingInterval, queryArgs, routerPreference, trigger])
-  useTimeout(request, 200)
+  }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
+  useTimeout(request, routerPreference === RouterPreference.SKIP ? null : 200)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, data),
@@ -90,6 +88,7 @@ export function useRouterTrade(
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(data?.gasUseEstimateUSD)
 
   return useMemo(() => {
+    if (routerPreference === RouterPreference.SKIP) return TRADE_NOT_FOUND
     if (!currencyIn || !currencyOut) return TRADE_INVALID
     if (!trade && !isError) return TRADE_LOADING
 
@@ -98,7 +97,7 @@ export function useRouterTrade(
       : undefined
     if (!trade || !otherAmount || isError) return TRADE_NOT_FOUND
 
-    const state = isSyncing ? TradeState.SYNCING : TradeState.VALID
+    const state = isLoading ? TradeState.LOADING : TradeState.VALID
     return { state, trade, gasUseEstimateUSD }
-  }, [currencyIn, currencyOut, trade, isError, data, tradeType, isSyncing, gasUseEstimateUSD])
+  }, [routerPreference, currencyIn, currencyOut, trade, isError, data, tradeType, isLoading, gasUseEstimateUSD])
 }
