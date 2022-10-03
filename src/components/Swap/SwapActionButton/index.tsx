@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
+import { SwapError } from 'hooks/swap/useSwapInfo'
 import { memo } from 'react'
 import { Field } from 'state/swap'
 import { useTheme } from 'styled-components/macro'
+import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import SwitchChainButton from './SwitchChainButton'
@@ -23,7 +25,6 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
     error,
     trade,
   } = useSwapInfo()
-
   const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
 
   const onSubmit = useOnSubmit()
@@ -31,10 +32,11 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
   const color = tokenColorExtraction ? 'interactive' : 'accent'
 
-  if (chainId && tokenChainId && chainId !== tokenChainId) {
-    return <SwitchChainButton color={color} chainId={tokenChainId} />
-  } else if (disabled || !chainId) {
+  if (disabled || !chainId) {
     return <DisabledButton color={color} />
+  } else if (error === SwapError.MISMATCHED_CHAIN) {
+    invariant(tokenChainId)
+    return <SwitchChainButton color={color} chainId={tokenChainId} />
   } else if (trade) {
     return <TradeButton color={color} onSubmit={onSubmit} trade={trade} disabled={error !== undefined} />
   } else {

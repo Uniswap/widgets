@@ -57,22 +57,23 @@ describe('connect', () => {
   })
 
   describe('with provider', () => {
+    const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
+      0,
+      6
+    )}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
+
     // The real hardhat.provider relies on real timeouts when providing data.
     jest.useRealTimers()
 
     const renderWidget = () => render(<SwapWidget provider={hardhat.provider} />)
 
     it('displays connected account chip', async () => {
-      const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
-        0,
-        6
-      )}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
-
       const widget = renderWidget()
       const toolbar = await widget.findByTestId('toolbar')
       // The toolbar will reflect a pending connection until it connects.
       await waitFor(() => expect(toolbar.textContent).not.toBe('Connecting…'), { timeout: 10000 })
 
+      widget.rerender(<SwapWidget provider={hardhat.provider} />)
       const account = await widget.findByTestId('account')
       await waitFor(() => expect(account.textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING))
     })

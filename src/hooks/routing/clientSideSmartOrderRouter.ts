@@ -1,8 +1,9 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import type { AlphaRouterConfig } from '@uniswap/smart-order-router'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
-// eslint-disable-next-line no-restricted-imports
-import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { AlphaRouter, ChainId, routeAmountsToString } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
@@ -51,13 +52,18 @@ async function getQuote(
   const baseCurrency = isExactInput(tradeType) ? currencyIn : currencyOut
   const quoteCurrency = isExactInput(tradeType) ? currencyOut : currencyIn
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
-  const swapRoute = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
+  const route = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (!swapRoute) {
+  if (!route) {
     throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
   }
 
-  return { data: transformSwapRouteToGetQuoteResult(tradeType, amount, swapRoute) }
+  return {
+    data: {
+      ...transformSwapRouteToGetQuoteResult(route),
+      routeString: routeAmountsToString(route.route),
+    },
+  }
 }
 
 interface QuoteArguments {

@@ -32,6 +32,7 @@ export default memo(function Toolbar() {
         return <Caption.Connecting />
       case SwapError.UNSUPPORTED_CHAIN:
         return <Caption.UnsupportedNetwork />
+      case SwapError.MISMATCHED_CHAIN:
       case SwapError.MISSING_INPUTS:
         return <Caption.Empty />
       case SwapError.INSUFFICIENT_BALANCE:
@@ -50,6 +51,8 @@ export default memo(function Toolbar() {
           return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
         }
     }
+
+    return <Caption.Empty />
   }, [error, inputCurrency, outputCurrency, trade, outputUSDC])
 
   return (

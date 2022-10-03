@@ -27,6 +27,7 @@ export enum SwapError {
   WALLET_DISCONNECTED,
   WALLET_CONNECTING,
   UNSUPPORTED_CHAIN,
+  MISMATCHED_CHAIN,
   MISSING_INPUTS,
   INSUFFICIENT_BALANCE,
   INSUFFICIENT_LIQUIDITY,
@@ -49,12 +50,15 @@ interface SwapInfo {
 
 /** Returns the best computed trade. */
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
+  const { account, chainId, isActivating } = useWeb3React()
   const {
     type: tradeType,
     amount,
     [Field.INPUT]: inputCurrency,
     [Field.OUTPUT]: outputCurrency,
   } = useAtomValue(swapAtom)
+  const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
+  const mismatchedChain = chainId && tokenChainId && chainId !== tokenChainId
   const isWrap = useIsWrap()
 
   const parsedAmount = useMemo(
@@ -65,7 +69,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     tradeType,
     parsedAmount,
     isExactInput(tradeType) ? outputCurrency : inputCurrency,
-    isWrap ? RouterPreference.SKIP : RouterPreference.TRADE,
+    isWrap || mismatchedChain ? RouterPreference.SKIP : RouterPreference.TRADE,
     routerUrl
   )
 
@@ -92,7 +96,6 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const inputUSDCValueResponsive = useUSDCValue(inputAmountResponsive)
   const outputUSDCValueResponsive = useUSDCValue(outputAmountResponsive)
 
-  const { account, chainId, isActivating } = useWeb3React()
   const [inputBalance, outputBalance] = useCurrencyBalances(
     account,
     useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
@@ -106,6 +109,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     if (trade.state === TradeState.LOADING) return SwapError.LOADING
     if (!account || !chainId) return isActivating ? SwapError.WALLET_CONNECTING : SwapError.WALLET_DISCONNECTED
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) return SwapError.UNSUPPORTED_CHAIN
+    if (mismatchedChain) return SwapError.MISMATCHED_CHAIN
     if (!(inputCurrency && outputCurrency && parsedAmount?.greaterThan(0))) return SwapError.MISSING_INPUTS
     if (inputBalance && inputAmountResponsive?.greaterThan(inputBalance)) return SwapError.INSUFFICIENT_BALANCE
     if (isWrap) return undefined
@@ -120,6 +124,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     inputCurrency,
     isActivating,
     isWrap,
+    mismatchedChain,
     outputCurrency,
     parsedAmount,
     trade.state,

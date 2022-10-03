@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
-// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { ErrorCode } from 'constants/eip1193'
 import { useMemo } from 'react'
