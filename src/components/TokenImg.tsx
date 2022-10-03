@@ -53,5 +53,5 @@ export default styled(TokenImg)<{ size?: number; approval?: ApprovalState }>`
   border-radius: 100%;
   height: ${({ size }) => size || 1}em;
   width: ${({ size }) => size || 1}em;
-  filter: ${({ approval }) => approval !== undefined && approval !== ApprovalState.APPROVED && 'opacity(0.4)'};
+  filter: ${({ approval }) => approval !== undefined && approval !== ApprovalState.APPROVED && 'grayscale(1)'};
 `
