@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -207,6 +207,10 @@ msgstr "Výkon se odhaduje. Odešlete maximálně {0} {1} nebo se transakce vrá
 msgid "Please enter a valid slippage %"
 msgstr "Zadejte prosím platný skluz %"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Obnovte stránku a zkuste to znovu."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Využívá protokol Uniswap"
@@ -254,7 +258,6 @@ msgstr "Nastavení"
 msgid "Slippage tolerance"
 msgstr "Tolerance skluzu"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Něco se pokazilo."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -207,6 +207,10 @@ msgstr "A kimenet becsült. Legfeljebb {0} {1} -et küld, vagy a tranzakció vis
 msgid "Please enter a valid slippage %"
 msgstr "Kérjük, adjon meg egy érvényes csúszást %"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Kérjük, frissítse az oldalt, és próbálja újra."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Az Uniswap protokoll működteti"
@@ -254,7 +258,6 @@ msgstr "Beállítások"
 msgid "Slippage tolerance"
 msgstr "Csúszási tolerancia"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Valami elromlott."

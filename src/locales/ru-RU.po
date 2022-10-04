@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -207,6 +207,10 @@ msgstr "Сумма к продаже — оценочная. Вы продади
 msgid "Please enter a valid slippage %"
 msgstr "Пожалуйста, введите корректный процент проскальзывания"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Пожалуйста, обновите страницу и повторите попытку."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Работает по протоколу Uniswap"
@@ -254,7 +258,6 @@ msgstr "Настройки"
 msgid "Slippage tolerance"
 msgstr "Допустимое проскальзывание"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Что-то пошло не так."

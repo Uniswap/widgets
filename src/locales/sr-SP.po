@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -207,6 +207,10 @@ msgstr "Излаз је процењен. Послаћете највише {0} 
 msgid "Please enter a valid slippage %"
 msgstr "Унесите важећи % клизања"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Освежите страницу и покушајте поново."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Покреће Унисвап протокол"
@@ -254,7 +258,6 @@ msgstr "Подешавања"
 msgid "Slippage tolerance"
 msgstr "Клизна толеранција"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Нешто је кренуло наопако."

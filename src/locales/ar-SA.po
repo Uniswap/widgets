@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -207,6 +207,10 @@ msgstr "الناتج يقدر. سوف ترسل {0} {1} على الأكثر وإ�
 msgid "Please enter a valid slippage %"
 msgstr "الرجاء إدخال انزلاق سعر صالح٪"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "يرجى تحديث الصفحة وحاول مرة أخرى."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "مدعوم من بروتوكول Uniswap"
@@ -254,7 +258,6 @@ msgstr "إعدادات"
 msgid "Slippage tolerance"
 msgstr "تحمل الانزلاق"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "هناك خطأ ما."

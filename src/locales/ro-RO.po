@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -207,6 +207,10 @@ msgstr "Ieșirea este estimată. Veți trimite cel mult {0} {1} sau tranzacția 
 msgid "Please enter a valid slippage %"
 msgstr "Vă rugăm să introduceți un % de alunecare valid"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Vă rugăm să reîmprospătați pagina și să încercați din nou."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Funcționat de protocolul Uniswap"
@@ -254,7 +258,6 @@ msgstr "Setări"
 msgid "Slippage tolerance"
 msgstr "Toleranță derapaj"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Ceva n-a mers bine."

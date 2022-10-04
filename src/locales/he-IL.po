@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -207,6 +207,10 @@ msgstr "התפוקה מוערכת. אתה תשלח לכל היותר {0} {1} א�
 msgid "Please enter a valid slippage %"
 msgstr "אנא הזן % החלקה חוקית"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "אנא רענן את הדף ונסה שוב."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "מופעל על ידי פרוטוקול Uniswap"
@@ -254,7 +258,6 @@ msgstr "הגדרות"
 msgid "Slippage tolerance"
 msgstr "סובלנות להחלקה"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "משהו השתבש."

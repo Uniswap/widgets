@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -207,6 +207,10 @@ msgstr "มีการประมาณการเอาท์พุต ค�
 msgid "Please enter a valid slippage %"
 msgstr "โปรดป้อน % การคลาดเคลื่อนที่ถูกต้อง"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "โปรดรีเฟรชหน้าแล้วลองอีกครั้ง"
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "ขับเคลื่อนโดยโปรโตคอล Uniswap"
@@ -254,7 +258,6 @@ msgstr "การตั้งค่า"
 msgid "Slippage tolerance"
 msgstr "ความทนทานต่อการเลื่อนหลุด"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "อะไรบางอย่างผิดปกติ."

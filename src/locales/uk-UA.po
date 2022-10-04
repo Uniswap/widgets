@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -207,6 +207,10 @@ msgstr "Вихід оцінюється. Ви надішлете щонайбі�
 msgid "Please enter a valid slippage %"
 msgstr "Будь ласка, введіть дійсний % промаху"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Будь ласка, оновіть сторінку та повторіть спробу."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Працює на основі протоколу Uniswap"
@@ -254,7 +258,6 @@ msgstr "Налаштування"
 msgid "Slippage tolerance"
 msgstr "Толерантність до проковзування"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Щось пішло не так."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -207,6 +207,10 @@ msgstr "Εκτιμάται η παραγωγή. Θα στείλετε το πο�
 msgid "Please enter a valid slippage %"
 msgstr "Εισαγάγετε ένα έγκυρο ολίσθημα %"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Ανανεώστε τη σελίδα και δοκιμάστε ξανά."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Τροφοδοτείται από το πρωτόκολλο Uniswap"
@@ -254,7 +258,6 @@ msgstr "Ρυθμίσεις"
 msgid "Slippage tolerance"
 msgstr "Ανοχή ολίσθησης"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Κάτι πήγε στραβά."

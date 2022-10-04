@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-04 22:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -207,6 +207,10 @@ msgstr "출력이 예상됩니다. 최대 {0} {1} 을 보내지 않으면 거래
 msgid "Please enter a valid slippage %"
 msgstr "유효한 미끄러짐 %를 입력하십시오"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "페이지를 새로고침하고 다시 시도하십시오."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Uniswap 프로토콜 기반"
@@ -254,7 +258,6 @@ msgstr "설정"
 msgid "Slippage tolerance"
 msgstr "슬리피지 허용 오차"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "문제가 발생했습니다."
