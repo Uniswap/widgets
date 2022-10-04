@@ -56,7 +56,7 @@ export function useRouterTrade(
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
   const { isError, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
   const isValidBlock = useIsValidBlock(Number(data?.blockNumber))
-  const isSyncing = currentData !== data || !isValidBlock
+  const isLoading = currentData !== data || !isValidBlock
 
   // PRICE fetching is informational and costly, so it's done less frequently.
   const pollingInterval = routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`
@@ -95,7 +95,7 @@ export function useRouterTrade(
       : undefined
     if (!trade || !otherAmount || isError) return TRADE_NOT_FOUND
 
-    const state = isSyncing ? TradeState.SYNCING : TradeState.VALID
+    const state = isLoading ? TradeState.LOADING : TradeState.VALID
     return { state, trade, gasUseEstimateUSD }
-  }, [currencyIn, currencyOut, trade, isError, data, tradeType, isSyncing, gasUseEstimateUSD])
+  }, [currencyIn, currencyOut, trade, isError, data, tradeType, isLoading, gasUseEstimateUSD])
 }
