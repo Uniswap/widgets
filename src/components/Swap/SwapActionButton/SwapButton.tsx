@@ -23,10 +23,12 @@ import { SummaryDialog } from '../Summary'
  */
 export default function SwapButton({
   color,
+  disabled,
   signatureData,
   onSubmit,
 }: {
   color: keyof Colors
+  disabled: boolean
   signatureData: SignatureData | null
   onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
 }) {
@@ -91,7 +93,7 @@ export default function SwapButton({
 
   return (
     <>
-      <ActionButton color={color} onClick={onClick}>
+      <ActionButton color={color} onClick={onClick} disabled={disabled}>
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade && (

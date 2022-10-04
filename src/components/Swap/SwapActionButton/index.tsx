@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { ApproveOrPermitState, useApproveOrPermit } from 'hooks/swap/useSwapApproval'
@@ -7,7 +6,6 @@ import { memo, useMemo } from 'react'
 import { Field } from 'state/swap'
 import { useTheme } from 'styled-components/macro'
 
-import ActionButton from '../../ActionButton'
 import ApproveButton, { useIsPendingApproval } from './ApproveButton'
 import SwapButton from './SwapButton'
 import SwitchChainButton from './SwitchChainButton'
@@ -48,17 +46,11 @@ export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
 
   if (chainId && tokenChainId && chainId !== tokenChainId) {
     return <SwitchChainButton color={color} chainId={tokenChainId} />
-  } else if (isDisabled) {
-    return (
-      <ActionButton color={color} disabled={true}>
-        <Trans>Review swap</Trans>
-      </ActionButton>
-    )
   } else if (isWrap) {
-    return <WrapButton color={color} onSubmit={onSubmit} />
+    return <WrapButton color={color} onSubmit={onSubmit} disabled={isDisabled} />
   } else if (approval.approvalState !== ApproveOrPermitState.APPROVED) {
     return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
   } else {
-    return <SwapButton color={color} onSubmit={onSubmit} signatureData={approval.signatureData} />
+    return <SwapButton color={color} onSubmit={onSubmit} signatureData={approval.signatureData} disabled={isDisabled} />
   }
 })
