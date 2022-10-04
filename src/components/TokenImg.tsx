@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import missingTokenSrc from 'assets/missing-token-image.png'
 import { useToken } from 'hooks/useCurrency'
 import useCurrencyLogoURIs from 'hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState } from 'react'
@@ -7,9 +6,16 @@ import styled from 'styled-components/macro'
 
 const badSrcs = new Set<string>()
 
-const MissingTokenImg = styled.img`
-  height: 1em;
-  width: 1em;
+const MissingTokenImg = styled.div<{ fontSize?: number; circleSize?: number }>`
+  background-color: ${({ theme }) => theme.container};
+  border-radius: 100%;
+  color: ${({ theme }) => theme.primary};
+  font-size: ${({ fontSize }) => fontSize || 9}px;
+  font-weight: 500;
+  height: ${({ circleSize }) => circleSize || 24}px;
+  line-height: ${({ circleSize }) => circleSize || 24}px;
+  text-align: center;
+  width: ${({ circleSize }) => circleSize || 24}px};
 `
 
 interface BaseProps {
@@ -39,7 +45,13 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
     [src]
   )
 
-  if (!src) return <MissingTokenImg src={missingTokenSrc} alt={alt} color="secondary" {...rest} />
+  if (!src) {
+    return (
+      <MissingTokenImg>
+        {tokenInfo.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+      </MissingTokenImg>
+    )
+  }
   return <img src={src} alt={alt} key={alt} onError={onError} {...rest} />
 }
 
