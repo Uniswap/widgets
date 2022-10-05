@@ -1,12 +1,11 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useRouterArguments } from 'hooks/routing/useRouterArguments'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
 import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
+import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
@@ -40,17 +39,7 @@ export function useRouterTrade(
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
-  const [currencyIn, currencyOut] = isExactInput(tradeType)
-    ? [amountSpecified?.currency, otherCurrency]
-    : [otherCurrency, amountSpecified?.currency]
-  const queryArgs = useRouterArguments({
-    tokenIn: currencyIn,
-    tokenOut: currencyOut,
-    amount: amountSpecified,
-    tradeType,
-    routerUrl,
-    provider: provider as JsonRpcProvider,
-  })
+  const queryArgs = useGetQuoteArgs({ provider, tradeType, amountSpecified, otherCurrency, routerUrl })
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
@@ -71,19 +60,19 @@ export function useRouterTrade(
   }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const route = useMemo(
-    () => computeRoutes(currencyIn, currencyOut, tradeType, data),
-    [currencyIn, currencyOut, data, tradeType]
-  )
+  const [currencyIn, currencyOut] = isExactInput(tradeType)
+    ? [amountSpecified?.currency, otherCurrency]
+    : [otherCurrency, amountSpecified?.currency]
   const trade = useMemo(() => {
-    if (!route || route.length === 0) return
+    const routes = computeRoutes(currencyIn, currencyOut, tradeType, data)
+    if (!routes || routes.length === 0) return
     try {
-      return transformRoutesToTrade(route, tradeType)
+      return transformRoutesToTrade(routes, tradeType)
     } catch (e: unknown) {
       console.debug('transformRoutesToTrade failed: ', e)
       return
     }
-  }, [route, tradeType])
+  }, [currencyIn, currencyOut, data, tradeType])
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(data?.gasUseEstimateUSD)
 
   return useMemo(() => {

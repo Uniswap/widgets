@@ -1,11 +1,11 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider } from '@ethersproject/providers'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import type { AlphaRouterConfig } from '@uniswap/smart-order-router'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AlphaRouter, ChainId, routeAmountsToString } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import { GetQuoteResult } from 'state/routing/types'
+import { GetQuoteArgs, GetQuoteResult } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -18,9 +18,9 @@ function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
   return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
 }
 
-const routers = new WeakMap<JsonRpcProvider, AlphaRouter>()
+const routers = new WeakMap<BaseProvider, AlphaRouter>()
 
-function getRouter(chainId: ChainId, provider: JsonRpcProvider): AlphaRouter {
+function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
   const cached = routers.get(provider)
   if (cached) return cached
 
@@ -66,19 +66,6 @@ async function getQuote(
   }
 }
 
-interface QuoteArguments {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  tradeType: TradeType
-}
-
 export async function getClientSideQuote(
   {
     tokenInAddress,
@@ -91,8 +78,8 @@ export async function getClientSideQuote(
     tokenOutSymbol,
     amount,
     tradeType,
-  }: QuoteArguments,
-  provider: JsonRpcProvider,
+    provider,
+  }: GetQuoteArgs,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   if (!isAutoRouterSupportedChain(tokenInChainId)) {
