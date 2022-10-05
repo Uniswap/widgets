@@ -64,7 +64,7 @@ export interface GetQuoteArgs {
   provider: BaseProvider
 }
 
-export interface GetQuoteResult {
+export interface QuoteResult {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -82,5 +82,9 @@ export interface GetQuoteResult {
   route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
 }
+
+export const NO_ROUTE = 'No Route'
+
+export type GetQuoteResult = QuoteResult | typeof NO_ROUTE
 
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}
