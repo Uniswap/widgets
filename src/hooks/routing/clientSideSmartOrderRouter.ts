@@ -3,7 +3,7 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import type { AlphaRouterConfig } from '@uniswap/smart-order-router'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { AlphaRouter, ChainId, routeAmountsToString } from '@uniswap/smart-order-router'
+import { AlphaRouter, ChainId, routeAmountsToString, StaticV2SubgraphProvider } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteArgs, GetQuoteResult } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
@@ -26,7 +26,14 @@ function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
   const cached = routers[chainId]
   if (cached) return cached
 
-  const router = new AlphaRouter({ chainId, provider })
+  // V2 is unsupported for chains other than mainnet.
+  // TODO(zzmp): Upstream to @uniswap/smart-order-router.
+  let v2SubgraphProvider
+  if (chainId !== ChainId.MAINNET) {
+    v2SubgraphProvider = new StaticV2SubgraphProvider(chainId)
+  }
+
+  const router = new AlphaRouter({ chainId, provider, v2SubgraphProvider })
   routers[chainId] = router
   routersCache.set(provider, routers)
   return router
