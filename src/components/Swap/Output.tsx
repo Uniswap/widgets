@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import BrandedFooter from 'components/BrandedFooter'
 import Rule from 'components/Rule'
