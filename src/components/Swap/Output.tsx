@@ -24,7 +24,7 @@ export const colorAtom = atom<string | undefined>(undefined)
 const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  padding: 2.25em 0.75em 0.5em;
+  padding: 2em 0.75em 0.5em;
   position: relative;
 
   // Set transitions to reduce color flashes when switching color/token.
