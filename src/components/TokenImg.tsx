@@ -6,16 +6,18 @@ import styled from 'styled-components/macro'
 
 const badSrcs = new Set<string>()
 
-const MissingTokenImg = styled.div<{ fontSize?: number; circleSize?: number }>`
+const MissingTokenImg = styled.div`
+  align-items: center;
   background-color: ${({ theme }) => theme.container};
   border-radius: 100%;
+  display: flex;
+  justify-content: center;
+`
+
+const MissingTokenSymbol = styled.span<{ width?: number }>`
   color: ${({ theme }) => theme.primary};
-  font-size: ${({ fontSize }) => fontSize || 9}px;
+  font-size: ${({ width }) => (width || 24) * (9 / 24)}px;
   font-weight: 500;
-  height: ${({ circleSize }) => circleSize || 24}px;
-  line-height: ${({ circleSize }) => circleSize || 24}px;
-  text-align: center;
-  width: ${({ circleSize }) => circleSize || 24}px};
 `
 
 interface BaseProps {
@@ -24,7 +26,7 @@ interface BaseProps {
 
 type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>, keyof BaseProps>
 
-function TokenImg({ token, ...rest }: TokenImgProps) {
+function TokenImg({ token, width, ...rest }: TokenImgProps) {
   // Use the wrapped token info so that it includes the logoURI.
   const tokenInfo = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
   const srcs = useCurrencyLogoURIs(tokenInfo)
@@ -47,8 +49,10 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
 
   if (!src) {
     return (
-      <MissingTokenImg>
-        {tokenInfo.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+      <MissingTokenImg {...rest}>
+        <MissingTokenSymbol width={width}>
+          {tokenInfo.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+        </MissingTokenSymbol>
       </MissingTokenImg>
     )
   }

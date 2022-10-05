@@ -27,11 +27,11 @@ const TOKEN_WITH_NO_LOGO = {
   address: '0x3819f64f282bf135d62168C1e513280dAF905e06',
 }
 
-const newTokenList = (tokens as TokenInfo[]).concat([TOKEN_WITH_NO_LOGO])
 const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
 const tokenLists: Record<string, TokenInfo[]> = {
-  Default: newTokenList,
+  Default: tokens,
   'Mainnet only': mainnetTokens,
+  Logoless: [TOKEN_WITH_NO_LOGO],
 }
 
 function Fixture() {
