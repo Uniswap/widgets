@@ -3,7 +3,14 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import type { AlphaRouterConfig } from '@uniswap/smart-order-router'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { AlphaRouter, ChainId, routeAmountsToString, StaticV2SubgraphProvider } from '@uniswap/smart-order-router'
+import {
+  AlphaRouter,
+  ChainId,
+  OnChainQuoteProvider,
+  routeAmountsToString,
+  StaticV2SubgraphProvider,
+  UniswapMulticallProvider,
+} from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteArgs, GetQuoteResult } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
@@ -33,7 +40,40 @@ function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
     v2SubgraphProvider = new StaticV2SubgraphProvider(chainId)
   }
 
-  const router = new AlphaRouter({ chainId, provider, v2SubgraphProvider })
+  // V3 computes on-chain, so the quoter must have gas limits appropriate to the provider.
+  // Most defaults are fine, but polygon needs a lower gas limit.
+  // TODO(zzmp): Upstream to @uniswap/smart-order-router.
+  let onChainQuoteProvider
+  let multicall2Provider
+  if ([ChainId.POLYGON, ChainId.POLYGON_MUMBAI].includes(chainId)) {
+    multicall2Provider = new UniswapMulticallProvider(chainId, provider, 375_000)
+    // See https://github.com/Uniswap/smart-order-router/blob/98c58bdee9981fd9ffac9e7d7a97b18302d5f77a/src/routers/alpha-router/alpha-router.ts#L464-L487
+    onChainQuoteProvider = new OnChainQuoteProvider(
+      chainId,
+      provider,
+      multicall2Provider,
+      {
+        retries: 2,
+        minTimeout: 100,
+        maxTimeout: 1000,
+      },
+      {
+        multicallChunk: 10,
+        gasLimitPerCall: 5_000_000,
+        quoteMinSuccessRate: 0.1,
+      },
+      {
+        gasLimitOverride: 5_000_000,
+        multicallChunk: 5,
+      },
+      {
+        gasLimitOverride: 6_250_000,
+        multicallChunk: 4,
+      }
+    )
+  }
+
+  const router = new AlphaRouter({ chainId, provider, v2SubgraphProvider, multicall2Provider, onChainQuoteProvider })
   routers[chainId] = router
   routersCache.set(provider, routers)
   return router
