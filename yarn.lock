@@ -3499,11 +3499,6 @@
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-4.1.0.tgz#bbda8b946096f248b92809f71b77b4d407768796"
   integrity sha512-NxFW4OhYpnAunD37CKDRadG5ujp3r6cYnfBzTD1Eq4jwdr3ULt01xGqGljq0SuGAGhTsD+bmR46vPg3TdDwW0g==
 
-"@uniswap/lib@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/@uniswap/lib/-/lib-1.1.1.tgz"
-  integrity sha512-2yK7sLpKIT91TiS5sewHtOa7YuM8IuBXVl4GZv2jZFys4D2sY7K5vZh6MqD25TPA95Od+0YzCVq6cTF2IKrOmg==
-
 "@uniswap/lib@^4.0.1-alpha":
   version "4.0.1-alpha"
   resolved "https://registry.npmjs.org/@uniswap/lib/-/lib-4.0.1-alpha.tgz"
@@ -3591,21 +3586,13 @@
 
 "@uniswap/v2-core@1.0.0":
   version "1.0.0"
-  resolved "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-core/-/v2-core-1.0.0.tgz#e0fab91a7d53e8cafb5326ae4ca18351116b0844"
   integrity sha512-BJiXrBGnN8mti7saW49MXwxDBRFiWemGetE58q8zgfnPPzQKq55ADltEILqOt6VFZ22kVeVKbF8gVd8aY3l7pA==
 
 "@uniswap/v2-core@1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.1.tgz"
   integrity sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q==
-
-"@uniswap/v2-periphery@^1.1.0-beta.0":
-  version "1.1.0-beta.0"
-  resolved "https://registry.npmjs.org/@uniswap/v2-periphery/-/v2-periphery-1.1.0-beta.0.tgz"
-  integrity sha512-6dkwAMKza8nzqYiXEr2D86dgW3TTavUvCR0w2Tu33bAbM8Ah43LKAzH7oKKPRT5VJQaMi1jtkGs1E8JPor1n5g==
-  dependencies:
-    "@uniswap/lib" "1.1.1"
-    "@uniswap/v2-core" "1.0.0"
 
 "@uniswap/v2-sdk@^3.0.1":
   version "3.0.1"
