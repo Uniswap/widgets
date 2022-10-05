@@ -18,14 +18,17 @@ function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
   return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
 }
 
-const routers = new WeakMap<BaseProvider, AlphaRouter>()
+/** A cache of AlphaRouters, which must be initialized to a specific chain/provider. */
+const routersCache = new WeakMap<BaseProvider, { [chainId: number]: AlphaRouter }>()
 
 function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
-  const cached = routers.get(provider)
+  const routers = routersCache.get(provider) || {}
+  const cached = routers[chainId]
   if (cached) return cached
 
   const router = new AlphaRouter({ chainId, provider })
-  routers.set(provider, router)
+  routers[chainId] = router
+  routersCache.set(provider, routers)
   return router
 }
 
