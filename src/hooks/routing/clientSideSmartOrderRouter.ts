@@ -12,7 +12,7 @@ import {
   UniswapMulticallProvider,
 } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import { GetQuoteArgs, GetQuoteResult } from 'state/routing/types'
+import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -96,7 +96,7 @@ async function getQuote(
   },
   router: AlphaRouter,
   routerConfig: Partial<AlphaRouterConfig>
-): Promise<{ data: GetQuoteResult }> {
+): Promise<GetQuoteResult> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
@@ -105,16 +105,9 @@ async function getQuote(
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
   const route = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (!route) {
-    throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
-  }
+  if (!route) return NO_ROUTE
 
-  return {
-    data: {
-      ...transformSwapRouteToGetQuoteResult(route),
-      routeString: routeAmountsToString(route.route),
-    },
-  }
+  return transformSwapRouteToGetQuoteResult({ ...route, routeString: routeAmountsToString(route.route) })
 }
 
 export async function getClientSideQuote(

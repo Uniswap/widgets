@@ -5,7 +5,7 @@ import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
 
 import { serializeGetQuoteArgs } from './args'
-import { GetQuoteArgs, GetQuoteResult } from './types'
+import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from './types'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
@@ -43,13 +43,23 @@ export const routing = createApi({
             })
             const response = await global.fetch(`${args.routerUrl}quote?${query}`)
             if (!response.ok) {
-              return { error: { status: response.status, data: await response.text() } }
+              let data: string | Record<string, unknown> = await response.text()
+              try {
+                data = JSON.parse(data)
+              } catch {}
+
+              // NO_ROUTE should be treated as a valid response to prevent retries.
+              if (typeof data === 'object' && data.errorCode === 'NO_ROUTE') {
+                return { data: NO_ROUTE as GetQuoteResult }
+              }
+
+              throw data
             }
 
-            const data: GetQuoteResult = await response.json()
-            return { data }
+            const quote: GetQuoteResult = await response.json()
+            return { data: quote }
           } catch (error) {
-            console.warn(`GetQuote failed, falling back to client: ${error}`)
+            console.warn(`GetQuote failed on routing API, falling back to client: ${error}`)
           }
         }
 
@@ -57,8 +67,8 @@ export const routing = createApi({
         try {
           // Lazy-load the client-side router to improve initial pageload times.
           const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
-          const result = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
-          return result
+          const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
+          return { data: quote }
         } catch (error) {
           console.warn(`GetQuote failed on client: ${error}`)
           return { error: { status: 'CUSTOM_ERROR', error: error.message } }
