@@ -31,10 +31,7 @@ export const Balance = styled(ThemedText.Body2)`
 `
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  margin-bottom: 0.25em;
-  padding: 0.75em;
+  margin: 0.75em;
   position: relative;
 
   ${TokenImg} {
