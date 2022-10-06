@@ -128,7 +128,7 @@ export default function Input({ disabled, focused }: InputProps) {
             {balance && (
               <Row gap={0.5}>
                 <Balance color={insufficientBalance ? 'error' : focused ? 'secondary' : 'hint'}>
-                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                  <Trans>Balance:</Trans> <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </Balance>
                 {max && (
                   <TextButton onClick={onClickMax}>
