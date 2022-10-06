@@ -134,7 +134,7 @@ const ItemRow = memo(function ItemRow({
 },
 areEqual)
 
-interface TokenOptionsHandle {
+export interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
 }
 
