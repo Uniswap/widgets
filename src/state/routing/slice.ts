@@ -56,8 +56,8 @@ export const routing = createApi({
               throw data
             }
 
-            const data: GetQuoteResult = await response.json()
-            return { data }
+            const quote: GetQuoteResult = await response.json()
+            return { data: quote }
           } catch (error) {
             console.warn(`GetQuote failed on routing API, falling back to client: ${error}`)
           }
@@ -67,8 +67,8 @@ export const routing = createApi({
         try {
           // Lazy-load the client-side router to improve initial pageload times.
           const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
-          const data = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
-          return { data }
+          const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
+          return { data: quote }
         } catch (error) {
           console.warn(`GetQuote failed on client: ${error}`)
           return { error: { status: 'CUSTOM_ERROR', error: error.message } }
