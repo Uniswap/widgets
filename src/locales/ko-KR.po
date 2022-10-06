@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-06 19:10\n"
+"PO-Revision-Date: 2022-10-06 23:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -67,6 +67,10 @@ msgstr "자동"
 #: src/components/Swap/RoutingDiagram/index.tsx
 msgid "Auto Router"
 msgstr "자동 라우터"
+
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "잔액:"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
@@ -159,7 +163,7 @@ msgstr "잘못된 수령인"
 msgid "Liquidity provider fee"
 msgstr "유동성 공급자 수수료"
 
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "최대"
 

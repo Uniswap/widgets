@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-06 19:10\n"
+"PO-Revision-Date: 2022-10-06 23:05\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -67,6 +67,10 @@ msgstr "自动"
 #: src/components/Swap/RoutingDiagram/index.tsx
 msgid "Auto Router"
 msgstr "自动路由"
+
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "余额："
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
@@ -159,7 +163,7 @@ msgstr "无效的接收方"
 msgid "Liquidity provider fee"
 msgstr "流动性提供者费用"
 
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "最大值"
 

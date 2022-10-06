@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-06 19:10\n"
+"PO-Revision-Date: 2022-10-06 23:05\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -67,6 +67,10 @@ msgstr "Auto"
 #: src/components/Swap/RoutingDiagram/index.tsx
 msgid "Auto Router"
 msgstr "Automatyczny router"
+
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
@@ -159,7 +163,7 @@ msgstr "Nieprawidłowy odbiorca"
 msgid "Liquidity provider fee"
 msgstr "Opłata dostawcy płynności"
 
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Maks."
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-06 19:10\n"
+"PO-Revision-Date: 2022-10-06 23:05\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -67,6 +67,10 @@ msgstr "Tự động"
 #: src/components/Swap/RoutingDiagram/index.tsx
 msgid "Auto Router"
 msgstr "Bộ định tuyến tự động"
+
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Thăng bằng:"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
@@ -159,7 +163,7 @@ msgstr "Người nhận không hợp lệ"
 msgid "Liquidity provider fee"
 msgstr "Phí nhà cung cấp thanh khoản"
 
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Tối đa"
 

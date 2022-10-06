@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-06 19:10\n"
+"PO-Revision-Date: 2022-10-06 23:05\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -67,6 +67,10 @@ msgstr "Аutomatski"
 #: src/components/Swap/RoutingDiagram/index.tsx
 msgid "Auto Router"
 msgstr "Ауто Роутер"
+
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Стање:"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
@@ -159,7 +163,7 @@ msgstr "Неважећи прималац"
 msgid "Liquidity provider fee"
 msgstr "Накнада добављача ликвидности"
 
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Макс"
 

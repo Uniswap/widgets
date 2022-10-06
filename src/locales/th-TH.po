@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-06 19:10\n"
+"PO-Revision-Date: 2022-10-06 23:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -67,6 +67,10 @@ msgstr "รถยนต์"
 #: src/components/Swap/RoutingDiagram/index.tsx
 msgid "Auto Router"
 msgstr "เราเตอร์อัตโนมัติ"
+
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "สมดุล:"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
@@ -159,7 +163,7 @@ msgstr "ผู้รับไม่ถูกต้อง"
 msgid "Liquidity provider fee"
 msgstr "ค่าธรรมเนียมผู้ให้บริการสภาพคล่อง"
 
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "แม็กซ์"
 
