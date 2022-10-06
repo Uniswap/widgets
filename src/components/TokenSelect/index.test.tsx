@@ -16,7 +16,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn()
 
       const component = renderWidget(
-        <TokenSelect field={Field.INPUT} value={undefined} collapsed disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
@@ -31,7 +31,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn().mockResolvedValueOnce(true)
 
       const component = renderWidget(
-        <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
@@ -46,7 +46,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn().mockResolvedValueOnce(false)
 
       const component = renderWidget(
-        <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
@@ -61,7 +61,7 @@ describe('TokenSelect.tsx', () => {
       const onTokenSelectorClick = jest.fn().mockRejectedValueOnce(false)
 
       const component = renderWidget(
-        <TokenSelect field={Field.INPUT} value={undefined} collapsed={false} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect field={Field.INPUT} value={undefined} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }
