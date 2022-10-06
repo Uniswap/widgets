@@ -6,7 +6,7 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { useAtomValue } from 'jotai/utils'
-import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field, swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -18,7 +18,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenButton from './TokenButton'
-import TokenOptions from './TokenOptions'
+import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
 const SearchInput = styled(StringInput)`
@@ -72,7 +72,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
-  const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
+  const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
   const { chainId } = useWeb3React()
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
