@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -122,10 +122,6 @@ msgstr "Terjadi kesalahan saat mengambil perdagangan"
 msgid "Fetching best price…"
 msgstr "Mengambil harga terbaik…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Untuk"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "Keluaran diperkirakan. Anda akan mengirimkan paling banyak {0} {1} atau 
 msgid "Please enter a valid slippage %"
 msgstr "Harap masukkan % slippage yang valid"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Segarkan halaman dan coba lagi."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Didukung oleh protokol Uniswap"
@@ -254,7 +254,6 @@ msgstr "Setelan"
 msgid "Slippage tolerance"
 msgstr "Toleransi slip"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Ada yang salah."

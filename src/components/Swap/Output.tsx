@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import BrandedFooter from 'components/BrandedFooter'
 import Rule from 'components/Rule'
@@ -24,8 +23,7 @@ export const colorAtom = atom<string | undefined>(undefined)
 const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  padding: 0.75em;
-  padding-bottom: 0.5em;
+  padding: 2em 0.75em 0.5em;
   position: relative;
 
   // Set transitions to reduce color flashes when switching color/token.
@@ -74,11 +72,6 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
-        <Row>
-          <ThemedText.Subhead1 color="secondary">
-            <Trans>For</Trans>
-          </ThemedText.Subhead1>
-        </Row>
         <TokenInput
           amount={amount}
           currency={swapOutputCurrency}

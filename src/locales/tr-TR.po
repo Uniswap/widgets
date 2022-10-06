@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -122,10 +122,6 @@ msgstr "Takas alınırken hata oluştu"
 msgid "Fetching best price…"
 msgstr "En iyi fiyat getiriliyor…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Şunun için"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "Çıktı tahmin edilmektedir. En fazla {0} {1} gönderirsiniz yoksa işl
 msgid "Please enter a valid slippage %"
 msgstr "Lütfen geçerli bir kayma yüzdesi girin"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Lütfen sayfayı yenileyin ve tekrar deneyin."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Uniswap protokolü tarafından desteklenmektedir"
@@ -254,7 +254,6 @@ msgstr "Ayarlar"
 msgid "Slippage tolerance"
 msgstr "Kayma toleransı"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Bir şeyler yanlış gitti."

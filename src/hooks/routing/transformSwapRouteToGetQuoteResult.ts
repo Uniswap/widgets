@@ -8,6 +8,7 @@ export function transformSwapRouteToGetQuoteResult({
   quote,
   quoteGasAdjusted,
   route,
+  routeString,
   estimatedGasUsed,
   estimatedGasUsedQuoteToken,
   estimatedGasUsedUSD,
@@ -15,7 +16,7 @@ export function transformSwapRouteToGetQuoteResult({
   methodParameters,
   blockNumber,
   trade: { tradeType, inputAmount, outputAmount },
-}: SwapRoute): Omit<GetQuoteResult, 'routeString'> {
+}: SwapRoute & { routeString: string }): GetQuoteResult {
   const routeResponse: Array<V3PoolInRoute[] | V2PoolInRoute[]> = []
 
   for (const subRoute of route) {
@@ -141,5 +142,6 @@ export function transformSwapRouteToGetQuoteResult({
     gasUseEstimateUSD: estimatedGasUsedUSD.toExact(),
     gasPriceWei: gasPriceWei.toString(),
     route: routeResponse,
+    routeString,
   }
 }

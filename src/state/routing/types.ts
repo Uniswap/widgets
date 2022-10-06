@@ -1,5 +1,7 @@
+import { BaseProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Token, TradeType } from '@uniswap/sdk-core'
+import type { ChainId } from '@uniswap/smart-order-router'
 
 export enum TradeState {
   LOADING,
@@ -46,7 +48,22 @@ export type V2PoolInRoute = {
   address?: string
 }
 
-export interface GetQuoteResult {
+export interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  routerUrl?: string
+  tradeType: TradeType
+  provider: BaseProvider
+}
+
+export interface QuoteResult {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -64,5 +81,9 @@ export interface GetQuoteResult {
   route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
 }
+
+export const NO_ROUTE = 'No Route'
+
+export type GetQuoteResult = QuoteResult | typeof NO_ROUTE
 
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}
