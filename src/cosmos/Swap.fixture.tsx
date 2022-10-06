@@ -19,6 +19,21 @@ import EventFeed, { Event } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
+const TOKEN_WITH_NO_LOGO = {
+  chainId: 1,
+  decimals: 18,
+  symbol: 'HDRN',
+  name: 'Hedron',
+  address: '0x3819f64f282bf135d62168C1e513280dAF905e06',
+}
+
+const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
+const tokenLists: Record<string, TokenInfo[]> = {
+  Default: tokens,
+  'Mainnet only': mainnetTokens,
+  Logoless: [TOKEN_WITH_NO_LOGO],
+}
+
 function Fixture() {
   const [events, setEvents] = useState<Event[]>([])
   const useHandleEvent = useCallback(
@@ -69,10 +84,6 @@ function Fixture() {
 
   const connector = useProvider(defaultChainId)
 
-  const tokenLists: Record<string, TokenInfo[]> = {
-    Default: tokens,
-    'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
-  }
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })

@@ -34,7 +34,7 @@ function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
   if (cached) return cached
 
   // V2 is unsupported for chains other than mainnet.
-  // TODO(zzmp): Upstream to @uniswap/smart-order-router.
+  // TODO(zzmp): Upstream to @uniswap/smart-order-router, exporting an enum of supported v2 chains for clarity.
   let v2SubgraphProvider
   if (chainId !== ChainId.MAINNET) {
     v2SubgraphProvider = new StaticV2SubgraphProvider(chainId)
@@ -42,7 +42,8 @@ function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
 
   // V3 computes on-chain, so the quoter must have gas limits appropriate to the provider.
   // Most defaults are fine, but polygon needs a lower gas limit.
-  // TODO(zzmp): Upstream to @uniswap/smart-order-router.
+  // TODO(zzmp): Upstream to @uniswap/smart-order-router, possibly making this easier to modify
+  // (eg allowing configuration without an instance to avoid duplicating multicall2Provider).
   let onChainQuoteProvider
   let multicall2Provider
   if ([ChainId.POLYGON, ChainId.POLYGON_MUMBAI].includes(chainId)) {
