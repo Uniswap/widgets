@@ -93,7 +93,9 @@ export function TokenListProvider({
         if (typeof list === 'string') {
           tokens = await fetchTokenList(list, resolver)
         } else {
-          tokens = await validateTokens(list)
+          // Empty lists will fail validation, but are valid (eg EMPTY_TOKEN_LIST)
+          // for integrators using their own token selection UI.
+          tokens = list.length > 0 ? await validateTokens(list) : EMPTY_TOKEN_LIST
         }
         // tokensToChainTokenMap also caches the fetched tokens, so it must be invoked even if stale.
         const map = tokensToChainTokenMap(tokens)
