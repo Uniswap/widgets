@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-14 15:04\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -122,10 +122,6 @@ msgstr "Kon nie handel haal nie"
 msgid "Fetching best price…"
 msgstr "Haal die beste prys…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Vir"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "Uitset word geskat. Jy sal hoogstens {0} {1} stuur of die transaksie sal
 msgid "Please enter a valid slippage %"
 msgstr "Voer asseblief 'n geldige glip-% in"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Herlaai asseblief die bladsy en probeer weer."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Aangedryf deur die Uniswap-protokol"
@@ -254,7 +254,6 @@ msgstr "Instellings"
 msgid "Slippage tolerance"
 msgstr "Glipverdraagsaamheid"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Iets het verkeerd geloop."

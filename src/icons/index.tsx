@@ -8,6 +8,7 @@ import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
 import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
+// This file wraps react-feather, so its import is intentional.
 /* eslint-disable no-restricted-imports */
 import { Icon as FeatherIcon } from 'react-feather'
 import {
@@ -29,12 +30,11 @@ import {
   X as XIcon,
   XOctagon as XOctagonIcon,
 } from 'react-feather'
+/* eslint-enable no-restricted-imports */
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Color } from 'theme'
 
 import IdenticonIcon from './identicon'
-
-/* eslint-enable no-restricted-imports */
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 

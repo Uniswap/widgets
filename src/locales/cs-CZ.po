@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-14 15:04\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -122,10 +122,6 @@ msgstr "Chyba při načítání obchodu"
 msgid "Fetching best price…"
 msgstr "Načítání nejlepší ceny…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Pro"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "Výkon se odhaduje. Odešlete maximálně {0} {1} nebo se transakce vrá
 msgid "Please enter a valid slippage %"
 msgstr "Zadejte prosím platný skluz %"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Obnovte stránku a zkuste to znovu."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Využívá protokol Uniswap"
@@ -254,7 +254,6 @@ msgstr "Nastavení"
 msgid "Slippage tolerance"
 msgstr "Tolerance skluzu"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Něco se pokazilo."

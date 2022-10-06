@@ -23,7 +23,7 @@ import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 
 const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
-const WidgetWrapper = styled.div<{ width?: number | string }>`
+export const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);

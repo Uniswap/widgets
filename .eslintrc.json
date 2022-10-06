@@ -52,10 +52,6 @@
           {
             "name": "styled-components",
             "message": "Please import from styled-components/macro."
-          },
-          {
-            "name": "@uniswap/smart-order-router",
-            "message": "Forbidden import; smart-order-router is lazy-loaded."
           }
         ],
         "patterns": [
@@ -66,6 +62,18 @@
           {
             "group": ["*clientSideSmartOrderRouter"],
             "message": "Forbidden import; smart-order-router is lazy-loaded."
+          }
+        ]
+      }
+    ],
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@uniswap/smart-order-router",
+            "message": "Forbidden import; smart-order-router is lazy-loaded.",
+            "allowTypeImports": true
           }
         ]
       }

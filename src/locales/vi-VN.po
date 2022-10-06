@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-14 15:05\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -122,10 +122,6 @@ msgstr "Lỗi khi tìm nạp giao dịch"
 msgid "Fetching best price…"
 msgstr "Tìm nạp giá tốt nhất…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Đối với"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "Sản lượng được ước tính. Bạn sẽ gửi nhiều nhất l�
 msgid "Please enter a valid slippage %"
 msgstr "Vui lòng nhập% trượt giá hợp lệ"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Hãy làm mới trang và thử lại."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Được hỗ trợ bởi giao thức Uniswap"
@@ -254,7 +254,6 @@ msgstr "Cài đặt"
 msgid "Slippage tolerance"
 msgstr "Khả năng chịu trượt"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Đã xảy ra lỗi."

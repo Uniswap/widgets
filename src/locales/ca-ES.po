@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-14 15:04\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -122,10 +122,6 @@ msgstr "S'ha produït un error en recuperar el comerç"
 msgid "Fetching best price…"
 msgstr "Obtenint el millor preu…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Per a"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "La sortida s'estima. Enviareu com a màxim {0} {1} o la transacció es r
 msgid "Please enter a valid slippage %"
 msgstr "Introduïu un % de lliscament vàlid"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Actualitzeu la pàgina i torneu-ho a provar."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Impulsat pel protocol Uniswap"
@@ -254,7 +254,6 @@ msgstr "Configuració"
 msgid "Slippage tolerance"
 msgstr "Tolerància al lliscament"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Alguna cosa ha anat malament."

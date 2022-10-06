@@ -29,8 +29,11 @@ export const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)`
-  margin: 0.75em;
+const InputColumn = styled(Column)<{ approved?: boolean }>`
+  background-color: ${({ theme }) => theme.module};
+  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  margin-bottom: 0.25em;
+  padding: 0.75em;
   position: relative;
 `
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-14 15:05\n"
+"PO-Revision-Date: 2022-10-06 03:33\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -122,10 +122,6 @@ msgstr "Feil under henting av handel"
 msgid "Fetching best price…"
 msgstr "Får best pris…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "For"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -207,6 +203,10 @@ msgstr "Utgang er estimert. Du sender maksimalt {0} {1} eller transaksjonen går
 msgid "Please enter a valid slippage %"
 msgstr "Vennligst skriv inn en gyldig slip %"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Oppdater siden og prøv igjen."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Drevet av Uniswap-protokollen"
@@ -254,7 +254,6 @@ msgstr "Innstillinger"
 msgid "Slippage tolerance"
 msgstr "Toleranse for sammenføyning"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Noe gikk galt."

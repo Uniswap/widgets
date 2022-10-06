@@ -3,13 +3,13 @@ import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import useSwitchChain from 'hooks/useSwitchChain'
 import { Spinner } from 'icons'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Colors } from 'theme'
 
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ color, chainId }: { color: keyof Colors; chainId: number }) {
   const { account } = useWeb3React()
-  const [isPending, setIsPending] = useState(!account)
+  const [isPending, setIsPending] = useState(false)
 
   const switchChain = useSwitchChain()
   const [error, setError] = useState()
@@ -24,11 +24,6 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
     }
   }, [chainId, switchChain])
   if (error) throw error
-
-  // If there is no account (ie no wallet to take agency), switch chains automatically
-  useEffect(() => {
-    if (!account) onSwitchChain()
-  }, [account, onSwitchChain])
 
   const actionProps = useMemo(
     () =>
