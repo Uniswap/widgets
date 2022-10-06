@@ -11,7 +11,7 @@ import {
   useSwapInfo,
 } from 'hooks/swap'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -23,7 +23,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import Column from '../Column'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
-import TokenInput from './TokenInput'
+import TokenInput, { TokenInputHandle } from './TokenInput'
 
 export const USDC = styled(Row)`
   ${loadingTransitionCss};
@@ -75,6 +75,7 @@ export default function Input({ disabled, focused }: InputProps) {
   const [inputAmount, updateInputAmount] = useSwapAmount(Field.INPUT)
   const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
   const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
+  const [input, setInput] = useState<TokenInputHandle | null>(null)
 
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
@@ -109,11 +110,13 @@ export default function Input({ disabled, focused }: InputProps) {
   const onClickMax = useCallback(() => {
     invariant(max)
     updateInputAmount(max)
-  }, [max, updateInputAmount])
+    input?.focus()
+  }, [input, max, updateInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
+        ref={setInput}
         amount={amount}
         currency={inputCurrency}
         disabled={disabled}
