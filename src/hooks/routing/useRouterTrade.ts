@@ -60,7 +60,7 @@ export function useRouterTrade(
   }, [fulfilledTimeStamp, isFetching, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const result = useMemo(() => (typeof data === 'object' ? data : undefined), [data])
+  const result = typeof data === 'object' ? data : undefined
   const trade = useMemo(() => {
     const [currencyIn, currencyOut] = isExactInput(tradeType)
       ? [amountSpecified?.currency, otherCurrency]
