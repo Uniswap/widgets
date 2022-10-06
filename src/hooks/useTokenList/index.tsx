@@ -11,7 +11,8 @@ import { validateTokens } from './validateTokenList'
 
 export { useQueryTokens } from './useQueryTokens'
 
-export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+export const UNISWAP_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+export const EMPTY_TOKEN_LIST = []
 
 const MISSING_PROVIDER = Symbol()
 const ChainTokenMapContext = createContext<ChainTokenMap | undefined | typeof MISSING_PROVIDER>(MISSING_PROVIDER)
@@ -54,7 +55,7 @@ export function useTokenMap(): TokenMap {
 }
 
 export function TokenListProvider({
-  list = DEFAULT_TOKEN_LIST,
+  list = UNISWAP_TOKEN_LIST,
   children,
 }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
