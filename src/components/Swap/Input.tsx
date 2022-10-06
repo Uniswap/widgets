@@ -1,5 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
 import {
   useIsSwapFieldIndependent,
@@ -9,11 +11,12 @@ import {
   useSwapInfo,
 } from 'hooks/swap'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import invariant from 'tiny-invariant'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -80,14 +83,13 @@ export default function Input({ disabled, focused }: InputProps) {
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 
+  const amount = useFormattedFieldAmount({
+    currencyAmount: tradeCurrencyAmount,
+    fieldAmount: inputAmount,
+  })
+
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
-
-  // account for gas needed if using max on native token
-  const max = useMemo(() => {
-    const maxAmount = maxAmountSpend(balance)
-    return maxAmount?.greaterThan(0) ? maxAmount.toExact() : undefined
-  }, [balance])
 
   const insufficientBalance = useMemo(
     () =>
@@ -96,10 +98,18 @@ export default function Input({ disabled, focused }: InputProps) {
     [balance, inputCurrencyAmount, tradeCurrencyAmount]
   )
 
-  const amount = useFormattedFieldAmount({
-    currencyAmount: tradeCurrencyAmount,
-    fieldAmount: inputAmount,
-  })
+  const max = useMemo(() => {
+    // account for gas needed if using max on native token
+    const max = maxAmountSpend(balance)
+    if (!max || !balance) return
+    if (max.equalTo(0) || balance.lessThan(max)) return
+    if (inputCurrencyAmount && max.equalTo(inputCurrencyAmount)) return
+    return max.toExact()
+  }, [balance, inputCurrencyAmount])
+  const onClickMax = useCallback(() => {
+    invariant(max)
+    updateInputAmount(max)
+  }, [max, updateInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
@@ -108,7 +118,6 @@ export default function Input({ disabled, focused }: InputProps) {
         currency={inputCurrency}
         disabled={disabled}
         field={Field.INPUT}
-        max={max}
         onChangeInput={updateInputAmount}
         onChangeCurrency={updateInputCurrency}
         loading={isLoading}
@@ -117,9 +126,18 @@ export default function Input({ disabled, focused }: InputProps) {
           <Row>
             <USDC isLoading={isRouteLoading}>{usdc ? `$${formatCurrencyAmount(usdc, 6, 'en', 2)}` : ''}</USDC>
             {balance && (
-              <Balance color={insufficientBalance ? 'error' : focused ? 'secondary' : 'hint'}>
-                Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
-              </Balance>
+              <Row gap={0.5}>
+                <Balance color={insufficientBalance ? 'error' : focused ? 'secondary' : 'hint'}>
+                  <Trans>Balance:</Trans> <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                </Balance>
+                {max && (
+                  <TextButton onClick={onClickMax}>
+                    <ThemedText.ButtonSmall>
+                      <Trans>Max</Trans>
+                    </ThemedText.ButtonSmall>
+                  </TextButton>
+                )}
+              </Row>
             )}
           </Row>
         </ThemedText.Body2>

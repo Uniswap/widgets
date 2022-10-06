@@ -22,15 +22,13 @@ const StyledTokenButton = styled(Button)`
   }
 `
 
-const TokenButtonRow = styled(Row)<{ empty: boolean; collapsed: boolean }>`
+const TokenButtonRow = styled(Row)<{ empty: boolean }>`
   float: right;
   height: 1.2em;
-  // max-width must have an absolute value in order to transition.
-  max-width: ${({ collapsed }) => (collapsed ? '1.2em' : '12em')};
+  max-width: 12em;
+  overflow: hidden;
   padding-left: ${({ empty }) => empty && 0.5}em;
   width: fit-content;
-  overflow: hidden;
-  transition: max-width 0.25s linear;
 
   img {
     min-width: 1.2em;
@@ -39,12 +37,11 @@ const TokenButtonRow = styled(Row)<{ empty: boolean; collapsed: boolean }>`
 
 interface TokenButtonProps {
   value?: Currency
-  collapsed: boolean
   disabled?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, disabled, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = value ? 'interactive' : 'accent'
   const contentColor = buttonBackgroundColor === 'accent' ? 'onAccent' : 'currentColor'
 
@@ -78,7 +75,6 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
         <TokenButtonRow
           gap={0.4}
           empty={!value}
-          collapsed={collapsed}
           // ref is used to set an absolute width, so it must be reset for each value passed.
           // To force this, value?.symbol is passed as a key.
           ref={setRow}
