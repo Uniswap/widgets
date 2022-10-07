@@ -74,7 +74,7 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
             {error.message ? `: ${error.message}` : ''}
           </ThemedText.Code>
         </Expando>
-        <ActionButton color={'interactive'} onClick={onClick}>
+        <ActionButton color="interactive" onClick={onClick}>
           {action}
         </ActionButton>
       </Column>
