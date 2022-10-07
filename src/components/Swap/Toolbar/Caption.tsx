@@ -10,7 +10,6 @@ import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatPercentage } from 'utils/formatPercentage'
 
 import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
