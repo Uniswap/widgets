@@ -12,7 +12,6 @@ import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatPercentage } from 'utils/formatPercentage'
 import { computeRealizedLPFeeAmount } from 'utils/prices'
 import { isExactInput } from 'utils/tradeType'
 
@@ -66,7 +65,7 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
     }
 
     if (impact) {
-      rows.push([t`Price impact`, formatPercentage(impact.percent), impact.warning])
+      rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
     if (lpFeeAmount) {
