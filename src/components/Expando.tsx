@@ -3,7 +3,7 @@ import Column, { ColumnProps } from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import useScrollbar from 'hooks/useScrollbar'
-import { Expando as ExpandoIcon } from 'icons'
+import { Expando as ExpandoIcon, Info as InfoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -13,7 +13,17 @@ const HeaderColumn = styled(Column)`
 `
 
 const TitleRow = styled(Row)`
+  color: ${({ theme }) => theme.secondary};
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+`
+
+const TitleHeader = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `
 
 const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
@@ -55,7 +65,10 @@ export default function Expando({ title, open, onExpand, height, children, ...re
       <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
         <Rule />
         <TitleRow>
-          {title}
+          <TitleHeader>
+            <InfoIcon style={{ marginRight: '5px' }} color="secondary" />
+            {title}
+          </TitleHeader>
           <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
         </TitleRow>
         {open && <Rule />}
