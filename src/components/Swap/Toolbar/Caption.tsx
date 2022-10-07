@@ -113,8 +113,7 @@ export function Trade({
           {impact?.warning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {formatPercentage(impact.percent)} less than the input amount due to
-                impact
+                The output amount is estimated at {impact.toString()} less than the input amount due to impact
               </ThemedText.Caption>
               <Rule />
             </>

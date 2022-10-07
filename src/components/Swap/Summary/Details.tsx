@@ -66,7 +66,7 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
     }
 
     if (impact) {
-      rows.push([t`Price impact`, formatPercentage(impact.percent), impact.warning])
+      rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
     if (lpFeeAmount) {
