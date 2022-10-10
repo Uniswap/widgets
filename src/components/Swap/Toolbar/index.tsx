@@ -38,7 +38,7 @@ export default memo(function Toolbar() {
       case ChainError.MISMATCHED_TOKEN_CHAINS:
         return <Caption.Error />
       case ChainError.MISMATCHED_CHAINS:
-        return <Caption.Empty />
+        return
       default:
     }
 
