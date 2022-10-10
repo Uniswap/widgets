@@ -45,7 +45,6 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 
 export interface InputProps {
   disabled: boolean
-  focused: boolean
 }
 
 interface UseFormattedFieldAmountArguments {
@@ -65,7 +64,7 @@ export function useFormattedFieldAmount({ currencyAmount, fieldAmount }: UseForm
   }, [currencyAmount, fieldAmount])
 }
 
-export default function Input({ disabled, focused }: InputProps) {
+export default function Input({ disabled }: InputProps) {
   const { i18n } = useLingui()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
@@ -130,7 +129,7 @@ export default function Input({ disabled, focused }: InputProps) {
             <USDC isLoading={isRouteLoading}>{usdc ? `$${formatCurrencyAmount(usdc, 6, 'en', 2)}` : ''}</USDC>
             {balance && (
               <Row gap={0.5}>
-                <Balance color={insufficientBalance ? 'error' : focused ? 'secondary' : 'hint'}>
+                <Balance color={insufficientBalance ? 'error' : 'secondary'}>
                   <Trans>Balance:</Trans> <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </Balance>
                 {max && (

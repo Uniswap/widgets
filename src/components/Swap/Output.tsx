@@ -41,7 +41,7 @@ const Footer = styled(Row)`
   height: 1em;
 `
 
-export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
+export default function Output({ disabled, children }: PropsWithChildren<InputProps>) {
   const { i18n } = useLingui()
 
   const disableBranding = useBrandingSetting()
@@ -95,7 +95,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
                 {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
-                <Balance color={focused ? 'secondary' : 'hint'}>
+                <Balance color="secondary">
                   Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </Balance>
               )}

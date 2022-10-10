@@ -9,7 +9,6 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
@@ -60,8 +59,6 @@ export default function Swap(props: SwapProps) {
   const onSupportedNetwork = useOnSupportedNetwork()
   const isDisabled = !(isActive && onSupportedNetwork)
 
-  const focused = useHasFocus(wrapper)
-
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
@@ -71,9 +68,9 @@ export default function Swap(props: SwapProps) {
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
           <SwapInfoProvider routerUrl={props.routerUrl}>
-            <Input disabled={isDisabled} focused={focused} />
+            <Input disabled={isDisabled} />
             <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused}>
+            <Output disabled={isDisabled}>
               <Toolbar />
               <SwapActionButton disabled={isDisabled} />
             </Output>
