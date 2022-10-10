@@ -51,13 +51,22 @@ const InnerColumn = styled(Column)<{ height: number }>`
 interface ExpandoProps extends ColumnProps {
   title: ReactNode
   open: boolean
+  hideIcon?: boolean
   onExpand: () => void
   // The absolute height of the expanded container, in em.
   height: number
 }
 
 /** A scrollable Expando with an absolute height. */
-export default function Expando({ title, open, onExpand, height, children, ...rest }: PropsWithChildren<ExpandoProps>) {
+export default function Expando({
+  hideIcon,
+  title,
+  open,
+  onExpand,
+  height,
+  children,
+  ...rest
+}: PropsWithChildren<ExpandoProps>) {
   const [scrollingEl, setScrollingEl] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(scrollingEl)
   return (
@@ -66,7 +75,7 @@ export default function Expando({ title, open, onExpand, height, children, ...re
         <Rule />
         <TitleRow>
           <TitleHeader>
-            <InfoIcon style={{ marginRight: '5px' }} color="secondary" />
+            {hideIcon === true ? null : <InfoIcon style={{ marginRight: '5px' }} color="secondary" />}
             {title}
           </TitleHeader>
           <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />

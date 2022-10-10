@@ -43,7 +43,7 @@ const Body = styled(Column)`
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
   return (
     <Row gap={0.5}>
-      {impact?.warning || slippage.warning ? (
+      {Boolean(impact?.warning || slippage.warning) ? (
         <AlertTriangle color={impact?.warning || slippage.warning} />
       ) : (
         <Info color="secondary" />
@@ -182,6 +182,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           <Price trade={trade} />
         </Heading>
         <Expando
+          hideIcon
           title={<Subhead impact={impact} slippage={slippage} />}
           open={open}
           onExpand={onExpand}
