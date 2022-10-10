@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController, SwapSettingsController } from 'hooks/swap/useSyncController'
@@ -11,7 +12,7 @@ import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefa
 import { usePendingTransactions } from 'hooks/transactions'
 import useHasFocus from 'hooks/useHasFocus'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
+import useSyncBrandingSetting, { BrandingSettings, useBrandingSetting } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
@@ -26,7 +27,6 @@ import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
 import SwapActionButton from './SwapActionButton'
-import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
 // SwapProps also currently includes props needed for wallet connection,
@@ -61,6 +61,7 @@ export default function Swap(props: SwapProps) {
   const isDisabled = !(isActive && onSupportedNetwork)
 
   const focused = useHasFocus(wrapper)
+  const disableBranding = useBrandingSetting()
 
   return (
     <>
@@ -73,10 +74,9 @@ export default function Swap(props: SwapProps) {
           <SwapInfoProvider routerUrl={props.routerUrl}>
             <Input disabled={isDisabled} focused={focused} />
             <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused}>
-              <Toolbar />
-              <SwapActionButton disabled={isDisabled} />
-            </Output>
+            <Output disabled={isDisabled} focused={focused} />
+            <SwapActionButton disabled={isDisabled} />
+            {!disableBranding && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
       </div>

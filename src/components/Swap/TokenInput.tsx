@@ -48,7 +48,7 @@ interface TokenInputProps {
 }
 
 export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenInputProps>>(function TokenInput(
-  { amount, currency, disabled, field, onChangeInput, onChangeCurrency, loading, children },
+  { amount, currency, disabled, field, onChangeInput, onChangeCurrency, loading, children, ...rest },
   ref
 ) {
   const input = useRef<HTMLInputElement>(null)
@@ -71,7 +71,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
   useImperativeHandle(ref, () => ({ focus }), [focus])
 
   return (
-    <Column gap={0.25}>
+    <Column gap={0.25} {...rest}>
       <TokenInputRow gap={0.5}>
         <ThemedText.H2>
           <ValueInput

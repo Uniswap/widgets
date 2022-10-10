@@ -10,6 +10,7 @@ import ExternalLink from './ExternalLink'
 const UniswapA = styled(ExternalLink)`
   color: ${({ theme }) => theme.secondary};
   cursor: pointer;
+  margin-top: 12px;
   text-decoration: none;
 
   ${Logo} {

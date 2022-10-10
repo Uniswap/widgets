@@ -38,7 +38,7 @@ export const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-smooth: always;
   font-variant: none;
   min-width: 300px;
-  padding: 0.25em;
+  padding: 8px;
   position: relative;
   user-select: none;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};

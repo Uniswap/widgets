@@ -13,7 +13,8 @@ import Row from '../../Row'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
-  padding: 0.5em 0;
+  border-top: 1px solid ${({ theme }) => theme.container};
+  padding: 14px 16px 0.5em 16px;
   ${largeIconCss}
 `
 

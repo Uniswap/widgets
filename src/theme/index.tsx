@@ -16,11 +16,11 @@ const white = 'hsl(0, 0%, 100%)'
 const black = 'hsl(0, 0%, 0%)'
 
 const brandLight = 'hsl(331.3, 100%, 50%)'
-const brandDark = 'hsl(215, 79%, 51.4%)'
+const brandDark = 'hsl(221, 96%, 64%)'
 export const brand = brandLight
 
 const stateColors = {
-  active: 'hsl(215, 79%, 51.4%)',
+  active: 'hsl(221, 96%, 64%)',
   success: 'hsl(145, 63.4%, 41.8%)',
   warning: 'hsl(43, 89.9%, 53.5%)',
   error: 'hsl(0, 98%, 62.2%)',
@@ -51,8 +51,8 @@ export const lightTheme: Colors = {
 export const darkTheme: Colors = {
   // surface
   accent: brandDark,
-  container: 'hsl(220, 10.7%, 11%)',
-  module: 'hsl(222, 10.2%, 19.2%)',
+  container: 'hsl(225, 30%, 8%)',
+  module: 'hsl(222, 37%, 12%)',
   interactive: 'hsl(224, 10%, 28%)',
   outline: 'hsl(227, 10%, 37.5%)',
   dialog: black,
@@ -60,7 +60,7 @@ export const darkTheme: Colors = {
   // text
   onAccent: white,
   primary: white,
-  secondary: 'hsl(224, 8.7%, 57.1%)',
+  secondary: 'hsl(227, 21%, 67%)',
   hint: 'hsl(225, 10%, 47.1%)',
   onInteractive: white,
 
