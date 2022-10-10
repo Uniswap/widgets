@@ -15,8 +15,9 @@ import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 import { useIsWrap } from './useWrapCallback'
 
-enum ChainError {
-  UNCONNECTED_CHAIN = 1, // 1-indexed so that ChainError can be used as a boolean
+export enum ChainError {
+  UNCONNECTED_CHAIN,
+  ACTIVATING_CHAIN,
   UNSUPPORTED_CHAIN,
   MISMATCHED_TOKEN_CHAINS,
   MISMATCHED_CHAINS,
@@ -44,13 +45,13 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const { account, chainId, isActive } = useWeb3React()
+  const { account, chainId, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
   const error = useMemo(() => {
-    if (!isActive) return ChainError.UNCONNECTED_CHAIN
+    if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
 
     const chainIn = currencyIn?.chainId
@@ -61,7 +62,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     if (chainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
 
     return
-  }, [chainId, currencyIn?.chainId, currencyOut?.chainId, isActive, isSupported])
+  }, [chainId, currencyIn?.chainId, currencyOut?.chainId, isActivating, isActive, isSupported])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),

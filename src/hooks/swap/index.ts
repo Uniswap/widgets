@@ -6,7 +6,7 @@ import { pickAtom } from 'state/atoms'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { invertTradeType, toTradeType } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
-export { default as useSwapInfo } from './useSwapInfo'
+export { ChainError, default as useSwapInfo } from './useSwapInfo'
 
 function otherField(field: Field) {
   switch (field) {
