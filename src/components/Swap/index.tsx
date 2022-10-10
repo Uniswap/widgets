@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Provider as Eip1193Provider } from '@web3-react/types'
+import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController, SwapSettingsController } from 'hooks/swap/useSyncController'
@@ -8,7 +9,7 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
+import useSyncBrandingSetting, { BrandingSettings, useBrandingSetting } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
@@ -53,6 +54,7 @@ export default function Swap(props: SwapProps) {
   const pendingTxs = usePendingTransactions()
   const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
+  const disableBranding = useBrandingSetting()
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
@@ -64,10 +66,10 @@ export default function Swap(props: SwapProps) {
           <SwapInfoProvider routerUrl={props.routerUrl}>
             <Input />
             <ReverseButton />
-            <Output>
-              <Toolbar />
-              <SwapActionButton />
-            </Output>
+            <Output />
+            <Toolbar />
+            <SwapActionButton />
+            {!disableBranding && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
       </div>

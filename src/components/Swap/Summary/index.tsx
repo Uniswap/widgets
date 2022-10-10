@@ -41,13 +41,10 @@ const Body = styled(Column)`
 `
 
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
+  const showWarning = Boolean(impact?.warning || slippage.warning)
   return (
     <Row gap={0.5}>
-      {impact?.warning || slippage.warning ? (
-        <AlertTriangle color={impact?.warning || slippage.warning} />
-      ) : (
-        <Info color="secondary" />
-      )}
+      {showWarning ? <AlertTriangle color={impact?.warning || slippage.warning} /> : <Info color="secondary" />}
       <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
         {impact?.warning ? (
           <Trans>High price impact</Trans>

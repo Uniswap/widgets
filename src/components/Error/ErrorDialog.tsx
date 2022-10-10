@@ -3,6 +3,7 @@ import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { AlertTriangle, Icon, LargeIcon } from 'icons'
+import { Info as InfoIcon } from 'icons'
 import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
@@ -68,7 +69,17 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
         </ErrorHeader>
       </StatusHeader>
       <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
-        <Expando title={<Trans>Error details</Trans>} open={open} onExpand={onExpand} height={7.5}>
+        <Expando
+          title={
+            <>
+              <InfoIcon style={{ marginRight: '5px' }} color="secondary" />
+              <Trans>Error details</Trans>
+            </>
+          }
+          open={open}
+          onExpand={onExpand}
+          height={7.5}
+        >
           <ThemedText.Body2 userSelect>
             {error.name}
             {error.message ? `: ${error.message}` : ''}

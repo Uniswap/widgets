@@ -3,7 +3,7 @@ import Column, { ColumnProps } from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import useScrollbar from 'hooks/useScrollbar'
-import { Expando as ExpandoIcon, Info as InfoIcon } from 'icons'
+import { Expando as ExpandoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -65,10 +65,7 @@ export default function Expando({ title, open, onExpand, height, children, ...re
       <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
         <Rule />
         <TitleRow>
-          <TitleHeader>
-            <InfoIcon style={{ marginRight: '5px' }} color="secondary" />
-            {title}
-          </TitleHeader>
+          <TitleHeader>{title}</TitleHeader>
           <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
         </TitleRow>
         {open && <Rule />}

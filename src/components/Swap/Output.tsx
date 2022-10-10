@@ -1,10 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import BrandedFooter from 'components/BrandedFooter'
-import Rule from 'components/Rule'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
-import { useBrandingSetting } from 'hooks/useSyncBrandingSetting'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -23,9 +20,13 @@ export const colorAtom = atom<string | undefined>(undefined)
 
 const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  padding: 0.75em;
-  padding-bottom: 0.5em;
+  border-bottom: 1px solid ${({ theme }) => theme.container};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-top-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  margin-bottom: 0;
+  padding: 12px 0 8px 0;
   position: relative;
 
   // Set transitions to reduce color flashes when switching color/token.
@@ -36,15 +37,12 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
     transition: ${({ hasColor }) => (hasColor === null ? 'color 0.25s ease-in, stroke 0.25s ease-in' : undefined)};
   }
 `
-
-const Footer = styled(Row)`
-  height: 1em;
+const MarginWrapper = styled.div`
+  margin: 8px 16px 0;
 `
 
 export default function Output({ children }: { children?: ReactNode }) {
   const { i18n } = useLingui()
-
-  const disableBranding = useBrandingSetting()
 
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
@@ -76,37 +74,36 @@ export default function Output({ children }: { children?: ReactNode }) {
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
-        <Row>
-          <ThemedText.Subhead1 color="secondary">
-            <Trans>For</Trans>
-          </ThemedText.Subhead1>
-        </Row>
-        <TokenInput
-          amount={amount}
-          currency={swapOutputCurrency}
-          disabled={isDisabled}
-          field={Field.OUTPUT}
-          onChangeInput={updateSwapOutputAmount}
-          onChangeCurrency={updateSwapOutputCurrency}
-          loading={isLoading}
-        >
-          <ThemedText.Body2 color="secondary" userSelect>
-            <Row>
-              <USDC gap={0.5} isLoading={isRouteLoading}>
-                {outputUSDC && `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)} `}
-                {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
-              </USDC>
-              {balance && (
-                <Balance color="secondary">
-                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
-                </Balance>
-              )}
-            </Row>
-          </ThemedText.Body2>
-        </TokenInput>
-        <Rule />
-        {children}
-        {disableBranding ? <Footer /> : <BrandedFooter />}
+        <MarginWrapper>
+          <Row>
+            <ThemedText.Subhead1 color="secondary">
+              <Trans>For</Trans>
+            </ThemedText.Subhead1>
+          </Row>
+          <TokenInput
+            amount={amount}
+            currency={swapOutputCurrency}
+            disabled={isDisabled}
+            field={Field.OUTPUT}
+            onChangeInput={updateSwapOutputAmount}
+            onChangeCurrency={updateSwapOutputCurrency}
+            loading={isLoading}
+          >
+            <ThemedText.Body2 color="secondary" userSelect>
+              <Row>
+                <USDC gap={0.5} isLoading={isRouteLoading}>
+                  {outputUSDC && `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)} `}
+                  {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
+                </USDC>
+                {balance && (
+                  <Balance color="secondary">
+                    Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                  </Balance>
+                )}
+              </Row>
+            </ThemedText.Body2>
+          </TokenInput>
+        </MarginWrapper>
       </OutputColumn>
     </DynamicThemeProvider>
   )
