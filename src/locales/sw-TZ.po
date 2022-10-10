@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -159,10 +159,6 @@ msgstr "Usawa wa kutosha {0}"
 msgid "Invalid recipient"
 msgstr "Mpokeaji si sahihi"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Ada ya mtoa huduma ya ukwasi"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Upeo"
@@ -182,6 +178,10 @@ msgstr "Kiwango cha chini kimepokelewa"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Kukosa utegemezi"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Ada ya mtandao"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

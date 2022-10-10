@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -159,10 +159,6 @@ msgstr "{0} 餘額不足"
 msgid "Invalid recipient"
 msgstr "無效的接收方"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "流動性提供者費用"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "最大值"
@@ -182,6 +178,10 @@ msgstr "收到的最低數額"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "缺少依賴套件"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "網絡費用"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

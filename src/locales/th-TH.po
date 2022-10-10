@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -159,10 +159,6 @@ msgstr "ไม่เพียงพอ {0} ยอดคงเหลือ"
 msgid "Invalid recipient"
 msgstr "ผู้รับไม่ถูกต้อง"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "ค่าธรรมเนียมผู้ให้บริการสภาพคล่อง"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "แม็กซ์"
@@ -182,6 +178,10 @@ msgstr "รับขั้นต่ำ"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "ไม่มีการพึ่งพา"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "ค่าธรรมเนียมเครือข่าย"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

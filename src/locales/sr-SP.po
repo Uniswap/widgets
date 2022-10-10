@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -159,10 +159,6 @@ msgstr "Недовољно {0} на стању"
 msgid "Invalid recipient"
 msgstr "Неважећи прималац"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Накнада добављача ликвидности"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Макс"
@@ -182,6 +178,10 @@ msgstr "Минимално примљено"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Недостају зависности"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Мрежна накнада"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

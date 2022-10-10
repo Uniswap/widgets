@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -159,10 +159,6 @@ msgstr "부족한 {0} 잔액"
 msgid "Invalid recipient"
 msgstr "잘못된 수령인"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "유동성 공급자 수수료"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "최대"
@@ -182,6 +178,10 @@ msgstr "최소 수령됨"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "누락된 종속성"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "네트워크 요금"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

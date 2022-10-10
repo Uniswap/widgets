@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -159,10 +159,6 @@ msgstr "Elégtelen {0} egyenleg"
 msgid "Invalid recipient"
 msgstr "Érvénytelen címzett"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likviditási szolgáltató díja"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Max"
@@ -182,6 +178,10 @@ msgstr "Minimum beérkezett"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Hiányzó függőségek"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Hálózati díj"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

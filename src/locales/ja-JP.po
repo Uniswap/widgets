@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -159,10 +159,6 @@ msgstr "{0} の残高が足りません"
 msgid "Invalid recipient"
 msgstr "受け取りアドレスが無効です"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "流動性プロバイダー手数料"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "最大"
@@ -182,6 +178,10 @@ msgstr "最小購入数"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "依存関係がありません"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "ネットワーク料金"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -159,10 +159,6 @@ msgstr "Saldo {0} insuficiente"
 msgid "Invalid recipient"
 msgstr "Receptor no válido"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Tarifa del proveedor de liquidez"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Máx"
@@ -182,6 +178,10 @@ msgstr "Mínimo recibido"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dependencias faltantes"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Tarifa de red"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

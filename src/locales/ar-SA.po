@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -159,10 +159,6 @@ msgstr "رصيد {0} غير كاف"
 msgid "Invalid recipient"
 msgstr "مستلم غير صالح"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "رسوم مزود السيولة"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "الحد الأقصى"
@@ -182,6 +178,10 @@ msgstr "تلقى الحد الأدنى"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "التبعيات المفقودة"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "رسوم الشبكة"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."

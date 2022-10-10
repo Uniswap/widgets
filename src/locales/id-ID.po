@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-10 21:04\n"
+"PO-Revision-Date: 2022-10-10 22:05\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -159,10 +159,6 @@ msgstr "Saldo {0} tidak cukup"
 msgid "Invalid recipient"
 msgstr "Penerima tidak valid"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Biaya penyedia likuiditas"
-
 #: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Max"
@@ -182,6 +178,10 @@ msgstr "Minimum diterima"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Ketergantungan yang hilang"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Biaya jaringan"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
