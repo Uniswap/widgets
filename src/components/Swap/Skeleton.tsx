@@ -76,7 +76,7 @@ export function SwapWidgetSkeleton({ theme, width }: SwapWidgetSkeletonProps) {
               <FloatingDetails />
             </InputColumn>
             <div>
-              <ReverseButton disabled={true} />
+              <ReverseButton />
               <OutputColumn>
                 <FloatingDetails isModule />
                 <FloatingButton />

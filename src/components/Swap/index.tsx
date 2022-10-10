@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
@@ -9,7 +8,6 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
@@ -49,30 +47,26 @@ export default function Swap(props: SwapProps) {
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
   useSyncBrandingSetting(props as BrandingSettings)
 
-  const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
   const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
-  const onSupportedNetwork = useOnSupportedNetwork()
-  const isDisabled = !(isActive && onSupportedNetwork)
-
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
         <Wallet disabled={props.hideConnectionUI} />
-        <Settings disabled={isDisabled} />
+        <Settings />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
           <SwapInfoProvider routerUrl={props.routerUrl}>
-            <Input disabled={isDisabled} />
-            <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled}>
+            <Input />
+            <ReverseButton />
+            <Output>
               <Toolbar />
-              <SwapActionButton disabled={isDisabled} />
+              <SwapActionButton />
             </Output>
           </SwapInfoProvider>
         </BoundaryProvider>
