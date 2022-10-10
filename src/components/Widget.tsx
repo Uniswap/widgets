@@ -33,7 +33,6 @@ export const WidgetWrapper = styled.div<{ width?: number | string }>`
   color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
