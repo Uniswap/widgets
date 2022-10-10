@@ -59,7 +59,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     if (chainIn && chainOut && chainIn !== chainOut) return ChainError.MISMATCHED_TOKEN_CHAINS
 
     const tokenChainId = chainIn || chainOut
-    if (chainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
+    if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
 
     return
   }, [chainId, currencyIn?.chainId, currencyOut?.chainId, isActivating, isActive, isSupported])
