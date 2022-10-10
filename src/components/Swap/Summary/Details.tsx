@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
@@ -12,7 +13,6 @@ import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { computeRealizedLPFeeAmount } from 'utils/prices'
 import { isExactInput } from 'utils/tradeType'
 
 const Value = styled.span<{ color?: Color }>`
@@ -40,16 +40,16 @@ function Detail({ label, value, color }: DetailProps) {
 interface DetailsProps {
   trade: InterfaceTrade
   slippage: Slippage
+  gasUseEstimateUSD?: CurrencyAmount<Token>
   impact?: PriceImpact
 }
 
-export default function Details({ trade, slippage, impact }: DetailsProps) {
+export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
-  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
   const { i18n } = useLingui()
 
   const details = useMemo(() => {
@@ -68,9 +68,8 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
       rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
-    if (lpFeeAmount) {
-      const parsedLpFee = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
-      rows.push([t`Liquidity provider fee`, `${parsedLpFee} ${inputCurrency.symbol || currencyId(inputCurrency)}`])
+    if (gasUseEstimateUSD) {
+      rows.push([t`Network fee`, `~$${gasUseEstimateUSD.toFixed(2)}`])
     }
 
     if (isExactInput(trade.tradeType)) {
@@ -86,14 +85,15 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
     return rows
   }, [
     feeOptions,
+    gasUseEstimateUSD,
     i18n.locale,
     impact,
-    inputCurrency,
+    inputCurrency.symbol,
     integrator,
-    lpFeeAmount,
     outputAmount,
     outputCurrency,
-    slippage,
+    slippage.allowed,
+    slippage.warning,
     trade,
   ])
 
