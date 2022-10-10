@@ -80,10 +80,10 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           onExpand={onExpand}
           height={7.5}
         >
-          <ThemedText.Code userSelect>
+          <ThemedText.Body2 userSelect>
             {error.name}
             {error.message ? `: ${error.message}` : ''}
-          </ThemedText.Code>
+          </ThemedText.Body2>
         </Expando>
         <ActionButton color="interactive" onClick={onClick}>
           {action}

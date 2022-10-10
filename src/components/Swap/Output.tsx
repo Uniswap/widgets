@@ -4,6 +4,7 @@ import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo 
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { ReactNode } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -12,7 +13,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
 import Row from '../Row'
-import { Balance, InputProps, USDC, useFormattedFieldAmount } from './Input'
+import { Balance, USDC, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -40,11 +41,12 @@ const MarginWrapper = styled.div`
   margin: 8px 16px 0;
 `
 
-export default function Output({ disabled, focused }: InputProps) {
+export default function Output({ children }: { children?: ReactNode }) {
   const { i18n } = useLingui()
 
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
+    error,
     trade: { state: tradeState },
     impact,
   } = useSwapInfo()
@@ -52,7 +54,8 @@ export default function Output({ disabled, focused }: InputProps) {
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
-  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isDisabled = error !== undefined
+  const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
   const isLoading = isRouteLoading && isDependentField
 
@@ -80,7 +83,7 @@ export default function Output({ disabled, focused }: InputProps) {
           <TokenInput
             amount={amount}
             currency={swapOutputCurrency}
-            disabled={disabled}
+            disabled={isDisabled}
             field={Field.OUTPUT}
             onChangeInput={updateSwapOutputAmount}
             onChangeCurrency={updateSwapOutputCurrency}
@@ -93,7 +96,7 @@ export default function Output({ disabled, focused }: InputProps) {
                   {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
                 </USDC>
                 {balance && (
-                  <Balance color={focused ? 'secondary' : 'hint'}>
+                  <Balance color="secondary">
                     Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                   </Balance>
                 )}

@@ -34,7 +34,7 @@ export default function SwapButton({
   const {
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
-    trade: { trade },
+    trade: { trade, gasUseEstimateUSD },
     slippage,
     impact,
   } = useSwapInfo()
@@ -99,6 +99,7 @@ export default function SwapButton({
           <SummaryDialog
             trade={trade}
             slippage={slippage}
+            gasUseEstimateUSD={gasUseEstimateUSD}
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
             impact={impact}
