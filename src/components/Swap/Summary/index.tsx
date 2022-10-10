@@ -182,7 +182,6 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           <Price trade={trade} />
         </Heading>
         <Expando
-          hideIcon
           title={<Subhead impact={impact} slippage={slippage} />}
           open={open}
           onExpand={onExpand}
