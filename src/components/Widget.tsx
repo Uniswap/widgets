@@ -37,7 +37,6 @@ export const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
-  height: 360px;
   min-width: 300px;
   padding: 0.25em;
   position: relative;
