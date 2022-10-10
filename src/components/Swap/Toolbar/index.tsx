@@ -13,8 +13,10 @@ import Row from '../../Row'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
-  border-top: 1px solid ${({ theme }) => theme.container};
-  padding: 14px 16px 0.5em 16px;
+  background-color: ${({ theme }) => theme.module};
+  border-bottom-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-bottom-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  padding: 14px 16px;
   ${largeIconCss}
 `
 

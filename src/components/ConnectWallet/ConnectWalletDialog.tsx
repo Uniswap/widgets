@@ -17,14 +17,9 @@ const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-
 const Body = styled(Column)`
   display: grid;
   gap: 12px;
+  grid-template-columns: repeat(2, calc(50% - 0.5em / 2));
   grid-template-rows: 2fr 1fr;
   height: calc(100% - 2.5em);
-`
-
-const SecondaryOptionsRow = styled(Row)`
-  align-self: end;
-  grid-template-columns: repeat(2, calc(50% - 0.5em / 2));
-  height: fit-content;
 `
 
 const StyledButtonContents = styled(Column)`
@@ -34,6 +29,7 @@ const StyledButtonContents = styled(Column)`
 
 const StyledMainButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  grid-column: 1 / 3;
   height: 100%;
   padding: 22px;
 `
@@ -150,14 +146,12 @@ export function ConnectWalletDialog() {
           walletConnectQR={connectors.walletConnectQR}
           onClick={() => onActivate(connectors.walletConnect)}
         />
-        <SecondaryOptionsRow>
-          <MetaMaskButton
-            walletName="MetaMask"
-            logoSrc={METAMASK_ICON_URL}
-            onClick={() => onActivate(connectors.metaMask)}
-          />
-          <NoWalletButton />
-        </SecondaryOptionsRow>
+        <MetaMaskButton
+          walletName="MetaMask"
+          logoSrc={METAMASK_ICON_URL}
+          onClick={() => onActivate(connectors.metaMask)}
+        />
+        <NoWalletButton />
       </Body>
     </>
   )

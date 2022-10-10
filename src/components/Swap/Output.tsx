@@ -14,13 +14,17 @@ import Column from '../Column'
 import Row from '../Row'
 import { Balance, InputProps, USDC, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
-import Toolbar from './Toolbar'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
 const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-bottom: 1px solid ${({ theme }) => theme.container};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-top-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  margin-bottom: 0;
   padding: 12px 0 8px 0;
   position: relative;
 
@@ -97,7 +101,6 @@ export default function Output({ disabled, focused }: InputProps) {
             </ThemedText.Body2>
           </TokenInput>
         </MarginWrapper>
-        <Toolbar />
       </OutputColumn>
     </DynamicThemeProvider>
   )

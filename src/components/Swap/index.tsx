@@ -27,6 +27,7 @@ import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
 import SwapActionButton from './SwapActionButton'
+import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
 // SwapProps also currently includes props needed for wallet connection,
@@ -75,6 +76,7 @@ export default function Swap(props: SwapProps) {
             <Input disabled={isDisabled} focused={focused} />
             <ReverseButton disabled={isDisabled} />
             <Output disabled={isDisabled} focused={focused} />
+            <Toolbar />
             <SwapActionButton disabled={isDisabled} />
             {!disableBranding && <BrandedFooter />}
           </SwapInfoProvider>

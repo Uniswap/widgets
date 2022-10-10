@@ -10,7 +10,6 @@ import ExternalLink from './ExternalLink'
 const UniswapA = styled(ExternalLink)`
   color: ${({ theme }) => theme.secondary};
   cursor: pointer;
-  margin-top: 12px;
   text-decoration: none;
 
   ${Logo} {
@@ -26,10 +25,13 @@ const UniswapA = styled(ExternalLink)`
     transform: rotate(-5deg);
   }
 `
+const Wrapper = styled(Row)`
+  margin-top: 12px;
+`
 
 export default memo(function BrandedFooter() {
   return (
-    <Row justify="center">
+    <Wrapper justify="center">
       <UniswapA href={`https://uniswap.org/`}>
         <Row gap={0.25}>
           <Logo />
@@ -38,6 +40,6 @@ export default memo(function BrandedFooter() {
           </ThemedText.Caption>
         </Row>
       </UniswapA>
-    </Row>
+    </Wrapper>
   )
 })
