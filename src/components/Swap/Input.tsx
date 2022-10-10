@@ -43,10 +43,6 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   }
 `
 
-export interface InputProps {
-  disabled: boolean
-}
-
 interface UseFormattedFieldAmountArguments {
   currencyAmount?: CurrencyAmount<Currency>
   fieldAmount?: string
@@ -64,10 +60,11 @@ export function useFormattedFieldAmount({ currencyAmount, fieldAmount }: UseForm
   }, [currencyAmount, fieldAmount])
 }
 
-export default function Input({ disabled }: InputProps) {
+export default function Input() {
   const { i18n } = useLingui()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
+    error,
     trade: { state: tradeState },
   } = useSwapInfo()
 
@@ -79,7 +76,8 @@ export default function Input({ disabled }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
 
-  const isRouteLoading = disabled || tradeState === TradeState.LOADING
+  const isDisabled = error !== undefined
+  const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 
@@ -118,7 +116,7 @@ export default function Input({ disabled }: InputProps) {
         ref={setInput}
         amount={amount}
         currency={inputCurrency}
-        disabled={disabled}
+        disabled={isDisabled}
         field={Field.INPUT}
         onChangeInput={updateInputAmount}
         onChangeCurrency={updateInputCurrency}
