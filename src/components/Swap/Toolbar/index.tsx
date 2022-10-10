@@ -29,7 +29,7 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const caption = useMemo(() => {
-    if (state === TradeState.SYNCING || state === TradeState.LOADING) {
+    if (state === TradeState.LOADING) {
       return <Caption.LoadingTrade />
     }
 
