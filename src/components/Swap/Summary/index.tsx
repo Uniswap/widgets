@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
@@ -64,23 +63,22 @@ interface EstimateProps {
 }
 
 function Estimate({ trade, slippage }: EstimateProps) {
-  const { i18n } = useLingui()
   const text = useMemo(
     () =>
       isExactInput(trade.tradeType) ? (
         <Trans>
           Output is estimated. You will receive at least{' '}
-          {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)}{' '}
+          {formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })}{' '}
           {trade.outputAmount.currency.symbol} or the transaction will revert.
         </Trans>
       ) : (
         <Trans>
           Output is estimated. You will send at most{' '}
-          {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
+          {formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })}{' '}
           {trade.inputAmount.currency.symbol} or the transaction will revert.
         </Trans>
       ),
-    [i18n.locale, slippage.allowed, trade]
+    [slippage.allowed, trade]
   )
   return <StyledEstimate color="secondary">{text}</StyledEstimate>
 }
