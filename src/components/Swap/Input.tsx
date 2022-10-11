@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
+import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
@@ -130,10 +131,12 @@ export function InputWrapper({
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 
+  const isWrap = useIsWrap()
   const formattedAmount = useMemo(() => {
     if (amount !== undefined) return amount
-    return currencyAmount ? formatCurrencyAmount({ amount: currencyAmount }) : ''
-  }, [amount, currencyAmount])
+    if (!currencyAmount) return ''
+    return isWrap ? currencyAmount.toExact() : formatCurrencyAmount({ amount: currencyAmount })
+  }, [amount, currencyAmount, isWrap])
 
   const onClickMax = useCallback(() => {
     if (!maxAmount) return
