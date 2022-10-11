@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { ChevronRight } from 'icons'
+import { ChevronDown } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -88,7 +88,7 @@ export default function TokenButton({ value, disabled, onClick }: TokenButtonPro
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronRight color={contentColor} strokeWidth={2} />
+          <ChevronDown color={contentColor} strokeWidth={2} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>

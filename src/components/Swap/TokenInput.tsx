@@ -32,6 +32,10 @@ const ValueInput = styled(DecimalInput)`
   ${loadingTransitionCss}
 `
 
+const TokenInputColumn = styled(Column)`
+  margin: 0 16px;
+`
+
 export interface TokenInputHandle {
   focus: () => void
 }
@@ -71,7 +75,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
   useImperativeHandle(ref, () => ({ focus }), [focus])
 
   return (
-    <Column gap={0.25} {...rest}>
+    <TokenInputColumn gap={0.25} {...rest}>
       <TokenInputRow gap={0.5}>
         <ThemedText.H2>
           <ValueInput
@@ -80,12 +84,12 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
             disabled={disabled || !currency}
             isLoading={Boolean(loading)}
             ref={input}
-          ></ValueInput>
+          />
         </ThemedText.H2>
         <TokenSelect value={currency} disabled={disabled} onSelect={onSelect} field={field} />
       </TokenInputRow>
       {children}
-    </Column>
+    </TokenInputColumn>
   )
 })
 
