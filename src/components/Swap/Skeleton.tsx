@@ -37,7 +37,7 @@ const InputColumn = styled(Column)`
   gap: 1.875em;
   margin-bottom: 0.25em;
   padding: 0.75em;
-  padding-bottom: 3em;
+  padding-bottom: 3.25em;
   padding-top: 1.25em;
 `
 
@@ -45,11 +45,11 @@ const OutputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   display: flex;
-  gap: 1em;
 `
 
 const OutputInnerTopColumn = styled(Column)`
-  padding-bottom: 2em;
+  border-bottom: 1px solid ${({ theme }) => theme.container};
+  padding-bottom: 2.75em;
   padding-left: 0.75em;
   padding-right: 0.75em;
   padding-top: 1.5em;
@@ -60,6 +60,7 @@ const OutputInnerBottomColumn = styled(Column)`
   padding-bottom: 1em;
   padding-left: 0.75em;
   padding-right: 0.75em;
+  padding-top: 0.75em;
   width: 100%;
 `
 
@@ -99,9 +100,6 @@ function FloatingOutput({ isModule }: { isModule?: boolean }) {
           <Blob height="2em" width="7.25em" isModule={isModule} />
         </Row>
       </OutputInnerTopColumn>
-      <div style={{ width: '100%' }}>
-        <Rule />
-      </div>
       <OutputInnerBottomColumn>
         <Blob height="1em" width="7.5em" isModule />
       </OutputInnerBottomColumn>
