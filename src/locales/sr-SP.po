@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-11 02:57\n"
+"PO-Revision-Date: 2022-10-11 03:50\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -125,10 +125,6 @@ msgstr "Грешка при преузимању трговине"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Дохваћање најбоље цене…"
-
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "За"
 
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx

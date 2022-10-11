@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-11 02:57\n"
+"PO-Revision-Date: 2022-10-11 03:50\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -125,10 +125,6 @@ msgstr "Fout bij ophalen van handel"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Beste prijs ophalen…"
-
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Voor"
 
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
