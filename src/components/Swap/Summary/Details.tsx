@@ -57,7 +57,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
     if (feeOptions) {
       const fee = outputAmount.multiply(feeOptions.fee)
       if (fee.greaterThan(0)) {
-        const parsedFee = formatCurrencyAmount(fee)
+        const parsedFee = formatCurrencyAmount({ amount: fee })
         rows.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
       }
     }
@@ -67,14 +67,14 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
     }
 
     if (gasUseEstimateUSD) {
-      rows.push([t`Network fee`, `~${formatCurrencyAmount(gasUseEstimateUSD, true)}`])
+      rows.push([t`Network fee`, `~${formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}`])
     }
 
     if (isExactInput(trade.tradeType)) {
-      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed))
+      const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed)})
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     } else {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed))
+      const localizedMaxSent = formatCurrencyAmount({ amount:trade.maximumAmountIn(slippage.allowed)})
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 

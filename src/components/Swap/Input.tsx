@@ -64,7 +64,7 @@ export function useFormattedFieldAmount({ currencyAmount, fieldAmount }: UseForm
       return fieldAmount
     }
     if (currencyAmount) {
-      return formatCurrencyAmount(currencyAmount)
+      return formatCurrencyAmount({ amount: currencyAmount })
     }
     return ''
   }, [currencyAmount, fieldAmount])
@@ -133,11 +133,13 @@ export default function Input() {
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <USDC isLoading={isRouteLoading}>{usdc ? `${formatCurrencyAmount(usdc, true)}` : ''}</USDC>
+            <USDC isLoading={isRouteLoading}>
+              {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
+            </USDC>
             {balance && (
               <Row gap={0.5}>
                 <Balance color={insufficientBalance ? 'error' : 'secondary'}>
-                  <Trans>Balance:</Trans> <span>{formatCurrencyAmount(balance)}</span>
+                  <Trans>Balance:</Trans> {formatCurrencyAmount({ amount: balance })}
                 </Balance>
                 {max && (
                   <TextButton onClick={onClickMax}>

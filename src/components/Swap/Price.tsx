@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'
@@ -15,7 +14,6 @@ interface PriceProps {
 
 /** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */
 export default function Price({ trade, outputUSDC }: PriceProps) {
-  const { i18n } = useLingui()
   const { inputAmount, outputAmount, executionPrice } = trade
 
   const [base, setBase] = useState<'input' | 'output'>('input')
@@ -43,7 +41,9 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
         <Row gap={0.25}>
           {1} {price.baseCurrency.symbol} = {formatPrice(price)} {price.quoteCurrency.symbol}
           {usdcPrice && (
-            <ThemedText.Caption color="secondary">({formatCurrencyAmount(usdcPrice, true)})</ThemedText.Caption>
+            <ThemedText.Caption color="secondary">
+              ({formatCurrencyAmount({ amount: usdcPrice, isUsdPrice: true })})
+            </ThemedText.Caption>
           )}
         </Row>
       </ThemedText.Caption>

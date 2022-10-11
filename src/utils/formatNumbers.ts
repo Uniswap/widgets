@@ -1,9 +1,8 @@
-/* Copied from Uniswap/v-3: https://github.com/Uniswap/v3-info/blob/master/src/utils/numbers.ts */
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { DEFAULT_LOCALE } from 'constants/locales'
 
 // Convert [CurrencyAmount] to number with necessary precision for price formatting.
-export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Currency> | undefined) => {
+export function currencyAmountToPreciseFloat(currencyAmount: CurrencyAmount<Currency> | undefined) {
   if (!currencyAmount) return undefined
   const floatForLargerNumbers = parseFloat(currencyAmount.toExact())
   if (floatForLargerNumbers < 0.1) {
@@ -13,7 +12,7 @@ export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Curr
 }
 
 // Convert [Price] to number with necessary precision for price formatting.
-export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined) => {
+export function priceToPreciseFloat(price: Price<Currency, Currency> | undefined) {
   if (!price) return undefined
   const floatForLargerNumbers = parseFloat(price.toFixed(9))
   if (floatForLargerNumbers < 0.1) {
@@ -27,9 +26,8 @@ interface FormatDollarArgs {
   lessPreciseStablecoinValues?: boolean
 }
 
-// Using a currency library here in case we want to add more in future.
-export const formatDollar = ({ num, lessPreciseStablecoinValues = false }: FormatDollarArgs): string => {
-  // For USD dollar denominated prices.
+// For USD or USD equivalent denominated values.
+export function formatDollar({ num, lessPreciseStablecoinValues = false }: FormatDollarArgs): string {
   if (num === 0) return '$0.00'
   if (!num) return '-'
   if (num < 0.000001) {
@@ -38,17 +36,13 @@ export const formatDollar = ({ num, lessPreciseStablecoinValues = false }: Forma
   if ((num >= 0.000001 && num < 0.1) || num > 1000000) {
     return `$${Number(num).toPrecision(3)}`
   }
-  // We only show 2 decimal places in explore table for stablecoin value ranges
-  // for the sake of readability (as opposed to the usual 3 elsewhere).
   if (num >= 0.1 && num < (lessPreciseStablecoinValues ? 0.9995 : 1.05)) {
     return `$${num.toFixed(3)}`
   }
   return `$${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
 }
 
-// For transaction review numbers, such as token quantities, NFT price (token-denominated),
-// network fees, transaction history items.
-export const formatTransactionAmount = (num: number | undefined | null, maxDigits = 9) => {
+export function formatTransactionAmount(num: number | undefined | null, maxDigits = 9) {
   if (num === 0) return '0.00'
   if (!num) return ''
   if (num < 0.00001) {

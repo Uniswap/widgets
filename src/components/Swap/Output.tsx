@@ -65,12 +65,12 @@ export default function Output() {
           <ThemedText.Body2 color="secondary" userSelect>
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
-                {outputUSDC && `${formatCurrencyAmount(outputUSDC, true)} `}
+                {outputUSDC && `${formatCurrencyAmount({ amount: outputUSDC, isUsdPrice: true })} `}
                 {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
                 <Balance color="secondary">
-                  Balance: <span>{formatCurrencyAmount(balance)}</span>
+                  Balance: <span>{formatCurrencyAmount({ amount: balance })}</span>
                 </Balance>
               )}
             </Row>
