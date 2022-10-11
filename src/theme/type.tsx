@@ -61,7 +61,7 @@ export function Body2(props: TextProps) {
 }
 
 export function Caption(props: TextProps) {
-  return <TextWrapper className="caption" fontSize={12} fontWeight={400} lineHeight="16px" {...props} />
+  return <TextWrapper className="caption" fontSize={14} fontWeight={400} lineHeight="16px" {...props} />
 }
 
 export function Badge(props: TextProps) {

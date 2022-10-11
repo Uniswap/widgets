@@ -10,7 +10,7 @@ import { DynamicThemeProvider, ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Row from '../Row'
-import { Balance, InputColumn, InputProps, USDC, useFormattedFieldAmount } from './Input'
+import { Balance, InputColumn, USDC, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -22,7 +22,7 @@ const StyledInputColumn = styled(InputColumn)`
   margin-bottom: 0;
 `
 
-export default function Output({ disabled, focused }: InputProps) {
+export default function Output() {
   const { i18n } = useLingui()
 
   const {
@@ -58,7 +58,7 @@ export default function Output({ disabled, focused }: InputProps) {
         <TokenInput
           amount={amount}
           currency={swapOutputCurrency}
-          disabled={disabled}
+          disabled={isDisabled}
           field={Field.OUTPUT}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}
@@ -71,7 +71,7 @@ export default function Output({ disabled, focused }: InputProps) {
                 {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
-                <Balance color={focused ? 'secondary' : 'hint'}>
+                <Balance color="secondary">
                   Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </Balance>
               )}
