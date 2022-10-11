@@ -192,8 +192,10 @@ export function SummaryDialog({
           height={6}
           gap={open ? 0 : 0.75}
         >
-          <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
-          <Estimate trade={trade} slippage={slippage} />
+          <Column gap={0.5}>
+            <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
+            <Estimate trade={trade} slippage={slippage} />
+          </Column>
         </Expando>
 
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />

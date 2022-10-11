@@ -150,7 +150,7 @@ export function InputWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
-              {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
+              {impact && <ThemedText.Body2 color={impact.warning}> ({impact.toString()})</ThemedText.Body2>}
             </USDC>
             {balance && (
               <Row gap={0.5}>
