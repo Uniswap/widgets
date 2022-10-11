@@ -118,7 +118,7 @@ function ConfirmButton({
         message: <Trans>Price updated</Trans>,
         icon: BarChart,
         onClick: () => {
-          onSwapPriceUpdateAck?.()
+          onSwapPriceUpdateAck?.(ackTrade, trade)
           setAckTrade(trade)
         },
         children: <Trans>Accept</Trans>,
@@ -131,7 +131,7 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
+  }, [ackPriceImpact, ackTrade, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
 
   return (
     <ActionButton

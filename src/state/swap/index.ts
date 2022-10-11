@@ -4,6 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { Slippage } from './settings'
 
@@ -80,11 +81,11 @@ interface InputEventHandlers {
 /** An integration hook called when the user signs a permit. */
 export type OnPermitSign = () => void
 
-/** An integration hook called when the user receives a quote. */
-export type OnSwapQuote = () => void
+/** An integration hook called when the user receives an initial quote for a set of inputs. */
+export type OnInitialSwapQuote = () => void
 
 /** An integration hook called when the user acks a quote's price update. */
-export type OnSwapPriceUpdateAck = () => void
+export type OnSwapPriceUpdateAck = (trade: InterfaceTrade, update: InterfaceTrade) => void
 
 /** An integration hook called when the user expands a swap's details. */
 export type OnExpandSwapDetails = () => void
@@ -97,7 +98,7 @@ export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
 export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
   onPermitSign?: OnPermitSign
-  onSwapQuote?: OnSwapQuote & never
+  onInitialSwapQuote?: OnInitialSwapQuote & never
   onReviewSwapClick?: OnReviewSwapClick
   onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
   onExpandSwapDetails?: OnExpandSwapDetails
