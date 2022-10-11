@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
@@ -24,8 +23,6 @@ const StyledInputColumn = styled(InputColumn)`
 `
 
 export default function Output() {
-  const { i18n } = useLingui()
-
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
     error,
@@ -68,12 +65,12 @@ export default function Output() {
           <ThemedText.Body2 color="secondary" userSelect>
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
-                {outputUSDC && `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)} `}
+                {outputUSDC && `${formatCurrencyAmount({ amount: outputUSDC, isUsdPrice: true })} `}
                 {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
                 <Balance color="secondary">
-                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                  Balance: <span>{formatCurrencyAmount({ amount: balance })}</span>
                 </Balance>
               )}
             </Row>

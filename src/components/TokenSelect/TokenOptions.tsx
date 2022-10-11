@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
@@ -78,7 +77,6 @@ const TokenBalance = styled.div<{ isLoading: boolean }>`
 `
 
 function TokenOption({ index, value, style }: TokenOptionProps) {
-  const { i18n } = useLingui()
   const ref = useRef<HTMLButtonElement>(null)
   // Annotate the event to be handled later instead of passing in handlers to avoid rerenders.
   // This prevents token logos from reloading and flashing on the screen.
@@ -112,7 +110,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>
-            {balance?.greaterThan(0) && formatCurrencyAmount(balance, 4, i18n.locale)}
+            {balance?.greaterThan(0) && formatCurrencyAmount({ amount: balance })}
           </TokenBalance>
         </Row>
       </ThemedText.Body1>
