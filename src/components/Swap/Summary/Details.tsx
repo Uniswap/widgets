@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
@@ -50,7 +49,6 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
-  const { i18n } = useLingui()
 
   const details = useMemo(() => {
     const rows: Array<[string, string] | [string, string, Color | undefined]> = []
@@ -59,7 +57,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
     if (feeOptions) {
       const fee = outputAmount.multiply(feeOptions.fee)
       if (fee.greaterThan(0)) {
-        const parsedFee = formatCurrencyAmount(fee, 6, i18n.locale)
+        const parsedFee = formatCurrencyAmount({ amount: fee })
         rows.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
       }
     }
@@ -69,14 +67,14 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
     }
 
     if (gasUseEstimateUSD) {
-      rows.push([t`Network fee`, `~$${gasUseEstimateUSD.toFixed(2)}`])
+      rows.push([t`Network fee`, `~${formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}`])
     }
 
     if (isExactInput(trade.tradeType)) {
-      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)
+      const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     } else {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)
+      const localizedMaxSent = formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
@@ -86,7 +84,6 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
   }, [
     feeOptions,
     gasUseEstimateUSD,
-    i18n.locale,
     impact,
     inputCurrency.symbol,
     integrator,

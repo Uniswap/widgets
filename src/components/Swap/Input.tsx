@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
@@ -65,14 +64,13 @@ export function useFormattedFieldAmount({ currencyAmount, fieldAmount }: UseForm
       return fieldAmount
     }
     if (currencyAmount) {
-      return currencyAmount.toSignificant(6)
+      return formatCurrencyAmount({ amount: currencyAmount })
     }
     return ''
   }, [currencyAmount, fieldAmount])
 }
 
 export default function Input() {
-  const { i18n } = useLingui()
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
     error,
@@ -135,11 +133,13 @@ export default function Input() {
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <USDC isLoading={isRouteLoading}>{usdc ? `$${formatCurrencyAmount(usdc, 6, 'en', 2)}` : ''}</USDC>
+            <USDC isLoading={isRouteLoading}>
+              {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
+            </USDC>
             {balance && (
               <Row gap={0.5}>
                 <Balance color={insufficientBalance ? 'error' : 'secondary'}>
-                  <Trans>Balance:</Trans> <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                  <Trans>Balance:</Trans> {formatCurrencyAmount({ amount: balance })}
                 </Balance>
                 {max && (
                   <TextButton onClick={onClickMax}>
