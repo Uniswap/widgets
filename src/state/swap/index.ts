@@ -84,7 +84,7 @@ export type OnPermitSign = () => void
 export type OnSwapQuote = () => void
 
 /** An integration hook called when the user acks a quote's price update. */
-export type OnAckSwapPriceUpdate = () => void
+export type OnSwapPriceUpdateAck = () => void
 
 /** An integration hook called when the user expands a swap's details. */
 export type OnExpandSwapDetails = () => void
@@ -96,10 +96,10 @@ export type OnExpandSwapDetails = () => void
 export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
 export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
-  onPermitSign?: OnPermitSign & never
+  onPermitSign?: OnPermitSign
   onSwapQuote?: OnSwapQuote & never
   onReviewSwapClick?: OnReviewSwapClick
-  onAckSwapPriceUpdate?: OnAckSwapPriceUpdate & never
+  onSwapPriceUpdateAck?: OnSwapPriceUpdateAck & never
   onExpandSwapDetails?: OnExpandSwapDetails & never
 }
 
