@@ -1,72 +1,39 @@
 import { useSwapInfo, useSwitchSwapCurrencies } from 'hooks/swap'
-import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'icons'
-import { useCallback, useState } from 'react'
+import { ArrowDown } from 'icons'
+import { transparentize } from 'polished'
 import styled from 'styled-components/macro'
 import { Layer } from 'theme'
 
 import Button from '../Button'
-import Row from '../Row'
 
-const ReverseRow = styled(Row)`
+const StyledReverseButton = styled(Button)`
+  align-items: center;
+  background-color: ${({ theme }) => theme.module};
+  border: 4px solid;
+  border-color: ${({ theme }) => theme.container};
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  display: flex;
+  height: 40px;
+  justify-content: center;
   left: 50%;
   position: absolute;
   transform: translate(-50%, -60%);
+  transition: 125ms ease background-color;
+  width: 40px;
   z-index: ${Layer.OVERLAY};
-`
-
-const ArrowUp = styled(ArrowUpIcon)`
-  left: calc(50% - 0.37em);
-  position: absolute;
-  top: calc(50% - 0.82em);
-`
-
-const ArrowDown = styled(ArrowDownIcon)`
-  bottom: calc(50% - 0.82em);
-  position: absolute;
-  right: calc(50% - 0.37em);
-`
-
-const Overlay = styled.div`
-  background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  padding: 0.25em;
-`
-
-const StyledReverseButton = styled(Button)<{ turns: number }>`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  color: ${({ theme }) => theme.primary};
-  height: 2.5em;
-  position: relative;
-  width: 2.5em;
-
-  div {
-    transform: rotate(${({ turns }) => turns / 2}turn);
-    transition: transform 0.25s ease-in-out;
-    will-change: transform;
+  :hover {
+    background-color: ${({ theme }) => transparentize(0.2, theme.module)};
   }
 `
 
 export default function ReverseButton() {
   const { error } = useSwapInfo()
   const isDisabled = error !== undefined
-
   const switchCurrencies = useSwitchSwapCurrencies()
-  const [turns, setTurns] = useState(0)
-  const onClick = useCallback(() => {
-    switchCurrencies()
-    setTurns((turns) => ++turns)
-  }, [switchCurrencies])
 
   return (
-    <ReverseRow justify="center">
-      <Overlay>
-        <StyledReverseButton disabled={isDisabled} onClick={onClick} turns={turns}>
-          <div>
-            <ArrowUp strokeWidth={3} />
-            <ArrowDown strokeWidth={3} />
-          </div>
-        </StyledReverseButton>
-      </Overlay>
-    </ReverseRow>
+    <StyledReverseButton disabled={isDisabled} onClick={switchCurrencies}>
+      <ArrowDown />
+    </StyledReverseButton>
   )
 }
