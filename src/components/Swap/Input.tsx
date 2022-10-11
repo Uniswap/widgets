@@ -33,9 +33,20 @@ export const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)<{ approved?: boolean }>`
-  margin: 0.75em;
+export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boolean | null }>`
+  background-color: ${({ theme }) => theme.module};
+  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  margin-bottom: 4px;
+  padding: 20px 0 24px 0;
   position: relative;
+
+  // Set transitions to reduce color flashes when switching color/token.
+  // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.
+  transition: ${({ hasColor }) => (hasColor ? 'background-color 0.25s ease-out' : undefined)};
+  > {
+    // When color is loading, delay the color/stroke so that it seems to transition from the last state.
+    transition: ${({ hasColor }) => (hasColor === null ? 'color 0.25s ease-in, stroke 0.25s ease-in' : undefined)};
+  }
 
   ${TokenImg} {
     filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.4)')};
@@ -142,7 +153,6 @@ export default function Input() {
           </Row>
         </ThemedText.Body2>
       </TokenInput>
-      <Row />
     </InputColumn>
   )
 }
