@@ -3,16 +3,12 @@ import { useEffect, useRef } from 'react'
 import { controlledAtom as swapAtom, Swap } from 'state/swap'
 import { controlledAtom as settingsAtom, Settings } from 'state/swap/settings'
 
-export type SwapSettingsController = Settings
-export type SwapController = Swap
+export interface SwapController {
+  value?: Swap
+  settings?: Settings
+}
 
-export default function useSyncController({
-  value,
-  settings,
-}: {
-  value?: SwapController
-  settings?: SwapSettingsController
-}): void {
+export default function useSyncController({ value, settings }: SwapController): void {
   // Log an error if the component changes from uncontrolled to controlled (or vice versa).
   const isSwapControlled = useRef(Boolean(value))
   const isSettingsControlled = useRef(Boolean(settings))

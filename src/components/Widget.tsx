@@ -5,7 +5,6 @@ import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
-import { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as Web3ReactProvider } from 'hooks/web3'
 import { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
@@ -95,7 +94,7 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends BrandingSettings, TransactionEventHandlers {
+export interface WidgetProps extends TransactionEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   provider?: Eip1193Provider | JsonRpcProvider | null

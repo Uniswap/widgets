@@ -1,10 +1,8 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Provider as Eip1193Provider } from '@web3-react/types'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
-import useSyncController, { SwapController, SwapSettingsController } from 'hooks/swap/useSyncController'
+import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -31,17 +29,20 @@ import useValidate from './useValidate'
 // since the wallet connection component exists within the Swap component.
 // This includes useSyncWidgetEventHandlers.
 // TODO(zzmp): refactor WalletConnection outside of Swap component
-export interface SwapProps extends BrandingSettings, FeeOptions, SwapEventHandlers, TokenDefaults, WidgetEventHandlers {
+export interface SwapProps
+  extends BrandingSettings,
+    FeeOptions,
+    SwapController,
+    SwapEventHandlers,
+    TokenDefaults,
+    WidgetEventHandlers {
   hideConnectionUI?: boolean
-  provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  settings?: SwapSettingsController
-  value?: SwapController
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncController(props)
+  useSyncController(props as SwapController)
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
