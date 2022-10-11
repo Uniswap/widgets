@@ -88,10 +88,10 @@ export default memo(function Toolbar() {
   ])
 
   return (
-    <ThemedText.Caption data-testid="toolbar">
+    <ThemedText.Body2 data-testid="toolbar">
       <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
         {caption}
       </ToolbarRow>
-    </ThemedText.Caption>
+    </ThemedText.Body2>
   )
 })
