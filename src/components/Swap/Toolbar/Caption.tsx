@@ -28,7 +28,7 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
       <Icon color="secondary" />
-      {caption}
+      <ThemedText.Caption>{caption}</ThemedText.Caption>
     </>
   )
 }
@@ -66,7 +66,7 @@ export function Error() {
   return <Caption caption={<Trans>Error fetching trade</Trans>} />
 }
 
-export function Empty() {
+export function MissingInputs() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 

@@ -5,7 +5,9 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
+import useSwitchChain from 'hooks/useSwitchChain'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
+import useConnectors from 'hooks/web3/useConnectors'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -50,19 +52,16 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
+  const chainIn = currencyIn?.chainId
+  const chainOut = currencyOut?.chainId
+  const tokenChainId = chainIn || chainOut
   const error = useMemo(() => {
     if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
-
-    const chainIn = currencyIn?.chainId
-    const chainOut = currencyOut?.chainId
     if (chainIn && chainOut && chainIn !== chainOut) return ChainError.MISMATCHED_TOKEN_CHAINS
-
-    const tokenChainId = chainIn || chainOut
     if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
-
     return
-  }, [chainId, currencyIn?.chainId, currencyOut?.chainId, isActivating, isActive, isSupported])
+  }, [chainId, chainIn, chainOut, isActivating, isActive, isSupported, tokenChainId])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),
@@ -146,6 +145,24 @@ const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
 export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
   const swapInfo = useComputeSwapInfo(routerUrl)
+
+  const {
+    error,
+    [Field.INPUT]: { currency: currencyIn },
+    [Field.OUTPUT]: { currency: currencyOut },
+  } = swapInfo
+  const { connector } = useWeb3React()
+  const switchChain = useSwitchChain()
+  const chainIn = currencyIn?.chainId
+  const chainOut = currencyOut?.chainId
+  const tokenChainId = chainIn || chainOut
+  const { network } = useConnectors()
+  // The network connector should be auto-switched, as it is a read-only interface that should "just work".
+  if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
+    delete swapInfo.error // avoids flashing an error whilst switching
+    switchChain(tokenChainId)
+  }
+
   return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
 
