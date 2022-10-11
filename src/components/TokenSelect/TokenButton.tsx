@@ -23,7 +23,7 @@ const StyledTokenButton = styled(Button)`
 `
 
 const TokenButtonRow = styled(Row)<{ empty: boolean }>`
-  float: right;
+  flex-direction: row;
   height: 1.2em;
   max-width: 12em;
   overflow: hidden;
@@ -73,17 +73,19 @@ export default function TokenButton({ value, disabled, onClick }: TokenButtonPro
     >
       <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow
-          gap={0.4}
+          align="flex-end"
           empty={!value}
+          flex
+          gap={0.4}
           // ref is used to set an absolute width, so it must be reset for each value passed.
           // To force this, value?.symbol is passed as a key.
           ref={setRow}
-          key={value?.symbol}
+          key={value?.wrapped.address}
         >
           {value ? (
             <>
               <TokenImg token={value} size={1.2} />
-              {value.symbol}
+              <span>{value.symbol}</span>
             </>
           ) : (
             <Trans>Select a token</Trans>

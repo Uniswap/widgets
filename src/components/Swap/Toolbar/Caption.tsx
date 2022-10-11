@@ -27,8 +27,8 @@ interface CaptionProps {
 function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
-      <Icon color="secondary" />
-      <ThemedText.Caption>{caption}</ThemedText.Caption>
+      <Icon color="secondary" size={16.67 / 14} />
+      <ThemedText.Caption lineHeight="14px">{caption}</ThemedText.Caption>
     </>
   )
 }

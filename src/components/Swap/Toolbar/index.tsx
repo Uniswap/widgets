@@ -86,7 +86,7 @@ export default memo(function Toolbar() {
   ])
 
   return (
-    <ToolbarRow justify="flex-start" data-testid="toolbar" gap={3 / 8}>
+    <ToolbarRow flex justify="flex-start" data-testid="toolbar" gap={3 / 8} align="flex-end">
       {caption}
     </ToolbarRow>
   )
