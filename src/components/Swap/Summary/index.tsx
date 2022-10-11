@@ -73,17 +73,16 @@ function Estimate({ trade, slippage }: EstimateProps) {
       isExactInput(trade.tradeType) ? (
         <Trans>
           Output is estimated. You will receive at least{' '}
-          {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)}{' '}
-          {trade.outputAmount.currency.symbol} or the transaction will revert.
+          {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed))} {trade.outputAmount.currency.symbol} or the
+          transaction will revert.
         </Trans>
       ) : (
         <Trans>
-          Output is estimated. You will send at most{' '}
-          {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
+          Output is estimated. You will send at most {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed))}{' '}
           {trade.inputAmount.currency.symbol} or the transaction will revert.
         </Trans>
       ),
-    [i18n.locale, slippage.allowed, trade]
+    [slippage.allowed, trade]
   )
   return <StyledEstimate color="secondary">{text}</StyledEstimate>
 }

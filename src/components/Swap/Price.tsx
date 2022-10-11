@@ -43,9 +43,9 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
       <ThemedText.Caption>
         <Row gap={0.25}>
           {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {price.baseCurrency.symbol} ={' '}
-          {formatPrice(price, 6, i18n.locale)} {price.quoteCurrency.symbol}
+          {formatPrice(price)} {price.quoteCurrency.symbol}
           {usdcPrice && (
-            <ThemedText.Caption color="secondary">(${formatCurrencyAmount(usdcPrice, 6, 'en', 2)})</ThemedText.Caption>
+            <ThemedText.Caption color="secondary">({formatCurrencyAmount(usdcPrice, true)})</ThemedText.Caption>
           )}
         </Row>
       </ThemedText.Caption>

@@ -91,12 +91,12 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           <ThemedText.Body2 color="secondary" userSelect>
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
-                {outputUSDC && `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)} `}
+                {outputUSDC && `${formatCurrencyAmount(outputUSDC, true)} `}
                 {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
                 <Balance color={focused ? 'secondary' : 'hint'}>
-                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                  Balance: <span>{formatCurrencyAmount(balance)}</span>
                 </Balance>
               )}
             </Row>

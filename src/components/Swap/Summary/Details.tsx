@@ -59,7 +59,7 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
     if (feeOptions) {
       const fee = outputAmount.multiply(feeOptions.fee)
       if (fee.greaterThan(0)) {
-        const parsedFee = formatCurrencyAmount(fee, 6, i18n.locale)
+        const parsedFee = formatCurrencyAmount(fee)
         rows.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
       }
     }
@@ -69,33 +69,22 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
     }
 
     if (lpFeeAmount) {
-      const parsedLpFee = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
+      const parsedLpFee = formatCurrencyAmount(lpFeeAmount)
       rows.push([t`Liquidity provider fee`, `${parsedLpFee} ${inputCurrency.symbol || currencyId(inputCurrency)}`])
     }
 
     if (isExactInput(trade.tradeType)) {
-      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)
+      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed))
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     } else {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed))
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
     rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])
 
     return rows
-  }, [
-    feeOptions,
-    i18n.locale,
-    impact,
-    inputCurrency,
-    integrator,
-    lpFeeAmount,
-    outputAmount,
-    outputCurrency,
-    slippage,
-    trade,
-  ])
+  }, [feeOptions, impact, inputCurrency, integrator, lpFeeAmount, outputAmount, outputCurrency, slippage, trade])
 
   return (
     <Column gap={0.5}>

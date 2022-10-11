@@ -112,7 +112,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>
-            {balance?.greaterThan(0) && formatCurrencyAmount(balance, 4, i18n.locale)}
+            {balance?.greaterThan(0) && formatCurrencyAmount(balance)}
           </TokenBalance>
         </Row>
       </ThemedText.Body1>

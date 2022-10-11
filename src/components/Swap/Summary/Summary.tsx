@@ -28,13 +28,13 @@ function TokenValue({ input, usdc, open, children }: PropsWithChildren<TokenValu
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2 userSelect>
-          {formatCurrencyAmount(input, 6, i18n.locale)} {input.currency.symbol}
+          {formatCurrencyAmount(input)} {input.currency.symbol}
         </ThemedText.Body2>
       </Row>
       {usdc && (
         <ThemedText.Caption color="secondary" userSelect>
           <Row justify="flex-start" gap={0.25}>
-            ${formatCurrencyAmount(usdc, 6, 'en', 2)}
+            {formatCurrencyAmount(usdc, true)}
             {children}
           </Row>
         </ThemedText.Caption>
