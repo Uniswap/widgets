@@ -3,6 +3,7 @@ import { transparentize } from 'polished'
 import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
 import styled, { css } from 'styled-components/macro'
 
+const inputValueColorTransparentize = transparentize(1 - loadingOpacity)
 const Input = styled.input`
   -webkit-appearance: textfield;
   background-color: transparent;
@@ -43,8 +44,11 @@ const Input = styled.input`
 
   :disabled {
     // Overrides WebKit's override of input:disabled color.
-    -webkit-text-fill-color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
+    -webkit-text-fill-color: ${({ theme }) => inputValueColorTransparentize(theme.primary)};
+    color: ${({ theme }) => inputValueColorTransparentize(theme.primary)};
+    ::placeholder {
+      color: inputValueColorTransparentize(theme.primary);
+    }
   }
 `
 
