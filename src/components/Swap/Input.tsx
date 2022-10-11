@@ -33,7 +33,7 @@ export const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boolean | null }>`
+export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boolean | null; disableHover?: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
@@ -70,13 +70,17 @@ export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boole
     transition: 125ms ease border-color;
   }
 
-  &:hover:before {
-    border-color: ${({ theme }) => theme.interactive};
-  }
+  ${({ theme, disableHover }) =>
+    !disableHover &&
+    `&:hover:before {
+    border-color: ${theme.interactive};
+  }`}
 
-  &:focus-within:before {
-    border-color: ${({ theme }) => theme.outline};
-  }
+  ${({ theme, disableHover }) =>
+    !disableHover &&
+    `&:focus-within:before {
+    border-color: ${theme.outline};
+  }`}
 `
 
 interface UseFormattedFieldAmountArguments {
@@ -147,7 +151,7 @@ export default function Input() {
   }, [input, max, updateInputAmount])
 
   return (
-    <InputColumn gap={0.5} approved={mockApproved}>
+    <InputColumn gap={0.5} approved={mockApproved} disableHover={isDisabled}>
       <TokenInput
         ref={setInput}
         amount={amount}
