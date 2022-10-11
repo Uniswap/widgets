@@ -63,7 +63,7 @@
     "@popperjs/core": "^2.4.4",
     "@reduxjs/toolkit": "^1.6.1",
     "@uniswap/redux-multicall": "^1.1.1",
-    "@uniswap/router-sdk": "^1.0.3",
+    "@uniswap/router-sdk": "^1.3.0",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/smart-order-router": "^2.10.0",
     "@uniswap/token-lists": "^1.0.0-beta.30",
