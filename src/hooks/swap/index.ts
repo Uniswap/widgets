@@ -1,11 +1,10 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { invertTradeType, toTradeType } from 'utils/tradeType'
-import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 export { ChainError, default as useSwapInfo } from './useSwapInfo'
 
 function otherField(field: Field) {
@@ -88,16 +87,4 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
     [amount, field, onAmountChange, setSwap]
   )
   return [amount, updateAmount]
-}
-
-export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | undefined {
-  const isFieldIndependent = useIsSwapFieldIndependent(field)
-  const isAmountPopulated = useIsAmountPopulated()
-  const [swapAmount] = useSwapAmount(field)
-  const [swapCurrency] = useSwapCurrency(field)
-  const currencyAmount = useMemo(() => tryParseCurrencyAmount(swapAmount, swapCurrency), [swapAmount, swapCurrency])
-  if (isFieldIndependent && isAmountPopulated) {
-    return currencyAmount
-  }
-  return
 }
