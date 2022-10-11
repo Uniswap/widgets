@@ -4,7 +4,6 @@ import { Theme, ThemeProvider } from 'theme'
 
 import Column from '../Column'
 import Row from '../Row'
-import Rule from '../Rule'
 import { WidgetWrapper } from '../Widget'
 import ReverseButton from './ReverseButton'
 
