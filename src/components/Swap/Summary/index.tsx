@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
@@ -41,13 +41,10 @@ const Body = styled(Column)`
 `
 
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
+  const showWarning = Boolean(impact?.warning || slippage.warning)
   return (
     <Row gap={0.5}>
-      {impact?.warning || slippage.warning ? (
-        <AlertTriangle color={impact?.warning || slippage.warning} />
-      ) : (
-        <Info color="secondary" />
-      )}
+      {showWarning ? <AlertTriangle color={impact?.warning || slippage.warning} /> : <Info color="secondary" />}
       <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
         {impact?.warning ? (
           <Trans>High price impact</Trans>
@@ -151,13 +148,22 @@ function ConfirmButton({
 interface SummaryDialogProps {
   trade: InterfaceTrade
   slippage: Slippage
+  gasUseEstimateUSD?: CurrencyAmount<Token>
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
   onConfirm: () => Promise<void>
 }
 
-export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog({
+  trade,
+  slippage,
+  gasUseEstimateUSD,
+  inputUSDC,
+  outputUSDC,
+  impact,
+  onConfirm,
+}: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
 
   const [open, setOpen] = useState(false)
@@ -187,7 +193,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           height={6}
           gap={open ? 0 : 0.75}
         >
-          <Details trade={trade} slippage={slippage} impact={impact} />
+          <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
           <Estimate trade={trade} slippage={slippage} />
         </Expando>
 

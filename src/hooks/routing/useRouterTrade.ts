@@ -75,7 +75,7 @@ export function useRouterTrade(
     }
   }, [amountSpecified?.currency, otherCurrency, result, tradeType])
   const isValidBlock = useIsValidBlock(Number(result?.blockNumber))
-  const isSyncing = currentData !== data || !isValidBlock
+  const isLoading = currentData !== data || !isValidBlock
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(result?.gasUseEstimateUSD)
 
   return useMemo(() => {
@@ -84,7 +84,7 @@ export function useRouterTrade(
 
     if (!trade) return isError ? TRADE_NOT_FOUND : TRADE_LOADING
 
-    const state = isSyncing ? TradeState.SYNCING : TradeState.VALID
+    const state = isLoading ? TradeState.LOADING : TradeState.VALID
     return { state, trade, gasUseEstimateUSD }
-  }, [queryArgs, data, trade, isError, isSyncing, gasUseEstimateUSD])
+  }, [queryArgs, data, trade, isError, isLoading, gasUseEstimateUSD])
 }

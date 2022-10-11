@@ -8,7 +8,6 @@ export enum TradeState {
   INVALID,
   NO_ROUTE_FOUND,
   VALID,
-  SYNCING,
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts

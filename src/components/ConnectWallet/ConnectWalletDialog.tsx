@@ -15,14 +15,11 @@ import { WalletConnectQR } from 'utils/WalletConnect'
 const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
 
 const Body = styled(Column)`
-  height: calc(100% - 2.5em);
-  padding: 0em 0.75em 0.75em;
-`
-
-const SecondaryOptionsRow = styled(Row)`
-  align-self: end;
+  display: grid;
+  gap: 12px;
   grid-template-columns: repeat(2, calc(50% - 0.5em / 2));
-  height: fit-content;
+  grid-template-rows: 2fr 1fr;
+  height: calc(100% - 2.5em);
 `
 
 const StyledButtonContents = styled(Column)`
@@ -32,7 +29,8 @@ const StyledButtonContents = styled(Column)`
 
 const StyledMainButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: 200px;
+  grid-column: 1 / 3;
+  height: 100%;
   padding: 22px;
 `
 
@@ -142,22 +140,18 @@ export function ConnectWalletDialog() {
     <>
       <Header title={<Trans>Connect wallet</Trans>} />
       <Body align="stretch" padded>
-        <Column>
-          <WalletConnectButton
-            walletName="WalletConnect"
-            logoSrc={WALLETCONNECT_ICON_URL}
-            walletConnectQR={connectors.walletConnectQR}
-            onClick={() => onActivate(connectors.walletConnect)}
-          />
-          <SecondaryOptionsRow>
-            <MetaMaskButton
-              walletName="MetaMask"
-              logoSrc={METAMASK_ICON_URL}
-              onClick={() => onActivate(connectors.metaMask)}
-            />
-            <NoWalletButton />
-          </SecondaryOptionsRow>
-        </Column>
+        <WalletConnectButton
+          walletName="WalletConnect"
+          logoSrc={WALLETCONNECT_ICON_URL}
+          walletConnectQR={connectors.walletConnectQR}
+          onClick={() => onActivate(connectors.walletConnect)}
+        />
+        <MetaMaskButton
+          walletName="MetaMask"
+          logoSrc={METAMASK_ICON_URL}
+          onClick={() => onActivate(connectors.metaMask)}
+        />
+        <NoWalletButton />
       </Body>
     </>
   )

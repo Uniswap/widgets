@@ -1,6 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
+import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { largeIconCss } from 'icons'
 import { memo, useMemo } from 'react'
@@ -13,37 +12,45 @@ import Row from '../../Row'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
-  padding: 0.5em 0;
+  background-color: ${({ theme }) => theme.module};
+  border-bottom-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-bottom-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  padding: 14px 16px;
   ${largeIconCss}
 `
 
 export default memo(function Toolbar() {
-  const { account, isActivating, chainId } = useWeb3React()
+  const { account } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
+    error,
     trade: { trade, state },
     impact,
   } = useSwapInfo()
-  const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const caption = useMemo(() => {
-    if (state === TradeState.SYNCING || state === TradeState.LOADING) {
+    switch (error) {
+      case ChainError.UNCONNECTED_CHAIN:
+        return <Caption.ConnectWallet />
+      case ChainError.ACTIVATING_CHAIN:
+        return <Caption.ConnectWallet />
+      case ChainError.UNSUPPORTED_CHAIN:
+        return <Caption.UnsupportedNetwork />
+      case ChainError.MISMATCHED_TOKEN_CHAINS:
+        return <Caption.Error />
+      case ChainError.MISMATCHED_CHAINS:
+        return
+      default:
+    }
+
+    if (state === TradeState.LOADING) {
       return <Caption.LoadingTrade />
     }
 
-    if (chainId && tokenChainId && chainId !== tokenChainId) {
-      return <Caption.Empty />
-    }
-
-    if (!account || !chainId) {
-      if (isActivating) return <Caption.Connecting />
+    if (!account) {
       return <Caption.ConnectWallet />
-    }
-
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
-      return <Caption.UnsupportedNetwork />
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -66,14 +73,12 @@ export default memo(function Toolbar() {
 
     return <Caption.Empty />
   }, [
+    error,
     state,
-    chainId,
-    tokenChainId,
     account,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
-    isActivating,
     inputBalance,
     inputAmount,
     isWrap,

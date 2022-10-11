@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
@@ -12,7 +12,6 @@ import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { computeRealizedLPFeeAmount } from 'utils/prices'
 import { isExactInput } from 'utils/tradeType'
 
 const Value = styled.span<{ color?: Color }>`
@@ -40,17 +39,16 @@ function Detail({ label, value, color }: DetailProps) {
 interface DetailsProps {
   trade: InterfaceTrade
   slippage: Slippage
+  gasUseEstimateUSD?: CurrencyAmount<Token>
   impact?: PriceImpact
 }
 
-export default function Details({ trade, slippage, impact }: DetailsProps) {
+export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
-  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
-  const { i18n } = useLingui()
 
   const details = useMemo(() => {
     const rows: Array<[string, string] | [string, string, Color | undefined]> = []
@@ -68,9 +66,8 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
       rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
-    if (lpFeeAmount) {
-      const parsedLpFee = formatCurrencyAmount(lpFeeAmount)
-      rows.push([t`Liquidity provider fee`, `${parsedLpFee} ${inputCurrency.symbol || currencyId(inputCurrency)}`])
+    if (gasUseEstimateUSD) {
+      rows.push([t`Network fee`, `~${formatCurrencyAmount(gasUseEstimateUSD, true)}`])
     }
 
     if (isExactInput(trade.tradeType)) {
@@ -84,7 +81,18 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
     rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])
 
     return rows
-  }, [feeOptions, impact, inputCurrency, integrator, lpFeeAmount, outputAmount, outputCurrency, slippage, trade])
+  }, [
+    feeOptions,
+    gasUseEstimateUSD,
+    impact,
+    inputCurrency.symbol,
+    integrator,
+    outputAmount,
+    outputCurrency,
+    slippage.allowed,
+    slippage.warning,
+    trade,
+  ])
 
   return (
     <Column gap={0.5}>

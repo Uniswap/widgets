@@ -17,7 +17,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatTransactionAmount } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
@@ -43,11 +42,6 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   }
 `
 
-export interface InputProps {
-  disabled: boolean
-  focused: boolean
-}
-
 interface UseFormattedFieldAmountArguments {
   currencyAmount?: CurrencyAmount<Currency>
   fieldAmount?: string
@@ -65,9 +59,10 @@ export function useFormattedFieldAmount({ currencyAmount, fieldAmount }: UseForm
   }, [currencyAmount, fieldAmount])
 }
 
-export default function Input({ disabled, focused }: InputProps) {
+export default function Input() {
   const {
     [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
+    error,
     trade: { state: tradeState },
   } = useSwapInfo()
 
@@ -79,7 +74,8 @@ export default function Input({ disabled, focused }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)
 
-  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isDisabled = error !== undefined
+  const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
   const isLoading = isRouteLoading && isDependentField
 
@@ -118,7 +114,7 @@ export default function Input({ disabled, focused }: InputProps) {
         ref={setInput}
         amount={amount}
         currency={inputCurrency}
-        disabled={disabled}
+        disabled={isDisabled}
         field={Field.INPUT}
         onChangeInput={updateInputAmount}
         onChangeCurrency={updateInputCurrency}
@@ -129,7 +125,7 @@ export default function Input({ disabled, focused }: InputProps) {
             <USDC isLoading={isRouteLoading}>{usdc ? `${formatCurrencyAmount(usdc, true)}` : ''}</USDC>
             {balance && (
               <Row gap={0.5}>
-                <Balance color={insufficientBalance ? 'error' : focused ? 'secondary' : 'hint'}>
+                <Balance color={insufficientBalance ? 'error' : 'secondary'}>
                   <Trans>Balance:</Trans> <span>{formatCurrencyAmount(balance)}</span>
                 </Balance>
                 {max && (

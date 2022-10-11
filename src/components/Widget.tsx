@@ -33,13 +33,11 @@ export const WidgetWrapper = styled.div<{ width?: number | string }>`
   color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
-  height: 360px;
   min-width: 300px;
-  padding: 0.25em;
+  padding: 8px;
   position: relative;
   user-select: none;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};

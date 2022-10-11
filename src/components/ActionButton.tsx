@@ -50,6 +50,7 @@ const actionCss = css`
 export const Overlay = styled(Row)<{ hasAction: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
+  margin-top: 12px;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
 
