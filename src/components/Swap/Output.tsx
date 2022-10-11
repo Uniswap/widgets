@@ -1,4 +1,4 @@
-import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
+import { useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -27,34 +27,18 @@ const OutputWrapper = styled(InputWrapper)<{ hasColor?: boolean | null }>`
 `
 
 export default function Output() {
-  const {
-    [Field.OUTPUT]: { balance, amount: currencyAmount, usdc },
-    impact,
-  } = useSwapInfo()
+  const { impact } = useSwapInfo()
 
-  const [amount, updateAmount] = useSwapAmount(Field.OUTPUT)
-  const [currency, updateCurrency] = useSwapCurrency(Field.OUTPUT)
-
+  const [currency] = useSwapCurrency(Field.OUTPUT)
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(currency)
   const color = overrideColor || dynamicColor
-
   // different state true/null/false allow smoother color transition
   const hasColor = currency ? Boolean(color) || null : false
 
   return (
     <DynamicThemeProvider color={color}>
-      <OutputWrapper
-        amount={amount}
-        updateAmount={updateAmount}
-        currency={currency}
-        updateCurrency={updateCurrency}
-        currencyAmount={currencyAmount}
-        balance={balance}
-        usdc={usdc}
-        impact={impact}
-        hasColor={hasColor}
-      />
+      <OutputWrapper field={Field.OUTPUT} impact={impact} hasColor={hasColor} />
     </DynamicThemeProvider>
   )
 }

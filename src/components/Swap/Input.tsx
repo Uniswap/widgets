@@ -82,35 +82,27 @@ export function useFormattedFieldAmount({
 }
 
 interface InputWrapperProps {
-  amount: string | undefined
-  updateAmount: (amount: string) => void
-  currency: Currency | undefined
-  updateCurrency: (currency: Currency) => void
-  currencyAmount: CurrencyAmount<Currency> | undefined
-  balance: CurrencyAmount<Currency> | undefined
-  usdc: CurrencyAmount<Currency> | undefined
+  field: Field
   impact?: PriceImpact
   maxAmount?: string
   isSufficientBalance?: boolean
 }
 
 export function InputWrapper({
-  amount,
-  updateAmount,
-  currency,
-  updateCurrency,
-  currencyAmount,
-  balance,
-  usdc,
+  field,
   impact,
   maxAmount,
   isSufficientBalance,
   className,
 }: InputWrapperProps & { className?: string }) {
   const {
+    [field]: { balance, amount: currencyAmount, usdc },
     error,
     trade: { state: tradeState },
   } = useSwapInfo()
+
+  const [amount, updateAmount] = useSwapAmount(field)
+  const [currency, updateCurrency] = useSwapCurrency(field)
 
   const wrapper = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState<TokenInputHandle | null>(null)
@@ -185,11 +177,8 @@ export function InputWrapper({
 
 export default function Input() {
   const {
-    [Field.INPUT]: { balance, amount: currencyAmount, usdc },
+    [Field.INPUT]: { balance, amount: currencyAmount },
   } = useSwapInfo()
-
-  const [amount, updateAmount] = useSwapAmount(Field.INPUT)
-  const [currency, updateCurrency] = useSwapCurrency(Field.INPUT)
 
   const isSufficientBalance = useMemo(() => {
     if (!balance || !currencyAmount) return undefined
@@ -205,17 +194,5 @@ export default function Input() {
     return max.toExact()
   }, [balance, currencyAmount])
 
-  return (
-    <InputWrapper
-      amount={amount}
-      updateAmount={updateAmount}
-      currency={currency}
-      updateCurrency={updateCurrency}
-      currencyAmount={currencyAmount}
-      balance={balance}
-      usdc={usdc}
-      isSufficientBalance={isSufficientBalance}
-      maxAmount={maxAmount}
-    />
-  )
+  return <InputWrapper field={Field.INPUT} isSufficientBalance={isSufficientBalance} maxAmount={maxAmount} />
 }
