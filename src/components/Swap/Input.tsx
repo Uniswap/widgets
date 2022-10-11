@@ -71,15 +71,13 @@ export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boole
 
   ${({ theme, disableHover }) =>
     !disableHover &&
-    `&:hover:before {
-    border-color: ${theme.interactive};
-  }`}
+    ` &:hover:before {
+        border-color: ${theme.interactive};
+      }
 
-  ${({ theme, disableHover }) =>
-    !disableHover &&
-    `&:focus-within:before {
-    border-color: ${theme.outline};
-  }`}
+      &:focus-within:before {
+        border-color: ${theme.outline};
+      }`}
 `
 
 interface UseFormattedFieldAmountArguments {
