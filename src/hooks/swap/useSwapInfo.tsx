@@ -9,9 +9,9 @@ import useSwitchChain from 'hooks/useSwitchChain'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import useConnectors from 'hooks/web3/useConnectors'
 import { useAtomValue } from 'jotai/utils'
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { Field, swapAtom } from 'state/swap'
+import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -144,13 +144,22 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
 export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
+  const swap = useAtomValue(swapAtom)
   const swapInfo = useComputeSwapInfo(routerUrl)
-
   const {
     error,
+    trade,
     [Field.INPUT]: { currency: currencyIn },
     [Field.OUTPUT]: { currency: currencyOut },
   } = swapInfo
+
+  const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
+  useEffect(() => {
+    if (trade.state === TradeState.VALID && trade.trade) {
+      onInitialSwapQuote?.(trade.trade)
+    }
+  }, [onInitialSwapQuote, swap, trade])
+
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
   const chainIn = currencyIn?.chainId

@@ -23,14 +23,15 @@ export type { OnConnectWalletClick, WidgetEventHandlers } from 'hooks/useSyncWid
 export { EMPTY_TOKEN_LIST, UNISWAP_TOKEN_LIST } from 'hooks/useTokenList'
 export type { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 export type {
-  OnAckSwapPriceUpdate,
   OnAmountChange,
   OnExpandSwapDetails,
-  OnPermitSign,
+  OnInitialSwapQuote,
   OnReviewSwapClick,
   OnSettingsReset,
   OnSlippageChange,
-  OnSwapQuote,
+  OnSubmitSwapClick,
+  OnSwapApprove,
+  OnSwapPriceUpdateAck,
   OnSwitchTokens,
   OnTokenChange,
   OnTokenSelectorClick,

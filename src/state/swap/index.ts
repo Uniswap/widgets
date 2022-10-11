@@ -78,14 +78,14 @@ interface InputEventHandlers {
   onTokenSelectorClick?: OnTokenSelectorClick
 }
 
-/** An integration hook called when the user signs a permit. */
-export type OnPermitSign = () => void
+/** An integration hook called when the user approves a token, either through allowance or permit. */
+export type OnSwapApprove = () => void
 
 /** An integration hook called when the user receives an initial quote for a set of inputs. */
-export type OnInitialSwapQuote = () => void
+export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
 
 /** An integration hook called when the user acks a quote's price update. */
-export type OnSwapPriceUpdateAck = (trade: InterfaceTrade, update: InterfaceTrade) => void
+export type OnSwapPriceUpdateAck = (stale: InterfaceTrade, update: InterfaceTrade) => void
 
 /** An integration hook called when the user expands a swap's details. */
 export type OnExpandSwapDetails = () => void
@@ -96,12 +96,16 @@ export type OnExpandSwapDetails = () => void
  */
 export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
+/** An integration hook called when the user confirms a swap, but before it is submitted. */
+export type OnSubmitSwapClick = (trade: InterfaceTrade) => void
+
 export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
-  onPermitSign?: OnPermitSign
-  onInitialSwapQuote?: OnInitialSwapQuote & never
-  onReviewSwapClick?: OnReviewSwapClick
+  onSwapApprove?: OnSwapApprove
+  onInitialSwapQuote?: OnInitialSwapQuote
   onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
   onExpandSwapDetails?: OnExpandSwapDetails
+  onReviewSwapClick?: OnReviewSwapClick
+  onSubmitSwapClick?: OnSubmitSwapClick
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})

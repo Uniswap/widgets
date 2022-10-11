@@ -59,30 +59,29 @@ export const useApproveOrPermit = (
     signatureData,
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
-  const { onPermitSign } = useAtomValue(swapEventHandlersAtom)
 
   // If permit is supported, trigger a signature, if not create approval transaction.
+  const { onSwapApprove } = useAtomValue(swapEventHandlersAtom)
   const handleApproveOrPermit = useCallback(async () => {
     try {
       if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
         try {
           await gatherPermitSignature()
-          onPermitSign?.()
-          return
         } catch (error) {
           // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
           if (error?.code !== ErrorCode.USER_REJECTED_REQUEST) {
-            return await getApproval()
+            await getApproval()
           }
         }
       } else {
-        return await getApproval()
+        await getApproval()
       }
     } catch (e) {
       // Swallow approval errors - user rejections do not need to be displayed.
+      return
     }
-    return
-  }, [signatureState, gatherPermitSignature, onPermitSign, getApproval])
+    onSwapApprove?.()
+  }, [onSwapApprove, signatureState, gatherPermitSignature, getApproval])
 
   const approvalState = useMemo(() => {
     if (approval === ApprovalState.PENDING) {

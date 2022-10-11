@@ -104,11 +104,13 @@ function ConfirmButton({
   )
 
   const [isPending, setIsPending] = useState(false)
+  const { onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const onClick = useCallback(async () => {
     setIsPending(true)
+    onSubmitSwapClick?.(trade)
     await onConfirm()
     setIsPending(false)
-  }, [onConfirm])
+  }, [onConfirm, onSubmitSwapClick, trade])
 
   const action = useMemo((): Action | undefined => {
     if (isPending) {
