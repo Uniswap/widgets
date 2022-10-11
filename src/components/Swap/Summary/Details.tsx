@@ -71,10 +71,10 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
     }
 
     if (isExactInput(trade.tradeType)) {
-      const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed)})
+      const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     } else {
-      const localizedMaxSent = formatCurrencyAmount({ amount:trade.maximumAmountIn(slippage.allowed)})
+      const localizedMaxSent = formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 

@@ -32,7 +32,7 @@ function TokenValue({ input, usdc, open, children }: PropsWithChildren<TokenValu
       {usdc && (
         <ThemedText.Caption color="secondary" userSelect>
           <Row justify="flex-start" gap={0.25}>
-            {formatCurrencyAmount({ amount: usdc, isUsdPrice: true})}
+            {formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}
             {children}
           </Row>
         </ThemedText.Caption>
