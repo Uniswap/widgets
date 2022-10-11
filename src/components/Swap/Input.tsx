@@ -41,6 +41,30 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
     filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.4)')};
     transition: filter 0.25s;
   }
+
+  &:before {
+    box-sizing: border-box;
+    background-size: 100%;
+    border-radius: inherit;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    content: '';
+    border: 1px solid ${({ theme }) => theme.module};
+  }
+
+  &:hover:before {
+    border-color: ${({ theme }) => theme.interactive};
+  }
+
+  &:focus-within:before {
+    border-color: ${({ theme }) => theme.outline};
+  }
 `
 
 interface UseFormattedFieldAmountArguments {
