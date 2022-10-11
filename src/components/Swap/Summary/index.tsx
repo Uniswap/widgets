@@ -96,15 +96,14 @@ function ConfirmButton({
 }) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
+  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
-  const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
 
   const [isPending, setIsPending] = useState(false)
-  const { onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const onClick = useCallback(async () => {
     setIsPending(true)
     onSubmitSwapClick?.(trade)
