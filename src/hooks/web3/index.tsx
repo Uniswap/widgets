@@ -20,7 +20,7 @@ import {
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 
 interface Web3ReactConnectors {
-  user: Web3ReactConnector<EIP1193 | JsonRpcConnector> | null | undefined
+  user: Web3ReactConnector<EIP1193 | JsonRpcConnector> | undefined
   metaMask: Web3ReactConnector<MetaMask>
   walletConnect: Web3ReactConnector<WalletConnectPopup>
   walletConnectQR: Web3ReactConnector<WalletConnectQR>
@@ -72,18 +72,18 @@ export function Provider({
     [web3ReactConnectors]
   )
 
-  // Attempt to connect eagerly if there is no user-provided provider.
+  const shouldEagerlyConnect = provider === undefined
   useEffect(() => {
     // Ignore any errors during connection so they do not propagate to the widget.
     if (connectors.user) {
       connectors.user.activate().catch(() => undefined)
       return
-    } else if (connectors.user !== null) {
+    } else if (shouldEagerlyConnect) {
       const eagerConnectors = [connectors.metaMask, connectors.walletConnect]
       eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
     }
     connectors.network.activate().catch(() => undefined)
-  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect])
+  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect, shouldEagerlyConnect])
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
@@ -111,7 +111,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcMap }: Provid
   )
 
   const user = useMemo(() => {
-    if (!provider) return provider
+    if (!provider) return
     if (JsonRpcProvider.isProvider(provider)) {
       return initializeWeb3ReactConnector(JsonRpcConnector, { provider })
     } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
