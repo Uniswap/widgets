@@ -71,7 +71,7 @@ export default function TokenButton({ value, disabled, onClick }: TokenButtonPro
       onTransitionEnd={() => setShouldTransition(false)}
       data-testid="token-select"
     >
-      <ThemedText.ButtonLarge color={contentColor} fontWeight={600}>
+      <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow
           gap={0.4}
           empty={!value}
