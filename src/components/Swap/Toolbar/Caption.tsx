@@ -66,7 +66,7 @@ export function Error() {
   return <Caption caption={<Trans>Error fetching trade</Trans>} />
 }
 
-export function Empty() {
+export function MissingInputs() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 
