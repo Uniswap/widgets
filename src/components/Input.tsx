@@ -45,6 +45,9 @@ const Input = styled.input`
     // Overrides WebKit's override of input:disabled color.
     -webkit-text-fill-color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
     color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
+    ::placeholder {
+      color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
+    }
   }
 `
 

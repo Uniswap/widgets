@@ -3509,7 +3509,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.1.tgz#095285a9f9951d92ca0f8785bc4d2270676c309c"
   integrity sha512-sXX2pAbxJj1OrErSc7zMEFo7j1EXqTBbllYuUDEWCZ/A12sK/4RXgXW2+zSoXOHCN6djyVUc3FmEt0v3x2jLSw==
 
-"@uniswap/router-sdk@^1.0.3", "@uniswap/router-sdk@^1.3.0":
+"@uniswap/router-sdk@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.3.0.tgz#8c17e957f65099a18dda536cd05fc34e779628aa"
   integrity sha512-T6kXQFXrAkIHfCCmhyW+0xgUyuFVepL9rlwG9+MjnfVtmGIBssbMzyFKGk5HGQYlk6WQrm630W1j87kdfXpZ/Q==
@@ -5178,9 +5178,9 @@ camelize@^1.0.0:
   integrity sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=
 
 caniuse-lite@^1.0.30001332:
-  version "1.0.30001332"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001332.tgz#39476d3aa8d83ea76359c70302eafdd4a1d727dd"
-  integrity sha512-10T30NYOEQtN6C11YGg411yebhvpnC6Z102+B95eAsN0oB6KUs01ivE8u+G6FMIRtIrVlYXhL+LUwQ3/hXwDWw==
+  version "1.0.30001418"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001418.tgz"
+  integrity sha512-oIs7+JL3K9JRQ3jPZjlH6qyYDp+nBTCais7hjh0s+fuBwufc7uZ7hPYMXrDOJhV360KGMTcczMRObk0/iMqZRg==
 
 cardinal@^2.1.1:
   version "2.1.1"
