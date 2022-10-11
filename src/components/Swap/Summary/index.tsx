@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
@@ -64,7 +63,6 @@ interface EstimateProps {
 }
 
 function Estimate({ trade, slippage }: EstimateProps) {
-  const { i18n } = useLingui()
   const text = useMemo(
     () =>
       isExactInput(trade.tradeType) ? (

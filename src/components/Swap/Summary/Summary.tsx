@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { ArrowDown, ArrowRight } from 'icons'
@@ -22,7 +21,6 @@ interface TokenValueProps {
 }
 
 function TokenValue({ input, usdc, open, children }: PropsWithChildren<TokenValueProps>) {
-  const { i18n } = useLingui()
   return (
     <CollapsingColumn justify="flex-start" open={open} flex>
       <Row gap={0.375} justify="flex-start">

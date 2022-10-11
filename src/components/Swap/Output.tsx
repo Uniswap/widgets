@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
@@ -42,8 +41,6 @@ const MarginWrapper = styled.div`
 `
 
 export default function Output({ children }: { children?: ReactNode }) {
-  const { i18n } = useLingui()
-
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
     error,

@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
-import formatLocaleNumber from 'utils/formatLocaleNumber'
 
 import { TextButton } from '../Button'
 
@@ -42,8 +41,7 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
     <TextButton color="primary" onClick={onClick}>
       <ThemedText.Caption>
         <Row gap={0.25}>
-          {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {price.baseCurrency.symbol} ={' '}
-          {formatPrice(price)} {price.quoteCurrency.symbol}
+          {1} {price.baseCurrency.symbol} = {formatPrice(price)} {price.quoteCurrency.symbol}
           {usdcPrice && (
             <ThemedText.Caption color="secondary">({formatCurrencyAmount(usdcPrice, true)})</ThemedText.Caption>
           )}
