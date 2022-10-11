@@ -11,7 +11,7 @@ import {
 } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
@@ -88,8 +88,11 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const eventHandlers = HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {})
+  const eventHandlers = useMemo(
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
+    [useHandleEvent]
+  )
 
   const widget = (
     <SwapWidget
