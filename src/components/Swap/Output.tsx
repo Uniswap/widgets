@@ -13,6 +13,8 @@ import Row from '../Row'
 import { Balance, InputColumn, InputProps, USDC, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
+export const colorAtom = atom<string | undefined>(undefined)
+
 const StyledInputColumn = styled(InputColumn)`
   border-bottom: 1px solid ${({ theme }) => theme.container};
   border-bottom-left-radius: 0;
@@ -20,13 +22,12 @@ const StyledInputColumn = styled(InputColumn)`
   margin-bottom: 0;
 `
 
-export const colorAtom = atom<string | undefined>(undefined)
-
 export default function Output({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
 
   const {
     [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
+    error,
     trade: { state: tradeState },
     impact,
   } = useSwapInfo()
@@ -34,7 +35,8 @@ export default function Output({ disabled, focused }: InputProps) {
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
-  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isDisabled = error !== undefined
+  const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
   const isLoading = isRouteLoading && isDependentField
 

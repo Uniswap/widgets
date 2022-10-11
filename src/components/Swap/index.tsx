@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
@@ -10,8 +9,6 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useHasFocus from 'hooks/useHasFocus'
-import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import useSyncBrandingSetting, { BrandingSettings, useBrandingSetting } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
@@ -51,33 +48,27 @@ export default function Swap(props: SwapProps) {
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
   useSyncBrandingSetting(props as BrandingSettings)
 
-  const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
   const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
-  const onSupportedNetwork = useOnSupportedNetwork()
-  const isDisabled = !(isActive && onSupportedNetwork)
-
-  const focused = useHasFocus(wrapper)
   const disableBranding = useBrandingSetting()
-
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
         <Wallet disabled={props.hideConnectionUI} />
-        <Settings disabled={isDisabled} />
+        <Settings />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
           <SwapInfoProvider routerUrl={props.routerUrl}>
-            <Input disabled={isDisabled} focused={focused} />
-            <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused} />
+            <Input />
+            <ReverseButton />
+            <Output />
             <Toolbar />
-            <SwapActionButton disabled={isDisabled} />
+            <SwapActionButton />
             {!disableBranding && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
