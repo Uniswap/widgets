@@ -97,11 +97,11 @@ function ConfirmButton({
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
   const [ackTrade, setAckTrade] = useState(trade)
+  const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
-  const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
 
   const [isPending, setIsPending] = useState(false)
   const onClick = useCallback(async () => {
@@ -172,9 +172,11 @@ export function SummaryDialog({
   const { inputAmount, outputAmount } = trade
 
   const [open, setOpen] = useState(false)
+  const { onExpandSwapDetails } = useAtomValue(swapEventHandlersAtom)
   const onExpand = useCallback(() => {
+    onExpandSwapDetails?.()
     setOpen((open) => !open)
-  }, [])
+  }, [onExpandSwapDetails])
 
   return (
     <>

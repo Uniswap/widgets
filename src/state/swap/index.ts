@@ -100,7 +100,7 @@ export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHand
   onSwapQuote?: OnSwapQuote & never
   onReviewSwapClick?: OnReviewSwapClick
   onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
-  onExpandSwapDetails?: OnExpandSwapDetails & never
+  onExpandSwapDetails?: OnExpandSwapDetails
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})
