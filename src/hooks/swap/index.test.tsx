@@ -124,7 +124,7 @@ describe('swap state', () => {
           ],
         }
       )
-      expect(spy).toHaveBeenCalledWith(Field.OUTPUT, '123')
+      expect(spy).toHaveBeenCalledWith(Field.OUTPUT, '123', undefined)
 
       const { result } = rerender(() => useAtomValue(swapAtom))
       expect(result.current).toMatchObject({ ...INITIAL_SWAP, amount: '123', type: TradeType.EXACT_OUTPUT })
@@ -145,7 +145,7 @@ describe('swap state', () => {
           ],
         }
       )
-      expect(spy).toHaveBeenCalledWith(Field.OUTPUT, '123')
+      expect(spy).toHaveBeenCalledWith(Field.OUTPUT, '123', undefined)
 
       const { result } = rerender(() => useAtomValue(swapAtom))
       expect(result.current).toMatchObject(INITIAL_SWAP)

@@ -8,8 +8,10 @@ import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, BarChart, Info, Spinner } from 'icons'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -94,6 +96,7 @@ function ConfirmButton({
 }) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
+  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
@@ -103,9 +106,10 @@ function ConfirmButton({
   const [isPending, setIsPending] = useState(false)
   const onClick = useCallback(async () => {
     setIsPending(true)
+    onSubmitSwapClick?.(trade)
     await onConfirm()
     setIsPending(false)
-  }, [onConfirm])
+  }, [onConfirm, onSubmitSwapClick, trade])
 
   const action = useMemo((): Action | undefined => {
     if (isPending) {
@@ -114,7 +118,10 @@ function ConfirmButton({
       return {
         message: <Trans>Price updated</Trans>,
         icon: BarChart,
-        onClick: () => setAckTrade(trade),
+        onClick: () => {
+          onSwapPriceUpdateAck?.(ackTrade, trade)
+          setAckTrade(trade)
+        },
         children: <Trans>Accept</Trans>,
       }
     } else if (highPriceImpact && !ackPriceImpact) {
@@ -125,7 +132,7 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
+  }, [ackPriceImpact, ackTrade, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
 
   return (
     <ActionButton
@@ -166,9 +173,11 @@ export function SummaryDialog({
   const { inputAmount, outputAmount } = trade
 
   const [open, setOpen] = useState(false)
+  const { onExpandSwapDetails } = useAtomValue(swapEventHandlersAtom)
   const onExpand = useCallback(() => {
+    onExpandSwapDetails?.()
     setOpen((open) => !open)
-  }, [])
+  }, [onExpandSwapDetails])
 
   return (
     <>
