@@ -83,15 +83,7 @@ export function Provider({
       eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
     }
     connectors.network.activate().catch(() => undefined)
-  }, [
-    connectors.metaMask,
-    connectors.network,
-    connectors.user,
-    connectors.walletConnect,
-    provider,
-    shouldEagerlyConnect,
-    web3ReactConnectors.user,
-  ])
+  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect, shouldEagerlyConnect])
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
