@@ -6,7 +6,6 @@ import { Layer } from 'theme'
 
 import Button from '../Button'
 
-const onHoverColorShift = transparentize(0.2)
 const StyledReverseButton = styled(Button)`
   align-items: center;
   background-color: ${({ theme }) => theme.module};
@@ -23,7 +22,7 @@ const StyledReverseButton = styled(Button)`
   width: 40px;
   z-index: ${Layer.OVERLAY};
   :hover {
-    background-color: ${({ theme }) => onHoverColorShift(theme.module)};
+    background-color: ${({ theme }) => transparentize(0.2, theme.module)};
   }
 `
 
