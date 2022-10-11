@@ -151,7 +151,7 @@ export default function Input() {
   }, [input, max, updateInputAmount])
 
   return (
-    <InputColumn gap={0.5} approved={mockApproved} disableHover={isDisabled}>
+    <InputColumn gap={0.5} approved={mockApproved} disableHover={isDisabled || !inputCurrency}>
       <TokenInput
         ref={setInput}
         amount={amount}

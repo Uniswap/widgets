@@ -55,7 +55,7 @@ export default function Output() {
 
   return (
     <DynamicThemeProvider color={color}>
-      <StyledInputColumn hasColor={hasColor} gap={0.5}>
+      <StyledInputColumn gap={0.5} disableHover={isDisabled || !swapOutputCurrency} hasColor={hasColor}>
         <TokenInput
           amount={amount}
           currency={swapOutputCurrency}
