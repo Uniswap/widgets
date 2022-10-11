@@ -20,7 +20,7 @@ import {
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 
 interface Web3ReactConnectors {
-  user: Web3ReactConnector<EIP1193 | JsonRpcConnector> | undefined
+  user: Web3ReactConnector<EIP1193 | JsonRpcConnector> | null | undefined
   metaMask: Web3ReactConnector<MetaMask>
   walletConnect: Web3ReactConnector<WalletConnectPopup>
   walletConnectQR: Web3ReactConnector<WalletConnectQR>
@@ -28,7 +28,11 @@ interface Web3ReactConnectors {
 }
 
 interface ProviderProps {
-  provider?: Eip1193Provider | JsonRpcProvider
+  /**
+   * If null, no auto-connection (MetaMask or WalletConnect) will be attempted.
+   * This is appropriate for integrations which wish to control the connected provider.
+   */
+  provider?: Eip1193Provider | JsonRpcProvider | null
   jsonRpcMap?: JsonRpcConnectionMap
   defaultChainId?: SupportedChainId
 }
@@ -47,7 +51,7 @@ export function Provider({
     // referentially static.
     key.current += 1
 
-    const prioritizedConnectors: (Web3ReactConnector | undefined)[] = [
+    const prioritizedConnectors: (Web3ReactConnector | null | undefined)[] = [
       web3ReactConnectors.user,
       web3ReactConnectors.metaMask,
       web3ReactConnectors.walletConnect,
@@ -74,9 +78,10 @@ export function Provider({
     if (connectors.user) {
       connectors.user.activate().catch(() => undefined)
       return
+    } else if (connectors.user !== null) {
+      const eagerConnectors = [connectors.metaMask, connectors.walletConnect]
+      eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
     }
-    const eagerConnectors = [connectors.metaMask, connectors.walletConnect]
-    eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
     connectors.network.activate().catch(() => undefined)
   }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect])
 
@@ -106,7 +111,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcMap }: Provid
   )
 
   const user = useMemo(() => {
-    if (!provider) return
+    if (!provider) return provider
     if (JsonRpcProvider.isProvider(provider)) {
       return initializeWeb3ReactConnector(JsonRpcConnector, { provider })
     } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
