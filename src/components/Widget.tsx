@@ -98,7 +98,7 @@ export const DialogWrapper = styled.div`
 export interface WidgetProps extends BrandingSettings, TransactionEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | JsonRpcProvider
+  provider?: Eip1193Provider | JsonRpcProvider | null
   jsonRpcUrlMap?: JsonRpcConnectionMap
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
