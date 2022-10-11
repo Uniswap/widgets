@@ -46,20 +46,23 @@ export type OnSlippageChange = (slippage: Slippage) => void
 /** An integration hook called when the user changes transaction deadline settings. */
 export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
 
+interface SettingsEventHandlers {
+  onSettingsReset?: OnSettingsReset
+  onSlippageChange?: OnSlippageChange
+  onTransactionDeadlineChange?: OnTransactionDeadlineChange
+}
+
 /** An integration hook called when the user selects a new token. */
 export type OnTokenChange = (field: Field, token: Currency) => void
 
-/** An integration hook called when the user enters a new amount. */
-export type OnAmountChange = (field: Field, amount: string) => void
+/**
+ * An integration hook called when the user enters a new amount.
+ * If the amount changed from the user clicking Max, origin will be set to 'max'.
+ */
+export type OnAmountChange = (field: Field, amount: string, origin?: 'max') => void
 
 /** An integration hook called when the user switches the tokens. */
 export type OnSwitchTokens = () => void
-
-/**
- * An integration hook called when the user clicks 'Review swap'.
- * If the hook resolves to false or rejects, the review dialog will not open.
- */
-export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
 /**
  * An integration hook called when the user clicks the token selector.
@@ -67,15 +70,37 @@ export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
  */
 export type OnTokenSelectorClick = (field: Field) => void | boolean | Promise<boolean>
 
-export interface SwapEventHandlers {
-  onSettingsReset?: OnSettingsReset
-  onSlippageChange?: OnSlippageChange
-  onTransactionDeadlineChange?: OnTransactionDeadlineChange
+interface InputEventHandlers {
   onTokenChange?: OnTokenChange
   onAmountChange?: OnAmountChange
   onSwitchTokens?: OnSwitchTokens
-  onReviewSwapClick?: OnReviewSwapClick
   onTokenSelectorClick?: OnTokenSelectorClick
+}
+
+/** An integration hook called when the user signs a permit. */
+export type OnPermitSign = () => void
+
+/** An integration hook called when the user receives a quote. */
+export type OnSwapQuote = () => void
+
+/** An integration hook called when the user acks a quote's price update. */
+export type OnAckSwapPriceUpdate = () => void
+
+/** An integration hook called when the user expands a swap's details. */
+export type OnExpandSwapDetails = () => void
+
+/**
+ * An integration hook called when the user clicks 'Review swap'.
+ * If the hook resolves to false or rejects, the review dialog will not open.
+ */
+export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
+
+export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
+  onPermitSign?: OnPermitSign & never
+  onSwapQuote?: OnSwapQuote & never
+  onReviewSwapClick?: OnReviewSwapClick
+  onAckSwapPriceUpdate?: OnAckSwapPriceUpdate & never
+  onExpandSwapDetails?: OnExpandSwapDetails & never
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})
