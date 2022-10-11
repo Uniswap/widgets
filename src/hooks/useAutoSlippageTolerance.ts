@@ -16,6 +16,7 @@ import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
 export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
+const GAS_ESTIMATE_BUFFER = new Percent(10, 100) // 10%
 
 // Base costs regardless of how many hops in the route
 const V3_SWAP_BASE_GAS_ESTIMATE = 100_000
@@ -72,13 +73,10 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 /**
  * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
  */
-export default function useAutoSlippageTolerance({
-  trade,
-  gasUseEstimateUSD,
-}: {
-  trade?: InterfaceTrade
+export default function useAutoSlippageTolerance(
+  trade: InterfaceTrade | undefined,
   gasUseEstimateUSD?: CurrencyAmount<Token>
-} = {}): Percent {
+): Percent {
   const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
@@ -105,16 +103,22 @@ export default function useAutoSlippageTolerance({
     // if not, use local heuristic
     const dollarCostToUse =
       chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && gasUseEstimateUSD
-        ? gasUseEstimateUSD
-        : dollarGasCost
+        ? gasUseEstimateUSD.multiply(GAS_ESTIMATE_BUFFER)
+        : dollarGasCost?.multiply(GAS_ESTIMATE_BUFFER)
 
     if (outputDollarValue && dollarCostToUse) {
       // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
       // the cost of the gas of the failed transaction
       const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
-      if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) return MAX_AUTO_SLIPPAGE_TOLERANCE
-      if (result.lessThan(MIN_AUTO_SLIPPAGE_TOLERANCE)) return MIN_AUTO_SLIPPAGE_TOLERANCE
+      if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) {
+        return MAX_AUTO_SLIPPAGE_TOLERANCE
+      }
+
+      if (result.lessThan(MIN_AUTO_SLIPPAGE_TOLERANCE)) {
+        return MIN_AUTO_SLIPPAGE_TOLERANCE
+      }
+
       return result
     }
 
@@ -127,7 +131,7 @@ export default function useAutoSlippageTolerance({
     nativeCurrency,
     nativeCurrencyPrice,
     chainId,
-    gasUseEstimateUSD,
     outputDollarValue,
+    gasUseEstimateUSD,
   ])
 }
