@@ -1,12 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
-import { largeIconCss } from 'icons'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
 import Row from '../../Row'
 import * as Caption from './Caption'
@@ -16,7 +14,6 @@ const ToolbarRow = styled(Row)`
   border-bottom-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   border-bottom-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   padding: 14px 16px;
-  ${largeIconCss}
 `
 
 export default memo(function Toolbar() {
@@ -35,7 +32,7 @@ export default memo(function Toolbar() {
       case ChainError.UNCONNECTED_CHAIN:
         return <Caption.ConnectWallet />
       case ChainError.ACTIVATING_CHAIN:
-        return <Caption.ConnectWallet />
+        return <Caption.Connecting />
       case ChainError.UNSUPPORTED_CHAIN:
         return <Caption.UnsupportedNetwork />
       case ChainError.MISMATCHED_TOKEN_CHAINS:
@@ -88,10 +85,8 @@ export default memo(function Toolbar() {
   ])
 
   return (
-    <ThemedText.Caption data-testid="toolbar">
-      <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
-        {caption}
-      </ToolbarRow>
-    </ThemedText.Caption>
+    <ToolbarRow justify="flex-start" data-testid="toolbar" gap={3 / 8}>
+      {caption}
+    </ToolbarRow>
   )
 })
