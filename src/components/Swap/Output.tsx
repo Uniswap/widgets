@@ -20,6 +20,7 @@ const StyledInputColumn = styled(InputColumn)`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   margin-bottom: 0;
+  padding: 24px 0 20px 0;
 `
 
 export default function Output() {

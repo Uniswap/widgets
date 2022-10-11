@@ -36,8 +36,8 @@ export const Balance = styled(ThemedText.Body2)`
 export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  padding: 20px 0;
   margin-bottom: 4px;
+  padding: 20px 0 24px 0;
   position: relative;
 
   // Set transitions to reduce color flashes when switching color/token.
