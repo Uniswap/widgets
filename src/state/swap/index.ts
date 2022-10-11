@@ -99,7 +99,7 @@ export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHand
   onPermitSign?: OnPermitSign
   onSwapQuote?: OnSwapQuote & never
   onReviewSwapClick?: OnReviewSwapClick
-  onSwapPriceUpdateAck?: OnSwapPriceUpdateAck & never
+  onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
   onExpandSwapDetails?: OnExpandSwapDetails & never
 }
 

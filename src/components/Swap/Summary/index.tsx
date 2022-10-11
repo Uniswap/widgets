@@ -8,8 +8,10 @@ import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, BarChart, Info, Spinner } from 'icons'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -99,6 +101,7 @@ function ConfirmButton({
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
+  const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
 
   const [isPending, setIsPending] = useState(false)
   const onClick = useCallback(async () => {
@@ -114,7 +117,10 @@ function ConfirmButton({
       return {
         message: <Trans>Price updated</Trans>,
         icon: BarChart,
-        onClick: () => setAckTrade(trade),
+        onClick: () => {
+          onSwapPriceUpdateAck?.()
+          setAckTrade(trade)
+        },
         children: <Trans>Accept</Trans>,
       }
     } else if (highPriceImpact && !ackPriceImpact) {
@@ -125,7 +131,7 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
+  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
 
   return (
     <ActionButton
