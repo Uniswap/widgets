@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
-import EventFeed, { Event, HANDLERS } from './EventFeed'
+import EventFeed, { Event } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
@@ -88,9 +88,6 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const eventHandlers = HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {})
-
   const widget = (
     <SwapWidget
       convenienceFee={convenienceFee}
@@ -109,7 +106,12 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      {...eventHandlers}
+      onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
+      onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
+      onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
+      onTxSubmit={useHandleEvent('onTxSubmit')}
+      onTxSuccess={useHandleEvent('onTxSuccess')}
+      onTxFail={useHandleEvent('onTxFail')}
     />
   )
 

@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, nativeOnChain, USDC } from '../constants/tokens'
-import EventFeed, { Event, HANDLERS } from './EventFeed'
+import EventFeed, { Event } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
@@ -46,9 +46,6 @@ function Fixture() {
 
   const connector = useProvider(SupportedChainId.MAINNET)
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const eventHandlers = HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {})
-
   return (
     <Row flex align="start" justify="start" gap={0.5}>
       <SwapWidget
@@ -67,7 +64,12 @@ function Fixture() {
         jsonRpcUrlMap={INFURA_NETWORK_URLS}
         provider={connector}
         tokenList={tokens}
-        {...eventHandlers}
+        onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
+        onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
+        onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
+        onTxSubmit={useHandleEvent('onTxSubmit')}
+        onTxSuccess={useHandleEvent('onTxSuccess')}
+        onTxFail={useHandleEvent('onTxFail')}
       />
       <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>

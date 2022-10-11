@@ -4,10 +4,8 @@ import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { swapEventHandlersAtom } from 'state/swap'
 
 import { ApprovalState, useApproval } from '../useApproval'
 export { ApprovalState } from '../useApproval'
@@ -61,27 +59,24 @@ export const useApproveOrPermit = (
   } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
 
   // If permit is supported, trigger a signature, if not create approval transaction.
-  const { onSwapApprove } = useAtomValue(swapEventHandlersAtom)
   const handleApproveOrPermit = useCallback(async () => {
     try {
       if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
         try {
-          await gatherPermitSignature()
+          return await gatherPermitSignature()
         } catch (error) {
           // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
           if (error?.code !== ErrorCode.USER_REJECTED_REQUEST) {
-            await getApproval()
+            return await getApproval()
           }
         }
       } else {
-        await getApproval()
+        return await getApproval()
       }
     } catch (e) {
       // Swallow approval errors - user rejections do not need to be displayed.
-      return
     }
-    onSwapApprove?.()
-  }, [onSwapApprove, signatureState, gatherPermitSignature, getApproval])
+  }, [signatureState, gatherPermitSignature, getApproval])
 
   const approvalState = useMemo(() => {
     if (approval === ApprovalState.PENDING) {

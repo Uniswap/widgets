@@ -4,7 +4,6 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
-import { InterfaceTrade } from 'state/routing/types'
 
 import { Slippage } from './settings'
 
@@ -47,48 +46,14 @@ export type OnSlippageChange = (slippage: Slippage) => void
 /** An integration hook called when the user changes transaction deadline settings. */
 export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
 
-interface SettingsEventHandlers {
-  onSettingsReset?: OnSettingsReset
-  onSlippageChange?: OnSlippageChange
-  onTransactionDeadlineChange?: OnTransactionDeadlineChange
-}
-
 /** An integration hook called when the user selects a new token. */
 export type OnTokenChange = (field: Field, token: Currency) => void
 
-/**
- * An integration hook called when the user enters a new amount.
- * If the amount changed from the user clicking Max, origin will be set to 'max'.
- */
-export type OnAmountChange = (field: Field, amount: string, origin?: 'max') => void
+/** An integration hook called when the user enters a new amount. */
+export type OnAmountChange = (field: Field, amount: string) => void
 
 /** An integration hook called when the user switches the tokens. */
 export type OnSwitchTokens = () => void
-
-/**
- * An integration hook called when the user clicks the token selector.
- * If the hook resolve to false or rejects, the token selector will not open.
- */
-export type OnTokenSelectorClick = (field: Field) => void | boolean | Promise<boolean>
-
-interface InputEventHandlers {
-  onTokenChange?: OnTokenChange
-  onAmountChange?: OnAmountChange
-  onSwitchTokens?: OnSwitchTokens
-  onTokenSelectorClick?: OnTokenSelectorClick
-}
-
-/** An integration hook called when the user approves a token, either through allowance or permit. */
-export type OnSwapApprove = () => void
-
-/** An integration hook called when the user receives an initial quote for a set of inputs. */
-export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
-
-/** An integration hook called when the user acks a quote's price update. */
-export type OnSwapPriceUpdateAck = (stale: InterfaceTrade, update: InterfaceTrade) => void
-
-/** An integration hook called when the user expands a swap's details. */
-export type OnExpandSwapDetails = () => void
 
 /**
  * An integration hook called when the user clicks 'Review swap'.
@@ -96,16 +61,21 @@ export type OnExpandSwapDetails = () => void
  */
 export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
-/** An integration hook called when the user confirms a swap, but before it is submitted. */
-export type OnSubmitSwapClick = (trade: InterfaceTrade) => void
+/**
+ * An integration hook called when the user clicks the token selector.
+ * If the hook resolve to false or rejects, the token selector will not open.
+ */
+export type OnTokenSelectorClick = (field: Field) => void | boolean | Promise<boolean>
 
-export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
-  onSwapApprove?: OnSwapApprove
-  onInitialSwapQuote?: OnInitialSwapQuote
-  onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
-  onExpandSwapDetails?: OnExpandSwapDetails
+export interface SwapEventHandlers {
+  onSettingsReset?: OnSettingsReset
+  onSlippageChange?: OnSlippageChange
+  onTransactionDeadlineChange?: OnTransactionDeadlineChange
+  onTokenChange?: OnTokenChange
+  onAmountChange?: OnAmountChange
+  onSwitchTokens?: OnSwitchTokens
   onReviewSwapClick?: OnReviewSwapClick
-  onSubmitSwapClick?: OnSubmitSwapClick
+  onTokenSelectorClick?: OnTokenSelectorClick
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})

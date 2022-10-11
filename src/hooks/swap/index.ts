@@ -68,7 +68,7 @@ export function useIsAmountPopulated() {
   return Boolean(useAtomValue(amountAtom))
 }
 
-export function useSwapAmount(field: Field): [string | undefined, (amount: string, origin?: 'max') => void] {
+export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
   const value = useAtomValue(amountAtom)
   const isFieldIndependent = useIsSwapFieldIndependent(field)
   const amount = isFieldIndependent ? value : undefined
@@ -76,9 +76,9 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
   const { onAmountChange } = useAtomValue(swapEventHandlersAtom)
   const setSwap = useUpdateAtom(swapAtom)
   const updateAmount = useCallback(
-    (update: string, origin?: 'max') => {
+    (update: string) => {
       if (update === amount) return
-      onAmountChange?.(field, update, origin)
+      onAmountChange?.(field, update)
       setSwap((swap) => {
         swap.type = toTradeType(field)
         swap.amount = update
