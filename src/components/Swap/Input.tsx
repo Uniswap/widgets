@@ -67,6 +67,7 @@ export const InputColumn = styled(Column)<{ approved?: boolean; hasColor?: boole
     pointer-events: none;
     content: '';
     border: 1px solid ${({ theme }) => theme.module};
+    transition: 125ms ease border-color;
   }
 
   &:hover:before {

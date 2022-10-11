@@ -21,14 +21,6 @@ const ValueInput = styled(DecimalInput)`
   height: 1.5em;
   margin: -0.25em 0;
 
-  :hover:not(:focus-within) {
-    color: ${({ theme }) => theme.onHover(theme.primary)};
-  }
-
-  :hover:not(:focus-within)::placeholder {
-    color: ${({ theme }) => theme.onHover(theme.secondary)};
-  }
-
   ${loadingTransitionCss}
 `
 
