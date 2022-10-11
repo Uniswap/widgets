@@ -130,7 +130,7 @@ export function InputWrapper({
 
   const onClickMax = useCallback(() => {
     if (!maxAmount) return
-    updateAmount(maxAmount, /* origin= */ 'max')
+    updateAmount(maxAmount)
     input?.focus()
   }, [input, maxAmount, updateAmount])
 
