@@ -6,11 +6,11 @@ import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { DynamicThemeProvider } from 'theme'
 
-import { InputWrapper } from './Input'
+import { FieldWrapper } from './Input'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
-const OutputWrapper = styled(InputWrapper)<{ hasColor?: boolean | null }>`
+const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null }>`
   border-bottom: 1px solid ${({ theme }) => theme.container};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
