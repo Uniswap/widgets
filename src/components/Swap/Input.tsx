@@ -118,7 +118,7 @@ export function InputWrapper({
 
   const isDisabled = error !== undefined
   const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
-  const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
+  const isDependentField = !useIsSwapFieldIndependent(field)
   const isLoading = isRouteLoading && isDependentField
 
   const isWrap = useIsWrap()
@@ -141,7 +141,7 @@ export function InputWrapper({
         amount={formattedAmount}
         currency={currency}
         disabled={isDisabled}
-        field={Field.INPUT}
+        field={field}
         onChangeInput={updateAmount}
         onChangeCurrency={updateCurrency}
         loading={isLoading}
