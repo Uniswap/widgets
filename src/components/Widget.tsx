@@ -142,6 +142,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     return props.defaultChainId
   }, [props.defaultChainId])
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
+
   return (
     <StrictMode>
       <ThemeProvider theme={props.theme}>
