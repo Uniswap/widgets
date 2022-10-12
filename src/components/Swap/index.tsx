@@ -24,10 +24,9 @@ import SwapActionButton from './SwapActionButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
-// SwapProps also currently includes props needed for wallet connection,
+// SwapProps also currently includes props needed for wallet connection (eg hideConnectionUI),
 // since the wallet connection component exists within the Swap component.
-// This includes useSyncWidgetEventHandlers.
-// TODO(zzmp): refactor WalletConnection outside of Swap component
+// TODO(zzmp): refactor WalletConnection into Widget component
 export interface SwapProps extends BrandingSettings, FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
   hideConnectionUI?: boolean
   routerUrl?: string
