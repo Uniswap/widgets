@@ -8,7 +8,6 @@ import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncS
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import useSyncBrandingSetting, { BrandingSettings, useBrandingSetting } from 'hooks/useSyncBrandingSetting'
-import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
@@ -29,13 +28,7 @@ import useValidate from './useValidate'
 // since the wallet connection component exists within the Swap component.
 // This includes useSyncWidgetEventHandlers.
 // TODO(zzmp): refactor WalletConnection outside of Swap component
-export interface SwapProps
-  extends BrandingSettings,
-    FeeOptions,
-    SwapController,
-    SwapEventHandlers,
-    TokenDefaults,
-    WidgetEventHandlers {
+export interface SwapProps extends BrandingSettings, FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
   hideConnectionUI?: boolean
   routerUrl?: string
 }
@@ -46,7 +39,6 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
-  useSyncWidgetEventHandlers(props as WidgetEventHandlers)
   useSyncBrandingSetting(props as BrandingSettings)
 
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
