@@ -11,53 +11,38 @@ import {
 } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { Field } from 'state/swap'
-import styled from 'styled-components/macro'
-import * as Type from 'theme/type'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
+import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
-const EventFeedWrapper = styled.div`
-  background-color: ${defaultTheme.container};
-  border-radius: ${defaultTheme.borderRadius}em;
-  box-sizing: border-box;
-  font-family: ${defaultTheme.fontFamily.font};
-  padding: 1em;
-  width: 360px;
-`
-const EventData = styled.div`
-  height: 80vh;
-  overflow: auto;
-`
-const EventJSON = styled.pre`
-  margin-top: 1em;
-`
-const EventRow = styled.div`
-  background-color: ${defaultTheme.module};
-  border-radius: ${defaultTheme.borderRadius / 2}em;
-  margin: 1em 0;
-  padding: 0.2em;
-`
-const Message = styled.pre`
-  margin: 0;
-`
-interface HandlerEventMessage {
-  message: string
-  data: Record<string, any>
+const TOKEN_WITH_NO_LOGO = {
+  chainId: 1,
+  decimals: 18,
+  symbol: 'HDRN',
+  name: 'Hedron',
+  address: '0x3819f64f282bf135d62168C1e513280dAF905e06',
+}
+
+const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
+const tokenLists: Record<string, TokenInfo[]> = {
+  Default: tokens,
+  'Mainnet only': mainnetTokens,
+  Logoless: [TOKEN_WITH_NO_LOGO],
 }
 
 function Fixture() {
-  const [events, setEvents] = useState<HandlerEventMessage[]>([])
-  const addEvent = useCallback(
-    (event: HandlerEventMessage) => {
-      setEvents(events.concat(event))
-    },
-    [events]
+  const [events, setEvents] = useState<Event[]>([])
+  const useHandleEvent = useCallback(
+    (name: string) =>
+      (...data: unknown[]) =>
+        setEvents((events) => [{ name, data }, ...events]),
+    []
   )
+
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
   const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
     options: [
@@ -78,6 +63,8 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
+  const [disableBranding] = useValue('disableBranding', { defaultValue: false })
+
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
 
   const [width] = useValue('width', { defaultValue: 360 })
@@ -85,11 +72,9 @@ function Fixture() {
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
   const locale = useOption('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })
 
-  const [theme, setTheme] = useValue('theme', { defaultValue: { ...defaultTheme } })
+  const [theme, setTheme] = useValue('theme', { defaultValue: defaultTheme })
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
-
-  const jsonRpcUrlMap = INFURA_NETWORK_URLS
 
   const defaultNetwork = useOption('defaultChainId', {
     options: Object.keys(CHAIN_NAMES_TO_IDS),
@@ -99,57 +84,46 @@ function Fixture() {
 
   const connector = useProvider(defaultChainId)
 
-  const tokenLists: Record<string, TokenInfo[]> = {
-    Default: tokens,
-    'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
-  }
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
+  const eventHandlers = useMemo(
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
+    [useHandleEvent]
+  )
+
+  const widget = (
+    <SwapWidget
+      convenienceFee={convenienceFee}
+      convenienceFeeRecipient={convenienceFeeRecipient}
+      defaultInputTokenAddress={defaultInputToken}
+      defaultInputAmount={defaultInputAmount}
+      defaultOutputTokenAddress={defaultOutputToken}
+      defaultOutputAmount={defaultOutputAmount}
+      disableBranding={disableBranding}
+      hideConnectionUI={hideConnectionUI}
+      locale={locale}
+      jsonRpcUrlMap={INFURA_NETWORK_URLS}
+      defaultChainId={defaultChainId}
+      provider={connector}
+      theme={theme}
+      tokenList={tokenList}
+      width={width}
+      routerUrl={routerUrl}
+      {...eventHandlers}
+    />
+  )
+
+  // If framed in a different origin, only display the SwapWidget, without any chrome.
+  // This is done to faciliate iframing in the documentation (https://docs.uniswap.org).
+  if (!window.frameElement) return widget
+
   return (
-    <Row align="start" justify="space-around">
-      <SwapWidget
-        convenienceFee={convenienceFee}
-        convenienceFeeRecipient={convenienceFeeRecipient}
-        defaultInputTokenAddress={defaultInputToken}
-        defaultInputAmount={defaultInputAmount}
-        defaultOutputTokenAddress={defaultOutputToken}
-        defaultOutputAmount={defaultOutputAmount}
-        hideConnectionUI={hideConnectionUI}
-        locale={locale}
-        jsonRpcUrlMap={jsonRpcUrlMap}
-        defaultChainId={defaultChainId}
-        provider={connector}
-        theme={theme}
-        tokenList={tokenList}
-        width={width}
-        routerUrl={routerUrl}
-        onConnectWalletClick={() => addEvent({ message: 'onConnectWalletClick', data: {} })}
-        onReviewSwapClick={() => addEvent({ message: 'onReviewSwapClick', data: {} })}
-        onTokenSelectorClick={(f: Field) => addEvent({ message: `onTokenSelectorClick`, data: { field: f } })}
-        onTxSubmit={(_txHash: string, data: any) => addEvent({ message: `onTxSubmit`, data })}
-        onTxSuccess={(_txHash: string, data: any) => addEvent({ message: `onTxSuccess`, data })}
-        onTxFail={(error: Error) => addEvent({ message: `onTxFail`, data: error })}
-      />
-      <EventFeedWrapper>
-        <Type.H2>Event Feed</Type.H2>
-        <button onClick={() => setEvents([])} disabled={events.length === 0}>
-          clear
-        </button>
-        <EventData>
-          {events?.map(({ message, data }, i) => (
-            <EventRow key={i}>
-              <div>
-                <Type.H3 padding={0}>
-                  <Message>{message}</Message>
-                </Type.H3>
-                <EventJSON>{JSON.stringify(data, null, 2)}</EventJSON>
-              </div>
-            </EventRow>
-          ))}
-        </EventData>
-      </EventFeedWrapper>
+    <Row flex align="start" justify="start" gap={0.5}>
+      {widget}
+      <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>
   )
 }

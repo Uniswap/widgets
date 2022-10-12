@@ -1,11 +1,13 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { atomWithImmer } from 'jotai/immer'
+import { InterfaceTrade } from 'state/routing/types'
 
 export enum TransactionType {
   APPROVAL,
   SWAP,
   WRAP,
+  UNWRAP,
 }
 
 interface BaseTransactionInfo {
@@ -22,30 +24,33 @@ export interface ApprovalTransactionInfo extends BaseTransactionInfo {
 export interface SwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType
-  inputCurrencyAmount: CurrencyAmount<Currency>
-  outputCurrencyAmount: CurrencyAmount<Currency>
+  trade: InterfaceTrade
+  slippageTolerance: Percent
 }
 
-export interface InputSwapTransactionInfo extends SwapTransactionInfo {
+export interface ExactInputSwapTransactionInfo extends SwapTransactionInfo {
   tradeType: TradeType.EXACT_INPUT
-  expectedOutputCurrencyAmount: string
-  minimumOutputCurrencyAmount: string
 }
 
-export interface OutputSwapTransactionInfo extends SwapTransactionInfo {
+export interface ExactOutputSwapTransactionInfo extends SwapTransactionInfo {
   tradeType: TradeType.EXACT_OUTPUT
-  expectedInputCurrencyAmount: string
-  maximumInputCurrencyAmount: string
 }
 
 export interface WrapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.WRAP
-  unwrapped: boolean
-  currencyAmountRaw: string
-  chainId?: number
+  amount: CurrencyAmount<Currency>
 }
 
-export type TransactionInfo = ApprovalTransactionInfo | SwapTransactionInfo | WrapTransactionInfo
+export interface UnwrapTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.UNWRAP
+  amount: CurrencyAmount<Currency>
+}
+
+export type TransactionInfo =
+  | ApprovalTransactionInfo
+  | SwapTransactionInfo
+  | WrapTransactionInfo
+  | UnwrapTransactionInfo
 
 export interface Transaction<T extends TransactionInfo = TransactionInfo> {
   addedTime: number

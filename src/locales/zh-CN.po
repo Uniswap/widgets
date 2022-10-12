@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 00:16\n"
+"PO-Revision-Date: 2022-10-11 18:07\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -24,19 +24,19 @@ msgstr "接受"
 msgid "Acknowledge"
 msgstr "确认"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "允许"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "允许在你的钱包里"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "先允许 {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "先允许 {symbol}"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "待定津贴"
 
@@ -44,21 +44,21 @@ msgstr "待定津贴"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "等待批准"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "批准"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "在您的钱包中批准"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "先授权 {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "先批准 {symbol}"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -68,12 +68,16 @@ msgstr "自动"
 msgid "Auto Router"
 msgstr "自动路由"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "余额："
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "关闭"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "在你的钱包中确认"
 
@@ -122,10 +126,6 @@ msgstr "获取交易时出错"
 msgid "Fetching best price…"
 msgstr "正在获取最优兑换率..."
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "赞成"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "{0} 余额不足"
 msgid "Invalid recipient"
 msgstr "无效的接收方"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "流动性提供者费用"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "最大值"
 
@@ -179,9 +175,9 @@ msgstr "收到的最低数额"
 msgid "Missing dependencies"
 msgstr "缺少依赖套件"
 
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "模拟切换"
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "网络费用"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -211,6 +207,10 @@ msgstr "估计输出。您最多发送 {0} {1} 或交易将恢复。"
 msgid "Please enter a valid slippage %"
 msgstr "请输入有效的滑点百分比"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "请刷新页面并重试。"
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "由 Uniswap 协议提供支持"
@@ -235,7 +235,8 @@ msgstr "重新加载页面"
 msgid "Reset"
 msgstr "重置"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "检查交易"
 
@@ -257,7 +258,6 @@ msgstr "设置"
 msgid "Slippage tolerance"
 msgstr "滑点容差"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "出问题了。"
@@ -286,6 +286,22 @@ msgstr "交易处理中"
 #: src/components/Swap/Summary/index.tsx
 msgid "Swap summary"
 msgstr "交易摘要"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch"
+msgstr "转变"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network"
+msgstr "切换网络"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network in your wallet"
+msgstr "在您的钱包中切换网络"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "交换网络"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -353,32 +369,18 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "不支持的网络 - 切换到另一个进行交易"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "交易已确认"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "交易处理中"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "展开 {0}"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "在 Etherscan 上查看"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "交易已确认"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "交易处理中"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "换行 {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -391,6 +393,10 @@ msgstr "如果兑换率变动超过此百分比，则将还原该交易。"
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "分钟"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

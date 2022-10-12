@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 00:16\n"
+"PO-Revision-Date: 2022-10-11 18:07\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -24,19 +24,19 @@ msgstr "수락"
 msgid "Acknowledge"
 msgstr "인정하다"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "허용하다"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "지갑에서 허용"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "먼저 {0} 허용"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "먼저 {symbol} 허용"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "수당 보류"
 
@@ -44,21 +44,21 @@ msgstr "수당 보류"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "교환을 실행하는 중에 오류가 발생했습니다. 가격변동 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 교환중인 토큰이 Uniswap과 호환되지 않는 것일 수 있습니다. 참고: 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "승인 대기 중"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "승인"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "지갑에서 승인"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "{0} 먼저 승인"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "{symbol} 먼저 승인"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -68,12 +68,16 @@ msgstr "자동"
 msgid "Auto Router"
 msgstr "자동 라우터"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "잔액:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "닫기"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "지갑에서 확인"
 
@@ -122,10 +126,6 @@ msgstr "거래를 가져오는 중에 오류가 발생했습니다."
 msgid "Fetching best price…"
 msgstr "최적 가격을 가져오는 중…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "찬성"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "부족한 {0} 잔액"
 msgid "Invalid recipient"
 msgstr "잘못된 수령인"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "유동성 공급자 수수료"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "최대"
 
@@ -179,9 +175,9 @@ msgstr "최소 수령됨"
 msgid "Missing dependencies"
 msgstr "누락된 종속성"
 
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "모의 토글"
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "네트워크 요금"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -211,6 +207,10 @@ msgstr "출력이 예상됩니다. 최대 {0} {1} 을 보내지 않으면 거래
 msgid "Please enter a valid slippage %"
 msgstr "유효한 미끄러짐 %를 입력하십시오"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "페이지를 새로고침하고 다시 시도하십시오."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Uniswap 프로토콜 기반"
@@ -235,7 +235,8 @@ msgstr "페이지 새로고침"
 msgid "Reset"
 msgstr "초기화"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "스왑 검토"
 
@@ -257,7 +258,6 @@ msgstr "설정"
 msgid "Slippage tolerance"
 msgstr "슬리피지 허용 오차"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "문제가 발생했습니다."
@@ -286,6 +286,22 @@ msgstr "스왑 보류"
 #: src/components/Swap/Summary/index.tsx
 msgid "Swap summary"
 msgstr "스왑 요약"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch"
+msgstr "스위치"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network"
+msgstr "네트워크 전환"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network in your wallet"
+msgstr "지갑에서 네트워크 전환"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "스위칭 네트워크"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -353,32 +369,18 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "지원되지 않는 네트워크 - 거래를 위해 다른 네트워크로 전환"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "포장 풀기 확인"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "언래핑 보류"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "포장 풀기 {0}"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Etherscan에서보기"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "랩 확인됨"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "랩 대기 중"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "랩 {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -391,6 +393,10 @@ msgstr "가격이 이 요율 이상으로 불리하게 변경되면 거래가 �
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "분"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

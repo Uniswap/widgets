@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 00:16\n"
+"PO-Revision-Date: 2022-10-11 18:07\n"
 "Last-Translator: \n"
 "Language: pt_BR\n"
 "Language-Team: Portuguese, Brazilian\n"
@@ -24,19 +24,19 @@ msgstr "Aceitar"
 msgid "Acknowledge"
 msgstr "Reconhecer"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "Permitir"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "Permitir na sua carteira"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Permitir {0} primeiro"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "Permitir {symbol} primeiro"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "Provisão pendente"
 
@@ -44,21 +44,21 @@ msgstr "Provisão pendente"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ocorreu um erro ao tentar executar esta troca. Pode ser necessário aumentar sua tolerância ao deslizamento. Se isso não funcionar, pode haver uma incompatibilidade com o token que você está negociando. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "Aprovação pendente"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "Aprovar"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "Aprove em sua carteira"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Aprovar {0} primeiro"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "Aprovar {symbol} primeiro"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -68,12 +68,16 @@ msgstr "Automático"
 msgid "Auto Router"
 msgstr "Roteador automático"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Fechar"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "Confirme na sua carteira"
 
@@ -122,10 +126,6 @@ msgstr "Erro ao buscar a negociação"
 msgid "Fetching best price…"
 msgstr "Buscando o melhor preço…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Para"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Saldo insuficiente {0}"
 msgid "Invalid recipient"
 msgstr "Destinatário inválido"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Taxa de provedor de liquidez"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Máx"
 
@@ -179,9 +175,9 @@ msgstr "Mínimo recebido"
 msgid "Missing dependencies"
 msgstr "Dependências ausentes"
 
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Alternar Simulado"
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Taxa de rede"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -211,6 +207,10 @@ msgstr "A saída é estimada. Você enviará no máximo {0} {1} ou a transação
 msgid "Please enter a valid slippage %"
 msgstr "Insira uma % de derrapagem válida"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Atualize a página e tente novamente."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Alimentado pelo protocolo Uniswap"
@@ -235,7 +235,8 @@ msgstr "Recarregue a página"
 msgid "Reset"
 msgstr "Redefinir"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "Troca de revisão"
 
@@ -257,7 +258,6 @@ msgstr "Configurações"
 msgid "Slippage tolerance"
 msgstr "Tolerância a discrepâncias"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Algo deu errado."
@@ -286,6 +286,22 @@ msgstr "Troca pendente"
 #: src/components/Swap/Summary/index.tsx
 msgid "Swap summary"
 msgstr "Resumo da troca"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch"
+msgstr "Trocar"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network"
+msgstr "Mudar de rede"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network in your wallet"
+msgstr "Mude de rede em sua carteira"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "Rede de comutação"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -353,32 +369,18 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "Rede não suportada - mude para outra para negociar"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "Desembrulhar confirmado"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Desempacotar pendente"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Desembrulhar {0}"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Ver no Etherscan"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Envelopamento confirmado"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Encerramento pendente"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Envoltório {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -391,6 +393,10 @@ msgstr "Sua operação será revertida se o preço sofrer alteração desfavorá
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "Minutos"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

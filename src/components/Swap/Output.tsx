@@ -1,31 +1,21 @@
-import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-import BrandedFooter from 'components/BrandedFooter'
-import Rule from 'components/Rule'
-import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
+import { useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { PropsWithChildren } from 'react'
-import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { DynamicThemeProvider, ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { DynamicThemeProvider } from 'theme'
 
-import Column from '../Column'
-import Row from '../Row'
-import { Balance, InputProps, USDC, useFormattedFieldAmount } from './Input'
-import TokenInput from './TokenInput'
+import { FieldWrapper } from './Input'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
-const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  padding: 0.75em;
-  padding-bottom: 0.5em;
-  position: relative;
+const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null }>`
+  border-bottom: 1px solid ${({ theme }) => theme.container};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 0;
+  padding: 24px 0 20px 0;
 
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.
@@ -36,70 +26,19 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
-export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
-  const { i18n } = useLingui()
+export default function Output() {
+  const { impact } = useSwapInfo()
 
-  const {
-    [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
-    trade: { state: tradeState },
-    impact,
-  } = useSwapInfo()
-
-  const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
-  const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
-
-  const isRouteLoading = disabled || tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
-  const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
-  const isLoading = isRouteLoading && isDependentField
-
+  const [currency] = useSwapCurrency(Field.OUTPUT)
   const overrideColor = useAtomValue(colorAtom)
-  const dynamicColor = useCurrencyColor(swapOutputCurrency)
+  const dynamicColor = useCurrencyColor(currency)
   const color = overrideColor || dynamicColor
-
   // different state true/null/false allow smoother color transition
-  const hasColor = swapOutputCurrency ? Boolean(color) || null : false
-
-  const amount = useFormattedFieldAmount({
-    disabled,
-    currencyAmount: outputCurrencyAmount,
-    fieldAmount: swapOutputAmount,
-  })
+  const hasColor = currency ? Boolean(color) || null : false
 
   return (
     <DynamicThemeProvider color={color}>
-      <OutputColumn hasColor={hasColor} gap={0.5}>
-        <Row>
-          <ThemedText.Subhead1 color="secondary">
-            <Trans>For</Trans>
-          </ThemedText.Subhead1>
-        </Row>
-        <TokenInput
-          amount={amount}
-          currency={swapOutputCurrency}
-          disabled={disabled}
-          field={Field.OUTPUT}
-          onChangeInput={updateSwapOutputAmount}
-          onChangeCurrency={updateSwapOutputCurrency}
-          loading={isLoading}
-        >
-          <ThemedText.Body2 color="secondary" userSelect>
-            <Row>
-              <USDC gap={0.5} isLoading={isRouteLoading}>
-                {outputUSDC ? `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)}` : '-'}{' '}
-                {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
-              </USDC>
-              {balance && (
-                <Balance focused={focused}>
-                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
-                </Balance>
-              )}
-            </Row>
-          </ThemedText.Body2>
-        </TokenInput>
-        <Rule />
-        {children}
-        <BrandedFooter />
-      </OutputColumn>
+      <OutputWrapper field={Field.OUTPUT} impact={impact} hasColor={hasColor} />
     </DynamicThemeProvider>
   )
 }

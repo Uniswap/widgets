@@ -1,26 +1,22 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-// This file is lazy-loaded, so the import of smart-order-router is intentional.
-// eslint-disable-next-line no-restricted-imports
-import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
+import type { SwapRoute } from '@uniswap/smart-order-router'
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
+import { isExactInput } from 'utils/tradeType'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
-export function transformSwapRouteToGetQuoteResult(
-  type: 'exactIn' | 'exactOut',
-  amount: CurrencyAmount<Currency>,
-  {
-    quote,
-    quoteGasAdjusted,
-    route,
-    estimatedGasUsed,
-    estimatedGasUsedQuoteToken,
-    estimatedGasUsedUSD,
-    gasPriceWei,
-    methodParameters,
-    blockNumber,
-  }: SwapRoute
-): GetQuoteResult {
+export function transformSwapRouteToGetQuoteResult({
+  quote,
+  quoteGasAdjusted,
+  route,
+  routeString,
+  estimatedGasUsed,
+  estimatedGasUsedQuoteToken,
+  estimatedGasUsedUSD,
+  gasPriceWei,
+  methodParameters,
+  blockNumber,
+  trade: { tradeType, inputAmount, outputAmount },
+}: SwapRoute & { routeString: string }): GetQuoteResult {
   const routeResponse: Array<V3PoolInRoute[] | V2PoolInRoute[]> = []
 
   for (const subRoute of route) {
@@ -36,12 +32,12 @@ export function transformSwapRouteToGetQuoteResult(
 
         let edgeAmountIn = undefined
         if (i === 0) {
-          edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
+          edgeAmountIn = isExactInput(tradeType) ? amount.quotient.toString() : quote.quotient.toString()
         }
 
         let edgeAmountOut = undefined
         if (i === pools.length - 1) {
-          edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
+          edgeAmountOut = isExactInput(tradeType) ? quote.quotient.toString() : amount.quotient.toString()
         }
 
         curRoute.push({
@@ -78,12 +74,12 @@ export function transformSwapRouteToGetQuoteResult(
 
         let edgeAmountIn = undefined
         if (i === 0) {
-          edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
+          edgeAmountIn = isExactInput(tradeType) ? amount.quotient.toString() : quote.quotient.toString()
         }
 
         let edgeAmountOut = undefined
         if (i === pools.length - 1) {
-          edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
+          edgeAmountOut = isExactInput(tradeType) ? quote.quotient.toString() : amount.quotient.toString()
         }
 
         const reserve0 = nextPool.reserve0
@@ -130,7 +126,8 @@ export function transformSwapRouteToGetQuoteResult(
     }
   }
 
-  const result: GetQuoteResult = {
+  const amount = isExactInput(tradeType) ? inputAmount : outputAmount
+  return {
     methodParameters,
     blockNumber: blockNumber.toString(),
     amount: amount.quotient.toString(),
@@ -145,8 +142,6 @@ export function transformSwapRouteToGetQuoteResult(
     gasUseEstimateUSD: estimatedGasUsedUSD.toExact(),
     gasPriceWei: gasPriceWei.toString(),
     route: routeResponse,
-    routeString: routeAmountsToString(route),
+    routeString,
   }
-
-  return result
 }

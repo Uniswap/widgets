@@ -1,11 +1,11 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
-import { Field, swapAtom } from 'state/swap'
-import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
-export { default as useSwapInfo } from './useSwapInfo'
+import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
+import { invertTradeType, toTradeType } from 'utils/tradeType'
+export { ChainError, default as useSwapInfo } from './useSwapInfo'
 
 function otherField(field: Field) {
   switch (field) {
@@ -19,48 +19,46 @@ function otherField(field: Field) {
 }
 
 export function useSwitchSwapCurrencies() {
-  const update = useUpdateAtom(swapAtom)
+  const { onSwitchTokens } = useAtomValue(swapEventHandlersAtom)
+  const setSwap = useUpdateAtom(swapAtom)
   return useCallback(() => {
-    update((swap) => {
+    setSwap((swap) => {
+      onSwitchTokens?.()
+      swap.type = invertTradeType(swap.type)
       const oldOutput = swap[Field.OUTPUT]
       swap[Field.OUTPUT] = swap[Field.INPUT]
       swap[Field.INPUT] = oldOutput
-      switch (swap.independentField) {
-        case Field.INPUT:
-          swap.independentField = Field.OUTPUT
-          break
-        case Field.OUTPUT:
-          swap.independentField = Field.INPUT
-          break
-      }
     })
-  }, [update])
+  }, [onSwitchTokens, setSwap])
 }
 
-export function useSwapCurrency(field: Field): [Currency | undefined, (currency?: Currency) => void] {
-  const atom = useMemo(() => pickAtom(swapAtom, field), [field])
-  const otherAtom = useMemo(() => pickAtom(swapAtom, otherField(field)), [field])
-  const [currency, setCurrency] = useAtom(atom)
-  const otherCurrency = useAtomValue(otherAtom)
+export function useSwapCurrency(field: Field): [Currency | undefined, (currency: Currency) => void] {
+  const currencyAtom = useMemo(() => pickAtom(swapAtom, field), [field])
+  const [currency, setCurrency] = useAtom(currencyAtom)
+  const otherCurrencyAtom = useMemo(() => pickAtom(swapAtom, otherField(field)), [field])
+  const otherCurrency = useAtomValue(otherCurrencyAtom)
+  const { onTokenChange } = useAtomValue(swapEventHandlersAtom)
   const switchSwapCurrencies = useSwitchSwapCurrencies()
   const setOrSwitchCurrency = useCallback(
-    (currency?: Currency) => {
-      if (currency === otherCurrency) {
+    (update: Currency) => {
+      if (update === currency) return
+      if (update === otherCurrency) {
         switchSwapCurrencies()
       } else {
-        setCurrency(currency)
+        onTokenChange?.(field, update)
+        setCurrency(update)
       }
     },
-    [otherCurrency, setCurrency, switchSwapCurrencies]
+    [currency, field, onTokenChange, otherCurrency, setCurrency, switchSwapCurrencies]
   )
   return [currency, setOrSwitchCurrency]
 }
 
-const independentFieldAtom = pickAtom(swapAtom, 'independentField')
+const tradeTypeAtom = pickAtom(swapAtom, 'type')
 
 export function useIsSwapFieldIndependent(field: Field): boolean {
-  const independentField = useAtomValue(independentFieldAtom)
-  return independentField === field
+  const type = useAtomValue(tradeTypeAtom)
+  return type === toTradeType(field)
 }
 
 const amountAtom = pickAtom(swapAtom, 'amount')
@@ -70,30 +68,23 @@ export function useIsAmountPopulated() {
   return Boolean(useAtomValue(amountAtom))
 }
 
-export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
-  const amount = useAtomValue(amountAtom)
+export function useSwapAmount(field: Field): [string | undefined, (amount: string, origin?: 'max') => void] {
+  const value = useAtomValue(amountAtom)
   const isFieldIndependent = useIsSwapFieldIndependent(field)
-  const value = isFieldIndependent ? amount : undefined
-  const updateSwap = useUpdateAtom(swapAtom)
-  const updateAmount = useCallback(
-    (amount: string) =>
-      updateSwap((swap) => {
-        swap.independentField = field
-        swap.amount = amount
-      }),
-    [field, updateSwap]
-  )
-  return [value, updateAmount]
-}
+  const amount = isFieldIndependent ? value : undefined
 
-export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | undefined {
-  const isFieldIndependent = useIsSwapFieldIndependent(field)
-  const isAmountPopulated = useIsAmountPopulated()
-  const [swapAmount] = useSwapAmount(field)
-  const [swapCurrency] = useSwapCurrency(field)
-  const currencyAmount = useMemo(() => tryParseCurrencyAmount(swapAmount, swapCurrency), [swapAmount, swapCurrency])
-  if (isFieldIndependent && isAmountPopulated) {
-    return currencyAmount
-  }
-  return
+  const { onAmountChange } = useAtomValue(swapEventHandlersAtom)
+  const setSwap = useUpdateAtom(swapAtom)
+  const updateAmount = useCallback(
+    (update: string, origin?: 'max') => {
+      if (update === amount) return
+      onAmountChange?.(field, update, origin)
+      setSwap((swap) => {
+        swap.type = toTradeType(field)
+        swap.amount = update
+      })
+    },
+    [amount, field, onAmountChange, setSwap]
+  )
+  return [amount, updateAmount]
 }

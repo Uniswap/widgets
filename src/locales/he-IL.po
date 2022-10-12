@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 00:16\n"
+"PO-Revision-Date: 2022-10-11 18:06\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -24,19 +24,19 @@ msgstr "לְקַבֵּל"
 msgid "Acknowledge"
 msgstr "לְהוֹדוֹת"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "להתיר"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "אפשר בארנק שלך"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "אפשר קודם {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "אפשר קודם {symbol}"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "קצבה בהמתנה"
 
@@ -44,21 +44,21 @@ msgstr "קצבה בהמתנה"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Uniswap V3."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "מחכה לאישור"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "לְאַשֵׁר"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "אשר בארנק שלך"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "תחילה תאשר {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "תחילה תאשר {symbol}"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -68,12 +68,16 @@ msgstr "אוטומטי"
 msgid "Auto Router"
 msgstr "נתב אוטומטי"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "מאזן:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "סגור"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "אשר בארנק שלך"
 
@@ -122,10 +126,6 @@ msgstr "שגיאה בשליפת המסחר"
 msgid "Fetching best price…"
 msgstr "משיג את המחיר הטוב ביותר…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "ל"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "איזון {0} לא מספיק"
 msgid "Invalid recipient"
 msgstr "נמען לא חוקי"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "עמלת ספק נזילות"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "מקסימום"
 
@@ -179,9 +175,9 @@ msgstr "מינימום שהתקבל"
 msgid "Missing dependencies"
 msgstr "חסרות תלות"
 
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "חילופי מדומה"
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "עמלת רשת"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -211,6 +207,10 @@ msgstr "התפוקה מוערכת. אתה תשלח לכל היותר {0} {1} א�
 msgid "Please enter a valid slippage %"
 msgstr "אנא הזן % החלקה חוקית"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "אנא רענן את הדף ונסה שוב."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "מופעל על ידי פרוטוקול Uniswap"
@@ -235,7 +235,8 @@ msgstr "טען מחדש את הדף"
 msgid "Reset"
 msgstr "אִתחוּל"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "סקירת החלפה"
 
@@ -257,7 +258,6 @@ msgstr "הגדרות"
 msgid "Slippage tolerance"
 msgstr "סובלנות להחלקה"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "משהו השתבש."
@@ -286,6 +286,22 @@ msgstr "ההחלפה בהמתנה"
 #: src/components/Swap/Summary/index.tsx
 msgid "Swap summary"
 msgstr "סיכום החלפה"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch"
+msgstr "החלף"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network"
+msgstr "החלף רשת"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network in your wallet"
+msgstr "החלף רשת בארנק"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "החלפת רשת"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -353,32 +369,18 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "רשת לא נתמכת - עבור לרשת אחרת כדי לסחור"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "אישור ביטול הגלישה"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "ביטול הגלישה בהמתנה"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "פרק {0}"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "מבט על אתרסקאן"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "גלישה אושרה"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "גלישה בהמתנה"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "לעטוף {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -391,6 +393,10 @@ msgstr "העסקה שלך תחזור אם המחיר ישתנה בצורה לא 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "דקות"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

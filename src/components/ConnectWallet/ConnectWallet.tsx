@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { Wallet as WalletIcon } from 'icons'
 import { useAtomValue } from 'jotai/utils'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { onConnectWalletClickAtom } from 'state/wallet'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -25,11 +26,10 @@ export default function ConnectWallet({ disabled }: ConnectWalletProps) {
   const [open, setOpen] = useState(false)
   const onClose = () => setOpen(false)
 
-  const onConnectWalletClick = useAtomValue(onConnectWalletClickAtom)
-  const onClick = () => {
-    const promise = onConnectWalletClick && onConnectWalletClick()
-    return promise ? promise.then((open) => setOpen(open)) : setOpen(true)
-  }
+  const onConnectWalletClick = useConditionalHandler(useAtomValue(onConnectWalletClickAtom))
+  const onClick = useCallback(async () => {
+    setOpen(await onConnectWalletClick())
+  }, [onConnectWalletClick])
 
   return (
     <>

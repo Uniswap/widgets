@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 00:16\n"
+"PO-Revision-Date: 2022-10-11 18:06\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -24,19 +24,19 @@ msgstr "Acceptă"
 msgid "Acknowledge"
 msgstr "Recunoașteți"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "Permite"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "Permiteți-vă în portofel"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "Permiteți mai întâi {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "Permiteți mai întâi {symbol}"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "Alocație în așteptare"
 
@@ -44,21 +44,21 @@ msgstr "Alocație în așteptare"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil să fie nevoie să vă măriți toleranța la alunecare. Dacă acest lucru nu funcționează, poate exista o incompatibilitate cu jetonul pe care îl tranzacționați. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "În curs de aprobare"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "Aprobă"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "Aprobați în portofel"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "Aprobați mai întâi {0}"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "Aprobați mai întâi {symbol}"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -68,12 +68,16 @@ msgstr "Automat"
 msgid "Auto Router"
 msgstr "Router automat"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Sold:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Închide"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "Confirmați în portofel"
 
@@ -122,10 +126,6 @@ msgstr "Eroare la preluarea comerțului"
 msgid "Fetching best price…"
 msgstr "Preluare cel mai bun preț…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Pentru"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Sold {0} insuficient"
 msgid "Invalid recipient"
 msgstr "Destinatar nevalid"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Comision furnizor de lichiditate"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Maxim"
 
@@ -179,9 +175,9 @@ msgstr "Minimum primit"
 msgid "Missing dependencies"
 msgstr "Dependențe lipsă"
 
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Comutare simulată"
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Taxa de retea"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -211,6 +207,10 @@ msgstr "Ieșirea este estimată. Veți trimite cel mult {0} {1} sau tranzacția 
 msgid "Please enter a valid slippage %"
 msgstr "Vă rugăm să introduceți un % de alunecare valid"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Vă rugăm să reîmprospătați pagina și să încercați din nou."
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "Funcționat de protocolul Uniswap"
@@ -235,7 +235,8 @@ msgstr "Reîncărcați pagina"
 msgid "Reset"
 msgstr "Resetați"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "Schimb de recenzii"
 
@@ -257,7 +258,6 @@ msgstr "Setări"
 msgid "Slippage tolerance"
 msgstr "Toleranță derapaj"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Ceva n-a mers bine."
@@ -286,6 +286,22 @@ msgstr "Schimb în așteptare"
 #: src/components/Swap/Summary/index.tsx
 msgid "Swap summary"
 msgstr "Rezumat schimb"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch"
+msgstr "Intrerupator"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network"
+msgstr "Schimbați rețeaua"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network in your wallet"
+msgstr "Schimbați rețeaua în portofel"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "Comutare de rețea"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -353,32 +369,18 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "Rețea neacceptată - comutați la alta pentru a tranzacționa"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "Desfacere confirmată"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Desfacere în așteptare"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "Desfaceți {0}"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "Vizualizare pe Etherscan"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "Wrap confirmat"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "Wrap în așteptare"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "Înfășurare {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -391,6 +393,10 @@ msgstr "Tranzacția dvs. va fi reluată dacă prețul se modifică nefavorabil c
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minute"
+
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
 #: src/components/ConnectWallet/ConnectWalletDialog.tsx
 msgid "{caption}"

@@ -9,11 +9,8 @@ import Row, { RowProps } from './Row'
 const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
+  max-height: 56px;
   transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
-
-  :disabled {
-    margin: -1px;
-  }
 `
 
 const ActionRow = styled(Row)``
@@ -43,15 +40,17 @@ const actionCss = css`
   }
 
   ${StyledButton} {
-    border-radius: ${({ theme }) => theme.borderRadius}em;
+    /* Subtract the padding from the borderRadius so that it nests properly. */
+    border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
     flex-grow: 0;
-    padding: 1em;
+    padding: 0 1em;
   }
 `
 
 export const Overlay = styled(Row)<{ hasAction: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
+  margin-top: 12px;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
 

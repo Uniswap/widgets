@@ -1,13 +1,14 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { autoSlippageAtom, maxSlippageAtom } from 'state/settings'
+import { slippageAtom } from 'state/swap/settings'
 
-export function toPercent(maxSlippage: number | undefined): Percent | undefined {
+export function toPercent(maxSlippage: string | undefined): Percent | undefined {
   if (!maxSlippage) return undefined
-  const numerator = Math.floor(maxSlippage * 100)
+  if (Number.isNaN(maxSlippage)) return undefined
+  const numerator = Math.floor(Number(maxSlippage) * 100)
   return new Percent(numerator, 10_000)
 }
 
@@ -20,20 +21,22 @@ export interface Slippage {
 export const DEFAULT_SLIPPAGE = { auto: true, allowed: DEFAULT_AUTO_SLIPPAGE }
 
 /** Returns the allowed slippage, and whether it is auto-slippage. */
-export default function useSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Slippage {
-  const shouldUseAutoSlippage = useAtomValue(autoSlippageAtom)
-  const autoSlippage = useAutoSlippageTolerance(shouldUseAutoSlippage ? trade : undefined)
-  const maxSlippageValue = useAtomValue(maxSlippageAtom)
-  const maxSlippage = useMemo(() => toPercent(maxSlippageValue), [maxSlippageValue])
+export default function useSlippage(trade: {
+  trade?: InterfaceTrade
+  gasUseEstimateUSD?: CurrencyAmount<Token>
+}): Slippage {
+  const slippage = useAtomValue(slippageAtom)
+  const autoSlippage = useAutoSlippageTolerance(slippage.auto ? trade : undefined)
+  const maxSlippage = useMemo(() => toPercent(slippage.max), [slippage.max])
   return useMemo(() => {
-    const auto = shouldUseAutoSlippage || !maxSlippage
-    const allowed = shouldUseAutoSlippage ? autoSlippage : maxSlippage ?? autoSlippage
+    const auto = slippage.auto || !slippage.max
+    const allowed = slippage.auto ? autoSlippage : maxSlippage ?? autoSlippage
     const warning = auto ? undefined : getSlippageWarning(allowed)
     if (auto && allowed === DEFAULT_AUTO_SLIPPAGE) {
       return DEFAULT_SLIPPAGE
     }
     return { auto, allowed, warning }
-  }, [autoSlippage, maxSlippage, shouldUseAutoSlippage])
+  }, [autoSlippage, maxSlippage, slippage])
 }
 
 export const MAX_VALID_SLIPPAGE = new Percent(1, 2)

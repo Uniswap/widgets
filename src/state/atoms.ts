@@ -33,8 +33,3 @@ export function pickAtom<Value, Key extends keyof Value & keyof Draft<Value>, Up
       })
   )
 }
-
-/** Sets a togglable atom to invert its state at the next render. */
-export function setTogglable(draft: boolean) {
-  return !draft
-}

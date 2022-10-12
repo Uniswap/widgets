@@ -2,12 +2,12 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
-import { ActiveWeb3Provider } from 'hooks/connectWeb3/useWeb3React'
-import { TransactionsUpdater } from 'hooks/transactions'
+import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
+import { Provider as Web3ReactProvider } from 'hooks/web3'
+import { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
@@ -16,14 +16,13 @@ import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
-import { UNMOUNTING } from 'utils/animations'
 
-import { Modal, Provider as DialogProvider } from './Dialog'
+import { Animation, Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 
 const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
-const WidgetWrapper = styled.div<{ width?: number | string }>`
+export const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -33,13 +32,12 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
-  height: 360px;
+  min-height: 360px;
   min-width: 300px;
-  padding: 0.25em;
+  padding: 8px;
   position: relative;
   user-select: none;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
@@ -54,12 +52,17 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-const slideIn = keyframes`
+const slideInLeft = keyframes`
   from {
     transform: translateX(calc(100% - 0.25em));
   }
 `
-const slideOut = keyframes`
+const slideOutLeft = keyframes`
+  to {
+    transform: translateX(calc(0.25em - 100%));
+  }
+`
+const slideOutRight = keyframes`
   to {
     transform: translateX(calc(100% - 0.25em));
   }
@@ -80,28 +83,28 @@ export const DialogWrapper = styled.div`
   }
 
   ${Modal} {
-    animation: ${slideIn} 0.25s ease-in;
+    animation: ${slideInLeft} 0.25s ease-in;
 
-    &.${UNMOUNTING} {
-      animation: ${slideOut} 0.25s ease-out;
+    &.${Animation.PAGING} {
+      animation: ${slideOutLeft} 0.25s ease-in;
+    }
+    &.${Animation.CLOSING} {
+      animation: ${slideOutRight} 0.25s ease-out;
     }
   }
 `
 
-export interface WidgetProps {
+export interface WidgetProps extends TransactionEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | JsonRpcProvider
-  jsonRpcUrlMap?: { [chainId: number]: string[] }
+  provider?: Eip1193Provider | JsonRpcProvider | null
+  jsonRpcUrlMap?: JsonRpcConnectionMap
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLDivElement | null
   className?: string
   onError?: ErrorHandler
-  onTxSubmit?: (txHash: string, data: any) => void
-  onTxSuccess?: (txHash: string, data: any) => void
-  onTxFail?: (error: Error, data: any) => void
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
@@ -134,25 +137,13 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
   const defaultChainId = useMemo(() => {
     if (!props.defaultChainId) return DEFAULT_CHAIN_ID
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
-      console.warn(`Unsupported chainId: ${props.defaultChainId}. Falling back to 1 (Ethereum Mainnet).`)
+      console.warn(
+        `Unsupported chainId: ${props.defaultChainId}. Falling back to ${DEFAULT_CHAIN_ID} (${SupportedChainId[DEFAULT_CHAIN_ID]}).`
+      )
       return DEFAULT_CHAIN_ID
     }
     return props.defaultChainId
   }, [props.defaultChainId])
-  const jsonRpcUrlMap: string | JsonRpcProvider | { [chainId: number]: string[] } = useMemo(() => {
-    if (!props.jsonRpcUrlMap) return JSON_RPC_FALLBACK_ENDPOINTS
-    for (const supportedChainId of ALL_SUPPORTED_CHAIN_IDS) {
-      if (!Object.keys(props.jsonRpcUrlMap).includes(`${supportedChainId}`)) {
-        const fallbackRpc = JSON_RPC_FALLBACK_ENDPOINTS[supportedChainId as number]
-        console.warn(
-          `Did not provide a jsonRpcUrlMap for chainId: ${supportedChainId}. Falling back to public RPC endpoint ${fallbackRpc}, which may be unreliable and severly rate-limited.`
-        )
-        props.jsonRpcUrlMap[supportedChainId as number] = fallbackRpc
-      }
-    }
-    return props.jsonRpcUrlMap
-  }, [props.jsonRpcUrlMap])
-
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
   return (
     <StrictMode>
@@ -164,21 +155,18 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
               <ErrorBoundary onError={props.onError}>
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
-                    <ActiveWeb3Provider
+                    <WidgetUpdater {...props} />
+                    <Web3ReactProvider
                       provider={props.provider}
-                      jsonRpcUrlMap={jsonRpcUrlMap}
+                      jsonRpcMap={props.jsonRpcUrlMap}
                       defaultChainId={defaultChainId}
                     >
                       <BlockNumberProvider>
                         <MulticallUpdater />
-                        <TransactionsUpdater
-                          onTxSubmit={props.onTxSubmit}
-                          onTxSuccess={props.onTxSuccess}
-                          onTxFail={props.onTxFail}
-                        />
+                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
-                    </ActiveWeb3Provider>
+                    </Web3ReactProvider>
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>
@@ -188,4 +176,9 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
       </ThemeProvider>
     </StrictMode>
   )
+}
+
+/** A component in the scope of AtomProvider to set Widget-scoped state. */
+function WidgetUpdater(props: WidgetProps) {
+  return null
 }

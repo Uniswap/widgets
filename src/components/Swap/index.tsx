@@ -1,19 +1,17 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
-import { Provider as Eip1193Provider } from '@web3-react/types'
+import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
+import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
+import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useHasFocus from 'hooks/useHasFocus'
-import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import useSyncEventHandlers from 'hooks/useSyncEventHandlers'
+import useSyncBrandingSetting, { BrandingSettings, useBrandingSetting } from 'hooks/useSyncBrandingSetting'
+import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
-import { displayTxHashAtom, Field } from 'state/swap'
-import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
+import { useMemo, useState } from 'react'
+import { displayTxHashAtom } from 'state/swap'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -23,70 +21,56 @@ import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
-import SwapButton from './SwapButton'
+import SwapActionButton from './SwapActionButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
-function getTransactionFromMap(
-  txs: { [hash: string]: Transaction },
-  hash?: string
-): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
-  if (hash) {
-    const tx = txs[hash]
-    if (tx?.info?.type === TransactionType.SWAP) {
-      return tx as Transaction<SwapTransactionInfo>
-    }
-    if (tx?.info?.type === TransactionType.WRAP) {
-      return tx as Transaction<WrapTransactionInfo>
-    }
-  }
-  return
-}
-
-// SwapProps also currently includes props needed for wallet connection, since the wallet connection component exists within the Swap component
-// TODO(kristiehuang): refactor WalletConnection outside of Swap component
-export interface SwapProps extends TokenDefaults, FeeOptions {
+// SwapProps also currently includes props needed for wallet connection,
+// since the wallet connection component exists within the Swap component.
+// This includes useSyncWidgetEventHandlers.
+// TODO(zzmp): refactor WalletConnection outside of Swap component
+export interface SwapProps
+  extends BrandingSettings,
+    FeeOptions,
+    SwapController,
+    SwapEventHandlers,
+    TokenDefaults,
+    WidgetEventHandlers {
   hideConnectionUI?: boolean
-  provider?: Eip1193Provider | JsonRpcProvider
   routerUrl?: string
-  onConnectWalletClick?: () => void | Promise<boolean>
-  onReviewSwapClick?: () => void | Promise<boolean>
-  onTokenSelectorClick?: (f: Field) => void | Promise<boolean>
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncConvenienceFee(props)
-  useSyncTokenDefaults(props)
-  useSyncEventHandlers(props)
+  useSyncController(props as SwapController)
+  useSyncConvenienceFee(props as FeeOptions)
+  useSyncSwapEventHandlers(props as SwapEventHandlers)
+  useSyncTokenDefaults(props as TokenDefaults)
+  useSyncWidgetEventHandlers(props as WidgetEventHandlers)
+  useSyncBrandingSetting(props as BrandingSettings)
 
-  const { isActive } = useWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
+  const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
-  const onSupportedNetwork = useOnSupportedNetwork()
-  const isDisabled = !(isActive && onSupportedNetwork)
-
-  const focused = useHasFocus(wrapper)
-
+  const disableBranding = useBrandingSetting()
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
         <Wallet disabled={props.hideConnectionUI} />
-        <Settings disabled={isDisabled} />
+        <Settings />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <SwapInfoProvider disabled={isDisabled} routerUrl={props.routerUrl}>
-            <Input disabled={isDisabled} focused={focused} />
-            <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused}>
-              <Toolbar />
-              <SwapButton disabled={isDisabled} />
-            </Output>
+          <SwapInfoProvider routerUrl={props.routerUrl}>
+            <Input />
+            <ReverseButton />
+            <Output />
+            <Toolbar />
+            <SwapActionButton />
+            {!disableBranding && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
       </div>

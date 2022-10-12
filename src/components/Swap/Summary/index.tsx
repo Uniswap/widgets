@@ -1,20 +1,22 @@
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import BaseExpando from 'components/Expando'
 import Row from 'components/Row'
+import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
-import { PriceImpact } from 'hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Info, Spinner } from 'icons'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
+import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
+import { isExactInput } from 'utils/tradeType'
 
 import Price from '../Price'
 import Details from './Details'
@@ -40,13 +42,10 @@ const Body = styled(Column)`
 `
 
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
+  const showWarning = Boolean(impact?.warning || slippage.warning)
   return (
     <Row gap={0.5}>
-      {impact?.warning || slippage.warning ? (
-        <AlertTriangle color={impact?.warning || slippage.warning} />
-      ) : (
-        <Info color="secondary" />
-      )}
+      {showWarning ? <AlertTriangle color={impact?.warning || slippage.warning} /> : <Info color="secondary" />}
       <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
         {impact?.warning ? (
           <Trans>High price impact</Trans>
@@ -62,31 +61,27 @@ function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippag
 
 interface EstimateProps {
   slippage: Slippage
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
 }
 
 function Estimate({ trade, slippage }: EstimateProps) {
-  const { i18n } = useLingui()
-  const text = useMemo(() => {
-    switch (trade.tradeType) {
-      case TradeType.EXACT_INPUT:
-        return (
-          <Trans>
-            Output is estimated. You will receive at least{' '}
-            {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)}{' '}
-            {trade.outputAmount.currency.symbol} or the transaction will revert.
-          </Trans>
-        )
-      case TradeType.EXACT_OUTPUT:
-        return (
-          <Trans>
-            Output is estimated. You will send at most{' '}
-            {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
-            {trade.inputAmount.currency.symbol} or the transaction will revert.
-          </Trans>
-        )
-    }
-  }, [i18n.locale, slippage.allowed, trade])
+  const text = useMemo(
+    () =>
+      isExactInput(trade.tradeType) ? (
+        <Trans>
+          Output is estimated. You will receive at least{' '}
+          {formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })}{' '}
+          {trade.outputAmount.currency.symbol} or the transaction will revert.
+        </Trans>
+      ) : (
+        <Trans>
+          Output is estimated. You will send at most{' '}
+          {formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })}{' '}
+          {trade.inputAmount.currency.symbol} or the transaction will revert.
+        </Trans>
+      ),
+    [slippage.allowed, trade]
+  )
   return <StyledEstimate color="secondary">{text}</StyledEstimate>
 }
 
@@ -95,12 +90,13 @@ function ConfirmButton({
   highPriceImpact,
   onConfirm,
 }: {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   highPriceImpact: boolean
   onConfirm: () => Promise<void>
 }) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
+  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
@@ -110,9 +106,10 @@ function ConfirmButton({
   const [isPending, setIsPending] = useState(false)
   const onClick = useCallback(async () => {
     setIsPending(true)
+    onSubmitSwapClick?.(trade)
     await onConfirm()
     setIsPending(false)
-  }, [onConfirm])
+  }, [onConfirm, onSubmitSwapClick, trade])
 
   const action = useMemo((): Action | undefined => {
     if (isPending) {
@@ -121,7 +118,10 @@ function ConfirmButton({
       return {
         message: <Trans>Price updated</Trans>,
         icon: BarChart,
-        onClick: () => setAckTrade(trade),
+        onClick: () => {
+          onSwapPriceUpdateAck?.(ackTrade, trade)
+          setAckTrade(trade)
+        },
         children: <Trans>Accept</Trans>,
       }
     } else if (highPriceImpact && !ackPriceImpact) {
@@ -132,7 +132,7 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
+  }, [ackPriceImpact, ackTrade, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
 
   return (
     <ActionButton
@@ -152,21 +152,32 @@ function ConfirmButton({
 }
 
 interface SummaryDialogProps {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   slippage: Slippage
+  gasUseEstimateUSD?: CurrencyAmount<Token>
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
   onConfirm: () => Promise<void>
 }
 
-export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog({
+  trade,
+  slippage,
+  gasUseEstimateUSD,
+  inputUSDC,
+  outputUSDC,
+  impact,
+  onConfirm,
+}: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
 
   const [open, setOpen] = useState(false)
+  const { onExpandSwapDetails } = useAtomValue(swapEventHandlersAtom)
   const onExpand = useCallback(() => {
+    onExpandSwapDetails?.()
     setOpen((open) => !open)
-  }, [])
+  }, [onExpandSwapDetails])
 
   return (
     <>
@@ -190,8 +201,10 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           height={6}
           gap={open ? 0 : 0.75}
         >
-          <Details trade={trade} slippage={slippage} impact={impact} />
-          <Estimate trade={trade} slippage={slippage} />
+          <Column gap={0.5}>
+            <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
+            <Estimate trade={trade} slippage={slippage} />
+          </Column>
         </Expando>
 
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
