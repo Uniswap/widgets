@@ -19,6 +19,7 @@ export type { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 export type { OnTxFail, OnTxSubmit, OnTxSuccess, TransactionEventHandlers } from 'hooks/transactions'
 export type {
+  AddEthereumChainParameter,
   OnConnectWalletClick,
   OnError,
   OnSwitchChain,

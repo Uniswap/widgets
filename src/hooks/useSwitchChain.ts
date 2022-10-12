@@ -8,6 +8,8 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 
+import useConnectors from './web3/useConnectors'
+
 /** Defined by EIP-3085. */
 export interface AddEthereumChainParameter {
   chainId: string
@@ -56,6 +58,7 @@ async function switchChain(
 
 export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
   const { connector, provider } = useWeb3React()
+  const connectors = useConnectors()
   const urlMap = useJsonRpcUrlsMap()
   const onSwitchChain = useAtomValue(onSwitchChainAtom)
   return useCallback(
@@ -69,9 +72,14 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
         rpcUrls: urlMap[chainId],
       }
       try {
-        // If the integrator implements onSwitchChain, use that instead.
-        const switching = onSwitchChain?.(addChainParameter)
-        if (switching) return switching
+        // The network connector does not implement EIP--3326.
+        if (connector === connectors.network) return await connector.activate(chainId)
+
+        // The user connector may require custom logic: try onSwitchChain if it is available.
+        if (connector === connectors.user) {
+          const switching = onSwitchChain?.(addChainParameter)
+          if (switching) return switching
+        }
 
         try {
           // A custom Connector may use a customProvider, in which case it should handle its own chain switching.
@@ -91,6 +99,6 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
         throw new Error(`Failed to switch network: ${error}`)
       }
     },
-    [connector, onSwitchChain, provider, urlMap]
+    [connector, connectors.network, connectors.user, onSwitchChain, provider, urlMap]
   )
 }
