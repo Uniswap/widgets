@@ -79,20 +79,20 @@ export function useFormattedFieldAmount({
   }, [currencyAmount, fieldAmount])
 }
 
-interface InputWrapperProps {
+interface FieldWrapperProps {
   field: Field
   impact?: PriceImpact
   maxAmount?: string
   isSufficientBalance?: boolean
 }
 
-export function InputWrapper({
+export function FieldWrapper({
   field,
   impact,
   maxAmount,
   isSufficientBalance,
   className,
-}: InputWrapperProps & { className?: string }) {
+}: FieldWrapperProps & { className?: string }) {
   const {
     [field]: { balance, amount: currencyAmount, usdc },
     error,
@@ -118,7 +118,7 @@ export function InputWrapper({
 
   const isDisabled = error !== undefined
   const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
-  const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
+  const isDependentField = !useIsSwapFieldIndependent(field)
   const isLoading = isRouteLoading && isDependentField
 
   const isWrap = useIsWrap()
@@ -141,7 +141,7 @@ export function InputWrapper({
         amount={formattedAmount}
         currency={currency}
         disabled={isDisabled}
-        field={Field.INPUT}
+        field={field}
         onChangeInput={updateAmount}
         onChangeCurrency={updateCurrency}
         loading={isLoading}
@@ -192,5 +192,5 @@ export default function Input() {
     return max.toExact()
   }, [balance, currencyAmount])
 
-  return <InputWrapper field={Field.INPUT} isSufficientBalance={isSufficientBalance} maxAmount={maxAmount} />
+  return <FieldWrapper field={Field.INPUT} isSufficientBalance={isSufficientBalance} maxAmount={maxAmount} />
 }
