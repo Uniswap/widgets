@@ -2,7 +2,7 @@ import { MixedRoute, partitionMixedRouteByProtocol, Protocol } from '@uniswap/ro
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -80,7 +80,7 @@ export default function useAutoSlippageTolerance({
   trade?: InterfaceTrade
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } = {}): Percent {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
   const nativeGasPrice = useGasPrice()

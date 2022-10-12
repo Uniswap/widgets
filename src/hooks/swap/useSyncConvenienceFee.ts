@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { feeOptionsAtom } from 'state/swap'
@@ -10,7 +10,7 @@ export interface FeeOptions {
 }
 
 export default function useSyncConvenienceFee({ convenienceFee, convenienceFeeRecipient }: FeeOptions) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const updateFeeOptions = useUpdateAtom(feeOptionsAtom)
 
   useEffect(() => {

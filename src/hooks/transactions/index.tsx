@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
@@ -16,13 +16,13 @@ function isTransactionRecent(transaction: Transaction) {
 }
 
 export function usePendingTransactions() {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const txs = useAtomValue(transactionsAtom)
   return (chainId ? txs[chainId] : null) ?? {}
 }
 
 export function useAddTransactionInfo() {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)
 
@@ -44,7 +44,7 @@ export function useAddTransactionInfo() {
 
 /** Returns the hash of a pending approval transaction, if it exists. */
 export function usePendingApproval(token?: Token): string | undefined {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const txs = useAtomValue(transactionsAtom)
   if (!chainId || !token || !spender) return undefined

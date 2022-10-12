@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { nativeOnChain } from 'constants/tokens'
 import { useTokenBalances } from 'hooks/useCurrencyBalance'
 import useDebounce from 'hooks/useDebounce'
@@ -9,7 +9,7 @@ import { getTokenFilter } from './filtering'
 import { tokenComparator, useSortTokensByQuery } from './sorting'
 
 export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
-  const { chainId, account } = useWeb3React()
+  const { chainId, account } = useSigner()
   const balances = useTokenBalances(account, tokens)
   const sortedTokens = useMemo(
     // Create a new array because sort is in-place and returns a referentially equivalent array.

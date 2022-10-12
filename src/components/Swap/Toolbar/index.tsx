@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { memo, useMemo } from 'react'
@@ -18,7 +18,7 @@ const ToolbarRow = styled(Row)`
 `
 
 export default memo(function Toolbar() {
-  const { account } = useWeb3React()
+  const { account } = useSigner()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },

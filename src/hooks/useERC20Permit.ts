@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
@@ -124,7 +124,7 @@ export function useERC20Permit(
   state: UseERC20PermitState
   gatherPermitSignature: null | (() => Promise<void>)
 } {
-  const { account, chainId, provider } = useWeb3React()
+  const { account, chainId, provider, jsonRpcProvider } = useSigner()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
@@ -143,7 +143,7 @@ export function useERC20Permit(
       !account ||
       !chainId ||
       !transactionDeadline ||
-      !provider ||
+      !jsonRpcProvider ||
       !tokenNonceState.valid ||
       !tokenAddress ||
       !spender ||
@@ -220,7 +220,7 @@ export function useERC20Permit(
           message,
         })
 
-        return provider
+        return jsonRpcProvider
           .send('eth_signTypedData_v4', [account, data])
           .then(splitSignature)
           .then((signature) => {
@@ -248,6 +248,7 @@ export function useERC20Permit(
     isArgentWallet,
     transactionDeadline,
     provider,
+    jsonRpcProvider,
     tokenNonceState.loading,
     tokenNonceState.valid,
     tokenNonceState.result,
@@ -263,7 +264,7 @@ export function useERC20PermitFromTrade(
   allowedSlippage: Percent,
   transactionDeadline: BigNumber | undefined
 ) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),

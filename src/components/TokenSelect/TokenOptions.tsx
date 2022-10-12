@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
@@ -86,7 +86,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.ref = ref.current ?? undefined
   }
 
-  const { account } = useWeb3React()
+  const { account } = useSigner()
   const balance = useCurrencyBalance(account, value)
 
   return (

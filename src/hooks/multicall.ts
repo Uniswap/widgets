@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import useBlockNumber from 'hooks/useBlockNumber'
 import multicall from 'state/multicall'
 
@@ -37,7 +37,7 @@ export function useSingleContractWithCallData(
 }
 
 function useCallContext() {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const latestBlock = useBlockNumber()
   return { chainId, latestBlock }
 }

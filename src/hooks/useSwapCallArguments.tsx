@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { SwapRouter } from '@uniswap/router-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -33,7 +33,7 @@ export function useSwapCallArguments(
   deadline: BigNumber | undefined,
   feeOptions: FeeOptions | undefined
 ): SwapCall[] {
-  const { account, chainId, provider } = useWeb3React()
+  const { account, chainId, provider } = useSigner()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress

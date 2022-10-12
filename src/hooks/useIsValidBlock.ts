@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { atomWithImmer } from 'jotai/immer'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
@@ -11,7 +11,7 @@ const oldestBlockMapAtom = atomWithImmer<{ [chainId: number]: number }>({})
 const DEFAULT_MAX_BLOCK_AGE = 10
 
 export function useSetOldestValidBlock(): (block: number) => void {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const updateValidBlock = useUpdateAtom(oldestBlockMapAtom)
   return useCallback(
     (block: number) => {
@@ -25,7 +25,7 @@ export function useSetOldestValidBlock(): (block: number) => void {
 }
 
 export function useGetIsValidBlock(maxBlockAge = DEFAULT_MAX_BLOCK_AGE): (block: number) => boolean {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const currentBlock = useBlockNumber()
   const oldestBlockMap = useAtomValue(oldestBlockMapAtom)
   const oldestBlock = chainId ? oldestBlockMap[chainId] : 0

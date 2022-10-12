@@ -1,5 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -47,7 +47,7 @@ export default function useSyncTokenDefaults({
   defaultOutputAmount,
 }: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)

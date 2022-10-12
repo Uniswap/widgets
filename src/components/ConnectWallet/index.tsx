@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 
 import ConnectedWalletChip from './ConnectedWalletChip'
 import ConnectWallet from './ConnectWallet'
@@ -8,7 +8,7 @@ interface WalletProps {
 }
 
 export default function Wallet({ disabled }: WalletProps) {
-  const { account, isActive } = useWeb3React()
+  const { account, isActive } = useSigner()
   return isActive && Boolean(account) ? (
     <ConnectedWalletChip disabled={disabled} account={account} />
   ) : (

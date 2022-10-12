@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
@@ -30,7 +30,7 @@ export default function SwapButton({
   signatureData: SignatureData | null
   onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
 }) {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useSigner()
   const {
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },

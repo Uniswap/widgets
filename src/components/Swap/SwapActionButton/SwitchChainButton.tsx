@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import ActionButton from 'components/ActionButton'
 import useSwitchChain from 'hooks/useSwitchChain'
 import { Spinner } from 'icons'
@@ -8,7 +8,7 @@ import { Colors } from 'theme'
 
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ color, chainId }: { color: keyof Colors; chainId: number }) {
-  const { account } = useWeb3React()
+  const { account } = useSigner()
   const [isPending, setIsPending] = useState(false)
 
   const switchChain = useSwitchChain()

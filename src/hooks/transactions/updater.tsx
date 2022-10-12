@@ -1,5 +1,5 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SupportedChainId } from 'constants/chains'
 import useBlockNumber, { useFastForwardBlockNumber } from 'hooks/useBlockNumber'
 import ms from 'ms.macro'
@@ -45,7 +45,7 @@ interface UpdaterProps {
 }
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const { chainId, provider } = useWeb3React()
+  const { chainId, provider } = useSigner()
 
   const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()

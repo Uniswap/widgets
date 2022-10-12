@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SupportedChainId } from 'constants/chains'
 import { Link } from 'icons'
 import { ReactNode, useMemo } from 'react'
@@ -22,7 +22,7 @@ interface EtherscanLinkProps {
 }
 
 export default function EtherscanLink({ data, type, color = 'currentColor', children }: EtherscanLinkProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const url = useMemo(
     () => data && getExplorerLink(chainId || SupportedChainId.MAINNET, data, type),
     [chainId, data, type]

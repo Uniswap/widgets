@@ -1,6 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
@@ -39,8 +39,8 @@ export function useRouterTrade(
   trade?: InterfaceTrade
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
-  const { provider } = useWeb3React()
-  const queryArgs = useGetQuoteArgs({ provider, tradeType, amountSpecified, otherCurrency, routerUrl })
+  const { jsonRpcProvider } = useSigner()
+  const queryArgs = useGetQuoteArgs({ provider: jsonRpcProvider, tradeType, amountSpecified, otherCurrency, routerUrl })
 
   // PRICE fetching is informational and costly, so it is done less frequently.
   const pollingInterval = routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -11,7 +11,7 @@ import { transactionTtlAtom } from 'state/swap/settings'
 
 /** Returns the default transaction TTL for the chain, in minutes. */
 export function useDefaultTransactionTtl(): number {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   if (chainId && L2_CHAIN_IDS.includes(chainId)) return L2_DEADLINE_FROM_NOW / 60
   return DEFAULT_DEADLINE_FROM_NOW / 60
 }

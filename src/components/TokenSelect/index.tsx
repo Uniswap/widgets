@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -26,7 +26,7 @@ const SearchInput = styled(StringInput)`
 `
 
 function usePrefetchBalances() {
-  const { account } = useWeb3React()
+  const { account } = useSigner()
   const tokenList = useTokenList()
   const prefetchedTokenList = useRef<typeof tokenList>()
   useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
@@ -34,7 +34,7 @@ function usePrefetchBalances() {
 }
 
 function useAreBalancesLoaded(): boolean {
-  const { account } = useWeb3React()
+  const { account } = useSigner()
   const tokens = useTokenList()
   const native = useNativeCurrency()
   const currencies = useMemo(() => [native, ...tokens], [native, tokens])
@@ -73,7 +73,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
   if (!listHasTokens && isLoaded) {

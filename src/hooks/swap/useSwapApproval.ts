@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
@@ -19,7 +19,7 @@ export default function useSwapApproval(
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
   amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
 ) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   const amountToApprove = useMemo(
     () => amount || (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [amount, trade, allowedSlippage]

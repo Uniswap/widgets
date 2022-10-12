@@ -1,11 +1,11 @@
 import { NativeCurrency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useMemo } from 'react'
 
 export default function useNativeCurrency(): NativeCurrency {
-  const { chainId } = useWeb3React()
+  const { chainId } = useSigner()
   return useMemo(
     () =>
       chainId
