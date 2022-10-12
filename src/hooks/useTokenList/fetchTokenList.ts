@@ -3,7 +3,7 @@ import contenthashToUri from 'utils/contenthashToUri'
 import parseENSAddress from 'utils/parseENSAddress'
 import uriToHttp from 'utils/uriToHttp'
 
-import validateTokenList from './validateTokenList'
+import { validateTokenList } from './validateTokenList'
 
 const listCache = new Map<string, TokenList>()
 
