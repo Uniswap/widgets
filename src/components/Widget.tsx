@@ -1,13 +1,12 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
-import { Provider as Eip1193Provider } from '@web3-react/types'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { Animation, Modal, Provider as DialogProvider } from 'components/Dialog'
+import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
+import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { TokenListProvider } from 'hooks/useTokenList'
-import { Provider as Web3ReactProvider } from 'hooks/web3'
-import { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
+import { Provider as Web3Provider, ProviderProps as Web3Props } from 'hooks/web3'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
@@ -16,11 +15,6 @@ import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
-
-import { Animation, Modal, Provider as DialogProvider } from './Dialog'
-import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
-
-const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
 export const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -94,17 +88,14 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends TransactionEventHandlers {
+export interface WidgetProps extends TransactionEventHandlers, Web3Props, WidgetEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | JsonRpcProvider | null
-  jsonRpcUrlMap?: JsonRpcConnectionMap
-  defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
   width?: string | number
   dialog?: HTMLDivElement | null
   className?: string
-  onError?: ErrorHandler
+  onError?: OnError
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
@@ -134,16 +125,6 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     }
     return props.locale ?? DEFAULT_LOCALE
   }, [props.locale])
-  const defaultChainId = useMemo(() => {
-    if (!props.defaultChainId) return DEFAULT_CHAIN_ID
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(props.defaultChainId)) {
-      console.warn(
-        `Unsupported chainId: ${props.defaultChainId}. Falling back to ${DEFAULT_CHAIN_ID} (${SupportedChainId[DEFAULT_CHAIN_ID]}).`
-      )
-      return DEFAULT_CHAIN_ID
-    }
-    return props.defaultChainId
-  }, [props.defaultChainId])
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
   return (
     <StrictMode>
@@ -156,17 +137,13 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
                     <WidgetUpdater {...props} />
-                    <Web3ReactProvider
-                      provider={props.provider}
-                      jsonRpcMap={props.jsonRpcUrlMap}
-                      defaultChainId={defaultChainId}
-                    >
+                    <Web3Provider {...(props as Web3Props)}>
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
-                    </Web3ReactProvider>
+                    </Web3Provider>
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>
@@ -180,5 +157,6 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
 
 /** A component in the scope of AtomProvider to set Widget-scoped state. */
 function WidgetUpdater(props: WidgetProps) {
+  useSyncWidgetEventHandlers(props as WidgetEventHandlers)
   return null
 }

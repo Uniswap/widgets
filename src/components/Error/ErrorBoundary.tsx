@@ -4,10 +4,10 @@ import { Component, ErrorInfo, PropsWithChildren } from 'react'
 import Dialog from '../Dialog'
 import ErrorDialog from './ErrorDialog'
 
-export type ErrorHandler = (error: Error, info: ErrorInfo) => void
+export type OnError = (error: Error, info: ErrorInfo) => void
 
 interface ErrorBoundaryProps {
-  onError?: ErrorHandler
+  onError?: OnError
 }
 
 type ErrorBoundaryState = {

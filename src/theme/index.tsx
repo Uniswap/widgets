@@ -2,7 +2,7 @@ import 'assets/fonts.scss'
 import './external'
 
 import { mix, transparentize } from 'polished'
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components/macro'
 
 import type { Colors, Theme } from './theme'
@@ -92,12 +92,11 @@ export function useSystemTheme() {
 
 const ThemeContext = createContext<DefaultTheme>(toDefaultTheme(defaultTheme))
 
-interface ThemeProviderProps {
+export interface ThemeProps {
   theme?: Theme
-  children: ReactNode
 }
 
-export function ThemeProvider({ theme, children }: ThemeProviderProps) {
+export function ThemeProvider({ theme, children }: PropsWithChildren<ThemeProps>) {
   const contextTheme = useContext(ThemeContext)
   const value = useMemo(() => {
     return toDefaultTheme({
