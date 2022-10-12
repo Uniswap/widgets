@@ -1,5 +1,5 @@
 import type { Web3Provider } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ErrorCode } from 'constants/eip1193'
@@ -45,7 +45,7 @@ async function switchChain(provider: Web3Provider, chainId: SupportedChainId, rp
 }
 
 export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
-  const { connector, provider } = useWeb3React()
+  const { provider } = useSigner()
   const urlMap = useJsonRpcUrlsMap()
   return useCallback(
     async (chainId: SupportedChainId) => {
@@ -58,16 +58,17 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
             // Await both the user action (switchChain) and its result (chainChanged)
             // so that the callback does not resolve before the chain switch has visibly occured.
             new Promise((resolve) => provider.once('chainChanged', resolve)),
-            switchChain(provider, chainId, urlMap[chainId]),
+            // switchChain(provider, chainId, urlMap[chainId]),
           ])
         } catch (error) {
           if (error?.code === ErrorCode.USER_REJECTED_REQUEST) return
-          await connector.activate(chainId)
+          // await connector.activate(chainId)
         }
       } catch (error) {
         throw new Error(`Failed to switch network: ${error}`)
       }
     },
-    [connector, provider, urlMap]
+    // [connector, provider, urlMap]
+    [provider, urlMap]
   )
 }

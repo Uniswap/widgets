@@ -1,21 +1,16 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
+import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { SupportedChainId } from 'constants/chains'
-import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 import { WalletConnectPopup, WalletConnectQR } from 'utils/WalletConnect'
 
-import { Provider as ConnectorsProvider } from './useConnectors'
-import {
-  JsonRpcConnectionMap,
-  Provider as JsonRpcUrlMapProvider,
-  toJsonRpcConnectionMap,
-  toJsonRpcUrlMap,
-} from './useJsonRpcUrlsMap'
+// import { Provider as ConnectorsProvider } from './useConnectors'
+import { JsonRpcConnectionMap, toJsonRpcConnectionMap, toJsonRpcUrlMap } from './useJsonRpcUrlsMap'
 
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 
@@ -37,62 +32,64 @@ interface ProviderProps {
   defaultChainId?: SupportedChainId
 }
 
-export function Provider({
-  defaultChainId = SupportedChainId.MAINNET,
-  jsonRpcMap,
-  provider,
-  children,
-}: PropsWithChildren<ProviderProps>) {
-  const web3ReactConnectors = useWeb3ReactConnectors({ provider, jsonRpcMap, defaultChainId })
+// export function Provider({
+//   defaultChainId = SupportedChainId.MAINNET,
+//   jsonRpcMap,
+//   provider,
+//   children,
+// }: PropsWithChildren<ProviderProps>) {
+//   const web3ReactConnectors = useWeb3ReactConnectors({ provider, jsonRpcMap, defaultChainId })
 
-  const key = useRef(0)
-  const prioritizedConnectors = useMemo(() => {
-    // Re-key Web3ReactProvider before rendering new connectors, as it expects connectors to be
-    // referentially static.
-    key.current += 1
+//   const key = useRef(0)
+//   const prioritizedConnectors = useMemo(() => {
+// Re-key Web3ReactProvider before rendering new connectors, as it expects connectors to be
+//     // referentially static.
+// key.current += 1
 
-    const prioritizedConnectors: (Web3ReactConnector | null | undefined)[] = [
-      web3ReactConnectors.user,
-      web3ReactConnectors.metaMask,
-      web3ReactConnectors.walletConnect,
-      web3ReactConnectors.walletConnectQR,
-      web3ReactConnectors.network,
-    ]
-    return prioritizedConnectors.filter((connector): connector is Web3ReactConnector => Boolean(connector))
-  }, [web3ReactConnectors])
+//     const prioritizedConnectors: (Web3ReactConnector | null | undefined)[] = [
+//       web3ReactConnectors.user,
+//       web3ReactConnectors.metaMask,
+//       web3ReactConnectors.walletConnect,
+//       web3ReactConnectors.walletConnectQR,
+//       web3ReactConnectors.network,
+//     ]
+//     return prioritizedConnectors.filter((connector): connector is Web3ReactConnector => Boolean(connector))
+//   }, [web3ReactConnectors])
 
-  const connectors = useMemo(
-    () => ({
-      user: web3ReactConnectors.user?.[0],
-      metaMask: web3ReactConnectors.metaMask[0],
-      walletConnect: web3ReactConnectors.walletConnect[0],
-      walletConnectQR: web3ReactConnectors.walletConnectQR[0],
-      network: web3ReactConnectors.network[0],
-    }),
-    [web3ReactConnectors]
-  )
+//   const connectors = useMemo(
+//     () => ({
+//       user: web3ReactConnectors.user?.[0],
+//       metaMask: web3ReactConnectors.metaMask[0],
+//       walletConnect: web3ReactConnectors.walletConnect[0],
+//       walletConnectQR: web3ReactConnectors.walletConnectQR[0],
+//       network: web3ReactConnectors.network[0],
+//     }),
+//     [web3ReactConnectors]
+//   )
 
-  const shouldEagerlyConnect = provider === undefined
-  useEffect(() => {
-    // Ignore any errors during connection so they do not propagate to the widget.
-    if (connectors.user) {
-      connectors.user.activate().catch(() => undefined)
-      return
-    } else if (shouldEagerlyConnect) {
-      const eagerConnectors = [connectors.metaMask, connectors.walletConnect]
-      eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
-    }
-    connectors.network.activate().catch(() => undefined)
-  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect, shouldEagerlyConnect])
+//   const shouldEagerlyConnect = provider === undefined
+//   useEffect(() => {
+//     // Ignore any errors during connection so they do not propagate to the widget.
+//     if (connectors.user) {
+//       connectors.user.activate().catch(() => undefined)
+//       return
+//     } else if (shouldEagerlyConnect) {
+//       const eagerConnectors = [connectors.metaMask, connectors.walletConnect]
+//       eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined))
+//     }
+//     connectors.network.activate().catch(() => undefined)
+//   }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect, shouldEagerlyConnect])
 
-  return (
-    <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
-      <JsonRpcUrlMapProvider jsonRpcMap={jsonRpcMap}>
-        <ConnectorsProvider connectors={connectors}>{children}</ConnectorsProvider>
-      </JsonRpcUrlMapProvider>
-    </Web3ReactProvider>
-  )
-}
+//   return (
+//     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
+//       <JsonRpcUrlMapProvider jsonRpcMap={jsonRpcMap}>
+//         <ConnectorsProvider connectors={connectors} key={key.current + 'connectors'}>
+//           {children}
+//         </ConnectorsProvider>
+//       </JsonRpcUrlMapProvider>
+//     </Web3ReactProvider>
+//   )
+// }
 
 const onError = (error: Error) => console.error(error)
 

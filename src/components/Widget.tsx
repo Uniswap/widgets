@@ -1,12 +1,9 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { TokenInfo } from '@uniswap/token-lists'
-import { Provider as Eip1193Provider } from '@web3-react/types'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import { TokenListProvider } from 'hooks/useTokenList'
-import { Provider as Web3ReactProvider } from 'hooks/web3'
 import { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 import { Provider as I18nProvider } from 'i18n'
 import { Atom, Provider as AtomProvider } from 'jotai'
@@ -19,6 +16,7 @@ import { Theme, ThemeProvider } from 'theme'
 
 import { Animation, Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+import { SignerI, SignerProvider } from './SignerProvider'
 
 const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
@@ -94,10 +92,9 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends TransactionEventHandlers {
+export interface WidgetProps extends TransactionEventHandlers, SignerI {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | JsonRpcProvider | null
   jsonRpcUrlMap?: JsonRpcConnectionMap
   defaultChainId?: SupportedChainId
   tokenList?: string | TokenInfo[]
@@ -156,17 +153,28 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
                 <ReduxProvider store={store}>
                   <AtomProvider initialValues={props.initialAtomValues}>
                     <WidgetUpdater {...props} />
-                    <Web3ReactProvider
+                    {/* <Web3ReactProvider
                       provider={props.provider}
                       jsonRpcMap={props.jsonRpcUrlMap}
                       defaultChainId={defaultChainId}
+                    > */}
+
+                    <SignerProvider
+                      provider={props.provider}
+                      jsonRpcProvider={props.jsonRpcProvider}
+                      signer={props.signer}
+                      address={props.address}
+                      chainId={props.chainId}
+                      account={props.address}
+                      isActive={true}
                     >
                       <BlockNumberProvider>
                         <MulticallUpdater />
                         <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                         <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                       </BlockNumberProvider>
-                    </Web3ReactProvider>
+                    </SignerProvider>
+                    {/* </Web3ReactProvider> */}
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>

@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useSigner } from 'components/SignerProvider'
 import { RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
@@ -7,7 +7,6 @@ import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import useSwitchChain from 'hooks/useSwitchChain'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import useConnectors from 'hooks/web3/useConnectors'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -47,7 +46,9 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const { account, chainId, isActivating, isActive } = useWeb3React()
+  const { account, chainId, isActive } = useSigner()
+  const isActivating = false
+
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
@@ -160,17 +161,20 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
     }
   }, [onInitialSwapQuote, swap, trade])
 
-  const { connector } = useWeb3React()
+  // const { connector } = useSigner()
   const switchChain = useSwitchChain()
   const chainIn = currencyIn?.chainId
   const chainOut = currencyOut?.chainId
   const tokenChainId = chainIn || chainOut
-  const { network } = useConnectors()
+  // const { network } = useConnectors()
   // The network connector should be auto-switched, as it is a read-only interface that should "just work".
-  if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
-    delete swapInfo.error // avoids flashing an error whilst switching
-    switchChain(tokenChainId)
-  }
+
+  // FORCE COMMENTTED
+
+  // if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
+  //   delete swapInfo.error // avoids flashing an error whilst switching
+  //   switchChain(tokenChainId)
+  // }
 
   return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }

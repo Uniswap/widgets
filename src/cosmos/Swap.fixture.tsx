@@ -13,11 +13,16 @@ import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { chain, useAccount, useConnect, useNetwork, useProvider, useSigner, WagmiConfig } from 'wagmi'
+import { configureChains, createClient } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { publicProvider } from 'wagmi/providers/public'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
-import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+// import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+import { INFURA_NETWORK_URLS } from './useProvider'
 
 const TOKEN_WITH_NO_LOGO = {
   chainId: 1,
@@ -82,7 +87,7 @@ function Fixture() {
   })
   const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
-  const connector = useProvider(defaultChainId)
+  // const connector = useProvider(defaultChainId)
 
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
 
@@ -93,6 +98,25 @@ function Fixture() {
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
     [useHandleEvent]
   )
+
+  // connect
+  const { connect, isLoading } = useConnect({
+    connector: new InjectedConnector(),
+  })
+  const { address, isConnected } = useAccount()
+  const provider = useProvider()
+  const { chain } = useNetwork()
+  const { data, isLoading: signerLoading } = useSigner()
+
+  useEffect(() => {
+    if (!window) return
+
+    if (!isConnected) {
+      connect()
+    }
+  }, [isConnected])
+
+  if (isLoading || signerLoading || !provider || !data || !chain?.id) return <></>
 
   const widget = (
     <SwapWidget
@@ -107,11 +131,18 @@ function Fixture() {
       locale={locale}
       jsonRpcUrlMap={INFURA_NETWORK_URLS}
       defaultChainId={defaultChainId}
-      provider={connector}
+      // provider={connector}
       theme={theme}
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
+      // data
+      provider={provider}
+      signer={data}
+      address={`${address}`}
+      account={`${address}`}
+      chainId={chain?.id}
+      isActive
       {...eventHandlers}
     />
   )
@@ -128,4 +159,16 @@ function Fixture() {
   )
 }
 
-export default <Fixture />
+const { chains, provider, webSocketProvider } = configureChains([chain.mainnet, chain.polygon], [publicProvider()])
+
+const client = createClient({
+  autoConnect: true,
+  provider,
+  webSocketProvider,
+})
+
+export default (
+  <WagmiConfig client={client}>
+    <Fixture />
+  </WagmiConfig>
+)
