@@ -4,7 +4,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { OnConnectWalletClick, onConnectWalletClickAtom } from 'state/wallet'
 export type { OnError } from 'components/Error/ErrorBoundary'
-export type { OnSwitchChain } from 'hooks/useSwitchChain'
+export type { AddEthereumChainParameter, OnSwitchChain } from 'hooks/useSwitchChain'
 export type { OnConnectWalletClick } from 'state/wallet'
 
 export interface WidgetEventHandlers {
