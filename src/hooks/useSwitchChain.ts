@@ -8,6 +8,8 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 
+import useConnectors from './web3/useConnectors'
+
 /** Defined by EIP-3085. */
 export interface AddEthereumChainParameter {
   chainId: string
@@ -56,6 +58,7 @@ async function switchChain(
 
 export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
   const { connector, provider } = useWeb3React()
+  const { network } = useConnectors()
   const urlMap = useJsonRpcUrlsMap()
   const onSwitchChain = useAtomValue(onSwitchChainAtom)
   return useCallback(
@@ -69,6 +72,8 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
         rpcUrls: urlMap[chainId],
       }
       try {
+        if (connector === network) return await connector.activate(chainId)
+
         // If the integrator implements onSwitchChain, use that instead.
         const switching = onSwitchChain?.(addChainParameter)
         if (switching) return switching
@@ -91,6 +96,6 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
         throw new Error(`Failed to switch network: ${error}`)
       }
     },
-    [connector, onSwitchChain, provider, urlMap]
+    [connector, network, onSwitchChain, provider, urlMap]
   )
 }
