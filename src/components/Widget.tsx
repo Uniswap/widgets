@@ -18,7 +18,7 @@ import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 
 import { Animation, Modal, Provider as DialogProvider } from './Dialog'
-import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+import ErrorBoundary, { OnError } from './Error/ErrorBoundary'
 
 const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
 
@@ -104,7 +104,7 @@ export interface WidgetProps extends TransactionEventHandlers {
   width?: string | number
   dialog?: HTMLDivElement | null
   className?: string
-  onError?: ErrorHandler
+  onError?: OnError
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
