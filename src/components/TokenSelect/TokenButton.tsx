@@ -28,7 +28,7 @@ const TokenButtonRow = styled(Row)<{ empty: boolean }>`
   max-width: 12em;
   overflow: hidden;
   padding-left: ${({ empty }) => empty && 0.5}em;
-  width: fit-content;
+  width: max-content;
 
   img {
     min-width: 1.2em;
@@ -73,7 +73,6 @@ export default function TokenButton({ value, disabled, onClick }: TokenButtonPro
     >
       <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow
-          align="flex-end"
           empty={!value}
           flex
           gap={0.4}
