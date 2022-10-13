@@ -21,16 +21,18 @@ const MissingTokenSymbol = styled.span<{ size?: number }>`
 `
 
 interface BaseProps {
-  token: Currency
+  // TODO(1533): Include logoURI as an optional property of Currency.
+  token: Currency & { logoURI?: string }
   size?: number
 }
 
 type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>, keyof BaseProps>
 
 function TokenImg({ token, size, ...rest }: TokenImgProps) {
-  // Use the wrapped token info so that it includes the logoURI.
+  // Use the wrapped token info so that it includes the logoURI...
   const currency = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
-  const srcs = useCurrencyLogoURIs(currency)
+  // ..but use the token directly if logoURI was included in its specification.
+  const srcs = useCurrencyLogoURIs(token?.logoURI ? token : currency)
   const alt = currency.name || currency.symbol
 
   const [attempt, setAttempt] = useState(0)

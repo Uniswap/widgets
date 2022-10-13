@@ -38,10 +38,8 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
   }
 }
 
-export default function useCurrencyLogoURIs(currency?: Currency | null): string[] {
-  const locations = useHttpLocations(
-    currency && 'logoURI' in currency ? (currency as { logoURI: string }).logoURI : undefined
-  )
+export default function useCurrencyLogoURIs(currency?: (Currency & { logoURI?: string }) | null): string[] {
+  const locations = useHttpLocations(currency?.logoURI)
   return useMemo(() => {
     const logoURIs = [...locations]
     if (currency) {
