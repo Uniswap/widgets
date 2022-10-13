@@ -29,9 +29,9 @@ type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>,
 
 function TokenImg({ token, size, ...rest }: TokenImgProps) {
   // Use the wrapped token info so that it includes the logoURI.
-  const tokenInfo = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
-  const srcs = useCurrencyLogoURIs(tokenInfo)
-  const alt = tokenInfo.name || tokenInfo.symbol
+  const currency = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
+  const srcs = useCurrencyLogoURIs(currency)
+  const alt = currency.name || currency.symbol
 
   const [attempt, setAttempt] = useState(0)
   const src = useMemo(() => {
@@ -52,7 +52,7 @@ function TokenImg({ token, size, ...rest }: TokenImgProps) {
     return (
       <MissingTokenImg {...rest}>
         <MissingTokenSymbol size={size}>
-          {tokenInfo.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+          {currency.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
         </MissingTokenSymbol>
       </MissingTokenImg>
     )

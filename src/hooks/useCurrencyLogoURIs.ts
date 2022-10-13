@@ -4,7 +4,6 @@ import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 
@@ -40,7 +39,9 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
 }
 
 export default function useCurrencyLogoURIs(currency?: Currency | null): string[] {
-  const locations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
+  const locations = useHttpLocations(
+    currency && 'logoURI' in currency ? (currency as { logoURI: string }).logoURI : undefined
+  )
   return useMemo(() => {
     const logoURIs = [...locations]
     if (currency) {
