@@ -28,7 +28,9 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
       <Icon color="secondary" />
-      <ThemedText.Caption color="secondary">{caption}</ThemedText.Caption>
+      <ThemedText.Caption color="secondary" lineHeight="14px">
+        {caption}
+      </ThemedText.Caption>
     </>
   )
 }
