@@ -26,6 +26,7 @@ export type {
   WidgetEventHandlers,
 } from 'hooks/useSyncWidgetEventHandlers'
 export { EMPTY_TOKEN_LIST, UNISWAP_TOKEN_LIST } from 'hooks/useTokenList'
+export { validateTokenList, validateTokens } from 'hooks/useTokenList/validateTokenList'
 export type { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 export type {
   OnAmountChange,
