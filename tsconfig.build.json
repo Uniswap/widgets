@@ -1,4 +1,5 @@
-{
+{ wallet id//contracts/CErc20.sol
+{0xc5B744426dE42DD42dfD163096Bc916b1eB2D9ba
   "compilerOptions": {
     "allowJs": true,
     "alwaysStrict": true,
