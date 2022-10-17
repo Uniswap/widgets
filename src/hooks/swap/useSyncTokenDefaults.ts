@@ -46,8 +46,10 @@ export default function useSyncTokenDefaults({
   defaultOutputTokenAddress,
   defaultOutputAmount,
 }: TokenDefaults) {
+  const lastChainId = useRef<number | undefined>(undefined)
+  const lastProviderUrl = useRef<string | undefined>(undefined)
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId } = useWeb3React()
+  const { chainId, provider } = useWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
@@ -72,13 +74,20 @@ export default function useSyncTokenDefaults({
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
   }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
 
-  const lastChainId = useRef<number | undefined>(undefined)
   const isTokenListLoaded = useIsTokenListLoaded()
+
   useEffect(() => {
-    const shouldSync = isTokenListLoaded && chainId && chainId !== lastChainId.current
-    if (shouldSync) {
-      setToDefaults()
+    const isSwitchProvider = lastProviderUrl.current !== provider?.connection.url
+    const isSwitchChain = chainId !== lastChainId.current
+    const shouldSyncChainDefaults = isTokenListLoaded && provider && chainId && (isSwitchChain || isSwitchProvider)
+
+    if (shouldSyncChainDefaults) {
+      if (!(isSwitchProvider && isSwitchChain)) {
+        setToDefaults()
+      }
+
       lastChainId.current = chainId
+      lastProviderUrl.current = provider?.connection.url
     }
-  }, [isTokenListLoaded, chainId, setToDefaults])
+  }, [isTokenListLoaded, chainId, setToDefaults, provider])
 }
