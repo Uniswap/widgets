@@ -1,21 +1,22 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
+import { ApproveOrPermitState, useApproveOrPermit } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
-import { SignatureData } from 'hooks/useERC20Permit'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
-import { SwapTransactionInfo, TransactionType } from 'state/transactions'
+import { ApprovalTransactionInfo, SwapTransactionInfo, TransactionType } from 'state/transactions'
 import { Colors } from 'theme'
 import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
+import ApproveButton, { useIsPendingApproval } from './ApproveButton'
 
 /**
  * A swapping ActionButton.
@@ -23,29 +24,30 @@ import { SummaryDialog } from '../Summary'
  */
 export default function SwapButton({
   color,
-  signatureData,
+  disabled,
   onSubmit,
 }: {
   color: keyof Colors
-  signatureData: SignatureData | null
-  onSubmit: (submit: () => Promise<SwapTransactionInfo | undefined>) => Promise<boolean>
+  disabled: boolean
+  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const { account, chainId } = useWeb3React()
   const {
-    [Field.INPUT]: { usdc: inputUSDC },
+    [Field.INPUT]: { usdc: inputUSDC, amount: inputCurrencyAmount },
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
     slippage,
     impact,
   } = useSwapInfo()
-  const feeOptions = useAtomValue(feeOptionsAtom)
+  const approval = useApproveOrPermit(trade, slippage.allowed, useIsPendingApproval, inputCurrencyAmount)
   const deadline = useTransactionDeadline()
+  const feeOptions = useAtomValue(feeOptionsAtom)
 
   const { callback: swapCallback } = useSwapCallback({
     trade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
-    signatureData,
+    signatureData: approval.signatureData,
     deadline,
     feeOptions,
   })
@@ -89,9 +91,13 @@ export default function SwapButton({
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
 
+  if (approval.approvalState !== ApproveOrPermitState.APPROVED && !disabled) {
+    return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
+  }
+
   return (
     <>
-      <ActionButton color={color} onClick={onClick}>
+      <ActionButton color={color} onClick={onClick} disabled={disabled}>
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade && (

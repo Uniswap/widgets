@@ -16,9 +16,11 @@ import ActionButton from '../../ActionButton'
  */
 export default function WrapButton({
   color,
+  disabled,
   onSubmit,
 }: {
   color: keyof Colors
+  disabled: boolean
   onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
@@ -51,7 +53,7 @@ export default function WrapButton({
   )
 
   return (
-    <ActionButton color={color} {...actionProps}>
+    <ActionButton color={color} {...actionProps} disabled={disabled}>
       <Trans>
         {wrapType === TransactionType.WRAP ? 'Wrap' : 'Unwrap'} {inputCurrency?.symbol}
       </Trans>
