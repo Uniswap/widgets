@@ -47,56 +47,46 @@ interface SwapInfo {
 
 /** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const { type, amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
   const { account, chainId, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
+  const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
-  const inputChainId = inputCurrency?.chainId
-  const outputChainId = outputCurrency?.chainId
-  const tokenChainId = inputChainId || outputChainId
+  const chainIdIn = currencyIn?.chainId
+  const chainIdOut = currencyOut?.chainId
+  const tokenChainId = chainIdIn || chainIdOut
   const error = useMemo(() => {
     if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
-    if (inputChainId && outputChainId && inputChainId !== outputChainId) return ChainError.MISMATCHED_TOKEN_CHAINS
+    if (chainIdIn && chainIdOut && chainIdIn !== chainIdOut) return ChainError.MISMATCHED_TOKEN_CHAINS
     if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainId, inputChainId, outputChainId, isActivating, isActive, isSupported, tokenChainId])
+  }, [chainId, chainIdIn, chainIdOut, isActivating, isActive, isSupported, tokenChainId])
 
   const parsedAmount = useMemo(
-    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? inputCurrency : outputCurrency) ?? undefined),
-    [amount, type, inputCurrency, outputCurrency]
+    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),
+    [amount, currencyIn, currencyOut, type]
   )
-  const hasAmounts = inputCurrency && outputCurrency && parsedAmount && !isWrap
   const trade = useRouterTrade(
     type,
-    hasAmounts ? parsedAmount : undefined,
-    hasAmounts ? (isExactInput(type) ? outputCurrency : inputCurrency) : undefined,
+    parsedAmount,
+    isExactInput(type) ? currencyOut : currencyIn,
     isWrap || error ? RouterPreference.SKIP : RouterPreference.TRADE,
     routerUrl
   )
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
-  const [inputAmount, outputAmount] = useMemo(() => {
+  const [amountIn, amountOut] = useMemo(() => {
     if (isWrap) {
       return isExactInput(type)
-        ? [parsedAmount, tryParseCurrencyAmount(amount, outputCurrency)]
-        : [tryParseCurrencyAmount(amount, inputCurrency), parsedAmount]
+        ? [parsedAmount, tryParseCurrencyAmount(amount, currencyOut)]
+        : [tryParseCurrencyAmount(amount, currencyIn), parsedAmount]
     }
     return isExactInput(type) ? [parsedAmount, trade.trade?.outputAmount] : [trade.trade?.inputAmount, parsedAmount]
-  }, [
-    amount,
-    inputCurrency,
-    isWrap,
-    outputCurrency,
-    parsedAmount,
-    trade.trade?.inputAmount,
-    trade.trade?.outputAmount,
-    type,
-  ])
-  const currencies = useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
-  const [inputBalance, outputBalance] = useCurrencyBalances(account, currencies)
-  const [inputUSDCValue, outputUSDCValue] = [useUSDCValue(inputAmount), useUSDCValue(outputAmount)]
+  }, [amount, currencyIn, currencyOut, isWrap, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount, type])
+  const currencies = useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
+  const [balanceIn, balanceOut] = useCurrencyBalances(account, currencies)
+  const [usdcIn, usdcOut] = [useUSDCValue(amountIn), useUSDCValue(amountOut)]
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
@@ -106,16 +96,16 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   return useMemo(() => {
     return {
       [Field.INPUT]: {
-        currency: inputCurrency,
-        amount: inputAmount,
-        balance: inputBalance,
-        usdc: inputUSDCValue,
+        currency: currencyIn,
+        amount: amountIn,
+        balance: balanceIn,
+        usdc: usdcIn,
       },
       [Field.OUTPUT]: {
-        currency: outputCurrency,
-        amount: outputAmount,
-        balance: outputBalance,
-        usdc: outputUSDCValue,
+        currency: currencyOut,
+        amount: amountOut,
+        balance: balanceOut,
+        usdc: usdcOut,
       },
       error,
       trade,
@@ -123,18 +113,18 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       impact,
     }
   }, [
+    amountIn,
+    amountOut,
+    balanceIn,
+    balanceOut,
+    currencyIn,
+    currencyOut,
     error,
     impact,
-    inputAmount,
-    inputBalance,
-    inputCurrency,
-    inputUSDCValue,
-    outputAmount,
-    outputBalance,
-    outputCurrency,
-    outputUSDCValue,
     slippage,
     trade,
+    usdcIn,
+    usdcOut,
   ])
 }
 
@@ -154,8 +144,8 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
   const {
     error,
     trade,
-    [Field.INPUT]: { currency: inputCurrency },
-    [Field.OUTPUT]: { currency: outputCurrency },
+    [Field.INPUT]: { currency: currencyIn },
+    [Field.OUTPUT]: { currency: currencyOut },
   } = swapInfo
 
   const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
@@ -167,9 +157,9 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
 
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
-  const inputChainId = inputCurrency?.chainId
-  const outputChainId = outputCurrency?.chainId
-  const tokenChainId = inputChainId || outputChainId
+  const chainIn = currencyIn?.chainId
+  const chainOut = currencyOut?.chainId
+  const tokenChainId = chainIn || chainOut
   const { network } = useConnectors()
   // The network connector should be auto-switched, as it is a read-only interface that should "just work".
   if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
