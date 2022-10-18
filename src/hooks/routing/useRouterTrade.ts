@@ -60,12 +60,12 @@ export function useRouterTrade(
   }, [fulfilledTimeStamp, isFetching, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const result = typeof data === 'object' ? data : undefined
+  const quote = typeof data === 'object' ? data : undefined
   const trade = useMemo(() => {
     const [currencyIn, currencyOut] = isExactInput(tradeType)
       ? [amountSpecified?.currency, otherCurrency]
       : [otherCurrency, amountSpecified?.currency]
-    const routes = computeRoutes(currencyIn, currencyOut, tradeType, result)
+    const routes = computeRoutes(currencyIn, currencyOut, tradeType, quote)
     if (!routes || routes.length === 0) return
     try {
       return transformRoutesToTrade(routes, tradeType)
@@ -73,10 +73,10 @@ export function useRouterTrade(
       console.debug('transformRoutesToTrade failed: ', e)
       return
     }
-  }, [amountSpecified?.currency, otherCurrency, result, tradeType])
-  const isValidBlock = useIsValidBlock(Number(result?.blockNumber))
+  }, [amountSpecified?.currency, otherCurrency, quote, tradeType])
+  const isValidBlock = useIsValidBlock(Number(quote?.blockNumber))
   const isLoading = currentData !== data || !isValidBlock
-  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(result?.gasUseEstimateUSD)
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quote?.gasUseEstimateUSD)
 
   return useMemo(() => {
     if (queryArgs === skipToken) return TRADE_INVALID
