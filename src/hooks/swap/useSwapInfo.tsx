@@ -9,7 +9,7 @@ import useSwitchChain from 'hooks/useSwitchChain'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import useConnectors from 'hooks/web3/useConnectors'
 import { useAtomValue } from 'jotai/utils'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
@@ -152,13 +152,21 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
     [Field.INPUT]: { currency: currencyIn },
     [Field.OUTPUT]: { currency: currencyOut },
   } = swapInfo
+  const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
 
   const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
+  const routeIsLoading = useMemo(() => TradeState.LOADING === trade.state, [trade])
   useEffect(() => {
-    if (trade.state === TradeState.VALID && trade.trade) {
+    if (trade.state === TradeState.VALID && trade.trade && newSwapQuoteNeedsLogging) {
+      console.log('logging trade')
       onInitialSwapQuote?.(trade.trade)
+      setNewSwapQuoteNeedsLogging(false)
     }
-  }, [onInitialSwapQuote, swap, trade])
+    if (routeIsLoading) {
+      setNewSwapQuoteNeedsLogging(true)
+      console.log('routeIsLoading')
+    }
+  }, [onInitialSwapQuote, swap, trade, routeIsLoading, newSwapQuoteNeedsLogging])
 
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
