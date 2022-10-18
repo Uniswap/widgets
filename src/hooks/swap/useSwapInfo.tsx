@@ -45,53 +45,53 @@ interface SwapInfo {
   impact?: PriceImpact
 }
 
-// from the current swap inputs, compute the best trade and return it.
+/** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
+  const { type, amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
   const { account, chainId, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
-  const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
-  const chainIn = currencyIn?.chainId
-  const chainOut = currencyOut?.chainId
-  const tokenChainId = chainIn || chainOut
+  const inputChainId = inputCurrency?.chainId
+  const outputChainId = outputCurrency?.chainId
+  const tokenChainId = inputChainId || outputChainId
   const error = useMemo(() => {
     if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
-    if (chainIn && chainOut && chainIn !== chainOut) return ChainError.MISMATCHED_TOKEN_CHAINS
+    if (inputChainId && outputChainId && inputChainId !== outputChainId) return ChainError.MISMATCHED_TOKEN_CHAINS
     if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainId, chainIn, chainOut, isActivating, isActive, isSupported, tokenChainId])
+  }, [chainId, inputChainId, outputChainId, isActivating, isActive, isSupported, tokenChainId])
 
   const parsedAmount = useMemo(
-    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),
-    [amount, type, currencyIn, currencyOut]
+    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? inputCurrency : outputCurrency) ?? undefined),
+    [amount, type, inputCurrency, outputCurrency]
   )
-  const hasAmounts = currencyIn && currencyOut && parsedAmount && !isWrap
+  const hasAmounts = inputCurrency && outputCurrency && parsedAmount && !isWrap
   const trade = useRouterTrade(
     type,
     hasAmounts ? parsedAmount : undefined,
-    hasAmounts ? (isExactInput(type) ? currencyOut : currencyIn) : undefined,
+    hasAmounts ? (isExactInput(type) ? outputCurrency : inputCurrency) : undefined,
     isWrap || error ? RouterPreference.SKIP : RouterPreference.TRADE,
     routerUrl
   )
 
-  const amountIn = useMemo(
+  const inputAmount = useMemo(
     () => (isWrap || isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
     [isWrap, parsedAmount, trade.trade?.inputAmount, type]
   )
-  const amountOut = useMemo(
+  const outputAmount = useMemo(
     () => (isWrap || !isExactInput(type) ? parsedAmount : trade.trade?.outputAmount),
     [isWrap, parsedAmount, trade.trade?.outputAmount, type]
   )
 
-  const [balanceIn, balanceOut] = useCurrencyBalances(
+  const [inputBalance, outputBalance] = useCurrencyBalances(
     account,
-    useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
+    useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
   )
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
-  // (Using amountIn/amountOut would show (incorrect) intermediate values.)
+  // (Using inputAmount/outputAmount would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade)
   const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
   const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
@@ -101,15 +101,15 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   return useMemo(() => {
     return {
       [Field.INPUT]: {
-        currency: currencyIn,
-        amount: amountIn,
-        balance: balanceIn,
+        currency: inputCurrency,
+        amount: inputAmount,
+        balance: inputBalance,
         usdc: inputUSDCValue,
       },
       [Field.OUTPUT]: {
-        currency: currencyOut,
-        amount: amountOut,
-        balance: balanceOut,
+        currency: outputCurrency,
+        amount: outputAmount,
+        balance: outputBalance,
         usdc: outputUSDCValue,
       },
       error,
@@ -118,15 +118,15 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       impact,
     }
   }, [
-    amountIn,
-    amountOut,
-    balanceIn,
-    balanceOut,
-    currencyIn,
-    currencyOut,
     error,
     impact,
+    inputAmount,
+    inputBalance,
+    inputCurrency,
     inputUSDCValue,
+    outputAmount,
+    outputBalance,
+    outputCurrency,
     outputUSDCValue,
     slippage,
     trade,
@@ -149,8 +149,8 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
   const {
     error,
     trade,
-    [Field.INPUT]: { currency: currencyIn },
-    [Field.OUTPUT]: { currency: currencyOut },
+    [Field.INPUT]: { currency: inputCurrency },
+    [Field.OUTPUT]: { currency: outputCurrency },
   } = swapInfo
 
   const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
@@ -162,9 +162,9 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
 
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
-  const chainIn = currencyIn?.chainId
-  const chainOut = currencyOut?.chainId
-  const tokenChainId = chainIn || chainOut
+  const inputChainId = inputCurrency?.chainId
+  const outputChainId = outputCurrency?.chainId
+  const tokenChainId = inputChainId || outputChainId
   const { network } = useConnectors()
   // The network connector should be auto-switched, as it is a read-only interface that should "just work".
   if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
