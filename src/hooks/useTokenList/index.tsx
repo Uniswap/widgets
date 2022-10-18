@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
@@ -11,7 +11,8 @@ import { validateTokens } from './validateTokenList'
 
 export { useQueryTokens } from './useQueryTokens'
 
-export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+export const UNISWAP_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+export const EMPTY_TOKEN_LIST = []
 
 const MISSING_PROVIDER = Symbol()
 const ChainTokenMapContext = createContext<ChainTokenMap | undefined | typeof MISSING_PROVIDER>(MISSING_PROVIDER)
@@ -29,7 +30,7 @@ export function useIsTokenListLoaded() {
 }
 
 export default function useTokenList(): WrappedTokenInfo[] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const chainTokenMap = useChainTokenMapContext()
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
@@ -41,7 +42,7 @@ export default function useTokenList(): WrappedTokenInfo[] {
 export type TokenMap = { [address: string]: Token }
 
 export function useTokenMap(): TokenMap {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const chainTokenMap = useChainTokenMapContext()
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
@@ -54,7 +55,7 @@ export function useTokenMap(): TokenMap {
 }
 
 export function TokenListProvider({
-  list = DEFAULT_TOKEN_LIST,
+  list = UNISWAP_TOKEN_LIST,
   children,
 }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
@@ -65,15 +66,15 @@ export function TokenListProvider({
 
   useEffect(() => setChainTokenMap(undefined), [list])
 
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, provider } = useWeb3React()
   const resolver = useCallback(
     (ensName: string) => {
-      if (library && chainId === 1) {
-        return resolveENSContentHash(ensName, library)
+      if (provider && chainId === 1) {
+        return resolveENSContentHash(ensName, provider)
       }
       throw new Error('Could not construct mainnet ENS resolver')
     },
-    [chainId, library]
+    [chainId, provider]
   )
 
   useEffect(() => {
@@ -92,7 +93,9 @@ export function TokenListProvider({
         if (typeof list === 'string') {
           tokens = await fetchTokenList(list, resolver)
         } else {
-          tokens = await validateTokens(list)
+          // Empty lists will fail validation, but are valid (eg EMPTY_TOKEN_LIST)
+          // for integrators using their own token selection UI.
+          tokens = list.length > 0 ? await validateTokens(list) : EMPTY_TOKEN_LIST
         }
         // tokensToChainTokenMap also caches the fetched tokens, so it must be invoked even if stale.
         const map = tokensToChainTokenMap(tokens)

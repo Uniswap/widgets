@@ -32,3 +32,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 notes.txt
+
+# tests
+/coverage
+
+# generated ajv schema
+/src/__generated__/*
+!/src/__generated__/.gitkeep 

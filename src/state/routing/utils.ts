@@ -3,7 +3,7 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { nativeOnChain } from 'constants/tokens'
 
-import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
+import { InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
  * Transforms a Routing API quote into an array of routes that can be used to create
@@ -13,7 +13,7 @@ export function computeRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
   tradeType: TradeType,
-  quoteResult: Pick<GetQuoteResult, 'route'> | undefined
+  quoteResult: Pick<QuoteResult, 'route'> | undefined
 ) {
   if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
@@ -51,16 +51,15 @@ export function computeRoutes(
     // `Route` constructor may throw if inputs/outputs are temporarily out of sync
     // (RTK-Query always returns the latest data which may not be the right inputs/outputs)
     // This is not fatal and will fix itself in future render cycles
-    console.error(e)
+    console.error('computeRoutes error', e)
     return undefined
   }
 }
 
 export function transformRoutesToTrade<TTradeType extends TradeType>(
   route: ReturnType<typeof computeRoutes>,
-  tradeType: TTradeType,
-  gasUseEstimateUSD?: CurrencyAmount<Token> | null
-): InterfaceTrade<Currency, Currency, TTradeType> {
+  tradeType: TTradeType
+): InterfaceTrade {
   return new InterfaceTrade({
     v2Routes:
       route
@@ -71,11 +70,10 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
         ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
         .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
     tradeType,
-    gasUseEstimateUSD,
   })
 }
 
-const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Token => {
+const parseToken = ({ address, chainId, decimals, symbol }: QuoteResult['route'][0][0]['tokenIn']): Token => {
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 

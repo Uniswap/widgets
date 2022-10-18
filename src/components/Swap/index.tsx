@@ -1,81 +1,67 @@
 import { Trans } from '@lingui/macro'
+import BrandedFooter from 'components/BrandedFooter'
+import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
+import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
+import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useHasFocus from 'hooks/useHasFocus'
-import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
+import useSyncBrandingSetting, { BrandingSettings, useBrandingSetting } from 'hooks/useSyncBrandingSetting'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
-import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'state/transactions'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
-import Wallet from '../Wallet'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
-import SwapButton from './SwapButton'
+import SwapActionButton from './SwapActionButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
-function getTransactionFromMap(
-  txs: { [hash: string]: Transaction },
-  hash?: string
-): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
-  if (hash) {
-    const tx = txs[hash]
-    if (tx?.info?.type === TransactionType.SWAP) {
-      return tx as Transaction<SwapTransactionInfo>
-    }
-    if (tx?.info?.type === TransactionType.WRAP) {
-      return tx as Transaction<WrapTransactionInfo>
-    }
-  }
-  return
-}
-
-export interface SwapProps extends TokenDefaults, FeeOptions {
-  onConnectWallet?: () => void
+// SwapProps also currently includes props needed for wallet connection (eg hideConnectionUI),
+// since the wallet connection component exists within the Swap component.
+// TODO(zzmp): refactor WalletConnection into Widget component
+export interface SwapProps extends BrandingSettings, FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
+  hideConnectionUI?: boolean
+  routerUrl?: string
 }
 
 export default function Swap(props: SwapProps) {
   useValidate(props)
-  useSyncConvenienceFee(props)
-  useSyncTokenDefaults(props)
+  useSyncController(props as SwapController)
+  useSyncConvenienceFee(props as FeeOptions)
+  useSyncSwapEventHandlers(props as SwapEventHandlers)
+  useSyncTokenDefaults(props as TokenDefaults)
+  useSyncBrandingSetting(props as BrandingSettings)
 
-  const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
+  const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
-  const onSupportedNetwork = useOnSupportedNetwork()
-  const isDisabled = !(active && onSupportedNetwork)
-
-  const focused = useHasFocus(wrapper)
-
+  const disableBranding = useBrandingSetting()
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={!active || Boolean(account)} onClick={props.onConnectWallet} />
-        <Settings disabled={isDisabled} />
+        <Wallet disabled={props.hideConnectionUI} />
+        <Settings />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <SwapInfoProvider disabled={isDisabled}>
-            <Input disabled={isDisabled} focused={focused} />
-            <ReverseButton disabled={isDisabled} />
-            <Output disabled={isDisabled} focused={focused}>
-              <Toolbar />
-              <SwapButton disabled={isDisabled} />
-            </Output>
+          <SwapInfoProvider routerUrl={props.routerUrl}>
+            <Input />
+            <ReverseButton />
+            <Output />
+            <Toolbar />
+            <SwapActionButton />
+            {!disableBranding && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
       </div>

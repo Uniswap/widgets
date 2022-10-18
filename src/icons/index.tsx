@@ -5,8 +5,10 @@ import { ReactComponent as InlineSpinnerIcon } from 'assets/svg/inline_spinner.s
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
+import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
 import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
+// This file wraps react-feather, so its import is intentional.
 /* eslint-disable no-restricted-imports */
 import { Icon as FeatherIcon } from 'react-feather'
 import {
@@ -16,8 +18,8 @@ import {
   ArrowUp as ArrowUpIcon,
   BarChart2 as BarChart2Icon,
   CheckCircle as CheckCircleIcon,
+  ChevronDown as ChevronDownIcon,
   ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
   Clock as ClockIcon,
   ExternalLink as LinkIcon,
   HelpCircle as HelpCircleIcon,
@@ -28,9 +30,11 @@ import {
   X as XIcon,
   XOctagon as XOctagonIcon,
 } from 'react-feather'
+/* eslint-enable no-restricted-imports */
 import styled, { css, keyframes } from 'styled-components/macro'
 import { Color } from 'theme'
-/* eslint-enable no-restricted-imports */
+
+import IdenticonIcon from './identicon'
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
@@ -83,9 +87,10 @@ export const ArrowUp = icon(ArrowUpIcon)
 export const CheckCircle = icon(CheckCircleIcon)
 export const BarChart = icon(BarChart2Icon)
 export const ChevronLeft = icon(ChevronLeftIcon)
-export const ChevronRight = icon(ChevronRightIcon)
+export const ChevronDown = icon(ChevronDownIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
+export const Identicon = icon(IdenticonIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
 export const AutoRouter = icon(RouterIcon)
@@ -121,6 +126,11 @@ export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
 
 export const Logo = styled(icon(LogoIcon))`
   fill: ${({ theme }) => theme.secondary};
+  stroke: none;
+`
+
+export const WalletDisconnect = styled(icon(WalletDisconnectIcon))<{ color?: Color }>`
+  fill: currentColor;
   stroke: none;
 `
 

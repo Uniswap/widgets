@@ -6,9 +6,9 @@ import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, 
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
 import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
-import { delayUnmountForAnimation } from 'utils/animations'
+import { useUnmountingAnimation } from 'utils/animations'
 
-import { IconButton } from './Button'
+import { TextButton } from './Button'
 import Column from './Column'
 import Row from './Row'
 import Rule from './Rule'
@@ -18,6 +18,18 @@ declare global {
   interface HTMLElement {
     inert?: boolean
   }
+}
+
+export enum Animation {
+  /** Used when the Dialog is closing. */
+  CLOSING = 'closing',
+  /**
+   * Used when the Dialog is paging to another Dialog screen.
+   * Paging occurs when multiple screens are sequenced in the Dialog, so that an action that closes
+   * one will simultaneously open the next. Special-casing paging animations can make the user feel
+   * like they are not leaving the Dialog, despite the initial screen closing.
+   */
+  PAGING = 'paging',
 }
 
 const Context = createContext({
@@ -51,14 +63,19 @@ export function Provider({ value, children }: ProviderProps) {
   )
 }
 
-const OnCloseContext = createContext<() => void>(() => void 0)
+const OnCloseContext = createContext<(() => void) | undefined>(undefined)
 
 const HeaderRow = styled(Row)`
   height: 1.75em;
   margin: 0 0.75em 0.75em;
   padding-top: 0.5em;
   ${largeIconCss}
+
+  button {
+    height: ${({ iconSize }) => iconSize}em;
+  }
 `
+
 interface HeaderProps {
   title?: ReactElement
   ruled?: boolean
@@ -66,19 +83,20 @@ interface HeaderProps {
 }
 
 export function Header({ title, children, ruled }: HeaderProps) {
+  const onClose = useContext(OnCloseContext)
   return (
-    <>
-      <Column>
-        <HeaderRow iconSize={1.2}>
+    <Column data-testid="dialog-header">
+      <HeaderRow iconSize={1.2}>
+        <TextButton color="primary" onClick={onClose}>
           <Row justify="flex-start" gap={0.5}>
-            <IconButton color="primary" onClick={useContext(OnCloseContext)} icon={ChevronLeft} />
+            <ChevronLeft />
             <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
           </Row>
-          {children}
-        </HeaderRow>
-        {ruled && <Rule padded />}
-      </Column>
-    </>
+        </TextButton>
+        {children}
+      </HeaderRow>
+      {ruled && <Rule padded />}
+    </Column>
   )
 }
 
@@ -102,7 +120,7 @@ interface DialogProps {
   onClose?: () => void
 }
 
-export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+export default function Dialog({ color, children, onClose }: DialogProps) {
   const context = useContext(Context)
   useEffect(() => {
     context.setActive(true)
@@ -110,7 +128,12 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
   }, [context])
 
   const modal = useRef<HTMLDivElement>(null)
-  useEffect(() => delayUnmountForAnimation(modal), [])
+  useUnmountingAnimation(modal, () => {
+    // Returns the context element's child count at the time of unmounting.
+    // This cannot be done through state because the count is updated outside of React's lifecycle -
+    // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
+    return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
+  })
 
   useEffect(() => {
     const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()

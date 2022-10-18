@@ -1,6 +1,5 @@
-import { useLingui } from '@lingui/react'
 import { Currency } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
@@ -12,6 +11,7 @@ import {
   memo,
   SyntheticEvent,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -77,7 +77,6 @@ const TokenBalance = styled.div<{ isLoading: boolean }>`
 `
 
 function TokenOption({ index, value, style }: TokenOptionProps) {
-  const { i18n } = useLingui()
   const ref = useRef<HTMLButtonElement>(null)
   // Annotate the event to be handled later instead of passing in handlers to avoid rerenders.
   // This prevents token logos from reloading and flashing on the screen.
@@ -87,7 +86,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.ref = ref.current ?? undefined
   }
 
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, value)
 
   return (
@@ -111,7 +110,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>
-            {balance?.greaterThan(0) && formatCurrencyAmount(balance, 4, i18n.locale)}
+            {balance?.greaterThan(0) && formatCurrencyAmount({ amount: balance })}
           </TokenBalance>
         </Row>
       </ThemedText.Body1>
@@ -133,9 +132,8 @@ const ItemRow = memo(function ItemRow({
 },
 areEqual)
 
-interface TokenOptionsHandle {
+export interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
-  blur: () => void
 }
 
 interface TokenOptionsProps {
@@ -148,8 +146,15 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   ref
 ) {
   const [focused, setFocused] = useState(false)
-  const [selected, setSelected] = useState<Currency>()
-  const hover = useMemo(() => (selected ? tokens.indexOf(selected) : -1), [selected, tokens])
+
+  const [selected, setSelected] = useState<Currency>(tokens[0])
+  const hover = useMemo(() => tokens.indexOf(selected), [selected, tokens])
+
+  // If tokens updates (eg from searching), always default to selecting the first token.
+  // As long as tokens.length >= 1, a token should be selected.
+  useEffect(() => {
+    setSelected((selected) => (tokens.includes(selected) ? selected : tokens[0]))
+  }, [tokens, setSelected])
 
   const list = useRef<FixedSizeList>(null)
   const [element, setElement] = useState<HTMLElement | null>(null)
@@ -186,8 +191,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
     },
     [hover, onSelect, scrollTo, tokens]
   )
-  const blur = useCallback(() => setSelected(undefined), [])
-  useImperativeHandle(ref, () => ({ onKeyDown, blur }), [blur, onKeyDown])
+  useImperativeHandle(ref, () => ({ onKeyDown }), [onKeyDown])
 
   const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
   const onFocus = useCallback(

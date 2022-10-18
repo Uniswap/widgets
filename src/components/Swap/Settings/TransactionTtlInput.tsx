@@ -31,7 +31,7 @@ export default function TransactionTtlInput() {
           <IntegerInput
             placeholder={placeholder}
             value={ttl?.toString() ?? ''}
-            onChange={(value) => setTtl(value ? parseFloat(value) : 0)}
+            onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
             size={Math.max(ttl?.toString().length || 0, placeholder.length)}
             ref={input}
           />

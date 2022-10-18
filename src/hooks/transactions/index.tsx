@@ -1,8 +1,10 @@
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Token } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
 
@@ -14,13 +16,13 @@ function isTransactionRecent(transaction: Transaction) {
 }
 
 export function usePendingTransactions() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const txs = useAtomValue(transactionsAtom)
   return (chainId ? txs[chainId] : null) ?? {}
 }
 
-export function useAddTransaction() {
-  const { chainId } = useActiveWeb3React()
+export function useAddTransactionInfo() {
+  const { chainId } = useWeb3React()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)
 
@@ -41,8 +43,9 @@ export function useAddTransaction() {
 }
 
 /** Returns the hash of a pending approval transaction, if it exists. */
-export function usePendingApproval(token?: Token, spender?: string): string | undefined {
-  const { chainId } = useActiveWeb3React()
+export function usePendingApproval(token?: Token): string | undefined {
+  const { chainId } = useWeb3React()
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const txs = useAtomValue(transactionsAtom)
   if (!chainId || !token || !spender) return undefined
 
@@ -60,9 +63,18 @@ export function usePendingApproval(token?: Token, spender?: string): string | un
   )?.info.response.hash
 }
 
-export function TransactionsUpdater() {
-  const pendingTransactions = usePendingTransactions()
+export type OnTxSubmit = (hash: string, tx: Transaction) => void
+export type OnTxSuccess = (hash: string, receipt: TransactionReceipt) => void
+export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void
 
+export interface TransactionEventHandlers {
+  onTxSubmit?: OnTxSubmit
+  onTxSuccess?: OnTxSuccess
+  onTxFail?: OnTxFail
+}
+
+export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionEventHandlers) {
+  const currentPendingTxs = usePendingTransactions()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
     ({ chainId, hash, blockNumber }) => {
@@ -85,9 +97,29 @@ export function TransactionsUpdater() {
           tx.receipt = receipt
         }
       })
+      if (receipt.status === 0) {
+        onTxFail?.(hash, receipt)
+      } else {
+        onTxSuccess?.(hash, receipt)
+      }
     },
-    [updateTxs]
+    [updateTxs, onTxFail, onTxSuccess]
   )
 
-  return <Updater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
+  const oldPendingTxs = useRef({})
+  useEffect(() => {
+    const newPendingTxHashes = Object.keys(currentPendingTxs)
+    const oldPendingTxHashes = new Set(Object.keys(oldPendingTxs.current))
+    if (newPendingTxHashes.length !== oldPendingTxHashes.size) {
+      // if added new tx
+      newPendingTxHashes.forEach((txHash) => {
+        if (!oldPendingTxHashes.has(txHash)) {
+          onTxSubmit?.(txHash, currentPendingTxs[txHash])
+        }
+      })
+      oldPendingTxs.current = currentPendingTxs
+    }
+  }, [currentPendingTxs, onTxSubmit])
+
+  return <Updater pendingTransactions={currentPendingTxs} onCheck={onCheck} onReceipt={onReceipt} />
 }

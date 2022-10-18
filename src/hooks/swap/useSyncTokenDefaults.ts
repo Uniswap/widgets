@@ -1,6 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useToken } from 'hooks/useCurrency'
 import useLast from 'hooks/useLast'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -48,7 +48,7 @@ export default function useSyncTokenDefaults({
   defaultOutputAmount,
 }: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
@@ -62,12 +62,12 @@ export default function useSyncTokenDefaults({
       amount: '',
       [Field.INPUT]: defaultInputToken,
       [Field.OUTPUT]: defaultOutputToken,
-      independentField: Field.INPUT,
+      type: TradeType.EXACT_INPUT,
     }
     if (defaultInputToken && defaultInputAmount) {
       defaultSwapState.amount = defaultInputAmount.toString()
     } else if (defaultOutputToken && defaultOutputAmount) {
-      defaultSwapState.independentField = Field.OUTPUT
+      defaultSwapState.type = TradeType.EXACT_OUTPUT
       defaultSwapState.amount = defaultOutputAmount.toString()
     }
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))

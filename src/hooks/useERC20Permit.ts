@@ -1,15 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -126,7 +124,7 @@ export function useERC20Permit(
   state: UseERC20PermitState
   gatherPermitSignature: null | (() => Promise<void>)
 } {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
@@ -145,7 +143,7 @@ export function useERC20Permit(
       !account ||
       !chainId ||
       !transactionDeadline ||
-      !library ||
+      !provider ||
       !tokenNonceState.valid ||
       !tokenAddress ||
       !spender ||
@@ -174,7 +172,8 @@ export function useERC20Permit(
       signatureData.tokenAddress === tokenAddress &&
       signatureData.nonce === nonceNumber &&
       signatureData.spender === spender &&
-      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
+      ('allowed' in signatureData ||
+        JSBI.greaterThanOrEqual(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
 
     return {
       state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
@@ -221,7 +220,7 @@ export function useERC20Permit(
           message,
         })
 
-        return library
+        return provider
           .send('eth_signTypedData_v4', [account, data])
           .then(splitSignature)
           .then((signature) => {
@@ -248,7 +247,7 @@ export function useERC20Permit(
     chainId,
     isArgentWallet,
     transactionDeadline,
-    library,
+    provider,
     tokenNonceState.loading,
     tokenNonceState.valid,
     tokenNonceState.result,
@@ -260,23 +259,12 @@ export function useERC20Permit(
 }
 
 export function useERC20PermitFromTrade(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
+  trade: InterfaceTrade | undefined,
   allowedSlippage: Percent,
   transactionDeadline: BigNumber | undefined
 ) {
-  const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = chainId
-    ? // v2 router does not support
-      trade instanceof V2Trade
-      ? undefined
-      : trade instanceof V3Trade
-      ? V3_ROUTER_ADDRESS[chainId]
-      : SWAP_ROUTER_ADDRESSES[chainId]
-    : undefined
+  const { chainId } = useWeb3React()
+  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]

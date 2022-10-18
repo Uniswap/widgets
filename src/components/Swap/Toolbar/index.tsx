@@ -1,50 +1,61 @@
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
-import useWrapCallback, { WrapType } from 'hooks/swap/useWrapCallback'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { largeIconCss } from 'icons'
+import { useWeb3React } from '@web3-react/core'
+import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
+import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
 import Row from '../../Row'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
-  padding: 0.5em 0;
-  ${largeIconCss}
+  background-color: ${({ theme }) => theme.module};
+  border-bottom-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-bottom-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  min-height: 44px;
+  padding: 14px 16px;
 `
 
 export default memo(function Toolbar() {
-  const { active, activating, chainId } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
+    error,
     trade: { trade, state },
     impact,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
-  const { type: wrapType } = useWrapCallback()
+  const isWrap = useIsWrap()
   const caption = useMemo(() => {
-    if (!active || !chainId) {
-      if (activating) return <Caption.Connecting />
+    switch (error) {
+      case ChainError.UNCONNECTED_CHAIN:
+        return <Caption.ConnectWallet />
+      case ChainError.ACTIVATING_CHAIN:
+        return <Caption.Connecting />
+      case ChainError.UNSUPPORTED_CHAIN:
+        return <Caption.UnsupportedNetwork />
+      case ChainError.MISMATCHED_TOKEN_CHAINS:
+        return <Caption.Error />
+      case ChainError.MISMATCHED_CHAINS:
+        return
+      default:
+    }
+
+    if (state === TradeState.LOADING) {
+      return <Caption.LoadingTrade />
+    }
+
+    if (!account) {
       return <Caption.ConnectWallet />
     }
 
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
-      return <Caption.UnsupportedNetwork />
-    }
-
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (state === TradeState.SYNCING || state === TradeState.LOADING) {
-        return <Caption.LoadingTrade />
-      }
       if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
-      if (wrapType !== WrapType.NONE) {
+      if (isWrap) {
         return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
@@ -58,28 +69,25 @@ export default memo(function Toolbar() {
       }
     }
 
-    return <Caption.Empty />
+    return <Caption.MissingInputs />
   }, [
-    activating,
-    active,
-    chainId,
-    impact,
-    inputAmount,
-    inputBalance,
-    inputCurrency,
-    isAmountPopulated,
-    outputCurrency,
-    outputUSDC,
+    error,
     state,
+    account,
+    inputCurrency,
+    outputCurrency,
+    isAmountPopulated,
+    inputBalance,
+    inputAmount,
+    isWrap,
     trade,
-    wrapType,
+    outputUSDC,
+    impact,
   ])
 
   return (
-    <ThemedText.Caption data-testid="toolbar">
-      <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
-        {caption}
-      </ToolbarRow>
-    </ThemedText.Caption>
+    <ToolbarRow flex justify="flex-start" data-testid="toolbar" gap={3 / 8} align="flex-end">
+      {caption}
+    </ToolbarRow>
   )
 })

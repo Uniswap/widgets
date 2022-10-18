@@ -1,8 +1,8 @@
-import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PriceImpact } from 'hooks/useUSDCPriceImpact'
-import { ArrowRight } from 'icons'
+import { PriceImpact } from 'hooks/usePriceImpact'
+import { ArrowDown, ArrowRight } from 'icons'
 import { PropsWithChildren } from 'react'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -10,30 +10,34 @@ import Column from '../../Column'
 import Row from '../../Row'
 import TokenImg from '../../TokenImg'
 
+const CollapsingColumn = styled(Column)<{ open: boolean }>`
+  justify-items: ${({ open }) => (open ? 'left' : 'center')};
+`
+
 interface TokenValueProps {
   input: CurrencyAmount<Currency>
   usdc?: CurrencyAmount<Currency>
+  open: boolean
 }
 
-function TokenValue({ input, usdc, children }: PropsWithChildren<TokenValueProps>) {
-  const { i18n } = useLingui()
+function TokenValue({ input, usdc, open, children }: PropsWithChildren<TokenValueProps>) {
   return (
-    <Column justify="flex-start">
+    <CollapsingColumn justify="flex-start" open={open} flex>
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2 userSelect>
-          {formatCurrencyAmount(input, 6, i18n.locale)} {input.currency.symbol}
+          {formatCurrencyAmount({ amount: input })} {input.currency.symbol}
         </ThemedText.Body2>
       </Row>
       {usdc && (
         <ThemedText.Caption color="secondary" userSelect>
           <Row justify="flex-start" gap={0.25}>
-            ${formatCurrencyAmount(usdc, 6, 'en', 2)}
+            {formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}
             {children}
           </Row>
         </ThemedText.Caption>
       )}
-    </Column>
+    </CollapsingColumn>
   )
 }
 
@@ -43,16 +47,26 @@ interface SummaryProps {
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
+  open?: boolean // if expando is open
 }
 
-export default function Summary({ input, output, inputUSDC, outputUSDC, impact }: SummaryProps) {
-  return (
-    <Row gap={impact ? 1 : 0.25}>
-      <TokenValue input={input} usdc={inputUSDC} />
-      <ArrowRight />
-      <TokenValue input={output} usdc={outputUSDC}>
+export default function Summary({ input, output, inputUSDC, outputUSDC, impact, open = true }: SummaryProps) {
+  const summaryContents = (
+    <>
+      <TokenValue input={input} usdc={inputUSDC} open={open} />
+      {open ? <ArrowRight /> : <ArrowDown />}
+      <TokenValue input={output} usdc={outputUSDC} open={open}>
         {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
       </TokenValue>
-    </Row>
+    </>
+  )
+
+  if (open) {
+    return <Row gap={impact ? 1 : 0.25}>{summaryContents}</Row>
+  }
+  return (
+    <Column gap={impact ? 1 : 0.25} flex>
+      {summaryContents}
+    </Column>
   )
 }

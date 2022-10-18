@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -24,19 +24,19 @@ msgstr "ยอมรับ"
 msgid "Acknowledge"
 msgstr "รับทราบ"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow"
 msgstr "อนุญาต"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allow in your wallet"
 msgstr "อนุญาตในกระเป๋าสตางค์ของคุณ"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Allow {0} first"
-msgstr "ให้ {0} ก่อน"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Allow {symbol} first"
+msgstr "ให้ {symbol} ก่อน"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Allowance pending"
 msgstr "ค่าเผื่อที่รอดำเนินการ"
 
@@ -44,21 +44,21 @@ msgstr "ค่าเผื่อที่รอดำเนินการ"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approval pending"
 msgstr "รอการอนุมัติ"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve"
 msgstr "อนุมัติ"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
 msgid "Approve in your wallet"
 msgstr "อนุมัติในกระเป๋าเงินของคุณ"
 
-#: src/components/Swap/SwapButton/useApprovalData.tsx
-msgid "Approve {0} first"
-msgstr "อนุมัติ {0} ก่อน"
+#: src/components/Swap/SwapActionButton/ApproveButton.tsx
+msgid "Approve {symbol} first"
+msgstr "อนุมัติ {symbol} ก่อน"
 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
@@ -68,12 +68,16 @@ msgstr "รถยนต์"
 msgid "Auto Router"
 msgstr "เราเตอร์อัตโนมัติ"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "สมดุล:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "ปิด I"
 
 #: src/components/Swap/Summary/index.tsx
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
 msgid "Confirm in your wallet"
 msgstr "ยืนยันในกระเป๋าเงินของคุณ"
 
@@ -81,8 +85,12 @@ msgstr "ยืนยันในกระเป๋าเงินของคุ
 msgid "Confirm swap"
 msgstr "ยืนยันการสลับ"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "Connect wallet"
+msgstr "เชื่อมต่อกระเป๋าสตางค์"
+
+#: src/components/ConnectWallet/ConnectWallet.tsx
 #: src/components/Swap/Toolbar/Caption.tsx
-#: src/components/Wallet.tsx
 msgid "Connect wallet to swap"
 msgstr "เชื่อมต่อกระเป๋าเงินเพื่อแลกเปลี่ยน"
 
@@ -93,6 +101,10 @@ msgstr "กำลังเชื่อมต่อ…"
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Convert {0} to {1}"
 msgstr "แปลง {0} เป็น {1}"
+
+#: src/components/ConnectWallet/ConnectedWalletChip.tsx
+msgid "Disconnect wallet"
+msgstr "ตัดการเชื่อมต่อกระเป๋าสตางค์"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
@@ -114,10 +126,6 @@ msgstr "เกิดข้อผิดพลาดในการดึงข้
 msgid "Fetching best price…"
 msgstr "กำลังเรียกราคาที่ดีที่สุด…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "สำหรับ"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -131,6 +139,10 @@ msgstr "การลื่นไถลสูง"
 msgid "High slippage increases the risk of price movement"
 msgstr "Slippage สูงเพิ่มความเสี่ยงจากการเคลื่อนไหวของราคา"
 
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "I don't have a wallet"
+msgstr "ฉันไม่มีกระเป๋าสตางค์"
+
 #: src/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
 msgstr "สภาพคล่องไม่เพียงพอสำหรับการซื้อขายของคุณ"
@@ -143,11 +155,7 @@ msgstr "ไม่เพียงพอ {0} ยอดคงเหลือ"
 msgid "Invalid recipient"
 msgstr "ผู้รับไม่ถูกต้อง"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "ค่าธรรมเนียมผู้ให้บริการสภาพคล่อง"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "แม็กซ์"
 
@@ -167,9 +175,9 @@ msgstr "รับขั้นต่ำ"
 msgid "Missing dependencies"
 msgstr "ไม่มีการพึ่งพา"
 
-#: src/components/Swap/Settings/MockToggle.tsx
-msgid "Mock Toggle"
-msgstr "Mock Toggle"
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "ค่าธรรมเนียมเครือข่าย"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -199,6 +207,10 @@ msgstr "มีการประมาณการเอาท์พุต ค�
 msgid "Please enter a valid slippage %"
 msgstr "โปรดป้อน % การคลาดเคลื่อนที่ถูกต้อง"
 
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "โปรดรีเฟรชหน้าแล้วลองอีกครั้ง"
+
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
 msgstr "ขับเคลื่อนโดยโปรโตคอล Uniswap"
@@ -223,7 +235,8 @@ msgstr "โหลดหน้าซ้ำ"
 msgid "Reset"
 msgstr "รีเซ็ต"
 
-#: src/components/Swap/SwapButton/index.tsx
+#: src/components/Swap/SwapActionButton/SwapButton.tsx
+#: src/components/Swap/SwapActionButton/index.tsx
 msgid "Review swap"
 msgstr "แลกเปลี่ยนรีวิว"
 
@@ -245,7 +258,6 @@ msgstr "การตั้งค่า"
 msgid "Slippage tolerance"
 msgstr "ความทนทานต่อการเลื่อนหลุด"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "อะไรบางอย่างผิดปกติ."
@@ -274,6 +286,22 @@ msgstr "อยู่ระหว่างดำเนินการแลกเ
 #: src/components/Swap/Summary/index.tsx
 msgid "Swap summary"
 msgstr "สรุปการสลับ"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch"
+msgstr "สวิตช์"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network"
+msgstr "สลับเครือข่าย"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switch network in your wallet"
+msgstr "สลับเครือข่ายในกระเป๋าเงินของคุณ"
+
+#: src/components/Swap/SwapActionButton/SwitchChainButton.tsx
+msgid "Switching network"
+msgstr "การสลับเครือข่าย"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -341,32 +369,18 @@ msgid "Unsupported network - switch to another to trade"
 msgstr "เครือข่ายที่ไม่รองรับ - เปลี่ยนไปใช้เครือข่ายอื่นเพื่อแลกเปลี่ยน"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
 msgstr "แกะกล่องยืนยัน"
 
 #: src/components/Swap/Status/StatusDialog.tsx
+#: src/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "แกะกล่องที่รอดำเนินการ"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Unwrap {0}"
-msgstr "แกะ {0}"
 
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "View on Etherscan"
 msgstr "ดูบน Etherscan"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap confirmed"
-msgstr "ยืนยันห่อแล้ว"
-
-#: src/components/Swap/Status/StatusDialog.tsx
-msgid "Wrap pending"
-msgstr "อยู่ระหว่างการพิจารณา"
-
-#: src/components/Swap/SwapButton/index.tsx
-msgid "Wrap {0}"
-msgstr "แรป {0}"
 
 #: src/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
@@ -380,9 +394,13 @@ msgstr "ธุรกรรมของคุณจะกลับคืนมา
 msgid "minutes"
 msgstr "นาที"
 
-#: src/components/Swap/RoutingDiagram/index.tsx
-msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {เส้นทางที่ดีที่สุดผ่าน 1 ฮอป} other {เส้นทางที่ดีที่สุดผ่าน # hops}}"
+#: src/components/Swap/SwapActionButton/WrapButton.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/ConnectWallet/ConnectWalletDialog.tsx
+msgid "{caption}"
+msgstr "{caption}"
 
 #: src/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"

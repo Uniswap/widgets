@@ -1,5 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useTokenBalances } from 'hooks/useCurrencyBalance'
 import useDebounce from 'hooks/useDebounce'
 import { useMemo } from 'react'
@@ -9,7 +9,7 @@ import { getTokenFilter } from './filtering'
 import { tokenComparator, useSortTokensByQuery } from './sorting'
 
 export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account } = useWeb3React()
   const balances = useTokenBalances(account, tokens)
   const sortedTokens = useMemo(
     // Create a new array because sort is in-place and returns a referentially equivalent array.

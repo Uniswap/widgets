@@ -1,20 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
-// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { ErrorCode } from 'constants/eip1193'
 import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
-
-type AnyTrade =
-  | V2Trade<Currency, Currency, TradeType>
-  | V3Trade<Currency, Currency, TradeType>
-  | Trade<Currency, Currency, TradeType>
 
 interface SwapCall {
   address: string
@@ -40,12 +32,12 @@ interface FailedCall extends SwapCallEstimate {
 export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
-  library: JsonRpcProvider | undefined,
-  trade: AnyTrade | undefined, // trade to execute, required
+  provider: JsonRpcProvider | undefined,
+  trade: InterfaceTrade | undefined,
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !provider || !account || !chainId) {
       return { callback: null }
     }
     return {
@@ -64,7 +56,7 @@ export default function useSendSwapTransaction(
                     value,
                   }
 
-            return library
+            return provider
               .estimateGas(tx)
               .then((gasEstimate) => {
                 return {
@@ -75,7 +67,7 @@ export default function useSendSwapTransaction(
               .catch((gasError) => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return library
+                return provider
                   .call(tx)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
@@ -110,11 +102,11 @@ export default function useSendSwapTransaction(
           call: { address, calldata, value },
         } = bestCallOption
 
-        return library
+        return provider
           .getSigner()
           .sendTransaction({
             from: account,
-            to: address,
+            to: address, // SwapRouter contract address
             data: calldata,
             // let the wallet try if we can't estimate the gas
             ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
@@ -125,16 +117,15 @@ export default function useSendSwapTransaction(
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
+            if (error?.code === ErrorCode.USER_REJECTED_REQUEST) {
               throw new Error(t`Transaction rejected.`)
             } else {
               // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
-
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+              console.error(`Swap failed`, error, calldata, value)
+              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`) // FIXME: this prints to console as [object Object]
             }
           })
       },
     }
-  }, [account, chainId, library, swapCalls, trade])
+  }, [account, chainId, provider, swapCalls, trade])
 }

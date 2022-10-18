@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { ChevronRight } from 'icons'
+import { ChevronDown } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -22,15 +22,13 @@ const StyledTokenButton = styled(Button)`
   }
 `
 
-const TokenButtonRow = styled(Row)<{ empty: boolean; collapsed: boolean }>`
-  float: right;
+const TokenButtonRow = styled(Row)<{ empty: boolean }>`
+  flex-direction: row;
   height: 1.2em;
-  // max-width must have an absolute value in order to transition.
-  max-width: ${({ collapsed }) => (collapsed ? '1.2em' : '12em')};
-  padding-left: ${({ empty }) => empty && 0.5}em;
-  width: fit-content;
+  max-width: 12em;
   overflow: hidden;
-  transition: max-width 0.25s linear;
+  padding-left: ${({ empty }) => empty && 0.5}em;
+  width: max-content;
 
   img {
     min-width: 1.2em;
@@ -39,14 +37,13 @@ const TokenButtonRow = styled(Row)<{ empty: boolean; collapsed: boolean }>`
 
 interface TokenButtonProps {
   value?: Currency
-  collapsed: boolean
   disabled?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
-  const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
-  const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
+export default function TokenButton({ value, disabled, onClick }: TokenButtonProps) {
+  const buttonBackgroundColor = value ? 'interactive' : 'accent'
+  const contentColor = buttonBackgroundColor === 'accent' ? 'onAccent' : 'currentColor'
 
   // Transition the button only if transitioning from a disabled state.
   // This makes initialization cleaner without adding distracting UX to normal swap flows.
@@ -72,26 +69,27 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
       style={style}
       transition={shouldTransition}
       onTransitionEnd={() => setShouldTransition(false)}
+      data-testid="token-select"
     >
       <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow
-          gap={0.4}
           empty={!value}
-          collapsed={collapsed}
+          flex
+          gap={0.4}
           // ref is used to set an absolute width, so it must be reset for each value passed.
           // To force this, value?.symbol is passed as a key.
           ref={setRow}
-          key={value?.symbol}
+          key={value?.wrapped.address}
         >
           {value ? (
             <>
               <TokenImg token={value} size={1.2} />
-              {value.symbol}
+              <span>{value.symbol}</span>
             </>
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronRight color={contentColor} strokeWidth={3} />
+          <ChevronDown color={contentColor} strokeWidth={2} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>

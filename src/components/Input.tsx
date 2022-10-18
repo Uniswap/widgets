@@ -45,6 +45,9 @@ const Input = styled.input`
     // Overrides WebKit's override of input:disabled color.
     -webkit-text-fill-color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
     color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
+    ::placeholder {
+      color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
+    }
   }
 `
 
@@ -152,7 +155,7 @@ export const inputCss = css`
   border: 1px solid ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   cursor: text;
-  padding: calc(0.5em - 1px);
+  padding: calc(0.75em - 1px);
 
   :hover:not(:focus-within) {
     background-color: ${({ theme }) => theme.onHover(theme.container)};

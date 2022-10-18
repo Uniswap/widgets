@@ -1,10 +1,13 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
+import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
-import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Field, swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -15,7 +18,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenButton from './TokenButton'
-import TokenOptions from './TokenOptions'
+import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
 const SearchInput = styled(StringInput)`
@@ -23,7 +26,7 @@ const SearchInput = styled(StringInput)`
 `
 
 function usePrefetchBalances() {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const tokenList = useTokenList()
   const prefetchedTokenList = useRef<typeof tokenList>()
   useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
@@ -31,7 +34,7 @@ function usePrefetchBalances() {
 }
 
 function useAreBalancesLoaded(): boolean {
-  const { account } = useActiveWeb3React()
+  const { account } = useWeb3React()
   const tokens = useTokenList()
   const native = useNativeCurrency()
   const currencies = useMemo(() => [native, ...tokens], [native, tokens])
@@ -69,8 +72,8 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
-  const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
-  const { chainId } = useActiveWeb3React()
+  const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
+  const { chainId } = useWeb3React()
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
   if (!listHasTokens && isLoaded) {
@@ -92,7 +95,6 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
               onChange={setQuery}
               placeholder={t`Search by token name or address`}
               onKeyDown={options?.onKeyDown}
-              onBlur={options?.blur}
               ref={input}
             />
           </ThemedText.Body1>
@@ -119,17 +121,20 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 }
 
 interface TokenSelectProps {
-  value?: Currency
-  collapsed: boolean
   disabled?: boolean
+  field: Field
   onSelect: (value: Currency) => void
+  value?: Currency
 }
 
-export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({ disabled, field, onSelect, value }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
-  const onOpen = useCallback(() => setOpen(true), [])
+  const onTokenSelectorClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onTokenSelectorClick)
+  const onOpen = useCallback(async () => {
+    setOpen(await onTokenSelectorClick(field))
+  }, [field, onTokenSelectorClick])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)
@@ -139,7 +144,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
+      <TokenButton value={value} disabled={disabled} onClick={onOpen} />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )

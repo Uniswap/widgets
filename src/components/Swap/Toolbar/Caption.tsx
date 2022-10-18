@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
-import { PriceImpact } from 'hooks/useUSDCPriceImpact'
+import { PriceImpact } from 'hooks/usePriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -28,7 +28,9 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
       <Icon color="secondary" />
-      {caption}
+      <ThemedText.Caption color="secondary" lineHeight="14px">
+        {caption}
+      </ThemedText.Caption>
     </>
   )
 }
@@ -66,7 +68,7 @@ export function Error() {
   return <Caption caption={<Trans>Error fetching trade</Trans>} />
 }
 
-export function Empty() {
+export function MissingInputs() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 
@@ -101,7 +103,7 @@ export function Trade({
   outputUSDC,
   impact,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
 }) {
@@ -112,8 +114,7 @@ export function Trade({
           {impact?.warning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {impact.toString()} less than the input amount due to high price
-                impact
+                The output amount is estimated at {impact.toString()} less than the input amount due to impact
               </ThemedText.Caption>
               <Rule />
             </>
