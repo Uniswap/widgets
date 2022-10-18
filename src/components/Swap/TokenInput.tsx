@@ -33,18 +33,18 @@ export interface TokenInputHandle {
 }
 
 interface TokenInputProps {
+  field: Field
   amount: string
   currency?: Currency
+  approved?: boolean
+  loading?: boolean
   disabled?: boolean
-  field: Field
-  max?: string
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
-  loading?: boolean
 }
 
 export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenInputProps>>(function TokenInput(
-  { amount, currency, disabled, field, onChangeInput, onChangeCurrency, loading, children, ...rest },
+  { field, amount, currency, approved, loading, disabled, onChangeInput, onChangeCurrency, children, ...rest },
   ref
 ) {
   const input = useRef<HTMLInputElement>(null)
@@ -78,7 +78,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
             ref={input}
           />
         </ThemedText.H2>
-        <TokenSelect value={currency} disabled={disabled} onSelect={onSelect} field={field} />
+        <TokenSelect field={field} value={currency} approved={approved} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}
     </TokenInputColumn>

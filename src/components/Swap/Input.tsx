@@ -81,16 +81,18 @@ export function useFormattedFieldAmount({
 
 interface FieldWrapperProps {
   field: Field
-  impact?: PriceImpact
   maxAmount?: string
   isSufficientBalance?: boolean
+  approved?: boolean
+  impact?: PriceImpact
 }
 
 export function FieldWrapper({
   field,
-  impact,
   maxAmount,
   isSufficientBalance,
+  approved,
+  impact,
   className,
 }: FieldWrapperProps & { className?: string }) {
   const {
@@ -138,13 +140,14 @@ export function FieldWrapper({
     <InputColumn disableHover={isDisabled || !currency} ref={wrapper} onClick={onClick} className={className}>
       <TokenInput
         ref={setInput}
+        field={field}
         amount={formattedAmount}
         currency={currency}
+        loading={isLoading}
+        approved={approved}
         disabled={isDisabled}
-        field={field}
         onChangeInput={updateAmount}
         onChangeCurrency={updateCurrency}
-        loading={isLoading}
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
