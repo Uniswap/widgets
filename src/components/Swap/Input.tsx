@@ -26,7 +26,7 @@ export const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)<{ approved?: boolean; disableHover?: boolean }>`
+const InputColumn = styled(Column)<{ disableHover?: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
