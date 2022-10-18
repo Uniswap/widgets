@@ -5,9 +5,7 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import useSwitchChain from 'hooks/useSwitchChain'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import useConnectors from 'hooks/web3/useConnectors'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -141,12 +139,7 @@ const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
   const swap = useAtomValue(swapAtom)
   const swapInfo = useComputeSwapInfo(routerUrl)
-  const {
-    error,
-    trade,
-    [Field.INPUT]: { currency: currencyIn },
-    [Field.OUTPUT]: { currency: currencyOut },
-  } = swapInfo
+  const { trade } = swapInfo
 
   const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
   useEffect(() => {
@@ -154,18 +147,6 @@ export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ ro
       onInitialSwapQuote?.(trade.trade)
     }
   }, [onInitialSwapQuote, swap, trade])
-
-  const { connector } = useWeb3React()
-  const switchChain = useSwitchChain()
-  const chainIn = currencyIn?.chainId
-  const chainOut = currencyOut?.chainId
-  const tokenChainId = chainIn || chainOut
-  const { network } = useConnectors()
-  // The network connector should be auto-switched, as it is a read-only interface that should "just work".
-  if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
-    delete swapInfo.error // avoids flashing an error whilst switching
-    switchChain(tokenChainId)
-  }
 
   return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
