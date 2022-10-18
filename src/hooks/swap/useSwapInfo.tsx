@@ -7,7 +7,7 @@ import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
@@ -137,16 +137,18 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
 export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
-  const swap = useAtomValue(swapAtom)
   const swapInfo = useComputeSwapInfo(routerUrl)
-  const { trade } = swapInfo
 
+  const swap = useAtomValue(swapAtom)
+  const lastQuotedSwap = useRef<typeof swap | null>(null)
   const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
   useEffect(() => {
-    if (trade.state === TradeState.VALID && trade.trade) {
-      onInitialSwapQuote?.(trade.trade)
+    if (swap === lastQuotedSwap.current) return
+    if (swapInfo.trade.state === TradeState.VALID && swapInfo.trade.trade) {
+      lastQuotedSwap.current = swap
+      onInitialSwapQuote?.(swapInfo.trade.trade)
     }
-  }, [onInitialSwapQuote, swap, trade])
+  }, [onInitialSwapQuote, swap, swapInfo.trade.state, swapInfo.trade.trade])
 
   return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
