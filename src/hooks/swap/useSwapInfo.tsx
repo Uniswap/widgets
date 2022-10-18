@@ -76,27 +76,32 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     routerUrl
   )
 
-  const inputAmount = useMemo(
-    () => (isWrap || isExactInput(type) ? parsedAmount : trade.trade?.inputAmount),
-    [isWrap, parsedAmount, trade.trade?.inputAmount, type]
-  )
-  const outputAmount = useMemo(
-    () => (isWrap || !isExactInput(type) ? parsedAmount : trade.trade?.outputAmount),
-    [isWrap, parsedAmount, trade.trade?.outputAmount, type]
-  )
-
-  const [inputBalance, outputBalance] = useCurrencyBalances(
-    account,
-    useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
-  )
+  // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
+  const [inputAmount, outputAmount] = useMemo(() => {
+    if (isWrap) {
+      return isExactInput(type)
+        ? [parsedAmount, tryParseCurrencyAmount(amount, outputCurrency)]
+        : [tryParseCurrencyAmount(amount, inputCurrency), parsedAmount]
+    }
+    return isExactInput(type) ? [parsedAmount, trade.trade?.outputAmount] : [trade.trade?.inputAmount, parsedAmount]
+  }, [
+    amount,
+    inputCurrency,
+    isWrap,
+    outputCurrency,
+    parsedAmount,
+    trade.trade?.inputAmount,
+    trade.trade?.outputAmount,
+    type,
+  ])
+  const currencies = useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
+  const [inputBalance, outputBalance] = useCurrencyBalances(account, currencies)
+  const [inputUSDCValue, outputUSDCValue] = [useUSDCValue(inputAmount), useUSDCValue(outputAmount)]
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
-  // (Using inputAmount/outputAmount would show (incorrect) intermediate values.)
+  // Wait until the trade is valid to avoid displaying incorrect intermediate values.
   const slippage = useSlippage(trade)
-  const inputUSDCValue = useUSDCValue(trade.trade?.inputAmount)
-  const outputUSDCValue = useUSDCValue(trade.trade?.outputAmount)
-
-  const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
+  const impact = usePriceImpact(trade.trade)
 
   return useMemo(() => {
     return {
