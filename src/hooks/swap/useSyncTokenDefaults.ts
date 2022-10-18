@@ -58,7 +58,7 @@ function useDefaultInputToken(
 
 export default function useSyncTokenDefaults(
   { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount }: TokenDefaults,
-  defaultChainId: SupportedChainId
+  defaultChainId: SupportedChainId = SupportedChainId.MAINNET
 ) {
   const lastChainId = useRef<number | undefined>(undefined)
   const didPriorityConnect = useRef<boolean | undefined>(false)

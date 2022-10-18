@@ -31,7 +31,7 @@ import useValidate from './useValidate'
 export interface SwapProps extends BrandingSettings, FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
   hideConnectionUI?: boolean
   routerUrl?: string
-  defaultChainId: SupportedChainId
+  defaultChainId?: SupportedChainId
 }
 
 export default function Swap(props: SwapProps) {
