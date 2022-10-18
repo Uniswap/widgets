@@ -41,6 +41,21 @@ function useDefaultToken(
   return token ?? undefined
 }
 
+function useDefaultInputToken(
+  defaultAddress: DefaultAddress | undefined,
+  chainId: number | undefined,
+  defaultOutputToken: Currency | undefined
+): Currency | undefined {
+  const nativeCurrency = useNativeCurrency()
+  const onSupportedNetwork = useOnSupportedNetwork()
+
+  return (
+    useDefaultToken(defaultAddress, chainId) ??
+    // Default the input token to the native currency if it is not the output token.
+    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
+  )
+}
+
 export default function useSyncTokenDefaults(
   { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount }: TokenDefaults,
   defaultChainId: SupportedChainId
@@ -49,17 +64,10 @@ export default function useSyncTokenDefaults(
   const didPriorityConnect = useRef<boolean | undefined>(false)
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId, hooks } = useWeb3React()
-  const onSupportedNetwork = useOnSupportedNetwork()
-  const nativeCurrency = useNativeCurrency()
+
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
-  const defaultInputToken =
-    useDefaultToken(defaultInputTokenAddress, chainId) ??
-    // Default the input token to the native currency if it is not the output token.
-    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
-  const defaultChainIdInputToken =
-    useDefaultToken(defaultInputTokenAddress, defaultChainId) ??
-    // Default the input token to the native currency if it is not the output token.
-    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
+  const defaultInputToken = useDefaultInputToken(defaultInputTokenAddress, chainId, defaultOutputToken)
+  const defaultChainIdInputToken = useDefaultInputToken(defaultInputTokenAddress, defaultChainId, defaultOutputToken)
 
   const setToDefaults = useCallback(
     (shouldUseDefaultChainId = false) => {
