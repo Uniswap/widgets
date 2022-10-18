@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
+import { SupportedChainId } from 'constants/chains'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
@@ -30,6 +31,7 @@ import useValidate from './useValidate'
 export interface SwapProps extends BrandingSettings, FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
   hideConnectionUI?: boolean
   routerUrl?: string
+  defaultChainId: SupportedChainId
 }
 
 export default function Swap(props: SwapProps) {
@@ -37,7 +39,7 @@ export default function Swap(props: SwapProps) {
   useSyncController(props as SwapController)
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
-  useSyncTokenDefaults(props as TokenDefaults)
+  useSyncTokenDefaults(props as TokenDefaults, props.defaultChainId)
   useSyncBrandingSetting(props as BrandingSettings)
 
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)

@@ -1,5 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -40,16 +41,14 @@ function useDefaultToken(
   return token ?? undefined
 }
 
-export default function useSyncTokenDefaults({
-  defaultInputTokenAddress,
-  defaultInputAmount,
-  defaultOutputTokenAddress,
-  defaultOutputAmount,
-}: TokenDefaults) {
+export default function useSyncTokenDefaults(
+  { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount }: TokenDefaults,
+  defaultChainId: SupportedChainId
+) {
   const lastChainId = useRef<number | undefined>(undefined)
-  const lastProviderUrl = useRef<string | undefined>(undefined)
+  const didPriorityConnect = useRef<boolean | undefined>(false)
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId, provider } = useWeb3React()
+  const { chainId, hooks } = useWeb3React()
   const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
@@ -57,37 +56,52 @@ export default function useSyncTokenDefaults({
     useDefaultToken(defaultInputTokenAddress, chainId) ??
     // Default the input token to the native currency if it is not the output token.
     (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
+  const defaultChainIdInputToken =
+    useDefaultToken(defaultInputTokenAddress, defaultChainId) ??
+    // Default the input token to the native currency if it is not the output token.
+    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
 
-  const setToDefaults = useCallback(() => {
-    const defaultSwapState: Swap = {
-      amount: '',
-      [Field.INPUT]: defaultInputToken,
-      [Field.OUTPUT]: defaultOutputToken,
-      type: TradeType.EXACT_INPUT,
-    }
-    if (defaultInputToken && defaultInputAmount) {
-      defaultSwapState.amount = defaultInputAmount.toString()
-    } else if (defaultOutputToken && defaultOutputAmount) {
-      defaultSwapState.type = TradeType.EXACT_OUTPUT
-      defaultSwapState.amount = defaultOutputAmount.toString()
-    }
-    updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
-  }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
+  const setToDefaults = useCallback(
+    (shouldUseDefaultChainId = false) => {
+      const defaultSwapState: Swap = {
+        amount: '',
+        [Field.INPUT]: shouldUseDefaultChainId ? defaultChainIdInputToken : defaultInputToken,
+        [Field.OUTPUT]: defaultOutputToken,
+        type: TradeType.EXACT_INPUT,
+      }
+      if (defaultInputToken && defaultInputAmount) {
+        defaultSwapState.amount = defaultInputAmount.toString()
+      } else if (defaultOutputToken && defaultOutputAmount) {
+        defaultSwapState.type = TradeType.EXACT_OUTPUT
+        defaultSwapState.amount = defaultOutputAmount.toString()
+      }
+      updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
+    },
+    [
+      defaultChainIdInputToken,
+      defaultInputToken,
+      defaultOutputToken,
+      defaultInputAmount,
+      defaultOutputAmount,
+      updateSwap,
+    ]
+  )
 
   const isTokenListLoaded = useIsTokenListLoaded()
+  const isPriorityConnectorActivating = hooks.usePriorityIsActivating()
 
   useEffect(() => {
-    const isSwitchProvider = lastProviderUrl.current !== provider?.connection.url
     const isSwitchChain = chainId !== lastChainId.current
-    const shouldSyncChainDefaults = isTokenListLoaded && provider && chainId && (isSwitchChain || isSwitchProvider)
+    const shouldSync = isTokenListLoaded && chainId && isSwitchChain
+    const shouldUseDefaultChainId = didPriorityConnect.current === false && !isPriorityConnectorActivating
 
-    if (shouldSyncChainDefaults) {
-      if (!(isSwitchProvider && isSwitchChain)) {
-        setToDefaults()
+    if (shouldSync) {
+      setToDefaults(shouldUseDefaultChainId)
+      if (shouldUseDefaultChainId) {
+        didPriorityConnect.current = true
       }
 
       lastChainId.current = chainId
-      lastProviderUrl.current = provider?.connection.url
     }
-  }, [isTokenListLoaded, chainId, setToDefaults, provider])
+  }, [isTokenListLoaded, chainId, setToDefaults, isPriorityConnectorActivating])
 }
