@@ -72,7 +72,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     type,
     hasAmounts ? parsedAmount : undefined,
     hasAmounts ? (isExactInput(type) ? currencyOut : currencyIn) : undefined,
-    RouterPreference.TRADE,
+    isWrap || error ? RouterPreference.SKIP : RouterPreference.TRADE,
     routerUrl
   )
 

@@ -35,19 +35,22 @@ export function serializeGetQuoteArgs({ endpointName, queryArgs }: { endpointNam
  * (this includes if the window is not visible).
  * NB: Input arguments do not need to be memoized, as they will be destructured.
  */
-export function useGetQuoteArgs({
-  provider,
-  tradeType,
-  amountSpecified,
-  otherCurrency,
-  routerUrl,
-}: Partial<{
-  provider: BaseProvider
-  tradeType: TradeType
-  amountSpecified: CurrencyAmount<Currency>
-  otherCurrency: Currency
-  routerUrl: string
-}>): GetQuoteArgs | SkipToken {
+export function useGetQuoteArgs(
+  {
+    provider,
+    tradeType,
+    amountSpecified,
+    otherCurrency,
+    routerUrl,
+  }: Partial<{
+    provider: BaseProvider
+    tradeType: TradeType
+    amountSpecified: CurrencyAmount<Currency>
+    otherCurrency: Currency
+    routerUrl: string
+  }>,
+  skip?: boolean
+): GetQuoteArgs | SkipToken {
   const args = useMemo(() => {
     if (!provider || !amountSpecified || tradeType === undefined) return null
 
@@ -73,5 +76,7 @@ export function useGetQuoteArgs({
   }, [provider, amountSpecified, tradeType, otherCurrency, routerUrl])
 
   const isWindowVisible = useIsWindowVisible()
-  return (isWindowVisible ? args : null) ?? skipToken
+  if (skip || !isWindowVisible) return skipToken
+
+  return args ?? skipToken
 }
