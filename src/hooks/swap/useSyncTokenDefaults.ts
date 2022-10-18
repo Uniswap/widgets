@@ -1,5 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Connector } from '@web3-react/types'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
@@ -58,12 +59,12 @@ function useDefaultInputToken(
 
 export default function useSyncTokenDefaults(
   { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount }: TokenDefaults,
-  defaultChainId: SupportedChainId = SupportedChainId.MAINNET
+  defaultChainId?: SupportedChainId
 ) {
   const lastChainId = useRef<number | undefined>(undefined)
-  const didPriorityConnect = useRef<boolean | undefined>(false)
+  const lastConnector = useRef<Connector | undefined>(undefined)
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId, hooks } = useWeb3React()
+  const { chainId, connector } = useWeb3React()
 
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
   const defaultInputToken = useDefaultInputToken(defaultInputTokenAddress, chainId, defaultOutputToken)
@@ -96,20 +97,18 @@ export default function useSyncTokenDefaults(
   )
 
   const isTokenListLoaded = useIsTokenListLoaded()
-  const isPriorityConnectorActivating = hooks.usePriorityIsActivating()
 
   useEffect(() => {
-    const isSwitchChain = chainId !== lastChainId.current
-    const shouldSync = isTokenListLoaded && chainId && isSwitchChain
-    const shouldUseDefaultChainId = didPriorityConnect.current === false && !isPriorityConnectorActivating
+    const isSwitchChain = chainId && chainId !== lastChainId.current
+    const isSwitchConnector = connector && connector !== lastConnector.current
+    const shouldSync = isTokenListLoaded && (isSwitchChain || isSwitchConnector)
+    const shouldSetToDefaultChainId = isSwitchConnector && defaultChainId
 
     if (shouldSync) {
-      setToDefaults(shouldUseDefaultChainId)
-      if (shouldUseDefaultChainId) {
-        didPriorityConnect.current = true
-      }
+      setToDefaults(shouldSetToDefaultChainId)
 
       lastChainId.current = chainId
+      lastConnector.current = connector
     }
-  }, [isTokenListLoaded, chainId, setToDefaults, isPriorityConnectorActivating])
+  }, [isTokenListLoaded, chainId, setToDefaults, connector, defaultChainId])
 }
