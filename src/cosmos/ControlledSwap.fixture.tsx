@@ -8,7 +8,7 @@ import { useValue } from 'react-cosmos/fixture'
 import { DAI, nativeOnChain, USDC } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
-import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+import useProvider, { RPC_URLS } from './useProvider'
 
 function Fixture() {
   const [events, setEvents] = useState<Event[]>([])
@@ -67,7 +67,7 @@ function Fixture() {
         onTokenChange={useHandleEvent('onTokenChange')}
         onAmountChange={useHandleEvent('onAmountChange')}
         onSwitchTokens={useHandleEvent('onSwitchTokens')}
-        jsonRpcUrlMap={INFURA_NETWORK_URLS}
+        jsonRpcUrlMap={RPC_URLS}
         provider={connector}
         tokenList={tokens}
         {...eventHandlers}

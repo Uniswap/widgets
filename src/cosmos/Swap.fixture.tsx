@@ -17,7 +17,7 @@ import { useValue } from 'react-cosmos/fixture'
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
-import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+import useProvider, { RPC_URLS } from './useProvider'
 
 const TOKEN_WITH_NO_LOGO = {
   chainId: 1,
@@ -105,7 +105,7 @@ function Fixture() {
       disableBranding={disableBranding}
       hideConnectionUI={hideConnectionUI}
       locale={locale}
-      jsonRpcUrlMap={INFURA_NETWORK_URLS}
+      jsonRpcUrlMap={RPC_URLS}
       defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
