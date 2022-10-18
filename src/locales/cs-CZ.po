@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -68,6 +68,10 @@ msgstr "Automaticky"
 msgid "Auto Router"
 msgstr "Auto Router"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Zůstatek:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Zavřít"
@@ -122,10 +126,6 @@ msgstr "Chyba při načítání obchodu"
 msgid "Fetching best price…"
 msgstr "Načítání nejlepší ceny…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Pro"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Nedostatečný zůstatek {0}"
 msgid "Invalid recipient"
 msgstr "Neplatný příjemce"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Poplatek poskytovatele likvidity"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Max."
 
@@ -178,6 +174,10 @@ msgstr "Minimum přijato"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Chybějící závislosti"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Síťový poplatek"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Výkon se odhaduje. Odešlete maximálně {0} {1} nebo se transakce vrá
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Zadejte prosím platný skluz %"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Obnovte stránku a zkuste to znovu."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Nastavení"
 msgid "Slippage tolerance"
 msgstr "Tolerance skluzu"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Něco se pokazilo."

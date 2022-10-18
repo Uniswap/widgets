@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -68,6 +68,10 @@ msgstr "Automatique"
 msgid "Auto Router"
 msgstr "Routeur automatique"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Solde :"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Fermer"
@@ -122,10 +126,6 @@ msgstr "Erreur lors de la récupération de l'échange"
 msgid "Fetching best price…"
 msgstr "Recherche du meilleur prix…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Pour"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Solde {0} insuffisant"
 msgid "Invalid recipient"
 msgstr "Destinataire invalide"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Commission du fournisseur de liquidité"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Max"
 
@@ -178,6 +174,10 @@ msgstr "Minimum reçu"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dépendances manquantes"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Frais de réseau"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "La production est estimée. Vous enverrez au plus {0} {1} ou la transact
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Veuillez saisir un pourcentage de glissement valide"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Veuillez actualiser la page et réessayer."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Réglages"
 msgid "Slippage tolerance"
 msgstr "Tolérance du slippage"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."

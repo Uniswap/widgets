@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -68,6 +68,10 @@ msgstr "Outomaties"
 msgid "Auto Router"
 msgstr "Outo-roeteerder"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Naby"
@@ -122,10 +126,6 @@ msgstr "Kon nie handel haal nie"
 msgid "Fetching best price…"
 msgstr "Haal die beste prys…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Vir"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Onvoldoende {0} balans"
 msgid "Invalid recipient"
 msgstr "Ongeldige ontvanger"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likiditeitsverskafferfooi"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Maks"
 
@@ -178,6 +174,10 @@ msgstr "Minimum ontvang"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Ontbrekings ontbreek"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Netwerk fooi"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Uitset word geskat. Jy sal hoogstens {0} {1} stuur of die transaksie sal
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Voer asseblief 'n geldige glip-% in"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Herlaai asseblief die bladsy en probeer weer."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Instellings"
 msgid "Slippage tolerance"
 msgstr "Glipverdraagsaamheid"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Iets het verkeerd geloop."

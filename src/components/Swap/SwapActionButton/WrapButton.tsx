@@ -55,7 +55,7 @@ export default function WrapButton({
   return (
     <ActionButton color={color} {...actionProps} disabled={disabled}>
       <Trans>
-        {wrapType === TransactionType.WRAP ? 'WRAP' : 'UNWRAP'} {inputCurrency?.symbol}
+        {wrapType === TransactionType.WRAP ? 'Wrap' : 'Unwrap'} {inputCurrency?.symbol}
       </Trans>
     </ActionButton>
   )

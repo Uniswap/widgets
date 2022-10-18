@@ -4,10 +4,10 @@ import { Component, ErrorInfo, PropsWithChildren } from 'react'
 import Dialog from '../Dialog'
 import ErrorDialog from './ErrorDialog'
 
-export type ErrorHandler = (error: Error, info: ErrorInfo) => void
+export type OnError = (error: Error, info: ErrorInfo) => void
 
 interface ErrorBoundaryProps {
-  onError?: ErrorHandler
+  onError?: OnError
 }
 
 type ErrorBoundaryState = {
@@ -34,7 +34,7 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
         <Dialog color="dialog">
           <ErrorDialog
             error={this.state.error}
-            header={<Trans>Something went wrong.</Trans>}
+            header={<Trans>Please refresh the page and try again.</Trans>}
             action={<Trans>Reload the page</Trans>}
             onClick={() => window.location.reload()}
           />

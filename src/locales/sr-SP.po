@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -68,6 +68,10 @@ msgstr "Аutomatski"
 msgid "Auto Router"
 msgstr "Ауто Роутер"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Стање:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Затвори"
@@ -122,10 +126,6 @@ msgstr "Грешка при преузимању трговине"
 msgid "Fetching best price…"
 msgstr "Дохваћање најбоље цене…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "За"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Недовољно {0} на стању"
 msgid "Invalid recipient"
 msgstr "Неважећи прималац"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Накнада добављача ликвидности"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Макс"
 
@@ -178,6 +174,10 @@ msgstr "Минимално примљено"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Недостају зависности"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Мрежна накнада"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Излаз је процењен. Послаћете највише {0} 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Унесите важећи % клизања"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Освежите страницу и покушајте поново."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Подешавања"
 msgid "Slippage tolerance"
 msgstr "Клизна толеранција"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Нешто је кренуло наопако."

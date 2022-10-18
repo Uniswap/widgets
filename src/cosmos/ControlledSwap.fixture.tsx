@@ -2,11 +2,11 @@ import { tokens } from '@uniswap/default-token-list'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Field, SupportedChainId, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, nativeOnChain, USDC } from '../constants/tokens'
-import EventFeed, { Event } from './EventFeed'
+import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
 
@@ -46,6 +46,12 @@ function Fixture() {
 
   const connector = useProvider(SupportedChainId.MAINNET)
 
+  const eventHandlers = useMemo(
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
+    [useHandleEvent]
+  )
+
   return (
     <Row flex align="start" justify="start" gap={0.5}>
       <SwapWidget
@@ -64,12 +70,7 @@ function Fixture() {
         jsonRpcUrlMap={INFURA_NETWORK_URLS}
         provider={connector}
         tokenList={tokens}
-        onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
-        onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
-        onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
-        onTxSubmit={useHandleEvent('onTxSubmit')}
-        onTxSuccess={useHandleEvent('onTxSuccess')}
-        onTxFail={useHandleEvent('onTxFail')}
+        {...eventHandlers}
       />
       <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>

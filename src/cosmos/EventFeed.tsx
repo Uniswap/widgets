@@ -1,4 +1,4 @@
-import { defaultTheme } from '@uniswap/widgets'
+import { defaultTheme, SwapEventHandlers, TransactionEventHandlers, WidgetEventHandlers } from '@uniswap/widgets'
 import Row from 'components/Row'
 import styled from 'styled-components/macro'
 import * as Type from 'theme/type'
@@ -24,6 +24,28 @@ const EventRow = styled.div`
 const EventData = styled.pre`
   margin: 0.5em 0 0;
 `
+
+export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers | keyof WidgetEventHandlers)[] = [
+  'onAmountChange',
+  'onConnectWalletClick',
+  'onError',
+  'onExpandSwapDetails',
+  'onInitialSwapQuote',
+  'onSwapApprove',
+  'onReviewSwapClick',
+  'onSettingsReset',
+  'onSlippageChange',
+  'onSubmitSwapClick',
+  'onSwapPriceUpdateAck',
+  'onSwitchChain',
+  'onSwitchTokens',
+  'onTokenChange',
+  'onTokenSelectorClick',
+  'onTransactionDeadlineChange',
+  'onTxFail',
+  'onTxSubmit',
+  'onTxSuccess',
+]
 
 export interface Event {
   name: string

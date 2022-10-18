@@ -1,7 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
-import { useSwapInfo } from 'hooks/swap'
+import { SupportedChainId } from 'constants/chains'
+import { ChainError, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Field } from 'state/swap'
 import { useTheme } from 'styled-components/macro'
 
@@ -10,38 +10,33 @@ import SwitchChainButton from './SwitchChainButton'
 import useOnSubmit from './useOnSubmit'
 import WrapButton from './WrapButton'
 
-interface SwapButtonProps {
-  disabled?: boolean
-}
-
-export default memo(function SwapActionButton({ disabled }: SwapButtonProps) {
-  const { chainId } = useWeb3React()
+export default function SwapActionButton() {
   const {
     [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
     [Field.OUTPUT]: { currency: outputCurrency },
+    error,
     trade: { trade },
   } = useSwapInfo()
-  const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
   const isWrap = useIsWrap()
   const isDisabled = useMemo(
     () =>
-      disabled ||
-      !chainId ||
+      error !== undefined ||
       (!isWrap && !trade) ||
       !(inputCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [disabled, chainId, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
+    [error, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
   )
   const onSubmit = useOnSubmit()
 
   const { tokenColorExtraction } = useTheme()
   const color = tokenColorExtraction ? 'interactive' : 'accent'
 
-  if (chainId && tokenChainId && chainId !== tokenChainId) {
+  if (error === ChainError.MISMATCHED_CHAINS) {
+    const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId ?? SupportedChainId.MAINNET
     return <SwitchChainButton color={color} chainId={tokenChainId} />
   } else if (isWrap) {
     return <WrapButton color={color} onSubmit={onSubmit} disabled={isDisabled} />
   } else {
     return <SwapButton color={color} onSubmit={onSubmit} disabled={isDisabled} />
   }
-})
+}

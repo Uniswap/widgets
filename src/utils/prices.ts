@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
+import { Fraction, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import {
@@ -57,13 +57,6 @@ export function computeRealizedLPFeePercent(trade: InterfaceTrade): Percent {
   }
 
   return new Percent(percent.numerator, percent.denominator)
-}
-
-// computes price breakdown for the trade
-export function computeRealizedLPFeeAmount(trade: InterfaceTrade): CurrencyAmount<Currency> | undefined {
-  const realizedLPFee = computeRealizedLPFeePercent(trade)
-  // the amount of the input that accrues to LPs
-  return CurrencyAmount.fromRawAmount(trade.inputAmount.currency, trade.inputAmount.multiply(realizedLPFee).quotient)
 }
 
 const IMPACT_TIERS = [

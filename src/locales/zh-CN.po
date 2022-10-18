@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -68,6 +68,10 @@ msgstr "自动"
 msgid "Auto Router"
 msgstr "自动路由"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "余额："
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "关闭"
@@ -122,10 +126,6 @@ msgstr "获取交易时出错"
 msgid "Fetching best price…"
 msgstr "正在获取最优兑换率..."
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "赞成"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "{0} 余额不足"
 msgid "Invalid recipient"
 msgstr "无效的接收方"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "流动性提供者费用"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "最大值"
 
@@ -178,6 +174,10 @@ msgstr "收到的最低数额"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "缺少依赖套件"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "网络费用"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "估计输出。您最多发送 {0} {1} 或交易将恢复。"
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "请输入有效的滑点百分比"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "请刷新页面并重试。"
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "设置"
 msgid "Slippage tolerance"
 msgstr "滑点容差"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "出问题了。"

@@ -36,6 +36,10 @@ export function usePriceImpact(
 
 export function toHumanReadablePercent(priceImpact: Percent): string {
   const sign = priceImpact.lessThan(0) ? '+' : ''
-  const number = parseFloat(priceImpact.multiply(-1)?.toSignificant(3))
+  const exactFloat = (Number(priceImpact.numerator) / Number(priceImpact.denominator)) * 100
+  if (exactFloat < 0.005) {
+    return '0.00%'
+  }
+  const number = parseFloat(priceImpact.multiply(-1)?.toFixed(2))
   return `${sign}${number}%`
 }

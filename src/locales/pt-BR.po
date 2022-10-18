@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: pt_BR\n"
 "Language-Team: Portuguese, Brazilian\n"
@@ -68,6 +68,10 @@ msgstr "Automático"
 msgid "Auto Router"
 msgstr "Roteador automático"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Fechar"
@@ -122,10 +126,6 @@ msgstr "Erro ao buscar a negociação"
 msgid "Fetching best price…"
 msgstr "Buscando o melhor preço…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Para"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Saldo insuficiente {0}"
 msgid "Invalid recipient"
 msgstr "Destinatário inválido"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Taxa de provedor de liquidez"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Máx"
 
@@ -178,6 +174,10 @@ msgstr "Mínimo recebido"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dependências ausentes"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Taxa de rede"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "A saída é estimada. Você enviará no máximo {0} {1} ou a transação
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Insira uma % de derrapagem válida"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Atualize a página e tente novamente."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Configurações"
 msgid "Slippage tolerance"
 msgstr "Tolerância a discrepâncias"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Algo deu errado."

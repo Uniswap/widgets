@@ -1,41 +1,32 @@
-import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
-import JSBI from 'jsbi'
-import formatLocaleNumber from 'utils/formatLocaleNumber'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 
-export function formatCurrencyAmount(
-  amount: CurrencyAmount<Currency> | undefined,
-  sigFigs: number,
-  locale: SupportedLocale = DEFAULT_LOCALE,
-  fixedDecimals?: number
-): string {
-  if (!amount) {
-    return '-'
-  }
+import {
+  currencyAmountToPreciseFloat,
+  formatDollar,
+  formatTransactionAmount,
+  priceToPreciseFloat,
+} from './formatNumbers'
 
-  if (JSBI.equal(amount.quotient, JSBI.BigInt(0))) {
-    return '0'
-  }
-
-  if (amount.divide(amount.decimalScale).lessThan(new Fraction(1, 100000))) {
-    return `<${formatLocaleNumber({ number: 0.00001, locale, sigFigs, fixedDecimals })}`
-  }
-
-  return formatLocaleNumber({ number: amount, locale, sigFigs, fixedDecimals })
+interface FormatCurrencyAmountArgs {
+  amount: CurrencyAmount<Currency> | undefined
+  isUsdPrice?: boolean
 }
 
-export function formatPrice(
-  price: Price<Currency, Currency> | undefined,
-  sigFigs: number,
-  locale: SupportedLocale = DEFAULT_LOCALE
-): string {
-  if (!price) {
-    return '-'
-  }
+/**
+ * Returns currency amount formatted as a human readable string.
+ * @param amount currency amount
+ * @param isUsdPrice whether the amount is denominated in USD or USD equivalent
+ */
+export function formatCurrencyAmount({ amount, isUsdPrice = false }: FormatCurrencyAmountArgs): string {
+  if (!amount) return ''
+  const currencyAmountNumber = currencyAmountToPreciseFloat(amount)
+  return isUsdPrice ? formatDollar({ num: currencyAmountNumber }) : formatTransactionAmount(currencyAmountNumber)
+}
 
-  if (parseFloat(price.toFixed(sigFigs)) < 0.0001) {
-    return `<${formatLocaleNumber({ number: 0.00001, locale })}`
-  }
-
-  return formatLocaleNumber({ number: price, locale, sigFigs })
+/**
+ * Returns price formatted as a human readable string.
+ * @param price price
+ */
+export function formatPrice(price: Price<Currency, Currency> | undefined): string {
+  return formatTransactionAmount(priceToPreciseFloat(price))
 }

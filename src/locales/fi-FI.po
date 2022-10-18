@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -68,6 +68,10 @@ msgstr "Automaattinen"
 msgid "Auto Router"
 msgstr "Automaattinen reititin"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Sulje"
@@ -122,10 +126,6 @@ msgstr "Virhe kauppaa haettaessa"
 msgid "Fetching best price…"
 msgstr "Haetaan paras hinta…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Kohteelle"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Riittämätön {0} saldo"
 msgid "Invalid recipient"
 msgstr "Virheellinen vastaanottaja"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likviditeetin tarjoajan palkkio"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Maksimi"
 
@@ -178,6 +174,10 @@ msgstr "Minimi vastaanotettu"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Puuttuvat riippuvuudet"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Verkkomaksu"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Tuotos on arvioitu. Lähetät enintään {0} {1} tai tapahtuma palautuu.
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Anna kelvollinen lipsuma %"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Päivitä sivu ja yritä uudelleen."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "asetukset"
 msgid "Slippage tolerance"
 msgstr "Luistonsieto"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Jotain meni pieleen."

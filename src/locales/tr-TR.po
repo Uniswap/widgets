@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -68,6 +68,10 @@ msgstr "Otomatik"
 msgid "Auto Router"
 msgstr "Otomatik Yönlendirici"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Bakiye:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Kapat"
@@ -122,10 +126,6 @@ msgstr "Takas alınırken hata oluştu"
 msgid "Fetching best price…"
 msgstr "En iyi fiyat getiriliyor…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Şunun için"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Yetersiz {0} bakiye"
 msgid "Invalid recipient"
 msgstr "Geçersiz alıcı"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likidite sağlayıcı ücreti"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Maksimum"
 
@@ -178,6 +174,10 @@ msgstr "Minimum alınan"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Eksik bağımlılıklar"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Ağ ücreti"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Çıktı tahmin edilmektedir. En fazla {0} {1} gönderirsiniz yoksa işl
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Lütfen geçerli bir kayma yüzdesi girin"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Lütfen sayfayı yenileyin ve tekrar deneyin."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Ayarlar"
 msgid "Slippage tolerance"
 msgstr "Kayma toleransı"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Bir şeyler yanlış gitti."

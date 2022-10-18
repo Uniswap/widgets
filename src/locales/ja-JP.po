@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -68,6 +68,10 @@ msgstr "自動"
 msgid "Auto Router"
 msgstr "自動ルーター"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "残高:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "閉じる"
@@ -122,10 +126,6 @@ msgstr "取引の取得中にエラーが発生しました"
 msgid "Fetching best price…"
 msgstr "ベストな価格を取得中…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "賛成"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "{0} の残高が足りません"
 msgid "Invalid recipient"
 msgstr "受け取りアドレスが無効です"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "流動性プロバイダー手数料"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "最大"
 
@@ -178,6 +174,10 @@ msgstr "最小購入数"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "依存関係がありません"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "ネットワーク料金"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "出力は推定されます。最大 {0} {1} を送信するか、トラ
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "有効なスリッページ％を入力してください"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "ページを更新して、もう一度お試しください。"
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "設定"
 msgid "Slippage tolerance"
 msgstr "スリッページの許容範囲"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "問題が発生しました。"

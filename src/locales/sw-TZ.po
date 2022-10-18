@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -68,6 +68,10 @@ msgstr "Otomatiki"
 msgid "Auto Router"
 msgstr "Njia ya Kiotomatiki"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Kiasi:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Funga"
@@ -122,10 +126,6 @@ msgstr "Hitilafu katika kuleta biashara"
 msgid "Fetching best price…"
 msgstr "Inaleta bei nzuri…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Kwa maana"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Usawa wa kutosha {0}"
 msgid "Invalid recipient"
 msgstr "Mpokeaji si sahihi"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Ada ya mtoa huduma ya ukwasi"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Upeo"
 
@@ -178,6 +174,10 @@ msgstr "Kiwango cha chini kimepokelewa"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Kukosa utegemezi"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Ada ya mtandao"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Pato linakadiriwa. Utatuma angalau {0} {1} au muamala utarejeshwa."
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Tafadhali weka utelezi sahihi %"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Tafadhali onyesha upya ukurasa na ujaribu tena."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Mipangilio"
 msgid "Slippage tolerance"
 msgstr "Uvumilivu wa kuteleza"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Hitilafu fulani imetokea."

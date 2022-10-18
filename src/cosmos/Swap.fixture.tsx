@@ -11,13 +11,28 @@ import {
 } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
-import EventFeed, { Event } from './EventFeed'
+import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
 import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+
+const TOKEN_WITH_NO_LOGO = {
+  chainId: 1,
+  decimals: 18,
+  symbol: 'HDRN',
+  name: 'Hedron',
+  address: '0x3819f64f282bf135d62168C1e513280dAF905e06',
+}
+
+const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
+const tokenLists: Record<string, TokenInfo[]> = {
+  Default: tokens,
+  'Mainnet only': mainnetTokens,
+  Logoless: [TOKEN_WITH_NO_LOGO],
+}
 
 function Fixture() {
   const [events, setEvents] = useState<Event[]>([])
@@ -69,13 +84,15 @@ function Fixture() {
 
   const connector = useProvider(defaultChainId)
 
-  const tokenLists: Record<string, TokenInfo[]> = {
-    Default: tokens,
-    'Mainnet only': tokens.filter((token) => token.chainId === SupportedChainId.MAINNET),
-  }
   const tokenList = useOption('tokenList', { options: tokenLists, defaultValue: 'Default', nullable: false })
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
+
+  const eventHandlers = useMemo(
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
+    [useHandleEvent]
+  )
 
   const widget = (
     <SwapWidget
@@ -95,12 +112,7 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      onConnectWalletClick={useHandleEvent('onConnectWalletClick')}
-      onReviewSwapClick={useHandleEvent('onReviewSwapClick')}
-      onTokenSelectorClick={useHandleEvent('onTokenSelectorClick')}
-      onTxSubmit={useHandleEvent('onTxSubmit')}
-      onTxSuccess={useHandleEvent('onTxSuccess')}
-      onTxFail={useHandleEvent('onTxFail')}
+      {...eventHandlers}
     />
   )
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -68,6 +68,10 @@ msgstr "تلقائي"
 msgid "Auto Router"
 msgstr "جهاز التوجيه التلقائي"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "الرصيد:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "إغلاق"
@@ -122,10 +126,6 @@ msgstr "خطأ في جلب التجارة"
 msgid "Fetching best price…"
 msgstr "الحصول على أفضل سعر…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "لـ"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "رصيد {0} غير كاف"
 msgid "Invalid recipient"
 msgstr "مستلم غير صالح"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "رسوم مزود السيولة"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "الحد الأقصى"
 
@@ -178,6 +174,10 @@ msgstr "تلقى الحد الأدنى"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "التبعيات المفقودة"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "رسوم الشبكة"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "الناتج يقدر. سوف ترسل {0} {1} على الأكثر وإ�
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "الرجاء إدخال انزلاق سعر صالح٪"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "يرجى تحديث الصفحة وحاول مرة أخرى."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "إعدادات"
 msgid "Slippage tolerance"
 msgstr "تحمل الانزلاق"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "هناك خطأ ما."

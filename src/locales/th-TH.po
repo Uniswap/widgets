@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -68,6 +68,10 @@ msgstr "รถยนต์"
 msgid "Auto Router"
 msgstr "เราเตอร์อัตโนมัติ"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "สมดุล:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "ปิด I"
@@ -122,10 +126,6 @@ msgstr "เกิดข้อผิดพลาดในการดึงข้
 msgid "Fetching best price…"
 msgstr "กำลังเรียกราคาที่ดีที่สุด…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "สำหรับ"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "ไม่เพียงพอ {0} ยอดคงเหลือ"
 msgid "Invalid recipient"
 msgstr "ผู้รับไม่ถูกต้อง"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "ค่าธรรมเนียมผู้ให้บริการสภาพคล่อง"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "แม็กซ์"
 
@@ -178,6 +174,10 @@ msgstr "รับขั้นต่ำ"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "ไม่มีการพึ่งพา"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "ค่าธรรมเนียมเครือข่าย"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "มีการประมาณการเอาท์พุต ค�
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "โปรดป้อน % การคลาดเคลื่อนที่ถูกต้อง"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "โปรดรีเฟรชหน้าแล้วลองอีกครั้ง"
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "การตั้งค่า"
 msgid "Slippage tolerance"
 msgstr "ความทนทานต่อการเลื่อนหลุด"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "อะไรบางอย่างผิดปกติ."

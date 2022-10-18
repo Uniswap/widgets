@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -68,6 +68,10 @@ msgstr "Automatiskt"
 msgid "Auto Router"
 msgstr "Auto Router"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Stäng"
@@ -122,10 +126,6 @@ msgstr "Fel vid hämtning av handel"
 msgid "Fetching best price…"
 msgstr "Får bästa pris…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "För"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Otillräckligt {0} saldo"
 msgid "Invalid recipient"
 msgstr "Ogiltig mottagare"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likviditetsgarantavgift"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Högst"
 
@@ -178,6 +174,10 @@ msgstr "Minimum mottaget"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Beroenden saknas"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Nätverksavgift"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Utgången är uppskattad. Du skickar högst {0} {1} annars återgår tra
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Vänligen ange en giltig glidning %"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Uppdatera sidan och försök igen."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "inställningar"
 msgid "Slippage tolerance"
 msgstr "Toleransmarginal"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Något gick fel."

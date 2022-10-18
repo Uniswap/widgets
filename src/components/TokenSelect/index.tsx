@@ -6,7 +6,7 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { useAtomValue } from 'jotai/utils'
-import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field, swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -18,7 +18,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenButton from './TokenButton'
-import TokenOptions from './TokenOptions'
+import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
 const SearchInput = styled(StringInput)`
@@ -72,7 +72,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
-  const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
+  const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
   const { chainId } = useWeb3React()
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
@@ -121,14 +121,13 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 }
 
 interface TokenSelectProps {
-  collapsed: boolean
   disabled?: boolean
   field: Field
   onSelect: (value: Currency) => void
   value?: Currency
 }
 
-export default memo(function TokenSelect({ collapsed, disabled, field, onSelect, value }: TokenSelectProps) {
+export default memo(function TokenSelect({ disabled, field, onSelect, value }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
@@ -145,7 +144,7 @@ export default memo(function TokenSelect({ collapsed, disabled, field, onSelect,
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
+      <TokenButton value={value} disabled={disabled} onClick={onOpen} />
       {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
     </>
   )

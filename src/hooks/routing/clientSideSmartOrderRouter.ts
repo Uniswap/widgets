@@ -1,11 +1,18 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider } from '@ethersproject/providers'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import type { AlphaRouterConfig } from '@uniswap/smart-order-router'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { AlphaRouter, ChainId, routeAmountsToString } from '@uniswap/smart-order-router'
+import {
+  AlphaRouter,
+  ChainId,
+  OnChainQuoteProvider,
+  routeAmountsToString,
+  StaticV2SubgraphProvider,
+  UniswapMulticallProvider,
+} from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import { GetQuoteResult } from 'state/routing/types'
+import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -18,14 +25,58 @@ function isAutoRouterSupportedChain(chainId: ChainId | undefined): boolean {
   return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
 }
 
-const routers = new WeakMap<JsonRpcProvider, AlphaRouter>()
+/** A cache of AlphaRouters, which must be initialized to a specific chain/provider. */
+const routersCache = new WeakMap<BaseProvider, { [chainId: number]: AlphaRouter }>()
 
-function getRouter(chainId: ChainId, provider: JsonRpcProvider): AlphaRouter {
-  const cached = routers.get(provider)
+function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
+  const routers = routersCache.get(provider) || {}
+  const cached = routers[chainId]
   if (cached) return cached
 
-  const router = new AlphaRouter({ chainId, provider })
-  routers.set(provider, router)
+  // V2 is unsupported for chains other than mainnet.
+  // TODO(zzmp): Upstream to @uniswap/smart-order-router, exporting an enum of supported v2 chains for clarity.
+  let v2SubgraphProvider
+  if (chainId !== ChainId.MAINNET) {
+    v2SubgraphProvider = new StaticV2SubgraphProvider(chainId)
+  }
+
+  // V3 computes on-chain, so the quoter must have gas limits appropriate to the provider.
+  // Most defaults are fine, but polygon needs a lower gas limit.
+  // TODO(zzmp): Upstream to @uniswap/smart-order-router, possibly making this easier to modify
+  // (eg allowing configuration without an instance to avoid duplicating multicall2Provider).
+  let onChainQuoteProvider
+  let multicall2Provider
+  if ([ChainId.POLYGON, ChainId.POLYGON_MUMBAI].includes(chainId)) {
+    multicall2Provider = new UniswapMulticallProvider(chainId, provider, 375_000)
+    // See https://github.com/Uniswap/smart-order-router/blob/98c58bdee9981fd9ffac9e7d7a97b18302d5f77a/src/routers/alpha-router/alpha-router.ts#L464-L487
+    onChainQuoteProvider = new OnChainQuoteProvider(
+      chainId,
+      provider,
+      multicall2Provider,
+      {
+        retries: 2,
+        minTimeout: 100,
+        maxTimeout: 1000,
+      },
+      {
+        multicallChunk: 10,
+        gasLimitPerCall: 5_000_000,
+        quoteMinSuccessRate: 0.1,
+      },
+      {
+        gasLimitOverride: 5_000_000,
+        multicallChunk: 5,
+      },
+      {
+        gasLimitOverride: 6_250_000,
+        multicallChunk: 4,
+      }
+    )
+  }
+
+  const router = new AlphaRouter({ chainId, provider, v2SubgraphProvider, multicall2Provider, onChainQuoteProvider })
+  routers[chainId] = router
+  routersCache.set(provider, routers)
   return router
 }
 
@@ -45,7 +96,7 @@ async function getQuote(
   },
   router: AlphaRouter,
   routerConfig: Partial<AlphaRouterConfig>
-): Promise<{ data: GetQuoteResult }> {
+): Promise<GetQuoteResult> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
@@ -54,29 +105,9 @@ async function getQuote(
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
   const route = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (!route) {
-    throw new Error(`Failed to generate client side quote from ${currencyIn.symbol} to ${currencyOut.symbol}`)
-  }
+  if (!route) return NO_ROUTE
 
-  return {
-    data: {
-      ...transformSwapRouteToGetQuoteResult(route),
-      routeString: routeAmountsToString(route.route),
-    },
-  }
-}
-
-interface QuoteArguments {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  tradeType: TradeType
+  return transformSwapRouteToGetQuoteResult({ ...route, routeString: routeAmountsToString(route.route) })
 }
 
 export async function getClientSideQuote(
@@ -91,8 +122,8 @@ export async function getClientSideQuote(
     tokenOutSymbol,
     amount,
     tradeType,
-  }: QuoteArguments,
-  provider: JsonRpcProvider,
+    provider,
+  }: GetQuoteArgs,
   routerConfig: Partial<AlphaRouterConfig>
 ) {
   if (!isAutoRouterSupportedChain(tokenInChainId)) {

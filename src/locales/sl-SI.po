@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -68,6 +68,10 @@ msgstr "Samodejno"
 msgid "Auto Router"
 msgstr "Samodejni iskalnik poti"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Dobroimetje:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Zapri"
@@ -122,10 +126,6 @@ msgstr "Napaka pri pridobivanju posla"
 msgid "Fetching best price…"
 msgstr "Pridobivam najboljšo ceno…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Za"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Prenizko dobroimetje {0}"
 msgid "Invalid recipient"
 msgstr "Neveljaven prejemnik"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Provizija za ponudnika likvidnosti"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Največ"
 
@@ -178,6 +174,10 @@ msgstr "Prejmete najmanj"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Manjkajoče odvisnosti"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Omrežnina"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Izhodni znesek je ocenjen. Poslali boste največ {0} {1} ali pa bo trans
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Prosimo, vnesite veljaven odstotek zdrsa"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Osvežite stran in poskusite znova."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Nastavitve"
 msgid "Slippage tolerance"
 msgstr "Toleranca do zdrsa"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Nekaj je šlo narobe."

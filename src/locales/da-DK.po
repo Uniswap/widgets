@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -68,6 +68,10 @@ msgstr "Automatisk"
 msgid "Auto Router"
 msgstr "Auto router"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Luk"
@@ -122,10 +126,6 @@ msgstr "Fejl ved hentning af handel"
 msgid "Fetching best price…"
 msgstr "Bedste pris…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Til"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Utilstrækkelig {0} saldo"
 msgid "Invalid recipient"
 msgstr "Ugyldig modtager"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likviditetstilbyder gebyr"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Maks."
 
@@ -178,6 +174,10 @@ msgstr "Minimum modtaget"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Manglende afhængigheder"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Netværksgebyr"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Output er estimeret. Du sender højst {0} {1} , ellers vil transaktionen
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Indtast venligst en gyldig glidning %"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Opdater venligst siden og prøv igen."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Indstillinger"
 msgid "Slippage tolerance"
 msgstr "Glidningstolerance"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Noget gik galt."

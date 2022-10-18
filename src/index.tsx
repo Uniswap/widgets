@@ -9,23 +9,35 @@ export type { Currency } from '@uniswap/sdk-core'
 export { TradeType } from '@uniswap/sdk-core'
 export type { TokenInfo } from '@uniswap/token-lists'
 export type { Provider as Eip1193Provider } from '@web3-react/types'
-export type { ErrorHandler } from 'components/Error/ErrorBoundary'
 export type { SwapWidgetSkeletonProps } from 'components/Swap/Skeleton'
 export { SwapWidgetSkeleton } from 'components/Swap/Skeleton'
 export { SupportedChainId } from 'constants/chains'
 export type { SupportedLocale } from 'constants/locales'
 export { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
-export type { SwapController, SwapSettingsController } from 'hooks/swap/useSyncController'
+export type { SwapController } from 'hooks/swap/useSyncController'
 export type { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 export type { OnTxFail, OnTxSubmit, OnTxSuccess, TransactionEventHandlers } from 'hooks/transactions'
-export type { OnConnectWalletClick, WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
+export type {
+  AddEthereumChainParameter,
+  OnConnectWalletClick,
+  OnError,
+  OnSwitchChain,
+  WidgetEventHandlers,
+} from 'hooks/useSyncWidgetEventHandlers'
+export { EMPTY_TOKEN_LIST, UNISWAP_TOKEN_LIST } from 'hooks/useTokenList'
+export { validateTokenList, validateTokens } from 'hooks/useTokenList/validateTokenList'
 export type { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 export type {
   OnAmountChange,
+  OnExpandSwapDetails,
+  OnInitialSwapQuote,
   OnReviewSwapClick,
   OnSettingsReset,
   OnSlippageChange,
+  OnSubmitSwapClick,
+  OnSwapApprove,
+  OnSwapPriceUpdateAck,
   OnSwitchTokens,
   OnTokenChange,
   OnTokenSelectorClick,

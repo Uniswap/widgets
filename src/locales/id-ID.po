@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -68,6 +68,10 @@ msgstr "Otomatis"
 msgid "Auto Router"
 msgstr "Router Otomatis"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Saldo:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Tutup"
@@ -122,10 +126,6 @@ msgstr "Terjadi kesalahan saat mengambil perdagangan"
 msgid "Fetching best price…"
 msgstr "Mengambil harga terbaik…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Untuk"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Saldo {0} tidak cukup"
 msgid "Invalid recipient"
 msgstr "Penerima tidak valid"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Biaya penyedia likuiditas"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Max"
 
@@ -178,6 +174,10 @@ msgstr "Minimum diterima"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Ketergantungan yang hilang"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Biaya jaringan"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Keluaran diperkirakan. Anda akan mengirimkan paling banyak {0} {1} atau 
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Harap masukkan % slippage yang valid"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Segarkan halaman dan coba lagi."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Setelan"
 msgid "Slippage tolerance"
 msgstr "Toleransi slip"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Ada yang salah."

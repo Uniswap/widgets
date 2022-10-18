@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-03 15:06\n"
+"PO-Revision-Date: 2022-10-13 19:09\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -68,6 +68,10 @@ msgstr "Tự động"
 msgid "Auto Router"
 msgstr "Bộ định tuyến tự động"
 
+#: src/components/Swap/Input.tsx
+msgid "Balance:"
+msgstr "Thăng bằng:"
+
 #: src/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Đóng"
@@ -122,10 +126,6 @@ msgstr "Lỗi khi tìm nạp giao dịch"
 msgid "Fetching best price…"
 msgstr "Tìm nạp giá tốt nhất…"
 
-#: src/components/Swap/Output.tsx
-msgid "For"
-msgstr "Đối với"
-
 #: src/components/Swap/Summary/index.tsx
 #: src/components/Swap/Summary/index.tsx
 msgid "High price impact"
@@ -155,11 +155,7 @@ msgstr "Số dư {0} không đủ"
 msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
 
-#: src/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Phí nhà cung cấp thanh khoản"
-
-#: src/components/Swap/TokenInput.tsx
+#: src/components/Swap/Input.tsx
 msgid "Max"
 msgstr "Tối đa"
 
@@ -178,6 +174,10 @@ msgstr "Số tiền nhận được tối thiểu"
 #: src/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Thiếu phụ thuộc"
+
+#: src/components/Swap/Summary/Details.tsx
+msgid "Network fee"
+msgstr "Phí mạng"
 
 #: src/components/TokenSelect/index.tsx
 msgid "No results found."
@@ -206,6 +206,10 @@ msgstr "Sản lượng được ước tính. Bạn sẽ gửi nhiều nhất l�
 #: src/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
 msgstr "Vui lòng nhập% trượt giá hợp lệ"
+
+#: src/components/Error/ErrorBoundary.tsx
+msgid "Please refresh the page and try again."
+msgstr "Hãy làm mới trang và thử lại."
 
 #: src/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
@@ -254,7 +258,6 @@ msgstr "Cài đặt"
 msgid "Slippage tolerance"
 msgstr "Khả năng chịu trượt"
 
-#: src/components/Error/ErrorBoundary.tsx
 #: src/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Đã xảy ra lỗi."

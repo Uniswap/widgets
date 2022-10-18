@@ -28,7 +28,9 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
       <Icon color="secondary" />
-      {caption}
+      <ThemedText.Caption color="secondary" lineHeight="14px">
+        {caption}
+      </ThemedText.Caption>
     </>
   )
 }
@@ -66,7 +68,7 @@ export function Error() {
   return <Caption caption={<Trans>Error fetching trade</Trans>} />
 }
 
-export function Empty() {
+export function MissingInputs() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 
@@ -112,8 +114,7 @@ export function Trade({
           {impact?.warning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {impact.toString()} less than the input amount due to high price
-                impact
+                The output amount is estimated at {impact.toString()} less than the input amount due to impact
               </ThemedText.Caption>
               <Rule />
             </>

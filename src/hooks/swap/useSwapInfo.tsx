@@ -2,17 +2,28 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
+import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
+import useSwitchChain from 'hooks/useSwitchChain'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
+import useConnectors from 'hooks/web3/useConnectors'
 import { useAtomValue } from 'jotai/utils'
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { Field, swapAtom } from 'state/swap'
+import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 import { useIsWrap } from './useWrapCallback'
+
+export enum ChainError {
+  UNCONNECTED_CHAIN,
+  ACTIVATING_CHAIN,
+  UNSUPPORTED_CHAIN,
+  MISMATCHED_TOKEN_CHAINS,
+  MISMATCHED_CHAINS,
+}
 
 interface SwapField {
   currency?: Currency
@@ -24,6 +35,7 @@ interface SwapField {
 interface SwapInfo {
   [Field.INPUT]: SwapField
   [Field.OUTPUT]: SwapField
+  error?: ChainError
   trade: {
     state: TradeState
     trade?: InterfaceTrade
@@ -35,8 +47,21 @@ interface SwapInfo {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(routerUrl?: string): SwapInfo {
-  const isWrap = useIsWrap()
+  const { account, chainId, isActivating, isActive } = useWeb3React()
+  const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
+  const isWrap = useIsWrap()
+
+  const chainIn = currencyIn?.chainId
+  const chainOut = currencyOut?.chainId
+  const tokenChainId = chainIn || chainOut
+  const error = useMemo(() => {
+    if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
+    if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
+    if (chainIn && chainOut && chainIn !== chainOut) return ChainError.MISMATCHED_TOKEN_CHAINS
+    if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
+    return
+  }, [chainId, chainIn, chainOut, isActivating, isActive, isSupported, tokenChainId])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),
@@ -60,7 +85,6 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     [isWrap, parsedAmount, trade.trade?.outputAmount, type]
   )
 
-  const { account } = useWeb3React()
   const [balanceIn, balanceOut] = useCurrencyBalances(
     account,
     useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
@@ -74,8 +98,8 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
 
   const impact = usePriceImpact(trade.trade, { inputUSDCValue, outputUSDCValue })
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    return {
       [Field.INPUT]: {
         currency: currencyIn,
         amount: amountIn,
@@ -88,29 +112,31 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
         balance: balanceOut,
         usdc: outputUSDCValue,
       },
+      error,
       trade,
       slippage,
       impact,
-    }),
-    [
-      amountIn,
-      amountOut,
-      balanceIn,
-      balanceOut,
-      currencyIn,
-      currencyOut,
-      impact,
-      inputUSDCValue,
-      outputUSDCValue,
-      slippage,
-      trade,
-    ]
-  )
+    }
+  }, [
+    amountIn,
+    amountOut,
+    balanceIn,
+    balanceOut,
+    currencyIn,
+    currencyOut,
+    error,
+    impact,
+    inputUSDCValue,
+    outputUSDCValue,
+    slippage,
+    trade,
+  ])
 }
 
 const DEFAULT_SWAP_INFO: SwapInfo = {
   [Field.INPUT]: {},
   [Field.OUTPUT]: {},
+  error: ChainError.UNCONNECTED_CHAIN,
   trade: { state: TradeState.INVALID, trade: undefined },
   slippage: DEFAULT_SLIPPAGE,
 }
@@ -118,7 +144,34 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
 export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
+  const swap = useAtomValue(swapAtom)
   const swapInfo = useComputeSwapInfo(routerUrl)
+  const {
+    error,
+    trade,
+    [Field.INPUT]: { currency: currencyIn },
+    [Field.OUTPUT]: { currency: currencyOut },
+  } = swapInfo
+
+  const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
+  useEffect(() => {
+    if (trade.state === TradeState.VALID && trade.trade) {
+      onInitialSwapQuote?.(trade.trade)
+    }
+  }, [onInitialSwapQuote, swap, trade])
+
+  const { connector } = useWeb3React()
+  const switchChain = useSwitchChain()
+  const chainIn = currencyIn?.chainId
+  const chainOut = currencyOut?.chainId
+  const tokenChainId = chainIn || chainOut
+  const { network } = useConnectors()
+  // The network connector should be auto-switched, as it is a read-only interface that should "just work".
+  if (error === ChainError.MISMATCHED_CHAINS && tokenChainId && connector === network) {
+    delete swapInfo.error // avoids flashing an error whilst switching
+    switchChain(tokenChainId)
+  }
+
   return <SwapInfoContext.Provider value={swapInfo}>{children}</SwapInfoContext.Provider>
 }
 
