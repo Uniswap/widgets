@@ -13,6 +13,7 @@ import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
+import { SwapApproval, SwapApprovalState, useSwapApproval } from './useSwapApproval'
 import { useIsWrap } from './useWrapCallback'
 
 export enum ChainError {
@@ -40,6 +41,7 @@ interface SwapInfo {
     gasUseEstimateUSD?: CurrencyAmount<Token>
   }
   slippage: Slippage
+  approval: SwapApproval
   impact?: PriceImpact
 }
 
@@ -89,6 +91,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
   const slippage = useSlippage(trade)
+  const approval = useSwapApproval(trade.trade, slippage.allowed)
   const impact = usePriceImpact(trade.trade)
 
   return useMemo(() => {
@@ -108,11 +111,13 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
       error,
       trade,
       slippage,
+      approval,
       impact,
     }
   }, [
     amountIn,
     amountOut,
+    approval,
     balanceIn,
     balanceOut,
     currencyIn,
@@ -132,6 +137,7 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
   error: ChainError.UNCONNECTED_CHAIN,
   trade: { state: TradeState.INVALID, trade: undefined },
   slippage: DEFAULT_SLIPPAGE,
+  approval: { state: SwapApprovalState.APPROVED },
 }
 
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
