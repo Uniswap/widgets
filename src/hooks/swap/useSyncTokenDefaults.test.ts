@@ -10,19 +10,19 @@ import useSyncTokenDefaults, { TokenDefaults } from './useSyncTokenDefaults'
 
 const MOCK_DAI_MAINNET = DAI
 const MOCK_USDC_MAINNET = USDC_MAINNET
+const MOCK_MAINNET_CHAIN_ID = SupportedChainId.MAINNET
 
 const INITIAL_SWAP: Swap = {
   type: TradeType.EXACT_INPUT,
   amount: '10',
   [Field.INPUT]: MOCK_USDC_MAINNET,
-  [Field.OUTPUT]: MOCK_USDC_MAINNET,
+  [Field.OUTPUT]: MOCK_DAI_MAINNET,
 }
 
 const TOKEN_DEFAULTS: TokenDefaults = {
   defaultInputAmount: 10,
   defaultInputTokenAddress: 'NATIVE',
-  defaultOutputAmount: 10,
-  defaultOutputTokenAddress: DAI.address,
+  defaultOutputTokenAddress: 'NATIVE',
 }
 
 jest.mock('@web3-react/core', () => {
@@ -30,7 +30,7 @@ jest.mock('@web3-react/core', () => {
   return {
     ...original,
     useWeb3React: () => ({
-      chainId: 1,
+      chainId: MOCK_MAINNET_CHAIN_ID,
       connector: {},
     }),
   }
@@ -53,10 +53,28 @@ jest.mock('hooks/useCurrency', () => {
 })
 
 describe('useSyncTokenDefaults', () => {
-  it('syncs to defaults when on initial render', () => {
+  it('syncs to defaults on initial render', () => {
     const { rerender } = renderHook(
       () => {
-        useSyncTokenDefaults(TOKEN_DEFAULTS, SupportedChainId.MAINNET)
+        useSyncTokenDefaults(TOKEN_DEFAULTS, SupportedChainId.POLYGON)
+      },
+      {
+        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
+      }
+    )
+
+    const { result } = rerender(() => useAtomValue(swapAtom))
+    expect(result.current).toMatchObject({
+      ...INITIAL_SWAP,
+      INPUT: nativeOnChain(SupportedChainId.POLYGON),
+      OUTPUT: nativeOnChain(SupportedChainId.POLYGON),
+    })
+  })
+
+  it('does not sync to defaults on initial render if defaultChainId is not provided', () => {
+    const { rerender } = renderHook(
+      () => {
+        useSyncTokenDefaults(TOKEN_DEFAULTS)
       },
       {
         initialAtomValues: [[stateAtom, INITIAL_SWAP]],
@@ -67,10 +85,28 @@ describe('useSyncTokenDefaults', () => {
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
       INPUT: nativeOnChain(SupportedChainId.MAINNET),
+      OUTPUT: nativeOnChain(SupportedChainId.MAINNET),
+    })
+  })
+
+  it.skip('syncs to default chainId if defaultChainId is provided and connector changes', () => {
+    const { rerender } = renderHook(
+      () => {
+        useSyncTokenDefaults(TOKEN_DEFAULTS, SupportedChainId.MAINNET)
+      },
+      {
+        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
+      }
+    )
+
+    const { result } = rerender(() => useAtomValue(swapAtom))
+
+    expect(result.current).toMatchObject({
+      ...INITIAL_SWAP,
+      INPUT: nativeOnChain(SupportedChainId.POLYGON),
       OUTPUT: DAI,
     })
   })
 
-  it.todo('syncs to default chainId if defaultChainId is provided and connector changes')
   it.todo('does not sync to default chainId if defaultChainId is NOT provided and connector changes')
 })
