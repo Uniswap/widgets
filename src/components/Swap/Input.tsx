@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
+import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
 import { PriceImpact } from 'hooks/usePriceImpact'
@@ -179,6 +180,7 @@ export function FieldWrapper({
 export default function Input() {
   const {
     [Field.INPUT]: { balance, amount: currencyAmount },
+    approval: { state: approvalState },
   } = useSwapInfo()
 
   const isSufficientBalance = useMemo(() => {
@@ -195,5 +197,12 @@ export default function Input() {
     return max.toExact()
   }, [balance, currencyAmount])
 
-  return <FieldWrapper field={Field.INPUT} isSufficientBalance={isSufficientBalance} maxAmount={maxAmount} />
+  return (
+    <FieldWrapper
+      field={Field.INPUT}
+      maxAmount={maxAmount}
+      isSufficientBalance={isSufficientBalance}
+      approved={approvalState === SwapApprovalState.APPROVED}
+    />
+  )
 }
