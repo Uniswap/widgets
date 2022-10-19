@@ -67,6 +67,7 @@ export default function useSyncTokenDefaults(
   const { chainId, connector } = useWeb3React()
 
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
+  const defaultChainIdOutputToken = useDefaultToken(defaultOutputTokenAddress, defaultChainId)
   const defaultInputToken = useDefaultInputToken(defaultInputTokenAddress, chainId, defaultOutputToken)
   const defaultChainIdInputToken = useDefaultInputToken(defaultInputTokenAddress, defaultChainId, defaultOutputToken)
 
@@ -75,7 +76,7 @@ export default function useSyncTokenDefaults(
       const defaultSwapState: Swap = {
         amount: '',
         [Field.INPUT]: shouldUseDefaultChainId ? defaultChainIdInputToken : defaultInputToken,
-        [Field.OUTPUT]: defaultOutputToken,
+        [Field.OUTPUT]: shouldUseDefaultChainId ? defaultChainIdOutputToken : defaultOutputToken,
         type: TradeType.EXACT_INPUT,
       }
       if (defaultInputToken && defaultInputAmount) {
@@ -89,6 +90,7 @@ export default function useSyncTokenDefaults(
     [
       defaultChainIdInputToken,
       defaultInputToken,
+      defaultChainIdOutputToken,
       defaultOutputToken,
       defaultInputAmount,
       defaultOutputAmount,
