@@ -19,6 +19,7 @@ export interface TokenDefaults {
   defaultInputAmount?: number | string
   defaultOutputTokenAddress?: DefaultAddress
   defaultOutputAmount?: number | string
+  defaultChainId?: SupportedChainId
 }
 
 function useDefaultToken(
