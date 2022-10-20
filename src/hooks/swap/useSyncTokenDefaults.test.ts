@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import * as web3React from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -7,8 +8,6 @@ import { renderHook } from 'test'
 
 import { DAI, USDC_MAINNET } from '../../constants/tokens'
 import useSyncTokenDefaults, { TokenDefaults } from './useSyncTokenDefaults'
-
-const web3React = require('@web3-react/core')
 
 jest.mock('@web3-react/core')
 
