@@ -58,10 +58,13 @@ function useDefaultInputToken(
   )
 }
 
-export default function useSyncTokenDefaults(
-  { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount }: TokenDefaults,
-  defaultChainId?: SupportedChainId
-) {
+export default function useSyncTokenDefaults({
+  defaultInputTokenAddress,
+  defaultInputAmount,
+  defaultOutputTokenAddress,
+  defaultOutputAmount,
+  defaultChainId,
+}: TokenDefaults) {
   const lastChainId = useRef<number | undefined>(undefined)
   const lastConnector = useRef<Connector | undefined>(undefined)
   const updateSwap = useUpdateAtom(swapAtom)

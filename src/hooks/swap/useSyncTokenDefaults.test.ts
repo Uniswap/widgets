@@ -53,7 +53,7 @@ describe('useSyncTokenDefaults', () => {
 
     const { rerender } = renderHook(
       () => {
-        useSyncTokenDefaults(TOKEN_DEFAULTS, SupportedChainId.POLYGON)
+        useSyncTokenDefaults({ ...TOKEN_DEFAULTS, defaultChainId: SupportedChainId.POLYGON })
       },
       {
         initialAtomValues: [[stateAtom, INITIAL_SWAP]],
@@ -66,7 +66,6 @@ describe('useSyncTokenDefaults', () => {
       INPUT: nativeOnChain(SupportedChainId.POLYGON),
       OUTPUT: nativeOnChain(SupportedChainId.POLYGON),
     })
-    expect(web3React.useWeb3React).toHaveReturnedWith('hey')
   })
 
   it('does not sync to default chainId on initial render if is not provided', () => {
