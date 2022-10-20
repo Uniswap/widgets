@@ -26,7 +26,7 @@ describe('swap state', () => {
           const switchSwapCurrencies = useSwitchSwapCurrencies()
           switchSwapCurrencies()
         },
-        { 
+        {
           initialAtomValues: [
             [stateAtom, INITIAL_SWAP],
             [swapEventHandlersAtom, { onSwitchTokens: spy }],
