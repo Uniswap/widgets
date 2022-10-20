@@ -71,4 +71,12 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Safe" URLs
     'https://kovan.optimism.io',
   ],
+  [SupportedChainId.CELO]: [
+    // "Safe" URLs
+    'https://forno.celo.org',
+  ],
+  [SupportedChainId.CELO_ALFAJORES]: [
+    // "Safe" URLs
+    'https://alfajores-forno.celo-testnet.org',
+  ],
 }
