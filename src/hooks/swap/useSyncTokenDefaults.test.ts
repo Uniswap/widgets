@@ -45,7 +45,7 @@ jest.mock('hooks/useCurrency', () => {
 
 describe('useSyncTokenDefaults', () => {
   it('syncs to default chainId on initial render if defaultChainId is provided', () => {
-    web3React.useWeb3React.mockImplementation(() => ({
+    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
       chainId: SupportedChainId.MAINNET,
       connector: {},
     }))
@@ -68,7 +68,7 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('does not sync to default chainId on initial render if is not provided', () => {
-    web3React.useWeb3React.mockImplementation(() => ({
+    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
       chainId: SupportedChainId.MAINNET,
       connector: {},
     }))
