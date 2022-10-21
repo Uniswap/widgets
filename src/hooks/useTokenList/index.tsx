@@ -43,14 +43,12 @@ export default function useTokenList(): WrappedTokenInfo[] {
 export type TokenMap = { [address: string]: Token }
 
 export function useTokenMap(chainId?: SupportedChainId): TokenMap {
-  let { chainId: _chainId } = useWeb3React()
+  const { chainId: activeChainId } = useWeb3React()
 
-  if (chainId) {
-    _chainId = chainId
-  }
+  chainId = chainId || activeChainId
 
   const chainTokenMap = useChainTokenMapContext()
-  const tokenMap = _chainId && chainTokenMap?.[_chainId]
+  const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
     if (!tokenMap) return {}
     return Object.entries(tokenMap).reduce((map, [address, { token }]) => {

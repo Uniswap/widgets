@@ -77,13 +77,17 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
+export function useTokenFromMapOrNetwork(
+  tokens: TokenMap,
+  tokenAddress?: string | null,
+  skipNetwork = false
+): Token | null | undefined {
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
 
   const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
 
-  return tokenFromNetwork ?? token
+  return skipNetwork || !tokenFromNetwork ? token : tokenFromNetwork
 }
 
 /**
@@ -92,8 +96,10 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useToken(tokenAddress?: string | null, chainId?: SupportedChainId): Token | null | undefined {
+  const { chainId: activeChainId } = useWeb3React()
+
   const tokens = useTokenMap(chainId)
-  return useTokenFromMapOrNetwork(tokens, tokenAddress)
+  return useTokenFromMapOrNetwork(tokens, tokenAddress, chainId && chainId !== activeChainId)
 }
 
 /**

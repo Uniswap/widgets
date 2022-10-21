@@ -3,12 +3,11 @@ import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 
 function useOnSupportedNetwork(chainId?: SupportedChainId) {
-  let { chainId: _chainId } = useWeb3React()
+  const { chainId: activeChainId } = useWeb3React()
 
-  if (chainId) {
-    _chainId = chainId
-  }
-  return useMemo(() => Boolean(_chainId && ALL_SUPPORTED_CHAIN_IDS.includes(_chainId)), [_chainId])
+  chainId = chainId || activeChainId
+
+  return useMemo(() => Boolean(chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId)), [chainId])
 }
 
 export default useOnSupportedNetwork
