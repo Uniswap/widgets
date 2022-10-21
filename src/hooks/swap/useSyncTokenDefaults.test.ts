@@ -24,10 +24,16 @@ const TOKEN_DEFAULTS: TokenDefaults = {
   defaultOutputTokenAddress: 'NATIVE',
 }
 
-jest.mock('@web3-react/core', () => ({
-  chainId: SupportedChainId.MAINNET,
-  connector: {},
-}))
+jest.mock('@web3-react/core', () => {
+  const { SupportedChainId } = jest.requireActual('constants/chains')
+
+  return {
+    useWeb3React: () => ({
+      chainId: SupportedChainId.MAINNET,
+      connector: {},
+    }),
+  }
+})
 
 jest.mock('../useTokenList', () => {
   return {
