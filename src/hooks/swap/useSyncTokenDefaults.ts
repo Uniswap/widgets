@@ -64,7 +64,7 @@ export default function useSyncTokenDefaults({
   const defaultChainIdInputToken = useDefaultToken(defaultInputTokenAddress, defaultChainId, true)
 
   const setToDefaults = useCallback(
-    (shouldUseDefaultChainId = false) => {
+    (shouldUseDefaultChainId) => {
       const defaultSwapState: Swap = {
         amount: '',
         [Field.INPUT]: shouldUseDefaultChainId ? defaultChainIdInputToken : defaultInputToken,
