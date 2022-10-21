@@ -87,7 +87,7 @@ export function useTokenFromMapOrNetwork(
 
   const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
 
-  return skipNetwork || !tokenFromNetwork ? token : tokenFromNetwork
+  return skipNetwork ? token : tokenFromNetwork || token
 }
 
 /**
@@ -99,7 +99,8 @@ export function useToken(tokenAddress?: string | null, chainId?: SupportedChainI
   const { chainId: activeChainId } = useWeb3React()
 
   const tokens = useTokenMap(chainId)
-  return useTokenFromMapOrNetwork(tokens, tokenAddress, chainId && chainId !== activeChainId)
+  const skipNetwork = chainId && chainId !== activeChainId
+  return useTokenFromMapOrNetwork(tokens, tokenAddress, skipNetwork)
 }
 
 /**

@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import * as web3React from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI_POLYGON, nativeOnChain } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -8,8 +7,6 @@ import { renderHook } from 'test'
 
 import { USDC_MAINNET } from '../../constants/tokens'
 import useSyncTokenDefaults, { TokenDefaults } from './useSyncTokenDefaults'
-
-jest.mock('@web3-react/core')
 
 const MOCK_DAI_POLYGON = DAI_POLYGON
 const MOCK_USDC_MAINNET = USDC_MAINNET
@@ -27,6 +24,11 @@ const TOKEN_DEFAULTS: TokenDefaults = {
   defaultOutputTokenAddress: 'NATIVE',
 }
 
+jest.mock('@web3-react/core', () => ({
+  chainId: SupportedChainId.MAINNET,
+  connector: {},
+}))
+
 jest.mock('../useTokenList', () => {
   return {
     useIsTokenListLoaded: () => true,
@@ -41,11 +43,6 @@ jest.mock('hooks/useCurrency', () => {
 
 describe('useSyncTokenDefaults', () => {
   it('syncs to default chainId on initial render if defaultChainId is provided', () => {
-    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
-      chainId: SupportedChainId.MAINNET,
-      connector: {},
-    }))
-
     const { rerender } = renderHook(
       () => {
         useSyncTokenDefaults({ ...TOKEN_DEFAULTS, defaultChainId: SupportedChainId.POLYGON })
@@ -64,11 +61,6 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('does not sync to default chainId on initial render if defaultChainId is not provided', () => {
-    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
-      chainId: SupportedChainId.MAINNET,
-      connector: {},
-    }))
-
     const { rerender } = renderHook(
       () => {
         useSyncTokenDefaults(TOKEN_DEFAULTS)
@@ -87,11 +79,6 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('syncs to default non NATIVE tokens of default chainId on initial render if defaultChainId is provided', () => {
-    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
-      chainId: SupportedChainId.MAINNET,
-      connector: {},
-    }))
-
     const { rerender } = renderHook(
       () => {
         useSyncTokenDefaults({
@@ -115,11 +102,6 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('syncs to non NATIVE tokens of chainId on initial render if defaultChainId is not provided', () => {
-    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
-      chainId: SupportedChainId.MAINNET,
-      connector: {},
-    }))
-
     const { rerender } = renderHook(
       () => {
         useSyncTokenDefaults(TOKEN_DEFAULTS)
