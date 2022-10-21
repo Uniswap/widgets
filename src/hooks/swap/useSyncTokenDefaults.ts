@@ -94,10 +94,10 @@ export default function useSyncTokenDefaults({
   const isTokenListLoaded = useIsTokenListLoaded()
 
   useEffect(() => {
-    const isSwitchChain = chainId && chainId !== lastChainId.current
-    const isSwitchConnector = connector && connector !== lastConnector.current
-    const shouldSync = isTokenListLoaded && (isSwitchChain || isSwitchConnector)
-    const shouldUseDefaultChainId = isSwitchConnector && defaultChainId
+    const isChainSwitched = chainId && chainId !== lastChainId.current
+    const isConnectorSwitched = connector && connector !== lastConnector.current
+    const shouldSync = isTokenListLoaded && (isChainSwitched || isConnectorSwitched)
+    const shouldUseDefaultChainId = isConnectorSwitched && defaultChainId
 
     if (shouldSync) {
       setToDefaults(shouldUseDefaultChainId)
