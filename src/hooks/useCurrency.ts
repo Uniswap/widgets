@@ -10,6 +10,7 @@ import { useMemo } from 'react'
 import { isAddress } from 'utils'
 import { supportedChainId } from 'utils/supportedChainId'
 
+import { SupportedChainId } from '..'
 import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
@@ -90,8 +91,8 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useToken(tokenAddress?: string | null): Token | null | undefined {
-  const tokens = useTokenMap()
+export function useToken(tokenAddress?: string | null, chainId?: SupportedChainId): Token | null | undefined {
+  const tokens = useTokenMap(chainId)
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 

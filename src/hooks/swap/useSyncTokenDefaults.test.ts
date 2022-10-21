@@ -1,24 +1,24 @@
 import { TradeType } from '@uniswap/sdk-core'
 import * as web3React from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import { nativeOnChain } from 'constants/tokens'
+import { DAI_POLYGON, nativeOnChain } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
 import { Field, stateAtom, Swap, swapAtom } from 'state/swap'
 import { renderHook } from 'test'
 
-import { DAI, USDC_MAINNET } from '../../constants/tokens'
+import { USDC_MAINNET } from '../../constants/tokens'
 import useSyncTokenDefaults, { TokenDefaults } from './useSyncTokenDefaults'
 
 jest.mock('@web3-react/core')
 
-const MOCK_DAI_MAINNET = DAI
+const MOCK_DAI_POLYGON = DAI_POLYGON
 const MOCK_USDC_MAINNET = USDC_MAINNET
 
 const INITIAL_SWAP: Swap = {
   type: TradeType.EXACT_INPUT,
   amount: '10',
   [Field.INPUT]: MOCK_USDC_MAINNET,
-  [Field.OUTPUT]: MOCK_DAI_MAINNET,
+  [Field.OUTPUT]: MOCK_DAI_POLYGON,
 }
 
 const TOKEN_DEFAULTS: TokenDefaults = {
@@ -28,18 +28,14 @@ const TOKEN_DEFAULTS: TokenDefaults = {
 }
 
 jest.mock('../useTokenList', () => {
-  const original = jest.requireActual('../useTokenList')
   return {
-    ...original,
     useIsTokenListLoaded: () => true,
   }
 })
 
 jest.mock('hooks/useCurrency', () => {
-  const original = jest.requireActual('hooks/useCurrency')
   return {
-    ...original,
-    useToken: () => MOCK_DAI_MAINNET,
+    useToken: () => MOCK_DAI_POLYGON,
   }
 })
 
@@ -67,7 +63,58 @@ describe('useSyncTokenDefaults', () => {
     })
   })
 
-  it('does not sync to default chainId on initial render if is not provided', () => {
+  it('does not sync to default chainId on initial render if defaultChainId is not provided', () => {
+    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
+      chainId: SupportedChainId.MAINNET,
+      connector: {},
+    }))
+
+    const { rerender } = renderHook(
+      () => {
+        useSyncTokenDefaults(TOKEN_DEFAULTS)
+      },
+      {
+        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
+      }
+    )
+
+    const { result } = rerender(() => useAtomValue(swapAtom))
+    expect(result.current).toMatchObject({
+      ...INITIAL_SWAP,
+      INPUT: nativeOnChain(SupportedChainId.MAINNET),
+      OUTPUT: nativeOnChain(SupportedChainId.MAINNET),
+    })
+  })
+
+  it('syncs to default non NATIVE tokens of default chainId on initial render if defaultChainId is provided', () => {
+    ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
+      chainId: SupportedChainId.MAINNET,
+      connector: {},
+    }))
+
+    const { rerender } = renderHook(
+      () => {
+        useSyncTokenDefaults({
+          ...TOKEN_DEFAULTS,
+          defaultInputTokenAddress: DAI_POLYGON.address,
+          defaultOutputTokenAddress: DAI_POLYGON.address,
+          defaultChainId: SupportedChainId.POLYGON,
+        })
+      },
+      {
+        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
+      }
+    )
+
+    const { result } = rerender(() => useAtomValue(swapAtom))
+    expect(result.current).toMatchObject({
+      ...INITIAL_SWAP,
+      INPUT: DAI_POLYGON,
+      OUTPUT: DAI_POLYGON,
+    })
+  })
+
+  it('syncs to non NATIVE tokens of chainId on initial render if defaultChainId is not provided', () => {
     ;(web3React.useWeb3React as jest.Mock).mockImplementation(() => ({
       chainId: SupportedChainId.MAINNET,
       connector: {},

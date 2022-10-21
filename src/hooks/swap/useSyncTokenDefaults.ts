@@ -1,12 +1,11 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
-import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Field, Swap, swapAtom } from 'state/swap'
 
 import useOnSupportedNetwork from '../useOnSupportedNetwork'
@@ -24,38 +23,26 @@ export interface TokenDefaults {
 
 function useDefaultToken(
   defaultAddress: DefaultAddress | undefined,
-  chainId: number | undefined
+  chainId: number | undefined,
+  defaultToNative: boolean
 ): Currency | undefined {
-  let address = undefined
+  let address: undefined | string | Token = undefined
   if (typeof defaultAddress === 'string') {
     address = defaultAddress
   } else if (typeof defaultAddress === 'object' && chainId) {
     address = defaultAddress[chainId]
   }
-  const token = useToken(address)
+  const token = useToken(address, chainId)
+  const onSupportedNetwork = useOnSupportedNetwork(chainId)
 
-  const onSupportedNetwork = useOnSupportedNetwork()
+  return useMemo(() => {
+    // Only use native currency if chain ID is in supported chains. ExtendedEther will error otherwise.
+    if (chainId && onSupportedNetwork && (address === 'NATIVE' || (!token && defaultToNative))) {
+      return nativeOnChain(chainId)
+    }
 
-  // Only use native currency if chain ID is in supported chains. ExtendedEther will error otherwise.
-  if (chainId && address === 'NATIVE' && onSupportedNetwork) {
-    return nativeOnChain(chainId)
-  }
-  return token ?? undefined
-}
-
-function useDefaultInputToken(
-  defaultAddress: DefaultAddress | undefined,
-  chainId: number | undefined,
-  defaultOutputToken: Currency | undefined
-): Currency | undefined {
-  const nativeCurrency = useNativeCurrency()
-  const onSupportedNetwork = useOnSupportedNetwork()
-
-  return (
-    useDefaultToken(defaultAddress, chainId) ??
-    // Default the input token to the native currency if it is not the output token.
-    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
-  )
+    return token ?? undefined
+  }, [address, chainId, defaultToNative, onSupportedNetwork, token])
 }
 
 export default function useSyncTokenDefaults({
@@ -70,10 +57,11 @@ export default function useSyncTokenDefaults({
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId, connector } = useWeb3React()
 
-  const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
-  const defaultChainIdOutputToken = useDefaultToken(defaultOutputTokenAddress, defaultChainId)
-  const defaultInputToken = useDefaultInputToken(defaultInputTokenAddress, chainId, defaultOutputToken)
-  const defaultChainIdInputToken = useDefaultInputToken(defaultInputTokenAddress, defaultChainId, defaultOutputToken)
+  const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId, false)
+  const defaultChainIdOutputToken = useDefaultToken(defaultOutputTokenAddress, defaultChainId, false)
+
+  const defaultInputToken = useDefaultToken(defaultInputTokenAddress, chainId, true)
+  const defaultChainIdInputToken = useDefaultToken(defaultInputTokenAddress, defaultChainId, true)
 
   const setToDefaults = useCallback(
     (shouldUseDefaultChainId = false) => {
@@ -83,6 +71,7 @@ export default function useSyncTokenDefaults({
         [Field.OUTPUT]: shouldUseDefaultChainId ? defaultChainIdOutputToken : defaultOutputToken,
         type: TradeType.EXACT_INPUT,
       }
+
       if (defaultInputToken && defaultInputAmount) {
         defaultSwapState.amount = defaultInputAmount.toString()
       } else if (defaultOutputToken && defaultOutputAmount) {

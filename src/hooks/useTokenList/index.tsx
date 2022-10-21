@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
@@ -41,10 +42,15 @@ export default function useTokenList(): WrappedTokenInfo[] {
 
 export type TokenMap = { [address: string]: Token }
 
-export function useTokenMap(): TokenMap {
-  const { chainId } = useWeb3React()
+export function useTokenMap(chainId?: SupportedChainId): TokenMap {
+  let { chainId: _chainId } = useWeb3React()
+
+  if (chainId) {
+    _chainId = chainId
+  }
+
   const chainTokenMap = useChainTokenMapContext()
-  const tokenMap = chainId && chainTokenMap?.[chainId]
+  const tokenMap = _chainId && chainTokenMap?.[_chainId]
   return useMemo(() => {
     if (!tokenMap) return {}
     return Object.entries(tokenMap).reduce((map, [address, { token }]) => {
