@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
-import { ApproveOrPermitState, useApproveOrPermit } from 'hooks/swap/useSwapApproval'
+import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
@@ -16,7 +16,7 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
-import ApproveButton, { useIsPendingApproval } from './ApproveButton'
+import ApproveButton from './ApproveButton'
 
 /**
  * A swapping ActionButton.
@@ -33,13 +33,13 @@ export default function SwapButton({
 }) {
   const { account, chainId } = useWeb3React()
   const {
-    [Field.INPUT]: { usdc: inputUSDC, amount: inputCurrencyAmount },
+    [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
     slippage,
     impact,
+    approval,
   } = useSwapInfo()
-  const approval = useApproveOrPermit(trade, slippage.allowed, useIsPendingApproval, inputCurrencyAmount)
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
@@ -47,7 +47,7 @@ export default function SwapButton({
     trade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
-    signatureData: approval.signatureData,
+    signatureData: approval?.signatureData,
     deadline,
     feeOptions,
   })
@@ -91,7 +91,7 @@ export default function SwapButton({
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
 
-  if (approval.approvalState !== ApproveOrPermitState.APPROVED && !disabled) {
+  if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
     return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
   }
 

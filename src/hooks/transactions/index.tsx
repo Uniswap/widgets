@@ -63,6 +63,10 @@ export function usePendingApproval(token?: Token): string | undefined {
   )?.info.response.hash
 }
 
+export function useIsPendingApproval(token?: Token): boolean {
+  return Boolean(usePendingApproval(token))
+}
+
 export type OnTxSubmit = (hash: string, tx: Transaction) => void
 export type OnTxSuccess = (hash: string, receipt: TransactionReceipt) => void
 export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void

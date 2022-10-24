@@ -13,12 +13,16 @@ const transitionCss = css`
   transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear, width 0.125s ease-out;
 `
 
-const StyledTokenButton = styled(Button)`
+const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   padding: 0.25em;
 
   :enabled {
     ${({ transition }) => transition && transitionCss};
+  }
+
+  ${TokenImg} {
+    filter: ${({ approved }) => approved === false && 'grayscale(1)'};
   }
 `
 
@@ -37,11 +41,12 @@ const TokenButtonRow = styled(Row)<{ empty: boolean }>`
 
 interface TokenButtonProps {
   value?: Currency
+  approved?: boolean
   disabled?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, disabled, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, approved, disabled, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = value ? 'interactive' : 'accent'
   const contentColor = buttonBackgroundColor === 'accent' ? 'onAccent' : 'currentColor'
 
@@ -65,6 +70,7 @@ export default function TokenButton({ value, disabled, onClick }: TokenButtonPro
     <StyledTokenButton
       onClick={onClick}
       color={buttonBackgroundColor}
+      approved={approved}
       disabled={disabled}
       style={style}
       transition={shouldTransition}

@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
+import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
 import { PriceImpact } from 'hooks/usePriceImpact'
@@ -26,7 +27,7 @@ export const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)<{ approved?: boolean; disableHover?: boolean }>`
+const InputColumn = styled(Column)<{ disableHover?: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
@@ -81,16 +82,18 @@ export function useFormattedFieldAmount({
 
 interface FieldWrapperProps {
   field: Field
-  impact?: PriceImpact
   maxAmount?: string
   isSufficientBalance?: boolean
+  approved?: boolean
+  impact?: PriceImpact
 }
 
 export function FieldWrapper({
   field,
-  impact,
   maxAmount,
   isSufficientBalance,
+  approved,
+  impact,
   className,
 }: FieldWrapperProps & { className?: string }) {
   const {
@@ -138,13 +141,14 @@ export function FieldWrapper({
     <InputColumn disableHover={isDisabled || !currency} ref={wrapper} onClick={onClick} className={className}>
       <TokenInput
         ref={setInput}
+        field={field}
         amount={formattedAmount}
         currency={currency}
+        loading={isLoading}
+        approved={approved}
         disabled={isDisabled}
-        field={field}
         onChangeInput={updateAmount}
         onChangeCurrency={updateCurrency}
-        loading={isLoading}
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
@@ -176,6 +180,7 @@ export function FieldWrapper({
 export default function Input() {
   const {
     [Field.INPUT]: { balance, amount: currencyAmount },
+    approval: { state: approvalState },
   } = useSwapInfo()
 
   const isSufficientBalance = useMemo(() => {
@@ -192,5 +197,12 @@ export default function Input() {
     return max.toExact()
   }, [balance, currencyAmount])
 
-  return <FieldWrapper field={Field.INPUT} isSufficientBalance={isSufficientBalance} maxAmount={maxAmount} />
+  return (
+    <FieldWrapper
+      field={Field.INPUT}
+      maxAmount={maxAmount}
+      isSufficientBalance={isSufficientBalance}
+      approved={approvalState === SwapApprovalState.APPROVED}
+    />
+  )
 }
