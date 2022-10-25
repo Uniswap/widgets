@@ -77,8 +77,12 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
 
         // The user connector may require custom logic: try onSwitchChain if it is available.
         if (connector === connectors.user) {
-          const switching = onSwitchChain?.(addChainParameter)
-          if (switching) return switching
+          try {
+            const switching = onSwitchChain?.(addChainParameter)
+            if (switching) return await switching
+          } catch (error) {
+            return // ignores integrator-originated errors
+          }
         }
 
         try {
