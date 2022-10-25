@@ -43,9 +43,11 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
 
-  // Celo logo is hosted elsewhere.
   if (isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
+      // The alternative logo represents $CELO as an erc-20 token and is consistent with token lists used by the
+      // interface and other applications on Celo. The same logo should be displayed on the swap widget as on the
+      // token list. Whereas the green and yellow logo traditionally represents the network itself.
       return 'https://celo-org.github.io/celo-token-list/assets/celo_alternative_logo.png'
     }
   }
