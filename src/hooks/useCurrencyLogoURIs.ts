@@ -46,7 +46,7 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
   // Celo logo is hosted elsewhere.
   if (isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
-      return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
+      return 'https://celo-org.github.io/celo-token-list/assets/celo_logo.svg'
     }
   }
 }

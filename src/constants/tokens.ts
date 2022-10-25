@@ -346,6 +346,8 @@ export const UNI: { [chainId: number]: Token } = {
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<SupportedChainId, Token>),
+  [SupportedChainId.CELO]: CELO_CELO,
+  [SupportedChainId.CELO_ALFAJORES]: CELO_CELO_ALFAJORES,
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
     '0x4200000000000000000000000000000000000006',
@@ -387,20 +389,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WMATIC',
     'Wrapped MATIC'
-  ),
-  [SupportedChainId.CELO]: new Token(
-    SupportedChainId.CELO,
-    '0x471ece3750da237f93b8e339c536989b8978a438',
-    18,
-    'CELO',
-    'Celo native asset'
-  ),
-  [SupportedChainId.CELO_ALFAJORES]: new Token(
-    SupportedChainId.CELO_ALFAJORES,
-    '0xf194afdf50b03e69bd7d057c1aa9e10c9954e4c9',
-    18,
-    'CELO',
-    'Celo native asset'
   ),
 }
 

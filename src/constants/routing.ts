@@ -5,8 +5,10 @@ import { SupportedChainId } from './chains'
 import {
   AMPL,
   CEUR_CELO,
+  CEUR_CELO_ALFAJORES,
   CMC02_CELO,
   CUSD_CELO,
+  CUSD_CELO_ALFAJORES,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
@@ -170,17 +172,18 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH_POLYGON_MUMBAI,
   ],
   [SupportedChainId.CELO]: [
-    nativeOnChain(SupportedChainId.POLYGON),
-    WETH_POLYGON,
-    USDC_POLYGON,
-    DAI_POLYGON,
-    USDT_POLYGON,
-    WBTC_POLYGON,
+    nativeOnChain(SupportedChainId.CELO),
+    CEUR_CELO,
+    CUSD_CELO,
+    PORTAL_ETH_CELO,
+    PORTAL_USDC_CELO,
+    CMC02_CELO,
   ],
   [SupportedChainId.CELO_ALFAJORES]: [
-    nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI] as Token,
-    WETH_POLYGON_MUMBAI,
+    nativeOnChain(SupportedChainId.CELO_ALFAJORES),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.CELO_ALFAJORES] as Token,
+    CUSD_CELO_ALFAJORES,
+    CEUR_CELO_ALFAJORES,
   ],
 }
 
