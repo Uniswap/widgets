@@ -74,7 +74,14 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_POLYGON,
     WETH_POLYGON,
   ],
-  [SupportedChainId.CELO]: [CUSD_CELO, CEUR_CELO, CMC02_CELO, PORTAL_USDC_CELO, PORTAL_ETH_CELO],
+  [SupportedChainId.CELO]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.CELO],
+    CUSD_CELO,
+    CEUR_CELO,
+    CMC02_CELO,
+    PORTAL_USDC_CELO,
+    PORTAL_ETH_CELO,
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
