@@ -178,7 +178,7 @@ const CHAIN_INFO: ChainInfoMap = {
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
-    explorer: 'https://alfajores-blockscout.celo-testnet.org/',
+    explorer: 'https://alfajores.celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo',
     label: 'Celo Alfajores',
     logoUrl: celoLogo,
