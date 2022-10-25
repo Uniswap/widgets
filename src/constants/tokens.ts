@@ -471,6 +471,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.KOVAN]: USDC_KOVAN.address,
     [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
-    [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
+    [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES.address,
   },
 }
