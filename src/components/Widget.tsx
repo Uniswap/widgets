@@ -4,6 +4,8 @@ import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
+import useInitialAtomValues from 'hooks/useInitialAtomValues'
+import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as Web3Provider, ProviderProps as Web3Props } from 'hooks/web3'
@@ -88,7 +90,7 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends TransactionEventHandlers, Web3Props, WidgetEventHandlers {
+export interface WidgetProps extends BrandingSettings, TransactionEventHandlers, Web3Props, WidgetEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   tokenList?: string | TokenInfo[]
@@ -110,6 +112,9 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
   if (props.initialAtomValues && process.env.NODE_ENV !== 'test') {
     throw new Error('initialAtomValues may only be used for testing')
   }
+
+  // UI configuration must be passed for the initial render, or the first frame will render incorrectly.
+  const initialAtomValues = useInitialAtomValues(props)
 
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
@@ -135,7 +140,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
             <DialogProvider value={props.dialog || dialog}>
               <ErrorBoundary onError={props.onError}>
                 <ReduxProvider store={store}>
-                  <AtomProvider initialValues={props.initialAtomValues}>
+                  <AtomProvider initialValues={props.initialAtomValues || initialAtomValues}>
                     <WidgetUpdater {...props} />
                     <Web3Provider {...(props as Web3Props)}>
                       <BlockNumberProvider>
@@ -157,6 +162,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
 
 /** A component in the scope of AtomProvider to set Widget-scoped state. */
 function WidgetUpdater(props: WidgetProps) {
+  useSyncBrandingSetting(props as BrandingSettings)
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
   return null
 }

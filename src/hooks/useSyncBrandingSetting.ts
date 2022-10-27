@@ -1,4 +1,4 @@
-import { atom } from 'jotai'
+import { Atom, atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 
@@ -10,6 +10,10 @@ export function useBrandingSetting() {
 
 export interface BrandingSettings {
   disableBranding?: boolean
+}
+
+export function useInitialBrandingSettings({ disableBranding }: BrandingSettings): [Atom<boolean>, boolean] {
+  return [disableBrandingAtom, disableBranding ?? false]
 }
 
 export default function useSyncBrandingSetting({ disableBranding }: BrandingSettings): void {
