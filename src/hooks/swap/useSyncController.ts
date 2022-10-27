@@ -1,3 +1,4 @@
+import { Atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect, useRef } from 'react'
 import { controlledAtom as swapAtom, Swap } from 'state/swap'
@@ -6,6 +7,10 @@ import { controlledAtom as settingsAtom, Settings } from 'state/swap/settings'
 export interface SwapController {
   value?: Swap
   settings?: Settings
+}
+
+export function useInitialController({ value }: SwapController): [Atom<Swap | undefined>, Swap | undefined] {
+  return [swapAtom, value]
 }
 
 export default function useSyncController({ value, settings }: SwapController): void {
