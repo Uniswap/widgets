@@ -19,6 +19,17 @@ describe('#getExplorerLink', () => {
   it('polygon', () => {
     expect(getExplorerLink(137, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://polygonscan.com/address/abc')
   })
+  it('mumbai', () => {
+    expect(getExplorerLink(80001, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+      'https://mumbai.polygonscan.com/address/abc'
+    )
+  })
+  it('celo', () => {
+    expect(getExplorerLink(42220, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://celoscan.io/address/abc')
+  })
+  it('alfajores', () => {
+    expect(getExplorerLink(44787, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://alfajores.celoscan.io/address/abc')
+  })
   it('ropsten', () => {
     expect(getExplorerLink(3, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://ropsten.etherscan.io/address/abc')
   })
