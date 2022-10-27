@@ -49,8 +49,8 @@ export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
   [ChainName.ARBITRUM_RINKEBY]: SupportedChainId.ARBITRUM_RINKEBY,
   [ChainName.OPTIMISM]: SupportedChainId.OPTIMISM,
   [ChainName.OPTIMISTIC_KOVAN]: SupportedChainId.OPTIMISTIC_KOVAN,
-  [SupportedChainId.CELO]: SupportedChainId.CELO,
-  [SupportedChainId.CELO_ALFAJORES]: SupportedChainId.CELO_ALFAJORES,
+  [ChainName.CELO]: SupportedChainId.CELO,
+  [ChainName.CELO_ALFAJORES]: SupportedChainId.CELO_ALFAJORES,
 }
 
 /**
