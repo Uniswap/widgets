@@ -19,11 +19,12 @@ import Column from '../Column'
 import Row from '../Row'
 import TokenInput, { TokenInputHandle } from './TokenInput'
 
-export const USDC = styled(Row)`
+const USDC = styled(Row)`
   ${loadingTransitionCss};
+  gap: 0.25em;
 `
 
-export const Balance = styled(ThemedText.Body2)`
+const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
@@ -154,7 +155,11 @@ export function FieldWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
-              {impact && <ThemedText.Body2 color={impact.warning}> ({impact.toString()})</ThemedText.Body2>}
+              {impact && (
+                <ThemedText.Body2 userSelect={false} color={impact.warning}>
+                  ({impact.toString()})
+                </ThemedText.Body2>
+              )}
             </USDC>
             {balance && (
               <Row gap={0.5}>
