@@ -19,6 +19,11 @@ export interface AddEthereumChainParameter {
   rpcUrls: string[]
 }
 
+/**
+ * An integration hook called when the user tries to switch chains.
+ * If the hook returns a Promise, it is assumed the integrator is attempting to switch the chain, and no further attempts will be made.
+ * If that Promise rejects, the error will be ignored so as not to crash the widget.
+ */
 export type OnSwitchChain = (addChainParameter: AddEthereumChainParameter) => void | Promise<void>
 export const onSwitchChainAtom = atom<OnSwitchChain | undefined>(undefined)
 
@@ -77,8 +82,13 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
 
         // The user connector may require custom logic: try onSwitchChain if it is available.
         if (connector === connectors.user) {
-          const switching = onSwitchChain?.(addChainParameter)
-          if (switching) return switching
+          try {
+            const switching = onSwitchChain?.(addChainParameter)
+            // If onSwitchChain returns a Promise, the integrator is responsible for any chain switching. Await and return.
+            if (switching) return await switching
+          } catch (error) {
+            return // ignores integrator-originated errors
+          }
         }
 
         try {
