@@ -29,13 +29,13 @@ const transitionCss = css`
   transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear;
 `
 
-export default styled(BaseButton)<{ color?: Color; transition?: boolean }>`
+export default styled(BaseButton)<{ color?: Color }>`
   background-color: ${({ color = 'interactive', theme }) => theme[color]};
   border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
-    ${({ transition = true }) => transition && transitionCss};
+    ${transitionCss};
   }
 
   :enabled:hover {
