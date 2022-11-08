@@ -4,7 +4,6 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo } from 'react'
-import { isExactInput } from 'utils/tradeType'
 
 import { GetQuoteArgs } from './types'
 
@@ -40,27 +39,25 @@ export function useGetQuoteArgs(
     provider,
     tradeType,
     amountSpecified,
-    otherCurrency,
+    currencyIn,
+    currencyOut,
     routerUrl,
   }: Partial<{
     provider: BaseProvider
     tradeType: TradeType
     amountSpecified: CurrencyAmount<Currency>
-    otherCurrency: Currency
+    currencyIn: Currency
+    currencyOut: Currency
     routerUrl: string
   }>,
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
   const args = useMemo(() => {
-    if (!provider || !amountSpecified || tradeType === undefined) return null
-
-    const [currencyIn, currencyOut] = isExactInput(tradeType)
-      ? [amountSpecified?.currency, otherCurrency]
-      : [otherCurrency, amountSpecified?.currency]
+    if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
 
     return {
-      amount: amountSpecified.quotient.toString(),
+      amount: amountSpecified?.quotient.toString() ?? null,
       tokenInAddress: currencyIn.wrapped.address,
       tokenInChainId: currencyIn.wrapped.chainId,
       tokenInDecimals: currencyIn.wrapped.decimals,
@@ -73,7 +70,7 @@ export function useGetQuoteArgs(
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, otherCurrency, routerUrl])
+  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerUrl])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken

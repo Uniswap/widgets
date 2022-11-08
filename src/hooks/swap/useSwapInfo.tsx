@@ -64,13 +64,14 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   }, [chainId, chainIdIn, chainIdOut, isActivating, isActive, isSupported, tokenChainId])
 
   const parsedAmount = useMemo(
-    () => tryParseCurrencyAmount(amount, (isExactInput(type) ? currencyIn : currencyOut) ?? undefined),
+    () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),
     [amount, currencyIn, currencyOut, type]
   )
   const trade = useRouterTrade(
     type,
     parsedAmount,
-    isExactInput(type) ? currencyOut : currencyIn,
+    currencyIn,
+    currencyOut,
     isWrap || error ? RouterPreference.SKIP : RouterPreference.TRADE,
     routerUrl
   )
