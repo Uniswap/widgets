@@ -5,7 +5,7 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import { useUSDCValue } from 'hooks/useUSDCPrice'
+import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -87,6 +87,9 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const currencies = useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
   const [balanceIn, balanceOut] = useCurrencyBalances(account, currencies)
   const [usdcIn, usdcOut] = [useUSDCValue(amountIn), useUSDCValue(amountOut)]
+
+  // Initialize USDC prices for otherCurrency so that it is available sooner after the trade loads.
+  useUSDCPrice(isExactInput(type) ? currencyOut : currencyIn)
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
