@@ -57,7 +57,7 @@ export interface GetQuoteArgs {
   tokenOutChainId: ChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
-  amount: string
+  amount: string | null // passing null will initialize the client-side SOR
   routerUrl?: string
   tradeType: TradeType
   provider: BaseProvider

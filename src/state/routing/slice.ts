@@ -27,8 +27,11 @@ export const routing = createApi({
       async queryFn(args: GetQuoteArgs | SkipToken) {
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
-        // If enabled, try routing API, falling back to clientside SOR.
+        // If enabled, try routing API, falling back to client-side SOR.
         if (Boolean(args.routerUrl)) {
+          // amount may be null to initialize the client-side SOR. This should be skipped for the server.
+          if (args.amount === undefined) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
+
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'

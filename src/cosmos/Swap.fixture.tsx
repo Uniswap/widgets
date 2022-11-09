@@ -59,7 +59,7 @@ function Fixture() {
     USDC: USDC_MAINNET.address,
   }
   const defaultInputToken = useOption('defaultInputToken', { options: currencies, defaultValue: 'Native' })
-  const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 1 })
+  const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 0 })
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 

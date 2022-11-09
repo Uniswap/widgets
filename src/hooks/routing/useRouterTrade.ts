@@ -10,7 +10,6 @@ import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, NO_ROUTE, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
-import { isExactInput } from 'utils/tradeType'
 
 export enum RouterPreference {
   PRICE,
@@ -27,12 +26,14 @@ const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
  * @param tradeType whether the swap is an exact in/out
  * @param routerUrl the base URL of the integrator's auto router API
  * @param amountSpecified the exact amount to swap in/out
- * @param otherCurrency the desired output/payment currency
+ * @param currencyIn the input currency
+ * @param currencyOut the output currency
  */
 export function useRouterTrade(
   tradeType: TradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
-  otherCurrency: Currency | undefined,
+  currencyIn: Currency | undefined,
+  currencyOut: Currency | undefined,
   routerPreference: RouterPreference,
   routerUrl?: string
 ): {
@@ -42,11 +43,12 @@ export function useRouterTrade(
 } {
   const { provider } = useWeb3React()
   const queryArgs = useGetQuoteArgs(
-    { provider, tradeType, amountSpecified, otherCurrency, routerUrl },
+    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerUrl },
     /*skip=*/ routerPreference === RouterPreference.SKIP
   )
 
   const pollingInterval = useMemo(() => {
+    if (!amountSpecified) return Infinity
     switch (routerPreference) {
       // PRICE fetching is informational and costly, so it is done less frequently.
       case RouterPreference.PRICE:
@@ -56,7 +58,7 @@ export function useRouterTrade(
       case RouterPreference.SKIP:
         return Infinity
     }
-  }, [routerPreference])
+  }, [amountSpecified, routerPreference])
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
@@ -75,9 +77,6 @@ export function useRouterTrade(
 
   const quote = typeof data === 'object' ? data : undefined
   const trade = useMemo(() => {
-    const [currencyIn, currencyOut] = isExactInput(tradeType)
-      ? [amountSpecified?.currency, otherCurrency]
-      : [otherCurrency, amountSpecified?.currency]
     const routes = computeRoutes(currencyIn, currencyOut, tradeType, quote)
     if (!routes || routes.length === 0) return
     try {
@@ -86,13 +85,13 @@ export function useRouterTrade(
       console.debug('transformRoutesToTrade failed: ', e)
       return
     }
-  }, [amountSpecified?.currency, otherCurrency, quote, tradeType])
+  }, [currencyIn, currencyOut, quote, tradeType])
   const isValidBlock = useIsValidBlock(Number(quote?.blockNumber))
   const isValid = currentData === data && isValidBlock
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quote?.gasUseEstimateUSD)
 
   return useMemo(() => {
-    if (isError || queryArgs === skipToken) {
+    if (!amountSpecified || isError || queryArgs === skipToken) {
       return TRADE_INVALID
     } else if (data === NO_ROUTE) {
       return TRADE_NOT_FOUND
@@ -102,5 +101,5 @@ export function useRouterTrade(
       const state = isValid ? TradeState.VALID : TradeState.LOADING
       return { state, trade, gasUseEstimateUSD }
     }
-  }, [isError, queryArgs, data, trade, isValid, gasUseEstimateUSD])
+  }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD])
 }

@@ -83,16 +83,14 @@ function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
 async function getQuote(
   {
     tradeType,
-    chainId,
     tokenIn,
     tokenOut,
     amount: amountRaw,
   }: {
     tradeType: TradeType
-    chainId: ChainId
     tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
-    amount: BigintIsh
+    amount: BigintIsh | null
   },
   router: AlphaRouter,
   routerConfig: Partial<AlphaRouterConfig>
@@ -102,10 +100,10 @@ async function getQuote(
 
   const baseCurrency = isExactInput(tradeType) ? currencyIn : currencyOut
   const quoteCurrency = isExactInput(tradeType) ? currencyOut : currencyIn
-  const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
+  const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw ?? '1')) // a null amountRaw should initialize the route
   const route = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (!route) return NO_ROUTE
+  if (amountRaw === null || !route) return NO_ROUTE
 
   return transformSwapRouteToGetQuoteResult({ ...route, routeString: routeAmountsToString(route.route) })
 }
@@ -134,7 +132,6 @@ export async function getClientSideQuote(
   return getQuote(
     {
       tradeType,
-      chainId: tokenInChainId,
       tokenIn: {
         address: tokenInAddress,
         chainId: tokenInChainId,
