@@ -27,9 +27,10 @@ export default function useSyncController({ value, settings }: SwapController): 
   }, [settings, value])
 
   const setSwap = useUpdateAtom(swapAtom)
-  useEffect(() => setSwap(value), [value, setSwap])
+  setSwap(() => value)
+
   const setSettings = useUpdateAtom(settingsAtom)
-  useEffect(() => setSettings(settings), [settings, setSettings])
+  setSettings(() => settings)
 }
 
 function warnOnControlChange({ state, prop }: { state: string; prop: string }) {
