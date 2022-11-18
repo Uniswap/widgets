@@ -14,7 +14,7 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["src/types/v3", "src/abis/types", "src/locales/", "node_modules/", "yarn.lock", "dist/"],
+  "ignorePatterns": ["dist/", "dts/", "node_modules/", "src/__generated__/", "src/types/v3/", "src/abis/types/", "src/locales/", "yarn.lock"],
   "extends": [
     "react-app",
     "plugin:react/recommended",
