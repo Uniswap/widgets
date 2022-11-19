@@ -3,7 +3,6 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Field, SupportedChainId, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'
-import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, nativeOnChain, USDC } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
@@ -19,16 +18,6 @@ function Fixture() {
     []
   )
 
-  const type = useOption('type', {
-    nullable: false,
-    defaultValue: 'Exact Input',
-    options: {
-      'Exact Input': TradeType.EXACT_INPUT,
-      'Exact Output': TradeType.EXACT_OUTPUT,
-    },
-  }) as TradeType
-
-  const [amount] = useValue('amount', { defaultValue: '0' })
   const currencies: Record<string, Currency> = {
     ETH: nativeOnChain(SupportedChainId.MAINNET),
     DAI,
@@ -52,6 +41,19 @@ function Fixture() {
     [useHandleEvent]
   )
 
+  const [type, setType] = useState(TradeType.EXACT_INPUT)
+  const [amount, setAmount] = useState('')
+  const handleAmountChange = useHandleEvent('onAmountChange')
+  const onAmountChange = useCallback(
+    (...data) => {
+      const [field, amount] = data
+      setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
+      setAmount(amount)
+      handleAmountChange(...data)
+    },
+    [handleAmountChange]
+  )
+
   return (
     <Row flex align="start" justify="start" gap={0.5}>
       <SwapWidget
@@ -61,16 +63,11 @@ function Fixture() {
           [Field.INPUT]: inputToken,
           [Field.OUTPUT]: outputToken,
         }}
-        onSettingsReset={useHandleEvent('onSettingsReset')}
-        onSlippageChange={useHandleEvent('onSlippageChange')}
-        onTransactionDeadlineChange={useHandleEvent('onTransactionDeadlineChange')}
-        onTokenChange={useHandleEvent('onTokenChange')}
-        onAmountChange={useHandleEvent('onAmountChange')}
-        onSwitchTokens={useHandleEvent('onSwitchTokens')}
         jsonRpcUrlMap={INFURA_NETWORK_URLS}
         provider={connector}
         tokenList={tokens}
         {...eventHandlers}
+        onAmountChange={onAmountChange}
       />
       <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>
