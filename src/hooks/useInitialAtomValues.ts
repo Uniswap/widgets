@@ -1,13 +1,12 @@
 import { Atom } from 'jotai'
 
-import { useInitialController } from './swap/useSyncController'
-import { useInitialBrandingSettings } from './useSyncBrandingSetting'
+import { SwapController, useInitialController } from './swap/useSyncController'
+import { Flags, useInitialFlags } from './useSyncFlags'
 
 export default function useInitialAtomValues(props: any): [Atom<unknown>, unknown][] {
-  const brandingSettings = useInitialBrandingSettings(props)
-
-  // TODO: Use a separate AtomProvider within Swap so that its configuration can be separated from general Widget configuration.
-  const controller = useInitialController(props)
-
-  return [brandingSettings, controller]
+  return [
+    useInitialFlags(props as Flags),
+    // TODO: Use a separate AtomProvider within Swap so that its configuration can be separated from general Widget configuration.
+    useInitialController(props as SwapController),
+  ]
 }

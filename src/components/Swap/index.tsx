@@ -7,7 +7,7 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import { useBrandingSetting } from 'hooks/useSyncBrandingSetting'
+import { useBrandedFooter } from 'hooks/useSyncFlags'
 import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
@@ -45,7 +45,6 @@ export default function Swap(props: SwapProps) {
   const pendingTxs = usePendingTransactions()
   const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
-  const disableBranding = useBrandingSetting()
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
@@ -60,7 +59,7 @@ export default function Swap(props: SwapProps) {
             <Output />
             <Toolbar />
             <SwapActionButton />
-            {!disableBranding && <BrandedFooter />}
+            {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
       </div>

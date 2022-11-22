@@ -63,7 +63,7 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
-  const [disableBranding] = useValue('disableBranding', { defaultValue: false })
+  const [brandedFooter] = useValue('brandedFooter', { defaultValue: true })
 
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
 
@@ -102,7 +102,7 @@ function Fixture() {
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
-      disableBranding={disableBranding}
+      brandedFooter={brandedFooter}
       hideConnectionUI={hideConnectionUI}
       locale={locale}
       jsonRpcUrlMap={INFURA_NETWORK_URLS}

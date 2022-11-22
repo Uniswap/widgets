@@ -5,7 +5,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/lo
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
 import useInitialAtomValues from 'hooks/useInitialAtomValues'
-import useSyncBrandingSetting, { BrandingSettings } from 'hooks/useSyncBrandingSetting'
+import useSyncFlags, { Flags } from 'hooks/useSyncFlags'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import { TokenListProvider } from 'hooks/useTokenList'
 import { Provider as Web3Provider, ProviderProps as Web3Props } from 'hooks/web3'
@@ -90,7 +90,7 @@ export const DialogWrapper = styled.div`
   }
 `
 
-export interface WidgetProps extends BrandingSettings, TransactionEventHandlers, Web3Props, WidgetEventHandlers {
+export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props, WidgetEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   tokenList?: string | TokenInfo[]
@@ -162,7 +162,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
 
 /** A component in the scope of AtomProvider to set Widget-scoped state. */
 function WidgetUpdater(props: WidgetProps) {
-  useSyncBrandingSetting(props as BrandingSettings)
+  useSyncFlags(props as Flags)
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
   return null
 }
