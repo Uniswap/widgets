@@ -30,7 +30,7 @@ function Fixture() {
       {}
     ),
   }
-  const inputToken = useOption('input', { options: currencies })
+  const inputToken = useOption('input', { options: currencies, defaultValue: 'ETH' })
   const outputToken = useOption('output', { options: currencies })
 
   const connector = useProvider(SupportedChainId.MAINNET)
