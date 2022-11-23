@@ -40,6 +40,7 @@
     "prebuild": "tsc -p tsconfig.build.json",
     "build": "rollup --config --failAfterWarnings",
     "release": "semantic-release",
+    "deduplicate": "yarn-deduplicate --strategy=highest",
     "lint": "eslint .",
     "test": "jest src",
     "test:e2e": "jest e2e"
