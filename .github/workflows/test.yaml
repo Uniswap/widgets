@@ -17,6 +17,13 @@ jobs:
 
       - run: yarn lint
 
+  deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn yarn-deduplicate --strategy=highest --list --fail
+
   test:
     runs-on: ubuntu-latest
     steps:
