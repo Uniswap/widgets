@@ -53,7 +53,7 @@ export function ConnectWallet() {
 }
 
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another to trade</Trans>} />
+  return <Caption caption={<Trans>Switch to a supported network to trade</Trans>} />
 }
 
 export function InsufficientBalance({ currency }: { currency: Currency }) {
@@ -61,7 +61,7 @@ export function InsufficientBalance({ currency }: { currency: Currency }) {
 }
 
 export function InsufficientLiquidity() {
-  return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
+  return <Caption caption={<Trans>Insufficient liquidity for your trade</Trans>} />
 }
 
 export function Error() {
