@@ -53,7 +53,7 @@ export const darkTheme: Colors = {
   accent: brandDark,
   container: 'hsl(225, 30%, 8%)',
   module: 'hsl(222, 37%, 12%)',
-  interactive: 'hsl(224, 10%, 28%)',
+  interactive: 'hsl(223, 28%, 22%)',
   outline: 'hsl(227, 10%, 37.5%)',
   dialog: black,
 
