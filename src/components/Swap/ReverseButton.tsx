@@ -17,7 +17,8 @@ const StyledReverseButton = styled(Button)`
   justify-content: center;
   left: 50%;
   position: absolute;
-  transform: translate(-50%, -60%);
+  /* Adjust by 2px to account for border display */
+  transform: translate(-50%, calc(-50% - 2px));
   transition: 125ms ease background-color;
   width: 48px;
   z-index: ${Layer.OVERLAY};

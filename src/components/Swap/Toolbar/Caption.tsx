@@ -5,7 +5,7 @@ import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact } from 'hooks/usePriceImpact'
-import { AlertTriangle, Icon, Info, InlineSpinner } from 'icons'
+import { AlertTriangle, Icon, Info, InlineSpinner, LargeIcon } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
@@ -27,10 +27,10 @@ interface CaptionProps {
 function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
-      <Icon color="secondary" />
-      <ThemedText.Caption color="secondary" lineHeight="14px">
+      <LargeIcon icon={Icon} color="secondary" />
+      <ThemedText.Body2 color="secondary" lineHeight="16px">
         {caption}
-      </ThemedText.Caption>
+      </ThemedText.Body2>
     </>
   )
 }
@@ -53,7 +53,7 @@ export function ConnectWallet() {
 }
 
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another to trade</Trans>} />
+  return <Caption caption={<Trans>Switch to a supported network to trade</Trans>} />
 }
 
 export function InsufficientBalance({ currency }: { currency: Currency }) {
@@ -61,7 +61,7 @@ export function InsufficientBalance({ currency }: { currency: Currency }) {
 }
 
 export function InsufficientLiquidity() {
-  return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
+  return <Caption caption={<Trans>Insufficient liquidity for your trade</Trans>} />
 }
 
 export function Error() {

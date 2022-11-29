@@ -32,7 +32,7 @@ const InputColumn = styled(Column)<{ disableHover?: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
-  padding: 20px 0 24px 0;
+  padding: 1em 0 1.5em 0;
   position: relative;
 
   &:before {
