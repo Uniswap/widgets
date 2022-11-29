@@ -13,6 +13,7 @@ const ToolbarRow = styled(Row)`
   background-color: ${({ theme }) => theme.module};
   border-bottom-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   border-bottom-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  gap: 0.5em;
   min-height: 44px;
   padding: 14px 16px;
 `

@@ -5,7 +5,7 @@ import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact } from 'hooks/usePriceImpact'
-import { AlertTriangle, Icon, Info, InlineSpinner } from 'icons'
+import { AlertTriangle, Icon, Info, InlineSpinner, LargeIcon } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
@@ -27,7 +27,7 @@ interface CaptionProps {
 function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
     <>
-      <Icon color="secondary" />
+      <LargeIcon icon={Icon} color="secondary" />
       <ThemedText.Body2 color="secondary" lineHeight="16px">
         {caption}
       </ThemedText.Body2>

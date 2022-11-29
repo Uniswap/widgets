@@ -22,7 +22,7 @@ export const BaseButton = styled.button`
 
   :disabled {
     cursor: initial;
-    filter: opacity(0.4);
+    filter: opacity(0.6);
   }
 `
 const transitionCss = css`
