@@ -69,7 +69,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
   return (
     <TokenInputColumn gap={0.25} {...rest}>
       <TokenInputRow gap={0.5}>
-        <ThemedText.H2>
+        <ThemedText.H1>
           <ValueInput
             value={amount}
             onChange={onChangeInput}
@@ -77,7 +77,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
             isLoading={Boolean(loading)}
             ref={input}
           />
-        </ThemedText.H2>
+        </ThemedText.H1>
         <TokenSelect field={field} value={currency} approved={approved} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}

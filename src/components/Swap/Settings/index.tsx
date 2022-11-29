@@ -43,6 +43,7 @@ export function SettingsDialog() {
 
 const SettingsButton = styled(IconButton)<{ hover: boolean }>`
   ${SettingsIcon} {
+    stroke-width: 1.5px;
     transform: ${({ hover }) => hover && 'rotate(45deg)'};
     transition: ${({ hover }) => hover && 'transform 0.25s'};
     will-change: transform;

@@ -24,7 +24,7 @@ const TransitionTextWrapper = styled(TextWrapper)`
 
 export function H1(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-1" fontSize={36} fontWeight={400} lineHeight="36px" noWrap {...props} />
+    <TextWrapper className="headline headline-1" fontSize={36} fontWeight={400} lineHeight="44px" noWrap {...props} />
   )
 }
 
@@ -42,7 +42,7 @@ export function H3(props: TextProps) {
 
 export function Subhead1(props: TextProps) {
   return (
-    <TextWrapper className="subhead subhead-1" fontSize={16} fontWeight={500} lineHeight="16px" noWrap {...props} />
+    <TextWrapper className="subhead subhead-1" fontSize={16} fontWeight={500} lineHeight="24px" noWrap {...props} />
   )
 }
 
@@ -70,7 +70,7 @@ export function Badge(props: TextProps) {
 
 export function ButtonLarge(props: TextProps) {
   return (
-    <TextWrapper className="button button-large" fontSize={20} fontWeight={500} lineHeight="20px" noWrap {...props} />
+    <TextWrapper className="button button-large" fontSize={20} fontWeight={600} lineHeight="24px" noWrap {...props} />
   )
 }
 
@@ -94,7 +94,7 @@ export function TransitionButton(props: TextProps & { buttonSize: 'small' | 'med
     <TransitionTextWrapper
       className={className}
       fontSize={fontSize}
-      fontWeight={500}
+      fontWeight={600}
       lineHeight={lineHeight}
       noWrap
       {...props}
