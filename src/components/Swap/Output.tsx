@@ -15,7 +15,7 @@ const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null }>`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   margin-bottom: 0;
-  padding: 24px 0 20px 0;
+  padding: 1.75em 0 1.25em 0;
 
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.

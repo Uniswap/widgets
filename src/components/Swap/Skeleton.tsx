@@ -44,6 +44,7 @@ const OutputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   display: flex;
+  padding-top: 0.25em;
 `
 
 const OutputInnerTopColumn = styled(Column)`
