@@ -25,7 +25,7 @@ const WideColumn = styled(Column)`
 
 const TitleColumn = styled(Column)`
   padding: 0.5em;
-  padding-bottom: 1em;
+  padding-bottom: 1.25em;
   width: 100%;
 `
 
@@ -37,19 +37,19 @@ const InputColumn = styled(Column)`
   margin-bottom: 0.25em;
   padding: 0.75em;
   padding-bottom: 3.25em;
-  padding-top: 1.25em;
+  padding-top: 1.5em;
 `
 
 const OutputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   display: flex;
-  padding-top: 0.25em;
+  padding-top: 0.5em;
 `
 
 const OutputInnerTopColumn = styled(Column)`
   border-bottom: 1px solid ${({ theme }) => theme.container};
-  padding-bottom: 2.75em;
+  padding-bottom: 3.25em;
   padding-left: 0.75em;
   padding-right: 0.75em;
   padding-top: 1.5em;
