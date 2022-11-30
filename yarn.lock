@@ -1612,10 +1612,10 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/strings" "^5.6.0"
 
-"@fontsource/ibm-plex-mono@^4.5.1":
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/@fontsource/ibm-plex-mono/-/ibm-plex-mono-4.5.1.tgz#f09822dc9d143710687ff8bd05248a86cc2dc4d1"
-  integrity sha512-LW12fxDJ5AsehWKjSdmIV3UZx/DAsbLrLXW7rBww/Rasid2Jgkr6l7mccC1JjcK3RtfQLK8bSYo9OaH61eSikw==
+"@fontsource/ibm-plex-mono@^4.5.12":
+  version "4.5.12"
+  resolved "https://registry.yarnpkg.com/@fontsource/ibm-plex-mono/-/ibm-plex-mono-4.5.12.tgz#d33bf0d7bc39630cc46cd4e91ac8f4d5c889d720"
+  integrity sha512-ysF4GfudxLgDnpycjzrHFKqsEMOYHt0IUJN6dRECg6YLvVggLMj/SPh+w0QWjdgXkIbjqIbcho0O5mNcLCJMiQ==
 
 "@fontsource/inter@^4.5.1":
   version "4.5.1"
