@@ -5,6 +5,7 @@ import { Color, ThemedText } from 'theme'
 
 import Button from './Button'
 import Row, { RowProps } from './Row'
+import Tooltip from './Tooltip'
 
 const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
@@ -65,6 +66,7 @@ export const Overlay = styled(Row)<{ hasAction: boolean }>`
 export interface Action {
   message: ReactNode
   icon?: Icon
+  tooltip?: ReactNode
   onClick?: () => void
   children?: ReactNode
 }
@@ -89,16 +91,20 @@ export default function ActionButton({
   const textColor = useMemo(() => (color === 'accent' ? 'onAccent' : 'currentColor'), [color])
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
-      {(action ? action.onClick : true) && (
-        <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>
-          <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
-            {action?.children || children}
-          </ThemedText.TransitionButton>
-        </StyledButton>
-      )}
+      <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>
+        <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
+          {action?.children || children}
+        </ThemedText.TransitionButton>
+      </StyledButton>
       {action && (
         <ActionRow gap={0.5}>
-          <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
+          {action.tooltip ? (
+            <Tooltip icon={LargeIcon} iconProps={{ color: 'currentColor', icon: action.icon || AlertTriangle }}>
+              {action.tooltip}
+            </Tooltip>
+          ) : (
+            <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
+          )}
           <ThemedText.Subhead2>{action?.message}</ThemedText.Subhead2>
         </ActionRow>
       )}
