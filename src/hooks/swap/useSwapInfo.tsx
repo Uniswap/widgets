@@ -95,8 +95,13 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
   const slippage = useSlippage(trade)
-  const approval = useSwapApproval(trade.trade, slippage.allowed)
   const impact = usePriceImpact(trade.trade)
+
+  const maximumAmountIn = useMemo(() => {
+    const maximumAmountIn = trade.trade?.maximumAmountIn(slippage.allowed)
+    return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
+  }, [slippage.allowed, trade.trade])
+  const approval = useSwapApproval(maximumAmountIn)
 
   return useMemo(() => {
     return {

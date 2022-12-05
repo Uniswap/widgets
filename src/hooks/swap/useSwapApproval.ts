@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
@@ -7,7 +7,6 @@ import { PermitState, SignatureData, usePermit } from 'hooks/usePermit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 
 import { ApprovalState, useApproval } from '../useApproval'
@@ -31,8 +30,7 @@ export interface SwapApproval {
  * Returns all relevant statuses and callback functions for approvals.
  * Considers both standard approval and ERC20 permit.
  */
-export function useSwapApproval(trade: InterfaceTrade | undefined, allowedSlippage: Percent): SwapApproval {
-  const amount = useMemo(() => trade?.maximumAmountIn(allowedSlippage), [allowedSlippage, trade])
+export function useSwapApproval(amount?: CurrencyAmount<Currency>): SwapApproval {
   const { chainId } = useWeb3React()
   const deadline = useTransactionDeadline()
   const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
