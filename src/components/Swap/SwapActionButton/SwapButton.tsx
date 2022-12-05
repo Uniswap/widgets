@@ -29,7 +29,7 @@ export default function SwapButton({
 }: {
   color: keyof Colors
   disabled: boolean
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | undefined>) => Promise<boolean>
+  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<boolean>
 }) {
   const { account, chainId } = useWeb3React()
   const {

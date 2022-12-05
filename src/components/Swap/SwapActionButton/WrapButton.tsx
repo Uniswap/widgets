@@ -21,7 +21,7 @@ export default function WrapButton({
 }: {
   color: keyof Colors
   disabled: boolean
-  onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
+  onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | void>) => Promise<boolean>
 }) {
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
 
