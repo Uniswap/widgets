@@ -109,7 +109,7 @@ export function Trade({
 }) {
   return (
     <>
-      <Tooltip placement="bottom" icon={impact?.warning ? AlertTriangle : Info}>
+      <Tooltip placement="bottom" icon={LargeIcon} iconProps={{ icon: impact?.warning ? AlertTriangle : Info }}>
         <Column gap={0.75}>
           {impact?.warning && (
             <>
