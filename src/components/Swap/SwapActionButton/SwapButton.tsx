@@ -5,7 +5,10 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
+import { PermitState } from 'hooks/usePermit2'
+import { usePermit2 } from 'hooks/useSyncFlags'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
@@ -17,6 +20,7 @@ import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import ApproveButton from './ApproveButton'
+import PermitButton from './Permit2Button'
 
 /**
  * A swapping ActionButton.
@@ -36,21 +40,30 @@ export default function SwapButton({
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
+    approval,
+    permit,
     slippage,
     impact,
-    approval,
   } = useSwapInfo()
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const { callback: swapCallback } = useSwapCallback({
-    trade,
+  const permit2 = usePermit2()
+  const { callback: swapRouterCallback } = useSwapCallback({
+    trade: permit2 ? undefined : trade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
     signatureData: approval?.signatureData,
     deadline,
     feeOptions,
   })
+  const universalRouterCallback = useUniversalRouterSwapCallback(permit2 ? trade : undefined, {
+    slippageTolerance: slippage.allowed,
+    deadline,
+    permit: permit.signature,
+    feeOptions,
+  })
+  const swapCallback = permit2 ? universalRouterCallback : swapRouterCallback
 
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
@@ -91,8 +104,14 @@ export default function SwapButton({
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
 
-  if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
-    return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
+  if (usePermit2()) {
+    if (![PermitState.UNKNOWN, PermitState.PERMITTED].includes(permit.state)) {
+      return <PermitButton color={color} onSubmit={onSubmit} trade={trade} {...permit} />
+    }
+  } else {
+    if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
+      return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
+    }
   }
 
   return (
