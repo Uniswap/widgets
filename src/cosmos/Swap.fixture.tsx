@@ -94,6 +94,7 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
+      permit2
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputTokenAddress={defaultInputToken}
