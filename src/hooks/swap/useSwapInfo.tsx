@@ -109,7 +109,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const approval = useSwapApproval(permit2 ? undefined : maximumAmountIn)
   const permit = usePermit(
     permit2 ? maximumAmountIn : undefined,
-    chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    permit2 && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
 
   return useMemo(() => {
