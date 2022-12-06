@@ -49,30 +49,19 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
               data,
             }
 
-      const response = await provider
-        .estimateGas(tx)
-        .catch((gasError) => {
-          return provider
-            .call(tx)
-            .then((result) => {
-              throw new Error('unexpected issue with gas estimation; please try again')
-            })
-            .catch((callError) => {
-              throw new Error(swapErrorToUserReadableMessage(callError))
-            })
-        })
-        .then((gasEstimate) =>
-          provider.getSigner().sendTransaction({
-            ...tx,
-            gasLimit: calculateGasMargin(gasEstimate),
-          })
-        )
-        .catch((error) => {
-          throw new Error(swapErrorToUserReadableMessage(error))
-        })
+      let gasEstimate: BigNumber
+      try {
+        gasEstimate = await provider.estimateGas(tx)
+      } catch (gasError) {
+        await provider.call(tx) // this should throw the actual error
+        throw new Error('unexpected issue with gas estimation; please try again')
+      }
+      const gasLimit = calculateGasMargin(gasEstimate)
+      const response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
       return response
-    } catch (e: unknown) {
-      throw new Error(`Trade failed: ${e instanceof Error ? e.message : e}`)
+    } catch (swapError: unknown) {
+      const message = swapErrorToUserReadableMessage(swapError)
+      throw new Error(`Trade failed: ${message}`)
     }
   }, [
     account,
