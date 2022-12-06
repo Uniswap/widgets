@@ -21,7 +21,7 @@ export default function WrapButton({
 }: {
   color: keyof Colors
   disabled: boolean
-  onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | undefined>) => Promise<boolean>
+  onSubmit: (submit: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | void>) => Promise<void>
 }) {
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
 
@@ -33,17 +33,20 @@ export default function WrapButton({
   const inputCurrency = wrapType === TransactionType.WRAP ? native : native.wrapped
   const onWrap = useCallback(async () => {
     setIsPending(true)
-    await onSubmit(async () => {
-      const response = await wrapCallback()
-      if (!response) return
+    try {
+      await onSubmit(async () => {
+        const response = await wrapCallback()
+        if (!response) return
 
-      invariant(wrapType !== undefined) // if response is valid, then so is wrapType
-      const amount = CurrencyAmount.fromRawAmount(native, response.value?.toString() ?? '0')
-      return { response, type: wrapType, amount }
-    })
-
-    // Whether or not the transaction submits, reset the pending state.
-    setIsPending(false)
+        invariant(wrapType !== undefined) // if response is valid, then so is wrapType
+        const amount = CurrencyAmount.fromRawAmount(native, response.value?.toString() ?? '0')
+        return { response, type: wrapType, amount }
+      })
+    } catch (e) {
+      console.error(e) // ignore error
+    } finally {
+      setIsPending(false)
+    }
   }, [native, onSubmit, wrapCallback, wrapType])
 
   const actionProps = useMemo(

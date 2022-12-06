@@ -22,7 +22,6 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 `
 
 const Reference = styled.div`
-  align-self: flex-start;
   display: inline-block;
   height: 1em;
 `

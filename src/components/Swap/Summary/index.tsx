@@ -138,6 +138,7 @@ function ConfirmButton({
     <ActionButton
       onClick={onClick}
       action={action}
+      disabled={isPending}
       wrapperProps={{
         style: {
           bottom: '0.25em',
@@ -146,7 +147,7 @@ function ConfirmButton({
         },
       }}
     >
-      <Trans>Confirm swap</Trans>
+      {isPending ? <Trans>Confirm</Trans> : <Trans>Confirm swap</Trans>}
     </ActionButton>
   )
 }

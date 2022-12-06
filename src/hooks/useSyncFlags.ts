@@ -1,3 +1,5 @@
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { Atom, atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -21,5 +23,13 @@ export function useBrandedFooter() {
 }
 
 export function usePermit2() {
-  return useAtomValue(flagsAtom).permit2 ?? false
+  const { chainId } = useWeb3React()
+  const permit2 = useAtomValue(flagsAtom).permit2 ?? false
+  try {
+    // Detect if the Universal Router is not yet deployed to chainId.
+    chainId && UNIVERSAL_ROUTER_ADDRESS(chainId)
+    return permit2
+  } catch {
+    return false
+  }
 }

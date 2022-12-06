@@ -5,7 +5,10 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
+import { PermitState } from 'hooks/usePermit2'
+import { usePermit2 } from 'hooks/useSyncFlags'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
@@ -17,6 +20,7 @@ import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import ApproveButton from './ApproveButton'
+import PermitButton from './Permit2Button'
 
 /**
  * A swapping ActionButton.
@@ -29,28 +33,37 @@ export default function SwapButton({
 }: {
   color: keyof Colors
   disabled: boolean
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | undefined>) => Promise<boolean>
+  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<void>
 }) {
   const { account, chainId } = useWeb3React()
   const {
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
+    approval,
+    permit,
     slippage,
     impact,
-    approval,
   } = useSwapInfo()
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const { callback: swapCallback } = useSwapCallback({
-    trade,
+  const permit2 = usePermit2()
+  const { callback: swapRouterCallback } = useSwapCallback({
+    trade: permit2 ? undefined : trade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
     signatureData: approval?.signatureData,
     deadline,
     feeOptions,
   })
+  const universalRouterCallback = useUniversalRouterSwapCallback(permit2 ? trade : undefined, {
+    slippageTolerance: slippage.allowed,
+    deadline,
+    permit: permit.signature,
+    feeOptions,
+  })
+  const swapCallback = permit2 ? universalRouterCallback : swapRouterCallback
 
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
@@ -60,29 +73,31 @@ export default function SwapButton({
 
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSwap = useCallback(async () => {
-    const submitted = await onSubmit(async () => {
-      const response = await swapCallback?.()
-      if (!response) return
+    try {
+      await onSubmit(async () => {
+        const response = await swapCallback?.()
+        if (!response) return
 
-      // Set the block containing the response to the oldest valid block to ensure that the
-      // completed trade's impact is reflected in future fetched trades.
-      response.wait(1).then((receipt) => {
-        setOldestValidBlock(receipt.blockNumber)
+        // Set the block containing the response to the oldest valid block to ensure that the
+        // completed trade's impact is reflected in future fetched trades.
+        response.wait(1).then((receipt) => {
+          setOldestValidBlock(receipt.blockNumber)
+        })
+
+        invariant(trade)
+        return {
+          type: TransactionType.SWAP,
+          response,
+          tradeType: trade.tradeType,
+          trade,
+          slippageTolerance: slippage.allowed,
+        }
       })
 
-      invariant(trade)
-      return {
-        type: TransactionType.SWAP,
-        response,
-        tradeType: trade.tradeType,
-        trade,
-        slippageTolerance: slippage.allowed,
-      }
-    })
-
-    // Only close the review modal if the transaction has submitted.
-    if (submitted) {
+      // Only close the review modal if the swap submitted (ie no-throw).
       setOpen(false)
+    } catch (e) {
+      console.error(e) // ignore error
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade])
 
@@ -91,8 +106,14 @@ export default function SwapButton({
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
 
-  if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
-    return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
+  if (usePermit2()) {
+    if (![PermitState.UNKNOWN, PermitState.PERMITTED].includes(permit.state)) {
+      return <PermitButton color={color} onSubmit={onSubmit} trade={trade} {...permit} />
+    }
+  } else {
+    if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
+      return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
+    }
   }
 
   return (
