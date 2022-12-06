@@ -19,12 +19,14 @@ export function useTokenAllowance(token?: Token, owner?: string, spender?: strin
   )
 }
 
-export function useTokenAllowanceCallback(amount?: CurrencyAmount<Token>, spender?: string) {
+export function useUpdateTokenAllowance(amount?: CurrencyAmount<Token>, spender?: string) {
   const contract = useTokenContract(amount?.currency.address)
 
   return useCallback(async (): Promise<ApprovalTransactionInfo> => {
     try {
-      if (!amount || !contract || !spender) throw new Error('missing input')
+      if (!amount) throw new Error('missing amount')
+      if (!contract) throw new Error('missing contract')
+      if (!spender) throw new Error('missing spender')
 
       let allowance: BigNumberish = MaxUint256.toString()
       const estimatedGas = await contract.estimateGas.approve(spender, allowance).catch(() => {

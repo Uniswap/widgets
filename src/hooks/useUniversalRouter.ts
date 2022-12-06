@@ -24,40 +24,40 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
 
   return useCallback(async (): Promise<TransactionResponse> => {
     try {
-      if (!account || !chainId || !provider || !trade) throw new Error('missing input')
+      if (!account) throw new Error('missing account')
+      if (!chainId) throw new Error('missing chainId')
+      if (!provider) throw new Error('missing provider')
+      if (!trade) throw new Error('missing trade')
 
-      const calldata = SwapRouter.swapERC20CallParameters(trade, {
+      const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
         slippageTolerance: options.slippageTolerance,
         deadlineOrPreviousBlockhash: options.deadline?.toString(),
         inputTokenPermit: options.permit,
         fee: options.feeOptions,
       })
       const tx =
-        calldata.value && !isZero(calldata.value)
+        value && !isZero(value)
           ? {
               from: account,
               to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-              data: calldata.calldata,
-              value: calldata.value,
+              data,
+              value,
             }
           : {
               from: account,
               to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-              data: calldata.calldata,
+              data,
             }
 
       const response = await provider
         .estimateGas(tx)
         .catch((gasError) => {
-          console.debug('Gas estimate failed, trying eth_call to extract error')
           return provider
             .call(tx)
             .then((result) => {
-              console.debug('Unexpected successful call after failed estimate gas', gasError, result)
               throw new Error('unexpected issue with gas estimation; please try again')
             })
             .catch((callError) => {
-              console.debug('Call threw error', callError)
               throw new Error(swapErrorToUserReadableMessage(callError))
             })
         })

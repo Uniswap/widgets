@@ -6,8 +6,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { ApprovalTransactionInfo } from '..'
 import useInterval from './useInterval'
-import { PermitSignature, usePermitAllowance, usePermitAllowanceCallback } from './usePermitAllowance'
-import { useTokenAllowance, useTokenAllowanceCallback } from './useTokenAllowance'
+import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
+import { useTokenAllowance, useUpdateTokenAllowance } from './useTokenAllowance'
 
 export enum PermitState {
   UNKNOWN,
@@ -25,27 +25,29 @@ export interface Permit {
 export default function usePermit(amount?: CurrencyAmount<Token>, spender?: string): Permit {
   const { account } = useWeb3React()
   const tokenAllowance = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
-  const approveToken = useTokenAllowanceCallback(amount, PERMIT2_ADDRESS)
+  const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
 
   const allowanceData = usePermitAllowance(amount?.currency, spender)
   const [permitAllowance, setPermitAllowance] = useState(allowanceData?.amount)
   useEffect(() => setPermitAllowance(allowanceData?.amount), [allowanceData?.amount])
 
   const [signature, setSignature] = useState<PermitSignature>()
-  const permitToken = usePermitAllowanceCallback(amount?.currency, spender, allowanceData?.nonce, setSignature)
+  const updatePermitAllowance = useUpdatePermitAllowance(amount?.currency, spender, allowanceData?.nonce, setSignature)
 
-  const approveAndPermitToken = useCallback(async () => {
-    // Queue both transactions. Delay the permit to ensure the approval is prompted for first.
-    const info = approveToken()
+  const updateTokenAndPermitAllowance = useCallback(async () => {
+    // Queue both transactions.
+    const info = updateTokenAllowance()
+    // Delay the permit allowance to ensure the approval is prompted for first;
+    // but do not wait until token allowance resolves, to avoid some wallets closing their modal in between prompts (eg MetaMask).
     await new Promise((resolve) => setTimeout(resolve, 500))
-    await permitToken()
-    return await info
-  }, [approveToken, permitToken])
+    await updatePermitAllowance()
+    return info
+  }, [updatePermitAllowance, updateTokenAllowance])
 
   // Trigger a re-render if either tokenAllowance or signature expire.
   useInterval(
     () => {
-      const now = Date.now() / 1000
+      const now = Date.now() / 1000 - 12 // ensure it can still go into this block (assuming 12s block time)
       if (signature && signature.sigDeadline < now) {
         setSignature(undefined)
       }
@@ -53,7 +55,7 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
         setPermitAllowance(undefined)
       }
     },
-    ms`1s`,
+    ms`12s`,
     true
   )
 
@@ -66,10 +68,18 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
       } else if (signature?.details.token === amount.currency.address && signature?.spender === spender) {
         return { state: PermitState.PERMITTED, signature }
       } else {
-        return { state: PermitState.PERMIT_NEEDED, callback: permitToken }
+        return { state: PermitState.PERMIT_NEEDED, callback: updatePermitAllowance }
       }
     } else {
-      return { state: PermitState.APPROVAL_NEEDED, callback: approveAndPermitToken }
+      return { state: PermitState.APPROVAL_NEEDED, callback: updateTokenAndPermitAllowance }
     }
-  }, [amount, approveAndPermitToken, permitAllowance, permitToken, signature, spender, tokenAllowance])
+  }, [
+    amount,
+    permitAllowance,
+    signature,
+    spender,
+    tokenAllowance,
+    updatePermitAllowance,
+    updateTokenAndPermitAllowance,
+  ])
 }

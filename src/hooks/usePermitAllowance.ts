@@ -53,7 +53,7 @@ export interface PermitSignature extends Permit {
   signature: string
 }
 
-export function usePermitAllowanceCallback(
+export function useUpdatePermitAllowance(
   token?: Token,
   spender?: string,
   nonce?: number,
@@ -63,7 +63,11 @@ export function usePermitAllowanceCallback(
 
   return useCallback(async () => {
     try {
-      if (!chainId || !provider || !token || !spender || nonce === undefined) throw new Error('missing input')
+      if (!chainId) throw new Error('missing chainId')
+      if (!provider) throw new Error('missing provider')
+      if (!token) throw new Error('missing token')
+      if (!spender) throw new Error('missing spender')
+      if (nonce === undefined) throw new Error('missing nonce')
 
       const permit: Permit = {
         details: {

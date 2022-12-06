@@ -22,10 +22,10 @@ export default function useSyncController({ value, settings }: SwapController): 
   }, [settings, value])
 
   const setSwap = useUpdateAtom(swapAtom)
-  if (value) setSwap(() => value)
+  setSwap(() => value)
 
   const setSettings = useUpdateAtom(settingsAtom)
-  if (settings) setSettings(() => settings)
+  setSettings(() => settings)
 }
 
 function warnOnControlChange({ state, prop }: { state: string; prop: string }) {
