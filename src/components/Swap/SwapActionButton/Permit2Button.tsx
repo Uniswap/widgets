@@ -26,7 +26,7 @@ export default function PermitButton({
   trade?: InterfaceTrade
   state: PermitState
   callback?: () => Promise<ApprovalTransactionInfo | void>
-  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | void>) => Promise<boolean>
+  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
 }) {
   const currency = trade?.inputAmount?.currency
   const [isPending, setIsPending] = useState(false)
@@ -39,9 +39,15 @@ export default function PermitButton({
 
   const onClick = useCallback(async () => {
     setIsPending(true)
-    const submitted = await onSubmit(callback)
-    setIsFailed(!submitted)
-    setIsPending(false)
+    try {
+      await onSubmit(callback)
+      setIsFailed(false)
+    } catch (e) {
+      console.error(e)
+      setIsFailed(true)
+    } finally {
+      setIsPending(false)
+    }
   }, [callback, onSubmit])
 
   const pendingApproval = usePendingApproval(currency?.isToken ? currency : undefined, PERMIT2_ADDRESS)

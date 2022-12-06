@@ -32,18 +32,23 @@ export default function ApproveButton({
     tokenAddress: string
     spenderAddress: string
   } | void>
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | void>) => Promise<boolean>
+  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
 }) {
   const [isPending, setIsPending] = useState(false)
   const onApprove = useCallback(async () => {
     setIsPending(true)
-    await onSubmit(async () => {
-      const info = await approve?.()
-      if (!info) return
+    try {
+      await onSubmit(async () => {
+        const info = await approve?.()
+        if (!info) return
 
-      return { type: TransactionType.APPROVAL, ...info }
-    })
-    setIsPending(false)
+        return { type: TransactionType.APPROVAL, ...info }
+      })
+    } catch (e) {
+      console.error(e) // ignore error
+    } finally {
+      setIsPending(false)
+    }
   }, [approve, onSubmit])
 
   const currency = trade?.inputAmount?.currency

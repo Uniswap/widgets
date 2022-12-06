@@ -33,7 +33,7 @@ export default function SwapButton({
 }: {
   color: keyof Colors
   disabled: boolean
-  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<boolean>
+  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<void>
 }) {
   const { account, chainId } = useWeb3React()
   const {
@@ -73,29 +73,31 @@ export default function SwapButton({
 
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSwap = useCallback(async () => {
-    const submitted = await onSubmit(async () => {
-      const response = await swapCallback?.()
-      if (!response) return
+    try {
+      await onSubmit(async () => {
+        const response = await swapCallback?.()
+        if (!response) return
 
-      // Set the block containing the response to the oldest valid block to ensure that the
-      // completed trade's impact is reflected in future fetched trades.
-      response.wait(1).then((receipt) => {
-        setOldestValidBlock(receipt.blockNumber)
+        // Set the block containing the response to the oldest valid block to ensure that the
+        // completed trade's impact is reflected in future fetched trades.
+        response.wait(1).then((receipt) => {
+          setOldestValidBlock(receipt.blockNumber)
+        })
+
+        invariant(trade)
+        return {
+          type: TransactionType.SWAP,
+          response,
+          tradeType: trade.tradeType,
+          trade,
+          slippageTolerance: slippage.allowed,
+        }
       })
 
-      invariant(trade)
-      return {
-        type: TransactionType.SWAP,
-        response,
-        tradeType: trade.tradeType,
-        trade,
-        slippageTolerance: slippage.allowed,
-      }
-    })
-
-    // Only close the review modal if the transaction has submitted.
-    if (submitted) {
+      // Only close the review modal if the swap submitted (ie no-throw).
       setOpen(false)
+    } catch (e) {
+      console.error(e) // ignore error
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade])
 
