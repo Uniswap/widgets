@@ -18,8 +18,6 @@ const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
 }
 
-export const INITIALIZATION = Symbol()
-
 export const routing = createApi({
   reducerPath: 'routing',
   baseQuery,
@@ -30,9 +28,9 @@ export const routing = createApi({
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
         if (
-          // If enabled, try routing API, falling back to client-side SOR.
+          // If enabled, try the routing API, falling back to client-side routing.
           Boolean(args.routerUrl) &&
-          // A null amount may be passed to initialize the client-side SOR.
+          // A null amount may be passed to initialize the client-side routing.
           args.amount !== null
         ) {
           try {
@@ -71,7 +69,6 @@ export const routing = createApi({
           }
         }
 
-        // If integrator did not provide a routing API URL param, use clientside SOR.
         // Lazy-load the client-side router to improve initial pageload times.
         const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
