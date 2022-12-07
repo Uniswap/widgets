@@ -3,16 +3,13 @@
  */
 export enum SupportedChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
   GOERLI = 5,
-  KOVAN = 42,
 
   ARBITRUM_ONE = 42161,
-  ARBITRUM_RINKEBY = 421611,
+  ARBITRUM_GOERLI = 421613,
 
   OPTIMISM = 10,
-  OPTIMISTIC_KOVAN = 69,
+  OPTIMISM_GOERLI = 420,
 
   POLYGON = 137,
   POLYGON_MUMBAI = 80001,
@@ -23,14 +20,11 @@ export enum SupportedChainId {
 
 export enum ChainName {
   MAINNET = 'mainnet',
-  ROPSTEN = 'ropsten',
-  RINKEBY = 'rinkeby',
   GOERLI = 'goerli',
-  KOVAN = 'kovan',
   OPTIMISM = 'optimism-mainnet',
-  OPTIMISTIC_KOVAN = 'optimism-kovan',
+  OPTIMISM_GOERLI = 'optimism-goerli',
   ARBITRUM_ONE = 'arbitrum-mainnet',
-  ARBITRUM_RINKEBY = 'arbitrum-rinkeby',
+  ARBITRUM_GOERLI = 'arbitrum-goerli',
   POLYGON = 'polygon-mainnet',
   POLYGON_MUMBAI = 'polygon-mumbai',
   CELO = 'celo',
@@ -39,16 +33,13 @@ export enum ChainName {
 
 export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
   [ChainName.MAINNET]: SupportedChainId.MAINNET,
-  [ChainName.ROPSTEN]: SupportedChainId.ROPSTEN,
-  [ChainName.RINKEBY]: SupportedChainId.RINKEBY,
   [ChainName.GOERLI]: SupportedChainId.GOERLI,
-  [ChainName.KOVAN]: SupportedChainId.KOVAN,
+  [ChainName.ARBITRUM_ONE]: SupportedChainId.ARBITRUM_ONE,
+  [ChainName.ARBITRUM_GOERLI]: SupportedChainId.ARBITRUM_GOERLI,
+  [ChainName.OPTIMISM]: SupportedChainId.OPTIMISM,
+  [ChainName.OPTIMISM_GOERLI]: SupportedChainId.OPTIMISM_GOERLI,
   [ChainName.POLYGON]: SupportedChainId.POLYGON,
   [ChainName.POLYGON_MUMBAI]: SupportedChainId.POLYGON_MUMBAI,
-  [ChainName.ARBITRUM_ONE]: SupportedChainId.ARBITRUM_ONE,
-  [ChainName.ARBITRUM_RINKEBY]: SupportedChainId.ARBITRUM_RINKEBY,
-  [ChainName.OPTIMISM]: SupportedChainId.OPTIMISM,
-  [ChainName.OPTIMISTIC_KOVAN]: SupportedChainId.OPTIMISTIC_KOVAN,
   [ChainName.CELO]: SupportedChainId.CELO,
   [ChainName.CELO_ALFAJORES]: SupportedChainId.CELO_ALFAJORES,
 }
@@ -73,10 +64,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
  */
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,
@@ -91,9 +79,9 @@ export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
  */
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.ARBITRUM_GOERLI,
   SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISTIC_KOVAN,
+  SupportedChainId.OPTIMISM_GOERLI,
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]

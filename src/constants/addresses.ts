@@ -7,13 +7,13 @@ export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5
 
 export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
-    SupportedChainId.OPTIMISTIC_KOVAN,
     SupportedChainId.OPTIMISM,
-    SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.OPTIMISM_GOERLI,
     SupportedChainId.POLYGON,
+    SupportedChainId.POLYGON_MUMBAI,
   ]),
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
-  [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+  [SupportedChainId.ARBITRUM_GOERLI]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
   [SupportedChainId.CELO]: '0x633987602DE5C4F337e3DbF265303A1080324204',
   [SupportedChainId.CELO_ALFAJORES]: '0x633987602DE5C4F337e3DbF265303A1080324204',
 }
@@ -21,9 +21,9 @@ export const MULTICALL_ADDRESS: AddressMap = {
 export const SWAP_ROUTER_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', [
     SupportedChainId.OPTIMISM,
-    SupportedChainId.OPTIMISTIC_KOVAN,
+    SupportedChainId.OPTIMISM_GOERLI,
     SupportedChainId.ARBITRUM_ONE,
-    SupportedChainId.ARBITRUM_RINKEBY,
+    SupportedChainId.ARBITRUM_GOERLI,
     SupportedChainId.POLYGON,
     SupportedChainId.POLYGON_MUMBAI,
   ]),
@@ -37,7 +37,5 @@ export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
 
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [SupportedChainId.ROPSTEN]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
   [SupportedChainId.GOERLI]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [SupportedChainId.RINKEBY]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
 }
