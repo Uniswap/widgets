@@ -13,8 +13,8 @@ export default function useOnSubmit() {
   const [, setInputAmount] = useSwapAmount(Field.INPUT)
 
   return useCallback(
-    async (submit?: () => Promise<TransactionInfo | void>): Promise<void> => {
-      const info = await submit?.()
+    async (submit: () => Promise<TransactionInfo | void>): Promise<void> => {
+      const info = await submit()
       if (!info) return
 
       addTransactionInfo(info)
