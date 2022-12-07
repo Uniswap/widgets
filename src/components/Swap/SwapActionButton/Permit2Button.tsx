@@ -3,7 +3,6 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
 import { usePendingApproval } from 'hooks/transactions'
-import { PermitState } from 'hooks/usePermit2'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -18,13 +17,11 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 export default function PermitButton({
   color,
   trade,
-  state,
   callback,
   onSubmit,
 }: {
   color: keyof Colors
   trade?: InterfaceTrade
-  state: PermitState
   callback?: () => Promise<ApprovalTransactionInfo | void>
   onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
 }) {
@@ -52,15 +49,7 @@ export default function PermitButton({
 
   const pendingApproval = usePendingApproval(currency?.isToken ? currency : undefined, PERMIT2_ADDRESS)
 
-  const actionProps = useMemo(() => {
-    switch (state) {
-      case PermitState.UNKNOWN:
-      case PermitState.PERMITTED:
-        return
-      case PermitState.APPROVAL_NEEDED:
-      case PermitState.PERMIT_NEEDED:
-    }
-
+  const action = useMemo(() => {
     if (isPending) {
       return {
         icon: Spinner,
@@ -82,15 +71,15 @@ export default function PermitButton({
       }
     } else {
       return {
-        tooltip: t`Permission is required for Uniswap to swap each token. This will expire after one month for your security.`,
-        message: `Approve use of ${currency?.symbol ?? 'token'}`,
+        tooltipContent: t`Permission is required for Uniswap to swap each token. This will expire after one month for your security.`,
+        message: t`Approve use of ${currency?.symbol ?? 'token'}`,
         onClick,
       }
     }
-  }, [currency?.symbol, isFailed, isPending, onClick, pendingApproval, state])
+  }, [currency?.symbol, isFailed, isPending, onClick, pendingApproval])
 
   return (
-    <ActionButton color={color} disabled={!actionProps?.onClick} action={actionProps}>
+    <ActionButton color={color} disabled={!action?.onClick} action={action}>
       {isFailed ? t`Try again` : t`Approve`}
     </ActionButton>
   )

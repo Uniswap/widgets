@@ -66,7 +66,7 @@ export const Overlay = styled(Row)<{ hasAction: boolean }>`
 export interface Action {
   message: ReactNode
   icon?: Icon
-  tooltip?: ReactNode
+  tooltipContent?: ReactNode
   onClick?: () => void
   children?: ReactNode
 }
@@ -98,9 +98,9 @@ export default function ActionButton({
       </StyledButton>
       {action && (
         <ActionRow gap={0.5}>
-          {action.tooltip ? (
+          {action.tooltipContent ? (
             <Tooltip icon={LargeIcon} iconProps={{ color: 'currentColor', icon: action.icon || AlertTriangle }}>
-              {action.tooltip}
+              {action.tooltipContent}
             </Tooltip>
           ) : (
             <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
