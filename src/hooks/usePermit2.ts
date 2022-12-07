@@ -1,7 +1,7 @@
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { BLOCK_TIME_L1 } from 'constants/chainInfo'
+import { STANDARD_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { ApprovalTransactionInfo } from '..'
@@ -47,7 +47,8 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
   // Trigger a re-render if either tokenAllowance or signature expire.
   useInterval(
     () => {
-      const now = (Date.now() - BLOCK_TIME_L1) / 1000 // ensure it can still go into this block
+      // Calculate now such that the signature will still be valid for the next block.
+      const now = (Date.now() - STANDARD_L1_BLOCK_TIME) / 1000
       if (signature && signature.sigDeadline < now) {
         setSignature(undefined)
       }
@@ -55,7 +56,7 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
         setPermitAllowanceAmount(undefined)
       }
     },
-    BLOCK_TIME_L1,
+    STANDARD_L1_BLOCK_TIME,
     true
   )
 

@@ -7,7 +7,7 @@ import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
 
-export const BLOCK_TIME_L1 = ms`12s`
+export const STANDARD_L1_BLOCK_TIME = ms`12s`
 
 export enum NetworkType {
   L1,
