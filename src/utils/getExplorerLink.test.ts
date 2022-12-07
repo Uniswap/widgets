@@ -30,10 +30,4 @@ describe('#getExplorerLink', () => {
   it('alfajores', () => {
     expect(getExplorerLink(44787, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://alfajores.celoscan.io/address/abc')
   })
-  it('ropsten', () => {
-    expect(getExplorerLink(3, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://ropsten.etherscan.io/address/abc')
-  })
-  it('enum', () => {
-    expect(getExplorerLink(4, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://rinkeby.etherscan.io/address/abc')
-  })
 })
