@@ -2,6 +2,7 @@ import { initializeConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
+import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { useEffect, useState } from 'react'
 
 import useOption from './useOption'
@@ -11,7 +12,18 @@ enum Wallet {
   WalletConnect = 'WalletConnect',
 }
 const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))
-const [walletConnect] = initializeConnector<WalletConnect>((actions) => new WalletConnect({ actions }))
+const [walletConnect] = initializeConnector<WalletConnect>(
+  (actions) =>
+    new WalletConnect({
+      actions,
+      options: {
+        rpc: Object.entries(JSON_RPC_FALLBACK_ENDPOINTS).reduce((rpcMap, [chainId, rpcUrls]) => ({
+          ...rpcMap,
+          [chainId]: rpcUrls.slice(0, 1),
+        })),
+      },
+    })
+)
 
 export default function useProvider(defaultChainId?: number) {
   const connectorType = useOption('provider', { options: [Wallet.MetaMask, Wallet.WalletConnect] })
