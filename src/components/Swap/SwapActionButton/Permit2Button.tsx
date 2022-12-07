@@ -22,12 +22,13 @@ export default function PermitButton({
 }: {
   color: keyof Colors
   trade?: InterfaceTrade
-  callback?: () => Promise<ApprovalTransactionInfo | void>
-  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
+  callback?: (isPendingApproval: boolean) => Promise<ApprovalTransactionInfo | void>
+  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
 }) {
   const currency = trade?.inputAmount?.currency
   const [isPending, setIsPending] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
+  const pendingApproval = usePendingApproval(currency?.isToken ? currency : undefined, PERMIT2_ADDRESS)
   useEffect(() => {
     // Reset pending/failed state if currency changes.
     setIsPending(false)
@@ -37,7 +38,7 @@ export default function PermitButton({
   const onClick = useCallback(async () => {
     setIsPending(true)
     try {
-      await onSubmit(callback)
+      await onSubmit(async () => await callback?.(Boolean(pendingApproval)))
       setIsFailed(false)
     } catch (e) {
       console.error(e)
@@ -45,9 +46,7 @@ export default function PermitButton({
     } finally {
       setIsPending(false)
     }
-  }, [callback, onSubmit])
-
-  const pendingApproval = usePendingApproval(currency?.isToken ? currency : undefined, PERMIT2_ADDRESS)
+  }, [callback, onSubmit, pendingApproval])
 
   const action = useMemo(() => {
     if (isPending) {
