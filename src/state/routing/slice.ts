@@ -74,9 +74,9 @@ export const routing = createApi({
         try {
           const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
           return { data: quote }
-        } catch (error: unknown) {
+        } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
-          return { error: { status: 'CUSTOM_ERROR', error: error instanceof Error ? error.message : error } }
+          return { error: { status: 'CUSTOM_ERROR', error: error?.message ?? error?.detail ?? error } }
         }
       },
       keepUnusedDataFor: ms`10s`,
