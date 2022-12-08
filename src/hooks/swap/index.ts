@@ -63,9 +63,9 @@ export function useIsSwapFieldIndependent(field: Field): boolean {
 
 const amountAtom = pickAtom(swapAtom, 'amount')
 
-// check if any amount has been entered by user
+/** Returns true if the user has entered a non-zero amount. */
 export function useIsAmountPopulated() {
-  return Boolean(useAtomValue(amountAtom))
+  return Boolean(Number(useAtomValue(amountAtom)))
 }
 
 export function useSwapAmount(field: Field): [string | undefined, (amount: string, origin?: 'max') => void] {

@@ -27,11 +27,12 @@ export const routing = createApi({
       async queryFn(args: GetQuoteArgs | SkipToken) {
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
-        // If enabled, try routing API, falling back to client-side SOR.
-        if (Boolean(args.routerUrl)) {
-          // amount may be null to initialize the client-side SOR. This should be skipped for the server.
-          if (args.amount === undefined) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
-
+        if (
+          // If enabled, try the routing API, falling back to client-side routing.
+          Boolean(args.routerUrl) &&
+          // A null amount may be passed to initialize the client-side routing.
+          args.amount !== null
+        ) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'
@@ -61,20 +62,21 @@ export const routing = createApi({
 
             const quote: GetQuoteResult = await response.json()
             return { data: quote }
-          } catch (error) {
-            console.warn(`GetQuote failed on routing API, falling back to client: ${error}`)
+          } catch (error: any) {
+            console.warn(
+              `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
+            )
           }
         }
 
-        // If integrator did not provide a routing API URL param, use clientside SOR
+        // Lazy-load the client-side router to improve initial pageload times.
+        const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
-          // Lazy-load the client-side router to improve initial pageload times.
-          const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
           const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
           return { data: quote }
-        } catch (error) {
+        } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } }
+          return { error: { status: 'CUSTOM_ERROR', error: error?.message ?? error?.detail ?? error } }
         }
       },
       keepUnusedDataFor: ms`10s`,

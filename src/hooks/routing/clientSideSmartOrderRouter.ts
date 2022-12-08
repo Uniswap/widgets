@@ -12,7 +12,7 @@ import {
   UniswapMulticallProvider,
 } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from 'state/routing/types'
+import { GetQuoteArgs, GetQuoteResult, INITIALIZED, NO_ROUTE } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -103,7 +103,8 @@ async function getQuote(
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw ?? '1')) // a null amountRaw should initialize the route
   const route = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (amountRaw === null || !route) return NO_ROUTE
+  if (!amountRaw) return INITIALIZED
+  if (!route) return NO_ROUTE
 
   return transformSwapRouteToGetQuoteResult({ ...route, routeString: routeAmountsToString(route.route) })
 }

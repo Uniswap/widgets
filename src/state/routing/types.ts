@@ -82,8 +82,9 @@ export interface QuoteResult {
   routeString: string
 }
 
+export const INITIALIZED = 'Initialized'
 export const NO_ROUTE = 'No Route'
 
-export type GetQuoteResult = QuoteResult | typeof NO_ROUTE
+export type GetQuoteResult = QuoteResult | typeof INITIALIZED | typeof NO_ROUTE
 
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}
