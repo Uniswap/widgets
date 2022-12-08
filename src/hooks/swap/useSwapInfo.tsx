@@ -101,15 +101,15 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
   const slippage = useSlippage(trade)
   const impact = usePriceImpact(trade.trade)
 
-  const permit2 = usePermit2()
+  const permit2Enabled = usePermit2()
   const maximumAmountIn = useMemo(() => {
     const maximumAmountIn = trade.trade?.maximumAmountIn(slippage.allowed)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [slippage.allowed, trade.trade])
-  const approval = useSwapApproval(permit2 ? undefined : maximumAmountIn)
+  const approval = useSwapApproval(permit2Enabled ? undefined : maximumAmountIn)
   const permit = usePermit(
-    permit2 ? maximumAmountIn : undefined,
-    permit2 && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    permit2Enabled ? maximumAmountIn : undefined,
+    permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
 
   return useMemo(() => {
@@ -157,7 +157,7 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
   error: ChainError.UNCONNECTED_CHAIN,
   trade: { state: TradeState.INVALID, trade: undefined },
   approval: { state: SwapApprovalState.APPROVED },
-  permit: { state: PermitState.UNKNOWN },
+  permit: { state: PermitState.INVALID },
   slippage: DEFAULT_SLIPPAGE,
 }
 
