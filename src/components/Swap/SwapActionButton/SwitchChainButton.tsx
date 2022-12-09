@@ -35,10 +35,13 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
         : {
             message: <Trans>Switch network</Trans>,
             onClick: onSwitchChain,
-            children: <Trans>Switch</Trans>,
           },
     [account, isPending, onSwitchChain]
   )
 
-  return <ActionButton color={color} action={actionProps} />
+  return (
+    <ActionButton color={color} disabled={isPending} action={actionProps}>
+      <Trans>Switch</Trans>
+    </ActionButton>
+  )
 }
