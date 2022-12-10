@@ -56,7 +56,7 @@ export default function WrapButton({
   )
 
   return (
-    <ActionButton color={color} {...actionProps} disabled={disabled}>
+    <ActionButton color={color} {...actionProps} disabled={disabled || isPending}>
       <Trans>
         {wrapType === TransactionType.WRAP ? 'Wrap' : 'Unwrap'} {inputCurrency?.symbol}
       </Trans>
