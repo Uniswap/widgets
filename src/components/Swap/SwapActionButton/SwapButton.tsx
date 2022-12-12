@@ -107,11 +107,11 @@ export default function SwapButton({
   }, [onReviewSwapClick])
 
   if (permit2Enabled) {
-    if (permit.state === PermitState.PERMIT_NEEDED) {
+    if (!disabled && permit.state === PermitState.PERMIT_NEEDED) {
       return <PermitButton color={color} onSubmit={onSubmit} trade={trade} {...permit} />
     }
   } else {
-    if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
+    if (!disabled && approval.state !== SwapApprovalState.APPROVED) {
       return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
     }
   }
