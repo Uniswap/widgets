@@ -74,9 +74,8 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
 
   // Permit2 should be marked syncing from the time approval is submitted (pending) until it is
   // synced in tokenAllowance, to avoid re-prompting the user for an already-submitted approval.
-  // It should *not* be marked syncing if not permitted, because the user must still take action.
   const [syncState, setSyncState] = useState(SyncState.SYNCED)
-  const isSyncing = isPermitted || isSigned ? false : syncState !== SyncState.SYNCED
+  const isSyncing = syncState !== SyncState.SYNCED
   const hasPendingApproval = Boolean(usePendingApproval(token, PERMIT2_ADDRESS))
   useEffect(() => {
     if (hasPendingApproval) {
@@ -108,18 +107,14 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
   return useMemo(() => {
     if (!token) {
       return { state: PermitState.INVALID }
-    }
-
-    if (!tokenAllowance || !permitAllowance) {
+    } else if (!tokenAllowance || !permitAllowance) {
       return { token, state: PermitState.LOADING }
-    } else if (isAllowed) {
-      if (isPermitted) {
-        return { token, state: PermitState.PERMITTED }
-      } else if (isSigned) {
-        return { token, state: PermitState.PERMITTED, signature }
-      }
+    } else if (!(isPermitted || isSigned)) {
+      return { token, state: PermitState.PERMIT_NEEDED, callback }
+    } else if (!isAllowed) {
+      return { token, state: PermitState.PERMIT_NEEDED, isSyncing, callback }
+    } else {
+      return { token, state: PermitState.PERMITTED, signature: isPermitted ? undefined : signature }
     }
-
-    return { token, state: PermitState.PERMIT_NEEDED, isSyncing, callback }
   }, [callback, isAllowed, isPermitted, isSigned, isSyncing, permitAllowance, signature, token, tokenAllowance])
 }
