@@ -19,14 +19,14 @@ enum SyncState {
 export enum PermitState {
   INVALID,
   LOADING,
-  PERMIT_NEEDED,
-  PERMITTED,
+  APPROVAL_OR_PERMIT_NEEDED,
+  APPROVAL_LOADING,
+  APPROVED_AND_PERMITTED,
 }
 
 export interface Permit {
   token?: Token
   state: PermitState
-  isSyncing?: boolean
   signature?: PermitSignature
   callback?: () => Promise<ApprovalTransactionInfo | void>
 }
@@ -75,7 +75,7 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
   // Permit2 should be marked syncing from the time approval is submitted (pending) until it is
   // synced in tokenAllowance, to avoid re-prompting the user for an already-submitted approval.
   const [syncState, setSyncState] = useState(SyncState.SYNCED)
-  const isSyncing = syncState !== SyncState.SYNCED
+  const isApprovalLoading = syncState !== SyncState.SYNCED
   const hasPendingApproval = Boolean(usePendingApproval(token, PERMIT2_ADDRESS))
   useEffect(() => {
     if (hasPendingApproval) {
@@ -110,11 +110,15 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
     } else if (!tokenAllowance || !permitAllowance) {
       return { token, state: PermitState.LOADING }
     } else if (!(isPermitted || isSigned)) {
-      return { token, state: PermitState.PERMIT_NEEDED, callback }
+      return { token, state: PermitState.APPROVAL_OR_PERMIT_NEEDED, callback }
     } else if (!isAllowed) {
-      return { token, state: PermitState.PERMIT_NEEDED, isSyncing, callback }
+      return {
+        token,
+        state: isApprovalLoading ? PermitState.APPROVAL_LOADING : PermitState.APPROVAL_OR_PERMIT_NEEDED,
+        callback,
+      }
     } else {
-      return { token, state: PermitState.PERMITTED, signature: isPermitted ? undefined : signature }
+      return { token, state: PermitState.APPROVED_AND_PERMITTED, signature: isPermitted ? undefined : signature }
     }
-  }, [callback, isAllowed, isPermitted, isSigned, isSyncing, permitAllowance, signature, token, tokenAllowance])
+  }, [callback, isAllowed, isApprovalLoading, isPermitted, isSigned, permitAllowance, signature, token, tokenAllowance])
 }

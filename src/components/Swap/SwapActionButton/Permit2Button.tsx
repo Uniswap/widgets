@@ -3,7 +3,7 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
 import { usePendingApproval } from 'hooks/transactions'
-import { Permit } from 'hooks/usePermit2'
+import { Permit, PermitState } from 'hooks/usePermit2'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo } from 'state/transactions'
@@ -19,13 +19,8 @@ interface PermitButtonProps extends Permit {
  * An approving PermitButton.
  * Should only be rendered if a valid trade exists that is not yet permitted.
  */
-export default function PermitButton({
-  token,
-  isSyncing: isApprovalPending,
-  callback,
-  color,
-  onSubmit,
-}: PermitButtonProps) {
+export default function PermitButton({ token, state, callback, color, onSubmit }: PermitButtonProps) {
+  const isApprovalLoading = state === PermitState.APPROVAL_LOADING
   const [isPending, setIsPending] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
   const pendingApproval = usePendingApproval(token, PERMIT2_ADDRESS)
@@ -54,7 +49,7 @@ export default function PermitButton({
         icon: Spinner,
         message: t`Approve in your wallet`,
       }
-    } else if (isApprovalPending) {
+    } else if (isApprovalLoading) {
       return {
         icon: Spinner,
         message: pendingApproval ? (
@@ -77,7 +72,7 @@ export default function PermitButton({
         onClick,
       }
     }
-  }, [isApprovalPending, isFailed, isPending, onClick, pendingApproval, token])
+  }, [isApprovalLoading, isFailed, isPending, onClick, pendingApproval, token])
 
   return (
     <ActionButton color={color} disabled={!action?.onClick} action={action}>
