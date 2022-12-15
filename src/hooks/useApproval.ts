@@ -22,7 +22,7 @@ export function useApprovalStateForSpender(
   const { account } = useWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
-  const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
+  const { amount: currentAllowance } = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {

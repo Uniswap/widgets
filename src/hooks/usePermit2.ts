@@ -5,9 +5,16 @@ import { STANDARD_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { ApprovalTransactionInfo } from '..'
+import { usePendingApproval } from './transactions'
 import useInterval from './useInterval'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
 import { useTokenAllowance, useUpdateTokenAllowance } from './useTokenAllowance'
+
+enum SyncState {
+  PENDING,
+  SYNCING,
+  SYNCED,
+}
 
 export enum PermitState {
   INVALID,
@@ -18,18 +25,37 @@ export enum PermitState {
 
 export interface Permit {
   state: PermitState
+  pending?: boolean
   signature?: PermitSignature
-  callback?: (isPendingApproval: boolean) => Promise<ApprovalTransactionInfo | void>
+  callback?: () => Promise<ApprovalTransactionInfo | void>
 }
 
 export default function usePermit(amount?: CurrencyAmount<Token>, spender?: string): Permit {
   const { account } = useWeb3React()
-  const tokenAllowance = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
+  const { amount: tokenAllowance, syncing } = useTokenAllowance(amount?.currency, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
   const isAllowed = useMemo(
     () => amount && (tokenAllowance?.greaterThan(amount) || tokenAllowance?.equalTo(amount)),
     [amount, tokenAllowance]
   )
+
+  const [syncState, setSyncState] = useState(SyncState.SYNCED)
+  const hasPendingApproval = Boolean(usePendingApproval(amount?.currency, PERMIT2_ADDRESS))
+  useEffect(() => {
+    if (hasPendingApproval) {
+      setSyncState(SyncState.PENDING)
+    } else {
+      setSyncState((state) => {
+        if (state === SyncState.PENDING && syncing) {
+          return SyncState.SYNCING
+        } else if (state === SyncState.SYNCING && !syncing) {
+          return SyncState.SYNCED
+        } else {
+          return state
+        }
+      })
+    }
+  }, [hasPendingApproval, syncing])
 
   const permitAllowance = usePermitAllowance(amount?.currency, spender)
   const [permitAllowanceAmount, setPermitAllowanceAmount] = useState(permitAllowance?.amount)
@@ -67,19 +93,16 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
     true
   )
 
-  const callback = useCallback(
-    async (isPendingApproval: boolean) => {
-      let info: ApprovalTransactionInfo | undefined
-      if (!isAllowed && !isPendingApproval) {
-        info = await updateTokenAllowance()
-      }
-      if (!isPermitted && !isSigned) {
-        await updatePermitAllowance()
-      }
-      return info
-    },
-    [isAllowed, isPermitted, isSigned, updatePermitAllowance, updateTokenAllowance]
-  )
+  const callback = useCallback(async () => {
+    let info: ApprovalTransactionInfo | undefined
+    if (!isAllowed && !hasPendingApproval) {
+      info = await updateTokenAllowance()
+    }
+    if (!isPermitted && !isSigned) {
+      await updatePermitAllowance()
+    }
+    return info
+  }, [hasPendingApproval, isAllowed, isPermitted, isSigned, updatePermitAllowance, updateTokenAllowance])
 
   return useMemo(() => {
     if (!amount) {
@@ -93,6 +116,6 @@ export default function usePermit(amount?: CurrencyAmount<Token>, spender?: stri
         return { state: PermitState.PERMITTED, signature }
       }
     }
-    return { state: PermitState.PERMIT_NEEDED, callback }
-  }, [amount, callback, isAllowed, isPermitted, isSigned, permitAllowance, signature, tokenAllowance])
+    return { state: PermitState.PERMIT_NEEDED, pending: syncState !== SyncState.SYNCED, callback }
+  }, [amount, callback, isAllowed, isPermitted, isSigned, permitAllowance, signature, syncState, tokenAllowance])
 }

@@ -17,12 +17,14 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 export default function PermitButton({
   color,
   trade,
+  pending: isPendingApproval,
   callback,
   onSubmit,
 }: {
   color: keyof Colors
   trade?: InterfaceTrade
-  callback?: (isPendingApproval: boolean) => Promise<ApprovalTransactionInfo | void>
+  pending?: boolean
+  callback?: () => Promise<ApprovalTransactionInfo | void>
   onSubmit: (submit: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
 }) {
   const currency = trade?.inputAmount?.currency
@@ -38,7 +40,7 @@ export default function PermitButton({
   const onClick = useCallback(async () => {
     setIsPending(true)
     try {
-      await onSubmit(async () => await callback?.(Boolean(pendingApproval)))
+      await onSubmit(async () => await callback?.())
       setIsFailed(false)
     } catch (e) {
       console.error(e)
@@ -46,7 +48,7 @@ export default function PermitButton({
     } finally {
       setIsPending(false)
     }
-  }, [callback, onSubmit, pendingApproval])
+  }, [callback, onSubmit])
 
   const action = useMemo(() => {
     if (isPending) {
@@ -54,13 +56,15 @@ export default function PermitButton({
         icon: Spinner,
         message: t`Approve in your wallet`,
       }
-    } else if (pendingApproval) {
+    } else if (isPendingApproval) {
       return {
         icon: Spinner,
-        message: (
+        message: pendingApproval ? (
           <EtherscanLink type={ExplorerDataType.TRANSACTION} data={pendingApproval}>
             <Trans>Approval pending</Trans>
           </EtherscanLink>
+        ) : (
+          <Trans>Approval pending</Trans>
         ),
       }
     } else if (isFailed) {
@@ -75,7 +79,7 @@ export default function PermitButton({
         onClick,
       }
     }
-  }, [currency?.symbol, isFailed, isPending, onClick, pendingApproval])
+  }, [currency?.symbol, isFailed, isPending, isPendingApproval, onClick, pendingApproval])
 
   return (
     <ActionButton color={color} disabled={!action?.onClick} action={action}>
