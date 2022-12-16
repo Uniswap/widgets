@@ -27,7 +27,7 @@ export function usePermitAllowance(token?: Token, owner?: string, spender?: stri
     blocksPerFetch,
   }).result as Awaited<ReturnType<Permit2['allowance']>> | undefined
 
-  const rawAmount = result?.amount.toString()
+  const rawAmount = result?.amount.toString() // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(
     () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
     [token, rawAmount]

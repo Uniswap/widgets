@@ -27,7 +27,7 @@ export function useTokenAllowance(
     syncing: boolean
   }
 
-  const rawAmount = result?.toString()
+  const rawAmount = result?.toString() // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(
     () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
     [token, rawAmount]
