@@ -5,7 +5,7 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
-import { AllowanceState } from 'hooks/usePermit2'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
@@ -19,8 +19,8 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
+import AllowanceButton from './AllowanceButton'
 import ApproveButton from './ApproveButton'
-import AllowanceButton from './Permit2Button'
 
 /**
  * A swapping ActionButton.
