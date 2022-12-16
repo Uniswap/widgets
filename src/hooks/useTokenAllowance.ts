@@ -1,10 +1,11 @@
 import { BigNumberish } from '@ethersproject/bignumber'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
-import { useSingleCallResult } from 'hooks/multicall'
-import { useCallback, useMemo } from 'react'
+import { Erc20 } from 'abis/types'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
+import { useSingleCallResult } from './multicall'
 import { useTokenContract } from './useContract'
 
 export function useTokenAllowance(
@@ -16,14 +17,24 @@ export function useTokenAllowance(
   isSyncing: boolean
 } {
   const contract = useTokenContract(token?.address, false)
-
   const inputs = useMemo(() => [owner, spender], [owner, spender])
-  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs)
 
-  return useMemo(() => {
-    const tokenAllowance = token && result && CurrencyAmount.fromRawAmount(token, result.toString())
-    return { tokenAllowance, isSyncing }
-  }, [isSyncing, result, token])
+  // If there is no allowance, recheck next observed block.
+  // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
+  const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
+  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }) as {
+    result: Awaited<ReturnType<Erc20['allowance']>> | undefined
+    syncing: boolean
+  }
+
+  const rawAmount = result?.toString()
+  const allowance = useMemo(
+    () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
+    [token, rawAmount]
+  )
+  useEffect(() => setBlocksPerFetch(allowance?.equalTo(0) ? 1 : undefined), [allowance])
+
+  return useMemo(() => ({ tokenAllowance: allowance, isSyncing }), [allowance, isSyncing])
 }
 
 export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
