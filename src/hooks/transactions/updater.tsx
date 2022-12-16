@@ -79,6 +79,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         promise
           .then((receipt) => {
             if (receipt) {
+              fastForwardBlockNumber(receipt.blockNumber)
               onReceipt({ chainId, hash, receipt })
             } else {
               onCheck({ chainId, hash, blockNumber: lastBlockNumber })
