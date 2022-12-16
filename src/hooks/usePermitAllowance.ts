@@ -3,11 +3,10 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
+import { useSingleCallResult } from 'hooks/multicall'
+import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-
-import { useSingleCallResult } from './multicall'
-import { useContract } from './useContract'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`

@@ -2,13 +2,12 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { STANDARD_L1_BLOCK_TIME } from 'constants/chainInfo'
+import { usePendingApproval } from 'hooks/transactions'
+import useInterval from 'hooks/useInterval'
+import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
+import { useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-
-import { ApprovalTransactionInfo } from '..'
-import { usePendingApproval } from './transactions'
-import useInterval from './useInterval'
-import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
-import { useTokenAllowance, useUpdateTokenAllowance } from './useTokenAllowance'
+import { ApprovalTransactionInfo } from 'state/transactions'
 
 enum ApprovalState {
   PENDING,

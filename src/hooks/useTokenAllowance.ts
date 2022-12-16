@@ -1,12 +1,11 @@
 import { BigNumberish } from '@ethersproject/bignumber'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Erc20 } from 'abis/types'
+import { useSingleCallResult } from 'hooks/multicall'
+import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-
-import { useSingleCallResult } from './multicall'
-import { useTokenContract } from './useContract'
 
 export function useTokenAllowance(
   token?: Token,
