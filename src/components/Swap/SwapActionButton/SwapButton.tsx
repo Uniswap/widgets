@@ -5,8 +5,8 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
-import { PermitState } from 'hooks/usePermit2'
-import { usePermit2 } from 'hooks/useSyncFlags'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
+import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
@@ -19,8 +19,8 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
+import AllowanceButton from './AllowanceButton'
 import ApproveButton from './ApproveButton'
-import PermitButton from './Permit2Button'
 
 /**
  * A swapping ActionButton.
@@ -41,14 +41,14 @@ export default function SwapButton({
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
     approval,
-    permit,
+    allowance,
     slippage,
     impact,
   } = useSwapInfo()
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const permit2Enabled = usePermit2()
+  const permit2Enabled = usePermit2Enabled()
   const { callback: swapRouterCallback } = useSwapCallback({
     trade: permit2Enabled ? undefined : trade,
     allowedSlippage: slippage.allowed,
@@ -60,7 +60,7 @@ export default function SwapButton({
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
     slippageTolerance: slippage.allowed,
     deadline,
-    permit: permit.signature,
+    permit: allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
     feeOptions,
   })
   const swapCallback = permit2Enabled ? universalRouterSwapCallback : swapRouterCallback
@@ -107,11 +107,8 @@ export default function SwapButton({
   }, [onReviewSwapClick])
 
   if (permit2Enabled) {
-    if (
-      !disabled &&
-      (permit.state === PermitState.APPROVAL_OR_PERMIT_NEEDED || permit.state === PermitState.APPROVAL_LOADING)
-    ) {
-      return <PermitButton color={color} onSubmit={onSubmit} {...permit} />
+    if (!disabled && allowance.state === AllowanceState.REQUIRED) {
+      return <AllowanceButton color={color} onSubmit={onSubmit} {...allowance} />
     }
   } else {
     if (!disabled && approval.state !== SwapApprovalState.APPROVED) {
@@ -124,7 +121,7 @@ export default function SwapButton({
       <ActionButton
         color={color}
         onClick={onClick}
-        disabled={disabled || (permit2Enabled && permit.state === PermitState.LOADING)}
+        disabled={disabled || (permit2Enabled && allowance.state === AllowanceState.LOADING)}
       >
         <Trans>Review swap</Trans>
       </ActionButton>
