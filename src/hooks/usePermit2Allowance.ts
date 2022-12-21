@@ -2,11 +2,12 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { STANDARD_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { useAddTransactionInfo, usePendingApproval } from 'hooks/transactions'
+import { usePendingApproval } from 'hooks/transactions'
 import useInterval from 'hooks/useInterval'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
 import { useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ApprovalTransactionInfo } from 'state/transactions'
 
 enum ApprovalState {
   PENDING,
@@ -24,7 +25,7 @@ export interface AllowanceRequired {
   state: AllowanceState.REQUIRED
   token: Token
   isApprovalLoading: boolean
-  callback: () => Promise<void>
+  approveAndPermit: (onApproval: (info: ApprovalTransactionInfo) => void) => Promise<void>
 }
 
 export type Allowance =
@@ -87,30 +88,32 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
 
   const shouldRequestApproval = !(isApproved || isApprovalLoading)
   const shouldRequestSignature = !(isPermitted || isSigned)
-  const addTransactionInfo = useAddTransactionInfo()
-  const callback = useCallback(async () => {
-    if (shouldRequestApproval) {
-      const info = await updateTokenAllowance()
-      addTransactionInfo(info)
-    }
-    if (shouldRequestSignature) {
-      await updatePermitAllowance()
-    }
-  }, [addTransactionInfo, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
+  const approveAndPermit = useCallback(
+    async (onApproval: (info: ApprovalTransactionInfo) => void) => {
+      if (shouldRequestApproval) {
+        const info = await updateTokenAllowance()
+        onApproval(info)
+      }
+      if (shouldRequestSignature) {
+        await updatePermitAllowance()
+      }
+    },
+    [shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance]
+  )
 
   return useMemo(() => {
     if (token) {
       if (!tokenAllowance || !permitAllowance) {
         return { state: AllowanceState.LOADING }
       } else if (!(isPermitted || isSigned)) {
-        return { token, state: AllowanceState.REQUIRED, isApprovalLoading: false, callback }
+        return { token, state: AllowanceState.REQUIRED, isApprovalLoading: false, approveAndPermit }
       } else if (!isApproved) {
-        return { token, state: AllowanceState.REQUIRED, isApprovalLoading, callback }
+        return { token, state: AllowanceState.REQUIRED, isApprovalLoading, approveAndPermit }
       }
     }
     return { token, state: AllowanceState.ALLOWED, permitSignature: !isPermitted && isSigned ? signature : undefined }
   }, [
-    callback,
+    approveAndPermit,
     isApprovalLoading,
     isApproved,
     isPermitted,

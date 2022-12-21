@@ -2,7 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
-import { usePendingApproval } from 'hooks/transactions'
+import { useAddTransactionInfo, usePendingApproval } from 'hooks/transactions'
 import { AllowanceRequired } from 'hooks/usePermit2Allowance'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -17,7 +17,7 @@ interface AllowanceButtonProps extends AllowanceRequired {
  * An approving AllowanceButton.
  * Should only be rendered if a valid trade exists that is not yet allowed.
  */
-export default function AllowanceButton({ token, isApprovalLoading, callback, color }: AllowanceButtonProps) {
+export default function AllowanceButton({ token, isApprovalLoading, approveAndPermit, color }: AllowanceButtonProps) {
   const [isPending, setIsPending] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
   const pendingApproval = usePendingApproval(token, PERMIT2_ADDRESS)
@@ -27,10 +27,11 @@ export default function AllowanceButton({ token, isApprovalLoading, callback, co
     setIsFailed(false)
   }, [token])
 
+  const addTransactionInfo = useAddTransactionInfo()
   const onClick = useCallback(async () => {
     setIsPending(true)
     try {
-      await callback?.()
+      await approveAndPermit?.(addTransactionInfo)
       setIsFailed(false)
     } catch (e) {
       console.error(e)
@@ -38,7 +39,7 @@ export default function AllowanceButton({ token, isApprovalLoading, callback, co
     } finally {
       setIsPending(false)
     }
-  }, [callback])
+  }, [addTransactionInfo, approveAndPermit])
 
   const action = useMemo(() => {
     if (isPending) {
