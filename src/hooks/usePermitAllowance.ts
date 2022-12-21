@@ -19,7 +19,7 @@ export function usePermitAllowance(token?: Token, owner?: string, spender?: stri
   const contract = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI)
   const inputs = useMemo(() => [owner, token?.address, spender], [owner, spender, token?.address])
 
-  // If there is no allowance, recheck next observed block.
+  // If there is no allowance yet, re-check next observed block.
   // This guarantees that the permitAllowance is synced upon submission and updated upon being synced.
   const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
   const result = useSingleCallResult(contract, 'allowance', inputs, {

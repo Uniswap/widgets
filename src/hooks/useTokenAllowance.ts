@@ -18,7 +18,7 @@ export function useTokenAllowance(
   const contract = useTokenContract(token?.address, false)
   const inputs = useMemo(() => [owner, spender], [owner, spender])
 
-  // If there is no allowance, recheck next observed block.
+  // If there is no allowance yet, re-check next observed block.
   // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
   const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
   const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }) as {

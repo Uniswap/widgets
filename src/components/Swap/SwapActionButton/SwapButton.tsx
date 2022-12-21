@@ -60,7 +60,7 @@ export default function SwapButton({
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
     slippageTolerance: slippage.allowed,
     deadline,
-    permit: allowance.state === AllowanceState.ALLOWED ? allowance.signature : undefined,
+    permit: allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
     feeOptions,
   })
   const swapCallback = permit2Enabled ? universalRouterSwapCallback : swapRouterCallback

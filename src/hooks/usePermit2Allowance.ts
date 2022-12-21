@@ -32,7 +32,7 @@ export type Allowance =
   | { state: AllowanceState.UNKNOWN }
   | {
       state: AllowanceState.ALLOWED
-      signature?: PermitSignature
+      permitSignature?: PermitSignature
     }
   | AllowanceRequired
 
@@ -107,7 +107,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
         return { token, state: AllowanceState.REQUIRED, isApprovalLoading, callback }
       }
     }
-    return { token, state: AllowanceState.ALLOWED, signature: !isPermitted && isSigned ? signature : undefined }
+    return { token, state: AllowanceState.ALLOWED, permitSignature: !isPermitted && isSigned ? signature : undefined }
   }, [
     callback,
     isApprovalLoading,
