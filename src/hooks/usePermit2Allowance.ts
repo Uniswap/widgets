@@ -16,7 +16,7 @@ enum ApprovalState {
 }
 
 export enum AllowanceState {
-  UNKNOWN,
+  LOADING,
   REQUIRED,
   ALLOWED,
 }
@@ -29,7 +29,7 @@ export interface AllowanceRequired {
 }
 
 export type Allowance =
-  | { state: AllowanceState.UNKNOWN }
+  | { state: AllowanceState.LOADING }
   | {
       state: AllowanceState.ALLOWED
       permitSignature?: PermitSignature
@@ -100,7 +100,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   return useMemo(() => {
     if (token) {
       if (!tokenAllowance || !permitAllowance) {
-        return { state: AllowanceState.UNKNOWN }
+        return { state: AllowanceState.LOADING }
       } else if (!(isPermitted || isSigned)) {
         return { token, state: AllowanceState.REQUIRED, isApprovalLoading: false, callback }
       } else if (!isApproved) {

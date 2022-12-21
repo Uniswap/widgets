@@ -157,7 +157,7 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
   error: ChainError.UNCONNECTED_CHAIN,
   trade: { state: TradeState.INVALID, trade: undefined },
   approval: { state: SwapApprovalState.APPROVED },
-  allowance: { state: AllowanceState.UNKNOWN },
+  allowance: { state: AllowanceState.LOADING },
   slippage: DEFAULT_SLIPPAGE,
 }
 

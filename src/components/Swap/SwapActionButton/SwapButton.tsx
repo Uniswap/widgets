@@ -121,7 +121,7 @@ export default function SwapButton({
       <ActionButton
         color={color}
         onClick={onClick}
-        disabled={disabled || (permit2Enabled && allowance.state === AllowanceState.UNKNOWN)}
+        disabled={disabled || (permit2Enabled && allowance.state === AllowanceState.LOADING)}
       >
         <Trans>Review swap</Trans>
       </ActionButton>
