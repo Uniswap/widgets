@@ -2,7 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
-import { useAddTransactionInfo, usePendingApproval } from 'hooks/transactions'
+import { usePendingApproval } from 'hooks/transactions'
 import { AllowanceRequired } from 'hooks/usePermit2Allowance'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -27,11 +27,10 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
     setIsFailed(false)
   }, [token])
 
-  const addTransactionInfo = useAddTransactionInfo()
   const onClick = useCallback(async () => {
     setIsPending(true)
     try {
-      await approveAndPermit?.(addTransactionInfo)
+      await approveAndPermit?.()
       setIsFailed(false)
     } catch (e) {
       console.error(e)
@@ -39,7 +38,7 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
     } finally {
       setIsPending(false)
     }
-  }, [addTransactionInfo, approveAndPermit])
+  }, [approveAndPermit])
 
   const action = useMemo(() => {
     if (isPending) {
