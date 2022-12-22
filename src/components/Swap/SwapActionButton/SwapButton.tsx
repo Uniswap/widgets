@@ -108,7 +108,7 @@ export default function SwapButton({
 
   if (permit2Enabled) {
     if (!disabled && allowance.state === AllowanceState.REQUIRED) {
-      return <AllowanceButton color={color} onSubmit={onSubmit} {...allowance} />
+      return <AllowanceButton color={color} {...allowance} />
     }
   } else {
     if (!disabled && approval.state !== SwapApprovalState.APPROVED) {

@@ -6,20 +6,18 @@ import { usePendingApproval } from 'hooks/transactions'
 import { AllowanceRequired } from 'hooks/usePermit2Allowance'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ApprovalTransactionInfo } from 'state/transactions'
 import { Colors } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 interface AllowanceButtonProps extends AllowanceRequired {
   color: keyof Colors
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | void>) => Promise<void>
 }
 
 /**
  * An approving AllowanceButton.
  * Should only be rendered if a valid trade exists that is not yet allowed.
  */
-export default function AllowanceButton({ token, isApprovalLoading, callback, color, onSubmit }: AllowanceButtonProps) {
+export default function AllowanceButton({ token, isApprovalLoading, approveAndPermit, color }: AllowanceButtonProps) {
   const [isPending, setIsPending] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
   const pendingApproval = usePendingApproval(token, PERMIT2_ADDRESS)
@@ -32,7 +30,7 @@ export default function AllowanceButton({ token, isApprovalLoading, callback, co
   const onClick = useCallback(async () => {
     setIsPending(true)
     try {
-      await onSubmit(async () => await callback?.())
+      await approveAndPermit?.()
       setIsFailed(false)
     } catch (e) {
       console.error(e)
@@ -40,7 +38,7 @@ export default function AllowanceButton({ token, isApprovalLoading, callback, co
     } finally {
       setIsPending(false)
     }
-  }, [callback, onSubmit])
+  }, [approveAndPermit])
 
   const action = useMemo(() => {
     if (isPending) {
