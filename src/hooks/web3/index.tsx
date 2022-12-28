@@ -4,7 +4,9 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
+import { useSetError } from 'components/Error/ErrorBoundary'
 import { SupportedChainId } from 'constants/chains'
+import { MetaMaskConnectionError } from 'errors'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 import { supportedChainId } from 'utils/supportedChainId'
@@ -107,13 +109,11 @@ export function Provider({
   )
 }
 
-const onError = (error: Error) => console.error(error)
-
 function initializeWeb3ReactConnector<T extends Connector, P extends object>(
   Constructor: { new (options: P): T },
-  options?: Omit<P, 'actions'>
+  options: Omit<P, 'actions'>
 ): Web3ReactConnector<T> {
-  const [connector, hooks] = initializeConnector((actions) => new Constructor({ actions, onError, ...options } as P))
+  const [connector, hooks] = initializeConnector((actions) => new Constructor({ actions, ...options } as P))
   return [connector, hooks]
 }
 
@@ -123,23 +123,43 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
     [jsonRpcUrlMap]
   )
 
+  const setError = useSetError()
+
   const user = useMemo(() => {
     if (!provider) return
     if (JsonRpcProvider.isProvider(provider)) {
-      return initializeWeb3ReactConnector(JsonRpcConnector, { provider })
+      return initializeWeb3ReactConnector(JsonRpcConnector, { provider, onError: console.error })
     } else if (JsonRpcProvider.isProvider((provider as any).provider)) {
       throw new Error('Eip1193Bridge is experimental: pass your ethers Provider directly')
     } else {
-      return initializeWeb3ReactConnector(EIP1193, { provider })
+      return initializeWeb3ReactConnector(EIP1193, { provider, onError: console.error })
     }
   }, [provider])
-  const metaMask = useMemo(() => initializeWeb3ReactConnector(MetaMask), [])
+  const metaMask = useMemo(
+    () =>
+      initializeWeb3ReactConnector(MetaMask, {
+        onError: () => {
+          setError(new MetaMaskConnectionError())
+        },
+      }),
+    [setError]
+  )
   const walletConnect = useMemo(
-    () => initializeWeb3ReactConnector(WalletConnectPopup, { options: { rpc: urlMap }, defaultChainId }),
+    () =>
+      initializeWeb3ReactConnector(WalletConnectPopup, {
+        options: { rpc: urlMap },
+        defaultChainId,
+        onError: console.error,
+      }),
     [defaultChainId, urlMap]
   )
   const walletConnectQR = useMemo(
-    () => initializeWeb3ReactConnector(WalletConnectQR, { options: { rpc: urlMap }, defaultChainId }),
+    () =>
+      initializeWeb3ReactConnector(WalletConnectQR, {
+        options: { rpc: urlMap },
+        defaultChainId,
+        onError: console.error,
+      }),
     [defaultChainId, urlMap]
   )
   const network = useMemo(

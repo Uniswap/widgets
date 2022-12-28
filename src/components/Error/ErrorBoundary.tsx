@@ -1,5 +1,5 @@
 import { GenericWidgetError, WidgetError } from 'errors'
-import { Component, createContext, ErrorInfo, PropsWithChildren, useState } from 'react'
+import { Component, createContext, ErrorInfo, PropsWithChildren, useContext, useState } from 'react'
 
 import Dialog from '../Dialog'
 import ErrorDialog from './ErrorDialog'
@@ -11,6 +11,14 @@ const ErrorContext = createContext<{
   error: undefined,
   setError: () => null,
 })
+
+export function useError() {
+  return useContext(ErrorContext).error
+}
+
+export function useSetError() {
+  return useContext(ErrorContext).setError
+}
 
 export const Provider = (props: PropsWithChildren) => {
   const [error, setError] = useState<WidgetError | undefined>(undefined)
