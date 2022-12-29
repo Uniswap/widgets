@@ -17,35 +17,7 @@ import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Theme, ThemeProvider } from 'theme'
 
-export const WidgetWrapper = styled.div<{ width?: number | string }>`
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  box-sizing: border-box;
-  color: ${({ theme }) => theme.primary};
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  font-smooth: always;
-  font-variant: none;
-  min-height: 360px;
-  min-width: 300px;
-  padding: 8px;
-  position: relative;
-  user-select: none;
-  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
-
-  * {
-    box-sizing: border-box;
-    font-family: ${({ theme }) => (typeof theme.fontFamily === 'string' ? theme.fontFamily : theme.fontFamily.font)};
-
-    @supports (font-variation-settings: normal) {
-      font-family: ${({ theme }) => (typeof theme.fontFamily === 'string' ? undefined : theme.fontFamily.variable)};
-    }
-  }
-`
+import WidgetWrapper from './WidgetWrapper'
 
 const slideInLeft = keyframes`
   from {
@@ -109,13 +81,6 @@ export interface TestableWidgetProps extends WidgetProps {
 }
 
 export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
-  const width = useMemo(() => {
-    if (props.width && props.width < 300) {
-      console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
-      return 300
-    }
-    return props.width ?? 360
-  }, [props.width])
   const locale = useMemo(() => {
     if (props.locale && ![...SUPPORTED_LOCALES, 'pseudo'].includes(props.locale)) {
       console.warn(`Unsupported locale: ${props.locale}. Falling back to ${DEFAULT_LOCALE}.`)
@@ -127,7 +92,7 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
   return (
     <StrictMode>
       <ThemeProvider theme={props.theme}>
-        <WidgetWrapper width={width} className={props.className}>
+        <WidgetWrapper width={props.width} className={props.className}>
           <I18nProvider locale={locale}>
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={props.dialog || dialog}>

@@ -8,6 +8,7 @@ import { dynamicActivate } from 'i18n'
 import fetch from 'jest-fetch-mock'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import { createRef, MutableRefObject, PropsWithChildren, ReactElement, RefObject, useEffect } from 'react'
+import ResizeObserverPolyfill from 'resize-observer-polyfill'
 import { ThemeProvider } from 'theme'
 
 export type { RenderResult } from '@testing-library/react'
@@ -16,6 +17,8 @@ export { default as userEvent } from '@testing-library/user-event'
 export { default as fetch } from 'jest-fetch-mock'
 
 fetch.enableMocks()
+
+global.ResizeObserver = ResizeObserverPolyfill
 
 beforeEach(() => {
   fetchMock.mockIf('https://gateway.ipfs.io/ipns/tokens.uniswap.org', JSON.stringify(tokenList))
