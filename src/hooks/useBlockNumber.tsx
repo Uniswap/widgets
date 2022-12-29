@@ -76,7 +76,11 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       value: chainId === activeChainId ? block : undefined,
-      fastForward: (block: number) => setChainBlock({ chainId: activeChainId, block }),
+      fastForward: (update: number) => {
+        if (block && update > block) {
+          setChainBlock({ chainId: activeChainId, block: update })
+        }
+      },
     }),
     [activeChainId, block, chainId]
   )

@@ -5,8 +5,8 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
-import { PermitState } from 'hooks/usePermit2'
-import { usePermit2 } from 'hooks/useSyncFlags'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
+import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
@@ -19,8 +19,8 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
+import AllowanceButton from './AllowanceButton'
 import ApproveButton from './ApproveButton'
-import PermitButton from './Permit2Button'
 
 /**
  * A swapping ActionButton.
@@ -33,7 +33,7 @@ export default function SwapButton({
 }: {
   color: keyof Colors
   disabled: boolean
-  onSubmit: (submit?: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<void>
+  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<void>
 }) {
   const { account, chainId } = useWeb3React()
   const {
@@ -41,29 +41,29 @@ export default function SwapButton({
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
     approval,
-    permit,
+    allowance,
     slippage,
     impact,
   } = useSwapInfo()
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const permit2 = usePermit2()
+  const permit2Enabled = usePermit2Enabled()
   const { callback: swapRouterCallback } = useSwapCallback({
-    trade: permit2 ? undefined : trade,
+    trade: permit2Enabled ? undefined : trade,
     allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
     signatureData: approval?.signatureData,
     deadline,
     feeOptions,
   })
-  const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2 ? trade : undefined, {
+  const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
     slippageTolerance: slippage.allowed,
     deadline,
-    permit: permit.signature,
+    permit: allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
     feeOptions,
   })
-  const swapCallback = permit2 ? universalRouterSwapCallback : swapRouterCallback
+  const swapCallback = permit2Enabled ? universalRouterSwapCallback : swapRouterCallback
 
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
@@ -106,19 +106,23 @@ export default function SwapButton({
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
 
-  if (usePermit2()) {
-    if (![PermitState.UNKNOWN, PermitState.PERMITTED].includes(permit.state)) {
-      return <PermitButton color={color} onSubmit={onSubmit} trade={trade} {...permit} />
+  if (permit2Enabled) {
+    if (!disabled && allowance.state === AllowanceState.REQUIRED) {
+      return <AllowanceButton color={color} {...allowance} />
     }
   } else {
-    if (approval.state !== SwapApprovalState.APPROVED && !disabled) {
+    if (!disabled && approval.state !== SwapApprovalState.APPROVED) {
       return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
     }
   }
 
   return (
     <>
-      <ActionButton color={color} onClick={onClick} disabled={disabled}>
+      <ActionButton
+        color={color}
+        onClick={onClick}
+        disabled={disabled || (permit2Enabled && allowance.state === AllowanceState.LOADING)}
+      >
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade && (
