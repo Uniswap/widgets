@@ -1,5 +1,5 @@
 import { useSwapInfo, useSwitchSwapCurrencies } from 'hooks/swap'
-import { ArrowDown, LargeIcon } from 'icons'
+import { LargeIcon, Reverse } from 'icons'
 import styled from 'styled-components/macro'
 import { Layer } from 'theme'
 
@@ -35,7 +35,7 @@ export default function ReverseButton() {
   return (
     <Underlayer>
       <StyledReverseButton disabled={isDisabled} onClick={switchCurrencies}>
-        <LargeIcon icon={ArrowDown} />
+        <LargeIcon icon={Reverse} />
       </StyledReverseButton>
     </Underlayer>
   )
