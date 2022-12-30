@@ -9,8 +9,8 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  padding: 0.25em;
+  border-radius: ${({ theme }) => theme.borderRadius}rem;
+  padding: 0.25rem;
 
   :enabled {
     transition: none;
