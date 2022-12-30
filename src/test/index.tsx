@@ -1,11 +1,9 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { render, RenderOptions, RenderResult } from '@testing-library/react'
-import tokenList, { tokens } from '@uniswap/default-token-list'
+import { tokens } from '@uniswap/default-token-list'
 import { TestableWidget, TestableWidgetProps } from 'components/Widget'
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
-import { dynamicActivate } from 'i18n'
-import fetch from 'jest-fetch-mock'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import { createRef, MutableRefObject, PropsWithChildren, ReactElement, RefObject, useEffect } from 'react'
 import { ThemeProvider } from 'theme'
@@ -14,16 +12,6 @@ export type { RenderResult } from '@testing-library/react'
 export { act, render, waitFor } from '@testing-library/react'
 export { default as userEvent } from '@testing-library/user-event'
 export { default as fetch } from 'jest-fetch-mock'
-
-fetch.enableMocks()
-
-beforeEach(() => {
-  fetchMock.mockIf('https://gateway.ipfs.io/ipns/tokens.uniswap.org', JSON.stringify(tokenList))
-})
-
-beforeAll(async () => {
-  await dynamicActivate('en-US')
-})
 
 function TestProvider({ initialAtomValues, children }: PropsWithChildren<ComponentRenderOptions>) {
   return (
