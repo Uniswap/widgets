@@ -1,11 +1,11 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI_POLYGON, nativeOnChain } from 'constants/tokens'
+import { USDC_MAINNET } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
 import { Field, stateAtom, Swap, swapAtom } from 'state/swap'
 import { renderHook } from 'test'
 
-import { USDC_MAINNET } from '../../constants/tokens'
 import useSyncTokenDefaults, { TokenDefaults } from './useSyncTokenDefaults'
 
 const MOCK_DAI_POLYGON = DAI_POLYGON

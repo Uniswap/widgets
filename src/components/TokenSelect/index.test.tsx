@@ -5,8 +5,9 @@
 import '@ethersproject/providers'
 import 'jest-environment-hardhat'
 
-import { Field, swapEventHandlersAtom } from '../../state/swap'
-import { renderWidget, userEvent } from '../../test'
+import { Field, swapEventHandlersAtom } from 'state/swap'
+import { renderWidget, userEvent } from 'test'
+
 import TokenSelect from './'
 
 describe('TokenSelect.tsx', () => {

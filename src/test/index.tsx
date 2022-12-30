@@ -8,8 +8,7 @@ import { Atom, Provider as AtomProvider } from 'jotai'
 import { createRef, MutableRefObject, PropsWithChildren, ReactElement, RefObject, useEffect } from 'react'
 import { ThemeProvider } from 'theme'
 
-export type { RenderResult } from '@testing-library/react'
-export { act, render, waitFor } from '@testing-library/react'
+export * from '@testing-library/react'
 export { default as userEvent } from '@testing-library/user-event'
 export { default as fetch } from 'jest-fetch-mock'
 
@@ -23,11 +22,11 @@ function TestProvider({ initialAtomValues, children }: PropsWithChildren<Compone
   )
 }
 
-export interface HookRenderOptions extends RenderOptions {
+interface HookRenderOptions extends RenderOptions {
   initialAtomValues?: Iterable<readonly [Atom<unknown>, unknown]>
 }
 
-export interface HookRenderResult<T> {
+interface HookRenderResult<T> {
   result: RefObject<T>
   rerender: (hook: () => T) => HookRenderResult<T>
 }
@@ -73,7 +72,7 @@ export function renderHook<T>(hook: () => T, options?: HookRenderOptions): HookR
   return { result, rerender }
 }
 
-export interface ComponentRenderOptions extends RenderOptions {
+interface ComponentRenderOptions extends RenderOptions {
   initialAtomValues?: Iterable<readonly [Atom<unknown>, unknown]>
 }
 
@@ -88,7 +87,7 @@ export function renderComponent(ui: ReactElement, options?: ComponentRenderOptio
   return result
 }
 
-export interface WidgetRenderOptions extends RenderOptions, TestableWidgetProps {}
+interface WidgetRenderOptions extends RenderOptions, TestableWidgetProps {}
 
 export function renderWidget(ui: ReactElement, options?: WidgetRenderOptions): RenderResult {
   const props: TestableWidgetProps = {
