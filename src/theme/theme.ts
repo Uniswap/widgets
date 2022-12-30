@@ -20,6 +20,8 @@ export interface Colors {
   warning: string
   error: string
 
+  networkDefaultShadow: string
+
   currentColor: 'currentColor'
 }
 

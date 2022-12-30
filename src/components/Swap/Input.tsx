@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
@@ -33,12 +33,12 @@ const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
-  padding: ${({ isWide }) => (isWide ? '1rem 0' : '1rem 0 1.5rem')};
+  padding: ${({ isWide }) => (isWide ? '1em 0' : '1em 0 1.5em')};
   position: relative;
 
   &:before {
     background-size: 100%;
-    border: 1px solid ${({ theme }) => theme.module};
+    border: 1px solid transparent;
     border-radius: inherit;
     box-sizing: border-box;
     content: '';
@@ -58,7 +58,7 @@ const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
       }
 
       &:focus-within:before {
-        border-color: ${theme.outline};
+        border-color: ${theme.networkDefaultShadow};
       }`}
 `
 
@@ -86,6 +86,7 @@ interface FieldWrapperProps {
   isSufficientBalance?: boolean
   approved?: boolean
   impact?: PriceImpact
+  subheader: string
 }
 
 export function FieldWrapper({
@@ -95,6 +96,7 @@ export function FieldWrapper({
   approved,
   impact,
   className,
+  subheader,
 }: FieldWrapperProps & { className?: string }) {
   const {
     [field]: { balance, amount: currencyAmount, usdc },
@@ -146,6 +148,9 @@ export function FieldWrapper({
       onClick={onClick}
       className={className}
     >
+      <Row pad={1 /* em */}>
+        <ThemedText.Subhead2 color={'secondary'}>{subheader}</ThemedText.Subhead2>
+      </Row>
       <TokenInput
         ref={setInput}
         field={field}
@@ -214,6 +219,7 @@ export default function Input() {
       maxAmount={maxAmount}
       isSufficientBalance={isSufficientBalance}
       approved={approvalState === SwapApprovalState.APPROVED}
+      subheader={t`You Pay`}
     />
   )
 }

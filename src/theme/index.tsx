@@ -15,7 +15,7 @@ export * as ThemedText from './type'
 const white = 'hsl(0, 0%, 100%)'
 const black = 'hsl(0, 0%, 0%)'
 
-const brandLight = 'hsl(331.3, 100%, 50%)'
+const brandLight = 'hsl(328, 97%, 53%)'
 const brandDark = 'hsl(221, 96%, 64%)'
 export const brand = brandLight
 
@@ -29,18 +29,20 @@ const stateColors = {
 export const lightTheme: Colors = {
   // surface
   accent: brandLight,
-  container: 'hsl(220, 23%, 97.5%)',
-  module: 'hsl(231, 14%, 90%)',
-  interactive: 'hsl(229, 13%, 83%)',
-  outline: 'hsl(225, 7%, 78%)',
+  container: 'hsl(0, 0%, 100%)',
+  module: 'hsl(231, 54%, 97%)',
+  interactive: 'hsl(227, 70%, 95%)',
+  outline: 'hsla(225, 18%, 44%, 0.24)',
   dialog: white,
 
   // text
   onAccent: white,
-  primary: black,
-  secondary: 'hsl(227, 10%, 37.5%)',
-  hint: 'hsl(224, 9%, 57%)',
+  primary: 'hsl(224, 37%, 8%)',
+  secondary: 'hsl(227, 18%, 55%)',
+  hint: 'hsl(226, 24%, 67%)',
   onInteractive: black,
+
+  networkDefaultShadow: 'hsla(328, 97%, 53%, 0.12)',
 
   // state
   ...stateColors,
@@ -51,10 +53,10 @@ export const lightTheme: Colors = {
 export const darkTheme: Colors = {
   // surface
   accent: brandDark,
-  container: 'hsl(225, 30%, 8%)',
+  container: 'hsla(224, 37%, 8%, 1)',
   module: 'hsl(222, 37%, 12%)',
-  interactive: 'hsl(223, 28%, 22%)',
-  outline: 'hsl(227, 10%, 37.5%)',
+  interactive: 'hsla(223, 28%, 22%, 1)',
+  outline: 'hsl(224, 33%, 16%)',
   dialog: black,
 
   // text
@@ -63,6 +65,8 @@ export const darkTheme: Colors = {
   secondary: 'hsl(227, 21%, 67%)',
   hint: 'hsl(225, 10%, 47.1%)',
   onInteractive: white,
+
+  networkDefaultShadow: 'hsla(221, 96%, 64%, 0.16)',
 
   // state
   ...stateColors,
