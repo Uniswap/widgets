@@ -45,7 +45,7 @@ function Fixture() {
   const [amount, setAmount] = useState('')
   const handleAmountChange = useHandleEvent('onAmountChange')
   const onAmountChange = useCallback(
-    (...data) => {
+    (...data: [Field, string]) => {
       const [field, amount] = data
       setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
       setAmount(amount)

@@ -79,7 +79,7 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
   const currentPendingTxs = usePendingTransactions()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
-    ({ chainId, hash, blockNumber }) => {
+    ({ chainId, hash, blockNumber }: { chainId: number; hash: string; blockNumber: number }) => {
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
@@ -92,7 +92,7 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
     [updateTxs]
   )
   const onReceipt = useCallback(
-    ({ chainId, hash, receipt }) => {
+    ({ chainId, hash, receipt }: { chainId: number; hash: string; receipt: TransactionReceipt }) => {
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
