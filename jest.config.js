@@ -8,4 +8,5 @@ module.exports = {
     '^test/*': '<rootDir>/src/test',
   },
   setupFiles: ['<rootDir>/test/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/setup-jest.ts'],
 }
