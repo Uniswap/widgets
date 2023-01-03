@@ -1,9 +1,7 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { render, RenderOptions, RenderResult } from '@testing-library/react'
-import { tokens } from '@uniswap/default-token-list'
-import { TestableWidget, TestableWidgetProps } from 'components/Widget'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
+import { TestableWidget } from 'components/Widget'
 import { Atom, Provider as AtomProvider } from 'jotai'
 import { createRef, MutableRefObject, PropsWithChildren, ReactElement, RefObject, useEffect } from 'react'
 import { ThemeProvider } from 'theme'
@@ -77,35 +75,5 @@ interface ComponentRenderOptions extends RenderOptions {
 }
 
 export function renderComponent(ui: ReactElement, options?: ComponentRenderOptions): RenderResult {
-  const result = render(<TestProvider initialAtomValues={options?.initialAtomValues}>{ui}</TestProvider>, options)
-
-  const rerender = result.rerender
-  result.rerender = function (this, ui) {
-    return rerender.call(this, <TestProvider>{ui}</TestProvider>)
-  }
-
-  return result
-}
-
-interface WidgetRenderOptions extends RenderOptions, TestableWidgetProps {}
-
-export function renderWidget(ui: ReactElement, options?: WidgetRenderOptions): RenderResult {
-  const props: TestableWidgetProps = {
-    provider: options?.provider ?? hardhat.provider,
-    jsonRpcUrlMap: options?.jsonRpcUrlMap ?? {
-      ...JSON_RPC_FALLBACK_ENDPOINTS,
-      1: [hardhat.url],
-    },
-    defaultChainId: options?.defaultChainId ?? 1,
-    tokenList: options?.tokenList ?? tokens,
-    initialAtomValues: options?.initialAtomValues,
-  }
-  const result = render(<TestableWidget {...props}>{ui}</TestableWidget>, options)
-
-  const rerender = result.rerender
-  result.rerender = function (this, ui) {
-    rerender.call(this, <TestableWidget {...props}>{ui}</TestableWidget>)
-  }
-
-  return result
+  return render(<TestableWidget initialAtomValues={options?.initialAtomValues}>{ui}</TestableWidget>, options)
 }
