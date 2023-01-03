@@ -1,6 +1,6 @@
 import { TokenInfo } from '@uniswap/token-lists'
 import { Animation, Modal, Provider as DialogProvider } from 'components/Dialog'
-import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
+import ErrorBoundary, { OnError, Provider as ErrorProvider } from 'components/Error/ErrorBoundary'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { BlockNumberProvider } from 'hooks/useBlockNumber'
@@ -131,20 +131,22 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
           <I18nProvider locale={locale}>
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={props.dialog || dialog}>
-              <ErrorBoundary onError={props.onError}>
-                <ReduxProvider store={store}>
-                  <AtomProvider initialValues={props.initialAtomValues}>
-                    <WidgetUpdater {...props} />
-                    <Web3Provider {...(props as Web3Props)}>
-                      <BlockNumberProvider>
-                        <MulticallUpdater />
-                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
-                        <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
-                      </BlockNumberProvider>
-                    </Web3Provider>
-                  </AtomProvider>
-                </ReduxProvider>
-              </ErrorBoundary>
+              <ErrorProvider>
+                <ErrorBoundary onError={props.onError}>
+                  <ReduxProvider store={store}>
+                    <AtomProvider initialValues={props.initialAtomValues}>
+                      <WidgetUpdater {...props} />
+                      <Web3Provider {...(props as Web3Props)}>
+                        <BlockNumberProvider>
+                          <MulticallUpdater />
+                          <TransactionsUpdater {...(props as TransactionEventHandlers)} />
+                          <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
+                        </BlockNumberProvider>
+                      </Web3Provider>
+                    </AtomProvider>
+                  </ReduxProvider>
+                </ErrorBoundary>
+              </ErrorProvider>
             </DialogProvider>
           </I18nProvider>
         </WidgetWrapper>
