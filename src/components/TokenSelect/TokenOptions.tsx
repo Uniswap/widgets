@@ -9,6 +9,7 @@ import {
   forwardRef,
   KeyboardEvent,
   memo,
+  ReactNode,
   SyntheticEvent,
   useCallback,
   useEffect,
@@ -18,7 +19,7 @@ import {
   useState,
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
+import { areEqual, FixedSizeList, FixedSizeListProps, ListChildComponentProps } from 'react-window'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
@@ -119,18 +120,9 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
 }
 
 const itemKey = (index: number, tokens: ItemData) => currencyId(tokens[index])
-const ItemRow = memo(function ItemRow({
-  data: tokens,
-  index,
-  style,
-}: {
-  data: ItemData
-  index: number
-  style: CSSProperties
-}) {
+const ItemRow = memo(function ItemRow({ data: tokens, index, style }: ListChildComponentProps<ItemData>) {
   return <TokenOption index={index} value={tokens[index]} style={style} />
-},
-areEqual)
+}, areEqual)
 
 export interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
@@ -246,7 +238,10 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             outerRef={setElement}
             scrollbar={scrollbar}
           >
-            {ItemRow}
+            {
+              // AutoSizer incorrectly requires this to be typed `& ReactNode`:
+              ItemRow as typeof ItemRow & ReactNode
+            }
           </TokenList>
         )}
       </AutoSizer>

@@ -1,38 +1,23 @@
 import { t } from '@lingui/macro'
 
-export class IntegrationError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'Integration Error'
-  }
-}
-
-const DefaultErrorHeader = t`Please refresh the page and try again.`
-const DefaultErrorAction = t`Reload the page`
+export const DEFAULT_ERROR_HEADER = t`Please refresh the page and try again.`
+export const DEFAULT_ERROR_ACTION = t`Reload the page`
 
 export abstract class WidgetError extends Error {
-  header: string = DefaultErrorHeader
-  action: string = DefaultErrorAction
+  header: string
+  action: string
 
   constructor(config: { header?: string; action?: string; message?: string }) {
     super(config.message)
-    if (config.header) {
-      this.header = config.header
-    }
-    if (config.action) {
-      this.action = config.action
-    }
+    this.header = config.header ?? DEFAULT_ERROR_HEADER
+    this.action = config.action ?? DEFAULT_ERROR_ACTION
   }
 }
 
-export class GenericWidgetError extends WidgetError {
-  constructor(message?: string) {
-    super({
-      header: DefaultErrorHeader,
-      action: DefaultErrorAction,
-      message,
-    })
-    this.name = 'Generic Widget Error'
+export class IntegrationError extends WidgetError {
+  constructor(message: string) {
+    super({ message })
+    this.name = 'Integration Error'
   }
 }
 

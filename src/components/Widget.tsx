@@ -1,21 +1,21 @@
 import { TokenInfo } from '@uniswap/token-lists'
 import { Animation, Modal, Provider as DialogProvider } from 'components/Dialog'
-import ErrorBoundary, { OnError, Provider as ErrorProvider } from 'components/Error/ErrorBoundary'
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
+import { SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
-import { BlockNumberProvider } from 'hooks/useBlockNumber'
+import { Provider as BlockNumberProvider } from 'hooks/useBlockNumber'
 import { Flags, useInitialFlags } from 'hooks/useSyncFlags'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
-import { TokenListProvider } from 'hooks/useTokenList'
+import { Provider as TokenListProvider } from 'hooks/useTokenList'
 import { Provider as Web3Provider, ProviderProps as Web3Props } from 'hooks/web3'
 import { Provider as I18nProvider } from 'i18n'
-import { Atom, Provider as AtomProvider } from 'jotai'
+import { Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useMemo, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
-import { Theme, ThemeProvider } from 'theme'
+import { Provider as ThemeProvider, Theme } from 'theme'
 
 export const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -100,15 +100,6 @@ export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props,
 }
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
-  // UI configuration must be passed to initial atom values, or the first frame will render incorrectly.
-  return <TestableWidget {...props} initialAtomValues={useInitialFlags(props as Flags)} />
-}
-
-export interface TestableWidgetProps extends WidgetProps {
-  initialAtomValues?: Iterable<readonly [Atom<unknown>, unknown]>
-}
-
-export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
   const width = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
@@ -116,37 +107,32 @@ export function TestableWidget(props: PropsWithChildren<TestableWidgetProps>) {
     }
     return props.width ?? 360
   }, [props.width])
-  const locale = useMemo(() => {
-    if (props.locale && ![...SUPPORTED_LOCALES, 'pseudo'].includes(props.locale)) {
-      console.warn(`Unsupported locale: ${props.locale}. Falling back to ${DEFAULT_LOCALE}.`)
-      return DEFAULT_LOCALE
-    }
-    return props.locale ?? DEFAULT_LOCALE
-  }, [props.locale])
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
   return (
     <StrictMode>
       <ThemeProvider theme={props.theme}>
         <WidgetWrapper width={width} className={props.className}>
-          <I18nProvider locale={locale}>
+          <I18nProvider locale={props.locale}>
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={props.dialog || dialog}>
-              <ErrorProvider>
-                <ErrorBoundary onError={props.onError}>
-                  <ReduxProvider store={store}>
-                    <AtomProvider initialValues={props.initialAtomValues}>
-                      <WidgetUpdater {...props} />
-                      <Web3Provider {...(props as Web3Props)}>
-                        <BlockNumberProvider>
-                          <MulticallUpdater />
-                          <TransactionsUpdater {...(props as TransactionEventHandlers)} />
-                          <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
-                        </BlockNumberProvider>
-                      </Web3Provider>
-                    </AtomProvider>
-                  </ReduxProvider>
-                </ErrorBoundary>
-              </ErrorProvider>
+              <ErrorBoundary onError={props.onError}>
+                <ReduxProvider store={store}>
+                  {
+                    // UI configuration must be passed to initial atom values, or the first frame will render incorrectly.
+                  }
+                  <AtomProvider initialValues={useInitialFlags(props as Flags)}>
+                    <WidgetUpdater {...props} />
+                    <Web3Provider {...(props as Web3Props)}>
+                      <BlockNumberProvider>
+                        <MulticallUpdater />
+                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
+                        <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
+                      </BlockNumberProvider>
+                    </Web3Provider>
+                  </AtomProvider>
+                </ReduxProvider>
+              </ErrorBoundary>
             </DialogProvider>
           </I18nProvider>
         </WidgetWrapper>
