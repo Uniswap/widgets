@@ -1,3 +1,5 @@
+import 'jest-environment-hardhat'
+
 import tokenList from '@uniswap/default-token-list'
 import { dynamicActivate } from 'i18n'
 import fetch from 'jest-fetch-mock'

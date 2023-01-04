@@ -1,10 +1,12 @@
+import { renderHook } from '@testing-library/react'
 import { TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI_POLYGON, nativeOnChain } from 'constants/tokens'
 import { USDC_MAINNET } from 'constants/tokens'
+import { Provider as AtomProvider } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { PropsWithChildren } from 'react'
 import { Field, stateAtom, Swap, swapAtom } from 'state/swap'
-import { renderHook } from 'test'
 
 import useSyncTokenDefaults, { TokenDefaults } from './useSyncTokenDefaults'
 
@@ -26,11 +28,11 @@ const TOKEN_DEFAULTS: TokenDefaults = {
 
 jest.mock('@web3-react/core', () => {
   const { SupportedChainId } = jest.requireActual('constants/chains')
-
+  const connector = {}
   return {
     useWeb3React: () => ({
       chainId: SupportedChainId.MAINNET,
-      connector: {},
+      connector,
     }),
   }
 })
@@ -48,17 +50,18 @@ jest.mock('hooks/useCurrency', () => {
 })
 
 describe('useSyncTokenDefaults', () => {
+  function Wrapper({ children }: PropsWithChildren) {
+    return <AtomProvider initialValues={[[stateAtom, INITIAL_SWAP]]}>{children}</AtomProvider>
+  }
+
   it('syncs to default chainId on initial render if defaultChainId is provided', () => {
-    const { rerender } = renderHook(
+    const { result } = renderHook(
       () => {
         useSyncTokenDefaults({ ...TOKEN_DEFAULTS, defaultChainId: SupportedChainId.POLYGON })
+        return useAtomValue(swapAtom)
       },
-      {
-        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
-      }
+      { wrapper: Wrapper }
     )
-
-    const { result } = rerender(() => useAtomValue(swapAtom))
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
       INPUT: nativeOnChain(SupportedChainId.POLYGON),
@@ -67,16 +70,13 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('does not sync to default chainId on initial render if defaultChainId is not provided', () => {
-    const { rerender } = renderHook(
+    const { result } = renderHook(
       () => {
         useSyncTokenDefaults(TOKEN_DEFAULTS)
+        return useAtomValue(swapAtom)
       },
-      {
-        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
-      }
+      { wrapper: Wrapper }
     )
-
-    const { result } = rerender(() => useAtomValue(swapAtom))
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
       INPUT: nativeOnChain(SupportedChainId.MAINNET),
@@ -85,7 +85,7 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('syncs to default non NATIVE tokens of default chainId on initial render if defaultChainId is provided', () => {
-    const { rerender } = renderHook(
+    const { result } = renderHook(
       () => {
         useSyncTokenDefaults({
           ...TOKEN_DEFAULTS,
@@ -93,13 +93,10 @@ describe('useSyncTokenDefaults', () => {
           defaultOutputTokenAddress: DAI_POLYGON.address,
           defaultChainId: SupportedChainId.POLYGON,
         })
+        return useAtomValue(swapAtom)
       },
-      {
-        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
-      }
+      { wrapper: Wrapper }
     )
-
-    const { result } = rerender(() => useAtomValue(swapAtom))
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
       INPUT: DAI_POLYGON,
@@ -108,16 +105,13 @@ describe('useSyncTokenDefaults', () => {
   })
 
   it('syncs to non NATIVE tokens of chainId on initial render if defaultChainId is not provided', () => {
-    const { rerender } = renderHook(
+    const { result } = renderHook(
       () => {
         useSyncTokenDefaults(TOKEN_DEFAULTS)
+        return useAtomValue(swapAtom)
       },
-      {
-        initialAtomValues: [[stateAtom, INITIAL_SWAP]],
-      }
+      { wrapper: Wrapper }
     )
-
-    const { result } = rerender(() => useAtomValue(swapAtom))
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
       INPUT: nativeOnChain(SupportedChainId.MAINNET),

@@ -14,47 +14,54 @@ const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
   6
 )}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
 
+declare global {
+  // eslint-disable-next-line no-var
+  var IS_REACT_ACT_ENVIRONMENT: boolean
+}
+
+beforeAll(() => {
+  // End-to-end tests do not need to run in an act environment.
+  global.IS_REACT_ACT_ENVIRONMENT = false
+})
+
 describe('connect', () => {
   // MetaMask uses a 3000ms timeout to detect window.ethereum.
-  // Use fake timers to prevent this from slowing tests (without configuring a test-only timeout value).
+  // Use fake timers to prevent this from slowing tests.
   jest.useFakeTimers()
 
-  function itPromptsForWalletConnection(widget: ReactElement) {
+  function itPromptsForWalletConnection(ui: ReactElement) {
     it('prompts for wallet connection', async () => {
-      const result = render(widget)
-      const connectWallet = await result.findByTestId('connect-wallet')
-      expect(connectWallet.textContent).toBe('Connect wallet to swap')
-
-      const toolbar = await result.findByTestId('toolbar')
-      expect(toolbar.textContent).toBe('Connect wallet to swap')
+      const widget = render(ui)
+      expect((await widget.findByTestId('connect-wallet')).textContent).toBe('Connect wallet to swap')
+      expect((await widget.findByTestId('toolbar')).textContent).toBe('Connect wallet to swap')
     })
   }
 
-  function itExpectsWidgetToBeEnabled(widget: ReactElement) {
+  function itExpectsWidgetToBeEnabled(ui: ReactElement) {
     it('widget is enabled', async () => {
-      const result = render(widget)
-      const tokenSelect = (await result.findAllByTestId('token-select'))[0]
-      await waitFor(() => expect(tokenSelect).toHaveProperty('disabled', false))
+      const widget = render(ui)
+      const tokenSelects = await widget.findAllByTestId('token-select')
+      await waitFor(() => tokenSelects.forEach((tokenSelect) => expect(tokenSelect).toHaveProperty('disabled', false)))
     })
   }
 
   describe('with no params', () => {
-    const widget = <SwapWidget />
-    itPromptsForWalletConnection(widget)
-    itExpectsWidgetToBeEnabled(widget)
+    const ui = <SwapWidget />
+    itPromptsForWalletConnection(ui)
+    itExpectsWidgetToBeEnabled(ui)
   })
 
   describe('with jsonRpcUrlMap', () => {
     describe('with an array', () => {
-      const widget = <SwapWidget jsonRpcUrlMap={{ 1: [hardhat.url] }} />
-      itPromptsForWalletConnection(widget)
-      itExpectsWidgetToBeEnabled(widget)
+      const ui = <SwapWidget jsonRpcUrlMap={{ 1: [hardhat.url] }} />
+      itPromptsForWalletConnection(ui)
+      itExpectsWidgetToBeEnabled(ui)
     })
 
     describe('with a singleton', () => {
-      const widget = <SwapWidget jsonRpcUrlMap={{ 1: hardhat.url }} />
-      itPromptsForWalletConnection(widget)
-      itExpectsWidgetToBeEnabled(widget)
+      const ui = <SwapWidget jsonRpcUrlMap={{ 1: hardhat.url }} />
+      itPromptsForWalletConnection(ui)
+      itExpectsWidgetToBeEnabled(ui)
     })
   })
 
@@ -62,18 +69,16 @@ describe('connect', () => {
     // The real hardhat.provider relies on real timeouts when providing data.
     jest.useRealTimers()
 
-    const widget = <SwapWidget provider={hardhat.provider} />
-    itExpectsWidgetToBeEnabled(widget)
+    const ui = <SwapWidget provider={hardhat.provider} />
+    itExpectsWidgetToBeEnabled(ui)
 
     it('displays connected account chip', async () => {
-      const result = render(widget)
-      const toolbar = await result.findByTestId('toolbar')
+      const widget = render(ui)
 
       // The toolbar will reflect a pending connection until it connects.
-      await waitFor(() => expect(toolbar.textContent).not.toContain('Connect'))
+      await waitFor(async () => expect((await widget.findByTestId('toolbar')).textContent).not.toContain('Connect'))
 
-      const account = await result.findByTestId('account')
-      await waitFor(() => expect(account.textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING))
+      expect((await widget.findByTestId('account')).textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING)
     })
   })
 })

@@ -96,7 +96,7 @@ export interface ThemeProps {
   theme?: Theme
 }
 
-export function ThemeProvider({ theme, children }: PropsWithChildren<ThemeProps>) {
+export function Provider({ theme, children }: PropsWithChildren<ThemeProps>) {
   const contextTheme = useContext(ThemeContext)
   const value = useMemo(() => {
     return toDefaultTheme({

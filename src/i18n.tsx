@@ -93,6 +93,10 @@ interface ProviderProps {
   children: ReactNode
 }
 
+export function TestableProvider({ locale, forceRenderAfterLocaleChange, children }: ProviderProps) {
+  return <I18nProvider i18n={i18n}>{children}</I18nProvider>
+}
+
 export function Provider({ locale, forceRenderAfterLocaleChange = true, onActivate, children }: ProviderProps) {
   useEffect(() => {
     dynamicActivate(locale)

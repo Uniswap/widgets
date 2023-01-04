@@ -58,10 +58,12 @@ export function useTokenMap(chainId?: SupportedChainId): TokenMap {
   }, [tokenMap])
 }
 
-export function TokenListProvider({
-  list = UNISWAP_TOKEN_LIST,
-  children,
-}: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
+export function TestableProvider({ list, children }: PropsWithChildren<{ list: TokenInfo[] }>) {
+  const chainTokenMap = useMemo(() => tokensToChainTokenMap(list), [list])
+  return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
+}
+
+export function Provider({ list = UNISWAP_TOKEN_LIST, children }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
   const [error, setError] = useState<Error>()
   if (error) throw error
