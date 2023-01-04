@@ -7,7 +7,7 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
 import { PriceImpact } from 'hooks/usePriceImpact'
-import useWidgetWidth from 'hooks/useWidgetWidth'
+import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
@@ -29,11 +29,11 @@ const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)<{ disableHover?: boolean; widgetWidthPx: number }>`
+const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
-  padding: ${({ widgetWidthPx }) => (widgetWidthPx > 420 ? '1rem 0' : '1rem 0 1.5rem')};
+  padding: ${({ isWide }) => (isWide ? '1rem 0' : '1rem 0 1.5rem')};
   position: relative;
 
   &:before {
@@ -104,7 +104,7 @@ export function FieldWrapper({
 
   const [amount, updateAmount] = useSwapAmount(field)
   const [currency, updateCurrency] = useSwapCurrency(field)
-  const widgetWidth = useWidgetWidth()
+  const isWideWidget = useIsWideWidget()
 
   const wrapper = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState<TokenInputHandle | null>(null)
@@ -140,7 +140,7 @@ export function FieldWrapper({
 
   return (
     <InputColumn
-      widgetWidthPx={widgetWidth}
+      isWide={isWideWidget}
       disableHover={isDisabled || !currency}
       ref={wrapper}
       onClick={onClick}

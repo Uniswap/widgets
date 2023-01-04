@@ -1,6 +1,6 @@
 import { useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
-import useWidgetWidth from 'hooks/useWidgetWidth'
+import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { Field } from 'state/swap'
@@ -11,12 +11,12 @@ import { FieldWrapper } from './Input'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
-const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; widgetWidthPx: number }>`
+const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.container};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   margin-bottom: 0;
-  padding: ${({ widgetWidthPx }) => (widgetWidthPx > 420 ? '1rem 0' : '1.5rem 0 1rem')};
+  padding: ${({ isWide }) => (isWide ? '1rem 0' : '1.5rem 0 1rem')};
 
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.
@@ -33,14 +33,14 @@ export default function Output() {
   const [currency] = useSwapCurrency(Field.OUTPUT)
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(currency)
-  const widgetWidth = useWidgetWidth()
+  const isWideWidget = useIsWideWidget()
   const color = overrideColor || dynamicColor
   // different state true/null/false allow smoother color transition
   const hasColor = currency ? Boolean(color) || null : false
 
   return (
     <DynamicThemeProvider color={color}>
-      <OutputWrapper widgetWidthPx={widgetWidth} field={Field.OUTPUT} impact={impact} hasColor={hasColor} />
+      <OutputWrapper isWide={isWideWidget} field={Field.OUTPUT} impact={impact} hasColor={hasColor} />
     </DynamicThemeProvider>
   )
 }

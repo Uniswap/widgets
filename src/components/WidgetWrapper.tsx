@@ -1,9 +1,11 @@
-import { createContext, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
+import { WidgetWidthProvider } from 'hooks/useWidgetWidth'
+import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
+import toLength from 'utils/toLength'
 
 const HORIZONTAL_PADDING = 8
 
-const StyledWidgetWrapper = styled.div<{ width?: number | string }>`
+const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -21,7 +23,7 @@ const StyledWidgetWrapper = styled.div<{ width?: number | string }>`
   padding: ${HORIZONTAL_PADDING}px;
   position: relative;
   user-select: none;
-  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
+  width: ${({ width }) => toLength(width)};
 
   * {
     box-sizing: border-box;
@@ -33,21 +35,13 @@ const StyledWidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-type WidgetWidthContextType = {
-  widgetWidth: number
-}
-
-export const WidgetWidthContext = createContext<WidgetWidthContextType>({
-  widgetWidth: 0,
-})
-
 interface WidgetWrapperProps {
   width: number | string | undefined
   className?: string | undefined
 }
 
 export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProps>) {
-  const width = useMemo(() => {
+  const initialWidth: string | number = useMemo(() => {
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
       return 300
@@ -59,17 +53,21 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
    * We need to manually track the width of the widget because the width prop could be a string
    * like "100%" or "400px" instead of a number.
    */
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const [wrapperWidth, setWidgetWidth] = useState(isNaN(Number(width)) ? 360 : (width as number))
+  const ref = useRef<HTMLDivElement>(null)
+  const [wrapperWidth, setWidgetWidth] = useState<number>(
+    toLength(initialWidth) === initialWidth
+      ? 360 // If the initial width is a string, use default width until the ResizeObserver gives us the true width as a number.
+      : (initialWidth as number)
+  )
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
       // contentRect doesn't include padding or borders
       const { width } = entries[0].contentRect
-      setWidgetWidth(Math.round(width) + 2 * HORIZONTAL_PADDING)
+      setWidgetWidth(width + 2 * HORIZONTAL_PADDING)
     })
-    const current = wrapperRef.current
+    const current = ref.current
     if (current) {
-      observer.observe(wrapperRef.current)
+      observer.observe(ref.current)
     }
     return () => {
       if (current) {
@@ -79,10 +77,8 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
   }, [])
 
   return (
-    <WidgetWidthContext.Provider value={{ widgetWidth: wrapperWidth }}>
-      <StyledWidgetWrapper width={width} className={props.className} ref={wrapperRef}>
-        {props.children}
-      </StyledWidgetWrapper>
-    </WidgetWidthContext.Provider>
+    <StyledWidgetWrapper width={initialWidth} className={props.className} ref={ref}>
+      <WidgetWidthProvider width={wrapperWidth}>{props.children}</WidgetWidthProvider>
+    </StyledWidgetWrapper>
   )
 }

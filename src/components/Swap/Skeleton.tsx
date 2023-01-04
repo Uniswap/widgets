@@ -1,7 +1,7 @@
 import WidgetWrapper from 'components/WidgetWrapper'
 import { StrictMode } from 'react'
 import styled from 'styled-components/macro'
-import { Theme, ThemeProvider } from 'theme'
+import { Provider as ThemeProvider, Theme } from 'theme'
 
 import Column from '../Column'
 import Row from '../Row'

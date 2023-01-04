@@ -1,5 +1,5 @@
 module.exports = {
-  testEnvironment: 'jsdom',
+  testEnvironment: 'hardhat/dist/jsdom',
   moduleNameMapper: {
     '.scss$': '<rootDir>/test/scssStub',
     '.(png|svg)$': '<rootDir>/test/imageStub',

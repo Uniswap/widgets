@@ -5,7 +5,7 @@ import { largeIconCss } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
-import { Color, Layer, ThemedText, ThemeProvider } from 'theme'
+import { Color, Layer, Provider as ThemeProvider, ThemedText } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
 import { TextButton } from './Button'
@@ -13,10 +13,10 @@ import Column from './Column'
 import Row from './Row'
 import Rule from './Rule'
 
-// Include inert from wicg-inert
+// Include inert from wicg-inert.
 declare global {
   interface HTMLElement {
-    inert?: boolean
+    inert: boolean
   }
 }
 
