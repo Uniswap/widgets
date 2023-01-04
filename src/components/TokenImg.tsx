@@ -42,13 +42,10 @@ function TokenImg({ token, size, ...rest }: TokenImgProps) {
 
     return srcs.find((src) => !badSrcs.has(src))
   }, [attempt, srcs])
-  const onError = useCallback(
-    (e) => {
-      if (src) badSrcs.add(src)
-      setAttempt((attempt) => ++attempt)
-    },
-    [src]
-  )
+  const onError = useCallback(() => {
+    if (src) badSrcs.add(src)
+    setAttempt((attempt) => ++attempt)
+  }, [src])
 
   if (!src) {
     return (

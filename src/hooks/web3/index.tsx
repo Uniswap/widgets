@@ -40,6 +40,11 @@ export interface ProviderProps {
   provider?: Eip1193Provider | JsonRpcProvider | null
 }
 
+export function TestableProvider({ provider, children }: PropsWithChildren<{ provider: JsonRpcProvider }>) {
+  const connectors = useMemo(() => [initializeWeb3ReactConnector(JsonRpcConnector, { provider })], [provider])
+  return <Web3ReactProvider connectors={connectors}>{children}</Web3ReactProvider>
+}
+
 export function Provider({
   defaultChainId: chainId = SupportedChainId.MAINNET,
   jsonRpcUrlMap,
@@ -114,6 +119,11 @@ function initializeWeb3ReactConnector<T extends Connector, P extends object>(
   options?: Omit<P, 'actions'>
 ): Web3ReactConnector<T> {
   const [connector, hooks] = initializeConnector((actions) => new Constructor({ actions, onError, ...options } as P))
+  if (options && 'provider' in options) {
+    // Short-circuit provider selection to improve performance and testability.
+    // Without doing so, provider will be unavailable for a frame.
+    hooks.useProvider = (() => (options as { provider: unknown }).provider) as typeof hooks.useProvider
+  }
   return [connector, hooks]
 }
 
