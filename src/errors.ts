@@ -7,12 +7,12 @@ export class IntegrationError extends Error {
   }
 }
 
-const DefaultErrorHeader = t`Please refresh the page and try again.`
-const DefaultErrorAction = t`Reload the page`
+export const DEFAULT_ERROR_HEADER = t`Please refresh the page and try again.`
+export const DEFAULT_ERROR_ACTION = t`Reload the page`
 
 export abstract class WidgetError extends Error {
-  header: string = DefaultErrorHeader
-  action: string = DefaultErrorAction
+  header: string = DEFAULT_ERROR_HEADER
+  action: string = DEFAULT_ERROR_ACTION
 
   constructor(config: { header?: string; action?: string; message?: string }) {
     super(config.message)
@@ -25,17 +25,6 @@ export abstract class WidgetError extends Error {
   }
 }
 
-export class GenericWidgetError extends WidgetError {
-  constructor(message?: string) {
-    super({
-      header: DefaultErrorHeader,
-      action: DefaultErrorAction,
-      message,
-    })
-    this.name = 'Generic Widget Error'
-  }
-}
-
 class ConnectionError extends WidgetError {}
 
 export class MetaMaskConnectionError extends ConnectionError {
@@ -45,6 +34,5 @@ export class MetaMaskConnectionError extends ConnectionError {
       action: t`Reload`,
       message: t`'A Metamask error caused your wallet to disconnect. Reload the page to reconnect.'`,
     })
-    this.name = 'MetaMask Connection Error'
   }
 }
