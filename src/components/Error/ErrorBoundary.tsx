@@ -9,8 +9,6 @@ const ErrorContext = createContext<{ setError: (e: WidgetError) => void }>({ set
 export type OnError = (error: Error, info?: ErrorInfo) => void
 
 interface ErrorBoundaryProps {
-  // A preset error may come from app state (a parent Context) rather than a thrown error
-  error?: Error | undefined
   onError?: OnError
 }
 
@@ -46,15 +44,21 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
     )
   }
 
-  setError(error: WidgetError) {
-    this.props.onError?.(error)
-    this.setState({ error })
-  }
-
   render() {
     if (this.state.error) {
       return this.renderErrorDialog(this.state.error)
     }
-    return <ErrorContext.Provider value={{ setError: this.setError }}>{this.props.children}</ErrorContext.Provider>
+    return (
+      <ErrorContext.Provider
+        value={{
+          setError: (error: WidgetError) => {
+            this.props.onError?.(error)
+            this.setState({ error })
+          },
+        }}
+      >
+        {this.props.children}
+      </ErrorContext.Provider>
+    )
   }
 }
