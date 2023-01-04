@@ -25,6 +25,11 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
     return { error }
   }
 
+  constructor(props: ErrorBoundaryProps) {
+    super(props)
+    this.state = {}
+  }
+
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.props.onError?.(error, errorInfo)
   }
