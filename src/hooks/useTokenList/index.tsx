@@ -105,7 +105,6 @@ export function Provider({ list = UNISWAP_TOKEN_LIST, children }: PropsWithChild
         const map = tokensToChainTokenMap(tokens)
         if (!stale) {
           setChainTokenMap(map)
-          throwError(undefined)
         }
       } catch (e: unknown) {
         if (!stale) {
