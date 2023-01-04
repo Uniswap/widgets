@@ -13,6 +13,13 @@ import Column from './Column'
 import Row from './Row'
 import Rule from './Rule'
 
+// Include inert from wicg-inert.
+declare global {
+  interface HTMLElement {
+    inert: boolean
+  }
+}
+
 export enum Animation {
   /** Used when the Dialog is closing. */
   CLOSING = 'closing',
