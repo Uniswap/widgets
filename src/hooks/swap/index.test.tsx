@@ -2,9 +2,8 @@ import { TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
-import { act } from 'react-dom/test-utils'
 import { controlledAtom, Field, stateAtom, Swap, swapAtom, swapEventHandlersAtom } from 'state/swap'
-import { renderHook } from 'test'
+import { act, renderHook } from 'test'
 
 import { useSwapAmount, useSwapCurrency, useSwitchSwapCurrencies } from './'
 

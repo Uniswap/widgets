@@ -1,4 +1,5 @@
-import { act } from '@testing-library/react'
+import 'jest-environment-hardhat'
+
 import tokenList from '@uniswap/default-token-list'
 import { dynamicActivate } from 'i18n'
 import fetch from 'jest-fetch-mock'
@@ -6,11 +7,7 @@ import fetch from 'jest-fetch-mock'
 fetch.enableMocks()
 
 beforeEach(() => {
-  fetchMock.mockIf('https://gateway.ipfs.io/ipns/tokens.uniswap.org', () => {
-    return new Promise((resolve) => {
-      act(() => resolve(JSON.stringify(tokenList)))
-    })
-  })
+  fetchMock.mockIf('https://gateway.ipfs.io/ipns/tokens.uniswap.org', JSON.stringify(tokenList))
 })
 
 beforeAll(async () => {
