@@ -1,5 +1,6 @@
 import { WidgetWidthProvider } from 'hooks/useWidgetWidth'
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
+import ResizeObserverPolyfill from 'resize-observer-polyfill'
 import styled from 'styled-components/macro'
 import toLength from 'utils/toLength'
 
@@ -60,7 +61,7 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
       : (initialWidth as number)
   )
   useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
+    const observer = new ResizeObserverPolyfill((entries) => {
       // contentRect doesn't include padding or borders
       const { width } = entries[0].contentRect
       setWidgetWidth(width + 2 * HORIZONTAL_PADDING)
