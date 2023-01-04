@@ -1,10 +1,8 @@
 import { DEFAULT_ERROR_ACTION, DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
-import { Component, createContext, ErrorInfo, PropsWithChildren, useContext } from 'react'
+import { Component, ErrorInfo, PropsWithChildren, useCallback, useState } from 'react'
 
 import Dialog from '../Dialog'
 import ErrorDialog from './ErrorDialog'
-
-const ErrorContext = createContext<{ setError: (e: WidgetError) => void }>({ setError: () => undefined })
 
 export type OnError = (error: Error, info?: ErrorInfo) => void
 
@@ -16,8 +14,28 @@ type ErrorBoundaryState = {
   error?: Error
 }
 
-export function useSetError() {
-  return useContext(ErrorContext).setError
+/**
+ * Throws an error from outside of the React lifecycle.
+ * Errors thrown through this method will correctly trigger the ErrorBoundary.
+ *
+ * @example
+ * const throwError = useAsyncError()
+ * useEffect(() => {
+ *   fetch('http://example.com')
+ *     .catch((e: Error) => {
+ *       throwError(toWidgetError(e))
+ *     })
+ * }, [throwError])
+ */
+export function useAsyncError() {
+  const [, setError] = useState()
+  return useCallback(
+    (e: WidgetError) =>
+      setError(() => {
+        throw e
+      }),
+    []
+  )
 }
 
 export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoundaryProps>, ErrorBoundaryState> {
@@ -48,17 +66,6 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
     if (this.state.error) {
       return this.renderErrorDialog(this.state.error)
     }
-    return (
-      <ErrorContext.Provider
-        value={{
-          setError: (error: WidgetError) => {
-            this.props.onError?.(error)
-            this.setState({ error })
-          },
-        }}
-      >
-        {this.props.children}
-      </ErrorContext.Provider>
-    )
+    return this.props.children
   }
 }

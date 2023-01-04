@@ -4,7 +4,7 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
-import { useSetError } from 'components/Error/ErrorBoundary'
+import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { SupportedChainId } from 'constants/chains'
 import { MetaMaskConnectionError } from 'errors'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
@@ -133,7 +133,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
     [jsonRpcUrlMap]
   )
 
-  const setError = useSetError()
+  const throwAsync = useAsyncError()
 
   const user = useMemo(() => {
     if (!provider) return
@@ -149,10 +149,10 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
     () =>
       initializeWeb3ReactConnector(MetaMask, {
         onError: () => {
-          setError(new MetaMaskConnectionError())
+          throwAsync(new MetaMaskConnectionError())
         },
       }),
-    [setError]
+    [throwAsync]
   )
   const walletConnect = useMemo(
     () =>
