@@ -1,5 +1,5 @@
 import { DEFAULT_ERROR_ACTION, DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
-import { Component, createContext, ErrorInfo, PropsWithChildren } from 'react'
+import { Component, createContext, ErrorInfo, PropsWithChildren, useContext } from 'react'
 
 import Dialog from '../Dialog'
 import ErrorDialog from './ErrorDialog'
@@ -14,6 +14,10 @@ interface ErrorBoundaryProps {
 
 type ErrorBoundaryState = {
   error?: Error
+}
+
+export function useSetError() {
+  return useContext(ErrorContext).setError
 }
 
 export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoundaryProps>, ErrorBoundaryState> {
