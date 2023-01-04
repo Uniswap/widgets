@@ -122,7 +122,7 @@ function initializeWeb3ReactConnector<T extends Connector, P extends object>(
   if (options && 'provider' in options) {
     // Short-circuit provider selection to improve performance and testability.
     // Without doing so, provider will be unavailable for a frame.
-    hooks.useProvider = (() => options.provider) as typeof hooks.useProvider
+    hooks.useProvider = (() => (options as { provider: unknown }).provider) as typeof hooks.useProvider
   }
   return [connector, hooks]
 }
