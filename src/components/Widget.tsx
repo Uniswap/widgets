@@ -1,7 +1,7 @@
 import { TokenInfo } from '@uniswap/token-lists'
 import { Animation, Modal, Provider as DialogProvider } from 'components/Dialog'
 import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { Provider as BlockNumberProvider } from 'hooks/useBlockNumber'
 import { Flags, useInitialFlags } from 'hooks/useSyncFlags'
@@ -107,19 +107,13 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     }
     return props.width ?? 360
   }, [props.width])
-  const locale = useMemo(() => {
-    if (props.locale && ![...SUPPORTED_LOCALES, 'pseudo'].includes(props.locale)) {
-      console.warn(`Unsupported locale: ${props.locale}. Falling back to ${DEFAULT_LOCALE}.`)
-      return DEFAULT_LOCALE
-    }
-    return props.locale ?? DEFAULT_LOCALE
-  }, [props.locale])
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
   return (
     <StrictMode>
       <ThemeProvider theme={props.theme}>
         <WidgetWrapper width={width} className={props.className}>
-          <I18nProvider locale={locale}>
+          <I18nProvider locale={props.locale}>
             <DialogWrapper ref={setDialog} />
             <DialogProvider value={props.dialog || dialog}>
               <ErrorBoundary onError={props.onError}>
