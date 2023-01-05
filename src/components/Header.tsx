@@ -6,13 +6,13 @@ import { ThemedText } from 'theme'
 import Row from './Row'
 
 const HeaderRow = styled(Row)`
-  height: 1.75rem;
-  margin: 0 0.75rem 1rem;
-  padding-top: 0.25rem;
+  height: 1.75em;
+  margin: 0 0.75em 1em;
+  padding-top: 0.25em;
   ${largeIconCss}
 
   button {
-    height: ${({ iconSize }) => iconSize}rem;
+    height: ${({ iconSize }) => iconSize}em;
   }
 `
 

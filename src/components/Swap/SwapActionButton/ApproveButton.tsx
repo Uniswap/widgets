@@ -6,11 +6,11 @@ import EtherscanLink from 'components/EtherscanLink'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
+import useButtonColor from 'hooks/useButtonColor'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
-import { Colors } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 /**
@@ -18,13 +18,11 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
  * Should only be rendered if a valid trade exists that is not yet approved.
  */
 export default function ApproveButton({
-  color,
   trade,
   state,
   approve,
   onSubmit,
 }: {
-  color: keyof Colors
   trade?: InterfaceTrade
   state: SwapApprovalState
   approve?: () => Promise<{
@@ -97,5 +95,5 @@ export default function ApproveButton({
     }
   }, [isPending, onApprove, pendingApprovalHash, state, symbol])
 
-  return <ActionButton color={color} action={actionProps} />
+  return <ActionButton color={useButtonColor()} action={actionProps} />
 }
