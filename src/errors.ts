@@ -41,6 +41,5 @@ export class MetaMaskConnectionError extends ConnectionError {
       action: t`Reload`,
       message: t`'A Metamask error caused your wallet to disconnect. Reload the page to reconnect.'`,
     })
-    this.name = 'MetaMask Connection Error'
   }
 }
