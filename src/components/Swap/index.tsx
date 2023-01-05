@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
@@ -39,6 +40,8 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
 
+  const { account } = useWeb3React()
+
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
@@ -57,7 +60,7 @@ export default function Swap(props: SwapProps) {
             <Input />
             <ReverseButton />
             <Output />
-            <Toolbar />
+            {account && <Toolbar />}
             <SwapActionButton />
             {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>

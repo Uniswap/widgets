@@ -32,8 +32,7 @@ describe('connect', () => {
   function itPromptsForWalletConnection(ui: ReactElement) {
     it('prompts for wallet connection', async () => {
       const widget = render(ui)
-      expect((await widget.findByTestId('connect-wallet')).textContent).toBe('Connect wallet to swap')
-      expect((await widget.findByTestId('toolbar')).textContent).toBe('Connect wallet to swap')
+      expect((await widget.findByTestId('connect-wallet')).textContent).toBe('Connect Wallet')
     })
   }
 
@@ -74,9 +73,6 @@ describe('connect', () => {
 
     it('displays connected account chip', async () => {
       const widget = render(ui)
-
-      // The toolbar will reflect a pending connection until it connects.
-      await waitFor(async () => expect((await widget.findByTestId('toolbar')).textContent).not.toContain('Connect'))
 
       expect((await widget.findByTestId('account')).textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING)
     })
