@@ -7,22 +7,16 @@ import 'jest-environment-hardhat'
 
 import { SwapWidget } from 'index'
 import React, { ReactElement } from 'react'
-import { render, waitFor } from 'test'
+
+import { cleanup, render, waitFor } from './test'
 
 const HARDHAT_ACCOUNT_DISPLAY_STRING = `${hardhat.account.address?.substring(
   0,
   6
 )}...${hardhat.account.address?.substring(hardhat.account.address.length - 4)}`
 
-declare global {
-  // eslint-disable-next-line no-var
-  var IS_REACT_ACT_ENVIRONMENT: boolean
-}
-
-beforeAll(() => {
-  // End-to-end tests do not need to run in an act environment.
-  global.IS_REACT_ACT_ENVIRONMENT = false
-})
+// We are testing different configurations of the widget, so we must run cleanup between tests.
+afterEach(cleanup)
 
 describe('connect', () => {
   // MetaMask uses a 3000ms timeout to detect window.ethereum.
