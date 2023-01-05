@@ -30,9 +30,10 @@ type ErrorBoundaryState = {
 export function useAsyncError() {
   const [, setError] = useState()
   return useCallback(
-    (e: WidgetError) =>
+    (error: unknown) =>
       setError(() => {
-        throw e
+        if (error instanceof Error) throw error
+        throw new Error(error as string)
       }),
     []
   )

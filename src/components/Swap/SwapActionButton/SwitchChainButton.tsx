@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
+import { useAsyncError } from 'components/Error/ErrorBoundary'
 import useSwitchChain from 'hooks/useSwitchChain'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
@@ -12,18 +13,17 @@ export default function ChainSwitchButton({ color, chainId }: { color: keyof Col
   const [isPending, setIsPending] = useState(false)
 
   const switchChain = useSwitchChain()
-  const [error, setError] = useState()
+  const throwError = useAsyncError()
   const onSwitchChain = useCallback(async () => {
     setIsPending(true)
     try {
       await switchChain(chainId)
     } catch (error) {
-      setError(error)
+      throwError(error)
     } finally {
       setIsPending(false)
     }
-  }, [chainId, switchChain])
-  if (error) throw error
+  }, [chainId, switchChain, throwError])
 
   const actionProps = useMemo(
     () =>
