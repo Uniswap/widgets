@@ -1,5 +1,12 @@
 name: Release
 
+on:
+  # push:
+  #   branches:
+  #     - main
+  # manual trigger
+  workflow_dispatch:
+
 jobs:
   release:
     runs-on: ubuntu-latest
