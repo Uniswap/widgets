@@ -63,11 +63,6 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
     )
   }
 
-  setError(error: WidgetError) {
-    this.props.onError?.(error)
-    this.setState({ error })
-  }
-
   render() {
     if (this.state.error) {
       return this.renderErrorDialog(this.state.error)
