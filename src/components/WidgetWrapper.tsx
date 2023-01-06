@@ -11,7 +11,9 @@ const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   background-color: ${({ theme }) => theme.container};
+  border: ${({ theme }) => `1px solid ${theme.outline}`};
   border-radius: ${({ theme }) => theme.borderRadius}em;
+  box-shadow: ${({ theme }) => `0px 40px 120px 0px ${theme.networkDefaultShadow}`};
   box-sizing: border-box;
   color: ${({ theme }) => theme.primary};
   display: flex;

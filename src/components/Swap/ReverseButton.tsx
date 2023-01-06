@@ -19,7 +19,7 @@ const Underlayer = styled.div`
 
 const StyledReverseButton = styled(Button)`
   align-items: center;
-  background-color: ${({ theme }) => theme.interactive};
+  background-color: ${({ theme }) => theme.module};
   border: 4px solid ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;

@@ -1,5 +1,3 @@
-import { loadingOpacity } from 'css/loading'
-import { transparentize } from 'polished'
 import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
 import styled, { css } from 'styled-components/macro'
 
@@ -34,20 +32,11 @@ const Input = styled.input`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.hint};
   }
 
   :enabled {
     transition: color 0.125s linear;
-  }
-
-  :disabled {
-    // Overrides WebKit's override of input:disabled color.
-    -webkit-text-fill-color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    ::placeholder {
-      color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    }
   }
 `
 
