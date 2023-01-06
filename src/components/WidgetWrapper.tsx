@@ -44,13 +44,15 @@ interface WidgetWrapperProps {
 
 export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProps>) {
   const initialWidth: string | number = useMemo(() => {
-    if (props.width && props.width < 300) {
-      console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
-      return 300
-    }
-    if (props.width && props.width > 600) {
-      console.warn(`Widget width must be at most 600px (you set it to ${props.width}). Falling back to 600px.`)
-      return 600
+    if (props.width) {
+      if (props.width < 300) {
+        console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
+        return 300
+      }
+      if (props.width > 600) {
+        console.warn(`Widget width must be at most 600px (you set it to ${props.width}). Falling back to 600px.`)
+        return 600
+      }
     }
     return props.width ?? 360
   }, [props.width])
