@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
@@ -15,8 +16,8 @@ const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: 
   border-bottom: 1px solid ${({ theme }) => theme.container};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  margin-bottom: 0;
-  padding: ${({ isWide }) => (isWide ? '1rem 0' : '1.5rem 0 1rem')};
+  padding: ${({ isWide }) => (isWide ? '1em 0' : '1.5em 0 1em')};
+  margin-bottom: 0.75em;
 
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.
@@ -40,7 +41,13 @@ export default function Output() {
 
   return (
     <DynamicThemeProvider color={color}>
-      <OutputWrapper isWide={isWideWidget} field={Field.OUTPUT} impact={impact} hasColor={hasColor} />
+      <OutputWrapper
+        isWide={isWideWidget}
+        field={Field.OUTPUT}
+        impact={impact}
+        hasColor={hasColor}
+        subheader={t`You receive`}
+      />
     </DynamicThemeProvider>
   )
 }

@@ -48,7 +48,7 @@ export function Subhead1(props: TextProps) {
 
 export function Subhead2(props: TextProps) {
   return (
-    <TextWrapper className="subhead subhead-2" fontSize={14} fontWeight={500} lineHeight="14px" noWrap {...props} />
+    <TextWrapper className="subhead subhead-2" fontSize={14} fontWeight={500} lineHeight="20px" noWrap {...props} />
   )
 }
 
@@ -82,7 +82,7 @@ export function ButtonMedium(props: TextProps) {
 
 export function ButtonSmall(props: TextProps) {
   return (
-    <TextWrapper className="button button-small" fontSize={14} fontWeight={500} lineHeight="14px" noWrap {...props} />
+    <TextWrapper className="button button-small" fontSize={14} fontWeight={600} lineHeight="14px" noWrap {...props} />
   )
 }
 
