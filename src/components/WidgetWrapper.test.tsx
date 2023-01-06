@@ -44,6 +44,18 @@ describe('WidgetWrapper', () => {
     expect(component.getByTestId(widgetIsWideTestId).textContent).toBe('wide')
   })
 
+  it('should constrain to max width', () => {
+    const component = renderComponent(
+      <WidgetWrapper width={700}>
+        <TestComponent />
+      </WidgetWrapper>
+    )
+    // 600 is the largest width allowed
+    expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('600')
+    expect(component.getByTestId(widgetWidthTypeTestId).textContent).toBe('number')
+    expect(component.getByTestId(widgetIsWideTestId).textContent).toBe('wide')
+  })
+
   it('should handle invalid number width', () => {
     const component = renderComponent(
       <WidgetWrapper width={200}>

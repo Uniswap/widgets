@@ -19,6 +19,7 @@ const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
+  max-width: 600px;
   min-height: 360px;
   min-width: 300px;
   padding: ${HORIZONTAL_PADDING}px;
@@ -46,6 +47,10 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
     if (props.width && props.width < 300) {
       console.warn(`Widget width must be at least 300px (you set it to ${props.width}). Falling back to 300px.`)
       return 300
+    }
+    if (props.width && props.width > 600) {
+      console.warn(`Widget width must be at most 600px (you set it to ${props.width}). Falling back to 600px.`)
+      return 600
     }
     return props.width ?? 360
   }, [props.width])
