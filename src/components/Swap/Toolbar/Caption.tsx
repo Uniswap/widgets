@@ -48,10 +48,6 @@ export function Connecting() {
   )
 }
 
-export function ConnectWallet() {
-  return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
-}
-
 export function UnsupportedNetwork() {
   return <Caption caption={<Trans>Switch to a supported network to trade</Trans>} />
 }

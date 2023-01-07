@@ -88,7 +88,16 @@ export default function ActionButton({
   wrapperProps,
   ...rest
 }: ActionButtonProps) {
-  const textColor = useMemo(() => (color === 'accent' ? 'onAccent' : 'currentColor'), [color])
+  const textColor = useMemo(() => {
+    switch (color) {
+      case 'accent':
+        return 'onAccent'
+      case 'accentSoft':
+        return 'accent'
+      default:
+        return 'currentColor'
+    }
+  }, [color])
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
       <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>

@@ -1,7 +1,7 @@
 import 'assets/fonts.scss'
 import './external'
 
-import { mix, transparentize } from 'polished'
+import { mix, rgba, transparentize } from 'polished'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components/macro'
 
@@ -29,6 +29,7 @@ const stateColors = {
 export const lightTheme: Colors = {
   // surface
   accent: brandLight,
+  accentSoft: rgba(brandLight, 0.12),
   container: 'hsl(0, 0%, 100%)',
   module: 'hsl(231, 54%, 97%)',
   interactive: 'hsl(227, 70%, 95%)',
@@ -53,6 +54,7 @@ export const lightTheme: Colors = {
 export const darkTheme: Colors = {
   // surface
   accent: brandDark,
+  accentSoft: rgba(brandDark, 0.12),
   container: 'hsla(224, 37%, 8%, 1)',
   module: 'hsl(222, 37%, 12%)',
   interactive: 'hsla(223, 28%, 22%, 1)',

@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
@@ -24,7 +23,6 @@ const ToolbarRow = styled(Row)`
 `
 
 export default memo(function Toolbar() {
-  const { account } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
@@ -41,8 +39,6 @@ export default memo(function Toolbar() {
 
   const caption = useMemo(() => {
     switch (error) {
-      case ChainError.UNCONNECTED_CHAIN:
-        return <Caption.ConnectWallet />
       case ChainError.ACTIVATING_CHAIN:
         return <Caption.Connecting />
       case ChainError.UNSUPPORTED_CHAIN:
@@ -56,10 +52,6 @@ export default memo(function Toolbar() {
 
     if (state === TradeState.LOADING) {
       return <Caption.LoadingTrade />
-    }
-
-    if (!account) {
-      return <Caption.ConnectWallet />
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -84,7 +76,6 @@ export default memo(function Toolbar() {
   }, [
     error,
     state,
-    account,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
