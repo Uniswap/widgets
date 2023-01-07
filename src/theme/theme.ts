@@ -1,6 +1,7 @@
 export interface Colors {
   // surface
   accent: string
+  accentSoft: string
   container: string
   module: string
   interactive: string
