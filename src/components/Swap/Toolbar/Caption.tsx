@@ -47,7 +47,7 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
 function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   return (
     <CaptionRow gap={0.25}>
-      <Gas color={'secondary'} />
+      <Gas color="secondary" />
       <ThemedText.Body2 color="secondary">
         {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
       </ThemedText.Body2>
@@ -127,13 +127,13 @@ export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD 
   )
 }
 
-export interface TradeProps {
+export interface TradeProps extends GasEstimateProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
 }
 
-export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
+export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps) {
   return (
     <>
       <CaptionRow gap={0.5}>
