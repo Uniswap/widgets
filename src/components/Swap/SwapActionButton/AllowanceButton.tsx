@@ -3,8 +3,8 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
 import { usePendingApproval } from 'hooks/transactions'
-import useButtonColor from 'hooks/useTokenColorExtraction'
 import { AllowanceRequired } from 'hooks/usePermit2Allowance'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ExplorerDataType } from 'utils/getExplorerLink'
@@ -68,7 +68,7 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
   }, [isApprovalLoading, isFailed, isPending, onClick, pendingApproval, token?.symbol])
 
   return (
-    <ActionButton color={useButtonColor()} disabled={!action?.onClick} action={action}>
+    <ActionButton color={useTokenColorExtraction()} disabled={!action?.onClick} action={action}>
       {isFailed ? t`Try again` : t`Approve`}
     </ActionButton>
   )

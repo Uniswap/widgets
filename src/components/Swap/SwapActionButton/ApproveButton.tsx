@@ -6,7 +6,7 @@ import EtherscanLink from 'components/EtherscanLink'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
-import useButtonColor from 'hooks/useTokenColorExtraction'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -96,5 +96,5 @@ export default function ApproveButton({
     }
   }, [isPending, onApprove, pendingApprovalHash, state, symbol])
 
-  return <ActionButton color={useButtonColor()} action={actionProps} />
+  return <ActionButton color={useTokenColorExtraction()} action={actionProps} />
 }

@@ -2,11 +2,11 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
-import useButtonColor from 'hooks/useTokenColorExtraction'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
@@ -37,7 +37,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   } = useSwapInfo()
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
-  const color = useButtonColor()
+  const color = useTokenColorExtraction()
 
   const permit2Enabled = usePermit2Enabled()
   const { callback: swapRouterCallback } = useSwapCallback({
