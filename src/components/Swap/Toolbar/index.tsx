@@ -11,7 +11,6 @@ import styled from 'styled-components/macro'
 import Row from '../../Row'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
-import useOnSubmit from '../SwapActionButton/useOnSubmit'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
@@ -35,7 +34,6 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const permit2Enabled = usePermit2Enabled()
-  const onSubmit = useOnSubmit()
 
   const caption = useMemo(() => {
     switch (error) {
@@ -97,7 +95,7 @@ export default memo(function Toolbar() {
     }
   } else {
     if (approval.state !== SwapApprovalState.APPROVED) {
-      return <ApproveButton onSubmit={onSubmit} trade={trade} {...approval} />
+      return <ApproveButton trade={trade} {...approval} />
     }
   }
 
