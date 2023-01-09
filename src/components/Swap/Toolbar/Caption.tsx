@@ -1,7 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
+import Column from 'components/Column'
 import Row from 'components/Row'
+import Rule from 'components/Rule'
+import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner, LargeIcon } from 'icons'
@@ -12,6 +15,7 @@ import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Price from '../Price'
+import RoutingDiagram from '../RoutingDiagram'
 
 const Loading = styled.span`
   color: ${({ theme }) => theme.secondary};
@@ -53,7 +57,7 @@ function GasEstimate({ gasUseEstimateUSD }: GasEstimateProp) {
     <CaptionRow gap={0.25}>
       <GasIconWrapper color={theme.secondary} />
       <ThemedText.Body2 color="secondary">
-        ${formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
+        {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
       </ThemedText.Body2>
     </CaptionRow>
   )
@@ -145,6 +149,19 @@ export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradePro
   return (
     <>
       <CaptionRow>
+        <Tooltip placement="bottom" icon={LargeIcon} iconProps={{ icon: impact?.warning ? AlertTriangle : Info }}>
+          <Column gap={0.75}>
+            {impact?.warning && (
+              <>
+                <ThemedText.Caption>
+                  The output amount is estimated at {impact.toString()} less than the input amount due to impact
+                </ThemedText.Caption>
+                <Rule />
+              </>
+            )}
+            <RoutingDiagram trade={trade} />
+          </Column>
+        </Tooltip>
         <Price trade={trade} outputUSDC={outputUSDC} />
       </CaptionRow>
       <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
