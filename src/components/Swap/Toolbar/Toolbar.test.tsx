@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
+import { flagsAtom } from 'hooks/useSyncFlags'
 import Module from 'module'
 import { Field, stateAtom, Swap } from 'state/swap'
 import { renderComponent } from 'test'
@@ -13,6 +14,16 @@ jest.mock('@web3-react/core', () => ({
     isActive: true,
     chainId: 1,
     account: '0x0000000000000000000000000000000000000000',
+  }),
+}))
+
+jest.mock('../../../hooks/usePermit2Allowance', () => ({
+  __esModule: true,
+  ...(jest.requireActual('../../../hooks/usePermit2Allowance') as Module),
+  default: () => ({
+    state: 1 /* AllowanceState.REQUIRED */,
+    isApprovalLoading: false,
+    approveAndPermit: jest.fn(),
   }),
 }))
 
@@ -42,5 +53,20 @@ describe('Toolbar', () => {
       }
     )
     expect(component.queryByText('Enter an amount')).toBeTruthy()
+  })
+
+  it('should render a request for approval', () => {
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Toolbar />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [
+          [stateAtom, getInitialTradeState({ amount: '1000' })],
+          [flagsAtom, { permit2: true }],
+        ],
+      }
+    )
+    expect(component.queryByText('Approve use of token')).toBeTruthy()
   })
 })
