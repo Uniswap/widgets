@@ -1,40 +1,30 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
-import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
-import { ApprovalTransactionInfo, SwapTransactionInfo, TransactionType } from 'state/transactions'
-import { Colors } from 'theme'
+import { TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
-import AllowanceButton from './AllowanceButton'
-import ApproveButton from './ApproveButton'
+import useOnSubmit from './useOnSubmit'
 
 /**
  * A swapping ActionButton.
  * Should only be rendered if a valid swap exists.
  */
-export default function SwapButton({
-  color,
-  disabled,
-  onSubmit,
-}: {
-  color: keyof Colors
-  disabled: boolean
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | SwapTransactionInfo | void>) => Promise<void>
-}) {
+export default function SwapButton({ disabled }: { disabled: boolean }) {
   const { account, chainId } = useWeb3React()
   const {
     [Field.INPUT]: { usdc: inputUSDC },
@@ -47,6 +37,7 @@ export default function SwapButton({
   } = useSwapInfo()
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
+  const color = useTokenColorExtraction()
 
   const permit2Enabled = usePermit2Enabled()
   const { callback: swapRouterCallback } = useSwapCallback({
@@ -72,6 +63,7 @@ export default function SwapButton({
   useEffect(() => setOpen(false), [chainId])
 
   const setOldestValidBlock = useSetOldestValidBlock()
+  const onSubmit = useOnSubmit()
   const onSwap = useCallback(async () => {
     try {
       await onSubmit(async () => {
@@ -105,16 +97,6 @@ export default function SwapButton({
   const onClick = useCallback(async () => {
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
-
-  if (permit2Enabled) {
-    if (!disabled && allowance.state === AllowanceState.REQUIRED) {
-      return <AllowanceButton color={color} {...allowance} />
-    }
-  } else {
-    if (!disabled && approval.state !== SwapApprovalState.APPROVED) {
-      return <ApproveButton color={color} onSubmit={onSubmit} trade={trade} {...approval} />
-    }
-  }
 
   return (
     <>

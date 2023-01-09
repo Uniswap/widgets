@@ -4,20 +4,16 @@ import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
 import { usePendingApproval } from 'hooks/transactions'
 import { AllowanceRequired } from 'hooks/usePermit2Allowance'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Colors } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
-
-interface AllowanceButtonProps extends AllowanceRequired {
-  color: keyof Colors
-}
 
 /**
  * An approving AllowanceButton.
  * Should only be rendered if a valid trade exists that is not yet allowed.
  */
-export default function AllowanceButton({ token, isApprovalLoading, approveAndPermit, color }: AllowanceButtonProps) {
+export default function AllowanceButton({ token, isApprovalLoading, approveAndPermit }: AllowanceRequired) {
   const [isPending, setIsPending] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
   const pendingApproval = usePendingApproval(token, PERMIT2_ADDRESS)
@@ -72,7 +68,7 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
   }, [isApprovalLoading, isFailed, isPending, onClick, pendingApproval, token?.symbol])
 
   return (
-    <ActionButton color={color} disabled={!action?.onClick} action={action}>
+    <ActionButton color={useTokenColorExtraction()} disabled={!action?.onClick} action={action}>
       {isFailed ? t`Try again` : t`Approve`}
     </ActionButton>
   )

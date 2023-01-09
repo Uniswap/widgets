@@ -14,8 +14,6 @@ export const colorAtom = atom<string | undefined>(undefined)
 
 const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.container};
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
   padding: ${({ isWide }) => (isWide ? '1em 0' : '1.5em 0 1em')};
   margin-bottom: 0.75em;
 
