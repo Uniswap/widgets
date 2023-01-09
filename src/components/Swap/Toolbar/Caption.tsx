@@ -141,13 +141,13 @@ export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD 
   )
 }
 
-export interface TradeProps {
+export interface TradeProps extends GasEstimateProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
 }
 
-export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
+export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps) {
   return (
     <>
       <CaptionRow gap={0.5} shrink={0}>
