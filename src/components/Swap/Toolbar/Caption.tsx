@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact } from 'hooks/usePriceImpact'
-import { AlertTriangle, Icon, Info, InlineSpinner, LargeIcon } from 'icons'
+import { AlertTriangle, Gas, Icon, Info, InlineSpinner, LargeIcon } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -22,14 +21,9 @@ const Loading = styled.span`
   ${loadingCss};
 `
 
-const CaptionRow = styled(Row)<{ gap?: number }>`
-  gap: ${({ gap }) => gap ?? 0.5}em;
+const CaptionRow = styled(Row)<{ gap: number }>`
+  gap: ${({ gap }) => gap}em;
   height: 100%;
-`
-
-const GasIconWrapper = styled(GasIcon)`
-  height: 1em;
-  width: 1em;
 `
 
 interface CaptionProps {
@@ -37,25 +31,23 @@ interface CaptionProps {
   caption: ReactNode
 }
 
-interface GasEstimateProp {
+interface GasEstimateProps {
   gasUseEstimateUSD: CurrencyAmount<Token> | undefined
 }
 
 function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   return (
-    <CaptionRow>
+    <CaptionRow gap={0.5}>
       <LargeIcon icon={Icon} color="secondary" />
       <ThemedText.Body2 color="secondary">{caption}</ThemedText.Body2>
     </CaptionRow>
   )
 }
 
-function GasEstimate({ gasUseEstimateUSD }: GasEstimateProp) {
-  const theme = useTheme()
-
+function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   return (
     <CaptionRow gap={0.25}>
-      <GasIconWrapper color={theme.secondary} />
+      <Gas color={'secondary'} />
       <ThemedText.Body2 color="secondary">
         {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
       </ThemedText.Body2>
@@ -96,7 +88,7 @@ export function MissingInputs() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 
-export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProp) {
+export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
   return (
     <>
       <Caption
@@ -112,16 +104,12 @@ export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProp) {
   )
 }
 
-interface WrapCurrencyProps {
+interface WrapCurrencyProps extends GasEstimateProps {
   inputCurrency: Currency
   outputCurrency: Currency
 }
 
-export function WrapCurrency({
-  inputCurrency,
-  outputCurrency,
-  gasUseEstimateUSD,
-}: WrapCurrencyProps & GasEstimateProp) {
+export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapCurrencyProps) {
   const Text = useCallback(
     () => (
       <Trans>
@@ -145,10 +133,10 @@ export interface TradeProps {
   impact?: PriceImpact
 }
 
-export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps & GasEstimateProp) {
+export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
   return (
     <>
-      <CaptionRow>
+      <CaptionRow gap={0.5}>
         <Tooltip placement="bottom" icon={LargeIcon} iconProps={{ icon: impact?.warning ? AlertTriangle : Info }}>
           <Column gap={0.75}>
             {impact?.warning && (

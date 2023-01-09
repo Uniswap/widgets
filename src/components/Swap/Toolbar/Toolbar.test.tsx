@@ -17,11 +17,11 @@ jest.mock('@web3-react/core', () => ({
   }),
 }))
 
-jest.mock('../../../hooks/usePermit2Allowance', () => ({
+jest.mock('hooks/usePermit2Allowance', () => ({
   __esModule: true,
-  ...(jest.requireActual('../../../hooks/usePermit2Allowance') as Module),
+  ...(jest.requireActual('hooks/usePermit2Allowance') as Module),
   default: () => ({
-    state: 1 /* AllowanceState.REQUIRED */,
+    state: jest.requireActual('hooks/usePermit2Allowance').AllowanceState.REQUIRED,
     isApprovalLoading: false,
     approveAndPermit: jest.fn(),
   }),
@@ -62,7 +62,7 @@ describe('Toolbar', () => {
       </SwapInfoProvider>,
       {
         initialAtomValues: [
-          [stateAtom, getInitialTradeState({ amount: '1000' })],
+          [stateAtom, getInitialTradeState({ amount: '1' })],
           [flagsAtom, { permit2: true }],
         ],
       }
