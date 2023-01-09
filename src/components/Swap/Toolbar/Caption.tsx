@@ -9,6 +9,7 @@ import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Price from '../Price'
 
@@ -51,7 +52,9 @@ function GasEstimate({ gasUseEstimateUSD }: GasEstimateProp) {
   return (
     <CaptionRow gap={0.25}>
       <GasIconWrapper color={theme.secondary} />
-      <ThemedText.Body2 color="secondary">${gasUseEstimateUSD?.toFixed(2) ?? ' –'}</ThemedText.Body2>
+      <ThemedText.Body2 color="secondary">
+        ${formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
+      </ThemedText.Body2>
     </CaptionRow>
   )
 }
