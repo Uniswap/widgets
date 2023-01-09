@@ -6,11 +6,12 @@ import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact } from 'hooks/usePriceImpact'
-import { AlertTriangle, Gas, Icon, Info, InlineSpinner, LargeIcon } from 'icons'
+import { useIsWideWidget } from 'hooks/useWidgetWidth'
+import { AlertTriangle, Gas, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Color, ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Price from '../Price'
@@ -29,28 +30,40 @@ const CaptionRow = styled(Row)<{ gap: number }>`
 interface CaptionProps {
   icon?: Icon
   caption: ReactNode
+  color?: Color
 }
 
 interface GasEstimateProps {
   gasUseEstimateUSD: CurrencyAmount<Token> | undefined
 }
 
-function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
+function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary' }: CaptionProps) {
   return (
     <CaptionRow gap={0.5}>
-      <LargeIcon icon={Icon} color="secondary" />
-      <ThemedText.Body2 color="secondary">{caption}</ThemedText.Body2>
+      <LargeIcon icon={Icon} color={color} />
+      <ThemedText.Body2 color={color}>{caption}</ThemedText.Body2>
     </CaptionRow>
   )
 }
 
 function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
+  const isWideWidget = useIsWideWidget()
   return (
     <CaptionRow gap={0.25}>
-      <Gas color={'secondary'} />
-      <ThemedText.Body2 color="secondary">
-        {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
-      </ThemedText.Body2>
+      {isWideWidget ? (
+        <Gas color={'secondary'} />
+      ) : (
+        <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
+          <ThemedText.Body2 color="secondary">
+            Estimated gas: {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
+          </ThemedText.Body2>
+        </Tooltip>
+      )}
+      {isWideWidget && (
+        <ThemedText.Body2 color="secondary">
+          {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
+        </ThemedText.Body2>
+      )}
     </CaptionRow>
   )
 }
@@ -58,7 +71,7 @@ function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
 export function Connecting() {
   return (
     <Caption
-      icon={InlineSpinner}
+      icon={Spinner}
       caption={
         <Loading>
           <Trans>Connecting…</Trans>
@@ -92,7 +105,8 @@ export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
   return (
     <>
       <Caption
-        icon={InlineSpinner}
+        icon={Spinner}
+        color="primary"
         caption={
           <Loading>
             <Trans>Fetching best price…</Trans>
@@ -136,7 +150,7 @@ export interface TradeProps {
 export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
   return (
     <>
-      <CaptionRow gap={0.5}>
+      <CaptionRow gap={0.5} shrink={0}>
         <Tooltip placement="bottom" icon={LargeIcon} iconProps={{ icon: impact?.warning ? AlertTriangle : Info }}>
           <Column gap={0.75}>
             {impact?.warning && (

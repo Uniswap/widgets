@@ -2,13 +2,11 @@ import { ReactComponent as RouterIcon } from 'assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'assets/svg/expando.svg'
 import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
-import { ReactComponent as InlineSpinnerIcon } from 'assets/svg/inline_spinner.svg'
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
 import { ReactComponent as ReverseIcon } from 'assets/svg/reverse.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
-import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
 // This file wraps react-feather, so its import is intentional.
 /* eslint-disable no-restricted-imports */
@@ -18,12 +16,12 @@ import {
   ArrowDown as ArrowDownIcon,
   ArrowRight as ArrowRightIcon,
   ArrowUp as ArrowUpIcon,
+  ArrowUpRight as LinkIcon,
   BarChart2 as BarChart2Icon,
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
   ChevronLeft as ChevronLeftIcon,
   Clock as ClockIcon,
-  ExternalLink as LinkIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
   Settings as SettingsIcon,
@@ -148,20 +146,8 @@ const rotate = keyframes`
 
 export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;
-  stroke: ${({ color = 'active', theme }) => theme[color]};
-  stroke-linecap: round;
-  stroke-width: 2;
-`
-
-export const InlineSpinner = styled(icon(InlineSpinnerIcon))<{ color?: Color }>`
-  animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-  color: ${({ color = 'active', theme }) => theme[color]};
-  fill: ${({ color = 'active', theme }) => theme[color]};
-
-  #track {
-    stroke: ${({ theme }) => theme.secondary};
-    ${loadingCss};
-  }
+  fill: ${({ color = 'primary', theme }) => theme[color]};
+  stroke: ${({ color = 'primary', theme }) => theme[color]};
 `
 
 export const Gas = styled(icon(GasIcon))<{ color?: Color }>`

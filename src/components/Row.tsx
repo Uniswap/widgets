@@ -10,6 +10,7 @@ export interface RowProps {
   gap?: number
   flex?: true
   grow?: true | 'first' | 'last'
+  shrink?: number
   children?: ReactNode
   theme: Theme
 }
@@ -20,6 +21,7 @@ const Row = styled.div<RowProps>`
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
   flex-flow: wrap;
   flex-grow: ${({ grow }) => grow && 1};
+  flex-shrink: ${({ shrink }) => shrink ?? 1};
   gap: ${({ gap }) => gap && `${gap}em`};
   grid-auto-flow: column;
   grid-template-columns: ${({ grow, children }) => {
