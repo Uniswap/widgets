@@ -10,7 +10,7 @@ export interface Flags {
   permit2?: boolean
 }
 
-const flagsAtom = atom<Flags>({})
+export const flagsAtom = atom<Flags>({})
 
 export function useInitialFlags({ brandedFooter, permit2 }: Flags): [[Atom<Flags>, Flags]] {
   // Only grab the initial flags on mount - ignore exhaustive-deps.

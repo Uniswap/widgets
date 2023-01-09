@@ -28,7 +28,7 @@ export default memo(function Toolbar() {
     error,
     approval,
     allowance,
-    trade: { trade, state },
+    trade: { trade, state, gasUseEstimateUSD },
     impact,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
@@ -49,7 +49,7 @@ export default memo(function Toolbar() {
     }
 
     if (state === TradeState.LOADING) {
-      return <Caption.LoadingTrade />
+      return <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} />
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -57,13 +57,21 @@ export default memo(function Toolbar() {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
       if (isWrap) {
-        return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+        return (
+          <Caption.WrapCurrency
+            inputCurrency={inputCurrency}
+            outputCurrency={outputCurrency}
+            gasUseEstimateUSD={gasUseEstimateUSD}
+          />
+        )
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
         return <Caption.InsufficientLiquidity />
       }
       if (trade?.inputAmount && trade.outputAmount) {
-        return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
+        return (
+          <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} gasUseEstimateUSD={gasUseEstimateUSD} />
+        )
       }
       if (state === TradeState.INVALID) {
         return <Caption.Error />
@@ -77,6 +85,7 @@ export default memo(function Toolbar() {
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
+    gasUseEstimateUSD,
     inputBalance,
     inputAmount,
     isWrap,
@@ -100,7 +109,7 @@ export default memo(function Toolbar() {
   }
 
   return (
-    <ToolbarRow flex justify="flex-start" data-testid="toolbar" gap={3 / 8}>
+    <ToolbarRow flex justify="space-between" data-testid="toolbar">
       {caption}
     </ToolbarRow>
   )
