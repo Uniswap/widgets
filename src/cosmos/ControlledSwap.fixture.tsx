@@ -7,7 +7,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { DAI, nativeOnChain, USDC } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
-import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+import useProvider from './useProvider'
 
 function Fixture() {
   const [events, setEvents] = useState<Event[]>([])
@@ -30,7 +30,7 @@ function Fixture() {
       {}
     ),
   }
-  const inputToken = useOption('input', { options: currencies })
+  const inputToken = useOption('input', { options: currencies, defaultValue: 'ETH' })
   const outputToken = useOption('output', { options: currencies })
 
   const connector = useProvider(SupportedChainId.MAINNET)
@@ -45,7 +45,7 @@ function Fixture() {
   const [amount, setAmount] = useState('')
   const handleAmountChange = useHandleEvent('onAmountChange')
   const onAmountChange = useCallback(
-    (...data) => {
+    (...data: [Field, string]) => {
       const [field, amount] = data
       setType(field === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
       setAmount(amount)
@@ -57,13 +57,13 @@ function Fixture() {
   return (
     <Row flex align="start" justify="start" gap={0.5}>
       <SwapWidget
+        permit2
         value={{
           type,
           amount,
           [Field.INPUT]: inputToken,
           [Field.OUTPUT]: outputToken,
         }}
-        jsonRpcUrlMap={INFURA_NETWORK_URLS}
         provider={connector}
         tokenList={tokens}
         {...eventHandlers}

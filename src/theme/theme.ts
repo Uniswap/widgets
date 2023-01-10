@@ -1,6 +1,7 @@
 export interface Colors {
   // surface
   accent: string
+  accentSoft: string
   container: string
   module: string
   interactive: string
@@ -19,6 +20,8 @@ export interface Colors {
   success: string
   warning: string
   error: string
+
+  networkDefaultShadow: string
 
   currentColor: 'currentColor'
 }

@@ -17,7 +17,7 @@ import { useValue } from 'react-cosmos/fixture'
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
-import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+import useProvider from './useProvider'
 
 const TOKEN_WITH_NO_LOGO = {
   chainId: 1,
@@ -63,8 +63,6 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
-  const [disableBranding] = useValue('disableBranding', { defaultValue: false })
-
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
 
   const [width] = useValue('width', { defaultValue: 360 })
@@ -96,16 +94,15 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
+      permit2
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputTokenAddress={defaultInputToken}
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
-      disableBranding={disableBranding}
       hideConnectionUI={hideConnectionUI}
       locale={locale}
-      jsonRpcUrlMap={INFURA_NETWORK_URLS}
       defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}

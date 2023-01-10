@@ -5,12 +5,18 @@ import { Color, ThemedText } from 'theme'
 
 import Button from './Button'
 import Row, { RowProps } from './Row'
+import Tooltip from './Tooltip'
 
 const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
   max-height: 56px;
   transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
+  ${({ theme, disabled }) =>
+    disabled &&
+    css`
+      background-color: ${theme.interactive};
+    `};
 `
 
 const ActionRow = styled(Row)``
@@ -50,7 +56,7 @@ const actionCss = css`
 export const Overlay = styled(Row)<{ hasAction: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
-  margin-top: 12px;
+  margin-top: 0.75em;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
 
@@ -60,6 +66,7 @@ export const Overlay = styled(Row)<{ hasAction: boolean }>`
 export interface Action {
   message: ReactNode
   icon?: Icon
+  tooltipContent?: ReactNode
   onClick?: () => void
   children?: ReactNode
 }
@@ -81,19 +88,32 @@ export default function ActionButton({
   wrapperProps,
   ...rest
 }: ActionButtonProps) {
-  const textColor = useMemo(() => (color === 'accent' ? 'onAccent' : 'currentColor'), [color])
+  const textColor = useMemo(() => {
+    switch (color) {
+      case 'accent':
+        return 'onAccent'
+      case 'accentSoft':
+        return 'accent'
+      default:
+        return 'currentColor'
+    }
+  }, [color])
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
-      {(action ? action.onClick : true) && (
-        <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>
-          <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
-            {action?.children || children}
-          </ThemedText.TransitionButton>
-        </StyledButton>
-      )}
+      <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>
+        <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
+          {action?.children || children}
+        </ThemedText.TransitionButton>
+      </StyledButton>
       {action && (
         <ActionRow gap={0.5}>
-          <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
+          {action.tooltipContent ? (
+            <Tooltip icon={LargeIcon} iconProps={{ color: 'currentColor', icon: action.icon || AlertTriangle }}>
+              {action.tooltipContent}
+            </Tooltip>
+          ) : (
+            <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
+          )}
           <ThemedText.Subhead2>{action?.message}</ThemedText.Subhead2>
         </ActionRow>
       )}

@@ -1,4 +1,4 @@
 import { TextDecoder, TextEncoder } from 'util'
 
-global.TextDecoder = TextDecoder
-global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder as typeof global.TextDecoder
+global.TextEncoder = TextEncoder as typeof global.TextEncoder

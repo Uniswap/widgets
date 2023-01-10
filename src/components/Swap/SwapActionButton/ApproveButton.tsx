@@ -1,28 +1,29 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
-import { Colors } from 'theme'
+import { TransactionType } from 'state/transactions'
 import { ExplorerDataType } from 'utils/getExplorerLink'
+
+import useOnSubmit from './useOnSubmit'
 
 /**
  * An approving ActionButton.
  * Should only be rendered if a valid trade exists that is not yet approved.
  */
 export default function ApproveButton({
-  color,
   trade,
   state,
   approve,
-  onSubmit,
 }: {
-  color: keyof Colors
   trade?: InterfaceTrade
   state: SwapApprovalState
   approve?: () => Promise<{
@@ -30,18 +31,23 @@ export default function ApproveButton({
     tokenAddress: string
     spenderAddress: string
   } | void>
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const [isPending, setIsPending] = useState(false)
+  const onSubmit = useOnSubmit()
   const onApprove = useCallback(async () => {
     setIsPending(true)
-    await onSubmit(async () => {
-      const info = await approve?.()
-      if (!info) return
+    try {
+      await onSubmit(async () => {
+        const info = await approve?.()
+        if (!info) return
 
-      return { type: TransactionType.APPROVAL, ...info }
-    })
-    setIsPending(false)
+        return { type: TransactionType.APPROVAL, ...info }
+      })
+    } catch (e) {
+      console.error(e) // ignore error
+    } finally {
+      setIsPending(false)
+    }
   }, [approve, onSubmit])
 
   const currency = trade?.inputAmount?.currency
@@ -50,7 +56,9 @@ export default function ApproveButton({
   // Reset the pending state if currency changes.
   useEffect(() => setIsPending(false), [currency])
 
-  const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined)
+  const { chainId } = useWeb3React()
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+  const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined, spender)
 
   const actionProps = useMemo(() => {
     switch (state) {
@@ -88,5 +96,5 @@ export default function ApproveButton({
     }
   }, [isPending, onApprove, pendingApprovalHash, state, symbol])
 
-  return <ActionButton color={color} action={actionProps} />
+  return <ActionButton color={useTokenColorExtraction()} action={actionProps} />
 }

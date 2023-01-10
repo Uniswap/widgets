@@ -11,7 +11,13 @@ export default function useHasFocus(node: Node | null | undefined): boolean {
   }, [node])
   const [hasFocus, setHasFocus] = useState(node?.contains(document?.activeElement) ?? false)
   const onFocus = useCallback(() => setHasFocus(true), [])
-  const onBlur = useCallback((e) => setHasFocus(node?.contains(e.relatedTarget) ?? false), [node])
+  const onBlur = useCallback(
+    (e: Event) => {
+      const target = (e as FocusEvent).relatedTarget as Node | null
+      setHasFocus(node?.contains(target) ?? false)
+    },
+    [node]
+  )
   useEffect(() => {
     node?.addEventListener('focusin', onFocus)
     node?.addEventListener('focusout', onBlur)

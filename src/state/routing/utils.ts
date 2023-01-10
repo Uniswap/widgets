@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { nativeOnChain } from 'constants/tokens'
 
 import { InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
@@ -25,9 +24,6 @@ export function computeRoutes(
   if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
   if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
 
-  const parsedCurrencyIn = currencyIn.isNative ? nativeOnChain(currencyIn.chainId) : parsedTokenIn
-  const parsedCurrencyOut = currencyOut.isNative ? nativeOnChain(currencyOut.chainId) : parsedTokenOut
-
   try {
     return quoteResult.route.map((route) => {
       if (route.length === 0) {
@@ -41,10 +37,10 @@ export function computeRoutes(
       }
 
       return {
-        routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        routev3: isV3Route(route) ? new V3Route(route.map(parsePool), currencyIn, currencyOut) : null,
+        routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), currencyIn, currencyOut) : null,
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
     })
   } catch (e) {

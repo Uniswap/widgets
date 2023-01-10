@@ -1,37 +1,42 @@
-import { useWeb3React } from '@web3-react/core'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
+import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
+import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import Row from '../../Row'
+import AllowanceButton from '../SwapActionButton/AllowanceButton'
+import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'
 
 const ToolbarRow = styled(Row)`
-  background-color: ${({ theme }) => theme.module};
-  border-bottom-left-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  border-bottom-right-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  min-height: 44px;
-  padding: 14px 16px;
+  border: 1px solid ${({ theme }) => theme.outline};
+  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  gap: 0.5em;
+  min-height: 3.5em;
+  padding: 0 1em;
 `
 
 export default memo(function Toolbar() {
-  const { account } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     error,
-    trade: { trade, state },
+    approval,
+    allowance,
+    trade: { trade, state, gasUseEstimateUSD },
     impact,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
+  const permit2Enabled = usePermit2Enabled()
+
   const caption = useMemo(() => {
     switch (error) {
-      case ChainError.UNCONNECTED_CHAIN:
-        return <Caption.ConnectWallet />
       case ChainError.ACTIVATING_CHAIN:
         return <Caption.Connecting />
       case ChainError.UNSUPPORTED_CHAIN:
@@ -44,11 +49,7 @@ export default memo(function Toolbar() {
     }
 
     if (state === TradeState.LOADING) {
-      return <Caption.LoadingTrade />
-    }
-
-    if (!account) {
-      return <Caption.ConnectWallet />
+      return <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} />
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -56,13 +57,21 @@ export default memo(function Toolbar() {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
       if (isWrap) {
-        return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+        return (
+          <Caption.WrapCurrency
+            inputCurrency={inputCurrency}
+            outputCurrency={outputCurrency}
+            gasUseEstimateUSD={gasUseEstimateUSD}
+          />
+        )
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
         return <Caption.InsufficientLiquidity />
       }
       if (trade?.inputAmount && trade.outputAmount) {
-        return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
+        return (
+          <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} gasUseEstimateUSD={gasUseEstimateUSD} />
+        )
       }
       if (state === TradeState.INVALID) {
         return <Caption.Error />
@@ -73,10 +82,10 @@ export default memo(function Toolbar() {
   }, [
     error,
     state,
-    account,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
+    gasUseEstimateUSD,
     inputBalance,
     inputAmount,
     isWrap,
@@ -85,8 +94,22 @@ export default memo(function Toolbar() {
     impact,
   ])
 
+  if (inputCurrency == null || outputCurrency == null) {
+    return null
+  }
+
+  if (permit2Enabled) {
+    if (allowance.state === AllowanceState.REQUIRED) {
+      return <AllowanceButton {...allowance} />
+    }
+  } else {
+    if (approval.state !== SwapApprovalState.APPROVED) {
+      return <ApproveButton trade={trade} {...approval} />
+    }
+  }
+
   return (
-    <ToolbarRow flex justify="flex-start" data-testid="toolbar" gap={3 / 8} align="flex-end">
+    <ToolbarRow flex justify="space-between" data-testid="toolbar">
       {caption}
     </ToolbarRow>
   )

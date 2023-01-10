@@ -3,5 +3,5 @@
  * @param hexNumberString
  */
 export default function isZero(hexNumberString: string) {
-  return /^0x0*$/.test(hexNumberString)
+  return hexNumberString === '0' || /^0x0*$/.test(hexNumberString)
 }

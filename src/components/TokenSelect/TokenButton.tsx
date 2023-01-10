@@ -23,7 +23,6 @@ const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
 
 const TokenButtonRow = styled(Row)<{ empty: boolean }>`
   flex-direction: row;
-  height: 1.2em;
   max-width: 12em;
   overflow: hidden;
   padding-left: ${({ empty }) => empty && 0.5}em;
@@ -54,7 +53,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
         <TokenButtonRow empty={!value} flex gap={0.4}>
           {value ? (
             <>
-              <TokenImg token={value} size={1.2} />
+              <TokenImg token={value} size={1.75} />
               <span>{value.symbol}</span>
             </>
           ) : (

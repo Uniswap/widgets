@@ -1,8 +1,10 @@
 import { ReactComponent as RouterIcon } from 'assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'assets/svg/expando.svg'
+import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
 import { ReactComponent as InlineSpinnerIcon } from 'assets/svg/inline_spinner.svg'
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
+import { ReactComponent as ReverseIcon } from 'assets/svg/reverse.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
@@ -100,6 +102,7 @@ export const Trash2 = icon(Trash2Icon)
 export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
+export const Reverse = icon(ReverseIcon)
 
 export const Check = styled(icon(CheckIcon))`
   circle {
@@ -159,4 +162,8 @@ export const InlineSpinner = styled(icon(InlineSpinnerIcon))<{ color?: Color }>`
     stroke: ${({ theme }) => theme.secondary};
     ${loadingCss};
   }
+`
+
+export const Gas = styled(icon(GasIcon))<{ color?: Color }>`
+  stroke: ${({ color = 'active', theme }) => theme[color]};
 `

@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
@@ -7,7 +8,7 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
-import { useBrandingSetting } from 'hooks/useSyncBrandingSetting'
+import { useBrandedFooter } from 'hooks/useSyncFlags'
 import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
@@ -39,13 +40,14 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
 
+  const { account } = useWeb3React()
+
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
   const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
 
-  const disableBranding = useBrandingSetting()
   return (
     <>
       <Header title={<Trans>Swap</Trans>}>
@@ -58,9 +60,9 @@ export default function Swap(props: SwapProps) {
             <Input />
             <ReverseButton />
             <Output />
-            <Toolbar />
+            {account && <Toolbar />}
             <SwapActionButton />
-            {!disableBranding && <BrandedFooter />}
+            {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
         </BoundaryProvider>
       </div>

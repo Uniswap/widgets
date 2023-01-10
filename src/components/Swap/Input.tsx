@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
@@ -7,6 +7,7 @@ import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
 import { PriceImpact } from 'hooks/usePriceImpact'
+import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
@@ -28,22 +29,20 @@ const Balance = styled(ThemedText.Body2)`
   transition: color 0.25s ease-in-out;
 `
 
-const InputColumn = styled(Column)<{ disableHover?: boolean }>`
+const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   margin-bottom: 4px;
-  padding: 20px 0 24px 0;
+  padding: ${({ isWide }) => (isWide ? '1em 0' : '1em 0 1.5em')};
   position: relative;
 
   &:before {
     background-size: 100%;
-    border: 1px solid ${({ theme }) => theme.module};
+    border: 1px solid transparent;
     border-radius: inherit;
-
     box-sizing: border-box;
     content: '';
     height: 100%;
-
     left: 0;
     pointer-events: none;
     position: absolute;
@@ -59,7 +58,7 @@ const InputColumn = styled(Column)<{ disableHover?: boolean }>`
       }
 
       &:focus-within:before {
-        border-color: ${theme.outline};
+        border-color: ${theme.networkDefaultShadow};
       }`}
 `
 
@@ -87,6 +86,7 @@ interface FieldWrapperProps {
   isSufficientBalance?: boolean
   approved?: boolean
   impact?: PriceImpact
+  subheader: string
 }
 
 export function FieldWrapper({
@@ -96,6 +96,7 @@ export function FieldWrapper({
   approved,
   impact,
   className,
+  subheader,
 }: FieldWrapperProps & { className?: string }) {
   const {
     [field]: { balance, amount: currencyAmount, usdc },
@@ -105,6 +106,7 @@ export function FieldWrapper({
 
   const [amount, updateAmount] = useSwapAmount(field)
   const [currency, updateCurrency] = useSwapCurrency(field)
+  const isWideWidget = useIsWideWidget()
 
   const wrapper = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState<TokenInputHandle | null>(null)
@@ -139,7 +141,16 @@ export function FieldWrapper({
   }, [input, maxAmount, updateAmount])
 
   return (
-    <InputColumn disableHover={isDisabled || !currency} ref={wrapper} onClick={onClick} className={className}>
+    <InputColumn
+      isWide={isWideWidget}
+      disableHover={isDisabled || !currency}
+      ref={wrapper}
+      onClick={onClick}
+      className={className}
+    >
+      <Row pad={1 /* em */}>
+        <ThemedText.Subhead2 color={'secondary'}>{subheader}</ThemedText.Subhead2>
+      </Row>
       <TokenInput
         ref={setInput}
         field={field}
@@ -208,6 +219,7 @@ export default function Input() {
       maxAmount={maxAmount}
       isSufficientBalance={isSufficientBalance}
       approved={approvalState === SwapApprovalState.APPROVED}
+      subheader={t`You Pay`}
     />
   )
 }

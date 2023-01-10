@@ -132,7 +132,7 @@ export default function MaxSlippageSelect() {
         }
       />
       <Row gap={0.5} grow="last">
-        <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto">
+        <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
           <ThemedText.ButtonMedium>
             <Trans>Auto</Trans>
           </ThemedText.ButtonMedium>
@@ -144,7 +144,7 @@ export default function MaxSlippageSelect() {
           icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
           ref={option}
           tabIndex={-1}
-          data-testid="custom"
+          data-testid="custom-slippage"
         >
           <Row color={warning === 'error' ? 'error' : undefined}>
             <DecimalInput
@@ -153,7 +153,7 @@ export default function MaxSlippageSelect() {
               onChange={(input) => processInput(input)}
               placeholder={'0.10'}
               ref={input}
-              data-testid="input"
+              data-testid="input-slippage"
             />
             %
           </Row>
