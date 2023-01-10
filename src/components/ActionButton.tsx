@@ -7,14 +7,14 @@ import Button from './Button'
 import Row, { RowProps } from './Row'
 import Tooltip from './Tooltip'
 
-const StyledButton = styled(Button)<{ useDisabledColor?: boolean }>`
+const StyledButton = styled(Button)<{ shouldUseDisabledColor?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
   max-height: 56px;
   transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
-  ${({ theme, disabled, useDisabledColor }) =>
+  ${({ theme, disabled, shouldUseDisabledColor }) =>
     disabled &&
-    (useDisabledColor
+    (shouldUseDisabledColor
       ? css`
           background-color: ${theme.interactive};
         `
@@ -77,13 +77,11 @@ export interface Action {
 
 type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive'>
 
-type DisabledBehavior = 'opacity' | 'color'
-
 interface BaseProps {
   color?: ActionButtonColor
   action?: Action
   wrapperProps?: Omit<React.HtmlHTMLAttributes<HTMLDivElement>, keyof RowProps>
-  disabledBehavior?: DisabledBehavior
+  shouldUseDisabledColor?: boolean
 }
 
 export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -91,7 +89,7 @@ export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTML
 export default function ActionButton({
   color = 'accent',
   disabled,
-  disabledBehavior = 'color',
+  shouldUseDisabledColor = true,
   action,
   onClick,
   children,
@@ -116,7 +114,7 @@ export default function ActionButton({
       <StyledButton
         color={color}
         disabled={disabled}
-        useDisabledColor={disabledBehavior === 'color'}
+        shouldUseDisabledColor={shouldUseDisabledColor}
         onClick={action?.onClick || onClick}
         {...rest}
       >
