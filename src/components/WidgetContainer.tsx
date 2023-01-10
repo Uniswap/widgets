@@ -1,5 +1,6 @@
 import { WidgetWidthProvider } from 'hooks/useWidgetWidth'
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
+import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components/macro'
 import toLength from 'utils/toLength'
 

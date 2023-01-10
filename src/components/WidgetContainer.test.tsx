@@ -2,7 +2,6 @@ import { useIsWideWidget, useWidgetWidth } from 'hooks/useWidgetWidth'
 import { renderComponent } from 'test'
 
 import WidgetContainer from './WidgetContainer'
-import WidgetWrapper from './WidgetWrapper'
 
 const widgetWidthValueTestId = 'widgetWidthValue'
 const widgetWidthTypeTestId = 'widgetWidthType'
@@ -36,9 +35,7 @@ describe('WidgetWrapper', () => {
   it('should handle valid number width, wide', () => {
     const component = renderComponent(
       <WidgetContainer width={500}>
-        <WidgetWrapper>
-          <TestComponent />
-        </WidgetWrapper>
+        <TestComponent />
       </WidgetContainer>
     )
     // 300 is the lowest width allowed
@@ -50,9 +47,7 @@ describe('WidgetWrapper', () => {
   it('should constrain to max width', () => {
     const component = renderComponent(
       <WidgetContainer width={700}>
-        <WidgetWrapper>
-          <TestComponent />
-        </WidgetWrapper>
+        <TestComponent />
       </WidgetContainer>
     )
     // 600 is the largest width allowed
@@ -64,9 +59,7 @@ describe('WidgetWrapper', () => {
   it('should handle invalid number width', () => {
     const component = renderComponent(
       <WidgetContainer width={200}>
-        <WidgetWrapper>
-          <TestComponent />
-        </WidgetWrapper>
+        <TestComponent />
       </WidgetContainer>
     )
     // 300 is the lowest width allowed
@@ -78,9 +71,7 @@ describe('WidgetWrapper', () => {
   it('should handle undefined width', () => {
     const component = renderComponent(
       <WidgetContainer width={undefined}>
-        <WidgetWrapper>
-          <TestComponent />
-        </WidgetWrapper>
+        <TestComponent />
       </WidgetContainer>
     )
 
