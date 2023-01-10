@@ -99,7 +99,7 @@ export default function ActionButton({
     }
   }, [color])
   return (
-    <Overlay hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
+    <Overlay data-testid="action-button" hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
       <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>
         <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
           {action?.children || children}
