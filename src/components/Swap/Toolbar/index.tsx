@@ -71,8 +71,10 @@ export default memo(function Toolbar() {
         return <Caption.InsufficientLiquidity />
       }
       if (trade?.inputAmount && trade.outputAmount) {
-        return (
-          <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} gasUseEstimateUSD={gasUseEstimateUSD} />
+        return impact ? (
+          <Caption.PriceImpactWarning impact={impact} trade={trade} />
+        ) : (
+          <Caption.Trade trade={trade} outputUSDC={outputUSDC} gasUseEstimateUSD={gasUseEstimateUSD} />
         )
       }
       if (state === TradeState.INVALID) {

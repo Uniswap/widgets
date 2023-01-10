@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import Column from 'components/Column'
 import Row from 'components/Row'
-import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact } from 'hooks/usePriceImpact'
@@ -183,32 +181,44 @@ export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD 
 export interface TradeProps extends GasEstimateProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
-  impact?: PriceImpact
 }
 
-export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps) {
+export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps) {
   return (
     <>
       <Caption
-        icon={impact?.warning ? AlertTriangle : Info}
+        icon={Info}
         caption={<Price trade={trade} outputUSDC={outputUSDC} />}
         tooltip={{
-          content: (
-            <Column gap={0.75}>
-              {impact?.warning && (
-                <>
-                  <ThemedText.Caption>
-                    The output amount is estimated at {impact.toString()} less than the input amount due to impact
-                  </ThemedText.Caption>
-                  <Rule />
-                </>
-              )}
-              <RoutingDiagram trade={trade} />
-            </Column>
-          ),
+          content: <RoutingDiagram trade={trade} />,
         }}
       />
       <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
+    </>
+  )
+}
+
+type PriceImpactWarningProps = Omit<TradeProps, 'gasUseEstimateUSD'> & { impact: PriceImpact }
+
+export function PriceImpactWarning({ impact }: PriceImpactWarningProps) {
+  return (
+    <>
+      <Caption
+        icon={AlertTriangle}
+        caption="High price impact"
+        color={impact.warning}
+        tooltip={{
+          placement: 'right',
+          content: (
+            <ThemedText.Caption>
+              There will be a large difference between your input and output values due to current liquidity.
+            </ThemedText.Caption>
+          ),
+        }}
+      />
+      <ThemedText.Body2 userSelect={false} color={impact.warning}>
+        {impact.percent.toFixed(1)}%
+      </ThemedText.Body2>
     </>
   )
 }
