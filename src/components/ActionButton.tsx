@@ -7,16 +7,20 @@ import Button from './Button'
 import Row, { RowProps } from './Row'
 import Tooltip from './Tooltip'
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<{ useDisabledColor?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
   max-height: 56px;
   transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
-  ${({ theme, disabled }) =>
+  ${({ theme, disabled, useDisabledColor }) =>
     disabled &&
-    css`
-      background-color: ${theme.interactive};
-    `};
+    (useDisabledColor
+      ? css`
+          background-color: ${theme.interactive};
+        `
+      : css`
+          opacity: 0.6;
+        `)};
 `
 
 const ActionRow = styled(Row)``
@@ -73,10 +77,13 @@ export interface Action {
 
 type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive'>
 
+type DisabledBehavior = 'opacity' | 'color'
+
 interface BaseProps {
   color?: ActionButtonColor
   action?: Action
   wrapperProps?: Omit<React.HtmlHTMLAttributes<HTMLDivElement>, keyof RowProps>
+  disabledBehavior?: DisabledBehavior
 }
 
 export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -84,6 +91,7 @@ export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTML
 export default function ActionButton({
   color = 'accent',
   disabled,
+  disabledBehavior = 'color',
   action,
   onClick,
   children,
@@ -105,7 +113,13 @@ export default function ActionButton({
 
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
-      <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick} {...rest}>
+      <StyledButton
+        color={color}
+        disabled={disabled}
+        useDisabledColor={disabledBehavior === 'color'}
+        onClick={action?.onClick || onClick}
+        {...rest}
+      >
         <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
           {action?.children || children}
         </ThemedText.TransitionButton>
