@@ -8,7 +8,8 @@ import { Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
-export const BoundaryProvider = BoundaryContext.Provider
+/* Defines a boundary component past which a Popover should not overflow. */
+export const PopoverBoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};
@@ -85,9 +86,18 @@ export interface PopoverProps {
   placement: Placement
   offset?: number
   contained?: true
+  showArrow?: boolean
 }
 
-export default function Popover({ content, show, children, placement, offset, contained }: PopoverProps) {
+export default function Popover({
+  content,
+  show,
+  children,
+  placement,
+  offset,
+  contained,
+  showArrow = true,
+}: PopoverProps) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
@@ -138,12 +148,14 @@ export default function Popover({ content, show, children, placement, offset, co
         createPortal(
           <PopoverContainer show={show} ref={setPopover} style={styles.popper} {...attributes.popper}>
             {content}
-            <Arrow
-              className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-              ref={setArrow}
-              style={styles.arrow}
-              {...attributes.arrow}
-            />
+            {showArrow && (
+              <Arrow
+                className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
+                ref={setArrow}
+                style={styles.arrow}
+                {...attributes.arrow}
+              />
+            )}
           </PopoverContainer>,
           boundary
         )}

@@ -1,6 +1,7 @@
 import { useIsWideWidget, useWidgetWidth } from 'hooks/useWidgetWidth'
 import { renderComponent } from 'test'
 
+import WidgetContainer from './WidgetContainer'
 import WidgetWrapper from './WidgetWrapper'
 
 const widgetWidthValueTestId = 'widgetWidthValue'
@@ -22,9 +23,9 @@ function TestComponent() {
 describe('WidgetWrapper', () => {
   it('should handle valid number width, narrow', () => {
     const component = renderComponent(
-      <WidgetWrapper width={300}>
+      <WidgetContainer width={300}>
         <TestComponent />
-      </WidgetWrapper>
+      </WidgetContainer>
     )
     // 300 is the lowest width allowed
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('300')
@@ -34,9 +35,11 @@ describe('WidgetWrapper', () => {
 
   it('should handle valid number width, wide', () => {
     const component = renderComponent(
-      <WidgetWrapper width={500}>
-        <TestComponent />
-      </WidgetWrapper>
+      <WidgetContainer width={500}>
+        <WidgetWrapper>
+          <TestComponent />
+        </WidgetWrapper>
+      </WidgetContainer>
     )
     // 300 is the lowest width allowed
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('500')
@@ -46,9 +49,11 @@ describe('WidgetWrapper', () => {
 
   it('should constrain to max width', () => {
     const component = renderComponent(
-      <WidgetWrapper width={700}>
-        <TestComponent />
-      </WidgetWrapper>
+      <WidgetContainer width={700}>
+        <WidgetWrapper>
+          <TestComponent />
+        </WidgetWrapper>
+      </WidgetContainer>
     )
     // 600 is the largest width allowed
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('600')
@@ -58,9 +63,11 @@ describe('WidgetWrapper', () => {
 
   it('should handle invalid number width', () => {
     const component = renderComponent(
-      <WidgetWrapper width={200}>
-        <TestComponent />
-      </WidgetWrapper>
+      <WidgetContainer width={200}>
+        <WidgetWrapper>
+          <TestComponent />
+        </WidgetWrapper>
+      </WidgetContainer>
     )
     // 300 is the lowest width allowed
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('300')
@@ -70,9 +77,11 @@ describe('WidgetWrapper', () => {
 
   it('should handle undefined width', () => {
     const component = renderComponent(
-      <WidgetWrapper width={undefined}>
-        <TestComponent />
-      </WidgetWrapper>
+      <WidgetContainer width={undefined}>
+        <WidgetWrapper>
+          <TestComponent />
+        </WidgetWrapper>
+      </WidgetContainer>
     )
 
     // We default to 360px if width is undefined

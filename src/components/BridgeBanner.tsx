@@ -35,7 +35,7 @@ const L2Icon = styled.img`
 `
 const Header = styled.div`
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.5em;
 `
 const BodyText = styled.div`

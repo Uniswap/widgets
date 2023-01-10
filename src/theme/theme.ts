@@ -19,6 +19,7 @@ export interface Colors {
   active: string
   success: string
   warning: string
+  warningSoft: string
   error: string
 
   networkDefaultShadow: string
