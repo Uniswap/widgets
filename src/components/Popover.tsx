@@ -8,7 +8,8 @@ import { Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
-export const BoundaryProvider = BoundaryContext.Provider
+/** Defines a boundary component past which a Popover should not overflow. */
+export const PopoverBoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};

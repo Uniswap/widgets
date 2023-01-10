@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 
 import { IconButton } from '../../Button'
 import Column from '../../Column'
-import Popover, { BoundaryProvider } from '../../Popover'
+import Popover, { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import TransactionTtlInput from './TransactionTtlInput'
 
@@ -13,10 +13,10 @@ export function SettingsPopover() {
 
   return (
     <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
-      <BoundaryProvider value={boundary}>
+      <PopoverBoundaryProvider value={boundary}>
         <MaxSlippageSelect />
         <TransactionTtlInput />
-      </BoundaryProvider>
+      </PopoverBoundaryProvider>
     </Column>
   )
 }
@@ -34,11 +34,11 @@ export default function Settings() {
 
   return (
     <div ref={setWrapper}>
-      <BoundaryProvider value={wrapper}>
+      <PopoverBoundaryProvider value={wrapper}>
         <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsPopover />}>
           <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
         </Popover>
-      </BoundaryProvider>
+      </PopoverBoundaryProvider>
     </div>
   )
 }
