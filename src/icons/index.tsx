@@ -18,6 +18,7 @@ import {
   ArrowDown as ArrowDownIcon,
   ArrowRight as ArrowRightIcon,
   ArrowUp as ArrowUpIcon,
+  ArrowUpRight as ArrowUpRightIcon,
   BarChart2 as BarChart2Icon,
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
@@ -103,6 +104,7 @@ export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
 export const Reverse = icon(ReverseIcon)
+export const ArrowUpRight = icon(ArrowUpRightIcon)
 
 export const Check = styled(icon(CheckIcon))`
   circle {

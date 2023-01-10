@@ -2,7 +2,7 @@ import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
-import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+import polygon from 'assets/svg/polygon.svg'
 import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
@@ -165,9 +165,9 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
-    logoUrl: polygonMaticLogo,
+    logoUrl: polygon,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-    color: '#A457FF',
+    color: '#8247e5',
     backgroundColor: '#a457ff29',
   },
   [SupportedChainId.POLYGON_MUMBAI]: {
@@ -178,9 +178,9 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://mumbai.polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
-    logoUrl: polygonMaticLogo,
+    logoUrl: polygon,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
-    color: '#A457FF',
+    color: '#8247e5',
     backgroundColor: '#a457ff29',
   },
   [SupportedChainId.CELO]: {

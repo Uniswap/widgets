@@ -64,6 +64,7 @@ function Fixture() {
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+  const [hideL2BridgeBanner] = useValue('hideL2BridgeBanner', { defaultValue: false })
 
   const [width] = useValue('width', { defaultValue: 360 })
 
@@ -102,6 +103,7 @@ function Fixture() {
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
       hideConnectionUI={hideConnectionUI}
+      hideL2BridgeBanner={hideL2BridgeBanner}
       locale={locale}
       defaultChainId={defaultChainId}
       provider={connector}
