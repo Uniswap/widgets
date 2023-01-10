@@ -12,7 +12,7 @@ import TransactionTtlInput from './TransactionTtlInput'
 export function SettingsPopover() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
 
-  // TODO: add back reset settings functionality
+  // TODO (WEB-2754): add back reset settings functionality
   return (
     <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
       <PopoverBoundaryProvider value={boundary}>
@@ -26,6 +26,11 @@ export function SettingsPopover() {
 const SettingsButton = styled(IconButton)`
   ${SettingsIcon}:hover {
     transform: rotate(45deg);
+    transition: transform 0.25s;
+  }
+
+  ${SettingsIcon} {
+    transform: rotate(-45deg);
     transition: transform 0.25s;
   }
 `
