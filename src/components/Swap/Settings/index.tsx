@@ -1,4 +1,4 @@
-import { useCloseOnEscape } from 'hooks/useCloseOnEscape'
+import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { Settings as SettingsIcon } from 'icons'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
@@ -34,7 +34,7 @@ export default function Settings() {
   const [open, setOpen] = useState(false)
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
-  useCloseOnEscape(() => setOpen(false))
+  useOnEscapeHandler(() => setOpen(false))
 
   return (
     <div ref={setWrapper}>

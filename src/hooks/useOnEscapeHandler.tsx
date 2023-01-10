@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export function useCloseOnEscape(onClose?: () => void) {
+export function useOnEscapeHandler(onClose?: () => void) {
   useEffect(() => {
     if (!onClose) return
 

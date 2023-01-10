@@ -1,6 +1,6 @@
 import 'wicg-inert'
 
-import { useCloseOnEscape } from 'hooks/useCloseOnEscape'
+import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { ChevronLeft } from 'icons'
 import { largeIconCss } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
@@ -136,7 +136,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
   })
 
-  useCloseOnEscape(onClose)
+  useOnEscapeHandler(onClose)
 
   return (
     context.element &&
