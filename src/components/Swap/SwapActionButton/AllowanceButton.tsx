@@ -76,7 +76,7 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
   const buttonColor = useMemo(() => (isFailed ? 'warningSoft' : defaultButtonColor), [defaultButtonColor, isFailed])
 
   return (
-    <ActionButton color={buttonColor} disabled={!action?.onClick} action={action}>
+    <ActionButton color={buttonColor} disabled={!action?.onClick} action={action} shouldUseDisabledColor={false}>
       {isFailed ? t`Try again` : t`Approve`}
     </ActionButton>
   )
