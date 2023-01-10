@@ -1,72 +1,53 @@
-import { Trans } from '@lingui/macro'
+import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { Settings as SettingsIcon } from 'icons'
-import { useAtomValue, useResetAtom } from 'jotai/utils'
-import { useCallback, useState } from 'react'
-import { swapEventHandlersAtom } from 'state/swap'
-import { settingsAtom } from 'state/swap/settings'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
-import { IconButton, TextButton } from '../../Button'
+import { IconButton } from '../../Button'
 import Column from '../../Column'
-import Dialog, { Header } from '../../Dialog'
-import { BoundaryProvider } from '../../Popover'
+import Popover, { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import TransactionTtlInput from './TransactionTtlInput'
 
-export function SettingsDialog() {
+export function SettingsPopover() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const { onSettingsReset } = useAtomValue(swapEventHandlersAtom)
-  const resetSettingsBase = useResetAtom(settingsAtom)
-  const resetSettings = useCallback(() => {
-    onSettingsReset?.()
-    resetSettingsBase()
-  }, [onSettingsReset, resetSettingsBase])
+
+  // TODO (WEB-2754): add back reset settings functionality
   return (
-    <>
-      <Header title={<Trans>Settings</Trans>} ruled>
-        <TextButton onClick={resetSettings}>
-          <ThemedText.ButtonSmall>
-            <Trans>Reset</Trans>
-          </ThemedText.ButtonSmall>
-        </TextButton>
-      </Header>
-      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
-        <BoundaryProvider value={boundary}>
-          <MaxSlippageSelect />
-          <TransactionTtlInput />
-        </BoundaryProvider>
-      </Column>
-    </>
+    <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
+      <PopoverBoundaryProvider value={boundary}>
+        <MaxSlippageSelect />
+        <TransactionTtlInput />
+      </PopoverBoundaryProvider>
+    </Column>
   )
 }
 
-const SettingsButton = styled(IconButton)<{ hover: boolean }>`
+const SettingsButton = styled(IconButton)`
+  ${SettingsIcon}:hover {
+    transform: rotate(45deg);
+    transition: transform 0.25s;
+  }
+
   ${SettingsIcon} {
-    transform: ${({ hover }) => hover && 'rotate(45deg)'};
-    transition: ${({ hover }) => hover && 'transform 0.25s'};
-    will-change: transform;
+    transform: rotate(0);
+    transition: transform 0.25s;
   }
 `
 
-export default function Settings({ disabled }: { disabled?: boolean }) {
+export default function Settings() {
   const [open, setOpen] = useState(false)
-  const [hover, setHover] = useState(false)
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
+
+  useOnEscapeHandler(() => setOpen(false))
+
   return (
-    <>
-      <SettingsButton
-        disabled={disabled}
-        hover={hover}
-        onClick={() => setOpen(true)}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        icon={SettingsIcon}
-      />
-      {open && (
-        <Dialog color="module" onClose={() => setOpen(false)}>
-          <SettingsDialog />
-        </Dialog>
-      )}
-    </>
+    <div ref={setWrapper}>
+      <PopoverBoundaryProvider value={wrapper}>
+        <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsPopover />}>
+          <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
+        </Popover>
+      </PopoverBoundaryProvider>
+    </div>
   )
 }
