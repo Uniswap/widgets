@@ -8,7 +8,7 @@ import { Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
-/** Defines a boundary component past which a Popover should not overflow. */
+/* Defines a boundary component past which a Popover should not overflow. */
 export const PopoverBoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
