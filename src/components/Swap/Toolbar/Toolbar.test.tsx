@@ -67,6 +67,6 @@ describe('Toolbar', () => {
         ],
       }
     )
-    expect(component.queryByText('Approve use of token')).toBeTruthy()
+    expect(component.getByText('Approve token')).toBeTruthy()
   })
 })
