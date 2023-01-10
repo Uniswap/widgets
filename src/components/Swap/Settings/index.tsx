@@ -30,7 +30,7 @@ const SettingsButton = styled(IconButton)`
   }
 
   ${SettingsIcon} {
-    transform: rotate(-45deg);
+    transform: rotate(0);
     transition: transform 0.25s;
   }
 `
