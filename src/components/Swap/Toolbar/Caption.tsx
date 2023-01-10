@@ -22,7 +22,8 @@ const Loading = styled.span`
   ${loadingCss};
 `
 
-const CaptionRow = styled(Row)<{ gap: number }>`
+const CaptionRow = styled(Row)<{ gap: number; shrink?: number }>`
+  flex-shrink: ${({ shrink }) => shrink ?? 1};
   gap: ${({ gap }) => gap}em;
   height: 100%;
 `
@@ -51,18 +52,18 @@ function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   return (
     <CaptionRow gap={0.25}>
       {isWideWidget ? (
-        <Gas color={'secondary'} />
+        <>
+          <Gas color="secondary" />
+          <ThemedText.Body2 color="secondary">
+            {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
+          </ThemedText.Body2>
+        </>
       ) : (
         <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
           <ThemedText.Body2 color="secondary">
             Estimated gas: {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
           </ThemedText.Body2>
         </Tooltip>
-      )}
-      {isWideWidget && (
-        <ThemedText.Body2 color="secondary">
-          {formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
-        </ThemedText.Body2>
       )}
     </CaptionRow>
   )

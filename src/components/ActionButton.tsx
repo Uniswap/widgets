@@ -71,9 +71,9 @@ export interface Action {
   children?: ReactNode
 }
 
-export type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive'>
+type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive'>
 
-export interface BaseProps {
+interface BaseProps {
   color?: ActionButtonColor
   action?: Action
   wrapperProps?: Omit<React.HtmlHTMLAttributes<HTMLDivElement>, keyof RowProps>

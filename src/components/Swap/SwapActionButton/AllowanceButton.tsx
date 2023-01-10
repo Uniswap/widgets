@@ -38,7 +38,6 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
   }, [approveAndPermit])
 
   const isWideWidget = useIsWideWidget()
-
   const action: Action = useMemo(() => {
     if (isPending) {
       return {
@@ -64,7 +63,7 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
       }
     } else {
       return {
-        tooltipContent: t`Permission is required for Uniswap smart contract to use each token. This will expire after one month for your security.`,
+        tooltipContent: t`Permission is required for the Uniswap smart contract to use each token. This will expire after one month for your security.`,
         message: isWideWidget
           ? t`Approve ${token?.symbol ?? 'token'} for trading`
           : t`Approve ${token?.symbol ?? 'token'}`,
@@ -75,10 +74,7 @@ export default function AllowanceButton({ token, isApprovalLoading, approveAndPe
 
   const defaultButtonColor = useTokenColorExtraction()
   const buttonColor = useMemo(() => {
-    if (isFailed) {
-      return 'warningSoft'
-    }
-    return defaultButtonColor
+    return isFailed ? 'warningSoft' : defaultButtonColor
   }, [defaultButtonColor, isFailed])
 
   return (
