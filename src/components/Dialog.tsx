@@ -1,5 +1,6 @@
 import 'wicg-inert'
 
+import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { ChevronLeft } from 'icons'
 import { largeIconCss } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
@@ -135,11 +136,8 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
   })
 
-  useEffect(() => {
-    const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
-    document.addEventListener('keydown', close, true)
-    return () => document.removeEventListener('keydown', close, true)
-  }, [onClose])
+  useOnEscapeHandler(onClose)
+
   return (
     context.element &&
     createPortal(
