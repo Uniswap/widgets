@@ -25,7 +25,7 @@ const BridgeLink = styled(ExternalLink)<{ color: string }>`
   font-size: 1em;
   justify-content: space-between;
   padding: 0.75em;
-  text-decoration: none !important;
+  text-decoration: none;
   width: 100%;
 `
 const L2Icon = styled.img`
@@ -56,13 +56,13 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
 export function BridgeBanner() {
   const { chainId } = useWeb3React()
 
-  if (!isSupportedChainId(chainId)) {
-    return null
-  }
+  if (!isSupportedChainId(chainId)) return null
 
   const { label, logoUrl, bridge, color, backgroundColor } = getChainInfo(chainId)
 
-  return bridge && color && backgroundColor ? (
+  if (!bridge || !color || !backgroundColor) return null
+
+  return (
     <ContentWrapper backgroundColor={backgroundColor}>
       <BridgeLink href={bridge} color={color}>
         <BodyText>
@@ -77,5 +77,5 @@ export function BridgeBanner() {
         <StyledArrowUpRight />
       </BridgeLink>
     </ContentWrapper>
-  ) : null
+  )
 }

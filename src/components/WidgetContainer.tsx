@@ -72,9 +72,7 @@ export default function WidgetContainer(props: PropsWithChildren<WidgetContainer
       observer.observe(ref.current)
     }
     return () => {
-      if (current) {
-        observer.unobserve(current)
-      }
+      current && observer.unobserve(current)
     }
   }, [])
 
