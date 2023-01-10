@@ -66,10 +66,8 @@ export type SwapWidgetProps = SwapProps & WidgetProps
 
 export function SwapWidget(props: SwapWidgetProps) {
   return (
-    <>
-      <Widget {...props}>
-        <Swap {...props} />
-      </Widget>
-    </>
+    <Widget {...props}>
+      <Swap {...props} />
+    </Widget>
   )
 }
