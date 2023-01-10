@@ -1,3 +1,4 @@
+import { useCloseOnEscape } from 'hooks/useCloseOnEscape'
 import { Settings as SettingsIcon } from 'icons'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
@@ -11,6 +12,7 @@ import TransactionTtlInput from './TransactionTtlInput'
 export function SettingsPopover() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
 
+  // TODO: add back reset settings functionality
   return (
     <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
       <PopoverBoundaryProvider value={boundary}>
@@ -31,6 +33,8 @@ const SettingsButton = styled(IconButton)`
 export default function Settings() {
   const [open, setOpen] = useState(false)
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
+
+  useCloseOnEscape(() => setOpen(false))
 
   return (
     <div ref={setWrapper}>
