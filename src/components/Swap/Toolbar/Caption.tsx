@@ -48,7 +48,7 @@ interface GasEstimateProps {
 function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', tooltip }: CaptionProps) {
   return (
     <CaptionRow gap={0.5} shrink={0}>
-      {Boolean(tooltip) ? (
+      {tooltip ? (
         <Tooltip placement={tooltip?.placement ?? 'bottom'} icon={LargeIcon} iconProps={{ icon: Icon, color }}>
           {tooltip?.content}
         </Tooltip>
@@ -62,21 +62,19 @@ function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', too
 
 function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
+  const displayEstimate = !gasUseEstimateUSD
+    ? '-'
+    : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })
   return (
     <CaptionRow gap={0.25}>
       {isWideWidget ? (
         <>
           <Gas color="secondary" />
-          <ThemedText.Body2 color="secondary">
-            {!gasUseEstimateUSD ? '-' : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
-          </ThemedText.Body2>
+          <ThemedText.Body2 color="secondary">{displayEstimate}</ThemedText.Body2>
         </>
       ) : (
         <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
-          <ThemedText.Body2 color="secondary">
-            Estimated gas:{' '}
-            {!gasUseEstimateUSD ? '-' : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}
-          </ThemedText.Body2>
+          <ThemedText.Body2 color="secondary">Estimated gas: {displayEstimate}</ThemedText.Body2>
         </Tooltip>
       )}
     </CaptionRow>
