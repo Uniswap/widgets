@@ -1,4 +1,11 @@
-import { shouldCheck } from './updater'
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { parseEther } from '@ethersproject/units'
+import * as BlockNumber from 'hooks/useBlockNumber'
+import useBlockNumber from 'hooks/useBlockNumber'
+import { useMemo } from 'react'
+import { act, renderComponent, waitFor } from 'test'
+
+import Updater, { shouldCheck } from './updater'
 
 describe('transactions updater', () => {
   describe('shouldCheck', () => {
@@ -31,5 +38,47 @@ describe('transactions updater', () => {
         true
       )
     })
+  })
+
+  it('fast forwards on a future receipt', async () => {
+    const fastForwardBlockNumber = jest.fn()
+    jest.spyOn(BlockNumber, 'useFastForwardBlockNumber').mockReturnValue(fastForwardBlockNumber)
+
+    function BlockNumberTestComponent({ tx }: { tx?: TransactionResponse }) {
+      const pendingTransactions = useMemo(
+        () =>
+          tx
+            ? {
+                [tx.hash]: {
+                  addedTime: new Date().getTime(),
+                  lastCheckedBlockNumber: 1,
+                  info: tx,
+                },
+              }
+            : {},
+        [tx]
+      )
+      const nop = () => undefined
+      return (
+        <>
+          <Updater pendingTransactions={pendingTransactions} onCheck={nop} onReceipt={nop} />
+          {useBlockNumber()}
+        </>
+      )
+    }
+
+    const blockNumber = await act(() => hardhat.provider.getBlockNumber()) // activate hardhat connector
+    const updater = renderComponent(<BlockNumberTestComponent />)
+
+    await waitFor(() => expect(updater.container.textContent).toBe(blockNumber.toString()))
+
+    const tx = await act(() =>
+      hardhat.provider.getSigner().sendTransaction({
+        to: hardhat.account.address,
+        value: parseEther('1'),
+      })
+    )
+    updater.rerender(<BlockNumberTestComponent tx={tx} />)
+    await waitFor(() => expect(fastForwardBlockNumber).toHaveBeenCalledWith(tx.blockNumber))
   })
 })
