@@ -5,7 +5,11 @@ import fetchTokenList from './fetchTokenList'
 
 describe('fetchTokenList', () => {
   const resolver = jest.fn()
-  beforeEach(() => resolver.mockReset())
+
+  beforeEach(() => {
+    jest.spyOn(console, 'debug').mockReturnValue(undefined)
+    resolver.mockReset()
+  })
 
   it('throws on an invalid list url', async () => {
     const url = 'https://example.com/invalid-tokenlist.json'
@@ -13,6 +17,7 @@ describe('fetchTokenList', () => {
       throw new Error()
     })
     await expect(fetchTokenList(url, resolver)).rejects.toThrowError(`failed to fetch list: ${url}`)
+    expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()
   })
 
