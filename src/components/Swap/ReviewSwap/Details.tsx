@@ -26,6 +26,7 @@ const Value = styled.span<{ color?: Color }>`
 `
 const TokenAmount = styled(ThemedText.H1)`
   color: ${({ theme }) => theme.primary};
+  white-space: nowrap;
 `
 
 interface DetailProps {

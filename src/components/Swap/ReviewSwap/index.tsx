@@ -5,7 +5,7 @@ import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
-import { BarChart, Spinner } from 'icons'
+import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -87,8 +87,9 @@ function ConfirmButton({
       return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner }
     } else if (doesTradeDiffer) {
       return {
+        color: 'accent',
         message: <Trans>Price updated</Trans>,
-        icon: BarChart,
+        icon: AlertTriangle,
         onClick: () => {
           onSwapPriceUpdateAck?.(ackTrade, trade)
           setAckTrade(trade)
@@ -106,18 +107,7 @@ function ConfirmButton({
   }, [ackPriceImpact, ackTrade, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
 
   return (
-    <ActionButton
-      onClick={onClick}
-      action={action}
-      disabled={isPending}
-      wrapperProps={{
-        style: {
-          bottom: '0.25em',
-          position: 'absolute',
-          width: 'calc(100% - 1.5em)',
-        },
-      }}
-    >
+    <ActionButton onClick={onClick} action={action} disabled={isPending}>
       {isPending ? <Trans>Confirm</Trans> : <Trans>Confirm swap</Trans>}
     </ActionButton>
   )
@@ -140,10 +130,9 @@ export function SummaryDialog(props: SummaryDialogProps) {
       <Body flex align="stretch" padded gap={0.75}>
         <Column gap={0.5}>
           <Details {...props} />
-          <Estimate {...props} />
         </Column>
-        <ConfirmButton {...props} highPriceImpact={props.impact?.warning === 'error'} />
       </Body>
+      <ConfirmButton {...props} highPriceImpact={props.impact?.warning === 'error'} />
     </>
   )
 }
