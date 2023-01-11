@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
@@ -18,7 +18,6 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 import { isExactInput } from 'utils/tradeType'
 
-import Price from '../Price'
 import Details from './Details'
 import Summary from './Summary'
 
@@ -156,23 +155,11 @@ interface SummaryDialogProps {
   trade: InterfaceTrade
   slippage: Slippage
   gasUseEstimateUSD?: CurrencyAmount<Token>
-  inputUSDC?: CurrencyAmount<Currency>
-  outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
   onConfirm: () => Promise<void>
 }
 
-export function SummaryDialog({
-  trade,
-  slippage,
-  gasUseEstimateUSD,
-  inputUSDC,
-  outputUSDC,
-  impact,
-  onConfirm,
-}: SummaryDialogProps) {
-  const { inputAmount, outputAmount } = trade
-
+export function SummaryDialog({ trade, slippage, gasUseEstimateUSD, impact, onConfirm }: SummaryDialogProps) {
   const [open, setOpen] = useState(false)
   const { onExpandSwapDetails } = useAtomValue(swapEventHandlersAtom)
   const onExpand = useCallback(() => {
@@ -184,29 +171,10 @@ export function SummaryDialog({
     <>
       <Header title={<Trans>Review Swap</Trans>} />
       <Body flex align="stretch" padded gap={0.75}>
-        <Heading gap={0.75} flex justify="center">
-          <Summary
-            input={inputAmount}
-            output={outputAmount}
-            inputUSDC={inputUSDC}
-            outputUSDC={outputUSDC}
-            impact={impact}
-            open={open}
-          />
-          <Price trade={trade} />
-        </Heading>
-        <Expando
-          title={<Subhead impact={impact} slippage={slippage} />}
-          open={open}
-          onExpand={onExpand}
-          height={6}
-          gap={open ? 0 : 0.75}
-        >
-          <Column gap={0.5}>
-            <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
-            <Estimate trade={trade} slippage={slippage} />
-          </Column>
-        </Expando>
+        <Column gap={0.5}>
+          <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
+          <Estimate trade={trade} slippage={slippage} />
+        </Column>
 
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
       </Body>

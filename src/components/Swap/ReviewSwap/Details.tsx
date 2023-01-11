@@ -14,6 +14,11 @@ import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { isExactInput } from 'utils/tradeType'
 
+import { useTradeExchangeRate } from '../Price'
+
+const Label = styled.span`
+  color: ${({ theme }) => theme.secondary};
+`
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
   white-space: nowrap;
@@ -27,12 +32,12 @@ interface DetailProps {
 
 function Detail({ label, value, color }: DetailProps) {
   return (
-    <ThemedText.Caption userSelect>
+    <ThemedText.Body2 userSelect>
       <Row gap={2}>
-        <span>{label}</span>
+        <Label>{label}</Label>
         <Value color={color}>{value}</Value>
       </Row>
-    </ThemedText.Caption>
+    </ThemedText.Body2>
   )
 }
 
@@ -49,10 +54,13 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
+  const [exchangeRate] = useTradeExchangeRate({ trade })
 
   const details = useMemo(() => {
     const rows: Array<[string, string] | [string, string, Color | undefined]> = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
+
+    rows.push([t`Exchange rate`, exchangeRate])
 
     if (feeOptions) {
       const fee = outputAmount.multiply(feeOptions.fee)
@@ -62,23 +70,23 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
       }
     }
 
-    if (impact) {
-      rows.push([t`Price impact`, impact.toString(), impact.warning])
-    }
-
     if (gasUseEstimateUSD) {
       rows.push([t`Network fee`, `~${formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}`])
     }
 
+    if (impact) {
+      rows.push([t`Price impact`, impact.toString(), impact.warning])
+    }
+
     if (isExactInput(trade.tradeType)) {
       const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
-      rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
+      rows.push([t`Minimum output after slippage`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     } else {
       const localizedMaxSent = formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
-    rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])
+    // rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])
 
     return rows
   }, [
@@ -90,7 +98,6 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
     outputAmount,
     outputCurrency,
     slippage.allowed,
-    slippage.warning,
     trade,
   ])
 

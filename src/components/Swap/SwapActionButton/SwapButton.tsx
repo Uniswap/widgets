@@ -113,8 +113,6 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
             trade={trade}
             slippage={slippage}
             gasUseEstimateUSD={gasUseEstimateUSD}
-            inputUSDC={inputUSDC}
-            outputUSDC={outputUSDC}
             impact={impact}
             onConfirm={onSwap}
           />
