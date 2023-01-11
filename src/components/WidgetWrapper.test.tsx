@@ -20,6 +20,8 @@ function TestComponent() {
 }
 
 describe('WidgetWrapper', () => {
+  beforeEach(() => jest.spyOn(console, 'warn').mockReturnValue(undefined))
+
   it('should handle valid number width, narrow', () => {
     const component = renderComponent(
       <WidgetWrapper width={300}>
@@ -51,6 +53,7 @@ describe('WidgetWrapper', () => {
       </WidgetWrapper>
     )
     // 600 is the largest width allowed
+    expect(console.warn).toHaveBeenCalled()
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('600')
     expect(component.getByTestId(widgetWidthTypeTestId).textContent).toBe('number')
     expect(component.getByTestId(widgetIsWideTestId).textContent).toBe('wide')
@@ -63,6 +66,7 @@ describe('WidgetWrapper', () => {
       </WidgetWrapper>
     )
     // 300 is the lowest width allowed
+    expect(console.warn).toHaveBeenCalled()
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('300')
     expect(component.getByTestId(widgetWidthTypeTestId).textContent).toBe('number')
     expect(component.getByTestId(widgetIsWideTestId).textContent).toBe('narrow')
