@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
-import Tooltip from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useAtomValue } from 'jotai/utils'
@@ -58,7 +57,8 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
     <Row gap={2} align="flex-start">
       <ThemedText.Body2 userSelect>
         <Label>{label}</Label>
-        {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>}
+        {/* TODO(cartcrom): WEB-2764 figure out why tooltips don't work on Dialog components  */}
+        {/* {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>} */}
       </ThemedText.Body2>
       <Column flex align="flex-end">
         <TokenAmount>
