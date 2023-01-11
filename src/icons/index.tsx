@@ -14,13 +14,13 @@ import { Icon as FeatherIcon } from 'react-feather'
 import {
   AlertTriangle as AlertTriangleIcon,
   ArrowDown as ArrowDownIcon,
+  ArrowLeft as ArrowLeftIcon,
   ArrowRight as ArrowRightIcon,
   ArrowUp as ArrowUpIcon,
   ArrowUpRight as LinkIcon,
   BarChart2 as BarChart2Icon,
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
-  ChevronLeft as ChevronLeftIcon,
   Clock as ClockIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
@@ -83,10 +83,10 @@ export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIco
 export const AlertTriangle = icon(AlertTriangleIcon)
 export const ArrowDown = icon(ArrowDownIcon)
 export const ArrowRight = icon(ArrowRightIcon)
+export const ArrowLeft = icon(ArrowLeftIcon)
 export const ArrowUp = icon(ArrowUpIcon)
 export const CheckCircle = icon(CheckCircleIcon)
 export const BarChart = icon(BarChart2Icon)
-export const ChevronLeft = icon(ChevronLeftIcon)
 export const ChevronDown = icon(ChevronDownIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
