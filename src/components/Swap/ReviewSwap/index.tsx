@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
-import BaseExpando from 'components/Expando'
-import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
-import { AlertTriangle, BarChart, Info, Spinner } from 'icons'
+import { BarChart, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -23,14 +21,6 @@ import Summary from './Summary'
 
 export default Summary
 
-const Expando = styled(BaseExpando)`
-  margin-bottom: 3.2em;
-  transition: gap 0.25s;
-`
-const Heading = styled(Column)`
-  flex-grow: 1;
-  transition: flex-grow 0.25s;
-`
 const StyledEstimate = styled(ThemedText.Caption)`
   margin-bottom: 0.5em;
   margin-top: 0.5em;
@@ -39,24 +29,6 @@ const StyledEstimate = styled(ThemedText.Caption)`
 const Body = styled(Column)`
   height: calc(100% - 2.5em);
 `
-
-function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
-  const showWarning = Boolean(impact?.warning || slippage.warning)
-  return (
-    <Row gap={0.5}>
-      {showWarning ? <AlertTriangle color={impact?.warning || slippage.warning} /> : <Info color="secondary" />}
-      <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
-        {impact?.warning ? (
-          <Trans>High price impact</Trans>
-        ) : slippage.warning ? (
-          <Trans>High slippage</Trans>
-        ) : (
-          <Trans>Swap details</Trans>
-        )}
-      </ThemedText.Subhead2>
-    </Row>
-  )
-}
 
 interface EstimateProps {
   slippage: Slippage
@@ -155,20 +127,22 @@ interface SummaryDialogProps {
   trade: InterfaceTrade
   slippage: Slippage
   gasUseEstimateUSD?: CurrencyAmount<Token>
+  inputUSDC?: CurrencyAmount<Currency>
+  outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
   onConfirm: () => Promise<void>
 }
 
-export function SummaryDialog({ trade, slippage, gasUseEstimateUSD, impact, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog(props: SummaryDialogProps) {
   return (
     <>
       <Header title={<Trans>Review Swap</Trans>} />
       <Body flex align="stretch" padded gap={0.75}>
         <Column gap={0.5}>
-          <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
-          <Estimate trade={trade} slippage={slippage} />
+          <Details {...props} />
+          <Estimate {...props} />
         </Column>
-        <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
+        <ConfirmButton {...props} highPriceImpact={props.impact?.warning === 'error'} />
       </Body>
     </>
   )

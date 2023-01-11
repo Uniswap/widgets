@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
+import Tooltip from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useAtomValue } from 'jotai/utils'
@@ -46,24 +47,28 @@ function Detail({ label, value, color }: DetailProps) {
 }
 
 interface AmountProps {
+  tooltipText?: string
   label: string
   amount: CurrencyAmount<Currency>
-  fiatValue: string
+  usdcAmount?: CurrencyAmount<Currency>
 }
 
-function Amount({ label, amount, fiatValue }: AmountProps) {
+function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   return (
     <Row gap={2} align="flex-start">
       <ThemedText.Body2 userSelect>
         <Label>{label}</Label>
+        {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>}
       </ThemedText.Body2>
       <Column flex align="flex-end">
         <TokenAmount>
           {formatCurrencyAmount({ amount })} {amount.currency.symbol}
         </TokenAmount>
-        <ThemedText.Body2>
-          <Value color="secondary">{fiatValue}</Value>
-        </ThemedText.Body2>
+        {usdcAmount && (
+          <ThemedText.Body2>
+            <Value color="secondary">{formatCurrencyAmount({ amount: usdcAmount, isUsdPrice: true })}</Value>
+          </ThemedText.Body2>
+        )}
       </Column>
     </Row>
   )
@@ -73,10 +78,12 @@ interface DetailsProps {
   trade: InterfaceTrade
   slippage: Slippage
   gasUseEstimateUSD?: CurrencyAmount<Token>
+  inputUSDC?: CurrencyAmount<Currency>
+  outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
 }
 
-export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: DetailsProps) {
+export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC, outputUSDC, impact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
@@ -84,7 +91,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
   const feeOptions = useAtomValue(feeOptionsAtom)
   const [exchangeRate] = useTradeExchangeRate({ trade })
 
-  const details = useMemo(() => {
+  const [details, minimumOutput] = useMemo(() => {
     const rows: Array<[string, string] | [string, string, Color | undefined]> = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
 
@@ -106,17 +113,17 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
       rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
+    let minimumOutput = ''
     if (isExactInput(trade.tradeType)) {
       const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
+      minimumOutput = `${localizedMaxSent} ${outputCurrency.symbol}`
       rows.push([t`Minimum output after slippage`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     } else {
       const localizedMaxSent = formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
-    // rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])
-
-    return rows
+    return [rows, minimumOutput]
   }, [
     exchangeRate,
     feeOptions,
@@ -135,9 +142,19 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
       {details.map(([label, detail, color]) => (
         <Detail key={label} label={label} value={detail} color={color} />
       ))}
-      <Rule />
-      <Amount label="You pay" amount={inputAmount} fiatValue="$4122" />
-      <Amount label="You receive" amount={outputAmount} fiatValue="$4122" />
+      <div style={{ margin: '1em 0' }}>
+        <Rule />
+      </div>
+
+      <Amount label="You pay" amount={inputAmount} usdcAmount={inputUSDC} />
+      <Amount
+        label="You receive"
+        amount={outputAmount}
+        usdcAmount={outputUSDC}
+        tooltipText={
+          t`Output is estimated. You will receive at least ` + minimumOutput + t` or the transaction will revert.`
+        }
+      />
     </Column>
   )
 }
