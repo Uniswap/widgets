@@ -1,7 +1,8 @@
 import { t } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import Rule from 'components/Rule'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useAtomValue } from 'jotai/utils'
@@ -23,6 +24,9 @@ const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
   white-space: nowrap;
 `
+const TokenAmount = styled(ThemedText.H1)`
+  color: ${({ theme }) => theme.primary};
+`
 
 interface DetailProps {
   label: string
@@ -38,6 +42,30 @@ function Detail({ label, value, color }: DetailProps) {
         <Value color={color}>{value}</Value>
       </Row>
     </ThemedText.Body2>
+  )
+}
+
+interface AmountProps {
+  label: string
+  amount: CurrencyAmount<Currency>
+  fiatValue: string
+}
+
+function Amount({ label, amount, fiatValue }: AmountProps) {
+  return (
+    <Row gap={2} align="flex-start">
+      <ThemedText.Body2 userSelect>
+        <Label>{label}</Label>
+      </ThemedText.Body2>
+      <Column flex align="flex-end">
+        <TokenAmount>
+          {formatCurrencyAmount({ amount })} {amount.currency.symbol}
+        </TokenAmount>
+        <ThemedText.Body2>
+          <Value color="secondary">{fiatValue}</Value>
+        </ThemedText.Body2>
+      </Column>
+    </Row>
   )
 }
 
@@ -90,6 +118,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
 
     return rows
   }, [
+    exchangeRate,
     feeOptions,
     gasUseEstimateUSD,
     impact,
@@ -106,6 +135,9 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, impact }: 
       {details.map(([label, detail, color]) => (
         <Detail key={label} label={label} value={detail} color={color} />
       ))}
+      <Rule />
+      <Amount label="You pay" amount={inputAmount} fiatValue="$4122" />
+      <Amount label="You receive" amount={outputAmount} fiatValue="$4122" />
     </Column>
   )
 }

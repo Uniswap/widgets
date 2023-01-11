@@ -160,13 +160,6 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ trade, slippage, gasUseEstimateUSD, impact, onConfirm }: SummaryDialogProps) {
-  const [open, setOpen] = useState(false)
-  const { onExpandSwapDetails } = useAtomValue(swapEventHandlersAtom)
-  const onExpand = useCallback(() => {
-    onExpandSwapDetails?.()
-    setOpen((open) => !open)
-  }, [onExpandSwapDetails])
-
   return (
     <>
       <Header title={<Trans>Review Swap</Trans>} />
@@ -175,7 +168,6 @@ export function SummaryDialog({ trade, slippage, gasUseEstimateUSD, impact, onCo
           <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
           <Estimate trade={trade} slippage={slippage} />
         </Column>
-
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
       </Body>
     </>
