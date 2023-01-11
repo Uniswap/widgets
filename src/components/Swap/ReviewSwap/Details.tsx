@@ -91,7 +91,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   const feeOptions = useAtomValue(feeOptionsAtom)
   const [exchangeRate] = useTradeExchangeRate({ trade })
 
-  const [details, minimumOutput] = useMemo(() => {
+  const [details, estimationMessage] = useMemo(() => {
     const rows: Array<[string, string] | [string, string, Color | undefined]> = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
 
@@ -113,17 +113,22 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
-    let minimumOutput = ''
+    let estimationMessage = ''
     if (isExactInput(trade.tradeType)) {
-      const localizedMaxSent = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
-      minimumOutput = `${localizedMaxSent} ${outputCurrency.symbol}`
-      rows.push([t`Minimum output after slippage`, `${localizedMaxSent} ${outputCurrency.symbol}`])
+      const localizedMinReceived = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
+      const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
+      estimationMessage =
+        t`Output is estimated. You will receive at least ` + minReceivedString + t`or the transaction will revert.`
+      rows.push([t`Minimum output after slippage`, minReceivedString])
     } else {
       const localizedMaxSent = formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })
-      rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
+      const maxSentString = `${localizedMaxSent} ${inputCurrency.symbol}`
+      estimationMessage =
+        t`Output is estimated. You will send at most ` + maxSentString + t`or the transaction will revert.`
+      rows.push([t`Maximum sent`, maxSentString])
     }
 
-    return [rows, minimumOutput]
+    return [rows, estimationMessage]
   }, [
     exchangeRate,
     feeOptions,
@@ -147,14 +152,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       </div>
 
       <Amount label="You pay" amount={inputAmount} usdcAmount={inputUSDC} />
-      <Amount
-        label="You receive"
-        amount={outputAmount}
-        usdcAmount={outputUSDC}
-        tooltipText={
-          t`Output is estimated. You will receive at least ` + minimumOutput + t` or the transaction will revert.`
-        }
-      />
+      <Amount label="You receive" amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
     </Column>
   )
 }
