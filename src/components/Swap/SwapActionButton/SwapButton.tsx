@@ -17,7 +17,7 @@ import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
-import { SummaryDialog } from '../Summary'
+import { SummaryDialog } from '../ReviewSwap'
 import useOnSubmit from './useOnSubmit'
 
 /**
