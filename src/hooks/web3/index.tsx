@@ -43,7 +43,12 @@ export interface ProviderProps {
 }
 
 export function TestableProvider({ provider, children }: PropsWithChildren<{ provider: JsonRpcProvider }>) {
-  const connectors = useMemo(() => [initializeWeb3ReactConnector(JsonRpcConnector, { provider })], [provider])
+  const connector = useMemo(() => initializeWeb3ReactConnector(JsonRpcConnector, { provider }), [provider])
+  useEffect(() => {
+    connector[0].activate()
+  }, [connector])
+
+  const connectors = useMemo(() => [connector], [connector])
   return <Web3ReactProvider connectors={connectors}>{children}</Web3ReactProvider>
 }
 
@@ -92,7 +97,7 @@ export function Provider({
     [web3ReactConnectors]
   )
 
-  const shouldEagerlyConnect = provider === undefined
+  const shouldEagerlyConnect = provider === undefined // !== null
   useEffect(() => {
     // Ignore any errors during connection so they do not propagate to the widget.
     if (connectors.user) {

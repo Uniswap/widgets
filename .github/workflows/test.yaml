@@ -32,6 +32,9 @@ jobs:
       - run: yarn prepare
 
       - run: yarn test
+        env:
+          JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
+
       - run: yarn test:e2e
         env:
           JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
