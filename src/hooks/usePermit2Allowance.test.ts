@@ -7,7 +7,7 @@ import { useAddTransactionInfo, usePendingApproval } from 'hooks/transactions'
 import { usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
 import { useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import ms from 'ms.macro'
-import { act, renderHook } from 'test'
+import { act, renderHook, waitFor } from 'test'
 
 import usePermit2Allowance, { AllowanceRequired, AllowanceState } from './usePermit2Allowance'
 
@@ -45,8 +45,7 @@ describe('usePermit2Allowance', () => {
 
   it('loads', async () => {
     const { result } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-    await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-    expect(useTokenAllowance).toHaveBeenCalledWith(TOKEN, addressMatcher, PERMIT2_ADDRESS)
+    await waitFor(() => expect(useTokenAllowance).toHaveBeenCalledWith(TOKEN, addressMatcher, PERMIT2_ADDRESS))
     expect(usePermitAllowance).toHaveBeenCalledWith(TOKEN, addressMatcher, SPENDER)
     expect(result.current).toMatchObject({ state: AllowanceState.LOADING })
   })
@@ -81,8 +80,7 @@ describe('usePermit2Allowance', () => {
       mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
 
       const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-      await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-      expect(useUpdateTokenAllowance).toHaveBeenCalledWith(AMOUNT, PERMIT2_ADDRESS)
+      await waitFor(() => expect(useUpdateTokenAllowance).toHaveBeenCalledWith(AMOUNT, PERMIT2_ADDRESS))
       expect(useUpdatePermitAllowance).toHaveBeenCalledWith(TOKEN, SPENDER, NONCE, expect.anything())
       expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
 
@@ -125,8 +123,13 @@ describe('usePermit2Allowance', () => {
         })
 
         const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        await waitFor(() =>
+          expect(result.current).toMatchObject({
+            token: TOKEN,
+            state: AllowanceState.REQUIRED,
+            isApprovalLoading: false,
+          })
+        )
 
         await act((result.current as AllowanceRequired).approveAndPermit)
         rerender()
@@ -148,8 +151,13 @@ describe('usePermit2Allowance', () => {
         mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
 
         const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        await waitFor(() =>
+          expect(result.current).toMatchObject({
+            token: TOKEN,
+            state: AllowanceState.REQUIRED,
+            isApprovalLoading: false,
+          })
+        )
 
         await act((result.current as AllowanceRequired).approveAndPermit)
         mockUsePendingApproval.mockReturnValue('0xd3adb33f')
@@ -175,8 +183,13 @@ describe('usePermit2Allowance', () => {
         mockUseUpdatePermitAllowance.mockReturnValue(updatePermitAllowance)
 
         const { result } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        await waitFor(() =>
+          expect(result.current).toMatchObject({
+            token: TOKEN,
+            state: AllowanceState.REQUIRED,
+            isApprovalLoading: false,
+          })
+        )
 
         await act((result.current as AllowanceRequired).approveAndPermit)
         expect(updatePermitAllowance).toHaveBeenCalled()
@@ -202,8 +215,13 @@ describe('usePermit2Allowance', () => {
         mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
 
         const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        await waitFor(() =>
+          expect(result.current).toMatchObject({
+            token: TOKEN,
+            state: AllowanceState.REQUIRED,
+            isApprovalLoading: false,
+          })
+        )
 
         await act((result.current as AllowanceRequired).approveAndPermit)
         mockUsePendingApproval.mockReturnValue('0xd3adb33f')
@@ -234,8 +252,13 @@ describe('usePermit2Allowance', () => {
         mockUseUpdatePermitAllowance.mockReturnValue(updatePermitAllowance)
 
         const { result } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        await waitFor(() =>
+          expect(result.current).toMatchObject({
+            token: TOKEN,
+            state: AllowanceState.REQUIRED,
+            isApprovalLoading: false,
+          })
+        )
 
         await act((result.current as AllowanceRequired).approveAndPermit)
         expect(updatePermitAllowance).toHaveBeenCalled()

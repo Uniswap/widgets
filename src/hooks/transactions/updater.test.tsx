@@ -67,7 +67,7 @@ describe('transactions updater', () => {
       )
     }
 
-    const blockNumber = await act(() => hardhat.provider.getBlockNumber()) // activate hardhat connector
+    const blockNumber = await act(() => hardhat.provider.getBlockNumber())
     const updater = renderComponent(<BlockNumberTestComponent />)
 
     await waitFor(() => expect(updater.container.textContent).toBe(blockNumber.toString()))

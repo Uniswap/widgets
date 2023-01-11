@@ -9,7 +9,7 @@ import { UNI } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
-import { act, renderHook } from 'test'
+import { renderHook, waitFor } from 'test'
 
 import { usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
 
@@ -98,12 +98,10 @@ describe('useUpdatePermitAllowance', () => {
   it('sends signature request to wallet', async () => {
     const onPermitSignature = jest.fn()
     const { result } = renderHook(() => useUpdatePermitAllowance(TOKEN, SPENDER, NONCE, onPermitSignature))
-
-    await act(() => hardhat.provider.getNetwork()) // activate hardhat connector
     expect(result.current).toBeInstanceOf(Function)
 
     jest.spyOn(Date, 'now').mockReturnValue(0)
-    await result.current()
+    await waitFor(() => result.current())
     expect(onPermitSignature).toHaveBeenCalledWith({
       details: {
         token: TOKEN.address,
