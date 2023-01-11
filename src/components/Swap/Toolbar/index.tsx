@@ -16,8 +16,10 @@ import * as Caption from './Caption'
 const ToolbarRow = styled(Row)`
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  flex-wrap: nowrap;
   gap: 0.5em;
   min-height: 3.5em;
+  overflow: hidden;
   padding: 0 1em;
 `
 

@@ -22,7 +22,7 @@ export const brand = brandLight
 const stateColors = {
   active: 'hsl(221, 96%, 64%)',
   success: 'hsl(145, 63.4%, 41.8%)',
-  warning: 'hsl(43, 89.9%, 53.5%)',
+  warningSoft: 'hsla(44, 86%, 51%, 0.24)',
   error: 'hsl(0, 98%, 62.2%)',
 }
 
@@ -47,6 +47,7 @@ export const lightTheme: Colors = {
 
   // state
   ...stateColors,
+  warning: 'hsla(41, 100%, 35%, 1)',
 
   currentColor: 'currentColor',
 }
@@ -72,6 +73,7 @@ export const darkTheme: Colors = {
 
   // state
   ...stateColors,
+  warning: 'hsl(44, 86%, 51%)',
 
   currentColor: 'currentColor',
 }

@@ -75,7 +75,7 @@ describe('Toolbar', () => {
     )
     const action = component.queryByTestId('action-button')
     assert(action)
-    expect(queryByText(action, 'Approve use of token')).toBeTruthy()
+    expect(queryByText(action, 'Approve token')).toBeTruthy()
 
     const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => void }).approveAndPermit
     await act(() => action.querySelector('button')?.click())

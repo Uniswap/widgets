@@ -15,7 +15,7 @@ import { displayTxHashAtom } from 'state/swap'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
-import { BoundaryProvider } from '../Popover'
+import { PopoverBoundaryProvider } from '../Popover'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -55,7 +55,7 @@ export default function Swap(props: SwapProps) {
         <Settings />
       </Header>
       <div ref={setWrapper}>
-        <BoundaryProvider value={wrapper}>
+        <PopoverBoundaryProvider value={wrapper}>
           <SwapInfoProvider routerUrl={props.routerUrl}>
             <Input />
             <ReverseButton />
@@ -64,7 +64,7 @@ export default function Swap(props: SwapProps) {
             <SwapActionButton />
             {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
-        </BoundaryProvider>
+        </PopoverBoundaryProvider>
       </div>
       {displayTx && (
         <Dialog color="dialog">
