@@ -67,8 +67,9 @@ describe('connect', () => {
 
     it('displays connected account chip', async () => {
       const widget = render(ui)
-
-      expect((await widget.findByTestId('account')).textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING)
+      await waitFor(() =>
+        expect(widget.getByTestId('account').textContent?.toLowerCase()).toBe(HARDHAT_ACCOUNT_DISPLAY_STRING)
+      )
     })
   })
 })
