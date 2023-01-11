@@ -62,17 +62,17 @@ export function useRouterTrade(
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
-  const { isError, isFetching, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
+  const { isError, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
   // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
   const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
-    if (!isFetching && fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
+    if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
       refetch()
     }
-  }, [fulfilledTimeStamp, isFetching, pollingInterval, queryArgs, trigger])
+  }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
   const quote = typeof data === 'object' ? data : undefined
