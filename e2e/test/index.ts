@@ -6,7 +6,7 @@
  *
  *     afterEach(cleanup)
  */
-import { waitFor as waitForBase, waitForOptions } from '@testing-library/react'
+import { waitFor as waitForBase, waitForOptions } from '@testing-library/react/pure'
 export * from '@testing-library/react/pure'
 
 export function waitFor(callback: () => unknown, options?: Omit<waitForOptions, 'timeout'>) {
