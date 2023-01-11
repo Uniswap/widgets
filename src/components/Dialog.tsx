@@ -71,10 +71,6 @@ const HeaderRow = styled(Row)`
   justify-content: flex-start;
   margin: 0.5em 0.75em 0.75em;
   position: relative;
-
-  button {
-    height: ${({ iconSize }) => iconSize}em;
-  }
 `
 
 const StyledBackButton = styled(ArrowLeft)`
@@ -87,8 +83,7 @@ const StyledBackButton = styled(ArrowLeft)`
 const Title = styled.div`
   left: 50%;
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 `
 
 interface HeaderProps {
