@@ -1,9 +1,10 @@
+import Column from 'components/Column'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -12,14 +13,22 @@ import Row from '../../Row'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'
+import ToolbarOrderRouting from './ToolbarOrderRouting'
+import ToolbarTradeSummary from './ToolbarTradeSummary'
 
-const ToolbarRow = styled(Row)`
+const ToolbarColumn = styled(Column)`
+  -moz-transition: height 0.5s ease 0.2s;
+  -webkit-transition: height 0.5s ease 0.2s;
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  overflow: hidden;
+  transition: height 0.5s ease 0.2s;
+`
+
+const ToolbarRow = styled(Row)`
   flex-wrap: nowrap;
   gap: 0.5em;
   min-height: 3.5em;
-  overflow: hidden;
   padding: 0 1em;
 `
 
@@ -32,10 +41,12 @@ export default memo(function Toolbar() {
     allowance,
     trade: { trade, state, gasUseEstimateUSD },
     impact,
+    slippage,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const permit2Enabled = usePermit2Enabled()
+  const [expanded, setExpanded] = useState(false)
 
   const caption = useMemo(() => {
     switch (error) {
@@ -51,7 +62,7 @@ export default memo(function Toolbar() {
     }
 
     if (state === TradeState.LOADING) {
-      return <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} />
+      return <Caption.LoadingTrade gasUseEstimateUSD={expanded ? null : gasUseEstimateUSD} />
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -63,7 +74,7 @@ export default memo(function Toolbar() {
           <Caption.WrapCurrency
             inputCurrency={inputCurrency}
             outputCurrency={outputCurrency}
-            gasUseEstimateUSD={gasUseEstimateUSD}
+            gasUseEstimateUSD={expanded ? null : gasUseEstimateUSD}
           />
         )
       }
@@ -72,9 +83,24 @@ export default memo(function Toolbar() {
       }
       if (trade?.inputAmount && trade.outputAmount) {
         return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} trade={trade} />
+          <Caption.PriceImpact
+            impact={impact}
+            trade={trade}
+            expanded={expanded}
+            toggleExpanded={() => {
+              setExpanded(!expanded)
+            }}
+          />
         ) : (
-          <Caption.Trade trade={trade} outputUSDC={outputUSDC} gasUseEstimateUSD={gasUseEstimateUSD} />
+          <Caption.Trade
+            trade={trade}
+            outputUSDC={outputUSDC}
+            gasUseEstimateUSD={expanded ? null : gasUseEstimateUSD}
+            expanded={expanded}
+            toggleExpanded={() => {
+              setExpanded(!expanded)
+            }}
+          />
         )
       }
       if (state === TradeState.INVALID) {
@@ -94,6 +120,7 @@ export default memo(function Toolbar() {
     inputAmount,
     isWrap,
     trade,
+    expanded,
     outputUSDC,
     impact,
   ])
@@ -113,8 +140,21 @@ export default memo(function Toolbar() {
   }
 
   return (
-    <ToolbarRow flex justify="space-between" data-testid="toolbar">
-      {caption}
-    </ToolbarRow>
+    <ToolbarColumn>
+      <ToolbarRow flex justify="space-between" data-testid="toolbar">
+        {caption}
+      </ToolbarRow>
+      {expanded && (
+        <>
+          <ToolbarTradeSummary
+            gasUseEstimateUSD={gasUseEstimateUSD}
+            impact={impact}
+            trade={trade}
+            slippage={slippage}
+          />
+          <ToolbarOrderRouting trade={trade} />
+        </>
+      )}
+    </ToolbarColumn>
   )
 })

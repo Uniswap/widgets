@@ -64,7 +64,7 @@ interface EstimateProps {
   trade: InterfaceTrade
 }
 
-function Estimate({ trade, slippage }: EstimateProps) {
+export function Estimate({ trade, slippage }: EstimateProps) {
   const text = useMemo(
     () =>
       isExactInput(trade.tradeType) ? (
