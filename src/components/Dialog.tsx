@@ -93,7 +93,7 @@ interface HeaderProps {
 export function Header({ title }: HeaderProps) {
   const onClose = useContext(OnCloseContext)
   return (
-    <HeaderRow iconSize={1.25}>
+    <HeaderRow iconSize={1.25} data-testid="dialog-header">
       <StyledBackButton onClick={onClose} />
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
