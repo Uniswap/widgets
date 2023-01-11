@@ -166,9 +166,9 @@ export function FieldWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
-              {impact?.percent && (
+              {impact && (
                 <ThemedText.Body2 userSelect={false} color="hint">
-                  ({impact.percent.toFixed(1)}%)
+                  ({impact.toString()})
                 </ThemedText.Body2>
               )}
             </USDC>

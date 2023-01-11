@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
@@ -11,7 +12,6 @@ import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
@@ -60,9 +60,7 @@ function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', too
 
 function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
-  const displayEstimate = !gasUseEstimateUSD
-    ? '-'
-    : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })
+  const displayEstimate = formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)
   return (
     <CaptionRow gap={0.25}>
       {isWideWidget ? (
@@ -217,7 +215,7 @@ export function PriceImpactWarning({ impact }: PriceImpactWarningProps) {
         }}
       />
       <ThemedText.Body2 userSelect={false} color={impact.warning}>
-        {impact.percent.toFixed(1)}%
+        {formatPriceImpact(impact?.percent)}
       </ThemedText.Body2>
     </>
   )
