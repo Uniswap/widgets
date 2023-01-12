@@ -6,6 +6,8 @@ import fetch from 'jest-fetch-mock'
 
 fetch.enableMocks()
 
+jest.mock('@uniswap/conedison/format', () => ({}))
+
 beforeEach(() => {
   fetchMock.mockIf('https://gateway.ipfs.io/ipns/tokens.uniswap.org', JSON.stringify(tokenList))
 })

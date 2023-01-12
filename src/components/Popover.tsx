@@ -107,7 +107,7 @@ export default function Popover({
 
   const options = useMemo((): Options => {
     const modifiers: Options['modifiers'] = [
-      { name: 'offset', options: { offset: [4, offset || 4] } },
+      { name: 'offset', options: { offset: [0, offset || 4] } },
       { name: 'arrow', options: { element: arrow, padding: 4 } },
     ]
     if (contained) {
