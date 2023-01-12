@@ -24,13 +24,9 @@ export function SettingsPopover() {
 }
 
 const SettingsButton = styled(IconButton)`
+  // don't rotate back when un-hovering because it works weirdly with modal backdrop opening on top
   ${SettingsIcon}:hover {
     transform: rotate(45deg);
-    transition: transform 0.25s;
-  }
-
-  ${SettingsIcon} {
-    transform: rotate(0);
     transition: transform 0.25s;
   }
 `
