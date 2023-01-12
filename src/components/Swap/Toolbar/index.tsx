@@ -60,7 +60,7 @@ export default memo(function Toolbar() {
       }
       if (isWrap) {
         return (
-          <Caption.WrapCurrency
+          <Caption.Wrap
             inputCurrency={inputCurrency}
             outputCurrency={outputCurrency}
             gasUseEstimateUSD={gasUseEstimateUSD}
@@ -72,7 +72,7 @@ export default memo(function Toolbar() {
       }
       if (trade?.inputAmount && trade.outputAmount) {
         return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} trade={trade} />
+          <Caption.PriceImpact impact={impact} />
         ) : (
           <Caption.Trade trade={trade} outputUSDC={outputUSDC} gasUseEstimateUSD={gasUseEstimateUSD} />
         )
