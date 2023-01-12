@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import Column from 'components/Column'
 import Row from 'components/Row'
-import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
-import { PriceImpact } from 'hooks/usePriceImpact'
+import { PriceImpact as PriceImpactType } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { AlertTriangle, Gas, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
@@ -62,6 +61,7 @@ function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', too
 
 function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
+  // TODO(just-toby): use formatCurrencyAmount from conedison
   const displayEstimate = !gasUseEstimateUSD
     ? '-'
     : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })
@@ -151,12 +151,12 @@ export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
   )
 }
 
-interface WrapCurrencyProps extends GasEstimateProps {
+interface WrapProps {
   inputCurrency: Currency
   outputCurrency: Currency
 }
 
-export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapCurrencyProps) {
+export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapProps & GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
   const Text = useCallback(
     () =>
@@ -180,35 +180,49 @@ export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD 
   )
 }
 
-export interface TradeProps extends GasEstimateProps {
+export interface TradeProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
-  impact?: PriceImpact
 }
 
-export function Trade({ trade, outputUSDC, impact, gasUseEstimateUSD }: TradeProps) {
+export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
   return (
     <>
       <Caption
-        icon={impact?.warning ? AlertTriangle : Info}
+        icon={Info}
         caption={<Price trade={trade} outputUSDC={outputUSDC} />}
         tooltip={{
-          content: (
-            <Column gap={0.75}>
-              {impact?.warning && (
-                <>
-                  <ThemedText.Caption>
-                    The output amount is estimated at {impact.toString()} less than the input amount due to impact
-                  </ThemedText.Caption>
-                  <Rule />
-                </>
-              )}
-              <RoutingDiagram trade={trade} />
-            </Column>
-          ),
+          content: <RoutingDiagram trade={trade} />,
         }}
       />
       <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
+    </>
+  )
+}
+
+interface PriceImpactProps {
+  impact: PriceImpactType
+}
+
+export function PriceImpact({ impact }: PriceImpactProps) {
+  return (
+    <>
+      <Caption
+        icon={AlertTriangle}
+        caption="High price impact"
+        color={impact.warning}
+        tooltip={{
+          placement: 'right',
+          content: (
+            <ThemedText.Caption>
+              There will be a large difference between your input and output values due to current liquidity.
+            </ThemedText.Caption>
+          ),
+        }}
+      />
+      <ThemedText.Body2 userSelect={false} color={impact.warning}>
+        {formatPriceImpact(impact?.percent)}
+      </ThemedText.Body2>
     </>
   )
 }

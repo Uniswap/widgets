@@ -36,10 +36,13 @@ export function useTokenAllowance(
   return useMemo(() => ({ tokenAllowance: allowance, isSyncing }), [allowance, isSyncing])
 }
 
-export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
+export function useUpdateTokenAllowance(
+  amount: CurrencyAmount<Token> | undefined,
+  spender: string
+): () => Promise<ApprovalTransactionInfo> {
   const contract = useTokenContract(amount?.currency.address)
 
-  return useCallback(async (): Promise<ApprovalTransactionInfo> => {
+  return useCallback(async () => {
     try {
       if (!amount) throw new Error('missing amount')
       if (!contract) throw new Error('missing contract')
@@ -62,7 +65,7 @@ export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefine
       }
     } catch (e: unknown) {
       const symbol = amount?.currency.symbol ?? 'Token'
-      throw new Error(`${symbol} approval failed: ${e instanceof Error ? e.message : e}`)
+      throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [amount, contract, spender])
 }

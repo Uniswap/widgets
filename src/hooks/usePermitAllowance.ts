@@ -80,7 +80,7 @@ export function useUpdatePermitAllowance(
       return
     } catch (e: unknown) {
       const symbol = token?.symbol ?? 'Token'
-      throw new Error(`${symbol} permit failed: ${e instanceof Error ? e.message : e}`)
+      throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
 }
