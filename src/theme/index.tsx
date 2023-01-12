@@ -35,6 +35,7 @@ export const lightTheme: Colors = {
   interactive: 'hsl(227, 70%, 95%)',
   outline: 'hsla(225, 18%, 44%, 0.24)',
   dialog: white,
+  scrim: 'hsla(224, 37%, 8%, 0.6)',
 
   // text
   onAccent: white,
@@ -43,7 +44,10 @@ export const lightTheme: Colors = {
   hint: 'hsl(226, 24%, 67%)',
   onInteractive: black,
 
+  deepShadow: 'hsla(234, 17%, 24%, 0.04), hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.04)',
   networkDefaultShadow: 'hsla(328, 97%, 53%, 0.12)',
+  shallowShadow: 'hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.01)',
+  modalBackdrop: 'rgba(27, 34, 54, 0.5)',
 
   // state
   ...stateColors,
@@ -61,6 +65,7 @@ export const darkTheme: Colors = {
   interactive: 'hsla(223, 28%, 22%, 1)',
   outline: 'hsl(224, 33%, 16%)',
   dialog: black,
+  scrim: 'hsla(224, 33%, 16%, 0.5)',
 
   // text
   onAccent: white,
@@ -69,7 +74,10 @@ export const darkTheme: Colors = {
   hint: 'hsl(225, 10%, 47.1%)',
   onInteractive: white,
 
+  deepShadow: 'hsla(0, 0%, 0%, 0.32), hsla(0, 0%, 0%, 0.24), hsla(0, 0%, 0%, 0.24)',
   networkDefaultShadow: 'hsla(221, 96%, 64%, 0.16)',
+  shallowShadow: 'hsla(0, 0%, 0%, 0.12), hsla(0, 0%, 0%, 0.12), hsla(0, 0%, 0%, 0.24)',
+  modalBackdrop: 'rgba(27, 34, 54, 0.5)',
 
   // state
   ...stateColors,

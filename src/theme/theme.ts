@@ -7,6 +7,7 @@ export interface Colors {
   interactive: string
   outline: string
   dialog: string
+  scrim: string
 
   // text
   primary: string
@@ -23,6 +24,9 @@ export interface Colors {
   error: string
 
   networkDefaultShadow: string
+  deepShadow: string
+  shallowShadow: string
+  modalBackdrop: string
 
   currentColor: 'currentColor'
 }

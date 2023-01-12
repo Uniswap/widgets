@@ -19,7 +19,7 @@ const slideOutBottom = keyframes`
 `
 
 const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
-  background-color: rgba(27, 34, 54, 0.5);
+  background-color: ${({ theme }) => theme.scrim};
   bottom: 0;
   left: 0;
   opacity: 1;
@@ -54,14 +54,15 @@ const Wrapper = styled.div<{ open: boolean }>`
 
   ${Modal} {
     animation: ${slideInBottom} 0.25s ease-in;
+    border-bottom-left-radius: 0;
 
     &.${Animation.CLOSING} {
       animation: ${slideOutBottom} 0.25s ease-out;
     }
 
-    border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     bottom: 0;
+    box-shadow: ${({ theme }) => theme.deepShadow};
     height: unset;
     position: fixed;
     top: unset;

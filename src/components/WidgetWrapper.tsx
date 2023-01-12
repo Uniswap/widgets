@@ -14,7 +14,6 @@ const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   box-shadow: ${({ theme }) => `0px 40px 120px 0px ${theme.networkDefaultShadow}`};
   box-sizing: border-box;
-  color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
 
