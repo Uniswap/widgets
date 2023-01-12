@@ -101,8 +101,8 @@ export function Header({ title, children, ruled }: HeaderProps) {
   )
 }
 
-export const Modal = styled.div<{ color: Color }>`
-  background-color: ${({ color, theme }) => theme[color]};
+export const Modal = styled.div<{ color?: Color }>`
+  background-color: ${({ color, theme }) => color && theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
   flex-direction: column;
