@@ -1,17 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
-import { PriceImpact } from 'hooks/usePriceImpact'
+import { PriceImpact as PriceImpactValue } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { AlertTriangle, Gas, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
@@ -60,7 +61,10 @@ function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', too
 
 function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
-  const displayEstimate = formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)
+  // TODO(just-toby): use formatCurrencyAmount from conedison
+  const displayEstimate = !gasUseEstimateUSD
+    ? '-'
+    : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })
   return (
     <CaptionRow gap={0.25}>
       {isWideWidget ? (
@@ -147,12 +151,16 @@ export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
   )
 }
 
-interface WrapCurrencyProps extends GasEstimateProps {
+interface WrapCurrencyProps {
   inputCurrency: Currency
   outputCurrency: Currency
 }
 
-export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapCurrencyProps) {
+export function WrapCurrency({
+  inputCurrency,
+  outputCurrency,
+  gasUseEstimateUSD,
+}: WrapCurrencyProps & GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
   const Text = useCallback(
     () =>
@@ -176,12 +184,12 @@ export function WrapCurrency({ inputCurrency, outputCurrency, gasUseEstimateUSD 
   )
 }
 
-export interface TradeProps extends GasEstimateProps {
+export interface TradeProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
 }
 
-export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps) {
+export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
   return (
     <>
       <Caption
@@ -196,9 +204,11 @@ export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps) {
   )
 }
 
-type PriceImpactWarningProps = Omit<TradeProps, 'gasUseEstimateUSD'> & { impact: PriceImpact }
+interface PriceImpactProps {
+  impact: PriceImpactValue
+}
 
-export function PriceImpactWarning({ impact }: PriceImpactWarningProps) {
+export function PriceImpact({ impact }: TradeProps & PriceImpactProps) {
   return (
     <>
       <Caption

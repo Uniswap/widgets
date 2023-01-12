@@ -72,7 +72,7 @@ export default memo(function Toolbar() {
       }
       if (trade?.inputAmount && trade.outputAmount) {
         return impact?.warning ? (
-          <Caption.PriceImpactWarning impact={impact} trade={trade} />
+          <Caption.PriceImpact impact={impact} trade={trade} />
         ) : (
           <Caption.Trade trade={trade} outputUSDC={outputUSDC} gasUseEstimateUSD={gasUseEstimateUSD} />
         )
