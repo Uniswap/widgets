@@ -21,6 +21,7 @@ import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
+import CommonBases from './CommonBases'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenButton from './TokenButton'
 import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
@@ -107,6 +108,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
             </ThemedText.Body1>
           </SearchInputContainer>
         </Row>
+        <CommonBases chainId={chainId} onSelect={onSelect} selectedCurrency={value} />
         <Rule padded />
       </Column>
       {isLoaded ? (
