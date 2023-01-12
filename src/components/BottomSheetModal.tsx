@@ -84,7 +84,7 @@ export function BottomSheetModal({ children, onClose, open, title }: BottomSheet
         {open && (
           <Dialog color="dialog" onClose={onClose}>
             <>
-              <Header title={<Trans>{title}</Trans>} ruled />
+              <Header title={<Trans>{title}</Trans>} />
               {children}
             </>
           </Dialog>
