@@ -28,12 +28,12 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
 
   &.hidden {
     opacity: 0;
-    transition: visibility 0s linear 0.3s, opacity 0.3s;
+    transition: visibility 0s linear 0.25s, opacity 0.25s;
     visibility: hidden;
   }
 
   top: 0;
-  transition: visibility 0s linear 0s, opacity 0.3s;
+  transition: visibility 0s linear 0s, opacity 0.25s;
   visibility: visible;
 `
 
@@ -45,7 +45,6 @@ const Wrapper = styled.div<{ open: boolean }>`
   left: 0;
   margin: 0;
   overflow: hidden;
-  top: unset;
   width: 100%;
 
   @supports (overflow: clip) {
@@ -105,6 +104,7 @@ const RootElement = forwardRef<HTMLDivElement, RootElementProps>(function RootWr
 ) {
   return createPortal(
     <>
+      {/* TODO (WEB-2767): Support dismissing modal when clicking on backdrop */}
       <BottomSheetModalBackdrop className={!open ? 'hidden' : undefined} />
       <Wrapper open={open} ref={ref}>
         {children}
