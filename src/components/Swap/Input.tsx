@@ -32,7 +32,7 @@ const Balance = styled(ThemedText.Body2)`
 const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  margin-bottom: 4px;
+  margin-bottom: 0.25em;
   padding: ${({ isWide }) => (isWide ? '1em 0' : '1em 0 1.5em')};
   position: relative;
 
