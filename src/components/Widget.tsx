@@ -79,33 +79,33 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   return (
     <StrictMode>
       <I18nProvider locale={props.locale}>
-        <DialogWrapper ref={setDialog} />
-        <DialogProvider value={props.dialog || dialog}>
-          <ErrorBoundary onError={props.onError}>
-            <ReduxProvider store={store}>
-              {
-                // UI configuration must be passed to initial atom values, or the first frame will render incorrectly.
-              }
-              <AtomProvider initialValues={useInitialFlags(props as Flags)}>
-                <WidgetUpdater {...props} />
-                <Web3Provider {...(props as Web3Props)}>
-                  <BlockNumberProvider>
-                    <ThemeProvider theme={props.theme}>
-                      <WidgetContainer width={props.width} className={props.className}>
-                        <WidgetWrapper>
+        <ErrorBoundary onError={props.onError}>
+          <ReduxProvider store={store}>
+            {
+              // UI configuration must be passed to initial atom values, or the first frame will render incorrectly.
+            }
+            <AtomProvider initialValues={useInitialFlags(props as Flags)}>
+              <WidgetUpdater {...props} />
+              <Web3Provider {...(props as Web3Props)}>
+                <BlockNumberProvider>
+                  <ThemeProvider theme={props.theme}>
+                    <WidgetContainer width={props.width} className={props.className}>
+                      <WidgetWrapper>
+                        <DialogWrapper ref={setDialog} />
+                        <DialogProvider value={props.dialog || dialog}>
                           <MulticallUpdater />
                           <TransactionsUpdater {...(props as TransactionEventHandlers)} />
                           <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
-                        </WidgetWrapper>
-                        {!props.hideL2BridgeBanner && <BridgeBanner />}
-                      </WidgetContainer>
-                    </ThemeProvider>
-                  </BlockNumberProvider>
-                </Web3Provider>
-              </AtomProvider>
-            </ReduxProvider>
-          </ErrorBoundary>
-        </DialogProvider>
+                        </DialogProvider>
+                      </WidgetWrapper>
+                      {!props.hideL2BridgeBanner && <BridgeBanner />}
+                    </WidgetContainer>
+                  </ThemeProvider>
+                </BlockNumberProvider>
+              </Web3Provider>
+            </AtomProvider>
+          </ReduxProvider>
+        </ErrorBoundary>
       </I18nProvider>
     </StrictMode>
   )
