@@ -19,7 +19,7 @@ function TestComponent() {
   )
 }
 
-describe('WidgetWrapper', () => {
+describe('WidgetContainer', () => {
   beforeEach(() => jest.spyOn(console, 'warn').mockReturnValue(undefined))
 
   it('should handle valid number width, narrow', () => {
