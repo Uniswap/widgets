@@ -22,9 +22,7 @@ export function usePermitAllowance(token?: Token, owner?: string, spender?: stri
   // If there is no allowance yet, re-check next observed block.
   // This guarantees that the permitAllowance is synced upon submission and updated upon being synced.
   const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
-  const result = useSingleCallResult(contract, 'allowance', inputs, {
-    blocksPerFetch,
-  }).result as Awaited<ReturnType<Permit2['allowance']>> | undefined
+  const result = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }).result
 
   const rawAmount = result?.amount.toString() // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(

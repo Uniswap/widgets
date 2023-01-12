@@ -1,6 +1,5 @@
 import { BigNumberish } from '@ethersproject/bignumber'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
-import { Erc20 } from 'abis/types'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -21,10 +20,7 @@ export function useTokenAllowance(
   // If there is no allowance yet, re-check next observed block.
   // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
   const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
-  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }) as {
-    result: Awaited<ReturnType<Erc20['allowance']>> | undefined
-    syncing: boolean
-  }
+  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch })
 
   const rawAmount = result?.toString() // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(

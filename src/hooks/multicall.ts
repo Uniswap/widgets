@@ -1,4 +1,7 @@
+import { Contract } from '@ethersproject/contracts'
+import { CallState as CallStateBase } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
+import { Interface } from 'ethers/lib/utils'
 import useBlockNumber from 'hooks/useBlockNumber'
 import multicall from 'state/multicall'
 
@@ -7,33 +10,53 @@ export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for conveni
 
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 
-type MulticallParams<T extends (chainId: number | undefined, latestBlock: number | undefined, ...args: any) => any> =
-  Parameters<T> extends [any, any, ...infer P] ? P : never
-
-export function useMultipleContractSingleData(
-  ...args: MulticallParams<typeof multicall.hooks.useMultipleContractSingleData>
-) {
-  const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useMultipleContractSingleData(chainId, latestBlock, ...args)
+interface CallState<C extends Contract, M extends keyof C['functions']> extends Omit<CallStateBase, 'result'> {
+  result: C['functions'][M] extends (...args: any) => Promise<infer T> ? T : never
 }
 
-export function useSingleCallResult(...args: MulticallParams<typeof multicall.hooks.useSingleCallResult>) {
-  const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args)
-}
+type MultipleContractParams<
+  M extends string,
+  T extends (
+    chainId: number | undefined,
+    latestBlock: number | undefined,
+    addresses: (string | undefined)[],
+    contractInterface: Interface,
+    methodName: M,
+    ...args: any
+  ) => any
+> = Parameters<T> extends [any, any, ...infer P] ? P : never
 
-export function useSingleContractMultipleData(
-  ...args: MulticallParams<typeof multicall.hooks.useSingleContractMultipleData>
+export function useMultipleContractSingleData<C extends Contract, M extends string>(
+  ...args: MultipleContractParams<M, typeof multicall.hooks.useMultipleContractSingleData>
 ) {
   const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
+  return multicall.hooks.useMultipleContractSingleData(chainId, latestBlock, ...args) as CallState<C, M>[]
 }
 
-export function useSingleContractWithCallData(
-  ...args: MulticallParams<typeof multicall.hooks.useSingleContractWithCallData>
+type SingleContractParams<
+  C extends Contract,
+  M extends string,
+  T extends (
+    chainId: number | undefined,
+    latestBlock: number | undefined,
+    contract: C | null | undefined,
+    methodName: M,
+    ...args: any
+  ) => any
+> = Parameters<T> extends [any, any, ...infer P] ? P : never
+
+export function useSingleCallResult<C extends Contract, M extends string>(
+  ...args: SingleContractParams<C, M, typeof multicall.hooks.useSingleCallResult>
 ) {
   const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleContractWithCallData(chainId, latestBlock, ...args)
+  return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args) as CallState<C, M>
+}
+
+export function useSingleContractMultipleData<C extends Contract, M extends string>(
+  ...args: SingleContractParams<C, M, typeof multicall.hooks.useSingleContractMultipleData>
+) {
+  const { chainId, latestBlock } = useCallContext()
+  return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args) as CallState<C, M>[]
 }
 
 function useCallContext() {
