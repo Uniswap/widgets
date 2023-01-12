@@ -1,7 +1,11 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+<<<<<<< HEAD
 import { inputCss, StringInput } from 'components/Input'
+=======
+import { StringInput } from 'components/Input'
+>>>>>>> 2601cb2f (feat: update colors and icon in token select dialog)
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
