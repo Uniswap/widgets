@@ -2,7 +2,7 @@ import { Placement } from '@popperjs/core'
 import useHasFocus from 'hooks/useHasFocus'
 import useHasHover from 'hooks/useHasHover'
 import { HelpCircle, Icon } from 'icons'
-import { ComponentProps, ReactNode, useRef } from 'react'
+import { ComponentProps, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { IconButton } from './Button'
@@ -35,11 +35,11 @@ export default function Tooltip({
   offset,
   contained,
 }: TooltipProps) {
-  const tooltip = useRef<HTMLDivElement>(null)
-  const showTooltip = useTooltip(tooltip.current)
+  const [tooltip, setTooltip] = useState<HTMLDivElement>()
+  const showTooltip = useTooltip(tooltip)
   return (
     <Popover content={children} show={showTooltip} placement={placement} offset={offset} contained={contained}>
-      <IconTooltip icon={Icon} iconProps={iconProps} ref={tooltip} />
+      <IconTooltip icon={Icon} iconProps={iconProps} ref={setTooltip} />
     </Popover>
   )
 }

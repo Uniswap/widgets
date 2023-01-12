@@ -27,7 +27,7 @@ export default function SwapActionButton() {
   const permit2Enabled = usePermit2Enabled()
   const isDisabled = useMemo(
     () =>
-      (permit2Enabled && allowance.state === AllowanceState.REQUIRED) ||
+      (permit2Enabled && allowance.state !== AllowanceState.ALLOWED) ||
       (!permit2Enabled && approval.state !== SwapApprovalState.APPROVED) ||
       error !== undefined ||
       (!isWrap && !trade) ||

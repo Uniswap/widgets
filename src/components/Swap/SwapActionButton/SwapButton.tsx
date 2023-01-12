@@ -100,11 +100,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
 
   return (
     <>
-      <ActionButton
-        color={color}
-        onClick={onClick}
-        disabled={disabled || (permit2Enabled && allowance.state === AllowanceState.LOADING)}
-      >
+      <ActionButton color={color} onClick={onClick} disabled={disabled}>
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade && (

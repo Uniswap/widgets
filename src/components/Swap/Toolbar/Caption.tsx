@@ -203,8 +203,15 @@ export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD, trade }
 export interface TradeProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
+}
+
+interface ExpandProps {
   expanded: boolean
   toggleExpanded: () => void
+}
+
+const Expander = ({ expanded, toggleExpanded }: ExpandProps) => {
+  return expanded ? <CollapseIcon onClick={toggleExpanded} /> : <ExpandIcon onClick={toggleExpanded} />
 }
 
 export function Trade({
@@ -213,13 +220,13 @@ export function Trade({
   gasUseEstimateUSD,
   expanded,
   toggleExpanded,
-}: TradeProps & GasEstimateProps) {
+}: TradeProps & GasEstimateProps & ExpandProps) {
   return (
     <>
       <Caption icon={null} caption={<Price trade={trade} outputUSDC={outputUSDC} />} />
       <CaptionRow gap={0.75}>
         <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
-        {expanded ? <CollapseIcon onClick={toggleExpanded} /> : <ExpandIcon onClick={toggleExpanded} />}
+        <Expander expanded={expanded} toggleExpanded={toggleExpanded} />
       </CaptionRow>
     </>
   )
@@ -235,7 +242,7 @@ export const PriceImpactWarningTooltipContent = () => (
   </ThemedText.Caption>
 )
 
-export function PriceImpact({ impact }: PriceImpactProps) {
+export function PriceImpact({ impact, expanded, toggleExpanded }: PriceImpactProps & ExpandProps) {
   return (
     <>
       <Caption
@@ -247,9 +254,12 @@ export function PriceImpact({ impact }: PriceImpactProps) {
           content: <PriceImpactWarningTooltipContent />,
         }}
       />
-      <ThemedText.Body2 userSelect={false} color={impact.warning}>
-        {formatPriceImpact(impact?.percent)}
-      </ThemedText.Body2>
+      <CaptionRow gap={0.75}>
+        <ThemedText.Body2 userSelect={false} color={impact.warning}>
+          {formatPriceImpact(impact?.percent)}
+        </ThemedText.Body2>
+        <Expander expanded={expanded} toggleExpanded={toggleExpanded} />
+      </CaptionRow>
     </>
   )
 }

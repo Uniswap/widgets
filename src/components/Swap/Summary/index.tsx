@@ -182,7 +182,7 @@ export function SummaryDialog({
 
   return (
     <>
-      <Header title={<Trans>Swap summary</Trans>} ruled />
+      <Header title={<Trans>Review Swap</Trans>} />
       <Body flex align="stretch" padded gap={0.75}>
         <Heading gap={0.75} flex justify="center">
           <Summary

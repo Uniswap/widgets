@@ -71,7 +71,7 @@ export default memo(function Toolbar() {
       }
       if (isWrap) {
         return (
-          <Caption.WrapCurrency
+          <Caption.Wrap
             inputCurrency={inputCurrency}
             outputCurrency={outputCurrency}
             gasUseEstimateUSD={expanded ? null : gasUseEstimateUSD}
@@ -85,7 +85,6 @@ export default memo(function Toolbar() {
         return impact?.warning ? (
           <Caption.PriceImpact
             impact={impact}
-            trade={trade}
             expanded={expanded}
             toggleExpanded={() => {
               setExpanded(!expanded)
