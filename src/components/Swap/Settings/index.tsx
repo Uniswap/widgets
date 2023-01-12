@@ -24,7 +24,7 @@ export function SettingsPopover() {
 }
 
 const SettingsButton = styled(IconButton)`
-  // don't rotate back when un-hovering because it works weirdly with modal backdrop opening on top
+  // Don't rotate back when un-hovering so that clicking (and losing hover due to the modal backdrop) doesn't cause unintentional back-rotation.
   ${SettingsIcon}:hover {
     transform: rotate(45deg);
     transition: transform 0.25s;
