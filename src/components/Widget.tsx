@@ -37,13 +37,13 @@ const slideOutRight = keyframes`
 
 export const DialogWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
-  height: calc(100% - 0.5em);
+  height: 100%;
   left: 0;
-  margin: 0.25em;
   overflow: hidden;
+  padding: 0.5em;
   position: absolute;
   top: 0;
-  width: calc(100% - 0.5em);
+  width: 100%;
 
   @supports (overflow: clip) {
     overflow: clip;

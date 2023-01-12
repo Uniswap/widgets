@@ -115,6 +115,7 @@ export const Modal = styled.div<{ color: Color }>`
   height: 100%;
   left: 0;
   overflow: hidden;
+  padding: 0.5em;
   position: absolute;
   top: 0;
   width: 100%;

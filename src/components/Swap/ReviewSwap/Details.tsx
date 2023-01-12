@@ -29,6 +29,14 @@ const TokenAmount = styled(ThemedText.H1)`
   white-space: nowrap;
 `
 
+function Divider() {
+  return (
+    <div style={{ margin: '1em 0.125em' }}>
+      <Rule />
+    </div>
+  )
+}
+
 interface DetailProps {
   label: string
   value: string
@@ -148,9 +156,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       {details.map(([label, detail, color]) => (
         <Detail key={label} label={label} value={detail} color={color} />
       ))}
-      <div style={{ margin: '1em 0' }}>
-        <Rule />
-      </div>
+      <Divider />
 
       <Amount label="You pay" amount={inputAmount} usdcAmount={inputUSDC} />
       <Amount label="You receive" amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />

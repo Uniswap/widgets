@@ -11,50 +11,17 @@ import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
-import { isExactInput } from 'utils/tradeType'
 
 import Details from './Details'
 import Summary from './Summary'
 
 export default Summary
 
-const StyledEstimate = styled(ThemedText.Caption)`
-  margin-bottom: 0.5em;
-  margin-top: 0.5em;
-  max-height: 3em;
-`
 const Body = styled(Column)`
-  height: calc(100% - 2.5em);
+  height: 100%;
+  padding: 0.75em 0.875em;
 `
-
-interface EstimateProps {
-  slippage: Slippage
-  trade: InterfaceTrade
-}
-
-function Estimate({ trade, slippage }: EstimateProps) {
-  const text = useMemo(
-    () =>
-      isExactInput(trade.tradeType) ? (
-        <Trans>
-          Output is estimated. You will receive at least{' '}
-          {formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })}{' '}
-          {trade.outputAmount.currency.symbol} or the transaction will revert.
-        </Trans>
-      ) : (
-        <Trans>
-          Output is estimated. You will send at most{' '}
-          {formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })}{' '}
-          {trade.inputAmount.currency.symbol} or the transaction will revert.
-        </Trans>
-      ),
-    [slippage.allowed, trade]
-  )
-  return <StyledEstimate color="secondary">{text}</StyledEstimate>
-}
 
 function ConfirmButton({
   trade,
@@ -126,11 +93,9 @@ interface SummaryDialogProps {
 export function SummaryDialog(props: SummaryDialogProps) {
   return (
     <>
-      <Header title={<Trans>Review Swap</Trans>} />
-      <Body flex align="stretch" padded gap={0.75}>
-        <Column gap={0.5}>
-          <Details {...props} />
-        </Column>
+      <Header title={<Trans>Review swap</Trans>} />
+      <Body flex align="stretch">
+        <Details {...props} />
       </Body>
       <ConfirmButton {...props} highPriceImpact={props.impact?.warning === 'error'} />
     </>
