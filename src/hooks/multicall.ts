@@ -11,7 +11,7 @@ export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for conveni
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 
 interface CallState<C extends Contract, M extends keyof C['functions']> extends Omit<CallStateBase, 'result'> {
-  result: C['functions'][M] extends (...args: any) => Promise<infer T> ? T : never
+  result: C['functions'][M] extends (...args: any) => Promise<infer T> ? T | undefined : never
 }
 
 type MultipleContractParams<
