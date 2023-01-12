@@ -162,7 +162,7 @@ describe('usePermit2Allowance', () => {
 
       itReturnsAllowanceStateRequired()
 
-      it('signs permit allowance (and does not rerequest token allowance)', async () => {
+      it('signs permit allowance without re-requesting token allowance', async () => {
         mockUseUpdatePermitAllowance.mockImplementation((token, spender, nonce, onPermitSignature) => () => {
           onPermitSignature({
             signature: SIGNATURE,
@@ -216,14 +216,7 @@ describe('usePermit2Allowance', () => {
       })
     }
 
-    describe('with initial permit allowance', () => {
-      beforeEach(() => {
-        mockUsePermitAllowance.mockReturnValue({ permitAllowance: MAX_AMOUNT, expiration: DEADLINE, nonce: NONCE })
-      })
-
-      itReturnsAllowanceStateRequired()
-      itTracksTokenAllowance()
-
+    function itDoesNotResubmitAPendingApproval() {
       it('does not resubmit a pending approval', async () => {
         mockUsePendingApproval.mockReturnValue('0xd3adb33f')
         const updateTokenAllowance = jest.fn()
@@ -240,6 +233,16 @@ describe('usePermit2Allowance', () => {
         await act((result.current as AllowanceRequired).approveAndPermit)
         expect(updateTokenAllowance).not.toHaveBeenCalled()
       })
+    }
+
+    describe('with initial permit allowance', () => {
+      beforeEach(() => {
+        mockUsePermitAllowance.mockReturnValue({ permitAllowance: MAX_AMOUNT, expiration: DEADLINE, nonce: NONCE })
+      })
+
+      itReturnsAllowanceStateRequired()
+      itTracksTokenAllowance()
+      itDoesNotResubmitAPendingApproval()
 
       it('rerequests an expired permit', async () => {
         mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
@@ -282,6 +285,7 @@ describe('usePermit2Allowance', () => {
 
       itReturnsAllowanceStateRequired()
       itTracksTokenAllowance()
+      itDoesNotResubmitAPendingApproval()
 
       it('rerequests an expired signature', async () => {
         mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
