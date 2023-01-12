@@ -47,7 +47,6 @@ export const lightTheme: Colors = {
   deepShadow: 'hsla(234, 17%, 24%, 0.04), hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.04)',
   networkDefaultShadow: 'hsla(328, 97%, 53%, 0.12)',
   shallowShadow: 'hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.01)',
-  modalBackdrop: 'rgba(27, 34, 54, 0.5)',
 
   // state
   ...stateColors,
@@ -77,7 +76,6 @@ export const darkTheme: Colors = {
   deepShadow: 'hsla(0, 0%, 0%, 0.32), hsla(0, 0%, 0%, 0.24), hsla(0, 0%, 0%, 0.24)',
   networkDefaultShadow: 'hsla(221, 96%, 64%, 0.16)',
   shallowShadow: 'hsla(0, 0%, 0%, 0.12), hsla(0, 0%, 0%, 0.12), hsla(0, 0%, 0%, 0.24)',
-  modalBackdrop: 'rgba(27, 34, 54, 0.5)',
 
   // state
   ...stateColors,

@@ -26,7 +26,6 @@ export interface Colors {
   networkDefaultShadow: string
   deepShadow: string
   shallowShadow: string
-  modalBackdrop: string
 
   currentColor: 'currentColor'
 }
