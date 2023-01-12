@@ -64,7 +64,7 @@ interface EstimateProps {
   trade: InterfaceTrade
 }
 
-export function Estimate({ trade, slippage }: EstimateProps) {
+export function SwapInputOutputEstimate({ trade, slippage }: EstimateProps) {
   const text = useMemo(
     () =>
       isExactInput(trade.tradeType) ? (
@@ -204,7 +204,7 @@ export function SummaryDialog({
         >
           <Column gap={0.5}>
             <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
-            <Estimate trade={trade} slippage={slippage} />
+            <SwapInputOutputEstimate trade={trade} slippage={slippage} />
           </Column>
         </Expando>
 

@@ -12,7 +12,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 
-import { Estimate } from '../Summary'
+import { SwapInputOutputEstimate } from '../Summary'
 import { PriceImpactWarningTooltipContent } from './Caption'
 
 const TradeSummaryColumn = styled(Column)`
@@ -81,7 +81,7 @@ export default function ToolbarTradeSummary({ gasUseEstimateUSD, impact, trade, 
     <TradeSummaryColumn gap={0.75}>
       <SummaryRow
         name={t`Network fee`}
-        value={(gasUseEstimateUSD ? '~' : '') + formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}
+        value={`${gasUseEstimateUSD ? '~' : ''}${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`}
       />
       <SummaryRow
         color={impact?.warning}
@@ -108,7 +108,7 @@ export default function ToolbarTradeSummary({ gasUseEstimateUSD, impact, trade, 
           trade
             ? {
                 icon: Info,
-                content: <Estimate trade={trade} slippage={slippage} />,
+                content: <SwapInputOutputEstimate trade={trade} slippage={slippage} />,
                 side: 'name',
               }
             : undefined
