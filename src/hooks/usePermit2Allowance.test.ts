@@ -142,7 +142,15 @@ describe('usePermit2Allowance', () => {
         expect(result.current).toMatchObject({
           token: TOKEN,
           state: AllowanceState.REQUIRED,
-          isApprovalLoading: false, // must still be false so that the UI will still attempt to collect a signature
+          isApprovalLoading: false, // must still be false while there is no permit allowance
+        })
+
+        mockUsePermitAllowance.mockReturnValue({ permitAllowance: MAX_AMOUNT, expiration: DEADLINE, nonce: NONCE })
+        rerender()
+        expect(result.current).toMatchObject({
+          token: TOKEN,
+          state: AllowanceState.REQUIRED,
+          isApprovalLoading: true, // true now that permit has allowance
         })
       })
     })
