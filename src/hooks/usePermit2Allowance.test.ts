@@ -14,7 +14,12 @@ import usePermit2Allowance, { AllowanceRequired, AllowanceState } from './usePer
 const SPENDER = UNIVERSAL_ROUTER_ADDRESS(SupportedChainId.MAINNET)
 
 const TOKEN = UNI[SupportedChainId.MAINNET]
-const AMOUNT = CurrencyAmount.fromRawAmount(TOKEN, MaxUint256.toString())
+const MAX_AMOUNT = CurrencyAmount.fromRawAmount(TOKEN, MaxUint256.toString())
+const ZERO_AMOUNT = CurrencyAmount.fromRawAmount(TOKEN, 0)
+
+const SIGNATURE = 'signature'
+const NONCE = 42
+const DEADLINE = Math.floor((Date.now() + ms`1m`) / 1000)
 
 jest.mock('hooks/useTokenAllowance')
 jest.mock('hooks/usePermitAllowance')
@@ -38,79 +43,118 @@ describe('usePermit2Allowance', () => {
 
   describe('with no token', () => {
     it('defaults to allowed', () => {
-      const { result } = renderHook(() => usePermit2Allowance())
+      const { result } = renderHook(() => usePermit2Allowance(undefined, SPENDER))
       expect(result.current).toMatchObject({ state: AllowanceState.ALLOWED })
     })
   })
 
-  it('loads', async () => {
-    const { result } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
+  it('returns AllowanceState.LOADING while awaiting allowances', async () => {
+    const { result } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
     await waitFor(() => expect(useTokenAllowance).toHaveBeenCalledWith(TOKEN, addressMatcher, PERMIT2_ADDRESS))
     expect(usePermitAllowance).toHaveBeenCalledWith(TOKEN, addressMatcher, SPENDER)
     expect(result.current).toMatchObject({ state: AllowanceState.LOADING })
   })
 
-  describe('approves', () => {
-    const ZERO_ALLOWANCE = CurrencyAmount.fromRawAmount(TOKEN, 0)
-    const SIGNATURE = 'signature'
-    const NONCE = 42
-    const DEADLINE = Math.floor((Date.now() + ms`1m`) / 1000)
+  it('returns AllowanceState.ALLOWED with initial allowances', async () => {
+    mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
+    mockUsePermitAllowance.mockReturnValue({ permitAllowance: MAX_AMOUNT, expiration: DEADLINE, nonce: NONCE })
+    const { result } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
+    expect(result.current).toMatchObject({ state: AllowanceState.ALLOWED })
+  })
 
+  describe('approval flows', () => {
     beforeEach(() => {
-      mockUseTokenAllowance.mockReturnValue({ tokenAllowance: ZERO_ALLOWANCE })
-      mockUsePermitAllowance.mockReturnValue({ permitAllowance: ZERO_ALLOWANCE, nonce: NONCE })
+      mockUseTokenAllowance.mockReturnValue({ tokenAllowance: ZERO_AMOUNT })
+      mockUsePermitAllowance.mockReturnValue({ permitAllowance: ZERO_AMOUNT, nonce: NONCE })
     })
 
-    it('tracks token allowance', async () => {
-      mockUseUpdatePermitAllowance.mockImplementation((token, spender, nonce, onPermitSignature) => () => {
-        onPermitSignature({
-          signature: SIGNATURE,
-          sigDeadline: DEADLINE,
-          details: {
-            token: TOKEN.address,
-          },
-          spender: SPENDER,
+    function itReturnsAllowanceStateRequired() {
+      it('returns AllowanceState.REQUIRED', async () => {
+        const { result } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
+        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        await waitFor(() => expect(useUpdateTokenAllowance).toHaveBeenCalledWith(MAX_AMOUNT, PERMIT2_ADDRESS))
+        expect(useUpdatePermitAllowance).toHaveBeenCalledWith(TOKEN, SPENDER, NONCE, expect.anything())
+      })
+    }
+
+    describe('with no initial allowances', () => {
+      itReturnsAllowanceStateRequired()
+
+      it('tracks token allowance', async () => {
+        const info = { __brand: 'info' }
+        const updateTokenAllowance = jest.fn().mockResolvedValue(info)
+        mockUseUpdateTokenAllowance.mockReturnValue(updateTokenAllowance)
+        const addTransactionInfo = jest.fn().mockImplementation(() => {
+          mockUsePendingApproval.mockReturnValue('0xd3adb33f')
         })
+        mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
+
+        const updatePermitAllowance = jest.fn()
+        mockUseUpdatePermitAllowance.mockImplementation((token, spender, nonce, onPermitSignature) =>
+          updatePermitAllowance.mockImplementation(() => {
+            onPermitSignature({
+              signature: SIGNATURE,
+              sigDeadline: DEADLINE,
+              details: {
+                token: TOKEN.address,
+              },
+              spender: SPENDER,
+            })
+          })
+        )
+
+        const { result, rerender } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
+        await act((result.current as AllowanceRequired).approveAndPermit)
+        rerender()
+        expect(addTransactionInfo).toHaveBeenCalledWith(info)
+        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
+
+        // Mock the transaction confirming with the token allowance not yet updated to reflect it.
+        mockUsePendingApproval.mockReturnValue(undefined)
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: ZERO_AMOUNT, isSyncing: true })
+        rerender()
+        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
+
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
+        rerender()
+        expect(result.current).toMatchObject({ state: AllowanceState.ALLOWED })
       })
 
-      const info = { __brand: 'info' }
-      const addTransactionInfo = jest.fn()
-      const updateTokenAllowance = jest.fn().mockResolvedValue(info)
-      mockUseUpdateTokenAllowance.mockReturnValue(updateTokenAllowance)
-      mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
+      it('tracks token allowance even if signature is declined', async () => {
+        const info = { __brand: 'info' }
+        const updateTokenAllowance = jest.fn().mockResolvedValue(info)
+        mockUseUpdateTokenAllowance.mockReturnValue(updateTokenAllowance)
+        const addTransactionInfo = jest.fn().mockImplementation(() => {
+          mockUsePendingApproval.mockReturnValue('0xd3adb33f')
+        })
+        mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
 
-      const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-      await waitFor(() => expect(useUpdateTokenAllowance).toHaveBeenCalledWith(AMOUNT, PERMIT2_ADDRESS))
-      expect(useUpdatePermitAllowance).toHaveBeenCalledWith(TOKEN, SPENDER, NONCE, expect.anything())
-      expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: false })
+        const error = new Error('signature declined')
+        const updatePermitAllowance = jest.fn().mockRejectedValue(error)
+        mockUseUpdatePermitAllowance.mockImplementation(() => updatePermitAllowance)
 
-      await act((result.current as AllowanceRequired).approveAndPermit)
-      mockUsePendingApproval.mockReturnValue('0xd3adb33f')
-      rerender()
-      expect(addTransactionInfo).toHaveBeenCalledWith(info)
-      expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
-
-      updateTokenAllowance.mockReset()
-      await act((result.current as AllowanceRequired).approveAndPermit)
-      expect(updateTokenAllowance).not.toHaveBeenCalled() // should not be called if already pending
-
-      mockUsePendingApproval.mockReturnValue(undefined)
-      mockUseTokenAllowance.mockReturnValue({ tokenAllowance: ZERO_ALLOWANCE, isSyncing: true })
-      rerender()
-      expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
-
-      await act((result.current as AllowanceRequired).approveAndPermit)
-      expect(updateTokenAllowance).not.toHaveBeenCalled() // should not be called if already pending
-
-      mockUseTokenAllowance.mockReturnValue({ tokenAllowance: AMOUNT })
-      rerender()
-      expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.ALLOWED })
+        const { result, rerender } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
+        await expect(async () => {
+          await act((result.current as AllowanceRequired).approveAndPermit)
+        }).rejects.toThrow(error)
+        rerender()
+        expect(addTransactionInfo).toHaveBeenCalledWith(info)
+        expect(result.current).toMatchObject({
+          token: TOKEN,
+          state: AllowanceState.REQUIRED,
+          isApprovalLoading: false, // must still be false so that the UI will still attempt to collect a signature
+        })
+      })
     })
 
-    describe('with approval', () => {
-      it('signs permit allowance (does not rerequest approval)', async () => {
-        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: AMOUNT })
+    describe('with initial token allowance', () => {
+      beforeEach(() => {
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
+      })
 
+      itReturnsAllowanceStateRequired()
+
+      it('signs permit allowance (and does not rerequest token allowance)', async () => {
         mockUseUpdatePermitAllowance.mockImplementation((token, spender, nonce, onPermitSignature) => () => {
           onPermitSignature({
             signature: SIGNATURE,
@@ -122,59 +166,77 @@ describe('usePermit2Allowance', () => {
           })
         })
 
-        const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await waitFor(() =>
-          expect(result.current).toMatchObject({
-            token: TOKEN,
-            state: AllowanceState.REQUIRED,
-            isApprovalLoading: false,
-          })
-        )
-
+        const { result, rerender } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
         await act((result.current as AllowanceRequired).approveAndPermit)
         rerender()
         expect(result.current).toMatchObject({
-          token: TOKEN,
           state: AllowanceState.ALLOWED,
           permitSignature: { signature: SIGNATURE },
         })
       })
     })
 
-    describe('with permit', () => {
-      it('tracks token allowance (does not rerequest signature)', async () => {
-        mockUsePermitAllowance.mockReturnValue({ permitAllowance: AMOUNT, expiration: DEADLINE, nonce: NONCE })
-
+    function itTracksTokenAllowance() {
+      it('tracks token allowance without re-requesting permit allowance', async () => {
         const info = { __brand: 'info' }
-        const addTransactionInfo = jest.fn()
-        mockUseUpdateTokenAllowance.mockReturnValue(() => Promise.resolve(info))
+        const updateTokenAllowance = jest.fn().mockResolvedValue(info)
+        mockUseUpdateTokenAllowance.mockReturnValue(updateTokenAllowance)
+        const addTransactionInfo = jest.fn().mockImplementation(() => {
+          mockUsePendingApproval.mockReturnValue('0xd3adb33f')
+        })
         mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
 
-        const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await waitFor(() =>
-          expect(result.current).toMatchObject({
-            token: TOKEN,
-            state: AllowanceState.REQUIRED,
-            isApprovalLoading: false,
-          })
-        )
+        const updatePermitAllowance = jest.fn()
+        mockUseUpdatePermitAllowance.mockImplementation(() => updatePermitAllowance)
 
+        const { result, rerender } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
         await act((result.current as AllowanceRequired).approveAndPermit)
-        mockUsePendingApproval.mockReturnValue('0xd3adb33f')
         rerender()
         expect(addTransactionInfo).toHaveBeenCalledWith(info)
+        expect(updatePermitAllowance).not.toHaveBeenCalled()
         expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
 
+        // Mock the transaction confirming with the token allowance not yet updated to reflect it.
         mockUsePendingApproval.mockReturnValue(undefined)
-        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: AMOUNT })
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: ZERO_AMOUNT, isSyncing: true })
         rerender()
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.ALLOWED })
+        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
+
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
+        rerender()
+        expect(result.current).toMatchObject({ state: AllowanceState.ALLOWED })
+      })
+    }
+
+    describe('with initial permit allowance', () => {
+      beforeEach(() => {
+        mockUsePermitAllowance.mockReturnValue({ permitAllowance: MAX_AMOUNT, expiration: DEADLINE, nonce: NONCE })
+      })
+
+      itReturnsAllowanceStateRequired()
+      itTracksTokenAllowance()
+
+      it('does not resubmit a pending approval', async () => {
+        mockUsePendingApproval.mockReturnValue('0xd3adb33f')
+        const updateTokenAllowance = jest.fn()
+        mockUseUpdateTokenAllowance.mockReturnValue(updateTokenAllowance)
+        mockUsePermitAllowance.mockReturnValue({ permitAllowance: MAX_AMOUNT, expiration: DEADLINE, nonce: NONCE })
+
+        const { result, rerender } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
+        await act((result.current as AllowanceRequired).approveAndPermit)
+        expect(updateTokenAllowance).not.toHaveBeenCalled()
+
+        mockUsePendingApproval.mockReturnValue(undefined)
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: ZERO_AMOUNT, isSyncing: true })
+        rerender()
+        await act((result.current as AllowanceRequired).approveAndPermit)
+        expect(updateTokenAllowance).not.toHaveBeenCalled()
       })
 
       it('rerequests an expired permit', async () => {
-        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: AMOUNT })
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
         mockUsePermitAllowance.mockReturnValue({
-          permitAllowance: AMOUNT,
+          permitAllowance: MAX_AMOUNT,
           expiration: Math.floor(Date.now() / 1000),
           nonce: NONCE,
         })
@@ -182,7 +244,7 @@ describe('usePermit2Allowance', () => {
         const updatePermitAllowance = jest.fn()
         mockUseUpdatePermitAllowance.mockReturnValue(updatePermitAllowance)
 
-        const { result } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
+        const { result } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
         await waitFor(() =>
           expect(result.current).toMatchObject({
             token: TOKEN,
@@ -196,8 +258,8 @@ describe('usePermit2Allowance', () => {
       })
     })
 
-    describe('with signature', () => {
-      it('tracks token allowance (does not rerequest signature)', async () => {
+    describe('with initial signature', () => {
+      beforeEach(() => {
         mockUseUpdatePermitAllowance.mockImplementationOnce((token, spender, nonce, onPermitSignature) => {
           onPermitSignature({
             signature: SIGNATURE,
@@ -208,35 +270,13 @@ describe('usePermit2Allowance', () => {
             spender: SPENDER,
           })
         })
-
-        const info = { __brand: 'info' }
-        const addTransactionInfo = jest.fn()
-        mockUseUpdateTokenAllowance.mockReturnValue(() => Promise.resolve(info))
-        mockUseAddTransactionInfo.mockReturnValue(addTransactionInfo)
-
-        const { result, rerender } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
-        await waitFor(() =>
-          expect(result.current).toMatchObject({
-            token: TOKEN,
-            state: AllowanceState.REQUIRED,
-            isApprovalLoading: false,
-          })
-        )
-
-        await act((result.current as AllowanceRequired).approveAndPermit)
-        mockUsePendingApproval.mockReturnValue('0xd3adb33f')
-        rerender()
-        expect(addTransactionInfo).toHaveBeenCalledWith(info)
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.REQUIRED, isApprovalLoading: true })
-
-        mockUsePendingApproval.mockReturnValue(undefined)
-        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: AMOUNT })
-        rerender()
-        expect(result.current).toMatchObject({ token: TOKEN, state: AllowanceState.ALLOWED })
       })
 
+      itReturnsAllowanceStateRequired()
+      itTracksTokenAllowance()
+
       it('rerequests an expired signature', async () => {
-        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: AMOUNT })
+        mockUseTokenAllowance.mockReturnValue({ tokenAllowance: MAX_AMOUNT })
         mockUseUpdatePermitAllowance.mockImplementationOnce((token, spender, nonce, onPermitSignature) => {
           onPermitSignature({
             signature: SIGNATURE,
@@ -251,7 +291,7 @@ describe('usePermit2Allowance', () => {
         const updatePermitAllowance = jest.fn()
         mockUseUpdatePermitAllowance.mockReturnValue(updatePermitAllowance)
 
-        const { result } = renderHook(() => usePermit2Allowance(AMOUNT, SPENDER))
+        const { result } = renderHook(() => usePermit2Allowance(MAX_AMOUNT, SPENDER))
         await waitFor(() =>
           expect(result.current).toMatchObject({
             token: TOKEN,
