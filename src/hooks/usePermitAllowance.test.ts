@@ -13,10 +13,11 @@ import { renderHook, waitFor } from 'test'
 
 import { usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
 
+const TOKEN = UNI[SupportedChainId.MAINNET]
 const OWNER = hardhat.account.address
 const SPENDER = UNIVERSAL_ROUTER_ADDRESS(SupportedChainId.MAINNET)
 
-const TOKEN = UNI[SupportedChainId.MAINNET]
+const CONTRACT = new Contract(PERMIT2_ADDRESS, PERMIT2_ABI) as Permit2
 const EXPIRATION = 1234567890
 const NONCE = 42
 
@@ -26,13 +27,12 @@ const mockUseContract = useContract as jest.Mock
 const mockUseSingleCallResult = useSingleCallResult as jest.Mock
 
 describe('usePermitAllowance', () => {
-  const CONTRACT = new Contract(PERMIT2_ADDRESS, PERMIT2_ABI) as Permit2
   const FETCH_DEFAULT_FREQ = { blocksPerFetch: undefined }
   const FETCH_EVERY_BLOCK = { blocksPerFetch: 1 }
 
   beforeEach(() => mockUseContract.mockReturnValue(CONTRACT))
 
-  describe('with no allowance loaded', () => {
+  describe('with allowance not loaded', () => {
     beforeEach(() => mockUseSingleCallResult.mockReturnValue({}))
 
     it('fetches allowance', () => {
@@ -53,7 +53,7 @@ describe('usePermitAllowance', () => {
       mockUseSingleCallResult.mockReturnValue({ result: { amount: BigInt(0), expiration: EXPIRATION, nonce: NONCE } })
     )
 
-    it('refetches allowance every block', () => {
+    it('refetches allowance every block - this ensures an allowance is "seen" on the block that it is granted', () => {
       const { result } = renderHook(() => usePermitAllowance(TOKEN, OWNER, SPENDER))
       expect(useContract).toHaveBeenCalledWith(PERMIT2_ADDRESS, expect.anything())
       expect(useSingleCallResult).toHaveBeenCalledWith(

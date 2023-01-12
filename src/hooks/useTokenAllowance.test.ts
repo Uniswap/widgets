@@ -6,7 +6,6 @@ import { Deferrable } from '@ethersproject/properties'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, MaxUint256 } from '@uniswap/sdk-core'
 import ERC20_ABI from 'abis/erc20.json'
-import { Erc20 } from 'abis/types'
 import { SupportedChainId } from 'constants/chains'
 import { UNI } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
@@ -16,10 +15,21 @@ import { renderHook } from 'test'
 
 import { useTokenAllowance, useUpdateTokenAllowance } from './useTokenAllowance'
 
+const TOKEN = UNI[SupportedChainId.MAINNET]
 const OWNER = hardhat.account.address
 const SPENDER = PERMIT2_ADDRESS
+const SIGNER = new VoidSigner(OWNER)
 
-const TOKEN = UNI[SupportedChainId.MAINNET]
+const CONTRACT = new (class extends Contract {
+  // approve cannot be spied on; it must be mocked instead
+  mockApprove(...args: unknown[]) {
+    throw new Error('mocked function; unimplemented')
+  }
+  approve(...args: unknown[]) {
+    return this.mockApprove(args)
+  }
+})(TOKEN.address, ERC20_ABI) as Contract
+
 const NO_ALLOWANCE = CurrencyAmount.fromRawAmount(TOKEN, 0)
 const FULL_ALLOWANCE = CurrencyAmount.fromRawAmount(TOKEN, MaxUint256)
 
@@ -29,13 +39,12 @@ const mockUseTokenContract = useTokenContract as jest.Mock
 const mockUseSingleCallResult = useSingleCallResult as jest.Mock
 
 describe('useTokenAllowance', () => {
-  const CONTRACT = new Contract(TOKEN.address, ERC20_ABI) as Erc20
   const FETCH_DEFAULT_FREQ = { blocksPerFetch: undefined }
   const FETCH_EVERY_BLOCK = { blocksPerFetch: 1 }
 
   beforeEach(() => mockUseTokenContract.mockReturnValue(CONTRACT))
 
-  describe('with no allowance loaded', () => {
+  describe('with allowance not loaded', () => {
     beforeEach(() => mockUseSingleCallResult.mockReturnValue({ syncing: false }))
 
     it('fetches allowance', () => {
@@ -48,7 +57,7 @@ describe('useTokenAllowance', () => {
   describe('with no allowance', () => {
     beforeEach(() => mockUseSingleCallResult.mockReturnValue({ result: BigNumber.from(0), syncing: false }))
 
-    it('refetches allowance every block', () => {
+    it('refetches allowance every block - this ensures an allowance is "seen" on the block that it is granted', () => {
       const { result, rerender } = renderHook(() => useTokenAllowance(TOKEN, OWNER, SPENDER))
       expect(useSingleCallResult).toHaveBeenCalledWith(CONTRACT, 'allowance', [OWNER, SPENDER], FETCH_EVERY_BLOCK)
       expect(result.current).toMatchObject({ tokenAllowance: NO_ALLOWANCE, isSyncing: false })
@@ -84,21 +93,14 @@ describe('useUpdateTokenAllowance', () => {
     tokenAddress: TOKEN.address,
     type: TransactionType.APPROVAL,
   }
-  const CONTRACT = new (class extends Contract {
-    // approve cannot be spied on; it must be mocked instead
-    approve(...args: unknown[]) {
-      return approve(args)
-    }
-  })(TOKEN.address, ERC20_ABI) as Contract
-  const SIGNER = new VoidSigner(OWNER)
 
-  const approve = jest.fn()
   let estimateGas: jest.SpiedFunction<(transaction: Deferrable<TransactionRequest>) => Promise<BigNumber>>
+  let approve: jest.SpiedFunction<(...args: unknown[]) => Promise<ContractTransaction>>
 
   beforeEach(() => {
     mockUseTokenContract.mockReturnValue(CONTRACT.connect(SIGNER))
-    approve.mockReset().mockResolvedValue(APPROVE_TRANSACTION)
     estimateGas = jest.spyOn(SIGNER, 'estimateGas').mockResolvedValue(BigNumber.from(100))
+    approve = jest.spyOn(Object.getPrototypeOf(CONTRACT), 'mockApprove').mockResolvedValue(APPROVE_TRANSACTION)
   })
 
   it('sends approval to wallet', async () => {
