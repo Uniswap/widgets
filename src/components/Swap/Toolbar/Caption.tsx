@@ -5,7 +5,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
-import { PriceImpact as PriceImpactValue } from 'hooks/usePriceImpact'
+import { PriceImpact as PriceImpactType } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { AlertTriangle, Gas, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
@@ -151,16 +151,12 @@ export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
   )
 }
 
-interface WrapCurrencyProps {
+interface WrapProps {
   inputCurrency: Currency
   outputCurrency: Currency
 }
 
-export function WrapCurrency({
-  inputCurrency,
-  outputCurrency,
-  gasUseEstimateUSD,
-}: WrapCurrencyProps & GasEstimateProps) {
+export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapProps & GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
   const Text = useCallback(
     () =>
@@ -205,10 +201,10 @@ export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps & Gas
 }
 
 interface PriceImpactProps {
-  impact: PriceImpactValue
+  impact: PriceImpactType
 }
 
-export function PriceImpact({ impact }: TradeProps & PriceImpactProps) {
+export function PriceImpact({ impact }: PriceImpactProps) {
   return (
     <>
       <Caption
