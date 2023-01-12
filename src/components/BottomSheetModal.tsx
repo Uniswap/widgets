@@ -28,12 +28,12 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
 
   &.hidden {
     opacity: 0;
-    transition: visibility 0s linear 300ms, opacity 300ms;
+    transition: visibility 0s linear 0.3s, opacity 0.3s;
     visibility: hidden;
   }
 
   top: 0;
-  transition: visibility 0s linear 0s, opacity 300ms;
+  transition: visibility 0s linear 0s, opacity 0.3s;
   visibility: visible;
 `
 
