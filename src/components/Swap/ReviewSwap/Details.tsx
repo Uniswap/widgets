@@ -1,10 +1,12 @@
 import { t } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
+import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -12,7 +14,6 @@ import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { isExactInput } from 'utils/tradeType'
 
 import { useTradeExchangeRate } from '../Price'
@@ -62,6 +63,15 @@ interface AmountProps {
 }
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
+  const isWide = useIsWideWidget()
+
+  let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
+  if (formattedAmount.length > 9) {
+    formattedAmount = isWide
+      ? formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
+      : formatCurrencyAmount(amount, NumberType.TokenNonTx)
+  }
+
   return (
     <Row gap={2} align="flex-start">
       <ThemedText.Body2 userSelect>
@@ -71,11 +81,11 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
       </ThemedText.Body2>
       <Column flex align="flex-end">
         <TokenAmount>
-          {formatCurrencyAmount({ amount })} {amount.currency.symbol}
+          {formattedAmount} {amount.currency.symbol}
         </TokenAmount>
         {usdcAmount && (
           <ThemedText.Body2>
-            <Value color="secondary">{formatCurrencyAmount({ amount: usdcAmount, isUsdPrice: true })}</Value>
+            <Value color="secondary">{formatCurrencyAmount(usdcAmount, NumberType.FiatTokenPrice)}</Value>
           </ThemedText.Body2>
         )}
       </Column>
@@ -109,13 +119,13 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
     if (feeOptions) {
       const fee = outputAmount.multiply(feeOptions.fee)
       if (fee.greaterThan(0)) {
-        const parsedFee = formatCurrencyAmount({ amount: fee })
+        const parsedFee = formatCurrencyAmount(fee, NumberType.FiatGasPrice)
         rows.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
       }
     }
 
     if (gasUseEstimateUSD) {
-      rows.push([t`Network fee`, `~${formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })}`])
+      rows.push([t`Network fee`, `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`])
     }
 
     if (impact) {
@@ -124,13 +134,13 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
 
     let estimationMessage = ''
     if (isExactInput(trade.tradeType)) {
-      const localizedMinReceived = formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })
+      const localizedMinReceived = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), NumberType.TokenTx)
       const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
       estimationMessage =
         t`Output is estimated. You will receive at least ` + minReceivedString + t`or the transaction will revert.`
       rows.push([t`Minimum output after slippage`, minReceivedString])
     } else {
-      const localizedMaxSent = formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), NumberType.TokenTx)
       const maxSentString = `${localizedMaxSent} ${inputCurrency.symbol}`
       estimationMessage =
         t`Output is estimated. You will send at most ` + maxSentString + t`or the transaction will revert.`

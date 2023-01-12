@@ -71,10 +71,6 @@ const HeaderRow = styled(Row)`
   justify-content: flex-start;
   margin: 0.5em 0.75em 0.75em;
   position: relative;
-
-  button {
-    height: ${({ iconSize }) => iconSize}em;
-  }
 `
 
 const StyledBackButton = styled(ArrowLeft)`
@@ -87,8 +83,7 @@ const StyledBackButton = styled(ArrowLeft)`
 const Title = styled.div`
   left: 50%;
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 `
 
 interface HeaderProps {
@@ -98,7 +93,7 @@ interface HeaderProps {
 export function Header({ title }: HeaderProps) {
   const onClose = useContext(OnCloseContext)
   return (
-    <HeaderRow iconSize={1.25}>
+    <HeaderRow iconSize={1.25} data-testid="dialog-header">
       <StyledBackButton onClick={onClose} />
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
@@ -109,7 +104,7 @@ export function Header({ title }: HeaderProps) {
 
 export const Modal = styled.div<{ color: Color }>`
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;
   flex-direction: column;
   height: 100%;
