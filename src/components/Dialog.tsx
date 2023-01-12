@@ -1,18 +1,15 @@
 import 'wicg-inert'
 
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
-import { ChevronLeft } from 'icons'
 import { largeIconCss } from 'icons'
+import { ArrowLeft } from 'icons'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components/macro'
 import { Color, Layer, Provider as ThemeProvider, ThemedText } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
-import { TextButton } from './Button'
-import Column from './Column'
 import Row from './Row'
-import Rule from './Rule'
 
 // Include inert from wicg-inert.
 declare global {
@@ -67,37 +64,41 @@ export function Provider({ value, children }: ProviderProps) {
 const OnCloseContext = createContext<(() => void) | undefined>(undefined)
 
 const HeaderRow = styled(Row)`
+  display: flex;
   height: 1.75em;
-  margin: 0 0.75em 0.75em;
-  padding-top: 0.5em;
   ${largeIconCss}
 
-  button {
-    height: ${({ iconSize }) => iconSize}em;
+  justify-content: flex-start;
+  margin: 0.5em 0.75em 0.75em;
+  position: relative;
+`
+
+const StyledBackButton = styled(ArrowLeft)`
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
   }
+`
+
+const Title = styled.div`
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
 `
 
 interface HeaderProps {
   title?: ReactElement
-  ruled?: boolean
-  children?: ReactNode
 }
 
-export function Header({ title, children, ruled }: HeaderProps) {
+export function Header({ title }: HeaderProps) {
   const onClose = useContext(OnCloseContext)
   return (
-    <Column data-testid="dialog-header">
-      <HeaderRow iconSize={1.2}>
-        <TextButton color="primary" onClick={onClose}>
-          <Row justify="flex-start" gap={0.5}>
-            <ChevronLeft />
-            <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
-          </Row>
-        </TextButton>
-        {children}
-      </HeaderRow>
-      {ruled && <Rule padded />}
-    </Column>
+    <HeaderRow iconSize={1.25} data-testid="dialog-header">
+      <StyledBackButton onClick={onClose} />
+      <Title>
+        <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
+      </Title>
+    </HeaderRow>
   )
 }
 
