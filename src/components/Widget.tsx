@@ -98,7 +98,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                           <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                         </DialogProvider>
                       </WidgetWrapper>
-                      {!props.showL2BridgeBanner && <BridgeBanner />}
+                      {props.showL2BridgeBanner && <BridgeBanner />}
                     </WidgetContainer>
                   </ThemeProvider>
                 </BlockNumberProvider>
