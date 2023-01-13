@@ -17,8 +17,6 @@ import { MulticallUpdater } from 'state/multicall'
 import styled, { keyframes } from 'styled-components/macro'
 import { Provider as ThemeProvider, Theme } from 'theme'
 
-import { BridgeBanner } from './BridgeBanner'
-import WidgetContainer from './WidgetContainer'
 import WidgetWrapper from './WidgetWrapper'
 
 const slideInLeft = keyframes`
@@ -68,7 +66,6 @@ export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props,
   locale?: SupportedLocale
   tokenList?: string | TokenInfo[]
   width?: string | number
-  showL2BridgeBanner?: boolean
   dialog?: HTMLDivElement | null
   className?: string
   onError?: OnError
@@ -78,35 +75,32 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const [dialog, setDialog] = useState<HTMLDivElement | null>(props.dialog || null)
   return (
     <StrictMode>
-      <I18nProvider locale={props.locale}>
-        <ErrorBoundary onError={props.onError}>
-          <ReduxProvider store={store}>
-            {
-              // UI configuration must be passed to initial atom values, or the first frame will render incorrectly.
-            }
-            <AtomProvider initialValues={useInitialFlags(props as Flags)}>
-              <WidgetUpdater {...props} />
-              <Web3Provider {...(props as Web3Props)}>
-                <BlockNumberProvider>
-                  <ThemeProvider theme={props.theme}>
-                    <WidgetContainer width={props.width} className={props.className}>
-                      <WidgetWrapper>
-                        <DialogWrapper ref={setDialog} />
-                        <DialogProvider value={props.dialog || dialog}>
-                          <MulticallUpdater />
-                          <TransactionsUpdater {...(props as TransactionEventHandlers)} />
-                          <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
-                        </DialogProvider>
-                      </WidgetWrapper>
-                      {props.showL2BridgeBanner && <BridgeBanner />}
-                    </WidgetContainer>
-                  </ThemeProvider>
-                </BlockNumberProvider>
-              </Web3Provider>
-            </AtomProvider>
-          </ReduxProvider>
-        </ErrorBoundary>
-      </I18nProvider>
+      <ThemeProvider theme={props.theme}>
+        <WidgetWrapper width={props.width} className={props.className}>
+          <I18nProvider locale={props.locale}>
+            <DialogWrapper ref={setDialog} />
+            <DialogProvider value={props.dialog || dialog}>
+              <ErrorBoundary onError={props.onError}>
+                <ReduxProvider store={store}>
+                  {
+                    // UI configuration must be passed to initial atom values, or the first frame will render incorrectly.
+                  }
+                  <AtomProvider initialValues={useInitialFlags(props as Flags)}>
+                    <WidgetUpdater {...props} />
+                    <Web3Provider {...(props as Web3Props)}>
+                      <BlockNumberProvider>
+                        <MulticallUpdater />
+                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
+                        <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
+                      </BlockNumberProvider>
+                    </Web3Provider>
+                  </AtomProvider>
+                </ReduxProvider>
+              </ErrorBoundary>
+            </DialogProvider>
+          </I18nProvider>
+        </WidgetWrapper>
+      </ThemeProvider>
     </StrictMode>
   )
 }
