@@ -2,6 +2,8 @@ import { ReactComponent as RouterIcon } from 'assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'assets/svg/expando.svg'
 import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
+import { ReactComponent as LargeCheckIcon } from 'assets/svg/large_check.svg'
+import { ReactComponent as LargeSpinnerIcon } from 'assets/svg/large_spinner.svg'
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
 import { ReactComponent as ReverseIcon } from 'assets/svg/reverse.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
@@ -19,7 +21,6 @@ import {
   ArrowUp as ArrowUpIcon,
   ArrowUpRight as ArrowUpRightIcon,
   BarChart2 as BarChart2Icon,
-  CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
   Clock as ClockIcon,
   HelpCircle as HelpCircleIcon,
@@ -85,7 +86,6 @@ export const ArrowDown = icon(ArrowDownIcon)
 export const ArrowRight = icon(ArrowRightIcon)
 export const ArrowLeft = icon(ArrowLeftIcon)
 export const ArrowUp = icon(ArrowUpIcon)
-export const CheckCircle = icon(CheckCircleIcon)
 export const BarChart = icon(BarChart2Icon)
 export const ChevronDown = icon(ChevronDownIcon)
 export const Clock = icon(ClockIcon)
@@ -147,6 +147,15 @@ const rotate = keyframes`
 export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;
   fill: ${({ color = 'primary', theme }) => theme[color]};
+  stroke: ${({ color = 'primary', theme }) => theme[color]};
+`
+
+export const LargeCheck = styled(icon(LargeCheckIcon))<{ color?: Color }>`
+  stroke: ${({ color = 'primary', theme }) => theme[color]};
+`
+
+export const LargeSpinner = styled(icon(LargeSpinnerIcon))<{ color?: Color }>`
+  animation: 2s ${rotate} linear infinite;
   stroke: ${({ color = 'primary', theme }) => theme[color]};
 `
 
