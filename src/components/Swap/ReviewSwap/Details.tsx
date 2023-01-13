@@ -136,14 +136,12 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
     if (isExactInput(trade.tradeType)) {
       const localizedMinReceived = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), NumberType.TokenTx)
       const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
-      estimationMessage =
-        t`Output is estimated. You will receive at least ` + minReceivedString + t`or the transaction will revert.`
+      estimationMessage = t`Output is estimated. You will receive at least ${minReceivedString} or the transaction will revert.`
       rows.push([t`Minimum output after slippage`, minReceivedString])
     } else {
       const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), NumberType.TokenTx)
       const maxSentString = `${localizedMaxSent} ${inputCurrency.symbol}`
-      estimationMessage =
-        t`Output is estimated. You will send at most ` + maxSentString + t`or the transaction will revert.`
+      estimationMessage = t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`
       rows.push([t`Maximum sent`, maxSentString])
     }
 
