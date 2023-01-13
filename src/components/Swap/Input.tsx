@@ -219,7 +219,7 @@ export default function Input() {
       maxAmount={maxAmount}
       isSufficientBalance={isSufficientBalance}
       approved={approvalState === SwapApprovalState.APPROVED}
-      subheader={t`You Pay`}
+      subheader={t`You pay`}
     />
   )
 }
