@@ -50,8 +50,8 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   // This avoids re-prompting the user for an already-submitted but not-yet-observed approval, by marking it loading
   // until it has been re-observed. It wll sync immediately, because confirmation fast-forwards the block number.
   const [approvalState, setApprovalState] = useState(ApprovalState.SYNCED)
-  const isApprovalLoading = approvalState !== ApprovalState.SYNCED
   const isApprovalPending = Boolean(usePendingApproval(token, PERMIT2_ADDRESS))
+  const isApprovalLoading = approvalState !== ApprovalState.SYNCED || isApprovalPending
   useEffect(() => {
     if (isApprovalPending) {
       setApprovalState(ApprovalState.PENDING)
@@ -70,7 +70,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   // Signature and PermitAllowance will expire, so they should be rechecked at an interval.
   const [now, setNow] = useState(Date.now())
   // Calculate now such that the signature will still be valid for the submitting block.
-  useInterval(() => setNow((Date.now() - STANDARD_L1_BLOCK_TIME) / 1000), STANDARD_L1_BLOCK_TIME, true)
+  useInterval(() => setNow((Date.now() + STANDARD_L1_BLOCK_TIME) / 1000), STANDARD_L1_BLOCK_TIME, true)
 
   const [signature, setSignature] = useState<PermitSignature>()
   const isSigned = useMemo(() => {
@@ -108,7 +108,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
         return { token, state: AllowanceState.REQUIRED, isApprovalLoading, approveAndPermit }
       }
     }
-    return { token, state: AllowanceState.ALLOWED, permitSignature: !isPermitted && isSigned ? signature : undefined }
+    return { state: AllowanceState.ALLOWED, permitSignature: !isPermitted && isSigned ? signature : undefined }
   }, [
     approveAndPermit,
     isApprovalLoading,
