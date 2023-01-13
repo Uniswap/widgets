@@ -97,6 +97,9 @@ export default function ActionButton({
   ...rest
 }: ActionButtonProps) {
   const textColor = useMemo(() => {
+    if (disabled) {
+      return 'primary'
+    }
     switch (color) {
       case 'accent':
         return 'onAccent'
@@ -107,7 +110,7 @@ export default function ActionButton({
       default:
         return 'currentColor'
     }
-  }, [color])
+  }, [color, disabled])
 
   return (
     <Overlay data-testid="action-button" hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>

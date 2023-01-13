@@ -4,7 +4,7 @@ import EtherscanLink from 'components/EtherscanLink'
 import Rule from 'components/Rule'
 import SwapSummary from 'components/Swap/Summary'
 import useInterval from 'hooks/useInterval'
-import { CheckCircle, Clock, Spinner } from 'icons'
+import { Clock, LargeCheck, LargeSpinner } from 'icons'
 import ms from 'ms.macro'
 import { useCallback, useMemo, useState } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
@@ -54,7 +54,7 @@ interface TransactionStatusProps {
 
 function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   const Icon = useMemo(() => {
-    return tx.receipt?.status ? CheckCircle : Spinner
+    return tx.receipt?.status ? LargeCheck : LargeSpinner
   }, [tx.receipt?.status])
   const heading = useMemo(() => {
     if (tx.info.type === TransactionType.SWAP) {

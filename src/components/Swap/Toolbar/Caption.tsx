@@ -78,13 +78,13 @@ function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', too
 
 function GasEstimate({ gasUseEstimateUSD, trade }: GasEstimateProps) {
   const isWideWidget = useIsWideWidget()
+  if (gasUseEstimateUSD == null) {
+    return null
+  }
   // TODO(just-toby): use formatCurrencyAmount from conedison
   const displayEstimate = !gasUseEstimateUSD
     ? '-'
     : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })
-  if (gasUseEstimateUSD == null) {
-    return null
-  }
   return (
     <CaptionRow gap={0.25}>
       <>
@@ -192,12 +192,7 @@ export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD, trade }
     [inputCurrency.symbol, isWideWidget, outputCurrency.symbol]
   )
 
-  return (
-    <>
-      <Caption icon={Info} caption={<Text />} />
-      <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
-    </>
-  )
+  return <Caption icon={Info} caption={<Text />} />
 }
 
 export interface TradeProps {
