@@ -49,19 +49,21 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
       disabled={disabled}
       data-testid="token-select"
     >
-      <ThemedText.ButtonLarge color={value ? 'currentColor' : 'onAccent'}>
-        <TokenButtonRow empty={!value} flex gap={0.4}>
-          {value ? (
-            <>
-              <TokenImg token={value} size={1.75} />
+      <TokenButtonRow empty={!value} flex gap={0.4}>
+        {value ? (
+          <>
+            <TokenImg token={value} size={1.75} />
+            <ThemedText.ButtonLarge color={'currentColor'}>
               <span>{value.symbol}</span>
-            </>
-          ) : (
+            </ThemedText.ButtonLarge>
+          </>
+        ) : (
+          <ThemedText.ButtonLarge color={'onAccent'}>
             <Trans>Select a token</Trans>
-          )}
-          <ChevronDown strokeWidth={2} />
-        </TokenButtonRow>
-      </ThemedText.ButtonLarge>
+          </ThemedText.ButtonLarge>
+        )}
+        <ChevronDown strokeWidth={2} />
+      </TokenButtonRow>
     </StyledTokenButton>
   )
 }
