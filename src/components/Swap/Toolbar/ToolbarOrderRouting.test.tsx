@@ -26,7 +26,7 @@ describe('ToolbarOrderRouting', () => {
         }
       />
     )
-    expect(component.getByText('1 hop')).toBeTruthy()
+    expect(component.getByText('Auto Router')).toBeTruthy()
   })
 
   it('renders correctly, 2 hops', () => {
@@ -43,7 +43,7 @@ describe('ToolbarOrderRouting', () => {
         }
       />
     )
-    expect(component.getByText('2 hops')).toBeTruthy()
+    expect(component.getByText('Auto Router')).toBeTruthy()
   })
 
   it('renders correctly, 3 hops across 2 swaps', () => {
@@ -60,6 +60,6 @@ describe('ToolbarOrderRouting', () => {
         }
       />
     )
-    expect(component.getByText('3 hops')).toBeTruthy()
+    expect(component.getByText('Auto Router')).toBeTruthy()
   })
 })

@@ -22,7 +22,7 @@ const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
   }
 `
 
-function Header() {
+export function AutoRouterHeader() {
   return (
     <ThemedText.Subhead2>
       <Row justify="left" gap={0.25}>
@@ -125,7 +125,7 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade }) {
 
   return (
     <Column gap={0.75}>
-      <Header />
+      <AutoRouterHeader />
       <Rule />
       {routes.map((route, index) => (
         <Route key={index} route={route} />
