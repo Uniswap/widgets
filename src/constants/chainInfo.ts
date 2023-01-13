@@ -22,6 +22,8 @@ interface BaseChainInfo {
   readonly explorer: string
   readonly infoLink: string
   readonly logoUrl: string
+  // MetaMask requires a specific allow-listed name to add a chain with no warning; In most cases, the label can be used interchangeably.
+  name?: string
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
@@ -91,7 +93,8 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://optimism.io/',
     explorer: 'https://goerli-optimism.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: 'Optimism Goerli Testnet',
+    name: 'Optimism Goerli Testnet',
+    label: 'Optimism Goerli',
     logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
@@ -134,7 +137,8 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
-    label: 'Polygon Mainnet',
+    name: 'Polygon Mainnet',
+    label: 'Polygon',
     logoUrl: polygon,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: '#8247e5',
@@ -147,7 +151,8 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.celo.org/',
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo',
-    label: 'Celo Mainnet',
+    name: 'Celo Mainnet',
+    label: 'Celo',
     logoUrl: celoLogo,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     color: '#35D07F',
