@@ -11,35 +11,14 @@ export const USDC_MAINNET = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_ROPSTEN = new Token(
-  SupportedChainId.ROPSTEN,
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_RINKEBY = new Token(
-  SupportedChainId.RINKEBY,
-  '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
-  6,
-  'tUSDC',
-  'test USD//C'
-)
-export const USDC_GOERLI = new Token(
+const USDC_GOERLI = new Token(
   SupportedChainId.GOERLI,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
   'USD//C'
 )
-export const USDC_KOVAN = new Token(
-  SupportedChainId.KOVAN,
-  '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_OPTIMISM = new Token(
+const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
   6,
@@ -60,8 +39,9 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_ARBITRUM_RINKEBY = new Token(
-  SupportedChainId.ARBITRUM_RINKEBY,
+// TODO(zzmp): This must be verified.
+export const USDC_ARBITRUM_GOERLI = new Token(
+  SupportedChainId.ARBITRUM_GOERLI,
   '0x09b98f8b2395d076514037ff7d39a091a536206c',
   6,
   'USDC',
@@ -74,26 +54,12 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_POLYGON_MUMBAI = new Token(
-  SupportedChainId.POLYGON_MUMBAI,
-  '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
-  6,
-  'USDC',
-  'USD//C'
-)
 export const PORTAL_USDC_CELO = new Token(
   SupportedChainId.CELO,
   '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
   6,
   'USDCet',
   'USDC (Portal from Ethereum)'
-)
-export const USDC_CELO_ALFAJORES = new Token(
-  SupportedChainId.CELO_ALFAJORES,
-  '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
-  6,
-  'USDC',
-  'USD//C'
 )
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -125,18 +91,13 @@ export const DAI_OPTIMISM = new Token(
 )
 export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.MAINNET]: USDC_MAINNET,
+  [SupportedChainId.GOERLI]: USDC_GOERLI,
   [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM,
+  [SupportedChainId.ARBITRUM_GOERLI]: USDC_ARBITRUM_GOERLI,
   [SupportedChainId.OPTIMISM]: USDC_OPTIMISM,
-  [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY,
   [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI,
   [SupportedChainId.POLYGON]: USDC_POLYGON,
-  [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
   [SupportedChainId.CELO]: PORTAL_USDC_CELO,
-  [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES,
-  [SupportedChainId.GOERLI]: USDC_GOERLI,
-  [SupportedChainId.RINKEBY]: USDC_RINKEBY,
-  [SupportedChainId.KOVAN]: USDC_KOVAN,
-  [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -151,13 +112,6 @@ export const USDT_POLYGON = new Token(
   6,
   'USDT',
   'Tether USD'
-)
-export const WBTC_POLYGON = new Token(
-  SupportedChainId.POLYGON,
-  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
-  8,
-  'WBTC',
-  'Wrapped BTC'
 )
 export const USDT = new Token(
   SupportedChainId.MAINNET,
@@ -264,14 +218,6 @@ export const SWISE = new Token(
   'SWISE',
   'StakeWise'
 )
-export const WETH_POLYGON_MUMBAI = new Token(
-  SupportedChainId.POLYGON_MUMBAI,
-  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
-  18,
-  'WETH',
-  'Wrapped Ether'
-)
-
 export const WETH_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -314,40 +260,15 @@ export const CMC02_CELO = new Token(
   'cMCO2',
   'Celo Moss Carbon Credit'
 )
-export const CELO_CELO_ALFAJORES = new Token(
-  SupportedChainId.CELO_ALFAJORES,
-  '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
-  18,
-  'CELO',
-  'Celo'
-)
-export const CUSD_CELO_ALFAJORES = new Token(
-  SupportedChainId.CELO_ALFAJORES,
-  '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
-  18,
-  'CUSD',
-  'Celo Dollar'
-)
-export const CEUR_CELO_ALFAJORES = new Token(
-  SupportedChainId.CELO_ALFAJORES,
-  '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-  18,
-  'CEUR',
-  'Celo Euro Stablecoin'
-)
 
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<SupportedChainId, Token>),
   [SupportedChainId.CELO]: CELO_CELO,
-  [SupportedChainId.CELO_ALFAJORES]: CELO_CELO_ALFAJORES,
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
     '0x4200000000000000000000000000000000000006',
@@ -369,8 +290,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
-  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
-    SupportedChainId.ARBITRUM_RINKEBY,
+  // TODO(zzmp): This must be verified.
+  [SupportedChainId.ARBITRUM_GOERLI]: new Token(
+    SupportedChainId.ARBITRUM_GOERLI,
     '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
     18,
     'WETH',
@@ -383,53 +305,27 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WMATIC',
     'Wrapped MATIC'
   ),
-  [SupportedChainId.POLYGON_MUMBAI]: new Token(
-    SupportedChainId.POLYGON_MUMBAI,
-    '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-    18,
-    'WMATIC',
-    'Wrapped MATIC'
-  ),
 }
 
-export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
-  return chainId === SupportedChainId.CELO_ALFAJORES || chainId === SupportedChainId.CELO
-}
-
-function getCeloNativeCurrency(chainId: number) {
-  switch (chainId) {
-    case SupportedChainId.CELO_ALFAJORES:
-      return CELO_CELO_ALFAJORES
-    case SupportedChainId.CELO:
-      return CELO_CELO
-    default:
-      throw new Error('Not celo')
-  }
-}
-
-function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
-  return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
-}
-
-class MaticNativeCurrency extends NativeCurrency {
+class PolygonNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
   }
 
   get wrapped(): Token {
-    if (!isMatic(this.chainId)) throw new Error('Not matic')
+    if (this.chainId !== SupportedChainId.POLYGON) throw new Error('Not matic')
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
+    if (chainId !== SupportedChainId.POLYGON) throw new Error('Not matic')
     super(chainId, 18, 'MATIC', 'Polygon Matic')
   }
 }
 
-export class ExtendedEther extends Ether {
+class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     if (wrapped) return wrapped
@@ -447,10 +343,10 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
-  if (isMatic(chainId)) {
-    nativeCurrency = new MaticNativeCurrency(chainId)
-  } else if (isCelo(chainId)) {
-    nativeCurrency = getCeloNativeCurrency(chainId)
+  if (chainId === SupportedChainId.POLYGON) {
+    nativeCurrency = new PolygonNativeCurrency(chainId)
+  } else if (chainId === SupportedChainId.CELO) {
+    nativeCurrency = CELO_CELO
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -462,15 +358,10 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.MAINNET]: USDC_MAINNET.address,
     [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
     [SupportedChainId.OPTIMISM]: USDC_OPTIMISM.address,
-    [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY.address,
+    [SupportedChainId.ARBITRUM_GOERLI]: USDC_ARBITRUM_GOERLI.address,
     [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
-    [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
-    [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
-    [SupportedChainId.KOVAN]: USDC_KOVAN.address,
-    [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
-    [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES.address,
   },
 }

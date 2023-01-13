@@ -18,33 +18,15 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     'https://rpc.ankr.com/eth',
     'https://eth-mainnet.public.blastapi.io',
   ],
-  [SupportedChainId.ROPSTEN]: [
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth_ropsten',
-  ],
-  [SupportedChainId.RINKEBY]: [
-    // "Fallback" URLs
-    'https://rinkeby-light.eth.linkpool.io/',
-  ],
   [SupportedChainId.GOERLI]: [
     // "Safe" URLs
     'https://rpc.goerli.mudit.blog/',
     // "Fallback" URLs
     'https://rpc.ankr.com/eth_goerli',
   ],
-  [SupportedChainId.KOVAN]: [
-    // "Fallback" URLs
-    'https://eth-kovan.public.blastapi.io',
-  ],
   [SupportedChainId.POLYGON]: [
     // "Safe" URLs
     'https://polygon-rpc.com/',
-  ],
-  [SupportedChainId.POLYGON_MUMBAI]: [
-    // "Safe" URLs
-    'https://matic-mumbai.chainstacklabs.com',
-    'https://rpc-mumbai.maticvigil.com',
-    'https://matic-testnet-archive-rpc.bwarelabs.com',
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     // "Safe" URLs
@@ -52,9 +34,9 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Fallback" URLs
     'https://arbitrum.public-rpc.com',
   ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
+  [SupportedChainId.ARBITRUM_GOERLI]: [
     // "Safe" URLs
-    'https://rinkeby.arbitrum.io/rpc',
+    'https://goerli-rollup.arbitrum.io/rpc',
   ],
   [SupportedChainId.OPTIMISM]: [
     // "Safe" URLs
@@ -69,9 +51,5 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
   [SupportedChainId.CELO]: [
     // "Safe" URLs
     'https://forno.celo.org',
-  ],
-  [SupportedChainId.CELO_ALFAJORES]: [
-    // "Safe" URLs
-    'https://alfajores-forno.celo-testnet.org',
   ],
 }

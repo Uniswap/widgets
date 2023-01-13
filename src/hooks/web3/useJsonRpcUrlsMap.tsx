@@ -19,18 +19,13 @@ export default function useJsonRpcUrlsMap(): Record<SupportedChainId, string[]> 
 function toJsonRpcMap<T>(getChainConnections: (chainId: SupportedChainId) => T): Record<SupportedChainId, T> {
   return {
     [SupportedChainId.MAINNET]: getChainConnections(SupportedChainId.MAINNET),
-    [SupportedChainId.ROPSTEN]: getChainConnections(SupportedChainId.ROPSTEN),
-    [SupportedChainId.RINKEBY]: getChainConnections(SupportedChainId.RINKEBY),
     [SupportedChainId.GOERLI]: getChainConnections(SupportedChainId.GOERLI),
-    [SupportedChainId.KOVAN]: getChainConnections(SupportedChainId.KOVAN),
-    [SupportedChainId.POLYGON]: getChainConnections(SupportedChainId.POLYGON),
-    [SupportedChainId.POLYGON_MUMBAI]: getChainConnections(SupportedChainId.POLYGON_MUMBAI),
     [SupportedChainId.ARBITRUM_ONE]: getChainConnections(SupportedChainId.ARBITRUM_ONE),
-    [SupportedChainId.ARBITRUM_RINKEBY]: getChainConnections(SupportedChainId.ARBITRUM_RINKEBY),
+    [SupportedChainId.ARBITRUM_GOERLI]: getChainConnections(SupportedChainId.ARBITRUM_GOERLI),
     [SupportedChainId.OPTIMISM]: getChainConnections(SupportedChainId.OPTIMISM),
     [SupportedChainId.OPTIMISM_GOERLI]: getChainConnections(SupportedChainId.OPTIMISM_GOERLI),
+    [SupportedChainId.POLYGON]: getChainConnections(SupportedChainId.POLYGON),
     [SupportedChainId.CELO]: getChainConnections(SupportedChainId.CELO),
-    [SupportedChainId.CELO_ALFAJORES]: getChainConnections(SupportedChainId.CELO_ALFAJORES),
   }
 }
 

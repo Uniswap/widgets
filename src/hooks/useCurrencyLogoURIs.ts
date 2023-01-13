@@ -6,7 +6,7 @@ import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 
-import { isCelo, nativeOnChain } from '../constants/tokens'
+import { nativeOnChain } from '../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 
@@ -25,11 +25,9 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
 
 function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
   switch (chainId) {
-    case SupportedChainId.POLYGON_MUMBAI:
     case SupportedChainId.POLYGON:
       return MaticLogo
     case SupportedChainId.CELO:
-    case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
     default:
       return EthereumLogo
@@ -43,7 +41,7 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
 
-  if (isCelo(chainId)) {
+  if (chainId === SupportedChainId.CELO) {
     if (address === nativeOnChain(chainId).wrapped.address) {
       // The alternative logo represents $CELO as an erc-20 token and is consistent with token lists used by the
       // interface and other applications on Celo. The same logo should be displayed on the swap widget as on the
