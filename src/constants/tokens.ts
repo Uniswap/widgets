@@ -39,10 +39,9 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
-// TODO(zzmp): This must be verified.
 export const USDC_ARBITRUM_GOERLI = new Token(
   SupportedChainId.ARBITRUM_GOERLI,
-  '0x09b98f8b2395d076514037ff7d39a091a536206c',
+  '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892',
   6,
   'USDC',
   'USD//C'
@@ -290,10 +289,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
-  // TODO(zzmp): This must be verified.
   [SupportedChainId.ARBITRUM_GOERLI]: new Token(
     SupportedChainId.ARBITRUM_GOERLI,
-    '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
+    '0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3',
     18,
     'WETH',
     'Wrapped Ether'

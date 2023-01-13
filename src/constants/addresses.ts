@@ -12,8 +12,7 @@ export const MULTICALL_ADDRESS: AddressMap = {
     SupportedChainId.POLYGON,
   ]),
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
-  // TODO(zzmp): Must be verified.
-  [SupportedChainId.ARBITRUM_GOERLI]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+  [SupportedChainId.ARBITRUM_GOERLI]: '0x8260CB40247290317a4c062F3542622367F206Ee',
   [SupportedChainId.CELO]: '0x633987602DE5C4F337e3DbF265303A1080324204',
 }
 
@@ -22,11 +21,10 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = {
     SupportedChainId.OPTIMISM,
     SupportedChainId.OPTIMISM_GOERLI,
     SupportedChainId.ARBITRUM_ONE,
-    // TODO(zzmp): Must be verified.
-    SupportedChainId.ARBITRUM_GOERLI,
     SupportedChainId.POLYGON,
   ]),
   [SupportedChainId.CELO]: '0x5615CDAb10dc425a742d643d949a7F474C01abc4',
+  [SupportedChainId.ARBITRUM_GOERLI]: '0xab7664500b19a7a2362Ab26081e6DfB971B6F1B0',
 }
 
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {

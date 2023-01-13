@@ -3,6 +3,8 @@ import { SupportedChainId } from 'constants/chains'
 const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.MAINNET]: 'https://etherscan.io',
   [SupportedChainId.GOERLI]: 'https://goerli.etherscan.io',
+  [SupportedChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
+  [SupportedChainId.ARBITRUM_GOERLI]: 'https://goerli.arbiscan.io',
   [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
   [SupportedChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
@@ -23,35 +25,21 @@ export enum ExplorerDataType {
  * @param type the type of the data
  */
 export function getExplorerLink(chainId: number, data: string, type: ExplorerDataType): string {
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://arbiscan.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://arbiscan.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://arbiscan.io/block/${data}`
-      default:
-        return `https://arbiscan.io/`
-    }
-  }
-
-  if (chainId === SupportedChainId.ARBITRUM_GOERLI) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://goerli-rollup-explorer.arbitrum.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://goerli-rollup-explorer.arbitrum.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://goerli-rollup-explorer.arbitrum.io/block/${data}`
-      default:
-        return `https://goerli-rollup-explorer.arbitrum.io/`
-    }
-  }
-
   const prefix = ETHERSCAN_PREFIXES[chainId] ?? 'https://etherscan.io'
+
+  if (chainId === SupportedChainId.ARBITRUM_ONE || chainId === SupportedChainId.ARBITRUM_GOERLI) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `${prefix}/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
+        return `${prefix}/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `${prefix}/block/${data}`
+      default:
+        return `${prefix}/`
+    }
+  }
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
