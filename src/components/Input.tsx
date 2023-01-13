@@ -141,7 +141,7 @@ export const DecimalInput = forwardRef(function DecimalInput(props: InputProps, 
 
 export const inputCss = css`
   background-color: ${({ theme }) => theme.container};
-  border: 1px solid ${({ theme }) => theme.container};
+  border: 1px solid ${({ theme }) => theme.outline};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   cursor: text;
   padding: calc(0.75em - 1px);

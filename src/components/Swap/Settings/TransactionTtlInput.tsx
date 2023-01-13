@@ -11,7 +11,6 @@ import { Label } from './components'
 
 const Input = styled(Row)`
   ${inputCss}
-  border: 1px solid ${({ theme }) => theme.outline};
 `
 
 export default function TransactionTtlInput() {
