@@ -6,9 +6,10 @@ import Row from 'components/Row'
 import Rule from 'components/Rule'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
-import { useIsWideWidget } from 'hooks/useWidgetWidth'
+import { useWidgetWidth } from 'hooks/useWidgetWidth'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -19,13 +20,17 @@ import { isExactInput } from 'utils/tradeType'
 import { useTradeExchangeRate } from '../Price'
 
 const Label = styled.span`
+  margin-right: 0.25em;
   color: ${({ theme }) => theme.secondary};
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
   white-space: nowrap;
 `
-const TokenAmount = styled(ThemedText.H1)`
+const TokenAmount = styled(Text)<{ widgetWidth: number }>`
+  font-weight: 500;
+  font-size: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '24px' : '30px') : '36px')};
+  line-height: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '30px' : '36px') : '44px')};
   color: ${({ theme }) => theme.primary};
   white-space: nowrap;
 `
@@ -55,6 +60,11 @@ function Detail({ label, value, color }: DetailProps) {
   )
 }
 
+const AmountContainer = styled.div`
+  display: 'flex';
+  flex-direction: row;
+`
+
 interface AmountProps {
   tooltipText?: string
   label: string
@@ -63,24 +73,26 @@ interface AmountProps {
 }
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
-  const isWide = useIsWideWidget()
+  const width = useWidgetWidth()
+  console.log(width)
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > 9) {
-    formattedAmount = isWide
-      ? formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
-      : formatCurrencyAmount(amount, NumberType.TokenNonTx)
+    formattedAmount =
+      width >= 420
+        ? formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
+        : formatCurrencyAmount(amount, NumberType.TokenNonTx)
   }
 
   return (
-    <Row gap={2} align="flex-start">
+    <Row flex align="space-between">
       <ThemedText.Body2 userSelect>
         <Label>{label}</Label>
         {/* TODO(cartcrom): WEB-2764 figure out why tooltips don't work on Dialog components  */}
         {/* {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>} */}
       </ThemedText.Body2>
-      <Column flex align="flex-end">
-        <TokenAmount>
+      <Column flex align="flex-end" grow>
+        <TokenAmount widgetWidth={width}>
           {formattedAmount} {amount.currency.symbol}
         </TokenAmount>
         {usdcAmount && (

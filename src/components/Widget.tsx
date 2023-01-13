@@ -38,6 +38,8 @@ const slideOutRight = keyframes`
 `
 
 export const DialogWrapper = styled.div`
+  border: ${({ theme }) => `1px solid ${theme.outline}`};
+
   border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 100%;
   left: 0;

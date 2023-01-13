@@ -1,9 +1,9 @@
+import { formatCurrencyAmount, formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { ThemedText } from 'theme'
-import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
 
 import { TextButton } from '../Button'
 
@@ -40,8 +40,8 @@ export function useTradeExchangeRate({
   }, [base, executionPrice, inputAmount, outputAmount, outputUSDC])
 
   return [
-    `${1} ${price.baseCurrency.symbol} = ${formatPrice(price)} ${price.quoteCurrency.symbol}`,
-    usdcPrice && formatCurrencyAmount({ amount: usdcPrice, isUsdPrice: true }),
+    `${1} ${price.baseCurrency.symbol} = ${formatPrice(price).substring(1)} ${price.quoteCurrency.symbol}`,
+    usdcPrice && formatCurrencyAmount(usdcPrice, NumberType.FiatTokenPrice),
   ]
 }
 
