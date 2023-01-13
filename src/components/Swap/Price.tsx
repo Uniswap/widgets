@@ -39,10 +39,13 @@ export function useTradeExchangeRate({
     }
   }, [base, executionPrice, inputAmount, outputAmount, outputUSDC])
 
-  return [
-    `${1} ${price.baseCurrency.symbol} = ${formatPrice(price).substring(1)} ${price.quoteCurrency.symbol}`,
-    usdcPrice && formatCurrencyAmount(usdcPrice, NumberType.FiatTokenPrice),
-  ]
+  return useMemo(
+    () => [
+      `${1} ${price.baseCurrency.symbol} = ${formatPrice(price).substring(1)} ${price.quoteCurrency.symbol}`,
+      usdcPrice && formatCurrencyAmount(usdcPrice, NumberType.FiatTokenPrice),
+    ],
+    [price, usdcPrice]
+  )
 }
 
 /** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */

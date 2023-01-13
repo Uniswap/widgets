@@ -27,21 +27,15 @@ const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
   white-space: nowrap;
 `
-const TokenAmount = styled(Text)<{ widgetWidth: number }>`
+const TokenAmount = styled(Text)`
   color: ${({ theme }) => theme.primary};
-  font-size: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '24px' : '30px') : '36px')};
   font-weight: 500;
-  line-height: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '30px' : '36px') : '44px')};
   white-space: nowrap;
 `
 
-function Divider() {
-  return (
-    <div style={{ margin: '1em 0.125em' }}>
-      <Rule />
-    </div>
-  )
-}
+const RuleWrapper = styled.div`
+  margin: 1em 0.125em;
+`
 
 interface DetailProps {
   label: string
@@ -69,6 +63,8 @@ interface AmountProps {
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const width = useWidgetWidth()
+  const [amountFontSize, amountLineHeight] =
+    width < 400 ? (width < 350 ? ['24px', '30px'] : ['30px', '36px']) : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > 9) {
@@ -79,14 +75,14 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   }
 
   return (
-    <Row flex align="space-between">
+    <Row flex align="flex-start">
       <ThemedText.Body2 userSelect>
         <Label>{label}</Label>
         {/* TODO(cartcrom): WEB-2764 figure out why tooltips don't work on Dialog components  */}
         {/* {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>} */}
       </ThemedText.Body2>
       <Column flex align="flex-end" grow>
-        <TokenAmount widgetWidth={width}>
+        <TokenAmount fontSize={amountFontSize} lineHeight={amountLineHeight}>
           {formattedAmount} {amount.currency.symbol}
         </TokenAmount>
         {usdcAmount && (
@@ -170,10 +166,12 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       {details.map(([label, detail, color]) => (
         <Detail key={label} label={label} value={detail} color={color} />
       ))}
-      <Divider />
+      <RuleWrapper>
+        <Rule />
+      </RuleWrapper>
 
-      <Amount label="You pay" amount={inputAmount} usdcAmount={inputUSDC} />
-      <Amount label="You receive" amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
+      <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
+      <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
     </Column>
   )
 }
