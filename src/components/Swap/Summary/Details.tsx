@@ -20,18 +20,18 @@ import { isExactInput } from 'utils/tradeType'
 import { useTradeExchangeRate } from '../Price'
 
 const Label = styled.span`
-  margin-right: 0.25em;
   color: ${({ theme }) => theme.secondary};
+  margin-right: 0.25em;
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
   white-space: nowrap;
 `
 const TokenAmount = styled(Text)<{ widgetWidth: number }>`
-  font-weight: 500;
-  font-size: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '24px' : '30px') : '36px')};
-  line-height: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '30px' : '36px') : '44px')};
   color: ${({ theme }) => theme.primary};
+  font-size: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '24px' : '30px') : '36px')};
+  font-weight: 500;
+  line-height: ${({ widgetWidth }) => (widgetWidth < 400 ? (widgetWidth < 350 ? '30px' : '36px') : '44px')};
   white-space: nowrap;
 `
 
@@ -60,11 +60,6 @@ function Detail({ label, value, color }: DetailProps) {
   )
 }
 
-const AmountContainer = styled.div`
-  display: 'flex';
-  flex-direction: row;
-`
-
 interface AmountProps {
   tooltipText?: string
   label: string
@@ -74,7 +69,6 @@ interface AmountProps {
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const width = useWidgetWidth()
-  console.log(width)
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > 9) {
