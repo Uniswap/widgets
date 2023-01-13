@@ -162,16 +162,15 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   ])
 
   return (
-    <Column gap={0.5}>
-      {details.map(([label, detail, color]) => (
-        <Detail key={label} label={label} value={detail} color={color} />
-      ))}
+    <>
+      <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
+      <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
       <RuleWrapper>
         <Rule />
       </RuleWrapper>
-
-      <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
-      <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
-    </Column>
+      {details.map(([label, detail, color]) => (
+        <Detail key={label} label={label} value={detail} color={color} />
+      ))}
+    </>
   )
 }
