@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import { ArrowUpRight } from 'icons'
+import { Link } from 'icons'
 import { ReactNode, useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { Color } from 'theme'
@@ -32,7 +32,7 @@ export default function EtherscanLink({ data, type, color = 'currentColor', chil
     <StyledExternalLink href={url} color={color} target="_blank">
       <Row gap={0.25}>
         {children}
-        {url && <ArrowUpRight />}
+        {url && <Link />}
       </Row>
     </StyledExternalLink>
   )

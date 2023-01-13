@@ -1,4 +1,3 @@
-import WidgetContainer from 'components/WidgetContainer'
 import WidgetWrapper from 'components/WidgetWrapper'
 import { StrictMode } from 'react'
 import styled from 'styled-components/macro'
@@ -125,23 +124,21 @@ export function SwapWidgetSkeleton({ theme, width }: SwapWidgetSkeletonProps) {
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <WidgetContainer width={width}>
-          <WidgetWrapper>
-            <LoadingWrapper>
-              <FloatingTitle />
-              <InputColumn>
-                <FloatingInput />
-              </InputColumn>
-              <div>
-                <ReverseButton />
-                <OutputColumn>
-                  <FloatingOutput isModule />
-                </OutputColumn>
-                <FloatingButton />
-              </div>
-            </LoadingWrapper>
-          </WidgetWrapper>
-        </WidgetContainer>
+        <WidgetWrapper width={width}>
+          <LoadingWrapper>
+            <FloatingTitle />
+            <InputColumn>
+              <FloatingInput />
+            </InputColumn>
+            <div>
+              <ReverseButton />
+              <OutputColumn>
+                <FloatingOutput isModule />
+              </OutputColumn>
+              <FloatingButton />
+            </div>
+          </LoadingWrapper>
+        </WidgetWrapper>
       </ThemeProvider>
     </StrictMode>
   )
