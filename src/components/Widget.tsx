@@ -68,7 +68,7 @@ export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props,
   locale?: SupportedLocale
   tokenList?: string | TokenInfo[]
   width?: string | number
-  showL2BridgeBanner?: boolean
+  hideL2BridgeBanner?: boolean
   dialog?: HTMLDivElement | null
   className?: string
   onError?: OnError
@@ -98,7 +98,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                           <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
                         </DialogProvider>
                       </WidgetWrapper>
-                      {props.showL2BridgeBanner && <BridgeBanner />}
+                      {!props.hideL2BridgeBanner && <BridgeBanner />}
                     </WidgetContainer>
                   </ThemeProvider>
                 </BlockNumberProvider>
