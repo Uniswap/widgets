@@ -151,7 +151,7 @@ export default memo(function Toolbar() {
             trade={trade}
             slippage={slippage}
           />
-          <ToolbarOrderRouting trade={trade} />
+          <ToolbarOrderRouting trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
         </>
       )}
     </ToolbarColumn>

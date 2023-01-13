@@ -17,6 +17,7 @@ describe('ToolbarOrderRouting', () => {
     const testRoute = buildSingleV3Route(inputAmount, outputAmount)
     const component = renderComponent(
       <ToolbarOrderRouting
+        gasUseEstimateUSD={CurrencyAmount.fromRawAmount(DAI, 1)}
         trade={
           new InterfaceTrade({
             v2Routes: [],
@@ -34,6 +35,7 @@ describe('ToolbarOrderRouting', () => {
     const dai = CurrencyAmount.fromRawAmount(DAI, 1)
     const component = renderComponent(
       <ToolbarOrderRouting
+        gasUseEstimateUSD={CurrencyAmount.fromRawAmount(DAI, 1)}
         trade={
           new InterfaceTrade({
             v2Routes: [],
@@ -51,6 +53,7 @@ describe('ToolbarOrderRouting', () => {
     const dai = CurrencyAmount.fromRawAmount(DAI, 1)
     const component = renderComponent(
       <ToolbarOrderRouting
+        gasUseEstimateUSD={CurrencyAmount.fromRawAmount(DAI, 1)}
         trade={
           new InterfaceTrade({
             v2Routes: [],

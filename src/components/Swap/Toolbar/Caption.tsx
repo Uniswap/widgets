@@ -90,7 +90,7 @@ function GasEstimate({ gasUseEstimateUSD, trade }: GasEstimateProps) {
       <>
         {trade ? (
           <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
-            <RoutingDiagram trade={trade} />
+            <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
           </Tooltip>
         ) : (
           <Gas color="secondary" />
