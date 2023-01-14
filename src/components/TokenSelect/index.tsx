@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { StringInput } from 'components/Input'
+import { inputCss, StringInput } from 'components/Input'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
@@ -23,19 +23,7 @@ import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
 const SearchInputContainer = styled(Row)`
-  background-color: ${({ theme }) => theme.module};
-  border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  justify-content: flex-start;
-  padding: calc(0.75em - 1px);
-
-  &:focus-within {
-    border-color: ${({ theme }) => theme.accentSoft};
-  }
-`
-
-const StyledSearchIcon = styled(Search)`
-  color: ${({ theme }) => theme.secondary};
+  ${inputCss}
 `
 
 function usePrefetchBalances() {
@@ -103,7 +91,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
       <Column gap={0.75}>
         <Row pad={0.75} grow>
           <SearchInputContainer gap={0.75} justify="start" flex>
-            <StyledSearchIcon />
+            <Search color="secondary" />
             <ThemedText.Body1 flexGrow={1}>
               <StringInput
                 value={query}
