@@ -17,6 +17,7 @@ export interface Colors {
 
   // state
   active: string
+  activeSoft: string
   success: string
   warning: string
   warningSoft: string
