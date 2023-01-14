@@ -1,25 +1,20 @@
-import { t } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
-import { PriceImpact } from 'hooks/usePriceImpact'
-import { Slippage } from 'hooks/useSlippage'
-import { AlertTriangle, Icon, Info } from 'icons'
+import { Icon } from 'icons'
 import { ReactNode } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
+import { Body2LineHeightRem } from 'theme/type'
 
-import { SwapInputOutputEstimate } from '../Summary'
-import { PriceImpactWarningTooltipContent } from './Caption'
+export const SUMMARY_COLUMN_GAP_EM = 0.75
+export const SUMMARY_ROW_HEIGHT_EM = Body2LineHeightRem + SUMMARY_COLUMN_GAP_EM
 
 const TradeSummaryColumn = styled(Column)`
   border-bottom: 1px solid ${({ theme }) => theme.outline};
   border-top: 1px solid ${({ theme }) => theme.outline};
   margin: 0 1em;
-  padding: 0.75em 0;
+  padding: ${SUMMARY_COLUMN_GAP_EM}em 0;
 `
 
 const TradeAttributeName = styled(ThemedText.Body2)`
@@ -30,34 +25,37 @@ const TradeAttributeValue = styled(ThemedText.Body2)`
   color: ${({ theme, color }) => color ?? theme.primary};
 `
 
-interface SummaryRowProps {
+export interface SummaryRowProps {
   name: string
   value: string
   color?: Color
-  tooltip?: {
-    side: 'name' | 'value'
+  nameTooltip?: {
+    content: ReactNode
+    icon: Icon
+  }
+  valueTooltip?: {
     content: ReactNode
     icon: Icon
   }
 }
 
-function SummaryRow({ name, value, color, tooltip }: SummaryRowProps) {
+function SummaryRow({ name, value, color, nameTooltip, valueTooltip }: SummaryRowProps) {
   return (
     <Row>
-      {tooltip?.side === 'name' ? (
+      {nameTooltip ? (
         <Row gap={0.25}>
           <TradeAttributeName color={color}>{name}</TradeAttributeName>
-          <Tooltip icon={tooltip.icon} iconProps={{ color }}>
-            {tooltip.content}
+          <Tooltip icon={nameTooltip.icon} iconProps={{ color }} contained>
+            {nameTooltip.content}
           </Tooltip>
         </Row>
       ) : (
         <TradeAttributeName color={color}>{name}</TradeAttributeName>
       )}
-      {tooltip?.side === 'value' ? (
+      {valueTooltip ? (
         <Row gap={0.25}>
-          <Tooltip icon={tooltip.icon} iconProps={{ color }}>
-            {tooltip.content}
+          <Tooltip icon={valueTooltip.icon} iconProps={{ color }} contained>
+            {valueTooltip.content}
           </Tooltip>
           <TradeAttributeValue color={color}>{value}</TradeAttributeValue>
         </Row>
@@ -69,51 +67,15 @@ function SummaryRow({ name, value, color, tooltip }: SummaryRowProps) {
 }
 
 interface ToolbarTradeSummaryProps {
-  trade?: InterfaceTrade
-  gasUseEstimateUSD?: CurrencyAmount<Token>
-  impact?: PriceImpact
-  slippage: Slippage
+  rows: SummaryRowProps[]
 }
 
-export default function ToolbarTradeSummary({ gasUseEstimateUSD, impact, trade, slippage }: ToolbarTradeSummaryProps) {
-  const currencySymbol = trade?.outputAmount?.currency?.symbol ?? ''
+export default function ToolbarTradeSummary({ rows }: ToolbarTradeSummaryProps) {
   return (
-    <TradeSummaryColumn gap={0.75}>
-      <SummaryRow
-        name={t`Network fee`}
-        value={`${gasUseEstimateUSD ? '~' : ''}${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`}
-      />
-      <SummaryRow
-        color={impact?.warning}
-        name={t`Price impact`}
-        value={formatPriceImpact(impact?.percent)}
-        tooltip={
-          impact?.warning
-            ? {
-                icon: AlertTriangle,
-                content: <PriceImpactWarningTooltipContent />,
-                side: 'value',
-              }
-            : undefined
-        }
-      />
-      <SummaryRow
-        name={t`Minimum output after slippage`}
-        value={`${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}`}
-      />
-      <SummaryRow
-        name={t`Expected output`}
-        value={`${formatCurrencyAmount(trade?.outputAmount)} ${currencySymbol}`}
-        tooltip={
-          trade
-            ? {
-                icon: Info,
-                content: <SwapInputOutputEstimate trade={trade} slippage={slippage} />,
-                side: 'name',
-              }
-            : undefined
-        }
-      />
+    <TradeSummaryColumn gap={SUMMARY_COLUMN_GAP_EM}>
+      {rows.map((row, i) => (
+        <SummaryRow key={i} {...row} />
+      ))}
     </TradeSummaryColumn>
   )
 }
