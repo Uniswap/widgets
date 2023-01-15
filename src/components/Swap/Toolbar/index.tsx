@@ -8,7 +8,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -56,11 +56,10 @@ export default memo(function Toolbar() {
   const permit2Enabled = usePermit2Enabled()
   const [open, setOpen] = useState(false)
 
-  const onExpand = useCallback(() => {
-    setOpen((open) => !open)
-  }, [])
-
   const caption = useMemo(() => {
+    const onExpand = () => {
+      setOpen((open) => !open)
+    }
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
         return <Caption.Connecting />
@@ -119,45 +118,49 @@ export default memo(function Toolbar() {
     trade,
     impact,
     open,
-    onExpand,
     outputUSDC,
   ])
 
   const tradeSummaryRows: SummaryRowProps[] = useMemo(() => {
     const currencySymbol = trade?.outputAmount?.currency.symbol ?? ''
-    const rows: SummaryRowProps[] = []
-    rows.push({
-      name: t`Network fee`,
-      value: gasUseEstimateUSD ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}` : '-',
-    })
-    rows.push({
-      color: impact?.warning,
-      name: t`Price impact`,
-      value: impact?.percent ? formatPriceImpact(impact?.percent) : '-',
-      valueTooltip: impact?.warning
-        ? {
-            icon: AlertTriangle,
-            content: <Caption.PriceImpactWarningTooltipContent />,
-          }
-        : undefined,
-    })
-    rows.push({
-      name: t`Minimum output after slippage`,
-      value: trade ? `${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}` : '-',
-    })
-    rows.push({
-      name: t`Expected output`,
-      value: trade ? `${formatCurrencyAmount(trade?.outputAmount)} ${currencySymbol}` : '-',
-      nameTooltip: trade
-        ? {
-            icon: Info,
-            content: <SwapInputOutputEstimate trade={trade} slippage={slippage} />,
-          }
-        : undefined,
-    })
+    const rows: SummaryRowProps[] = [
+      {
+        name: t`Network fee`,
+        value: gasUseEstimateUSD ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}` : '-',
+      },
+      {
+        color: impact?.warning,
+        name: t`Price impact`,
+        value: impact?.percent ? formatPriceImpact(impact?.percent) : '-',
+        valueTooltip: impact?.warning
+          ? {
+              icon: AlertTriangle,
+              content: <Caption.PriceImpactWarningTooltipContent />,
+            }
+          : undefined,
+      },
+      {
+        name: t`Minimum output after slippage`,
+        value: trade ? `${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}` : '-',
+      },
+      {
+        name: t`Expected output`,
+        value: trade ? `${formatCurrencyAmount(trade?.outputAmount)} ${currencySymbol}` : '-',
+        nameTooltip: trade
+          ? {
+              icon: Info,
+              content: <SwapInputOutputEstimate trade={trade} slippage={slippage} />,
+            }
+          : undefined,
+      },
+    ]
     return rows
   }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
+  /**
+   * The height of the expanded toolbar is dynamic based on the number of rows in the trade summary.
+   * Returns the total expanded height of the area below the base component.
+   */
   const expandedHeight = useMemo(() => {
     const summaryHeight = tradeSummaryRows.length * SUMMARY_ROW_HEIGHT_EM + SUMMARY_COLUMN_GAP_EM
     return summaryHeight + ORDER_ROUTING_HEIGHT_EM + 1 /* accounts for the border */
@@ -187,7 +190,9 @@ export default memo(function Toolbar() {
       styledTitleWrapper={false}
       bottomGradient={false}
       open={open}
-      onExpand={onExpand}
+      onExpand={() => {
+        setOpen((open) => !open)
+      }}
       height={expandedHeight}
     >
       <Column>

@@ -74,7 +74,7 @@ export default function ToolbarTradeSummary({ rows }: ToolbarTradeSummaryProps) 
   return (
     <TradeSummaryColumn gap={SUMMARY_COLUMN_GAP_EM}>
       {rows.map((row, i) => (
-        <SummaryRow key={i} {...row} />
+        <SummaryRow key={row.name} {...row} />
       ))}
     </TradeSummaryColumn>
   )
