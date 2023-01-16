@@ -56,14 +56,7 @@ export default function CommonBases({
             flex
             tabIndex={0}
             data-testid={`common-base-${currency.symbol}`}
-            onKeyPress={
-              !isSelected
-                ? (e) => {
-                    console.log({ e })
-                    e.key === 'Enter' && onSelect(currency)
-                  }
-                : undefined
-            }
+            onKeyPress={!isSelected ? (e) => e.key === 'Enter' && onSelect(currency) : undefined}
             onClick={!isSelected ? () => onSelect(currency) : undefined}
             active={isSelected}
             key={currencyId(currency)}
