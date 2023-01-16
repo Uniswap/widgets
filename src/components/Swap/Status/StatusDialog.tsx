@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
 import ErrorDialog, { StatusHeader } from 'components/Error/ErrorDialog'
 import EtherscanLink from 'components/EtherscanLink'
-import Rule from 'components/Rule'
+import Row from 'components/Row'
 import SwapSummary from 'components/Swap/Summary'
-import useInterval from 'hooks/useInterval'
-import { Clock, LargeCheck, LargeSpinner } from 'icons'
-import ms from 'ms.macro'
-import { useCallback, useMemo, useState } from 'react'
+import { LargeCheck, LargeSpinner } from 'icons'
+import { useMemo } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -14,38 +12,15 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
-import Row from '../../Row'
 
-const TransactionRow = styled(Row)`
-  flex-direction: row-reverse;
+const EtherscanLinkContainer = styled(Row)`
+  padding: 0.75em 0 1.5em;
+  transition: opacity 0.25s;
+  width: 100%;
+  :hover {
+    opacity: 0.6;
+  }
 `
-
-function ElapsedTime({ tx }: { tx: Transaction }) {
-  const [elapsedMs, setElapsedMs] = useState(0)
-
-  useInterval(() => setElapsedMs(Date.now() - tx.addedTime), tx.receipt ? null : ms`1s`)
-
-  const toElapsedTime = useCallback((ms: number) => {
-    let sec = Math.floor(ms / 1000)
-    const min = Math.floor(sec / 60)
-    sec = sec % 60
-    if (min) {
-      return (
-        <Trans>
-          {min}m {sec}s
-        </Trans>
-      )
-    } else {
-      return <Trans>{sec}s</Trans>
-    }
-  }, [])
-  return (
-    <Row gap={0.5}>
-      <Clock />
-      <ThemedText.Body2>{toElapsedTime(elapsedMs)}</ThemedText.Body2>
-    </Row>
-  )
-}
 
 interface TransactionStatusProps {
   tx: Transaction
@@ -58,35 +33,41 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   }, [tx.receipt?.status])
   const heading = useMemo(() => {
     if (tx.info.type === TransactionType.SWAP) {
-      return tx.receipt?.status ? <Trans>Swap confirmed</Trans> : <Trans>Swap pending</Trans>
+      return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Swap pending</Trans>
     } else if (tx.info.type === TransactionType.WRAP) {
-      return tx.receipt?.status ? <Trans>Unwrap confirmed</Trans> : <Trans>Unwrap pending</Trans>
+      return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Unwrap pending</Trans>
     } else if (tx.info.type === TransactionType.UNWRAP) {
-      return tx.receipt?.status ? <Trans>Unwrap confirmed</Trans> : <Trans>Unwrap pending</Trans>
+      return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Unwrap pending</Trans>
     }
-    return tx.receipt?.status ? <Trans>Transaction confirmed</Trans> : <Trans>Transaction pending</Trans>
+    return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Transaction pending</Trans>
   }, [tx.info, tx.receipt?.status])
+
+  const subheading = useMemo(() => {
+    if (tx.receipt?.status) {
+      return <Trans>Your transaction was successful</Trans>
+    }
+    return null
+  }, [tx.receipt?.status])
 
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
-        <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
+        <ThemedText.H4>{heading}</ThemedText.H4>
         {tx.info.type === TransactionType.SWAP ? (
           <SwapSummary input={tx.info.trade.inputAmount} output={tx.info.trade.outputAmount} />
         ) : null}
+        <ThemedText.Subhead1>{subheading}</ThemedText.Subhead1>
       </StatusHeader>
-      <Rule />
-      <TransactionRow flex>
-        <ThemedText.ButtonSmall>
-          <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
-            <Trans>View on Etherscan</Trans>
-          </EtherscanLink>
-        </ThemedText.ButtonSmall>
-        <ElapsedTime tx={tx} />
-      </TransactionRow>
       <ActionButton onClick={onClose}>
         <Trans>Close</Trans>
       </ActionButton>
+      <EtherscanLinkContainer flex justify="center">
+        <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash} showIcon={false}>
+          <ThemedText.ButtonLarge color="active">
+            <Trans>View on Etherscan</Trans>
+          </ThemedText.ButtonLarge>
+        </EtherscanLink>
+      </EtherscanLinkContainer>
     </Column>
   )
 }

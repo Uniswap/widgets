@@ -40,6 +40,12 @@ export function H3(props: TextProps) {
   )
 }
 
+export function H4(props: TextProps) {
+  return (
+    <TextWrapper className="headline headline-4" fontSize={20} fontWeight={500} lineHeight="28px" noWrap {...props} />
+  )
+}
+
 export function Subhead1(props: TextProps) {
   return (
     <TextWrapper className="subhead subhead-1" fontSize={16} fontWeight={500} lineHeight="24px" noWrap {...props} />
