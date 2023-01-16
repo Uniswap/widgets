@@ -140,7 +140,7 @@ export const DecimalInput = forwardRef(function DecimalInput(props: InputProps, 
 })
 
 export const inputCss = css`
-  background-color: ${({ theme }) => theme.container};
+  background-color: ${({ theme }) => theme.module};
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   cursor: text;
@@ -152,6 +152,6 @@ export const inputCss = css`
   }
 
   :focus-within {
-    border-color: ${({ theme }) => theme.active};
+    border-color: ${({ theme }) => theme.accentSoft};
   }
 `
