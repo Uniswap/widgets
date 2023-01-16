@@ -21,6 +21,8 @@ export interface Colors {
   warning: string
   warningSoft: string
   error: string
+  critical: string
+  criticalSoft: string
 
   networkDefaultShadow: string
 

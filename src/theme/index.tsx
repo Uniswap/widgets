@@ -23,6 +23,8 @@ const stateColors = {
   active: 'hsl(221, 96%, 64%)',
   success: 'hsl(145, 63.4%, 41.8%)',
   warningSoft: 'hsla(44, 86%, 51%, 0.24)',
+  critical: '#FA2B39',
+  criticalSoft: 'rgba(250, 43, 57, 0.12);',
 }
 
 export const lightTheme: Colors = {

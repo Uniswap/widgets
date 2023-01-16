@@ -75,7 +75,7 @@ export interface Action {
   children?: ReactNode
 }
 
-type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive'>
+type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive' | 'critical'>
 
 interface BaseProps {
   color?: ActionButtonColor
@@ -102,6 +102,7 @@ export default function ActionButton({
     }
     switch (color) {
       case 'accent':
+      case 'critical':
         return 'onAccent'
       case 'accentSoft':
         return 'accent'
