@@ -9,11 +9,11 @@ import { Slippage } from 'hooks/useSlippage'
 import { useWidgetWidth } from 'hooks/useWidgetWidth'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme/breakpoints'
 import { currencyId } from 'utils/currencyId'
 import { isExactInput } from 'utils/tradeType'
 
@@ -25,11 +25,6 @@ const Label = styled.span`
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
-  white-space: nowrap;
-`
-const TokenAmount = styled(Text)`
-  color: ${({ theme }) => theme.primary};
-  font-weight: 500;
   white-space: nowrap;
 `
 
@@ -64,14 +59,18 @@ interface AmountProps {
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const width = useWidgetWidth()
   const [amountFontSize, amountLineHeight] =
-    width < 400 ? (width < 350 ? ['24px', '30px'] : ['30px', '36px']) : ['36px', '44px']
+    width < BREAKPOINTS.MEDIUM
+      ? width < BREAKPOINTS.EXTRA_SMALL
+        ? ['24px', '30px']
+        : ['30px', '36px']
+      : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > 9) {
     formattedAmount =
-      width >= 420
-        ? formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
-        : formatCurrencyAmount(amount, NumberType.TokenNonTx)
+      width < BREAKPOINTS.WIDE
+        ? formatCurrencyAmount(amount, NumberType.TokenNonTx)
+        : formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
   }
 
   return (
@@ -82,9 +81,9 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
         {/* {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>} */}
       </ThemedText.Body2>
       <Column flex align="flex-end" grow>
-        <TokenAmount fontSize={amountFontSize} lineHeight={amountLineHeight}>
+        <ThemedText.H1 color="primary" fontSize={amountFontSize} lineHeight={amountLineHeight}>
           {formattedAmount} {amount.currency.symbol}
-        </TokenAmount>
+        </ThemedText.H1>
         {usdcAmount && (
           <ThemedText.Body2>
             <Value color="secondary">{formatCurrencyAmount(usdcAmount, NumberType.FiatTokenPrice)}</Value>
@@ -110,28 +109,27 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
-  const [exchangeRate] = useTradeExchangeRate({ trade })
+  const [exchangeRate] = useTradeExchangeRate(trade)
 
-  const [details, estimationMessage] = useMemo(() => {
-    const rows: Array<[string, string] | [string, string, Color | undefined]> = []
-    // @TODO(ianlapham): Check that provider fee is even a valid list item
+  const { details, estimationMessage } = useMemo(() => {
+    const details: Array<[string, string] | [string, string, Color | undefined]> = []
 
-    rows.push([t`Exchange rate`, exchangeRate])
+    details.push([t`Exchange rate`, exchangeRate])
 
     if (feeOptions) {
       const fee = outputAmount.multiply(feeOptions.fee)
       if (fee.greaterThan(0)) {
         const parsedFee = formatCurrencyAmount(fee, NumberType.FiatGasPrice)
-        rows.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
+        details.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
       }
     }
 
     if (gasUseEstimateUSD) {
-      rows.push([t`Network fee`, `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`])
+      details.push([t`Network fee`, `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`])
     }
 
     if (impact) {
-      rows.push([t`Price impact`, impact.toString(), impact.warning])
+      details.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
     let estimationMessage = ''
@@ -139,15 +137,15 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       const localizedMinReceived = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), NumberType.TokenTx)
       const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
       estimationMessage = t`Output is estimated. You will receive at least ${minReceivedString} or the transaction will revert.`
-      rows.push([t`Minimum output after slippage`, minReceivedString])
+      details.push([t`Minimum output after slippage`, minReceivedString])
     } else {
       const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), NumberType.TokenTx)
       const maxSentString = `${localizedMaxSent} ${inputCurrency.symbol}`
       estimationMessage = t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`
-      rows.push([t`Maximum sent`, maxSentString])
+      details.push([t`Maximum sent`, maxSentString])
     }
 
-    return [rows, estimationMessage]
+    return { details, estimationMessage }
   }, [
     exchangeRate,
     feeOptions,

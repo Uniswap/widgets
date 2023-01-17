@@ -7,20 +7,11 @@ import { ThemedText } from 'theme'
 
 import { TextButton } from '../Button'
 
-interface PriceProps {
-  trade: InterfaceTrade
-  outputUSDC?: CurrencyAmount<Currency>
-}
-
-interface ExchangeRateProps extends PriceProps {
-  base?: 'input' | 'output'
-}
-
-export function useTradeExchangeRate({
-  trade,
-  outputUSDC,
-  base = 'input',
-}: ExchangeRateProps): [string, string | undefined] {
+export function useTradeExchangeRate(
+  trade: InterfaceTrade,
+  outputUSDC?: CurrencyAmount<Currency>,
+  base: 'input' | 'output' = 'input'
+): [string, string | undefined] {
   const { inputAmount, outputAmount, executionPrice } = trade
 
   // Compute the usdc price from the output price, so that it aligns with the displayed price.
@@ -48,12 +39,17 @@ export function useTradeExchangeRate({
   )
 }
 
+interface PriceProps {
+  trade: InterfaceTrade
+  outputUSDC?: CurrencyAmount<Currency>
+}
+
 /** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */
 export default function Price({ trade, outputUSDC }: PriceProps) {
-  const [base, setBase] = useState<'input' | 'output'>('input')
-  const onClick = useCallback(() => setBase((base) => (base === 'input' ? 'output' : 'input')), [])
+  const [defaultBase, setDefaultBase] = useState(true)
+  const onClick = useCallback(() => setDefaultBase(!defaultBase), [defaultBase])
 
-  const [exchangeRate, usdcPrice] = useTradeExchangeRate({ trade, outputUSDC, base })
+  const [exchangeRate, usdcPrice] = useTradeExchangeRate(trade, outputUSDC, defaultBase ? 'input' : 'output')
 
   return (
     <TextButton color="primary" onClick={onClick}>

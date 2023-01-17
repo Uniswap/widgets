@@ -1,0 +1,6 @@
+export enum BREAKPOINTS {
+  WIDE = 420,
+  MEDIUM = 400,
+  SMALL = 375,
+  EXTRA_SMALL = 350,
+}

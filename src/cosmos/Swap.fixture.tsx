@@ -63,7 +63,7 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
-  const [hideBrandedFooter] = useValue('hideBrandedFooter', { defaultValue: true })
+  const [brandedFooter] = useValue('brandedFooter', { defaultValue: true })
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
   const [hideL2BridgeBanner] = useValue('hideL2BridgeBanner', { defaultValue: false })
 
@@ -112,7 +112,7 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
-      brandedFooter={!hideBrandedFooter}
+      brandedFooter={brandedFooter}
       {...eventHandlers}
     />
   )
