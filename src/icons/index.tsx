@@ -60,7 +60,7 @@ export const largeIconCss = css<{ iconSize: number }>`
 `
 
 const LargeWrapper = styled.div<{ iconSize: number }>`
-  height: 1em;
+  height: ${({ iconSize }) => iconSize}em;
   width: ${({ iconSize }) => iconSize}em;
   ${largeIconCss}
 `
@@ -71,13 +71,14 @@ interface LargeIconProps {
   icon?: Icon
   color?: Color
   size?: number
+  onClick?: () => void
   className?: string
 }
 
-export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIconProps) {
+export function LargeIcon({ icon: Icon, color, size = 1.2, onClick, className }: LargeIconProps) {
   return (
     <LargeWrapper color={color} iconSize={size} className={className}>
-      {Icon && <Icon color={color} />}
+      {Icon && <Icon color={color} onClick={onClick} />}
     </LargeWrapper>
   )
 }

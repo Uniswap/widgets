@@ -131,7 +131,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
         </Dialog>
       )}
       {view === VIEW.IMPACT_SPEEDBUMP && impact && (
-        <Dialog color="dialog" onClose={() => setView(VIEW.DEFAULT)}>
+        <Dialog color="container" onClose={() => setView(VIEW.DEFAULT)}>
           <SpeedbumpDialog onContinue={() => onContinue()} onClose={() => setView(VIEW.DEFAULT)} impact={impact} />
         </Dialog>
       )}

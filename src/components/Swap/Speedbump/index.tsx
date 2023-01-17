@@ -1,16 +1,38 @@
 import { t, Trans } from '@lingui/macro'
+import Button, { TextButton } from 'components/Button'
 import Column from 'components/Column'
-import { StatusHeader } from 'components/Error/ErrorDialog'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { AlertTriangle, LargeIcon, X } from 'icons'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const Body = styled(Column)`
-  height: calc(100% - 2.5em);
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  width: 100%;
 `
 const SpeedbumpWrapper = styled.div`
-  padding: 1.75em 1.25em;
+  padding: 1.5em 1.25em;
+`
+const SpeedbumpButtonStyle = css`
+  border-radius: 1em;
+  padding: 1em;
+`
+
+const StyledXButton = styled(LargeIcon).attrs({ icon: X, color: 'primary', size: 1.5 })`
+  :hover {
+    cursor: pointer;
+  }
+`
+const ContinueButton = styled(Button)`
+  ${SpeedbumpButtonStyle}
+  background-color: ${({ theme }) => theme.criticalSoft};
+  color: ${({ theme }) => theme.critical};
+`
+const CancelButton = styled(TextButton)`
+  ${SpeedbumpButtonStyle}
+  color: ${({ theme }) => theme.secondary};
 `
 
 interface SpeedbumpDialogProps {
@@ -22,46 +44,28 @@ interface SpeedbumpDialogProps {
 export function SpeedbumpDialog({ impact, onContinue, onClose }: SpeedbumpDialogProps) {
   return (
     <SpeedbumpWrapper>
-      <div onClick={onClose}>
-        <LargeIcon icon={X} color="primary" />
-      </div>
-
+      <StyledXButton onClick={onClose} />
       <Body flex align="stretch" padded gap={0.75}>
-        <StatusHeader icon={AlertTriangle} iconColor="critical" iconSize={4}>
-          <Column>
-            <ThemedText.H3>
-              <Trans>Warning</Trans>
-            </ThemedText.H3>
-            <ThemedText.Body1>
-              {t`This transaction will result in a ${impact?.toString()} price impact on the market price of this pool. Do you wish to continue? `}
-            </ThemedText.Body1>
-          </Column>
-        </StatusHeader>
-        {/* <Heading gap={0.75} flex justify="center">
-          <Summary
-            input={inputAmount}
-            output={outputAmount}
-            inputUSDC={inputUSDC}
-            outputUSDC={outputUSDC}
-            impact={impact}
-            open={open}
-          />
-          <Price trade={trade} />
-        </Heading>
-        <Expando
-          title={<Subhead impact={impact} slippage={slippage} />}
-          open={open}
-          onExpand={onExpand}
-          height={6}
-          gap={open ? 0 : 0.75}
-        >
-          <Column gap={0.5}>
-            <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
-            <Estimate trade={trade} slippage={slippage} />
-          </Column>
-        </Expando> */}
+        <LargeIcon icon={AlertTriangle} color="critical" size={4} />
 
-        {/* <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} /> */}
+        <Column>
+          <ThemedText.H3>
+            <Trans>Warning</Trans>
+          </ThemedText.H3>
+          <ThemedText.Body1>
+            {t`This transaction will result in a ${impact?.toString()} price impact on the market price of this pool. Do you wish to continue? `}
+          </ThemedText.Body1>
+          <ContinueButton onClick={onContinue}>
+            <ThemedText.ButtonLarge>
+              <Trans>Continue</Trans>
+            </ThemedText.ButtonLarge>
+          </ContinueButton>
+          <CancelButton onClick={onClose}>
+            <ThemedText.ButtonMedium>
+              <Trans>Cancel</Trans>
+            </ThemedText.ButtonMedium>
+          </CancelButton>
+        </Column>
       </Body>
     </SpeedbumpWrapper>
   )
