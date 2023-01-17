@@ -5,7 +5,7 @@ import Rule from 'components/Rule'
 import useScrollbar from 'hooks/useScrollbar'
 import { Expando as ExpandoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 const HeaderColumn = styled(Column)`
   cursor: pointer;
@@ -26,12 +26,7 @@ const TitleHeader = styled.div`
   justify-content: center;
 `
 
-const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
-  height: ${({ height, open }) => (open ? height : 0)}em;
-  overflow: hidden;
-  position: relative;
-  transition: height 0.25s, padding 0.25s;
-
+const bottomCss = css`
   :after {
     background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
     bottom: 0;
@@ -43,9 +38,16 @@ const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
   }
 `
 
+const ExpandoColumn = styled(Column)<{ height: number; open: boolean; showBottomGradient: boolean }>`
+  height: ${({ height, open }) => (open ? height : 0)}em;
+  overflow: hidden;
+  position: relative;
+  transition: height 0.25s, padding 0.25s;
+  ${({ showBottomGradient }) => showBottomGradient && bottomCss}
+`
+
 const InnerColumn = styled(Column)<{ height: number }>`
   height: ${({ height }) => height}em;
-  padding: 0.5em 0;
 `
 
 const IconPrefix = styled.div`
@@ -60,6 +62,30 @@ interface ExpandoProps extends ColumnProps {
   // The absolute height of the expanded container, in em.
   height: number
   hideRulers?: boolean
+  styledTitleWrapper?: boolean
+  showBottomGradient?: boolean
+}
+
+const StyledTitleWrapper = ({
+  title,
+  open,
+  onExpand,
+  hideRulers,
+  iconPrefix,
+}: Pick<ExpandoProps, 'title' | 'open' | 'onExpand' | 'hideRulers' | 'iconPrefix'>) => {
+  return (
+    <HeaderColumn onClick={onExpand} gap={open ? 0.5 : 0.75}>
+      {!hideRulers && <Rule />}
+      <TitleRow gap={1}>
+        <TitleHeader>{title}</TitleHeader>
+        <Row gap={0.2}>
+          {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
+          <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+        </Row>
+      </TitleRow>
+      {!hideRulers && open && <Rule />}
+    </HeaderColumn>
+  )
 }
 
 /** A scrollable Expando with an absolute height. */
@@ -71,24 +97,26 @@ export default function Expando({
   height,
   children,
   hideRulers,
+  styledTitleWrapper = true,
+  showBottomGradient = true,
   ...rest
 }: PropsWithChildren<ExpandoProps>) {
   const [scrollingEl, setScrollingEl] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(scrollingEl, { hideScrollbar: true })
   return (
     <Column {...rest}>
-      <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
-        {!hideRulers && <Rule />}
-        <TitleRow gap={1}>
-          <TitleHeader>{title}</TitleHeader>
-          <Row gap={0.2}>
-            {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
-            <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
-          </Row>
-        </TitleRow>
-        {!hideRulers && open && <Rule />}
-      </HeaderColumn>
-      <ExpandoColumn open={open} height={height}>
+      {styledTitleWrapper ? (
+        <StyledTitleWrapper
+          iconPrefix={iconPrefix}
+          hideRulers={hideRulers}
+          title={title}
+          open={open}
+          onExpand={onExpand}
+        />
+      ) : (
+        title
+      )}
+      <ExpandoColumn open={open} height={height} showBottomGradient={showBottomGradient}>
         <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
           {children}
         </InnerColumn>
