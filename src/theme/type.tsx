@@ -24,7 +24,7 @@ const TransitionTextWrapper = styled(TextWrapper)`
 
 export function H1(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-1" fontSize={36} fontWeight={400} lineHeight="44px" noWrap {...props} />
+    <TextWrapper className="headline headline-1" fontSize={36} fontWeight={500} lineHeight="44px" noWrap {...props} />
   )
 }
 

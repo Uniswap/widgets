@@ -14,7 +14,7 @@ import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import Row from '../../Row'
-import { SwapInputOutputEstimate } from '../Summary'
+import SwapInputOutputEstimate from '../Summary/Estimate'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'

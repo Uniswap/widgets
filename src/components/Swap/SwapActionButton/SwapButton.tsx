@@ -104,7 +104,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && trade && (
-        <Dialog color="dialog" onClose={() => setOpen(false)}>
+        <Dialog color="container" onClose={() => setOpen(false)}>
           <SummaryDialog
             trade={trade}
             slippage={slippage}
