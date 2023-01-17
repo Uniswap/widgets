@@ -1,3 +1,4 @@
+import { globalFontStyles } from 'css/font'
 import { WidgetWidthProvider } from 'hooks/useWidgetWidth'
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
@@ -7,20 +8,15 @@ import toLength from 'utils/toLength'
 const HORIZONTAL_PADDING = 8
 
 const StyledWidgetWrapper = styled.div<{ width: number | string }>`
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   background-color: ${({ theme }) => theme.container};
   border: ${({ theme }) => `1px solid ${theme.outline}`};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   box-shadow: ${({ theme }) => `0px 40px 120px 0px ${theme.networkDefaultShadow}`};
   box-sizing: border-box;
-  color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
-  font-size: 16px;
-  font-smooth: always;
-  font-variant: none;
+
   max-width: 600px;
   min-height: 360px;
   min-width: 300px;
@@ -31,12 +27,9 @@ const StyledWidgetWrapper = styled.div<{ width: number | string }>`
 
   * {
     box-sizing: border-box;
-    font-family: ${({ theme }) => (typeof theme.fontFamily === 'string' ? theme.fontFamily : theme.fontFamily.font)};
-
-    @supports (font-variation-settings: normal) {
-      font-family: ${({ theme }) => (typeof theme.fontFamily === 'string' ? undefined : theme.fontFamily.variable)};
-    }
   }
+
+  ${globalFontStyles};
 `
 
 interface WidgetWrapperProps {

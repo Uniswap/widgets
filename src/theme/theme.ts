@@ -7,6 +7,7 @@ export interface Colors {
   interactive: string
   outline: string
   dialog: string
+  scrim: string
 
   // text
   primary: string
@@ -25,6 +26,7 @@ export interface Colors {
   criticalSoft: string
 
   networkDefaultShadow: string
+  deepShadow: string
 
   currentColor: 'currentColor'
 }

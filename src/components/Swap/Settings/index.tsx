@@ -1,3 +1,5 @@
+import { BottomSheetModal } from 'components/BottomSheetModal'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { Settings as SettingsIcon } from 'icons'
 import { useState } from 'react'
@@ -37,13 +39,23 @@ export default function Settings() {
 
   useOnEscapeHandler(() => setOpen(false))
 
+  const isMobile = useIsMobileWidth()
   return (
     <div ref={setWrapper}>
-      <PopoverBoundaryProvider value={wrapper}>
-        <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsPopover />}>
+      {isMobile ? (
+        <>
           <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
-        </Popover>
-      </PopoverBoundaryProvider>
+          <BottomSheetModal title="Settings" onClose={() => setOpen(false)} open={open}>
+            <SettingsPopover />
+          </BottomSheetModal>
+        </>
+      ) : (
+        <PopoverBoundaryProvider value={wrapper}>
+          <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsPopover />}>
+            <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
+          </Popover>
+        </PopoverBoundaryProvider>
+      )}
     </div>
   )
 }

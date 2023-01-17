@@ -1,5 +1,6 @@
 import 'wicg-inert'
 
+import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { largeIconCss } from 'icons'
 import { ArrowLeft } from 'icons'
@@ -103,6 +104,8 @@ export function Header({ title }: HeaderProps) {
 }
 
 export const Modal = styled.div<{ color: Color }>`
+  ${globalFontStyles};
+
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
