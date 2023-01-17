@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { globalFontStyles } from 'css/font'
 import { forwardRef, PropsWithChildren, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
@@ -38,8 +37,6 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
 `
 
 const Wrapper = styled.div<{ open: boolean }>`
-  ${globalFontStyles};
-
   border-radius: 0;
   bottom: 0;
   left: 0;
@@ -75,12 +72,12 @@ type BottomSheetModalProps = PropsWithChildren<{
 }>
 
 export function BottomSheetModal({ children, onClose, open, title }: BottomSheetModalProps) {
-  const [rootWrapper, setRootWrapper] = useState<HTMLDivElement | null>(null)
+  const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null)
 
   return (
     <>
-      <RootElement ref={setRootWrapper} open={open} />
-      <DialogProvider value={rootWrapper}>
+      <RootElement ref={setRootElement} open={open} />
+      <DialogProvider value={rootElement}>
         {open && (
           <Dialog color="dialog" onClose={onClose}>
             <>
