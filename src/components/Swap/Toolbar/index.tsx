@@ -188,7 +188,7 @@ export default memo(function Toolbar() {
         </ToolbarRow>
       }
       styledTitleWrapper={false}
-      bottomGradient={false}
+      showBottomGradient={false}
       open={open}
       onExpand={() => {
         setOpen((open) => !open)
