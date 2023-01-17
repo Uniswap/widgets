@@ -72,6 +72,7 @@ export interface Action {
   onClick?: () => void
   color?: Color
   children?: ReactNode
+  hideButton?: boolean
 }
 
 type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive' | 'critical'>
@@ -114,17 +115,19 @@ export default function ActionButton({
 
   return (
     <Overlay data-testid="action-button" hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>
-      <StyledButton
-        color={color}
-        disabled={disabled}
-        shouldUseDisabledColor={shouldUseDisabledColor}
-        onClick={action?.onClick || onClick}
-        {...rest}
-      >
-        <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
-          {action?.children || children}
-        </ThemedText.TransitionButton>
-      </StyledButton>
+      {!action?.hideButton && (
+        <StyledButton
+          color={color}
+          disabled={disabled}
+          shouldUseDisabledColor={shouldUseDisabledColor}
+          onClick={action?.onClick || onClick}
+          {...rest}
+        >
+          <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
+            {action?.children || children}
+          </ThemedText.TransitionButton>
+        </StyledButton>
+      )}
       {action && (
         <ActionRow gap={0.5} color={action.color ?? 'primary'}>
           {action.tooltipContent ? (

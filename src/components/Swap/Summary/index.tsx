@@ -51,7 +51,7 @@ function ConfirmButton({
 
   const action = useMemo((): Action | undefined => {
     if (isPending) {
-      return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner }
+      return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner, hideButton: true }
     } else if (doesTradeDiffer) {
       return {
         color: 'accent',
