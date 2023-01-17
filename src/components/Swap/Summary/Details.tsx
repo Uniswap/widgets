@@ -29,8 +29,10 @@ const Value = styled.span<{ color?: Color }>`
 `
 
 const RuleWrapper = styled.div`
-  margin: 1em 0.125em;
+  margin: 0.75em 0.125em;
 `
+
+const MAX_AMOUNT_STR_LENGTH = 9
 
 interface DetailProps {
   label: string
@@ -41,9 +43,11 @@ interface DetailProps {
 function Detail({ label, value, color }: DetailProps) {
   return (
     <ThemedText.Body2 userSelect>
-      <Row gap={2}>
+      <Row flex>
         <Label>{label}</Label>
-        <Value color={color}>{value}</Value>
+        <Column flex align="flex-end" grow>
+          <Value color={color}>{value}</Value>
+        </Column>
       </Row>
     </ThemedText.Body2>
   )
@@ -66,7 +70,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
       : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
-  if (formattedAmount.length > 9) {
+  if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
     formattedAmount =
       width < WIDGET_BREAKPOINTS.WIDE
         ? formatCurrencyAmount(amount, NumberType.TokenNonTx)
@@ -161,14 +165,18 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
 
   return (
     <>
-      <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
-      <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
-      <RuleWrapper>
-        <Rule />
-      </RuleWrapper>
-      {details.map(([label, detail, color]) => (
-        <Detail key={label} label={label} value={detail} color={color} />
-      ))}
+      <Column gap={0.75}>
+        <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
+        <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
+        <RuleWrapper>
+          <Rule />
+        </RuleWrapper>
+      </Column>
+      <Column gap={0.75}>
+        {details.map(([label, detail, color]) => (
+          <Detail key={label} label={label} value={detail} color={color} />
+        ))}
+      </Column>
     </>
   )
 }
