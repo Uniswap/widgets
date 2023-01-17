@@ -21,11 +21,17 @@ import { getEstimateMessage } from './Estimate'
 
 const Label = styled.span`
   color: ${({ theme }) => theme.secondary};
-  margin-right: 0.25em;
+  margin-right: 0.5em;
+  max-width: 50%;
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
-  white-space: nowrap;
+  text-align: end;
+`
+
+const DetailValue = styled(Value)`
+  max-width: 45%;
+  overflow-wrap: break-word;
 `
 
 const RuleWrapper = styled.div`
@@ -43,11 +49,9 @@ interface DetailProps {
 function Detail({ label, value, color }: DetailProps) {
   return (
     <ThemedText.Body2 userSelect>
-      <Row flex>
+      <Row flex align="flex-start">
         <Label>{label}</Label>
-        <Column flex align="flex-end" grow>
-          <Value color={color}>{value}</Value>
-        </Column>
+        <DetailValue color={color}>{value}</DetailValue>
       </Row>
     </ThemedText.Body2>
   )
