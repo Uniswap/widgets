@@ -15,9 +15,9 @@ import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 import { currencyId } from 'utils/currencyId'
-import { isExactInput } from 'utils/tradeType'
 
 import { useTradeExchangeRate } from '../Price'
+import { getEstimateMessage } from './Estimate'
 
 const Label = styled.span`
   color: ${({ theme }) => theme.secondary};
@@ -109,13 +109,12 @@ interface DetailsProps {
 
 export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC, outputUSDC, impact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
-  const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
   const [exchangeRate] = useTradeExchangeRate(trade)
 
-  const { details, estimationMessage } = useMemo(() => {
+  const { details, estimateMessage } = useMemo(() => {
     const details: Array<[string, string] | [string, string, Color | undefined]> = []
 
     details.push([t`Exchange rate`, exchangeRate])
@@ -136,38 +135,17 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       details.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
-    let estimationMessage = ''
-    if (isExactInput(trade.tradeType)) {
-      const localizedMinReceived = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), NumberType.TokenTx)
-      const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
-      estimationMessage = t`Output is estimated. You will receive at least ${minReceivedString} or the transaction will revert.`
-      details.push([t`Minimum output after slippage`, minReceivedString])
-    } else {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), NumberType.TokenTx)
-      const maxSentString = `${localizedMaxSent} ${inputCurrency.symbol}`
-      estimationMessage = t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`
-      details.push([t`Maximum sent`, maxSentString])
-    }
+    const { estimateMessage, descriptor } = getEstimateMessage(trade, slippage)
+    details.push([descriptor, estimateMessage])
 
-    return { details, estimationMessage }
-  }, [
-    exchangeRate,
-    feeOptions,
-    gasUseEstimateUSD,
-    impact,
-    inputCurrency.symbol,
-    integrator,
-    outputAmount,
-    outputCurrency,
-    slippage.allowed,
-    trade,
-  ])
+    return { details, estimateMessage }
+  }, [exchangeRate, feeOptions, gasUseEstimateUSD, impact, integrator, outputAmount, outputCurrency, slippage, trade])
 
   return (
     <>
       <Column gap={0.75}>
         <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
-        <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimationMessage} />
+        <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimateMessage} />
         <RuleWrapper>
           <Rule />
         </RuleWrapper>

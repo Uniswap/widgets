@@ -56,8 +56,18 @@ export function Body1(props: TextProps) {
   return <TextWrapper className="body body-1" fontSize={16} fontWeight={400} lineHeight="24px" {...props} />
 }
 
+export const Body2LineHeightRem = 1.25
+
 export function Body2(props: TextProps) {
-  return <TextWrapper className="body body-2" fontSize={14} fontWeight={400} lineHeight="20px" {...props} />
+  return (
+    <TextWrapper
+      className="body body-2"
+      fontSize={14}
+      fontWeight={400}
+      lineHeight={`${Body2LineHeightRem}rem`}
+      {...props}
+    />
+  )
 }
 
 export function Caption(props: TextProps) {
