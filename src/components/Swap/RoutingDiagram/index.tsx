@@ -25,14 +25,14 @@ const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
 
 export function AutoRouterHeader() {
   return (
-    <ThemedText.Subhead2>
-      <Row justify="left" gap={0.25}>
-        <AutoRouter />
-        <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
+    <Row justify="left" gap={0.25}>
+      <AutoRouter />
+      <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
+        <ThemedText.Subhead2>
           <Trans>Auto Router</Trans>
-        </StyledAutoRouterLabel>
-      </Row>
-    </ThemedText.Subhead2>
+        </ThemedText.Subhead2>
+      </StyledAutoRouterLabel>
+    </Row>
   )
 }
 

@@ -41,6 +41,10 @@ const Body = styled(Column)`
   height: calc(100% - 2.5em);
 `
 
+const ExpandoContent = styled(Column)`
+  margin: 0.5em 0;
+`
+
 function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
   const showWarning = Boolean(impact?.warning || slippage.warning)
   return (
@@ -202,10 +206,10 @@ export function SummaryDialog({
           height={6}
           gap={open ? 0 : 0.75}
         >
-          <Column gap={0.5}>
+          <ExpandoContent gap={0.5}>
             <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
             <SwapInputOutputEstimate trade={trade} slippage={slippage} />
-          </Column>
+          </ExpandoContent>
         </Expando>
 
         <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />

@@ -47,6 +47,10 @@ const ErrorHeader = styled(Column)<{ open: boolean }>`
   }
 `
 
+const ExpandoContent = styled(ThemedText.Code)`
+  margin: 0.5em 0;
+`
+
 interface ErrorDialogProps {
   header?: ReactNode
   error: Error
@@ -60,12 +64,12 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
 
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
-      <StatusHeader icon={AlertTriangle} iconColor="error" iconSize={open ? 3 : 4}>
+      <StatusHeader icon={AlertTriangle} iconColor="critical" iconSize={open ? 3 : 4}>
         <ErrorHeader gap={open ? 0 : 0.75} open={open}>
           <ThemedText.Subhead1>
             <Trans>Something went wrong.</Trans>
           </ThemedText.Subhead1>
-          <ThemedText.Body2>{header}</ThemedText.Body2>
+          {!open && <ThemedText.Body2>{header}</ThemedText.Body2>}
         </ErrorHeader>
       </StatusHeader>
       <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
@@ -80,12 +84,12 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           onExpand={onExpand}
           height={7.5}
         >
-          <ThemedText.Body2 userSelect>
+          <ExpandoContent userSelect>
             {error.name}
             {error.message ? `: ${error.message}` : ''}
-          </ThemedText.Body2>
+          </ExpandoContent>
         </Expando>
-        <ActionButton color="interactive" onClick={onClick}>
+        <ActionButton color="critical" onClick={onClick}>
           {action}
         </ActionButton>
       </Column>

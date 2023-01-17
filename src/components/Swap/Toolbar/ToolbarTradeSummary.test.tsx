@@ -1,32 +1,29 @@
-import { CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { ALLOWED_PRICE_IMPACT_LOW } from 'constants/misc'
-import { USDC_MAINNET } from 'constants/tokens'
-import { InterfaceTrade } from 'state/routing/types'
 import { renderComponent } from 'test'
-import { buildSingleV3Route, DAI, USDC } from 'test/utils'
 
 import ToolbarTradeSummary from './ToolbarTradeSummary'
 
-const defaultSlippage = { auto: true, allowed: new Percent(5, 100) }
-const defaultImpact = { percent: ALLOWED_PRICE_IMPACT_LOW, toString: () => '0.5%' }
-
 describe('ToolbarTradeSummary', () => {
   it('renders correctly, defaults', () => {
-    const inputAmount = CurrencyAmount.fromRawAmount(USDC, 1)
-    const outputAmount = CurrencyAmount.fromRawAmount(DAI, 1)
-    const testRoute = buildSingleV3Route(inputAmount, outputAmount)
     const component = renderComponent(
       <ToolbarTradeSummary
-        slippage={defaultSlippage}
-        impact={defaultImpact}
-        gasUseEstimateUSD={CurrencyAmount.fromRawAmount(USDC_MAINNET, 1)}
-        trade={
-          new InterfaceTrade({
-            v2Routes: [],
-            v3Routes: [testRoute],
-            tradeType: TradeType.EXACT_INPUT,
-          })
-        }
+        rows={[
+          {
+            name: 'Network fee',
+            value: '0.0001 USDC',
+          },
+          {
+            name: 'Price impact',
+            value: '0.5%',
+          },
+          {
+            name: 'Minimum output after slippage',
+            value: '0.9999 DAI',
+          },
+          {
+            name: 'Expected output',
+            value: '1.0000 DAI',
+          },
+        ]}
       />
     )
     expect(component.getByText('Network fee')).toBeTruthy()
