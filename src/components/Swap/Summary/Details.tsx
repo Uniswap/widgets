@@ -76,7 +76,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
     formattedAmount =
-      width < WIDGET_BREAKPOINTS.WIDE
+      width < WIDGET_BREAKPOINTS.EXTRA_WIDE
         ? formatCurrencyAmount(amount, NumberType.TokenNonTx)
         : formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
   }
