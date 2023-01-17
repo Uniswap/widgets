@@ -1,6 +1,11 @@
-export enum BREAKPOINTS {
+// Widget width breakpoints, denoted in px
+export enum WIDGET_BREAKPOINTS {
   WIDE = 420,
   MEDIUM = 400,
   SMALL = 375,
   EXTRA_SMALL = 350,
+}
+// Screen width breakpoints, denoted in px
+export enum SCREEN_BREAKPOINTS {
+  MOBILE = 900,
 }

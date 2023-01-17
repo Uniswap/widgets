@@ -13,7 +13,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
-import { BREAKPOINTS } from 'theme/breakpoints'
+import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 import { currencyId } from 'utils/currencyId'
 import { isExactInput } from 'utils/tradeType'
 
@@ -59,8 +59,8 @@ interface AmountProps {
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const width = useWidgetWidth()
   const [amountFontSize, amountLineHeight] =
-    width < BREAKPOINTS.MEDIUM
-      ? width < BREAKPOINTS.EXTRA_SMALL
+    width < WIDGET_BREAKPOINTS.MEDIUM
+      ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
         ? ['24px', '30px']
         : ['30px', '36px']
       : ['36px', '44px']
@@ -68,7 +68,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > 9) {
     formattedAmount =
-      width < BREAKPOINTS.WIDE
+      width < WIDGET_BREAKPOINTS.WIDE
         ? formatCurrencyAmount(amount, NumberType.TokenNonTx)
         : formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
   }

@@ -172,12 +172,7 @@ export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapP
     [inputCurrency.symbol, isWideWidget, outputCurrency.symbol]
   )
 
-  return (
-    <>
-      <Caption icon={Info} caption={<Text />} />
-      <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
-    </>
-  )
+  return <Caption icon={Info} caption={<Text />} />
 }
 
 export interface TradeProps {

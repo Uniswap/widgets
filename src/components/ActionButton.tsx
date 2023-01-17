@@ -74,7 +74,7 @@ export interface Action {
   children?: ReactNode
 }
 
-type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive'>
+type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive' | 'critical'>
 
 interface BaseProps {
   color?: ActionButtonColor
@@ -96,8 +96,12 @@ export default function ActionButton({
   ...rest
 }: ActionButtonProps) {
   const textColor = useMemo(() => {
+    if (disabled) {
+      return 'primary'
+    }
     switch (color) {
       case 'accent':
+      case 'critical':
         return 'onAccent'
       case 'accentSoft':
         return 'accent'
@@ -106,7 +110,7 @@ export default function ActionButton({
       default:
         return 'currentColor'
     }
-  }, [color])
+  }, [color, disabled])
 
   return (
     <Overlay data-testid="action-button" hasAction={Boolean(action)} flex align="stretch" {...wrapperProps}>

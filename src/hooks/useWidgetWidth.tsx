@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext } from 'react'
-import { BREAKPOINTS } from 'theme/breakpoints'
+import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 
 const WidgetWidthContext = createContext<number>(0)
 
@@ -17,5 +17,5 @@ export function useWidgetWidth(): number {
 
 export function useIsWideWidget(): boolean {
   const widgetWidth = useWidgetWidth()
-  return widgetWidth > BREAKPOINTS.WIDE
+  return widgetWidth > WIDGET_BREAKPOINTS.WIDE
 }
