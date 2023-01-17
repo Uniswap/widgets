@@ -47,6 +47,10 @@ const ErrorHeader = styled(Column)<{ open: boolean }>`
   }
 `
 
+const ExpandoContent = styled(ThemedText.Code)`
+  margin: 0.5em 0;
+`
+
 interface ErrorDialogProps {
   header?: ReactNode
   error: Error
@@ -80,10 +84,10 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           onExpand={onExpand}
           height={7.5}
         >
-          <ThemedText.Code userSelect>
+          <ExpandoContent userSelect>
             {error.name}
             {error.message ? `: ${error.message}` : ''}
-          </ThemedText.Code>
+          </ExpandoContent>
         </Expando>
         <ActionButton color="critical" onClick={onClick}>
           {action}
