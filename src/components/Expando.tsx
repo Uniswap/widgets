@@ -48,27 +48,45 @@ const InnerColumn = styled(Column)<{ height: number }>`
   padding: 0.5em 0;
 `
 
+const IconPrefix = styled.div`
+  color: ${({ theme }) => theme.primary};
+`
+
 interface ExpandoProps extends ColumnProps {
   title: ReactNode
+  iconPrefix?: ReactNode
   open: boolean
   onExpand: () => void
   // The absolute height of the expanded container, in em.
   height: number
+  hideRulers?: boolean
 }
 
 /** A scrollable Expando with an absolute height. */
-export default function Expando({ title, open, onExpand, height, children, ...rest }: PropsWithChildren<ExpandoProps>) {
+export default function Expando({
+  title,
+  iconPrefix,
+  open,
+  onExpand,
+  height,
+  children,
+  hideRulers,
+  ...rest
+}: PropsWithChildren<ExpandoProps>) {
   const [scrollingEl, setScrollingEl] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(scrollingEl)
+  const scrollbar = useScrollbar(scrollingEl, { hideScrollbar: true })
   return (
     <Column {...rest}>
       <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
-        <Rule />
-        <TitleRow>
+        {!hideRulers && <Rule />}
+        <TitleRow gap={1}>
           <TitleHeader>{title}</TitleHeader>
-          <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+          <Row gap={0.2}>
+            {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
+            <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+          </Row>
         </TitleRow>
-        {open && <Rule />}
+        {!hideRulers && open && <Rule />}
       </HeaderColumn>
       <ExpandoColumn open={open} height={height}>
         <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
