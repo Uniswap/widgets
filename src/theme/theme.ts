@@ -25,7 +25,6 @@ export interface Colors {
 
   networkDefaultShadow: string
   deepShadow: string
-  shallowShadow: string
 
   currentColor: 'currentColor'
 }
