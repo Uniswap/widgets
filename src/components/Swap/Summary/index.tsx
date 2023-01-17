@@ -54,9 +54,9 @@ function ConfirmButton({
       return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner }
     } else if (doesTradeDiffer) {
       return {
-        color: 'accent',
         message: <Trans>Price updated</Trans>,
         icon: AlertTriangle,
+        color: 'accent',
         onClick: () => {
           onSwapPriceUpdateAck?.(ackTrade, trade)
           setAckTrade(trade)
