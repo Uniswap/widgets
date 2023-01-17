@@ -51,12 +51,13 @@ export default function CommonBases({
     <BasesContainer gap={0.5} flex justify="start">
       {bases.map((currency: Currency) => {
         const isSelected = selected?.equals(currency)
+        const onKeyPress = (e: React.KeyboardEvent) => e.key === 'Enter' && onSelect(currency)
         return (
           <BaseWrapper
             flex
             tabIndex={0}
             data-testid={`common-base-${currency.symbol}`}
-            onKeyPress={!isSelected ? (e) => e.key === 'Enter' && onSelect(currency) : undefined}
+            onKeyPress={!isSelected ? onKeyPress : undefined}
             onClick={!isSelected ? () => onSelect(currency) : undefined}
             active={isSelected}
             key={currencyId(currency)}
