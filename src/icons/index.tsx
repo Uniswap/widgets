@@ -26,6 +26,7 @@ import {
   Clock as ClockIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
+  Search as SearchIcon,
   Settings as SettingsIcon,
   Slash as SlashIcon,
   Trash2 as Trash2Icon,
@@ -103,6 +104,7 @@ export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
 export const Reverse = icon(ReverseIcon)
+export const Search = icon(SearchIcon)
 
 export const Check = styled(icon(CheckIcon))`
   circle {

@@ -1,10 +1,12 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { inputCss, StringInput } from 'components/Input'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field, swapEventHandlersAtom } from 'state/swap'
@@ -13,7 +15,6 @@ import { ThemedText } from 'theme'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
-import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
@@ -21,7 +22,7 @@ import TokenButton from './TokenButton'
 import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
-const SearchInput = styled(StringInput)`
+const SearchInputContainer = styled(Row)`
   ${inputCss}
 `
 
@@ -78,26 +79,29 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 
   if (!listHasTokens && isLoaded) {
     return (
-      <Dialog color="module" onClose={onClose}>
+      <Dialog color="container" onClose={onClose}>
         <Header title={<Trans>Select a token</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )
   }
   return (
-    <Dialog color="module" onClose={onClose}>
+    <Dialog color="container" onClose={onClose}>
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
         <Row pad={0.75} grow>
-          <ThemedText.Body1>
-            <SearchInput
-              value={query}
-              onChange={setQuery}
-              placeholder={t`Search by token name or address`}
-              onKeyDown={options?.onKeyDown}
-              ref={input}
-            />
-          </ThemedText.Body1>
+          <SearchInputContainer gap={0.75} justify="start" flex>
+            <Search color="secondary" />
+            <ThemedText.Body1 flexGrow={1}>
+              <StringInput
+                value={query}
+                onChange={setQuery}
+                placeholder={t`Search by token name or address`}
+                onKeyDown={options?.onKeyDown}
+                ref={input}
+              />
+            </ThemedText.Body1>
+          </SearchInputContainer>
         </Row>
         <Rule padded />
       </Column>

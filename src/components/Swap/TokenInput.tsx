@@ -21,7 +21,7 @@ const ValueInput = styled(DecimalInput)`
   height: 1.5em;
   margin: -0.25em 0;
 
-  ${loadingTransitionCss}
+  ${loadingTransitionCss};
 `
 
 const TokenInputColumn = styled(Column)`
