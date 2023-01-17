@@ -33,6 +33,7 @@ export default function TransactionTtlInput() {
     <Column gap={0.75}>
       <Expando
         hideRulers
+        showBottomGradient={false}
         height={4}
         open={open}
         onExpand={() => setOpen(!open)}
