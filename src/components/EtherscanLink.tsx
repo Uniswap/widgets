@@ -19,9 +19,16 @@ interface EtherscanLinkProps {
   data?: string
   color?: Color
   children: ReactNode
+  showIcon?: boolean
 }
 
-export default function EtherscanLink({ data, type, color = 'currentColor', children }: EtherscanLinkProps) {
+export default function EtherscanLink({
+  data,
+  type,
+  color = 'currentColor',
+  children,
+  showIcon = true,
+}: EtherscanLinkProps) {
   const { chainId } = useWeb3React()
   const url = useMemo(
     () => data && getExplorerLink(chainId || SupportedChainId.MAINNET, data, type),
@@ -32,7 +39,7 @@ export default function EtherscanLink({ data, type, color = 'currentColor', chil
     <StyledExternalLink href={url} color={color} target="_blank">
       <Row gap={0.25}>
         {children}
-        {url && <Link />}
+        {url && showIcon && <Link />}
       </Row>
     </StyledExternalLink>
   )
