@@ -53,7 +53,7 @@ export default function TransactionTtlInput() {
                 placeholder={placeholder}
                 value={ttlValue ?? ''}
                 onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
-                size={Math.max(ttl?.toString().length || 0, placeholder.length)}
+                size={Math.max(ttlValue?.length || 0, placeholder.length)}
                 ref={input}
               />
               <Trans>minutes</Trans>
