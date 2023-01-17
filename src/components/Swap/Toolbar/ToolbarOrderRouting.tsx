@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { Info } from 'icons'
@@ -21,9 +22,10 @@ const OrderRoutingRow = styled(Row)`
 
 interface ToolbarOrderRoutingProps {
   trade?: InterfaceTrade
+  gasUseEstimateUSD?: CurrencyAmount<Token> | null
 }
 
-export default function ToolbarOrderRouting({ trade }: ToolbarOrderRoutingProps) {
+export default function ToolbarOrderRouting({ trade, gasUseEstimateUSD }: ToolbarOrderRoutingProps) {
   return (
     <OrderRoutingRow flex>
       <Row gap={0.25}>
@@ -32,7 +34,7 @@ export default function ToolbarOrderRouting({ trade }: ToolbarOrderRoutingProps)
         </ThemedText.Body2>
         {trade && (
           <Tooltip icon={Info} contained>
-            <RoutingDiagram trade={trade} />
+            <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
           </Tooltip>
         )}
       </Row>
