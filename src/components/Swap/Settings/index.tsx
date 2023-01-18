@@ -23,6 +23,10 @@ export function SettingsMenu() {
   return (
     <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
       <PopoverBoundaryProvider value={boundary}>
+        {/*
+        If consumer doesn't pass in `routerUrl` as a prop, they have no choice but to use the client-side router,
+        so don't show them the settings option.
+        */}
         {Boolean(routerUrl) && (
           <>
             <RouterPreferenceToggle />
