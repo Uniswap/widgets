@@ -1,29 +1,21 @@
 import { Trans } from '@lingui/macro'
 import Button, { TextButton } from 'components/Button'
 import Column from 'components/Column'
-import { OnCloseDialogContext } from 'components/Dialog'
+import { useCloseDialog } from 'components/Dialog'
 import Row from 'components/Row'
-import { PriceImpact } from 'hooks/usePriceImpact'
 import { LargeAlert, LargeIcon, X } from 'icons'
-import { PropsWithChildren, useContext } from 'react'
+import { PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const SpeedbumpWrapper = styled.div`
+const SpeedBumpWrapper = styled(Column)`
+  align-items: stretch;
   display: flex;
-  flex-direction: column;
   height: 100%;
+  justify-content: space-between;
   padding: 1em;
   text-align: center;
 `
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-`
-
 const BodyText = styled(ThemedText.Body1)`
   padding: 0 0.5em;
 `
@@ -56,42 +48,39 @@ const CancelButton = styled(TextButton)`
 `
 
 interface SpeedbumpDialogProps {
-  impact: PriceImpact
   onAcknowledge: () => void
 }
 
-export function SpeedbumpDialog({ impact, onAcknowledge, children }: PropsWithChildren<SpeedbumpDialogProps>) {
-  const onClose = useContext(OnCloseDialogContext)
+export default function SpeedBumpDialog({ onAcknowledge, children }: PropsWithChildren<SpeedbumpDialogProps>) {
+  const onClose = useCloseDialog()
   return (
-    <SpeedbumpWrapper>
-      <Body>
-        <Column flex gap={0.75}>
-          <HeaderRow>
-            <StyledXButton onClick={onClose} />
-          </HeaderRow>
-          <IconWrapper>
-            <LargeAlert />
-          </IconWrapper>
+    <SpeedBumpWrapper>
+      <Column flex gap={0.75}>
+        <HeaderRow>
+          <StyledXButton onClick={onClose} />
+        </HeaderRow>
+        <IconWrapper>
+          <LargeAlert />
+        </IconWrapper>
 
-          <ThemedText.H3>
-            <Trans>Warning</Trans>
-          </ThemedText.H3>
+        <ThemedText.H3>
+          <Trans>Warning</Trans>
+        </ThemedText.H3>
 
-          <BodyText>{children}</BodyText>
-        </Column>
-        <Column>
-          <ContinueButton onClick={onAcknowledge}>
-            <ThemedText.ButtonLarge>
-              <Trans>Continue</Trans>
-            </ThemedText.ButtonLarge>
-          </ContinueButton>
-          <CancelButton onClick={onClose}>
-            <ThemedText.ButtonMedium>
-              <Trans>Cancel</Trans>
-            </ThemedText.ButtonMedium>
-          </CancelButton>
-        </Column>
-      </Body>
-    </SpeedbumpWrapper>
+        <BodyText>{children}</BodyText>
+      </Column>
+      <Column>
+        <ContinueButton onClick={onAcknowledge}>
+          <ThemedText.ButtonLarge>
+            <Trans>Continue</Trans>
+          </ThemedText.ButtonLarge>
+        </ContinueButton>
+        <CancelButton onClick={onClose}>
+          <ThemedText.ButtonMedium>
+            <Trans>Cancel</Trans>
+          </ThemedText.ButtonMedium>
+        </CancelButton>
+      </Column>
+    </SpeedBumpWrapper>
   )
 }

@@ -13,7 +13,7 @@ import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import { SpeedbumpDialog } from '../Speedbump'
+import SpeedBumpDialog from '../Speedbump'
 import Details from './Details'
 import Summary from './Summary'
 
@@ -111,7 +111,12 @@ export function SummaryDialog(props: SummaryDialogProps) {
 
   return (
     <>
-      {!showSpeedbump ? (
+      {showSpeedbump && props.impact ? (
+        <SpeedBumpDialog onAcknowledge={onAcknowledgePriceImpact}>
+          {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
+          {t`price impact on the market price of this pool. Do you wish to continue? `}
+        </SpeedBumpDialog>
+      ) : (
         <>
           <Header title={<Trans>Review swap</Trans>} />
           <Body flex align="stretch">
@@ -119,13 +124,6 @@ export function SummaryDialog(props: SummaryDialogProps) {
           </Body>
           <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
         </>
-      ) : (
-        props.impact && (
-          <SpeedbumpDialog onAcknowledge={onAcknowledgePriceImpact} impact={props.impact}>
-            {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
-            {t`price impact on the market price of this pool. Do you wish to continue? `}
-          </SpeedbumpDialog>
-        )
       )}
     </>
   )
