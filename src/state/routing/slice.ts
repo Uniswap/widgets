@@ -1,5 +1,6 @@
 import { BaseQueryFn, createApi, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+import { RouterPreference } from 'hooks/routing/types'
 import ms from 'ms.macro'
 import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
@@ -29,6 +30,7 @@ export const routing = createApi({
 
         if (
           // If enabled, try the routing API, falling back to client-side routing.
+          args.routerPreference === RouterPreference.API &&
           Boolean(args.routerUrl) &&
           // A null amount may be passed to initialize the client-side routing.
           args.amount !== null

@@ -42,7 +42,7 @@ const Wrapper = styled.div<{ open: boolean }>`
   left: 0;
   margin: 0;
   overflow: hidden;
-  width: 100%;
+  right: 0;
 
   @supports (overflow: clip) {
     overflow: clip;

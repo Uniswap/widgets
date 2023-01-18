@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { RouterPreference, useRouterTrade } from 'hooks/routing/useRouterTrade'
+import { RouterPreference } from 'hooks/routing/types'
+import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
@@ -9,10 +10,12 @@ import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
+import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
+import { routerPreferenceAtom } from 'state/swap/settings'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -71,12 +74,15 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),
     [amount, currencyIn, currencyOut, type]
   )
+
+  const [routerPreference] = useAtom(routerPreferenceAtom)
+
   const trade = useRouterTrade(
     type,
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : RouterPreference.TRADE,
+    isWrap || error ? RouterPreference.SKIP : routerPreference,
     routerUrl
   )
 
