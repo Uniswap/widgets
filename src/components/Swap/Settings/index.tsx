@@ -18,7 +18,7 @@ import TransactionTtlInput from './TransactionTtlInput'
 export function SettingsMenu() {
   const [routerUrl] = useAtom(swapRouterUrlAtom)
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  console.log('here 3: routerUrl', routerUrl)
+
   // TODO (WEB-2754): add back reset settings functionality
   return (
     <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
