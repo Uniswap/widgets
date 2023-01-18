@@ -20,12 +20,6 @@ import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import useOnSubmit from './useOnSubmit'
 
-enum VIEW {
-  DEFAULT,
-  IMPACT_SPEEDBUMP,
-  SWAP_REVIEW,
-}
-
 /**
  * A swapping ActionButton.
  * Should only be rendered if a valid swap exists.
@@ -64,7 +58,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
 
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
-  useEffect(() => setOpen((view) => (trade ? view : false)), [trade])
+  useEffect(() => setOpen((open) => (trade ? open : false)), [trade])
   // Close the review modal on chain change.
   useEffect(() => setOpen(false), [chainId])
 
