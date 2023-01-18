@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import Toggle from 'components/Toggle'
-import { RouterPreference } from 'hooks/routing/useRouterTrade'
+import { RouterPreference } from 'hooks/routing/types'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'

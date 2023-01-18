@@ -2,7 +2,7 @@ import { BaseProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { RouterPreference } from 'hooks/routing/useRouterTrade'
+import { RouterPreference } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo } from 'react'
 

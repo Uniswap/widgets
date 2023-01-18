@@ -1,4 +1,4 @@
-import { RouterPreference } from 'hooks/routing/useRouterTrade'
+import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 
