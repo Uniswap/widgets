@@ -27,10 +27,11 @@ const CaptionRow = styled(Row)<{ gap: number; shrink?: number }>`
   height: 100%;
 `
 
+// TODO (tina): consolidate this and Expando icon
 const ExpandIcon = styled(ChevronDown)<{ expanded: boolean }>`
   color: ${({ theme }) => theme.secondary};
   cursor: pointer;
-  transform: ${({ expanded }) => (expanded ? 'rotate(-180deg)' : 'rotate(0deg)')};
+  transform: ${({ expanded }) => (expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.25s;
   :hover {
     opacity: 0.6;

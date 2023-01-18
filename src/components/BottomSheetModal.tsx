@@ -62,6 +62,10 @@ const Wrapper = styled.div<{ open: boolean }>`
     height: unset;
     position: fixed;
     top: unset;
+
+    * {
+      box-sizing: border-box;
+    }
   }
 `
 

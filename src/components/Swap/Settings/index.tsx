@@ -1,4 +1,5 @@
 import { BottomSheetModal } from 'components/BottomSheetModal'
+import Rule from 'components/Rule'
 import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { Settings as SettingsIcon } from 'icons'
@@ -11,14 +12,15 @@ import Popover, { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import TransactionTtlInput from './TransactionTtlInput'
 
-export function SettingsPopover() {
+export function SettingsMenu() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
 
   // TODO (WEB-2754): add back reset settings functionality
   return (
-    <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
+    <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
       <PopoverBoundaryProvider value={boundary}>
         <MaxSlippageSelect />
+        <Rule />
         <TransactionTtlInput />
       </PopoverBoundaryProvider>
     </Column>
@@ -46,12 +48,12 @@ export default function Settings() {
         <>
           <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
           <BottomSheetModal title="Settings" onClose={() => setOpen(false)} open={open}>
-            <SettingsPopover />
+            <SettingsMenu />
           </BottomSheetModal>
         </>
       ) : (
         <PopoverBoundaryProvider value={wrapper}>
-          <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsPopover />}>
+          <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsMenu />}>
             <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
           </Popover>
         </PopoverBoundaryProvider>

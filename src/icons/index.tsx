@@ -114,19 +114,8 @@ export const Check = styled(icon(CheckIcon))`
 `
 
 export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
-  .left,
-  .right {
-    transition: transform 0.25s ease-in-out;
-    will-change: transform;
-  }
-
-  .left {
-    transform: ${({ open }) => (open ? undefined : 'translateX(-25%)')};
-  }
-
-  .right {
-    transform: ${({ open }) => (open ? undefined : 'translateX(25%)')};
-  }
+  transform: ${({ open }) => (open ? 'rotate(0deg)' : 'rotate(-180deg)')};
+  transition: transform 0.25s;
 `
 
 export const Logo = styled(icon(LogoIcon))`

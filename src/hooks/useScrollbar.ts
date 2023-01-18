@@ -5,6 +5,10 @@ const overflowCss = css`
   overflow-y: scroll;
 `
 
+const hiddenScrollbarCss = css`
+  overflow-y: auto;
+`
+
 /** Customizes the scrollbar for vertical overflow. */
 const scrollbarCss = (padded: boolean) => css`
   overflow-y: scroll;
@@ -43,14 +47,21 @@ const scrollbarCss = (padded: boolean) => css`
 
 interface ScrollbarOptions {
   padded?: boolean
+  hideScrollbar?: boolean
 }
 
-export default function useScrollbar(element: HTMLElement | null, { padded = false }: ScrollbarOptions = {}) {
+export default function useScrollbar(
+  element: HTMLElement | null,
+  { padded = false, hideScrollbar = false }: ScrollbarOptions = {}
+) {
   return useMemo(
     // NB: The css must be applied on an element's first render. WebKit will not re-apply overflow
     // properties until any transitions have ended, so waiting a frame for state would cause jank.
-    () => (hasOverflow(element) ? scrollbarCss(padded) : overflowCss),
-    [element, padded]
+    () => {
+      if (hideScrollbar) return hiddenScrollbarCss
+      return hasOverflow(element) ? scrollbarCss(padded) : overflowCss
+    },
+    [element, padded, hideScrollbar]
   )
 
   function hasOverflow(element: HTMLElement | null) {

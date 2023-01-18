@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import Expando from 'components/Expando'
 import Popover from 'components/Popover'
 import { useTooltip } from 'components/Tooltip'
 import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
@@ -123,42 +124,59 @@ export default function MaxSlippageSelect() {
     [setSlippage]
   )
 
+  const [open, setOpen] = useState(false)
   return (
     <Column gap={0.75}>
-      <Label
-        name={<Trans>Max slippage</Trans>}
-        tooltip={
-          <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-        }
-      />
-      <Row gap={0.5} grow="last">
-        <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
-          <ThemedText.ButtonMedium>
-            <Trans>Auto</Trans>
-          </ThemedText.ButtonMedium>
-        </Option>
-        <Option
-          wrapper={Custom}
-          selected={!slippage.auto}
-          onSelect={onInputSelect}
-          icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
-          ref={option}
-          tabIndex={-1}
-          data-testid="custom-slippage"
-        >
-          <Row color={warning === 'error' ? 'error' : undefined}>
-            <DecimalInput
-              size={Math.max(maxSlippageInput.length, 4)}
-              value={maxSlippageInput}
-              onChange={(input) => processInput(input)}
-              placeholder={'0.10'}
-              ref={input}
-              data-testid="input-slippage"
+      <Expando
+        hideRulers
+        showBottomGradient={false}
+        title={
+          <Row grow>
+            <Label
+              name={<Trans>Max slippage</Trans>}
+              // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
+              tooltip={
+                <Trans>
+                  Your transaction will revert if the price changes unfavorably by more than this percentage.
+                </Trans>
+              }
             />
-            %
           </Row>
-        </Option>
-      </Row>
+        }
+        iconPrefix={slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}
+        height={4}
+        open={open}
+        onExpand={() => setOpen(!open)}
+      >
+        <Row gap={0.5} grow="first">
+          <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
+            <ThemedText.ButtonMedium>
+              <Trans>Auto</Trans>
+            </ThemedText.ButtonMedium>
+          </Option>
+          <Option
+            wrapper={Custom}
+            selected={!slippage.auto}
+            onSelect={onInputSelect}
+            icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
+            ref={option}
+            tabIndex={-1}
+            data-testid="custom-slippage"
+          >
+            <Row color={warning === 'error' ? 'error' : undefined}>
+              <DecimalInput
+                size={Math.max(maxSlippageInput.length, 4)}
+                value={maxSlippageInput}
+                onChange={(input) => processInput(input)}
+                placeholder={'0.10'}
+                ref={input}
+                data-testid="input-slippage"
+              />
+              %
+            </Row>
+          </Option>
+        </Row>
+      </Expando>
     </Column>
   )
 }
