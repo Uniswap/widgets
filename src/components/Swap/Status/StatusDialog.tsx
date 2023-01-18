@@ -4,6 +4,7 @@ import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
 import SwapSummary from 'components/Swap/Summary'
 import { DialogAnimationLengthMs } from 'components/Widget'
+import { MS_IN_SECOND } from 'constants/misc'
 import { LargeArrow, LargeCheck, LargeSpinner } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
@@ -36,16 +37,18 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     }
     return tx.receipt?.status ? LargeCheck : LargeSpinner
   }, [showConfirmation, tx.receipt?.status])
+
   useEffect(() => {
     // We should show the confirmation for 1 second,
     // which should start after the entrance animation is complete.
     const handle = setTimeout(() => {
       setShowConfirmation(false)
-    }, 1000 + DialogAnimationLengthMs)
+    }, MS_IN_SECOND + DialogAnimationLengthMs)
     return () => {
       clearTimeout(handle)
     }
   }, [])
+
   const heading = useMemo(() => {
     if (showConfirmation) {
       return <Trans>Transaction submitted</Trans>
