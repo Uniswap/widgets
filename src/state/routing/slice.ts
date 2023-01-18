@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { RouterPreference } from 'hooks/routing/useRouterTrade'
+import { RouterPreference } from 'hooks/routing/types'
 import ms from 'ms.macro'
 import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'

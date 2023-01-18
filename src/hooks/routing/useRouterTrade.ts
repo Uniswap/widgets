@@ -11,12 +11,7 @@ import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice
 import { InterfaceTrade, NO_ROUTE, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
-export enum RouterPreference {
-  PRICE,
-  SKIP,
-  API,
-  CLIENT,
-}
+import { RouterPreference } from './types'
 
 const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
