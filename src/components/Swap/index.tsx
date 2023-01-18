@@ -6,6 +6,7 @@ import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
+import useSyncSwapRouterUrl from 'hooks/swap/useSyncSwapRouterUrl'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
@@ -39,6 +40,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
+  useSyncSwapRouterUrl(props.routerUrl)
 
   const { account } = useWeb3React()
 

@@ -9,10 +9,12 @@ import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
+import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
+import { routerAtom } from 'state/swap/settings'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -71,12 +73,15 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),
     [amount, currencyIn, currencyOut, type]
   )
+
+  const [tradeRouterPreference] = useAtom(routerAtom)
+  console.log('routerPreference', tradeRouterPreference)
   const trade = useRouterTrade(
     type,
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : RouterPreference.TRADE,
+    isWrap || error ? RouterPreference.SKIP : tradeRouterPreference,
     routerUrl
   )
 
@@ -164,6 +169,7 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
 export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
+  console.log('here1', routerUrl)
   const swapInfo = useComputeSwapInfo(routerUrl)
 
   const swap = useAtomValue(swapAtom)

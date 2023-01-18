@@ -8,5 +8,5 @@ export enum WIDGET_BREAKPOINTS {
 }
 // Screen width breakpoints, denoted in px
 export enum SCREEN_BREAKPOINTS {
-  MOBILE = 900,
+  MOBILE = 600,
 }

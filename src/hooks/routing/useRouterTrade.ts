@@ -13,8 +13,9 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 export enum RouterPreference {
   PRICE,
-  TRADE,
   SKIP,
+  API,
+  CLIENT,
 }
 
 const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
@@ -43,7 +44,7 @@ export function useRouterTrade(
 } {
   const { provider } = useWeb3React()
   const queryArgs = useGetQuoteArgs(
-    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerUrl },
+    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference, routerUrl },
     /*skip=*/ routerPreference === RouterPreference.SKIP
   )
 
@@ -53,7 +54,8 @@ export function useRouterTrade(
       // PRICE fetching is informational and costly, so it is done less frequently.
       case RouterPreference.PRICE:
         return ms`2m`
-      case RouterPreference.TRADE:
+      case RouterPreference.API:
+      case RouterPreference.CLIENT:
         return ms`15s`
       case RouterPreference.SKIP:
         return Infinity

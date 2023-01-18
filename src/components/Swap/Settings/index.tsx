@@ -3,22 +3,32 @@ import Rule from 'components/Rule'
 import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { Settings as SettingsIcon } from 'icons'
+import { useAtom } from 'jotai'
 import { useState } from 'react'
+import { swapRouterUrlAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import { IconButton } from '../../Button'
 import Column from '../../Column'
 import Popover, { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
+import RouterPreferenceToggle from './RouterPreferenceToggle'
 import TransactionTtlInput from './TransactionTtlInput'
 
 export function SettingsMenu() {
+  const [routerUrl] = useAtom(swapRouterUrlAtom)
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-
+  console.log('here 3: routerUrl', routerUrl)
   // TODO (WEB-2754): add back reset settings functionality
   return (
     <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
       <PopoverBoundaryProvider value={boundary}>
+        {Boolean(routerUrl) && (
+          <>
+            <RouterPreferenceToggle />
+            <Rule />
+          </>
+        )}
         <MaxSlippageSelect />
         <Rule />
         <TransactionTtlInput />
