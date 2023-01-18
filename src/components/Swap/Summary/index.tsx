@@ -122,8 +122,8 @@ export function SummaryDialog(props: SummaryDialogProps) {
       ) : (
         props.impact && (
           <SpeedbumpDialog onAcknowledge={onAcknowledgePriceImpact} impact={props.impact}>
-            {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()}</PriceImpactText>
-            {t` price impact on the market price of this pool. Do you wish to continue? `}
+            {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
+            {t`price impact on the market price of this pool. Do you wish to continue? `}
           </SpeedbumpDialog>
         )
       )}
