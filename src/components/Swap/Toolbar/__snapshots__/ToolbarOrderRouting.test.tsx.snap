@@ -20,57 +20,23 @@ Object {
             >
               Order routing
             </div>
-            <div
-              class="Popover__Reference-sc-1liex6z-1 dxsTSY"
-            >
-              <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 bIUiVy hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-0 edibPG"
-                style="outline: none;"
-                tabindex="-1"
-              >
-                <svg
-                  class="icons-sc-lekdau-0 iSRwlR"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="16"
-                    y2="12"
-                  />
-                  <line
-                    x1="12"
-                    x2="12.01"
-                    y1="8"
-                    y2="8"
-                  />
-                </svg>
-              </button>
-            </div>
           </div>
           <div
-            class="Row-sc-1nzvhrh-0 feiOJv"
+            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
+              class="Row-sc-1nzvhrh-0 feiOJv"
+              style="outline: none;"
+              tabindex="-1"
             >
               <div
-                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
               >
-                Auto Router
+                <div
+                  class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                >
+                  Auto Router
+                </div>
               </div>
             </div>
           </div>
@@ -94,57 +60,23 @@ Object {
           >
             Order routing
           </div>
-          <div
-            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
-          >
-            <button
-              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 bIUiVy hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-0 edibPG"
-              style="outline: none;"
-              tabindex="-1"
-            >
-              <svg
-                class="icons-sc-lekdau-0 iSRwlR"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                />
-                <line
-                  x1="12"
-                  x2="12"
-                  y1="16"
-                  y2="12"
-                />
-                <line
-                  x1="12"
-                  x2="12.01"
-                  y1="8"
-                  y2="8"
-                />
-              </svg>
-            </button>
-          </div>
         </div>
         <div
-          class="Row-sc-1nzvhrh-0 feiOJv"
+          class="Popover__Reference-sc-1liex6z-1 dxsTSY"
         >
           <div
-            class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
+            class="Row-sc-1nzvhrh-0 feiOJv"
+            style="outline: none;"
+            tabindex="-1"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+              class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
             >
-              Auto Router
+              <div
+                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+              >
+                Auto Router
+              </div>
             </div>
           </div>
         </div>
@@ -225,57 +157,23 @@ Object {
             >
               Order routing
             </div>
-            <div
-              class="Popover__Reference-sc-1liex6z-1 dxsTSY"
-            >
-              <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 bIUiVy hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-0 edibPG"
-                style="outline: none;"
-                tabindex="-1"
-              >
-                <svg
-                  class="icons-sc-lekdau-0 iSRwlR"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="16"
-                    y2="12"
-                  />
-                  <line
-                    x1="12"
-                    x2="12.01"
-                    y1="8"
-                    y2="8"
-                  />
-                </svg>
-              </button>
-            </div>
           </div>
           <div
-            class="Row-sc-1nzvhrh-0 feiOJv"
+            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
+              class="Row-sc-1nzvhrh-0 feiOJv"
+              style="outline: none;"
+              tabindex="-1"
             >
               <div
-                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
               >
-                Auto Router
+                <div
+                  class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                >
+                  Auto Router
+                </div>
               </div>
             </div>
           </div>
@@ -299,57 +197,23 @@ Object {
           >
             Order routing
           </div>
-          <div
-            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
-          >
-            <button
-              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 bIUiVy hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-0 edibPG"
-              style="outline: none;"
-              tabindex="-1"
-            >
-              <svg
-                class="icons-sc-lekdau-0 iSRwlR"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                />
-                <line
-                  x1="12"
-                  x2="12"
-                  y1="16"
-                  y2="12"
-                />
-                <line
-                  x1="12"
-                  x2="12.01"
-                  y1="8"
-                  y2="8"
-                />
-              </svg>
-            </button>
-          </div>
         </div>
         <div
-          class="Row-sc-1nzvhrh-0 feiOJv"
+          class="Popover__Reference-sc-1liex6z-1 dxsTSY"
         >
           <div
-            class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
+            class="Row-sc-1nzvhrh-0 feiOJv"
+            style="outline: none;"
+            tabindex="-1"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+              class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
             >
-              Auto Router
+              <div
+                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+              >
+                Auto Router
+              </div>
             </div>
           </div>
         </div>
@@ -430,57 +294,23 @@ Object {
             >
               Order routing
             </div>
-            <div
-              class="Popover__Reference-sc-1liex6z-1 dxsTSY"
-            >
-              <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 bIUiVy hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-0 edibPG"
-                style="outline: none;"
-                tabindex="-1"
-              >
-                <svg
-                  class="icons-sc-lekdau-0 iSRwlR"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="16"
-                    y2="12"
-                  />
-                  <line
-                    x1="12"
-                    x2="12.01"
-                    y1="8"
-                    y2="8"
-                  />
-                </svg>
-              </button>
-            </div>
           </div>
           <div
-            class="Row-sc-1nzvhrh-0 feiOJv"
+            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
+              class="Row-sc-1nzvhrh-0 feiOJv"
+              style="outline: none;"
+              tabindex="-1"
             >
               <div
-                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
               >
-                Auto Router
+                <div
+                  class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                >
+                  Auto Router
+                </div>
               </div>
             </div>
           </div>
@@ -504,57 +334,23 @@ Object {
           >
             Order routing
           </div>
-          <div
-            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
-          >
-            <button
-              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 bIUiVy hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-0 edibPG"
-              style="outline: none;"
-              tabindex="-1"
-            >
-              <svg
-                class="icons-sc-lekdau-0 iSRwlR"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                />
-                <line
-                  x1="12"
-                  x2="12"
-                  y1="16"
-                  y2="12"
-                />
-                <line
-                  x1="12"
-                  x2="12.01"
-                  y1="8"
-                  y2="8"
-                />
-              </svg>
-            </button>
-          </div>
         </div>
         <div
-          class="Row-sc-1nzvhrh-0 feiOJv"
+          class="Popover__Reference-sc-1liex6z-1 dxsTSY"
         >
           <div
-            class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
+            class="Row-sc-1nzvhrh-0 feiOJv"
+            style="outline: none;"
+            tabindex="-1"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+              class="type__TextWrapper-sc-16386l-0 bevZkg RoutingDiagram__StyledAutoRouterLabel-sc-3p4p27-0 hyAjPo css-aeawsu"
             >
-              Auto Router
+              <div
+                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+              >
+                Auto Router
+              </div>
             </div>
           </div>
         </div>
