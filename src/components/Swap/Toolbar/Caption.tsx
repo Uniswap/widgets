@@ -28,10 +28,10 @@ const CaptionRow = styled(Row)<{ gap: number; shrink?: number }>`
 `
 
 // TODO (tina): consolidate this and Expando icon
-const ExpandIcon = styled(ChevronDown)<{ expanded: boolean }>`
+const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.secondary};
   cursor: pointer;
-  transform: ${({ expanded }) => (expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.25s;
   :hover {
     opacity: 0.6;
@@ -199,7 +199,7 @@ interface ExpandProps {
 }
 
 const Expander = ({ expanded, onToggleExpand }: ExpandProps) => {
-  return <ExpandIcon onClick={onToggleExpand} expanded={expanded} />
+  return <ExpandIcon onClick={onToggleExpand} $expanded={expanded} />
 }
 
 export function Trade({
