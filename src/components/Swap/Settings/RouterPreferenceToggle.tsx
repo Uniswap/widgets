@@ -7,16 +7,9 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { swapEventHandlersAtom } from 'state/swap'
 import { routerPreferenceAtom } from 'state/swap/settings'
-import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { Label } from './components'
-
-const StyledRow = styled(Row)`
-  color: ${({ theme }) => theme.secondary};
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-`
 
 export default function RouterPreferenceToggle() {
   const { onRouterPreferenceChange } = useAtomValue(swapEventHandlersAtom)
@@ -39,13 +32,15 @@ export default function RouterPreferenceToggle() {
   }
 
   return (
-    <StyledRow>
-      <Label
-        name={<Trans>Auto Router API</Trans>}
-        // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
-        tooltip={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>}
-      />
-      <Toggle onToggle={onToggle} checked={routerPreference === RouterPreference.API} />
-    </StyledRow>
+    <ThemedText.Subhead2 color="secondary">
+      <Row>
+        <Label
+          name={<Trans>Auto Router API</Trans>}
+          // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
+          tooltip={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>}
+        />
+        <Toggle onToggle={onToggle} checked={routerPreference === RouterPreference.API} />
+      </Row>
+    </ThemedText.Subhead2>
   )
 }
