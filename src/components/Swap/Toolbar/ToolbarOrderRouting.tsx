@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import Popover from 'components/Popover'
 import Row from 'components/Row'
-import Tooltip from 'components/Tooltip'
-import { Info } from 'icons'
+import { useTooltip } from 'components/Tooltip'
+import { useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -26,19 +27,22 @@ interface ToolbarOrderRoutingProps {
 }
 
 export default function ToolbarOrderRouting({ trade, gasUseEstimateUSD }: ToolbarOrderRoutingProps) {
+  const [tooltip, setTooltip] = useState<HTMLDivElement | null>(null)
+  const showTooltip = useTooltip(tooltip)
   return (
     <OrderRoutingRow flex>
       <Row gap={0.25}>
         <ThemedText.Body2 color="secondary">
           <Trans>Order routing</Trans>
         </ThemedText.Body2>
-        {trade && (
-          <Tooltip icon={Info} contained>
-            <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
-          </Tooltip>
-        )}
       </Row>
-      <AutoRouterHeader />
+      <Popover
+        content={trade ? <RoutingDiagram gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} /> : null}
+        show={Boolean(trade) && showTooltip}
+        placement={'top'}
+      >
+        <AutoRouterHeader ref={setTooltip} />
+      </Popover>
     </OrderRoutingRow>
   )
 }
