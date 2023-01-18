@@ -1,7 +1,7 @@
 import { Icon } from 'icons'
 import { ComponentProps, forwardRef } from 'react'
 import styled, { css } from 'styled-components/macro'
-import { Color } from 'theme'
+import { AnimationSpeed, Color } from 'theme'
 
 export const BaseButton = styled.button`
   background-color: transparent;
@@ -17,7 +17,7 @@ export const BaseButton = styled.button`
   padding: 0;
 
   :enabled {
-    transition: filter 0.125s linear;
+    transition: filter ${AnimationSpeed.Fast} linear;
   }
 
   :disabled {
@@ -26,7 +26,8 @@ export const BaseButton = styled.button`
   }
 `
 const transitionCss = css`
-  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear;
+  transition: background-color ${AnimationSpeed.Fast} linear, border-color ${AnimationSpeed.Fast} linear,
+    filter ${AnimationSpeed.Fast} linear;
 `
 
 export default styled(BaseButton)<{ color?: Color }>`
