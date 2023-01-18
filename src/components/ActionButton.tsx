@@ -37,7 +37,6 @@ const grow = keyframes`
 `
 
 const actionCss = css`
-  background-color: ${({ theme }) => theme.container};
   border: 1px solid ${({ theme }) => theme.outline};
   padding: calc(0.5em - 1px);
   padding-left: calc(0.75em - 1px);

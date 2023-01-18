@@ -63,6 +63,7 @@ function Fixture() {
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
+  const [brandedFooter] = useValue('brandedFooter', { defaultValue: true })
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
 
   const [width] = useValue('width', { defaultValue: 360 })
@@ -109,6 +110,7 @@ function Fixture() {
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
+      brandedFooter={brandedFooter}
       {...eventHandlers}
     />
   )

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
 import Column from 'components/Column'
@@ -22,16 +23,16 @@ const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
   }
 `
 
-function Header() {
+export function AutoRouterHeader() {
   return (
-    <ThemedText.Subhead2>
-      <Row justify="left" gap={0.25}>
-        <AutoRouter />
-        <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
+    <Row justify="left" gap={0.25}>
+      <AutoRouter />
+      <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
+        <ThemedText.Subhead2>
           <Trans>Auto Router</Trans>
-        </StyledAutoRouterLabel>
-      </Row>
-    </ThemedText.Subhead2>
+        </ThemedText.Subhead2>
+      </StyledAutoRouterLabel>
+    </Row>
   )
 }
 
@@ -43,6 +44,13 @@ const Dots = styled(DotLine)`
 
 const RouteRow = styled(Row)`
   flex-wrap: nowrap;
+`
+
+const GasEstimateRow = styled(Row)`
+  border-top: 1px solid ${({ theme }) => theme.outline};
+  margin: 0 0.75em;
+  max-width: 350px;
+  padding: 0.5em 0;
 `
 
 const RouteNode = styled(Row)`
@@ -120,16 +128,32 @@ function Route({ route }: { route: RoutingDiagramEntry }) {
   )
 }
 
-export default function RoutingDiagram({ trade }: { trade: InterfaceTrade }) {
+export default function RoutingDiagram({
+  trade,
+  gasUseEstimateUSD,
+}: {
+  trade: InterfaceTrade
+  gasUseEstimateUSD?: CurrencyAmount<Token> | null
+}) {
   const routes: RoutingDiagramEntry[] = useMemo(() => getTokenPath(trade), [trade])
 
   return (
     <Column gap={0.75}>
-      <Header />
+      <AutoRouterHeader />
       <Rule />
       {routes.map((route, index) => (
         <Route key={index} route={route} />
       ))}
+      {gasUseEstimateUSD && (
+        <GasEstimateRow>
+          <ThemedText.Caption color="secondary">
+            <Trans>
+              Best price route costs {formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)} in gas. Your
+              price is optimized by considering split routes, multiple hops, and gas costs.
+            </Trans>
+          </ThemedText.Caption>
+        </GasEstimateRow>
+      )}
     </Column>
   )
 }

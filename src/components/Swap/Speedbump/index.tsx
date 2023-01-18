@@ -1,23 +1,43 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Button, { TextButton } from 'components/Button'
 import Column from 'components/Column'
+import { OnCloseDialogContext } from 'components/Dialog'
+import Row from 'components/Row'
 import { PriceImpact } from 'hooks/usePriceImpact'
-import { AlertTriangle, LargeIcon, X } from 'icons'
+import { LargeAlert, LargeIcon, X } from 'icons'
+import { PropsWithChildren, useContext } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const Body = styled(Column)`
-  align-items: center;
-  height: 100%;
-  text-align: center;
-  width: 100%;
-`
 const SpeedbumpWrapper = styled.div`
-  padding: 1.5em 1.25em;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1em;
+  text-align: center;
+`
+
+const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+`
+
+const BodyText = styled(ThemedText.Body1)`
+  padding: 0 0.5em;
+`
+
+const IconWrapper = styled.div`
+  padding: 2em;
 `
 const SpeedbumpButtonStyle = css`
   border-radius: 1em;
   padding: 1em;
+`
+const HeaderRow = styled(Row)`
+  align-items: flex-start;
+  width: 100%;
 `
 
 const StyledXButton = styled(LargeIcon).attrs({ icon: X, color: 'primary', size: 1.5 })`
@@ -37,25 +57,30 @@ const CancelButton = styled(TextButton)`
 
 interface SpeedbumpDialogProps {
   impact: PriceImpact
-  onContinue: () => void
-  onClose: () => void
+  onAcknowledge: () => void
 }
 
-export function SpeedbumpDialog({ impact, onContinue, onClose }: SpeedbumpDialogProps) {
+export function SpeedbumpDialog({ impact, onAcknowledge, children }: PropsWithChildren<SpeedbumpDialogProps>) {
+  const onClose = useContext(OnCloseDialogContext)
   return (
     <SpeedbumpWrapper>
-      <StyledXButton onClick={onClose} />
-      <Body flex align="stretch" padded gap={0.75}>
-        <LargeIcon icon={AlertTriangle} color="critical" size={4} />
+      <Body>
+        <Column flex gap={0.75}>
+          <HeaderRow>
+            <StyledXButton onClick={onClose} />
+          </HeaderRow>
+          <IconWrapper>
+            <LargeAlert />
+          </IconWrapper>
 
-        <Column>
           <ThemedText.H3>
             <Trans>Warning</Trans>
           </ThemedText.H3>
-          <ThemedText.Body1>
-            {t`This transaction will result in a ${impact?.toString()} price impact on the market price of this pool. Do you wish to continue? `}
-          </ThemedText.Body1>
-          <ContinueButton onClick={onContinue}>
+
+          <BodyText>{children}</BodyText>
+        </Column>
+        <Column>
+          <ContinueButton onClick={onAcknowledge}>
             <ThemedText.ButtonLarge>
               <Trans>Continue</Trans>
             </ThemedText.ButtonLarge>

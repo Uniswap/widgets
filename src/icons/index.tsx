@@ -22,6 +22,7 @@ import {
   ArrowUpRight as LinkIcon,
   BarChart2 as BarChart2Icon,
   ChevronDown as ChevronDownIcon,
+  ChevronUp as ChevronUpIcon,
   Clock as ClockIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
@@ -71,14 +72,15 @@ interface LargeIconProps {
   icon?: Icon
   color?: Color
   size?: number
+  strokeWidth?: number
   onClick?: () => void
   className?: string
 }
 
-export function LargeIcon({ icon: Icon, color, size = 1.2, onClick, className }: LargeIconProps) {
+export function LargeIcon({ icon: Icon, color, size = 1.2, strokeWidth = 1.5, onClick, className }: LargeIconProps) {
   return (
     <LargeWrapper color={color} iconSize={size} className={className}>
-      {Icon && <Icon color={color} onClick={onClick} />}
+      {Icon && <Icon color={color} strokeWidth={strokeWidth} onClick={onClick} />}
     </LargeWrapper>
   )
 }
@@ -90,6 +92,7 @@ export const ArrowLeft = icon(ArrowLeftIcon)
 export const ArrowUp = icon(ArrowUpIcon)
 export const BarChart = icon(BarChart2Icon)
 export const ChevronDown = icon(ChevronDownIcon)
+export const ChevronUp = icon(ChevronUpIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
 export const Identicon = icon(IdenticonIcon)
@@ -156,6 +159,8 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
 export const LargeCheck = styled(icon(LargeCheckIcon))<{ color?: Color }>`
   stroke: ${({ color = 'primary', theme }) => theme[color]};
 `
+
+export const LargeAlert = styled(LargeIcon).attrs({ icon: AlertTriangle, color: 'error', size: 6, strokeWidth: 1 })``
 
 export const LargeSpinner = styled(icon(LargeSpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;

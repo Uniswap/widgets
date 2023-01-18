@@ -24,19 +24,19 @@ const TransitionTextWrapper = styled(TextWrapper)`
 
 export function H1(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-1" fontSize={36} fontWeight={400} lineHeight="44px" noWrap {...props} />
+    <TextWrapper className="headline headline-1" fontSize={36} fontWeight={500} lineHeight="44px" noWrap {...props} />
   )
 }
 
 export function H2(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-2" fontSize={32} fontWeight={400} lineHeight="32px" noWrap {...props} />
+    <TextWrapper className="headline headline-2" fontSize={32} fontWeight={500} lineHeight="32px" noWrap {...props} />
   )
 }
 
 export function H3(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-3" fontSize={20} fontWeight={400} lineHeight="20px" noWrap {...props} />
+    <TextWrapper className="headline headline-3" fontSize={20} fontWeight={500} lineHeight="20px" noWrap {...props} />
   )
 }
 
@@ -56,8 +56,18 @@ export function Body1(props: TextProps) {
   return <TextWrapper className="body body-1" fontSize={16} fontWeight={400} lineHeight="24px" {...props} />
 }
 
+export const Body2LineHeightRem = 1.25
+
 export function Body2(props: TextProps) {
-  return <TextWrapper className="body body-2" fontSize={14} fontWeight={400} lineHeight="20px" {...props} />
+  return (
+    <TextWrapper
+      className="body body-2"
+      fontSize={14}
+      fontWeight={400}
+      lineHeight={`${Body2LineHeightRem}rem`}
+      {...props}
+    />
+  )
 }
 
 export function Caption(props: TextProps) {

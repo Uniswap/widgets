@@ -62,7 +62,7 @@ export function Provider({ value, children }: ProviderProps) {
   )
 }
 
-const OnCloseContext = createContext<(() => void) | undefined>(undefined)
+export const OnCloseDialogContext = createContext<(() => void) | undefined>(undefined)
 
 const HeaderRow = styled(Row)`
   display: flex;
@@ -92,7 +92,7 @@ interface HeaderProps {
 }
 
 export function Header({ title }: HeaderProps) {
-  const onClose = useContext(OnCloseContext)
+  const onClose = useContext(OnCloseDialogContext)
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
       <StyledBackButton onClick={onClose} />
@@ -107,12 +107,13 @@ export const Modal = styled.div<{ color: Color }>`
   ${globalFontStyles};
 
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;
   flex-direction: column;
   height: 100%;
   left: 0;
   overflow: hidden;
+  padding: 0.5em;
   position: absolute;
   top: 0;
   width: 100%;
@@ -146,11 +147,11 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     context.element &&
     createPortal(
       <ThemeProvider>
-        <OnCloseContext.Provider value={onClose}>
+        <OnCloseDialogContext.Provider value={onClose}>
           <Modal color={color} ref={modal}>
             {children}
           </Modal>
-        </OnCloseContext.Provider>
+        </OnCloseDialogContext.Provider>
       </ThemeProvider>,
       context.element
     )

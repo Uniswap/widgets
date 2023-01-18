@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ALLOWED_PRICE_IMPACT_HIGH } from 'constants/misc'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
@@ -18,7 +17,6 @@ import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
-import { SpeedbumpDialog } from '../Speedbump'
 import { SummaryDialog } from '../Summary'
 import useOnSubmit from './useOnSubmit'
 
@@ -64,11 +62,11 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   })
   const swapCallback = permit2Enabled ? universalRouterSwapCallback : swapRouterCallback
 
-  const [view, setView] = useState(VIEW.DEFAULT)
+  const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
-  useEffect(() => setView((view) => (trade ? view : VIEW.DEFAULT)), [trade])
+  useEffect(() => setOpen((view) => (trade ? view : false)), [trade])
   // Close the review modal on chain change.
-  useEffect(() => setView(VIEW.DEFAULT), [chainId])
+  useEffect(() => setOpen(false), [chainId])
 
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSubmit = useOnSubmit()
@@ -95,30 +93,24 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
       })
 
       // Only close the review modal if the swap submitted (ie no-throw).
-      setView(VIEW.DEFAULT)
+      setOpen(false)
     } catch (e) {
       console.error(e) // ignore error
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade])
 
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
-  const onContinue = useCallback(async () => {
-    setView((await onReviewSwapClick()) ? VIEW.SWAP_REVIEW : VIEW.DEFAULT)
+  const onClick = useCallback(async () => {
+    setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick])
-
-  const onClick = useCallback(() => {
-    if (view === VIEW.DEFAULT && impact?.percent.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
-      setView(VIEW.IMPACT_SPEEDBUMP)
-    } else onContinue()
-  }, [impact?.percent, onContinue, view])
 
   return (
     <>
       <ActionButton color={color} onClick={onClick} disabled={disabled}>
         <Trans>Review swap</Trans>
       </ActionButton>
-      {view === VIEW.SWAP_REVIEW && trade && (
-        <Dialog color="dialog" onClose={() => setView(VIEW.DEFAULT)}>
+      {open && trade && (
+        <Dialog color="container" onClose={() => setOpen(false)}>
           <SummaryDialog
             trade={trade}
             slippage={slippage}
@@ -128,11 +120,6 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
             impact={impact}
             onConfirm={onSwap}
           />
-        </Dialog>
-      )}
-      {view === VIEW.IMPACT_SPEEDBUMP && impact && (
-        <Dialog color="container" onClose={() => setView(VIEW.DEFAULT)}>
-          <SpeedbumpDialog onContinue={() => onContinue()} onClose={() => setView(VIEW.DEFAULT)} impact={impact} />
         </Dialog>
       )}
     </>
