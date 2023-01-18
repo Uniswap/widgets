@@ -63,7 +63,6 @@ export const routing = createApi({
             }
 
             const quote: GetQuoteResult = await response.json()
-            console.log('😎quote from auto router url: ', quote)
             return { data: quote }
           } catch (error: any) {
             console.warn(
@@ -76,7 +75,6 @@ export const routing = createApi({
         const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
           const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
-          console.log('⛽️quote from client side router')
           return { data: quote }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
