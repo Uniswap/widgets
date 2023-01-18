@@ -6,6 +6,7 @@ import useScrollbar from 'hooks/useScrollbar'
 import { Expando as ExpandoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const HeaderColumn = styled(Column)`
   cursor: pointer;
@@ -13,11 +14,7 @@ const HeaderColumn = styled(Column)`
 `
 
 const TitleRow = styled(Row)`
-  color: ${({ theme }) => theme.secondary};
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
 `
 
 const TitleHeader = styled.div`
@@ -76,13 +73,15 @@ const StyledTitleWrapper = ({
   return (
     <HeaderColumn onClick={onExpand} gap={open ? 0.5 : 0.75}>
       {!hideRulers && <Rule />}
-      <TitleRow gap={1}>
-        <TitleHeader>{title}</TitleHeader>
-        <Row gap={0.2}>
-          {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
-          <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
-        </Row>
-      </TitleRow>
+      <ThemedText.Subhead2 color="secondary">
+        <TitleRow gap={1}>
+          <TitleHeader>{title}</TitleHeader>
+          <Row gap={0.2}>
+            {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
+            <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+          </Row>
+        </TitleRow>
+      </ThemedText.Subhead2>
       {!hideRulers && open && <Rule />}
     </HeaderColumn>
   )
