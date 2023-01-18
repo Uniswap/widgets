@@ -12,14 +12,16 @@ export interface Slippage {
 export interface Settings {
   slippage: Slippage
   transactionTtl: number | undefined
-  router: RouterPreference
+  routerPreference: RouterPreference
 }
 
 const initialSettings: Settings = {
   slippage: { auto: true, max: undefined },
   transactionTtl: undefined,
-  // TODO: change default based on routerUrl prop
-  router: RouterPreference.CLIENT,
+
+  // Set to API by default so that if the consumer passes in the `routerUrl` prop, it is
+  // automatically set to use that url. Otherwise, it will fallback to client side routing.
+  routerPreference: RouterPreference.API,
 }
 
 export const controlledAtom = atom<Settings | undefined>(undefined)
@@ -31,4 +33,4 @@ export const settingsAtom = atom((get) => {
 
 export const slippageAtom = pickAtom(settingsAtom, 'slippage')
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
-export const routerAtom = pickAtom(settingsAtom, 'router')
+export const routerPreferenceAtom = pickAtom(settingsAtom, 'routerPreference')
