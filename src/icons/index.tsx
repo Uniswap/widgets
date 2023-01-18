@@ -2,6 +2,7 @@ import { ReactComponent as RouterIcon } from 'assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'assets/svg/expando.svg'
 import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
+import { ReactComponent as LargeArrowIcon } from 'assets/svg/large_arrow.svg'
 import { ReactComponent as LargeCheckIcon } from 'assets/svg/large_check.svg'
 import { ReactComponent as LargeSpinnerIcon } from 'assets/svg/large_spinner.svg'
 import { ReactComponent as LogoIcon } from 'assets/svg/logo.svg'
@@ -149,6 +150,10 @@ export const LargeCheck = styled(icon(LargeCheckIcon))<{ color?: Color }>`
 
 export const LargeSpinner = styled(icon(LargeSpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;
+  stroke: ${({ color = 'primary', theme }) => theme[color]};
+`
+
+export const LargeArrow = styled(icon(LargeArrowIcon))<{ color?: Color }>`
   stroke: ${({ color = 'primary', theme }) => theme[color]};
 `
 
