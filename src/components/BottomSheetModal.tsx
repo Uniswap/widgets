@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { forwardRef, PropsWithChildren, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
+import { AnimationSpeed } from 'theme'
 
 import Dialog, { Animation, Header, Modal, Provider as DialogProvider } from './Dialog'
 
@@ -27,12 +28,12 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
 
   &.hidden {
     opacity: 0;
-    transition: visibility 0s linear 0.25s, opacity 0.25s;
+    transition: visibility 0s linear ${AnimationSpeed.Medium}, opacity ${AnimationSpeed.Medium};
     visibility: hidden;
   }
 
   top: 0;
-  transition: visibility 0s linear 0s, opacity 0.25s;
+  transition: visibility 0s linear 0s, opacity ${AnimationSpeed.Medium};
   visibility: visible;
 `
 
@@ -49,11 +50,11 @@ const Wrapper = styled.div<{ open: boolean }>`
   }
 
   ${Modal} {
-    animation: ${slideInBottom} 0.25s ease-in;
+    animation: ${slideInBottom} ${AnimationSpeed.Medium} ease-in;
     border-bottom-left-radius: 0;
 
     &.${Animation.CLOSING} {
-      animation: ${slideOutBottom} 0.25s ease-out;
+      animation: ${slideOutBottom} ${AnimationSpeed.Medium} ease-out;
     }
 
     border-bottom-right-radius: 0;

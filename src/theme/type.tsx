@@ -1,6 +1,7 @@
 import { Text, TextProps as TextPropsWithCss } from 'rebass'
 import styled, { useTheme } from 'styled-components/macro'
 
+import { AnimationSpeed } from './animations'
 import type { Color } from './theme'
 
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color' | 'userSelect'> & {
@@ -19,7 +20,7 @@ const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string; noWrap?: t
 `
 
 const TransitionTextWrapper = styled(TextWrapper)`
-  transition: font-size 0.25s ease-out, line-height 0.25s ease-out;
+  transition: font-size ${AnimationSpeed.Medium} ease-out, line-height ${AnimationSpeed.Medium} ease-out;
 `
 
 export function H1(props: TextProps) {

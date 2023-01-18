@@ -6,10 +6,11 @@ import useScrollbar from 'hooks/useScrollbar'
 import { Expando as ExpandoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
+import { AnimationSpeed } from 'theme'
 
 const HeaderColumn = styled(Column)`
   cursor: pointer;
-  transition: gap 0.25s;
+  transition: gap ${AnimationSpeed.Medium};
 `
 
 const TitleRow = styled(Row)`
@@ -42,7 +43,7 @@ const ExpandoColumn = styled(Column)<{ height: number; open: boolean; showBottom
   height: ${({ height, open }) => (open ? height : 0)}em;
   overflow: hidden;
   position: relative;
-  transition: height 0.25s, padding 0.25s;
+  transition: height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
   ${({ showBottomGradient }) => showBottomGradient && bottomCss}
 `
 

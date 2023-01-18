@@ -6,14 +6,14 @@ import { AlertTriangle, Icon, LargeIcon } from 'icons'
 import { Info as InfoIcon } from 'icons'
 import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
-import { Color, ThemedText } from 'theme'
+import { AnimationSpeed, Color, ThemedText } from 'theme'
 
 const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
-  transition: height 0.25s, width 0.25s;
+  transition: height ${AnimationSpeed.Medium}, width ${AnimationSpeed.Medium};
 
   svg {
-    transition: height 0.25s, width 0.25s;
+    transition: height ${AnimationSpeed.Medium}, width ${AnimationSpeed.Medium};
   }
 `
 
@@ -38,12 +38,12 @@ export function StatusHeader({ icon: Icon, iconColor, iconSize = 5, children }: 
 }
 
 const ErrorHeader = styled(Column)<{ open: boolean }>`
-  transition: gap 0.25s;
+  transition: gap ${AnimationSpeed.Medium};
 
   div:last-child {
     max-height: ${({ open }) => (open ? 0 : 60 / 14)}em; // 3 * line-height
     overflow-y: hidden;
-    transition: max-height 0.25s;
+    transition: max-height ${AnimationSpeed.Medium};
   }
 `
 
@@ -72,7 +72,7 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           {!open && <ThemedText.Body2>{header}</ThemedText.Body2>}
         </ErrorHeader>
       </StatusHeader>
-      <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
+      <Column gap={open ? 0 : 0.75} style={{ transition: `gap ${AnimationSpeed.Medium}` }}>
         <Expando
           title={
             <>

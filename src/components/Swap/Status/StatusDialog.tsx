@@ -9,7 +9,7 @@ import { LargeArrow, LargeCheck, LargeSpinner } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { AnimationSpeed, ThemedText } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
@@ -17,7 +17,7 @@ import Column from '../../Column'
 
 const EtherscanLinkContainer = styled(Row)`
   padding: 0.75em 0 1.5em;
-  transition: opacity 0.25s;
+  transition: opacity ${AnimationSpeed.Medium};
   width: 100%;
   :hover {
     opacity: 0.6;

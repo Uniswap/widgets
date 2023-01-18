@@ -12,7 +12,7 @@ import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { AnimationSpeed, ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -26,7 +26,7 @@ const USDC = styled(Row)`
 `
 
 const Balance = styled(ThemedText.Body2)`
-  transition: color 0.25s ease-in-out;
+  transition: color ${AnimationSpeed.Medium} ease-in-out;
 `
 
 const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`

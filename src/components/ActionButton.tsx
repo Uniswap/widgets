@@ -1,7 +1,7 @@
 import { AlertTriangle, Icon, LargeIcon } from 'icons'
 import { ReactNode, useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components/macro'
-import { Color, Colors, ThemedText } from 'theme'
+import { AnimationSpeed, Color, Colors, ThemedText } from 'theme'
 
 import Button from './Button'
 import Row, { RowProps } from './Row'
@@ -11,7 +11,8 @@ const StyledButton = styled(Button)<{ shouldUseDisabledColor?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
   max-height: 56px;
-  transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
+  transition: background-color ${AnimationSpeed.Medium} ease-out, border-radius ${AnimationSpeed.Medium} ease-out,
+    flex-grow ${AnimationSpeed.Medium} ease-out;
   ${({ theme, disabled, shouldUseDisabledColor }) =>
     disabled &&
     (shouldUseDisabledColor
@@ -42,7 +43,7 @@ const actionCss = css`
   padding-left: calc(0.75em - 1px);
 
   ${ActionRow} {
-    animation: ${grow} 0.25s ease-in;
+    animation: ${grow} ${AnimationSpeed.Medium} ease-in;
     flex-grow: 1;
     justify-content: flex-start;
     white-space: nowrap;
@@ -61,7 +62,7 @@ export const Overlay = styled(Row)<{ hasAction: boolean }>`
   flex-flow: row-reverse nowrap;
   margin-top: 0.75em;
   min-height: 3.5em;
-  transition: padding 0.25s ease-out;
+  transition: padding ${AnimationSpeed.Medium} ease-out;
   ${({ hasAction }) => hasAction && actionCss}
 `
 
