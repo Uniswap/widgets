@@ -1,8 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { BottomSheetModal } from 'components/BottomSheetModal'
+import { IconButton } from 'components/Button'
+import Column from 'components/Column'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { Info } from 'icons'
+import { useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -26,17 +31,29 @@ interface ToolbarOrderRoutingProps {
 }
 
 export default function ToolbarOrderRouting({ trade, gasUseEstimateUSD }: ToolbarOrderRoutingProps) {
+  const isMobile = useIsMobileWidth()
+  const [open, setOpen] = useState(false)
   return (
     <OrderRoutingRow flex>
       <Row gap={0.25}>
         <ThemedText.Body2 color="secondary">
           <Trans>Order routing</Trans>
         </ThemedText.Body2>
-        {trade && (
-          <Tooltip icon={Info} contained>
-            <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
-          </Tooltip>
-        )}
+        {trade &&
+          (isMobile ? (
+            <>
+              <IconButton onClick={() => setOpen(!open)} icon={Info} />
+              <BottomSheetModal title="Route details" onClose={() => setOpen(false)} open={open}>
+                <Column padded>
+                  <RoutingDiagram trade={trade} hideHeader />
+                </Column>
+              </BottomSheetModal>
+            </>
+          ) : (
+            <Tooltip icon={Info} contained>
+              <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
+            </Tooltip>
+          ))}
       </Row>
       <AutoRouterHeader />
     </OrderRoutingRow>
