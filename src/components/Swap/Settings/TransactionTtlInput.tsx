@@ -61,19 +61,21 @@ export default function TransactionTtlInput() {
           />
         }
       >
-        <ThemedText.Body1>
-          <InputContainer grow>
-            <Input justify="start" onClick={() => input.current?.focus()}>
+        <InputContainer grow>
+          <Input justify="start" onClick={() => input.current?.focus()}>
+            <ThemedText.Body1>
               <IntegerInput
                 placeholder={placeholder}
                 value={ttlValue ?? ''}
                 onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
                 ref={input}
               />
-            </Input>
-            <Trans>minutes</Trans>
-          </InputContainer>
-        </ThemedText.Body1>
+            </ThemedText.Body1>
+          </Input>
+          <Trans>
+            <ThemedText.Body1>minutes</ThemedText.Body1>
+          </Trans>
+        </InputContainer>
       </Expando>
     </Column>
   )
