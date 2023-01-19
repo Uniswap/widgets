@@ -1,8 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { BottomSheetModal } from 'components/BottomSheetModal'
+import Column from 'components/Column'
 import Popover from 'components/Popover'
 import Row from 'components/Row'
 import { useTooltip } from 'components/Tooltip'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
@@ -16,7 +19,6 @@ export const ORDER_ROUTING_HEIGHT_EM = CONTAINER_VERTICAL_PADDING_EM * 2 + Body2
 
 const OrderRoutingRow = styled(Row)`
   height: ${ORDER_ROUTING_HEIGHT_EM}em;
-  justify-content: space-between;
   margin: 0 1em;
   padding: ${CONTAINER_VERTICAL_PADDING_EM}em 0;
 `
@@ -27,22 +29,34 @@ interface ToolbarOrderRoutingProps {
 }
 
 export default function ToolbarOrderRouting({ trade, gasUseEstimateUSD }: ToolbarOrderRoutingProps) {
+  const isMobile = useIsMobileWidth()
+  const [open, setOpen] = useState(false)
   const [tooltip, setTooltip] = useState<HTMLDivElement | null>(null)
   const showTooltip = useTooltip(tooltip)
   return (
     <OrderRoutingRow flex>
-      <Row gap={0.25}>
-        <ThemedText.Body2 color="secondary">
-          <Trans>Order routing</Trans>
-        </ThemedText.Body2>
-      </Row>
-      <Popover
-        content={trade ? <RoutingDiagram gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} /> : null}
-        show={Boolean(trade) && showTooltip}
-        placement={'top'}
-      >
-        <AutoRouterHeader ref={setTooltip} />
-      </Popover>
+      <ThemedText.Body2 color="secondary">
+        <Trans>Order routing</Trans>
+      </ThemedText.Body2>
+      {trade &&
+        (isMobile ? (
+          <Row>
+            <AutoRouterHeader ref={setTooltip} onClick={() => setOpen(true)} />
+            <BottomSheetModal title="Route details" onClose={() => setOpen(false)} open={open}>
+              <Column padded>
+                <RoutingDiagram trade={trade} hideHeader />
+              </Column>
+            </BottomSheetModal>
+          </Row>
+        ) : (
+          <Popover
+            content={trade ? <RoutingDiagram gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} /> : null}
+            show={Boolean(trade) && showTooltip}
+            placement={'top'}
+          >
+            <AutoRouterHeader ref={setTooltip} />
+          </Popover>
+        ))}
     </OrderRoutingRow>
   )
 }

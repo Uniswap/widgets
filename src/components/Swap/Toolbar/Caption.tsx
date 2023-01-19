@@ -2,13 +2,17 @@ import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
 import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { BottomSheetModal } from 'components/BottomSheetModal'
+import { IconButton } from 'components/Button'
+import Column from 'components/Column'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { PriceImpact as PriceImpactType } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { AlertTriangle, ChevronDown, Gas, Icon, Info, LargeIcon, Spinner } from 'icons'
-import { ReactNode, useCallback } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
@@ -72,6 +76,8 @@ function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionP
 
 function GasEstimate({ gasUseEstimateUSD, trade }: TradeTooltip) {
   const isWideWidget = useIsWideWidget()
+  const isMobile = useIsMobileWidth()
+  const [open, setOpen] = useState(false)
   if (gasUseEstimateUSD === null) {
     return null
   }
@@ -80,9 +86,20 @@ function GasEstimate({ gasUseEstimateUSD, trade }: TradeTooltip) {
     <CaptionRow gap={0.25}>
       <>
         {trade ? (
-          <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
-            <RoutingDiagram trade={trade} />
-          </Tooltip>
+          isMobile ? (
+            <>
+              <IconButton onClick={() => setOpen(!open)} icon={Gas} iconProps={{ color: 'secondary' }} />
+              <BottomSheetModal title="Route details" onClose={() => setOpen(false)} open={open}>
+                <Column padded>
+                  <RoutingDiagram trade={trade} hideHeader />
+                </Column>
+              </BottomSheetModal>
+            </>
+          ) : (
+            <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
+              <RoutingDiagram trade={trade} />
+            </Tooltip>
+          )
         ) : (
           <Gas color="secondary" />
         )}

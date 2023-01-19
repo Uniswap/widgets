@@ -134,16 +134,22 @@ function Route({ route }: { route: RoutingDiagramEntry }) {
 export default function RoutingDiagram({
   trade,
   gasUseEstimateUSD,
+  hideHeader,
 }: {
   trade: InterfaceTrade
   gasUseEstimateUSD?: CurrencyAmount<Token> | null
+  hideHeader?: boolean
 }) {
   const routes: RoutingDiagramEntry[] = useMemo(() => getTokenPath(trade), [trade])
 
   return (
     <Column gap={0.75}>
-      <AutoRouterHeader />
-      <Rule />
+      {!hideHeader && (
+        <>
+          <AutoRouterHeader />
+          <Rule />
+        </>
+      )}
       {routes.map((route, index) => (
         <Route key={index} route={route} />
       ))}
