@@ -137,8 +137,7 @@ export function FieldWrapper({
   const onClickMax = useCallback(() => {
     if (!maxAmount) return
     updateAmount(maxAmount, /* origin= */ 'max')
-    input?.focus()
-  }, [input, maxAmount, updateAmount])
+  }, [maxAmount, updateAmount])
 
   return (
     <InputColumn
