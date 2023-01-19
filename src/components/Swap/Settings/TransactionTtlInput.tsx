@@ -12,6 +12,19 @@ import { Label } from './components'
 
 const Input = styled(Row)`
   ${inputCss}
+
+  padding: 0.5em;
+  width: 4em;
+
+  input {
+    text-align: right;
+  }
+`
+
+const InputContainer = styled(Row)`
+  display: flex;
+  gap: 0.5em;
+  justify-content: flex-start;
 `
 
 const TtlValue = styled.div`
@@ -48,20 +61,19 @@ export default function TransactionTtlInput() {
           />
         }
       >
-        <Row grow>
-          <ThemedText.Body1>
+        <ThemedText.Body1>
+          <InputContainer grow>
             <Input justify="start" onClick={() => input.current?.focus()}>
               <IntegerInput
                 placeholder={placeholder}
                 value={ttlValue ?? ''}
                 onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
-                size={Math.max(ttlValue?.length || 0, placeholder.length)}
                 ref={input}
               />
-              <Trans>minutes</Trans>
             </Input>
-          </ThemedText.Body1>
-        </Row>
+            <Trans>minutes</Trans>
+          </InputContainer>
+        </ThemedText.Body1>
       </Expando>
     </Column>
   )
