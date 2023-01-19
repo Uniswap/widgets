@@ -14,7 +14,6 @@ const Input = styled(Row)`
   ${inputCss};
 
   background-color: transparent;
-  padding: 0.5em;
   width: 4em;
 
   input {
@@ -63,7 +62,7 @@ export default function TransactionTtlInput() {
         }
       >
         <InputContainer grow>
-          <Input justify="start" onClick={() => input.current?.focus()}>
+          <Input pad={0.5} justify="start" onClick={() => input.current?.focus()}>
             <ThemedText.Body1>
               <IntegerInput
                 placeholder={placeholder}
