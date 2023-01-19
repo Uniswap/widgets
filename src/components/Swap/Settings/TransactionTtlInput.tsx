@@ -11,8 +11,9 @@ import Row from '../../Row'
 import { Label } from './components'
 
 const Input = styled(Row)`
-  ${inputCss}
+  ${inputCss};
 
+  background-color: transparent;
   padding: 0.5em;
   width: 4em;
 
