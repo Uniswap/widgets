@@ -30,13 +30,13 @@ export function H1(props: TextProps) {
 
 export function H2(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-2" fontSize={32} fontWeight={400} lineHeight="32px" noWrap {...props} />
+    <TextWrapper className="headline headline-2" fontSize={32} fontWeight={500} lineHeight="32px" noWrap {...props} />
   )
 }
 
 export function H3(props: TextProps) {
   return (
-    <TextWrapper className="headline headline-3" fontSize={20} fontWeight={400} lineHeight="20px" noWrap {...props} />
+    <TextWrapper className="headline headline-3" fontSize={20} fontWeight={500} lineHeight="20px" noWrap {...props} />
   )
 }
 
