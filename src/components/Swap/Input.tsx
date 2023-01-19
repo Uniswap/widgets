@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
@@ -13,7 +14,6 @@ import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
@@ -74,7 +74,7 @@ export function useFormattedFieldAmount({
       return fieldAmount
     }
     if (currencyAmount) {
-      return formatCurrencyAmount({ amount: currencyAmount })
+      return formatCurrencyAmount(currencyAmount, NumberType.SwapTradeAmount)
     }
     return ''
   }, [currencyAmount, fieldAmount])
@@ -131,7 +131,7 @@ export function FieldWrapper({
   const formattedAmount = useMemo(() => {
     if (amount !== undefined) return amount
     if (!currencyAmount) return ''
-    return isWrap ? currencyAmount.toExact() : formatCurrencyAmount({ amount: currencyAmount })
+    return isWrap ? currencyAmount.toExact() : formatCurrencyAmount(currencyAmount, NumberType.SwapTradeAmount)
   }, [amount, currencyAmount, isWrap])
 
   const onClickMax = useCallback(() => {
@@ -165,7 +165,7 @@ export function FieldWrapper({
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
             <USDC isLoading={isRouteLoading}>
-              {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
+              {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
               {impact && (
                 <ThemedText.Body2 userSelect={false} color={impact.warning ?? 'hint'}>
                   ({impact.toString()})
@@ -175,7 +175,7 @@ export function FieldWrapper({
             {balance && (
               <Row gap={0.5}>
                 <Balance color={isSufficientBalance === false ? 'error' : 'secondary'}>
-                  <Trans>Balance:</Trans> {formatCurrencyAmount({ amount: balance })}
+                  <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
                 </Balance>
                 {maxAmount && (
                   <TextButton onClick={onClickMax}>
