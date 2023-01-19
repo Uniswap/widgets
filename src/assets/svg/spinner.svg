@@ -1,4 +1,35 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path opacity="0.1" stroke-width="0.5px" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12Z" />
-<path stroke-width="0.5px" d="M20.5 12C21.3284 12 22.0115 11.3247 21.8877 10.5056C21.7669 9.70653 21.5495 8.9232 21.2388 8.17317C20.7362 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C15.0768 2.45053 14.2935 2.23306 13.4944 2.11229C12.6753 1.98849 12 2.67157 12 3.5C12 4.32843 12.6791 4.98394 13.4886 5.1601C13.8946 5.24848 14.293 5.37305 14.6788 5.53284C15.5281 5.88463 16.2997 6.40024 16.9497 7.05025C17.5998 7.70026 18.1154 8.47194 18.4672 9.32122C18.627 9.707 18.7515 10.1054 18.8399 10.5114C19.0161 11.3209 19.6716 12 20.5 12Z" />
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <mask id="mask">
+    <circle cx="12" cy="12" r="10" fill="black" stroke="black" stroke-width="2" />
+    <rect width="12" height="12" fill="white" stroke-width="0" />
+    <circle cx="2" cy="12" r="1" fill="white" stroke-width="0" />
+    <circle cx="12" cy="2" r="1" fill="white" stroke-width="0" />
+    </mask>
+    <circle
+    cx="12"
+    cy="12"
+    r="6"
+    stroke="none"
+    />
+    <circle
+    id="track"
+    cx="12"
+    cy="12"
+    r="10"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+    />
+    <circle
+    cx="12"
+    cy="12"
+    r="10"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+    mask="url(#mask)"
+    />
 </svg>
