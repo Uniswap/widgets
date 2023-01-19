@@ -63,6 +63,9 @@ export function Provider({ value, children }: ProviderProps) {
 }
 
 const OnCloseContext = createContext<(() => void) | undefined>(undefined)
+export function useCloseDialog() {
+  return useContext(OnCloseContext)
+}
 
 const HeaderRow = styled(Row)`
   display: flex;
@@ -92,7 +95,7 @@ interface HeaderProps {
 }
 
 export function Header({ title }: HeaderProps) {
-  const onClose = useContext(OnCloseContext)
+  const onClose = useCloseDialog()
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
       <StyledBackButton onClick={onClose} />
@@ -115,8 +118,8 @@ export const Modal = styled.div<{ color: Color }>`
   overflow: hidden;
   padding: 0.5em;
   position: absolute;
+  right: 0;
   top: 0;
-  width: 100%;
   z-index: ${Layer.DIALOG};
 `
 

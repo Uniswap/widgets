@@ -67,8 +67,6 @@ export default memo(function Toolbar() {
         return <Caption.UnsupportedNetwork />
       case ChainError.MISMATCHED_TOKEN_CHAINS:
         return <Caption.Error />
-      case ChainError.MISMATCHED_CHAINS:
-        return
       default:
     }
 
@@ -166,7 +164,7 @@ export default memo(function Toolbar() {
     return summaryHeight + ORDER_ROUTING_HEIGHT_EM + 1 /* accounts for the border */
   }, [tradeSummaryRows.length])
 
-  if (inputCurrency == null || outputCurrency == null) {
+  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
   }
 

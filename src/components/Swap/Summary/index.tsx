@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
@@ -7,12 +7,13 @@ import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
+import SpeedBumpDialog from '../Speedbump'
 import Details from './Details'
 import Summary from './Summary'
 
@@ -22,18 +23,19 @@ const Body = styled(Column)`
   height: 100%;
   padding: 0.75em 0.875em;
 `
+const PriceImpactText = styled.span`
+  color: ${({ theme }) => theme.error};
+`
 
 function ConfirmButton({
   trade,
-  highPriceImpact,
   onConfirm,
+  onAcknowledgeNewTrade,
 }: {
   trade: InterfaceTrade
-  highPriceImpact: boolean
   onConfirm: () => Promise<void>
+  onAcknowledgeNewTrade: () => void
 }) {
-  const [ackPriceImpact, setAckPriceImpact] = useState(false)
-
   const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
@@ -60,18 +62,14 @@ function ConfirmButton({
         onClick: () => {
           onSwapPriceUpdateAck?.(ackTrade, trade)
           setAckTrade(trade)
+          // Prompts parent to show speedbump if new trade has high impact
+          onAcknowledgeNewTrade()
         },
         children: <Trans>Accept</Trans>,
       }
-    } else if (highPriceImpact && !ackPriceImpact) {
-      return {
-        message: <Trans>High price impact</Trans>,
-        onClick: () => setAckPriceImpact(true),
-        children: <Trans>Acknowledge</Trans>,
-      }
     }
     return
-  }, [ackPriceImpact, ackTrade, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
+  }, [ackTrade, doesTradeDiffer, isPending, onAcknowledgeNewTrade, onSwapPriceUpdateAck, trade])
 
   return (
     <ActionButton onClick={onClick} action={action} disabled={isPending}>
@@ -91,13 +89,42 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog(props: SummaryDialogProps) {
+  const [ackPriceImpact, setAckPriceImpact] = useState(false)
+  const [showSpeedbump, setShowSpeedbump] = useState(props.impact?.warning === 'error')
+
+  const onAcknowledgePriceImpact = useCallback(() => {
+    setAckPriceImpact(true)
+    setShowSpeedbump(false)
+  }, [])
+
+  const onAcknowledgeNewTrade = useCallback(() => {
+    if (!showSpeedbump && !ackPriceImpact && props.impact?.warning === 'error') {
+      setShowSpeedbump(true)
+    }
+  }, [ackPriceImpact, props.impact?.warning, showSpeedbump])
+
+  useEffect(() => {
+    if (showSpeedbump && props.impact?.warning !== 'error') {
+      setShowSpeedbump(false)
+    }
+  }, [ackPriceImpact, props.impact, showSpeedbump])
+
   return (
     <>
-      <Header title={<Trans>Review swap</Trans>} />
-      <Body flex align="stretch">
-        <Details {...props} />
-      </Body>
-      <ConfirmButton {...props} highPriceImpact={props.impact?.warning === 'error'} />
+      {showSpeedbump && props.impact ? (
+        <SpeedBumpDialog onAcknowledge={onAcknowledgePriceImpact}>
+          {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
+          {t`price impact on the market price of this pool. Do you wish to continue? `}
+        </SpeedBumpDialog>
+      ) : (
+        <>
+          <Header title={<Trans>Review swap</Trans>} />
+          <Body flex align="stretch">
+            <Details {...props} />
+          </Body>
+          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
+        </>
+      )}
     </>
   )
 }

@@ -2,6 +2,7 @@ import { BaseProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { RouterPreference } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo } from 'react'
 
@@ -41,6 +42,7 @@ export function useGetQuoteArgs(
     amountSpecified,
     currencyIn,
     currencyOut,
+    routerPreference,
     routerUrl,
   }: Partial<{
     provider: BaseProvider
@@ -48,6 +50,7 @@ export function useGetQuoteArgs(
     amountSpecified: CurrencyAmount<Currency>
     currencyIn: Currency
     currencyOut: Currency
+    routerPreference: RouterPreference
     routerUrl: string
   }>,
   skip?: boolean
@@ -66,11 +69,12 @@ export function useGetQuoteArgs(
       tokenOutChainId: currencyOut.wrapped.chainId,
       tokenOutDecimals: currencyOut.wrapped.decimals,
       tokenOutSymbol: currencyOut.wrapped.symbol,
+      routerPreference,
       routerUrl,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerUrl])
+  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, routerUrl])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken

@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo, useRef } from 'react'
 
-import { RouterPreference, useRouterTrade } from './routing/useRouterTrade'
+import { RouterPreference } from './routing/types'
+import { useRouterTrade } from './routing/useRouterTrade'
 import { STABLECOIN_AMOUNT_OUT } from './useStablecoinAmountFromFiatValue'
 
 /**

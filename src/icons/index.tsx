@@ -62,7 +62,7 @@ export const largeIconCss = css<{ iconSize: number }>`
 `
 
 const LargeWrapper = styled.div<{ iconSize: number }>`
-  height: 1em;
+  height: ${({ iconSize }) => iconSize}em;
   width: ${({ iconSize }) => iconSize}em;
   ${largeIconCss}
 `
@@ -73,13 +73,15 @@ interface LargeIconProps {
   icon?: Icon
   color?: Color
   size?: number
+  strokeWidth?: number
+  onClick?: () => void
   className?: string
 }
 
-export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIconProps) {
+export function LargeIcon({ icon: Icon, color, size = 1.2, strokeWidth = 1.5, onClick, className }: LargeIconProps) {
   return (
     <LargeWrapper color={color} iconSize={size} className={className}>
-      {Icon && <Icon color={color} />}
+      {Icon && <Icon color={color} strokeWidth={strokeWidth} onClick={onClick} />}
     </LargeWrapper>
   )
 }
@@ -147,6 +149,8 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
 export const LargeCheck = styled(icon(LargeCheckIcon))<{ color?: Color }>`
   stroke: ${({ color = 'primary', theme }) => theme[color]};
 `
+
+export const LargeAlert = styled(LargeIcon).attrs({ icon: AlertTriangle, color: 'error', size: 6, strokeWidth: 1 })``
 
 export const LargeSpinner = styled(icon(LargeSpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;
