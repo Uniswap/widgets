@@ -7,6 +7,8 @@ export const NetworkContextName = 'NETWORK'
 
 export const IS_IN_IFRAME = window.parent !== window
 
+export const MS_IN_SECOND = 1000
+
 // 30 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 30
 export const L2_DEADLINE_FROM_NOW = 60 * 5

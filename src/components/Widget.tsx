@@ -35,6 +35,8 @@ const slideOutRight = keyframes`
   }
 `
 
+export const DialogAnimationLengthMs = 250
+
 export const DialogWrapper = styled.div`
   border: ${({ theme }) => `1px solid ${theme.outline}`};
 
@@ -52,13 +54,13 @@ export const DialogWrapper = styled.div`
   }
 
   ${Modal} {
-    animation: ${slideInLeft} 0.25s ease-in;
+    animation: ${slideInLeft} ${DialogAnimationLengthMs}ms ease-in;
 
     &.${Animation.PAGING} {
-      animation: ${slideOutLeft} 0.25s ease-in;
+      animation: ${slideOutLeft} ${DialogAnimationLengthMs}ms ease-in;
     }
     &.${Animation.CLOSING} {
-      animation: ${slideOutRight} 0.25s ease-out;
+      animation: ${slideOutRight} ${DialogAnimationLengthMs}ms ease-out;
     }
   }
 `

@@ -8,7 +8,7 @@ import Row from 'components/Row'
 import Rule from 'components/Rule'
 import TokenImg from 'components/TokenImg'
 import { AutoRouter } from 'icons'
-import { useMemo } from 'react'
+import { ComponentProps, forwardRef, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Layer, ThemedText } from 'theme'
@@ -23,9 +23,12 @@ const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
   }
 `
 
-export function AutoRouterHeader() {
+export const AutoRouterHeader = forwardRef<HTMLDivElement, ComponentProps<typeof Row>>(function AutoRouterHeader(
+  props,
+  ref
+) {
   return (
-    <Row justify="left" gap={0.25}>
+    <Row justify="left" gap={0.25} ref={ref} {...props}>
       <AutoRouter />
       <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
         <ThemedText.Subhead2>
@@ -34,7 +37,7 @@ export function AutoRouterHeader() {
       </StyledAutoRouterLabel>
     </Row>
   )
-}
+})
 
 const Dots = styled(DotLine)`
   color: ${({ theme }) => theme.outline};

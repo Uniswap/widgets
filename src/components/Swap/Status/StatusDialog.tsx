@@ -3,8 +3,10 @@ import ErrorDialog, { StatusHeader } from 'components/Error/ErrorDialog'
 import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
 import SwapSummary from 'components/Swap/Summary'
-import { LargeCheck, LargeSpinner } from 'icons'
-import { useMemo } from 'react'
+import { DialogAnimationLengthMs } from 'components/Widget'
+import { MS_IN_SECOND } from 'constants/misc'
+import { LargeArrow, LargeCheck, LargeSpinner } from 'icons'
+import { useEffect, useMemo, useState } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -28,11 +30,29 @@ interface TransactionStatusProps {
 }
 
 function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
+  const [showConfirmation, setShowConfirmation] = useState(true)
   const Icon = useMemo(() => {
+    if (showConfirmation) {
+      return LargeArrow
+    }
     return tx.receipt?.status ? LargeCheck : LargeSpinner
-  }, [tx.receipt?.status])
+  }, [showConfirmation, tx.receipt?.status])
+
+  useEffect(() => {
+    // We should show the confirmation for 1 second,
+    // which should start after the entrance animation is complete.
+    const handle = setTimeout(() => {
+      setShowConfirmation(false)
+    }, MS_IN_SECOND + DialogAnimationLengthMs)
+    return () => {
+      clearTimeout(handle)
+    }
+  }, [])
+
   const heading = useMemo(() => {
-    if (tx.info.type === TransactionType.SWAP) {
+    if (showConfirmation) {
+      return <Trans>Transaction submitted</Trans>
+    } else if (tx.info.type === TransactionType.SWAP) {
       return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Swap pending</Trans>
     } else if (tx.info.type === TransactionType.WRAP) {
       return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Unwrap pending</Trans>
@@ -40,7 +60,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
       return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Unwrap pending</Trans>
     }
     return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Transaction pending</Trans>
-  }, [tx.info, tx.receipt?.status])
+  }, [showConfirmation, tx.info.type, tx.receipt?.status])
 
   const subheading = useMemo(() => {
     if (tx.receipt?.status) {

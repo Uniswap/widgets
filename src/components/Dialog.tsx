@@ -115,8 +115,8 @@ export const Modal = styled.div<{ color: Color }>`
   overflow: hidden;
   padding: 0.5em;
   position: absolute;
+  right: 0;
   top: 0;
-  width: calc(100% - 1em);
   z-index: ${Layer.DIALOG};
 `
 
