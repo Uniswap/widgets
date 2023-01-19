@@ -18,6 +18,7 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
+import { useCollapseToolbar } from '../Toolbar'
 import useOnSubmit from './useOnSubmit'
 
 /**
@@ -94,9 +95,11 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade])
 
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
+  const collapseToolbar = useCollapseToolbar()
   const onClick = useCallback(async () => {
+    collapseToolbar()
     setOpen(await onReviewSwapClick())
-  }, [onReviewSwapClick])
+  }, [onReviewSwapClick, collapseToolbar])
 
   return (
     <>
