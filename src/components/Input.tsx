@@ -1,5 +1,6 @@
 import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
 import styled, { css } from 'styled-components/macro'
+import { AnimationSpeed } from 'theme'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -36,7 +37,7 @@ const Input = styled.input`
   }
 
   :enabled {
-    transition: color 0.125s linear;
+    transition: color ${AnimationSpeed.Fast} linear;
   }
 `
 

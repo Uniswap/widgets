@@ -36,7 +36,7 @@ import {
 } from 'react-feather'
 /* eslint-enable no-restricted-imports */
 import styled, { css, keyframes } from 'styled-components/macro'
-import { Color } from 'theme'
+import { AnimationSpeed, Color } from 'theme'
 
 import IdenticonIcon from './identicon'
 
@@ -118,7 +118,7 @@ export const Check = styled(icon(CheckIcon))`
 
 export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
   transform: ${({ open }) => (open ? 'rotate(0deg)' : 'rotate(-180deg)')};
-  transition: transform 0.25s;
+  transition: transform ${AnimationSpeed.Medium};
 `
 
 export const Logo = styled(icon(LogoIcon))`

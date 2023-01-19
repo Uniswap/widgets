@@ -1,7 +1,7 @@
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { AnimationSpeed, ThemedText } from 'theme'
 
 const Input = styled.input`
   -moz-appearance: none;
@@ -51,7 +51,7 @@ const Input = styled.input`
   }
 
   :before {
-    transition: margin 0.25s ease;
+    transition: margin ${AnimationSpeed.Medium} ease;
   }
 `
 

@@ -15,7 +15,7 @@ import { AlertTriangle, ChevronDown, Gas, Icon, Info, LargeIcon, Spinner } from 
 import { ReactNode, useCallback, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
-import { Color, ThemedText } from 'theme'
+import { AnimationSpeed, Color, ThemedText } from 'theme'
 
 import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
@@ -36,7 +36,8 @@ const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.secondary};
   cursor: pointer;
   transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
-  transition: transform 0.25s;
+  transition: transform ${AnimationSpeed.Medium};
+
   :hover {
     opacity: 0.6;
   }

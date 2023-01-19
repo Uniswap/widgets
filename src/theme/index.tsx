@@ -7,6 +7,7 @@ import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components
 
 import type { Colors, Theme } from './theme'
 
+export * from './animations'
 export * from './dynamic'
 export * from './layer'
 export type { Color, Colors, Theme } from './theme'

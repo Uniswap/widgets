@@ -4,7 +4,7 @@ import React, { createContext, useContext, useMemo, useRef, useState } from 'rea
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
-import { Layer } from 'theme'
+import { AnimationSpeed, Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
@@ -17,7 +17,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   border-radius: 0.5em;
   opacity: ${(props) => (props.show ? 1 : 0)};
   padding: 10px 12px;
-  transition: visibility 0.25s linear, opacity 0.25s linear;
+  transition: visibility ${AnimationSpeed.Medium} linear, opacity ${AnimationSpeed.Medium} linear;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   z-index: ${Layer.TOOLTIP};
 `

@@ -7,6 +7,7 @@ import { useAtom } from 'jotai'
 import { useState } from 'react'
 import { swapRouterUrlAtom } from 'state/swap'
 import styled from 'styled-components/macro'
+import { AnimationSpeed } from 'theme'
 
 import { IconButton } from '../../Button'
 import Column from '../../Column'
@@ -45,7 +46,7 @@ const SettingsButton = styled(IconButton)`
   // Don't rotate back when un-hovering so that clicking (and losing hover due to the modal backdrop) doesn't cause unintentional back-rotation.
   ${SettingsIcon}:hover {
     transform: rotate(45deg);
-    transition: transform 0.25s;
+    transition: transform ${AnimationSpeed.Medium};
   }
 `
 
