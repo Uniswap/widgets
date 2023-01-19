@@ -151,7 +151,7 @@ export function InsufficientLiquidity() {
         content: (
           <ThemedText.Caption>Not enough liquidity in pool to swap between these two tokens.</ThemedText.Caption>
         ),
-        placement: 'right',
+        placement: 'auto',
       }}
     />
   )
@@ -256,7 +256,7 @@ export function PriceImpact({ impact, expanded, onToggleExpand }: PriceImpactPro
         caption="High price impact"
         color={impact.warning}
         tooltip={{
-          placement: 'right',
+          placement: 'auto',
           content: <PriceImpactWarningTooltipContent />,
         }}
       />
