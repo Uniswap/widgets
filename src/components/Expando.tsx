@@ -35,16 +35,16 @@ const bottomCss = css`
   }
 `
 
-const ExpandoColumn = styled(Column)<{ height: number; open: boolean; showBottomGradient: boolean }>`
-  height: ${({ height, open }) => (open ? height : 0)}em;
+const ExpandoColumn = styled(Column)<{ height?: number; open: boolean; showBottomGradient: boolean }>`
+  max-height: ${({ open, height }) => (open ? Math.min(height ?? Number.MAX_SAFE_INTEGER, 20) : 0)}em;
   overflow: hidden;
   position: relative;
-  transition: height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
+  transition: max-height ${AnimationSpeed.Slow}, padding ${AnimationSpeed.Medium};
   ${({ showBottomGradient }) => showBottomGradient && bottomCss}
 `
 
-const InnerColumn = styled(Column)<{ height: number }>`
-  height: ${({ height }) => height}em;
+const InnerColumn = styled(Column)<{ height?: number }>`
+  max-height: ${({ height }) => Math.min(height ?? Number.MAX_SAFE_INTEGER, 20)}em;
 `
 
 const IconPrefix = styled.div`
@@ -57,7 +57,8 @@ interface ExpandoProps extends ColumnProps {
   open: boolean
   onExpand: () => void
   // The absolute height of the expanded container, in em.
-  height: number
+  // If not provided, the container will expand to fit its contents up to 20em.
+  height?: number
   hideRulers?: boolean
   styledTitleWrapper?: boolean
   showBottomGradient?: boolean

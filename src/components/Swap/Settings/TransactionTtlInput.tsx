@@ -14,6 +14,10 @@ const Input = styled(Row)`
   ${inputCss}
 `
 
+const ExpandoContent = styled(Row)`
+  margin: 1em 0 0;
+`
+
 const TtlValue = styled.div`
   // set min width here to prevent entire popover layout from shrinking when
   // user deletes text in ttl input
@@ -34,7 +38,6 @@ export default function TransactionTtlInput() {
       <Expando
         hideRulers
         showBottomGradient={false}
-        height={4}
         open={open}
         onExpand={() => setOpen(!open)}
         iconPrefix={<TtlValue>{ttlValue ?? placeholder}m</TtlValue>}
@@ -48,7 +51,7 @@ export default function TransactionTtlInput() {
           />
         }
       >
-        <Row grow>
+        <ExpandoContent grow>
           <ThemedText.Body1>
             <Input justify="start" onClick={() => input.current?.focus()}>
               <IntegerInput
@@ -61,7 +64,7 @@ export default function TransactionTtlInput() {
               <Trans>minutes</Trans>
             </Input>
           </ThemedText.Body1>
-        </Row>
+        </ExpandoContent>
       </Expando>
     </Column>
   )

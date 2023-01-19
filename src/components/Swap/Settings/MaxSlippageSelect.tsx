@@ -27,6 +27,10 @@ const Custom = styled(BaseButton)<{ selected: boolean }>`
   ${inputCss}
 `
 
+const ExpandoContent = styled(Row)`
+  margin: 1em 0 0;
+`
+
 interface OptionProps {
   wrapper: typeof Button | typeof Custom
   selected: boolean
@@ -144,11 +148,10 @@ export default function MaxSlippageSelect() {
           </Row>
         }
         iconPrefix={slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}
-        height={4}
         open={open}
         onExpand={() => setOpen(!open)}
       >
-        <Row gap={0.5} grow="first">
+        <ExpandoContent gap={0.5} grow="first">
           <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
             <ThemedText.ButtonMedium>
               <Trans>Auto</Trans>
@@ -175,7 +178,7 @@ export default function MaxSlippageSelect() {
               %
             </Row>
           </Option>
-        </Row>
+        </ExpandoContent>
       </Expando>
     </Column>
   )
