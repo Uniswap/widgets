@@ -147,6 +147,7 @@ export default function MaxSlippageSelect() {
             />
           </Row>
         }
+        maxHeight={5}
         iconPrefix={slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}
         open={open}
         onExpand={() => setOpen(!open)}

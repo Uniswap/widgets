@@ -182,6 +182,7 @@ export default memo(function Toolbar() {
       onExpand={() => {
         setOpen((open) => !open)
       }}
+      maxHeight={16}
     >
       <Column>
         <ToolbarTradeSummary rows={tradeSummaryRows} />

@@ -35,16 +35,22 @@ const bottomCss = css`
   }
 `
 
-const ExpandoColumn = styled(Column)<{ height?: number; open: boolean; showBottomGradient: boolean }>`
-  max-height: ${({ open, height }) => (open ? Math.min(height ?? Number.MAX_SAFE_INTEGER, 20) : 0)}em;
+const ExpandoColumn = styled(Column)<{
+  height?: number
+  maxHeight?: number
+  open: boolean
+  showBottomGradient: boolean
+}>`
+  max-height: ${({ open, height, maxHeight }) =>
+    open ? Math.min(height ?? Number.MAX_SAFE_INTEGER, maxHeight ?? 20) : 0}em;
   overflow: hidden;
   position: relative;
-  transition: max-height ${AnimationSpeed.Slow}, padding ${AnimationSpeed.Medium};
+  transition: max-height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
   ${({ showBottomGradient }) => showBottomGradient && bottomCss}
 `
 
-const InnerColumn = styled(Column)<{ height?: number }>`
-  max-height: ${({ height }) => Math.min(height ?? Number.MAX_SAFE_INTEGER, 20)}em;
+const InnerColumn = styled(Column)<{ height?: number; maxHeight?: number }>`
+  max-height: ${({ height, maxHeight }) => Math.min(height ?? Number.MAX_SAFE_INTEGER, maxHeight ?? 20)}em;
 `
 
 const IconPrefix = styled.div`
@@ -57,8 +63,12 @@ interface ExpandoProps extends ColumnProps {
   open: boolean
   onExpand: () => void
   // The absolute height of the expanded container, in em.
-  // If not provided, the container will expand to fit its contents up to 20em.
+  // If not provided, the container will expand to fit its contents up to {maxHeight}em.
   height?: number
+  // The maximum height of the expanded container, in em.
+  // If relying on auto-sizing, this should be something close to (but still larger than)
+  // the content's height. Otherwise, the animation will feel fast.
+  maxHeight?: number
   hideRulers?: boolean
   styledTitleWrapper?: boolean
   showBottomGradient?: boolean
@@ -95,6 +105,7 @@ export default function Expando({
   open,
   onExpand,
   height,
+  maxHeight,
   children,
   hideRulers,
   styledTitleWrapper = true,
@@ -116,8 +127,8 @@ export default function Expando({
       ) : (
         title
       )}
-      <ExpandoColumn open={open} height={height} showBottomGradient={showBottomGradient}>
-        <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
+      <ExpandoColumn open={open} height={height} maxHeight={maxHeight} showBottomGradient={showBottomGradient}>
+        <InnerColumn flex align="stretch" height={height} maxHeight={maxHeight} ref={setScrollingEl} css={scrollbar}>
           {children}
         </InnerColumn>
       </ExpandoColumn>

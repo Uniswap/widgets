@@ -41,6 +41,7 @@ export default function TransactionTtlInput() {
         open={open}
         onExpand={() => setOpen(!open)}
         iconPrefix={<TtlValue>{ttlValue ?? placeholder}m</TtlValue>}
+        maxHeight={5}
         title={
           <Label
             name={<Trans>Transaction deadline</Trans>}
