@@ -73,7 +73,7 @@ export default function TransactionTtlInput() {
             </ThemedText.Body1>
           </Input>
           <Trans>
-            <ThemedText.Body1>minutes</ThemedText.Body1>
+            <ThemedText.Body1 color="secondary">minutes</ThemedText.Body1>
           </Trans>
         </InputContainer>
       </Expando>
