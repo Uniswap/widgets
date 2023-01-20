@@ -6,11 +6,11 @@
  * This is necessary to prevent DefaultTheme from conflicting with other users' redefinitions.
  */
 
-import { Attributes, Colors } from './theme'
+import { Attributes, Colors, ThemeBorderRadius } from './theme'
 
 declare module 'styled-components/macro' {
   export interface DefaultTheme extends Omit<Attributes, 'borderRadius'>, Colors {
-    borderRadius: number
+    borderRadius: ThemeBorderRadius
     onHover: (color: string) => string
   }
 }

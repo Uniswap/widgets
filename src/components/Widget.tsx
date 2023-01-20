@@ -39,7 +39,7 @@ export const DialogAnimationLengthMs = 250
 
 export const DialogWrapper = styled.div`
   border: ${({ theme }) => `1px solid ${theme.outline}`};
-  border-radius: ${({ theme }) => theme.borderRadius + 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}em;
   height: 100%;
   left: 0;
   overflow: hidden;

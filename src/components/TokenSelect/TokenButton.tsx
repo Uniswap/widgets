@@ -9,7 +9,7 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   min-height: 2.25em;
 
   padding: 0.25em;

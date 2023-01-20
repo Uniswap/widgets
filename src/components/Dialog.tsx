@@ -110,7 +110,7 @@ export const Modal = styled.div<{ color: Color }>`
   ${globalFontStyles};
 
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius + 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}em;
   display: flex;
   flex-direction: column;
   height: 100%;
