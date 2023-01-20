@@ -71,8 +71,8 @@ export default function ErrorDialog({ header, message, error, action, onClick }:
           {!open && <ThemedText.Body2>{message}</ThemedText.Body2>}
         </ErrorHeader>
       </StatusHeader>
-      {error && (
-        <Column gap={open ? 0 : 0.75} style={{ transition: `gap ${AnimationSpeed.Medium}` }}>
+      <Column gap={open ? 0 : 0.75} style={{ transition: `gap ${AnimationSpeed.Medium}` }}>
+        {error ? (
           <Expando
             title={
               <>
@@ -89,11 +89,13 @@ export default function ErrorDialog({ header, message, error, action, onClick }:
               {error.message ? `: ${error.message}` : ''}
             </ExpandoContent>
           </Expando>
-          <ActionButton color="critical" onClick={onClick}>
-            {action}
-          </ActionButton>
-        </Column>
-      )}
+        ) : (
+          <Column style={{ height: '7.5em' }} />
+        )}
+        <ActionButton color="critical" onClick={onClick}>
+          {action}
+        </ActionButton>
+      </Column>
     </Column>
   )
 }
