@@ -58,6 +58,16 @@ export default memo(function Toolbar() {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
+  const maybeToggleOpen = (e: MouseEvent<HTMLDivElement>) => {
+    const el = e.target as HTMLDivElement
+    // The clicked element will have this class manually added, if it triggered
+    // the trade Price toggle. In this case, we don't want to expand/collapse here.
+    if (el.classList.contains(TradePriceToggledClass)) {
+      return
+    }
+    setOpen((open) => !open)
+  }
+
   const caption = useMemo(() => {
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
@@ -171,17 +181,7 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow
-          flex
-          justify="space-between"
-          data-testid="toolbar"
-          onClick={(e: MouseEvent<HTMLDivElement>) => {
-            const el = e.target as HTMLDivElement
-            if (!el.classList.contains(TradePriceToggledClass)) {
-              setOpen((open) => !open)
-            }
-          }}
-        >
+        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={maybeToggleOpen}>
           {caption}
         </ToolbarRow>
       }
