@@ -166,13 +166,13 @@ const HiddenWrapper = styled.div`
 
 const AnimationWrapper = styled.div`
   ${Modal} {
-    animation: ${slideInLeft} ${AnimationSpeed.Medium}ms ease-in;
+    animation: ${slideInLeft} ${AnimationSpeed.Medium} ease-in;
 
     &.${Animation.PAGING} {
-      animation: ${slideOutLeft} ${AnimationSpeed.Medium}ms ease-in;
+      animation: ${slideOutLeft} ${AnimationSpeed.Medium} ease-in;
     }
     &.${Animation.CLOSING} {
-      animation: ${slideOutRight} ${AnimationSpeed.Medium}ms ease-out;
+      animation: ${slideOutRight} ${AnimationSpeed.Medium} ease-out;
     }
   }
 `
