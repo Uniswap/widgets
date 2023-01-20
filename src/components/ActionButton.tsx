@@ -58,7 +58,7 @@ const actionCss = css`
 `
 
 export const Overlay = styled(Row)<{ hasAction: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-flow: row-reverse nowrap;
   margin-top: 0.75em;
   min-height: 3.5em;
