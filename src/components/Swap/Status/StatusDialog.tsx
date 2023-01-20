@@ -95,7 +95,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
   return tx.receipt?.status === 0 ? (
     <ErrorDialog
-      header={<Trans>Your swap failed</Trans>}
+      header={<Trans>Your swap failed.</Trans>}
       message={
         <Trans>
           Try increasing your slippage tolerance.
