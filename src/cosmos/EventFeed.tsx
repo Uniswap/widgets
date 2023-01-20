@@ -5,7 +5,7 @@ import * as Type from 'theme/type'
 
 const EventFeedWrapper = styled.div`
   background-color: ${defaultTheme.container};
-  border-radius: ${defaultTheme.borderRadius}em;
+  border-radius: ${defaultTheme.borderRadius.medium}em;
   box-sizing: border-box;
   font-family: ${defaultTheme.fontFamily.font};
   padding: 1em;
@@ -17,7 +17,7 @@ const EventColumn = styled.div`
 `
 const EventRow = styled.div`
   background-color: ${defaultTheme.module};
-  border-radius: ${defaultTheme.borderRadius / 2}em;
+  border-radius: ${defaultTheme.borderRadius.medium / 2}em;
   margin: 0.5em 0;
   padding: 0.2em 0.2em 0.5em;
 `

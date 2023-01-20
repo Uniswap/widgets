@@ -50,7 +50,7 @@ interface PriceProps {
 
 /** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */
 export default function Price({ trade, outputUSDC }: PriceProps) {
-  const [defaultBase, setDefaultBase] = useState(true)
+  const [defaultBase, setDefaultBase] = useState(false)
   const onClick = useCallback(() => setDefaultBase(!defaultBase), [defaultBase])
 
   const [exchangeRate, usdcPrice] = useTradeExchangeRate(trade, outputUSDC, defaultBase ? 'input' : 'output')
@@ -64,12 +64,12 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
         el.classList.add(TradePriceToggledClass)
       }}
     >
-      <ThemedText.Caption>
+      <ThemedText.Body2>
         <Row gap={0.25}>
           {exchangeRate}
-          {usdcPrice && <ThemedText.Caption color="secondary">({usdcPrice})</ThemedText.Caption>}
+          {usdcPrice && <ThemedText.Body2 color="secondary">({usdcPrice})</ThemedText.Body2>}
         </Row>
-      </ThemedText.Caption>
+      </ThemedText.Body2>
     </TextButton>
   )
 }

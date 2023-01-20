@@ -53,12 +53,13 @@ const ExpandoContent = styled(ThemedText.Code)`
 
 interface ErrorDialogProps {
   header?: ReactNode
-  error: Error
+  message: ReactNode
+  error?: Error
   action: ReactNode
   onClick: () => void
 }
 
-export default function ErrorDialog({ header, error, action, onClick }: ErrorDialogProps) {
+export default function ErrorDialog({ header, message, error, action, onClick }: ErrorDialogProps) {
   const [open, setOpen] = useState(false)
   const onExpand = useCallback(() => setOpen((open) => !open), [])
 
@@ -66,29 +67,31 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={AlertTriangle} iconColor="critical" iconSize={open ? 3 : 4}>
         <ErrorHeader gap={open ? 0 : 0.75} open={open}>
-          <ThemedText.Subhead1>
-            <Trans>Something went wrong.</Trans>
-          </ThemedText.Subhead1>
-          {!open && <ThemedText.Body2>{header}</ThemedText.Body2>}
+          <ThemedText.Subhead1>{header || <Trans>Something went wrong.</Trans>}</ThemedText.Subhead1>
+          {!open && <ThemedText.Body2>{message}</ThemedText.Body2>}
         </ErrorHeader>
       </StatusHeader>
       <Column gap={open ? 0 : 0.75} style={{ transition: `gap ${AnimationSpeed.Medium}` }}>
-        <Expando
-          title={
-            <>
-              <InfoIcon style={{ marginRight: '5px' }} color="secondary" />
-              <Trans>Error details</Trans>
-            </>
-          }
-          open={open}
-          onExpand={onExpand}
-          height={7.5}
-        >
-          <ExpandoContent userSelect>
-            {error.name}
-            {error.message ? `: ${error.message}` : ''}
-          </ExpandoContent>
-        </Expando>
+        {error ? (
+          <Expando
+            title={
+              <>
+                <InfoIcon style={{ marginRight: '5px' }} color="secondary" />
+                <Trans>Error details</Trans>
+              </>
+            }
+            open={open}
+            onExpand={onExpand}
+            height={7.5}
+          >
+            <ExpandoContent userSelect>
+              {error.name}
+              {error.message ? `: ${error.message}` : ''}
+            </ExpandoContent>
+          </Expando>
+        ) : (
+          <Column style={{ height: '7.5em' }} />
+        )}
         <ActionButton color="critical" onClick={onClick}>
           {action}
         </ActionButton>

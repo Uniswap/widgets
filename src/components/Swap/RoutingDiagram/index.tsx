@@ -58,7 +58,7 @@ const GasEstimateRow = styled(Row)`
 
 const RouteNode = styled(Row)`
   background-color: ${({ theme }) => theme.interactive};
-  border-radius: ${({ theme }) => `${(theme.borderRadius ?? 1) * 0.5}em`};
+  border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.5}em`};
   margin-left: 1.625em;
   padding: 0.25em 0.375em;
   width: max-content;
@@ -66,7 +66,7 @@ const RouteNode = styled(Row)`
 
 const RouteBadge = styled.div`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => `${(theme.borderRadius ?? 1) * 0.25}em`};
+  border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.25}em`};
   padding: 0.125em;
 `
 

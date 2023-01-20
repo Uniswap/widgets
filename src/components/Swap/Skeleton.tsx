@@ -14,7 +14,7 @@ const LoadingWrapper = styled.div`
 `
 const Blob = styled.div<{ height: string; width: string; radius?: number; isModule?: boolean }>`
   background-color: ${({ isModule, theme }) => (isModule ? theme.outline : theme.module)};
-  border-radius: ${({ theme, radius }) => (radius ?? 0.25 * theme.borderRadius) + 'em'};
+  border-radius: ${({ theme, radius }) => (radius ?? 0.25) + 'em'};
   height: ${({ height }) => height};
   width: ${({ width }) => width};
 `
@@ -30,7 +30,7 @@ const TitleColumn = styled(Column)`
 
 const InputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.small}em;
   display: flex;
   gap: 1.875em;
   margin-bottom: 0.25em;

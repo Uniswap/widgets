@@ -34,8 +34,14 @@ export interface Colors {
 
 export type Color = keyof Colors
 
+export type ThemeBorderRadius = {
+  large: number
+  medium: number
+  small: number
+}
+
 export interface Attributes {
-  borderRadius: boolean | number
+  borderRadius: ThemeBorderRadius
   fontFamily:
     | string
     | {
