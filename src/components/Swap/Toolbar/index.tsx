@@ -8,12 +8,13 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { memo, useMemo, useState } from 'react'
+import { memo, MouseEvent, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import Row from '../../Row'
+import { TradePriceToggledClass } from '../Price'
 import SwapInputOutputEstimate from '../Summary/Estimate'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
@@ -174,8 +175,11 @@ export default memo(function Toolbar() {
           flex
           justify="space-between"
           data-testid="toolbar"
-          onClick={() => {
-            setOpen((open) => !open)
+          onClick={(e: MouseEvent<HTMLDivElement>) => {
+            const el = e.target as HTMLDivElement
+            if (!el.classList.contains(TradePriceToggledClass)) {
+              setOpen((open) => !open)
+            }
           }}
         >
           {caption}
