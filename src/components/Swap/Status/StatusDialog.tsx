@@ -94,14 +94,14 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
   return tx.receipt?.status === 0 ? (
     <ErrorDialog
-      header={
+      header={<Trans>Your swap failed.</Trans>}
+      message={
         <Trans>
           Try increasing your slippage tolerance.
           <br />
           NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
         </Trans>
       }
-      error={new Error('TODO(zzmp)')}
       action={<Trans>Dismiss</Trans>}
       onClick={onClose}
     />
