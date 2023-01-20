@@ -11,10 +11,20 @@ import Row from '../../Row'
 import { Label } from './components'
 
 const Input = styled(Row)`
-  ${inputCss}
+  ${inputCss};
+
+  background-color: transparent;
+  width: 4em;
+
+  input {
+    text-align: right;
+  }
 `
 
-const ExpandoContent = styled(Row)`
+const InputContainer = styled(Row)`
+  display: flex;
+  gap: 0.5em;
+  justify-content: flex-start;
   margin: 1em 0 0;
 `
 
@@ -52,20 +62,21 @@ export default function TransactionTtlInput() {
           />
         }
       >
-        <ExpandoContent grow>
-          <ThemedText.Body1>
-            <Input justify="start" onClick={() => input.current?.focus()}>
+        <InputContainer grow>
+          <Input pad={0.5} justify="start" onClick={() => input.current?.focus()}>
+            <ThemedText.Body1>
               <IntegerInput
                 placeholder={placeholder}
                 value={ttlValue ?? ''}
                 onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
-                size={Math.max(ttlValue?.length || 0, placeholder.length)}
                 ref={input}
               />
-              <Trans>minutes</Trans>
-            </Input>
-          </ThemedText.Body1>
-        </ExpandoContent>
+            </ThemedText.Body1>
+          </Input>
+          <Trans>
+            <ThemedText.Body2 color="secondary">minutes</ThemedText.Body2>
+          </Trans>
+        </InputContainer>
       </Expando>
     </Column>
   )
