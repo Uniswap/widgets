@@ -5,7 +5,7 @@ import { mix, rgba, transparentize } from 'polished'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components/macro'
 
-import type { Colors, Theme } from './theme'
+import type { Colors, Theme, ThemeBorderRadius } from './theme'
 
 export * from './animations'
 export * from './dynamic'
@@ -87,8 +87,17 @@ export const darkTheme: Colors = {
   currentColor: 'currentColor',
 }
 
+/**
+ * Common border radius values in em
+ */
+const defaultBorderRadius = {
+  large: 1.25,
+  medium: 1,
+  small: 0.75,
+}
+
 export const defaultTheme = {
-  borderRadius: 1,
+  borderRadius: defaultBorderRadius,
   fontFamily: {
     font: '"Inter", sans-serif',
     variable: '"InterVariable", sans-serif',
@@ -131,14 +140,17 @@ export function Provider({ theme, children }: PropsWithChildren<ThemeProps>) {
 function toDefaultTheme(theme: Required<Theme>): DefaultTheme {
   return {
     ...theme,
-    borderRadius: clamp(
-      Number.isFinite(theme.borderRadius) ? (theme.borderRadius as number) : theme.borderRadius ? 1 : 0
-    ),
+    borderRadius: clamp(theme.borderRadius ? (theme.borderRadius as ThemeBorderRadius) : defaultBorderRadius),
     onHover: (color: string) =>
       color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.16, theme.primary, color),
   }
 
-  function clamp(value: number) {
-    return Math.min(Math.max(value, 0), 1)
+  function clamp(value: ThemeBorderRadius): ThemeBorderRadius {
+    const clampNum = (num: number) => Math.min(Math.max(num, 0), 1)
+    return {
+      large: clampNum(value.large),
+      medium: clampNum(value.medium),
+      small: clampNum(value.small),
+    }
   }
 }
