@@ -1,5 +1,5 @@
 import { TokenInfo } from '@uniswap/token-lists'
-import { Animation, Modal, Provider as DialogProvider } from 'components/Dialog'
+import { Provider as DialogProvider } from 'components/Dialog'
 import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
 import { SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
@@ -14,28 +14,10 @@ import { PropsWithChildren, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { store } from 'state'
 import { MulticallUpdater } from 'state/multicall'
-import styled, { keyframes } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { Provider as ThemeProvider, Theme } from 'theme'
 
 import WidgetWrapper from './WidgetWrapper'
-
-const slideInLeft = keyframes`
-  from {
-    transform: translateX(calc(100% - 0.25em));
-  }
-`
-const slideOutLeft = keyframes`
-  to {
-    transform: translateX(calc(0.25em - 100%));
-  }
-`
-const slideOutRight = keyframes`
-  to {
-    transform: translateX(calc(100% - 0.25em));
-  }
-`
-
-export const DialogAnimationLengthMs = 250
 
 export const DialogWrapper = styled.div`
   border: ${({ theme }) => `1px solid ${theme.outline}`};
@@ -43,26 +25,10 @@ export const DialogWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 100%;
   left: 0;
-  overflow: hidden;
   padding: 0.5em;
   position: absolute;
   top: 0;
   width: 100%;
-
-  @supports (overflow: clip) {
-    overflow: clip;
-  }
-
-  ${Modal} {
-    animation: ${slideInLeft} ${DialogAnimationLengthMs}ms ease-in;
-
-    &.${Animation.PAGING} {
-      animation: ${slideOutLeft} ${DialogAnimationLengthMs}ms ease-in;
-    }
-    &.${Animation.CLOSING} {
-      animation: ${slideOutRight} ${DialogAnimationLengthMs}ms ease-out;
-    }
-  }
 `
 
 export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props, WidgetEventHandlers {

@@ -4,6 +4,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
+import Tooltip from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useWidgetWidth } from 'hooks/useWidgetWidth'
@@ -57,6 +58,10 @@ function Detail({ label, value, color }: DetailProps) {
   )
 }
 
+const ToolTipBody = styled(ThemedText.Caption)`
+  max-width: 220px;
+`
+
 interface AmountProps {
   tooltipText?: string
   label: string
@@ -83,11 +88,17 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
 
   return (
     <Row flex align="flex-start">
-      <ThemedText.Body2 userSelect>
-        <Label>{label}</Label>
-        {/* TODO(cartcrom): WEB-2764 figure out why tooltips don't work on Dialog components  */}
-        {/* {tooltipText && <Tooltip placement={'right'}>{tooltipText}</Tooltip>} */}
-      </ThemedText.Body2>
+      <Row>
+        <ThemedText.Body2 userSelect>
+          <Label>{label}</Label>
+        </ThemedText.Body2>
+        {tooltipText && (
+          <Tooltip placement="right" offset={8}>
+            <ToolTipBody>{tooltipText}</ToolTipBody>
+          </Tooltip>
+        )}
+      </Row>
+
       <Column flex align="flex-end" grow>
         <ThemedText.H1 color="primary" fontSize={amountFontSize} lineHeight={amountLineHeight}>
           {formattedAmount} {amount.currency.symbol}
