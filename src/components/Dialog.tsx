@@ -191,7 +191,7 @@ function AnimatedPopoverProvider({ children }: PropsWithChildren) {
   }, [])
 
   return (
-    <PopoverBoundaryProvider value={{ boundary: popoverRef.current, updateTrigger: updatePopover }}>
+    <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
       <div ref={popoverRef}>
         <HiddenWrapper>
           <AnimationWrapper>{children}</AnimationWrapper>

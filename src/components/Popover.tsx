@@ -1,6 +1,6 @@
 import { Options, Placement } from '@popperjs/core'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
@@ -10,7 +10,14 @@ type PopoverBoundary = { boundary: HTMLDivElement | null; updateTrigger?: any }
 const BoundaryContext = createContext<PopoverBoundary | null>(null)
 
 /* Defines a boundary component past which a Popover should not overflow. */
-export const PopoverBoundaryProvider = BoundaryContext.Provider
+export function PopoverBoundaryProvider({
+  value,
+  updateTrigger,
+  children,
+}: PropsWithChildren<{ value: HTMLDivElement | null; updateTrigger?: any }>) {
+  const boundaryContextValue = useMemo(() => ({ boundary: value, updateTrigger }), [updateTrigger, value])
+  return <BoundaryContext.Provider value={boundaryContextValue}>{children}</BoundaryContext.Provider>
+}
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};
