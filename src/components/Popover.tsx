@@ -1,12 +1,13 @@
 import { Options, Placement } from '@popperjs/core'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, Layer } from 'theme'
 
-const BoundaryContext = createContext<HTMLDivElement | null>(null)
+type PopoverBoundary = { boundary: HTMLDivElement | null; updateTrigger?: any }
+const BoundaryContext = createContext<PopoverBoundary | null>(null)
 
 /* Defines a boundary component past which a Popover should not overflow. */
 export const PopoverBoundaryProvider = BoundaryContext.Provider
@@ -98,8 +99,8 @@ export default function Popover({
   contained,
   showArrow = true,
 }: PopoverProps) {
-  const boundary = useContext(BoundaryContext)
-  const reference = useRef<HTMLDivElement>(null)
+  const { boundary, updateTrigger } = useContext(BoundaryContext) || {}
+  const [reference, setReference] = useState<HTMLDivElement | null>(null)
 
   // Use callback refs to be notified when instantiated
   const [popover, setPopover] = useState<HTMLDivElement | null>(null)
@@ -139,11 +140,15 @@ export default function Popover({
     }
   }, [offset, arrow, contained, placement, boundary])
 
-  const { styles, attributes } = usePopper(reference.current, popover, options)
+  const { styles, attributes, update } = usePopper(reference, popover, options)
+
+  useEffect(() => {
+    update?.()
+  }, [update, updateTrigger])
 
   return (
     <>
-      <Reference ref={reference}>{children}</Reference>
+      <Reference ref={setReference}>{children}</Reference>
       {boundary &&
         createPortal(
           <PopoverContainer show={show} ref={setPopover} style={styles.popper} {...attributes.popper}>

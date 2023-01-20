@@ -23,7 +23,7 @@ export function SettingsMenu() {
   // TODO (WEB-2754): add back reset settings functionality
   return (
     <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
-      <PopoverBoundaryProvider value={boundary}>
+      <PopoverBoundaryProvider value={{ boundary }}>
         {/*
         If consumer doesn't pass in `routerUrl` as a prop, they have no choice but to use the client-side router,
         so don't show them the settings option.
@@ -67,7 +67,7 @@ export default function Settings() {
           </BottomSheetModal>
         </>
       ) : (
-        <PopoverBoundaryProvider value={wrapper}>
+        <PopoverBoundaryProvider value={{ boundary: wrapper }}>
           <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsMenu />}>
             <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
           </Popover>

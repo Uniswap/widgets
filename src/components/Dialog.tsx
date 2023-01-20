@@ -4,12 +4,14 @@ import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { largeIconCss } from 'icons'
 import { ArrowLeft } from 'icons'
+import ms from 'ms.macro'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import styled from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components/macro'
 import { Color, Layer, Provider as ThemeProvider, ThemedText } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
+import { PopoverBoundaryProvider } from './Popover'
 import Row from './Row'
 
 // Include inert from wicg-inert.
@@ -115,12 +117,65 @@ export const Modal = styled.div<{ color: Color }>`
   flex-direction: column;
   height: 100%;
   left: 0;
-  overflow: hidden;
   padding: 0.5em;
   position: absolute;
   right: 0;
   top: 0;
   z-index: ${Layer.DIALOG};
+`
+
+const slideInLeft = keyframes`
+  from {
+    transform: translateX(calc(100% - 0.25em));
+  }
+`
+const slideOutLeft = keyframes`
+  to {
+    transform: translateX(calc(0.25em - 100%));
+  }
+`
+const slideOutRight = keyframes`
+  to {
+    transform: translateX(calc(100% - 0.25em));
+  }
+`
+export const DialogAnimationLengthMs = ms`250`
+export const PopoverAnimationUpdateDelay = ms`100`
+
+const HiddenWrapper = styled.div`
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  padding: 0.5em;
+  position: absolute;
+  top: 0;
+  width: 100%;
+
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
+`
+
+const AnimationWrapper = styled.div`
+  ${Modal} {
+    animation: ${slideInLeft} ${DialogAnimationLengthMs}ms ease-in;
+
+    &.${Animation.PAGING} {
+      animation: ${slideOutLeft} ${DialogAnimationLengthMs}ms ease-in;
+    }
+    &.${Animation.CLOSING} {
+      animation: ${slideOutRight} ${DialogAnimationLengthMs}ms ease-out;
+    }
+  }
+`
+
+const PopoverWrapper = styled.div`
+  height: 100%;
+  left: 0;
+  padding: 0.5em;
+  position: absolute;
+  top: 0;
+  width: 100%;
 `
 
 interface DialogProps {
@@ -136,6 +191,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     return () => context.setActive(false)
   }, [context])
 
+  const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const modal = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(modal, () => {
     // Returns the context element's child count at the time of unmounting.
@@ -144,17 +200,33 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
   })
 
+  const [updatePopover, setUpdatePopover] = useState(false)
+  useEffect(() => {
+    setUpdatePopover(false)
+    setTimeout(() => {
+      setUpdatePopover(true)
+    }, DialogAnimationLengthMs + PopoverAnimationUpdateDelay)
+  }, [])
+
   useOnEscapeHandler(onClose)
 
   return (
     context.element &&
     createPortal(
       <ThemeProvider>
-        <OnCloseContext.Provider value={onClose}>
-          <Modal color={color} ref={modal}>
-            {children}
-          </Modal>
-        </OnCloseContext.Provider>
+        <PopoverBoundaryProvider value={{ boundary: ref, updateTrigger: updatePopover }}>
+          <PopoverWrapper ref={setRef}>
+            <HiddenWrapper>
+              <AnimationWrapper>
+                <OnCloseContext.Provider value={onClose}>
+                  <Modal color={color} ref={modal}>
+                    {children}
+                  </Modal>
+                </OnCloseContext.Provider>
+              </AnimationWrapper>
+            </HiddenWrapper>
+          </PopoverWrapper>
+        </PopoverBoundaryProvider>
       </ThemeProvider>,
       context.element
     )
