@@ -87,6 +87,9 @@ export const darkTheme: Colors = {
   currentColor: 'currentColor',
 }
 
+/**
+ * Common border radius values in em
+ */
 const defaultBorderRadius = {
   large: 1.25,
   medium: 1,
