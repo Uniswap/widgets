@@ -52,7 +52,7 @@ export default function ToolbarOrderRouting({ trade, gasUseEstimateUSD }: Toolba
           <Popover
             content={trade ? <RoutingDiagram gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} /> : null}
             show={Boolean(trade) && showTooltip}
-            placement={'top'}
+            placement="auto"
           >
             <AutoRouterHeader ref={setTooltip} />
           </Popover>

@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
+import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
+import { t } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
@@ -23,6 +24,8 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
   const { account, chainId, provider } = useWeb3React()
 
   return useCallback(async (): Promise<TransactionResponse> => {
+    let tx: TransactionRequest
+    let response: TransactionResponse
     try {
       if (!account) throw new Error('missing account')
       if (!chainId) throw new Error('missing chainId')
@@ -35,7 +38,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         inputTokenPermit: options.permit,
         fee: options.feeOptions,
       })
-      const tx = {
+      tx = {
         from: account,
         to: UNIVERSAL_ROUTER_ADDRESS(chainId),
         data,
@@ -47,16 +50,21 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       try {
         gasEstimate = await provider.estimateGas(tx)
       } catch (gasError) {
-        await provider.call(tx) // this should throw the actual error
-        throw new Error('unexpected issue with gas estimation; please try again')
+        console.warn(gasError)
+        throw new Error('Your swap is expected to fail')
       }
       const gasLimit = calculateGasMargin(gasEstimate)
-      const response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
-      return response
+      response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
     } catch (swapError: unknown) {
       const message = swapErrorToUserReadableMessage(swapError)
-      throw new Error(`Trade failed: ${message}`)
+      throw new Error(message)
     }
+    if (tx.data !== response.data) {
+      throw new Error(
+        t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+      )
+    }
+    return response
   }, [
     account,
     chainId,

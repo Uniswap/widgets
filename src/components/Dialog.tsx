@@ -4,12 +4,23 @@ import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { largeIconCss } from 'icons'
 import { ArrowLeft } from 'icons'
-import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
+import ms from 'ms.macro'
+import {
+  createContext,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
-import styled from 'styled-components/macro'
-import { Color, Layer, Provider as ThemeProvider, ThemedText } from 'theme'
+import styled, { keyframes } from 'styled-components/macro'
+import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
+import { PopoverBoundaryProvider } from './Popover'
 import Row from './Row'
 
 // Include inert from wicg-inert.
@@ -115,13 +126,80 @@ export const Modal = styled.div<{ color: Color }>`
   flex-direction: column;
   height: 100%;
   left: 0;
-  overflow: hidden;
   padding: 0.5em;
   position: absolute;
   right: 0;
   top: 0;
   z-index: ${Layer.DIALOG};
 `
+
+const slideInLeft = keyframes`
+  from {
+    transform: translateX(calc(100% - 0.25em));
+  }
+`
+const slideOutLeft = keyframes`
+  to {
+    transform: translateX(calc(0.25em - 100%));
+  }
+`
+const slideOutRight = keyframes`
+  to {
+    transform: translateX(calc(100% - 0.25em));
+  }
+`
+
+const HiddenWrapper = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius}em;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  padding: 0.5em;
+  position: absolute;
+  top: 0;
+  width: 100%;
+
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
+`
+
+const AnimationWrapper = styled.div`
+  ${Modal} {
+    animation: ${slideInLeft} ${AnimationSpeed.Medium} ease-in;
+
+    &.${Animation.PAGING} {
+      animation: ${slideOutLeft} ${AnimationSpeed.Medium} ease-in;
+    }
+    &.${Animation.CLOSING} {
+      animation: ${slideOutRight} ${AnimationSpeed.Medium} ease-out;
+    }
+  }
+`
+
+// Accounts for any animation lag
+const PopoverAnimationUpdateDelay = ms`100`
+
+/* Allows slide in animation to occur without popovers appearing at pre-animated location. */
+function AnimatedPopoverProvider({ children }: PropsWithChildren) {
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const [updatePopover, setUpdatePopover] = useState(false)
+  useEffect(() => {
+    setTimeout(() => {
+      setUpdatePopover(true)
+    }, TransitionDuration.Medium + PopoverAnimationUpdateDelay)
+  }, [])
+
+  return (
+    <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
+      <div ref={popoverRef}>
+        <HiddenWrapper>
+          <AnimationWrapper>{children}</AnimationWrapper>
+        </HiddenWrapper>
+      </div>
+    </PopoverBoundaryProvider>
+  )
+}
 
 interface DialogProps {
   color: Color
@@ -150,11 +228,13 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     context.element &&
     createPortal(
       <ThemeProvider>
-        <OnCloseContext.Provider value={onClose}>
-          <Modal color={color} ref={modal}>
-            {children}
-          </Modal>
-        </OnCloseContext.Provider>
+        <AnimatedPopoverProvider>
+          <OnCloseContext.Provider value={onClose}>
+            <Modal color={color} ref={modal}>
+              {children}
+            </Modal>
+          </OnCloseContext.Provider>
+        </AnimatedPopoverProvider>
       </ThemeProvider>,
       context.element
     )

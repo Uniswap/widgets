@@ -53,7 +53,13 @@ function ConfirmButton({
 
   const action = useMemo((): Action | undefined => {
     if (isPending) {
-      return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner, hideButton: true }
+      return {
+        message: <Trans>Confirm in your wallet</Trans>,
+        icon: Spinner,
+        onClick: () => {
+          setIsPending(false)
+        },
+      }
     } else if (doesTradeDiffer) {
       return {
         color: 'accent',
@@ -72,8 +78,8 @@ function ConfirmButton({
   }, [ackTrade, doesTradeDiffer, isPending, onAcknowledgeNewTrade, onSwapPriceUpdateAck, trade])
 
   return (
-    <ActionButton onClick={onClick} action={action} disabled={isPending}>
-      {isPending ? <Trans>Confirm</Trans> : <Trans>Confirm swap</Trans>}
+    <ActionButton onClick={onClick} action={action} color={isPending ? 'interactive' : 'accent'}>
+      {isPending ? <Trans>Cancel</Trans> : <Trans>Confirm swap</Trans>}
     </ActionButton>
   )
 }

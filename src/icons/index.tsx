@@ -10,6 +10,7 @@ import { ReactComponent as ReverseIcon } from 'assets/svg/reverse.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
+import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
 // This file wraps react-feather, so its import is intentional.
 /* eslint-disable no-restricted-imports */
@@ -141,9 +142,13 @@ const rotate = keyframes`
 `
 
 export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
-  animation: 2s ${rotate} linear infinite;
-  fill: ${({ color = 'primary', theme }) => theme[color]};
-  stroke: ${({ color = 'primary', theme }) => theme[color]};
+  animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+  color: ${({ color = 'active', theme }) => theme[color]};
+  fill: ${({ color = 'active', theme }) => theme[color]};
+  #track {
+    stroke: ${({ theme }) => theme.secondary};
+    ${loadingCss};
+  }
 `
 
 export const LargeCheck = styled(icon(LargeCheckIcon))<{ color?: Color }>`
