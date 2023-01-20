@@ -8,7 +8,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { createContext, memo, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -49,8 +49,8 @@ const Context = createContext<{
 
 export const Provider = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false)
-  const onToggleOpen = useCallback(() => setOpen((open) => !open), [])
-  const collapse = useCallback(() => setOpen(false), [])
+  const onToggleOpen = () => setOpen((open) => !open)
+  const collapse = () => setOpen(false)
   return <Context.Provider value={{ open, onToggleOpen, collapse }}>{children}</Context.Provider>
 }
 
