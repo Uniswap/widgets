@@ -73,7 +73,7 @@ export const darkTheme: Colors = {
   onAccent: white,
   primary: white,
   secondary: 'hsl(227, 21%, 67%)',
-  hint: 'hsl(225, 10%, 47.1%)',
+  hint: 'hsla(225, 18%, 44%)',
   onInteractive: white,
 
   deepShadow: 'hsla(0, 0%, 0%, 0.32), hsla(0, 0%, 0%, 0.24), hsla(0, 0%, 0%, 0.24)',

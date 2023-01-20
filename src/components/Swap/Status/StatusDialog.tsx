@@ -3,13 +3,12 @@ import ErrorDialog, { StatusHeader } from 'components/Error/ErrorDialog'
 import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
 import SwapSummary from 'components/Swap/Summary'
-import { DialogAnimationLengthMs } from 'components/Widget'
 import { MS_IN_SECOND } from 'constants/misc'
 import { LargeArrow, LargeCheck, LargeSpinner } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
 import styled from 'styled-components/macro'
-import { AnimationSpeed, ThemedText } from 'theme'
+import { AnimationSpeed, ThemedText, TransitionDuration } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
@@ -43,7 +42,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     // which should start after the entrance animation is complete.
     const handle = setTimeout(() => {
       setShowConfirmation(false)
-    }, MS_IN_SECOND + DialogAnimationLengthMs)
+    }, MS_IN_SECOND + TransitionDuration.Medium)
     return () => {
       clearTimeout(handle)
     }
@@ -95,14 +94,14 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
   return tx.receipt?.status === 0 ? (
     <ErrorDialog
-      header={
+      header={<Trans>Your swap failed.</Trans>}
+      message={
         <Trans>
           Try increasing your slippage tolerance.
           <br />
           NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
         </Trans>
       }
-      error={new Error('TODO(zzmp)')}
       action={<Trans>Dismiss</Trans>}
       onClick={onClose}
     />

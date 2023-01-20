@@ -45,7 +45,7 @@ function SummaryRow({ name, value, color, nameTooltip, valueTooltip }: SummaryRo
       {nameTooltip ? (
         <Row gap={0.25}>
           <TradeAttributeName color={color}>{name}</TradeAttributeName>
-          <Tooltip icon={nameTooltip.icon} iconProps={{ color }} contained>
+          <Tooltip icon={nameTooltip.icon} iconProps={{ color }} placement="auto">
             {nameTooltip.content}
           </Tooltip>
         </Row>
@@ -54,7 +54,7 @@ function SummaryRow({ name, value, color, nameTooltip, valueTooltip }: SummaryRo
       )}
       {valueTooltip ? (
         <Row gap={0.25}>
-          <Tooltip icon={valueTooltip.icon} iconProps={{ color }} contained>
+          <Tooltip icon={valueTooltip.icon} iconProps={{ color }} placement="auto">
             {valueTooltip.content}
           </Tooltip>
           <TradeAttributeValue color={color}>{value}</TradeAttributeValue>

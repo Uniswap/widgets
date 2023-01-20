@@ -56,6 +56,10 @@ export default memo(function Toolbar() {
   const permit2Enabled = usePermit2Enabled()
   const [open, setOpen] = useState(false)
 
+  const insufficientBalance: boolean | undefined = useMemo(() => {
+    return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
+  }, [inputAmount, inputBalance])
+
   const caption = useMemo(() => {
     const onExpand = () => {
       setOpen((open) => !open)
@@ -75,7 +79,7 @@ export default memo(function Toolbar() {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
+      if (insufficientBalance) {
         return <Caption.InsufficientBalance currency={inputCurrency} />
       }
       if (isWrap) {
@@ -110,8 +114,7 @@ export default memo(function Toolbar() {
     outputCurrency,
     isAmountPopulated,
     gasUseEstimateUSD,
-    inputBalance,
-    inputAmount,
+    insufficientBalance,
     isWrap,
     trade,
     impact,
@@ -168,13 +171,15 @@ export default memo(function Toolbar() {
     return null
   }
 
-  if (permit2Enabled) {
-    if (allowance.state === AllowanceState.REQUIRED) {
-      return <AllowanceButton {...allowance} />
-    }
-  } else {
-    if (approval.state !== SwapApprovalState.APPROVED) {
-      return <ApproveButton trade={trade} {...approval} />
+  if (!insufficientBalance) {
+    if (permit2Enabled) {
+      if (allowance.state === AllowanceState.REQUIRED) {
+        return <AllowanceButton {...allowance} />
+      }
+    } else {
+      if (approval.state !== SwapApprovalState.APPROVED) {
+        return <ApproveButton trade={trade} {...approval} />
+      }
     }
   }
 
