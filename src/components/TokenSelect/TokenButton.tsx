@@ -9,10 +9,10 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  min-height: 2.25em;
+  border-radius: 1em;
+  min-height: 2em;
 
-  padding: 0.25em;
+  padding: 0.25em 0.5em 0.25em 0.25em;
 
   :enabled {
     transition: none;
@@ -54,7 +54,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
       <TokenButtonRow empty={!value} flex gap={0.4}>
         {value ? (
           <>
-            <TokenImg token={value} size={1.75} />
+            <TokenImg token={value} size={1.5} />
             <ThemedText.ButtonLarge color={'currentColor'}>
               <span>{value.symbol}</span>
             </ThemedText.ButtonLarge>

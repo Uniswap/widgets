@@ -83,7 +83,6 @@ export function useFormattedFieldAmount({
 interface FieldWrapperProps {
   field: Field
   maxAmount?: string
-  isSufficientBalance?: boolean
   approved?: boolean
   impact?: PriceImpact
   subheader: string
@@ -92,7 +91,6 @@ interface FieldWrapperProps {
 export function FieldWrapper({
   field,
   maxAmount,
-  isSufficientBalance,
   approved,
   impact,
   className,
@@ -173,7 +171,7 @@ export function FieldWrapper({
             </USDC>
             {balance && (
               <Row gap={0.5}>
-                <Balance color={isSufficientBalance === false ? 'error' : 'secondary'}>
+                <Balance color="secondary">
                   <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
                 </Balance>
                 {maxAmount && (
@@ -198,11 +196,6 @@ export default function Input() {
     approval: { state: approvalState },
   } = useSwapInfo()
 
-  const isSufficientBalance = useMemo(() => {
-    if (!balance || !currencyAmount) return undefined
-    return !currencyAmount.greaterThan(balance)
-  }, [balance, currencyAmount])
-
   const maxAmount = useMemo(() => {
     // account for gas needed if using max on native token
     const max = maxAmountSpend(balance)
@@ -216,7 +209,6 @@ export default function Input() {
     <FieldWrapper
       field={Field.INPUT}
       maxAmount={maxAmount}
-      isSufficientBalance={isSufficientBalance}
       approved={approvalState === SwapApprovalState.APPROVED}
       subheader={t`You pay`}
     />
