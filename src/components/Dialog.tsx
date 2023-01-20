@@ -17,7 +17,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
-import { Color, Layer, Provider as ThemeProvider, ThemedText } from 'theme'
+import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
 import { PopoverBoundaryProvider } from './Popover'
@@ -164,17 +164,15 @@ const HiddenWrapper = styled.div`
   }
 `
 
-export const DialogAnimationLengthMs = ms`250`
-
 const AnimationWrapper = styled.div`
   ${Modal} {
-    animation: ${slideInLeft} ${DialogAnimationLengthMs}ms ease-in;
+    animation: ${slideInLeft} ${AnimationSpeed.Medium}ms ease-in;
 
     &.${Animation.PAGING} {
-      animation: ${slideOutLeft} ${DialogAnimationLengthMs}ms ease-in;
+      animation: ${slideOutLeft} ${AnimationSpeed.Medium}ms ease-in;
     }
     &.${Animation.CLOSING} {
-      animation: ${slideOutRight} ${DialogAnimationLengthMs}ms ease-out;
+      animation: ${slideOutRight} ${AnimationSpeed.Medium}ms ease-out;
     }
   }
 `
@@ -189,7 +187,7 @@ function AnimatedPopoverProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     setTimeout(() => {
       setUpdatePopover(true)
-    }, DialogAnimationLengthMs + PopoverAnimationUpdateDelay)
+    }, TransitionDuration.Medium + PopoverAnimationUpdateDelay)
   }, [])
 
   return (

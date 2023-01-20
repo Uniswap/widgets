@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { DialogAnimationLengthMs } from 'components/Dialog'
 import ErrorDialog, { StatusHeader } from 'components/Error/ErrorDialog'
 import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
@@ -9,7 +8,7 @@ import { LargeArrow, LargeCheck, LargeSpinner } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
 import { Transaction, TransactionType } from 'state/transactions'
 import styled from 'styled-components/macro'
-import { AnimationSpeed, ThemedText } from 'theme'
+import { AnimationSpeed, ThemedText, TransitionDuration } from 'theme'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
@@ -43,7 +42,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     // which should start after the entrance animation is complete.
     const handle = setTimeout(() => {
       setShowConfirmation(false)
-    }, MS_IN_SECOND + DialogAnimationLengthMs)
+    }, MS_IN_SECOND + TransitionDuration.Medium)
     return () => {
       clearTimeout(handle)
     }
