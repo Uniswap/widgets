@@ -6,8 +6,8 @@ import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, Layer } from 'theme'
 
-type PopoverBoundary = { boundary: HTMLDivElement | null; updateTrigger?: any }
-const BoundaryContext = createContext<PopoverBoundary | null>(null)
+type PopoverBoundary = { boundary?: HTMLDivElement | null; updateTrigger?: any }
+const BoundaryContext = createContext<PopoverBoundary>({})
 
 /* Defines a boundary component past which a Popover should not overflow. */
 export function PopoverBoundaryProvider({
@@ -106,7 +106,7 @@ export default function Popover({
   contained,
   showArrow = true,
 }: PopoverProps) {
-  const { boundary, updateTrigger } = useContext(BoundaryContext) || {}
+  const { boundary, updateTrigger } = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
