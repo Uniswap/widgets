@@ -150,6 +150,7 @@ const slideOutRight = keyframes`
 `
 
 const HiddenWrapper = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 100%;
   left: 0;
   overflow: hidden;
@@ -231,7 +232,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
       <ThemeProvider>
         <AnimatedPopoverProvider>
           <OnCloseContext.Provider value={onClose}>
-            <Modal color={color} ref={modal}>
+            <Modal color={'scrim'} ref={modal}>
               {children}
             </Modal>
           </OnCloseContext.Provider>
