@@ -232,7 +232,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
       <ThemeProvider>
         <AnimatedPopoverProvider>
           <OnCloseContext.Provider value={onClose}>
-            <Modal color={'scrim'} ref={modal}>
+            <Modal color={color} ref={modal}>
               {children}
             </Modal>
           </OnCloseContext.Provider>
