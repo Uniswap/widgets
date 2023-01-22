@@ -41,8 +41,6 @@ export function useTradeExchangeRate(
   )
 }
 
-export const TradePriceToggledClass = 'trade-price-toggled'
-
 interface PriceProps {
   trade: InterfaceTrade
   outputUSDC?: CurrencyAmount<Currency>
@@ -56,14 +54,7 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
   const [exchangeRate, usdcPrice] = useTradeExchangeRate(trade, outputUSDC, defaultBase ? 'input' : 'output')
 
   return (
-    <TextButton
-      color="primary"
-      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-        onClick()
-        const el = e.target as HTMLDivElement
-        el.classList.add(TradePriceToggledClass)
-      }}
-    >
+    <TextButton color="primary" onClick={onClick}>
       <ThemedText.Body2>
         <Row gap={0.25}>
           {exchangeRate}

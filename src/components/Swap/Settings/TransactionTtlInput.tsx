@@ -48,10 +48,10 @@ export default function TransactionTtlInput() {
       <Expando
         hideRulers
         showBottomGradient={false}
+        maxHeight={4}
         open={open}
         onExpand={() => setOpen(!open)}
         iconPrefix={<TtlValue>{ttlValue ?? placeholder}m</TtlValue>}
-        maxHeight={5}
         title={
           <Label
             name={<Trans>Transaction deadline</Trans>}

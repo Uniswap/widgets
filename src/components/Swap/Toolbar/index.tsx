@@ -8,13 +8,12 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { memo, MouseEvent, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import Row from '../../Row'
-import { TradePriceToggledClass } from '../Price'
 import SwapInputOutputEstimate from '../Summary/Estimate'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
@@ -58,13 +57,7 @@ export default memo(function Toolbar() {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
-  const maybeToggleOpen = (e: MouseEvent<HTMLDivElement>) => {
-    const el = e.target as HTMLDivElement
-    // The clicked element will have this class manually added, if it triggered
-    // the trade Price toggle. In this case, we don't want to expand/collapse here.
-    if (el.classList.contains(TradePriceToggledClass)) {
-      return
-    }
+  const toggleOpen = () => {
     setOpen((open) => !open)
   }
 
@@ -95,13 +88,14 @@ export default memo(function Toolbar() {
       }
       if (trade?.inputAmount && trade.outputAmount) {
         return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} expanded={open} />
+          <Caption.PriceImpact impact={impact} expanded={open} toggleOpen={toggleOpen} />
         ) : (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
+            toggleOpen={toggleOpen}
           />
         )
       }
@@ -181,7 +175,20 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={maybeToggleOpen}>
+        <ToolbarRow
+          flex
+          justify="space-between"
+          data-testid="toolbar"
+          onClick={(e) => {
+            // e.currentTarget is ToolbarRow, the element this listener is attached to.
+            // e.target is the element that was clicked, which could be ToolbarRow or a child.
+            // The user interaction should be handled by the child.
+            if (e.currentTarget !== e.target) {
+              return
+            }
+            toggleOpen()
+          }}
+        >
           {caption}
         </ToolbarRow>
       }

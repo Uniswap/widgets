@@ -171,13 +171,20 @@ export interface TradeProps {
 
 interface ExpandProps {
   expanded: boolean
+  toggleOpen: () => void
 }
 
-const Expander = ({ expanded }: ExpandProps) => {
-  return <ExpandIcon $expanded={expanded} />
+const Expander = ({ expanded, toggleOpen }: ExpandProps) => {
+  return <ExpandIcon $expanded={expanded} onClick={toggleOpen} />
 }
 
-export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeProps & TradeTooltip & ExpandProps) {
+export function Trade({
+  trade,
+  outputUSDC,
+  gasUseEstimateUSD,
+  expanded,
+  toggleOpen,
+}: TradeProps & TradeTooltip & ExpandProps) {
   return (
     <>
       <Caption caption={<Price trade={trade} outputUSDC={outputUSDC} />} />
@@ -187,7 +194,7 @@ export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeP
             <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
           </CaptionRow>
         )}
-        <Expander expanded={expanded} />
+        <Expander expanded={expanded} toggleOpen={toggleOpen} />
       </CaptionRow>
     </>
   )
@@ -203,7 +210,7 @@ export const PriceImpactWarningTooltipContent = () => (
   </ThemedText.Caption>
 )
 
-export function PriceImpact({ impact, expanded }: PriceImpactProps & ExpandProps) {
+export function PriceImpact({ impact, expanded, toggleOpen }: PriceImpactProps & ExpandProps) {
   return (
     <>
       <Caption
@@ -219,7 +226,7 @@ export function PriceImpact({ impact, expanded }: PriceImpactProps & ExpandProps
         <ThemedText.Body2 userSelect={false} color={impact.warning}>
           {formatPriceImpact(impact?.percent)}
         </ThemedText.Body2>
-        <Expander expanded={expanded} />
+        <Expander expanded={expanded} toggleOpen={toggleOpen} />
       </CaptionRow>
     </>
   )
