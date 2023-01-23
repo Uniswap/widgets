@@ -37,14 +37,17 @@ const bottomCss = css`
 
 const MAX_HEIGHT = 20
 
+function getExpandoContentHeight(height: number | undefined, maxHeight: number | undefined): number {
+  return Math.min(height ?? MAX_HEIGHT, maxHeight ?? MAX_HEIGHT)
+}
+
 const ExpandoColumn = styled(Column)<{
   height?: number
   maxHeight?: number
   open: boolean
   showBottomGradient: boolean
 }>`
-  max-height: ${({ open, height, maxHeight }) =>
-    open ? Math.min(height ?? MAX_HEIGHT, maxHeight ?? MAX_HEIGHT) : 0}em;
+  max-height: ${({ open, height, maxHeight }) => (open ? getExpandoContentHeight(height, maxHeight) : 0)}em;
   overflow: hidden;
   position: relative;
   transition: max-height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
@@ -52,7 +55,7 @@ const ExpandoColumn = styled(Column)<{
 `
 
 const InnerColumn = styled(Column)<{ height?: number; maxHeight?: number }>`
-  max-height: ${({ height, maxHeight }) => Math.min(height ?? MAX_HEIGHT, maxHeight ?? MAX_HEIGHT)}em;
+  max-height: ${({ height, maxHeight }) => getExpandoContentHeight(height, maxHeight)}em;
 `
 
 const IconPrefix = styled.div`

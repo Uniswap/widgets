@@ -57,7 +57,7 @@ export default memo(function Toolbar() {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
-  const toggleOpen = () => {
+  const onToggleOpen = () => {
     setOpen((open) => !open)
   }
 
@@ -88,14 +88,14 @@ export default memo(function Toolbar() {
       }
       if (trade?.inputAmount && trade.outputAmount) {
         return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} expanded={open} toggleOpen={toggleOpen} />
+          <Caption.PriceImpact impact={impact} expanded={open} onToggleOpen={onToggleOpen} />
         ) : (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
-            toggleOpen={toggleOpen}
+            onToggleOpen={onToggleOpen}
           />
         )
       }
@@ -175,20 +175,7 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow
-          flex
-          justify="space-between"
-          data-testid="toolbar"
-          onClick={(e) => {
-            // e.currentTarget is ToolbarRow, the element this listener is attached to.
-            // e.target is the element that was clicked, which could be ToolbarRow or a child.
-            // The user interaction should be handled by the child.
-            if (e.currentTarget !== e.target) {
-              return
-            }
-            toggleOpen()
-          }}
-        >
+        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={onToggleOpen}>
           {caption}
         </ToolbarRow>
       }
