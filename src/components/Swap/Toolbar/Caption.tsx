@@ -179,8 +179,8 @@ const Expander = ({ expanded, onToggleOpen }: ExpandProps) => {
     <ExpandIcon
       $expanded={expanded}
       onClick={(e: React.MouseEvent) => {
-        e.stopPropagation()
         onToggleOpen()
+        e.stopPropagation()
       }}
     />
   )
