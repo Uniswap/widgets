@@ -18,12 +18,8 @@ import SwapInputOutputEstimate from '../Summary/Estimate'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'
-import ToolbarOrderRouting, { ORDER_ROUTING_HEIGHT_EM } from './ToolbarOrderRouting'
-import ToolbarTradeSummary, {
-  SUMMARY_COLUMN_GAP_EM,
-  SUMMARY_ROW_HEIGHT_EM,
-  SummaryRowProps,
-} from './ToolbarTradeSummary'
+import ToolbarOrderRouting from './ToolbarOrderRouting'
+import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
 const StyledExpando = styled(Expando)`
   border: 1px solid ${({ theme }) => theme.outline};
@@ -34,6 +30,7 @@ const StyledExpando = styled(Expando)`
 const COLLAPSED_TOOLBAR_HEIGHT_EM = 3.5
 
 const ToolbarRow = styled(Row)`
+  cursor: pointer;
   flex-wrap: nowrap;
   gap: 0.5em;
   height: ${COLLAPSED_TOOLBAR_HEIGHT_EM}em;
@@ -60,10 +57,11 @@ export default memo(function Toolbar() {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
+  const onToggleOpen = () => {
+    setOpen((open) => !open)
+  }
+
   const caption = useMemo(() => {
-    const onExpand = () => {
-      setOpen((open) => !open)
-    }
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
         return <Caption.Connecting />
@@ -90,14 +88,14 @@ export default memo(function Toolbar() {
       }
       if (trade?.inputAmount && trade.outputAmount) {
         return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} expanded={open} onToggleExpand={onExpand} />
+          <Caption.PriceImpact impact={impact} expanded={open} onToggleOpen={onToggleOpen} />
         ) : (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
-            onToggleExpand={onExpand}
+            onToggleOpen={onToggleOpen}
           />
         )
       }
@@ -158,15 +156,6 @@ export default memo(function Toolbar() {
     return rows
   }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
-  /**
-   * The height of the expanded toolbar is dynamic based on the number of rows in the trade summary.
-   * Returns the total expanded height of the area below the base component.
-   */
-  const expandedHeight = useMemo(() => {
-    const summaryHeight = tradeSummaryRows.length * SUMMARY_ROW_HEIGHT_EM + SUMMARY_COLUMN_GAP_EM
-    return summaryHeight + ORDER_ROUTING_HEIGHT_EM + 1 /* accounts for the border */
-  }, [tradeSummaryRows.length])
-
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
   }
@@ -186,7 +175,7 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow flex justify="space-between" data-testid="toolbar">
+        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={onToggleOpen}>
           {caption}
         </ToolbarRow>
       }
@@ -196,7 +185,7 @@ export default memo(function Toolbar() {
       onExpand={() => {
         setOpen((open) => !open)
       }}
-      height={expandedHeight}
+      maxHeight={16}
     >
       <Column>
         <ToolbarTradeSummary rows={tradeSummaryRows} />

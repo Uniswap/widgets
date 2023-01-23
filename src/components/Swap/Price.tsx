@@ -54,7 +54,13 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
   const [exchangeRate, usdcPrice] = useTradeExchangeRate(trade, outputUSDC, defaultBase ? 'input' : 'output')
 
   return (
-    <TextButton color="primary" onClick={onClick}>
+    <TextButton
+      color="primary"
+      onClick={(e) => {
+        e.stopPropagation()
+        onClick()
+      }}
+    >
       <ThemedText.Body2>
         <Row gap={0.25}>
           {exchangeRate}
