@@ -8,7 +8,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { memo, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -37,6 +37,28 @@ const ToolbarRow = styled(Row)`
   padding: 0 1em;
 `
 
+const Context = createContext<{
+  open: boolean
+  collapse: () => void
+  onToggleOpen: () => void
+}>({
+  open: false,
+  collapse: () => null,
+  onToggleOpen: () => null,
+})
+
+export const Provider = ({ children }: PropsWithChildren) => {
+  const [open, setOpen] = useState(false)
+  const onToggleOpen = () => setOpen((open) => !open)
+  const collapse = () => setOpen(false)
+  return <Context.Provider value={{ open, onToggleOpen, collapse }}>{children}</Context.Provider>
+}
+
+export function useCollapseToolbar() {
+  const { collapse } = useContext(Context)
+  return collapse
+}
+
 export default memo(function Toolbar() {
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
@@ -51,15 +73,11 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const permit2Enabled = usePermit2Enabled()
-  const [open, setOpen] = useState(false)
+  const { open, onToggleOpen } = useContext(Context)
 
   const insufficientBalance: boolean | undefined = useMemo(() => {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
-
-  const onToggleOpen = () => {
-    setOpen((open) => !open)
-  }
 
   const caption = useMemo(() => {
     switch (error) {
@@ -117,6 +135,7 @@ export default memo(function Toolbar() {
     trade,
     impact,
     open,
+    onToggleOpen,
     outputUSDC,
   ])
 
@@ -182,9 +201,7 @@ export default memo(function Toolbar() {
       styledTitleWrapper={false}
       showBottomGradient={false}
       open={open}
-      onExpand={() => {
-        setOpen((open) => !open)
-      }}
+      onExpand={onToggleOpen}
       maxHeight={16}
     >
       <Column>
