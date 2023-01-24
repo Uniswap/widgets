@@ -29,8 +29,8 @@ const StyledExpando = styled(Expando)`
 
 const COLLAPSED_TOOLBAR_HEIGHT_EM = 3.5
 
-const ToolbarRow = styled(Row)`
-  cursor: pointer;
+const ToolbarRow = styled(Row)<{ isExpandable: boolean }>`
+  cursor: ${({ isExpandable }) => isExpandable && 'pointer'};
   flex-wrap: nowrap;
   gap: 0.5em;
   height: ${COLLAPSED_TOOLBAR_HEIGHT_EM}em;
