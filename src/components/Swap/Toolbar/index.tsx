@@ -8,7 +8,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { createContext, memo, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -79,7 +79,7 @@ export default memo(function Toolbar() {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
-  const { caption, isExpandable } = useMemo(() => {
+  const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
         return { caption: <Caption.Connecting /> }
@@ -122,7 +122,7 @@ export default memo(function Toolbar() {
       }
     }
 
-    return { Caption: <Caption.MissingInputs /> }
+    return { caption: <Caption.MissingInputs /> }
   }, [
     error,
     state,
