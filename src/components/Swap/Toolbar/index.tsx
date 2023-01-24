@@ -79,62 +79,50 @@ export default memo(function Toolbar() {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
-  const maybeToggleOpen = useCallback(() => {
-    if (
-      !insufficientBalance &&
-      !isWrap &&
-      !(state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) &&
-      trade?.inputAmount &&
-      trade?.outputAmount
-    ) {
-      onToggleOpen()
-    }
-  }, [insufficientBalance, isWrap, onToggleOpen, state, trade])
-
-  const caption = useMemo(() => {
+  const { caption, isExpandable } = useMemo(() => {
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
-        return <Caption.Connecting />
+        return { caption: <Caption.Connecting /> }
       case ChainError.UNSUPPORTED_CHAIN:
-        return <Caption.UnsupportedNetwork />
+        return { caption: <Caption.UnsupportedNetwork /> }
       case ChainError.MISMATCHED_TOKEN_CHAINS:
-        return <Caption.Error />
+        return { caption: <Caption.Error /> }
       default:
     }
 
     if (state === TradeState.LOADING) {
-      return <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} />
+      return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
       if (insufficientBalance) {
-        return <Caption.InsufficientBalance currency={inputCurrency} />
+        return { caption: <Caption.InsufficientBalance currency={inputCurrency} /> }
       }
       if (isWrap) {
-        return <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+        return { caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} /> }
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
-        return <Caption.InsufficientLiquidity />
+        return { caption: <Caption.InsufficientLiquidity /> }
       }
       if (trade?.inputAmount && trade.outputAmount) {
-        return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} expanded={open} onToggleOpen={onToggleOpen} />
+        const caption = impact?.warning ? (
+          <Caption.PriceImpact impact={impact} expanded={open} />
         ) : (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
-            onToggleOpen={onToggleOpen}
           />
         )
+        return { caption, isExpandable: true }
       }
       if (state === TradeState.INVALID) {
-        return <Caption.Error />
+        return { caption: <Caption.Error /> }
       }
     }
 
-    return <Caption.MissingInputs />
+    return { Caption: <Caption.MissingInputs /> }
   }, [
     error,
     state,
@@ -147,9 +135,14 @@ export default memo(function Toolbar() {
     trade,
     impact,
     open,
-    onToggleOpen,
     outputUSDC,
   ])
+
+  const maybeToggleOpen = useCallback(() => {
+    if (isExpandable) {
+      onToggleOpen()
+    }
+  }, [isExpandable, onToggleOpen])
 
   const tradeSummaryRows: SummaryRowProps[] = useMemo(() => {
     const currencySymbol = trade?.outputAmount?.currency.symbol ?? ''
