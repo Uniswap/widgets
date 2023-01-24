@@ -8,7 +8,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { createContext, memo, PropsWithChildren, useContext, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -78,6 +78,18 @@ export default memo(function Toolbar() {
   const insufficientBalance: boolean | undefined = useMemo(() => {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
+
+  const maybeToggleOpen = useCallback(() => {
+    if (
+      !insufficientBalance &&
+      !isWrap &&
+      !(state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) &&
+      trade?.inputAmount &&
+      trade?.outputAmount
+    ) {
+      onToggleOpen()
+    }
+  }, [insufficientBalance, isWrap, onToggleOpen, state, trade])
 
   const caption = useMemo(() => {
     switch (error) {
@@ -194,14 +206,14 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={onToggleOpen}>
+        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={maybeToggleOpen}>
           {caption}
         </ToolbarRow>
       }
       styledTitleWrapper={false}
       showBottomGradient={false}
       open={open}
-      onExpand={onToggleOpen}
+      onExpand={maybeToggleOpen}
       maxHeight={16}
     >
       <Column>
