@@ -57,8 +57,8 @@ export default function Price({ trade, outputUSDC }: PriceProps) {
     <TextButton
       color="primary"
       onClick={(e) => {
-        e.stopPropagation()
         onClick()
+        e.stopPropagation()
       }}
     >
       <ThemedText.Body2>

@@ -36,8 +36,9 @@ export function GasEstimateTooltip({ gasUseEstimateUSD, trade }: TradeTooltip) {
     <>
       <Row
         gap={0.25}
-        onClick={() => {
+        onClick={(e) => {
           setOpen((open) => !open)
+          e.stopPropagation()
         }}
       >
         <Gas color="secondary" />
