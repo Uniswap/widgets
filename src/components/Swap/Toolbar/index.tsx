@@ -29,7 +29,7 @@ const StyledExpando = styled(Expando)`
 
 const COLLAPSED_TOOLBAR_HEIGHT_EM = 3.5
 
-const ToolbarRow = styled(Row)<{ isExpandable: boolean }>`
+const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   cursor: ${({ isExpandable }) => isExpandable && 'pointer'};
   flex-wrap: nowrap;
   gap: 0.5em;
@@ -199,7 +199,13 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow flex justify="space-between" data-testid="toolbar" onClick={maybeToggleOpen}>
+        <ToolbarRow
+          flex
+          justify="space-between"
+          data-testid="toolbar"
+          onClick={maybeToggleOpen}
+          isExpandable={isExpandable}
+        >
           {caption}
         </ToolbarRow>
       }
