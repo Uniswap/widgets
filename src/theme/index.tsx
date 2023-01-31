@@ -5,6 +5,7 @@ import { mix, rgba, transparentize } from 'polished'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeProvider as StyledProvider } from 'styled-components/macro'
 
+import { Layer } from './layer'
 import type { Colors, Theme, ThemeBorderRadius } from './theme'
 
 export * from './animations'
@@ -98,6 +99,9 @@ const defaultBorderRadius = {
 
 export const defaultTheme = {
   borderRadius: defaultBorderRadius,
+  zIndex: {
+    modal: Layer.DIALOG,
+  },
   fontFamily: {
     font: '"Inter", sans-serif',
     variable: '"InterVariable", sans-serif',

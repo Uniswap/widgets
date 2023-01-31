@@ -40,8 +40,13 @@ export type ThemeBorderRadius = {
   small: number
 }
 
+export type ZIndex = {
+  modal: number
+}
+
 export interface Attributes {
   borderRadius: ThemeBorderRadius
+  zIndex: ZIndex
   fontFamily:
     | string
     | {
