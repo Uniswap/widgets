@@ -34,6 +34,13 @@ class ConnectionError extends WidgetError {
   }
 }
 
+export class SwapError extends WidgetError {
+  constructor(config: WidgetErrorConfig) {
+    super(config)
+    this.name = 'SwapError'
+  }
+}
+
 export class MetaMaskConnectionError extends ConnectionError {
   constructor() {
     super({
