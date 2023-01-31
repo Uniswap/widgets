@@ -43,7 +43,8 @@
     "deduplicate": "yarn-deduplicate --strategy=highest",
     "lint": "eslint .",
     "test": "jest src",
-    "test:e2e": "jest e2e"
+    "test:e2e": "jest e2e",
+    "pack:local": "yarn cache clean && yarn build && json -I -f package.json -e \"this.version='0.0.1'\" && yarn pack && json -I -f package.json -e \"delete this.version\""
   },
   "browserslist": {
     "production": [
@@ -195,6 +196,7 @@
     "jest-environment-hardhat": "^1.1.4",
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.5",
+    "json": "^11.0.0",
     "json-loader": "^0.5.7",
     "prettier": "^2.2.1",
     "qs": "^6.9.4",
