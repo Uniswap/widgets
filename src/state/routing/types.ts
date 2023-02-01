@@ -60,7 +60,6 @@ export interface GetQuoteArgs {
   tokenOutSymbol?: string
   amount: string | null // passing null will initialize the client-side SOR
   routerPreference?: RouterPreference
-  routerUrl?: string
   tradeType: TradeType
   provider: BaseProvider
 }

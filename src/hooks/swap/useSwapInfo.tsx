@@ -10,12 +10,10 @@ import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
-import { routerPreferenceAtom } from 'state/swap/settings'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -53,7 +51,7 @@ interface SwapInfo {
 }
 
 /** Returns the best computed swap (trade/wrap). */
-function useComputeSwapInfo(routerUrl?: string): SwapInfo {
+function useComputeSwapInfo(): SwapInfo {
   const { account, chainId, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
@@ -75,16 +73,14 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     [amount, currencyIn, currencyOut, type]
   )
 
-  const [routerPreference] = useAtom(routerPreferenceAtom)
-
   const trade = useRouterTrade(
     type,
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : routerPreference,
-    routerUrl
+    isWrap || error ? RouterPreference.SKIP : RouterPreference.API
   )
+  console.log('📜 LOG > useComputeSwapInfo > trade', trade)
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
   const [amountIn, amountOut] = useMemo(() => {
@@ -169,11 +165,13 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
-export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
-  const swapInfo = useComputeSwapInfo(routerUrl)
-
+export function SwapInfoProvider({ children }: PropsWithChildren) {
+  const swapInfo = useComputeSwapInfo()
+  console.log('📜 LOG > SwapInfoProvider > swapInfo', swapInfo)
   const swap = useAtomValue(swapAtom)
+  console.log('📜 LOG > SwapInfoProvider > swap', swap)
   const lastQuotedSwap = useRef<typeof swap | null>(null)
+  console.log('📜 LOG > SwapInfoProvider > lastQuotedSwap', lastQuotedSwap)
   const { onInitialSwapQuote } = useAtomValue(swapEventHandlersAtom)
   useEffect(() => {
     if (swap === lastQuotedSwap.current) return

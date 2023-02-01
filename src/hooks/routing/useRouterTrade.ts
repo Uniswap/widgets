@@ -20,7 +20,6 @@ const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
- * @param routerUrl the base URL of the integrator's auto router API
  * @param amountSpecified the exact amount to swap in/out
  * @param currencyIn the input currency
  * @param currencyOut the output currency
@@ -30,8 +29,7 @@ export function useRouterTrade(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  routerPreference: RouterPreference,
-  routerUrl?: string
+  routerPreference: RouterPreference
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -39,7 +37,7 @@ export function useRouterTrade(
 } {
   const { provider } = useWeb3React()
   const queryArgs = useGetQuoteArgs(
-    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference, routerUrl },
+    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference },
     /*skip=*/ routerPreference === RouterPreference.SKIP
   )
 
@@ -50,7 +48,6 @@ export function useRouterTrade(
       case RouterPreference.PRICE:
         return ms`2m`
       case RouterPreference.API:
-      case RouterPreference.CLIENT:
         return ms`15s`
       case RouterPreference.SKIP:
         return Infinity
@@ -63,18 +60,21 @@ export function useRouterTrade(
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
   // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
-  const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
+  const [trigger] = useLazyGetQuoteQuery({ pollingInterval: 1000 * 100 })
   const request = useCallback(() => {
+    console.log('📜 LOG > request > queryArgs', queryArgs)
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
-    if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
-      refetch()
-    }
+    // if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
+    //   refetch()
+    // }
   }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
   const quote = typeof data === 'object' ? data : undefined
   const trade = useMemo(() => {
+    console.log('📜 LOG > trade > routes')
     const routes = computeRoutes(currencyIn, currencyOut, tradeType, quote)
+    console.log('📜 LOG > trade > routes', routes)
     if (!routes || routes.length === 0) return
     try {
       return transformRoutesToTrade(routes, tradeType)
@@ -96,6 +96,7 @@ export function useRouterTrade(
       return TRADE_LOADING
     } else {
       const state = isValid ? TradeState.VALID : TradeState.LOADING
+      console.log('📜 LOG > returnuseMemo > state', state)
       return { state, trade, gasUseEstimateUSD }
     }
   }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD])

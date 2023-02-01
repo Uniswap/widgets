@@ -43,7 +43,6 @@ export function useGetQuoteArgs(
     currencyIn,
     currencyOut,
     routerPreference,
-    routerUrl,
   }: Partial<{
     provider: BaseProvider
     tradeType: TradeType
@@ -51,11 +50,12 @@ export function useGetQuoteArgs(
     currencyIn: Currency
     currencyOut: Currency
     routerPreference: RouterPreference
-    routerUrl: string
   }>,
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
+  console.log('📜 LOG > skip', skip)
   const args = useMemo(() => {
+    console.log('📜 LOG > args > tradeType', tradeType)
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
 
@@ -70,14 +70,15 @@ export function useGetQuoteArgs(
       tokenOutDecimals: currencyOut.wrapped.decimals,
       tokenOutSymbol: currencyOut.wrapped.symbol,
       routerPreference,
-      routerUrl,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, routerUrl])
+  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference])
 
   const isWindowVisible = useIsWindowVisible()
+  console.log('📜 LOG > isWindowVisible', isWindowVisible)
   if (skip || !isWindowVisible) return skipToken
 
+  console.log('📜 LOG > args', args)
   return args ?? skipToken
 }

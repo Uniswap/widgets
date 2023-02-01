@@ -6,7 +6,6 @@ import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
-import useSyncSwapRouterUrl from 'hooks/swap/useSyncSwapRouterUrl'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
@@ -31,7 +30,6 @@ import useValidate from './useValidate'
 // TODO(zzmp): refactor WalletConnection into Widget component
 export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
   hideConnectionUI?: boolean
-  routerUrl?: string
 }
 
 export default function Swap(props: SwapProps) {
@@ -40,7 +38,6 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
-  useSyncSwapRouterUrl(props.routerUrl)
 
   const { account } = useWeb3React()
 
@@ -58,7 +55,7 @@ export default function Swap(props: SwapProps) {
       </Header>
       <div ref={setWrapper}>
         <PopoverBoundaryProvider value={wrapper}>
-          <SwapInfoProvider routerUrl={props.routerUrl}>
+          <SwapInfoProvider>
             <Input />
             <ReverseButton />
             <Output />

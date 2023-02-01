@@ -113,5 +113,3 @@ export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHand
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})
-
-export const swapRouterUrlAtom = atom<string | undefined>(undefined)

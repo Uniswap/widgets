@@ -21,17 +21,18 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     if (!currency || !stablecoin) {
       return undefined
     }
+    return new Price(stablecoin, stablecoin, '1', '1')
 
-    // handle usdc
-    if (currency?.wrapped.equals(stablecoin)) {
-      return new Price(stablecoin, stablecoin, '1', '1')
-    }
+    // // handle usdc
+    // if (currency?.wrapped.equals(stablecoin)) {
+    //   return new Price(stablecoin, stablecoin, '1', '1')
+    // }
 
-    if (trade?.trade) {
-      const { numerator, denominator } = trade.trade.routes[0].midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
-    }
-    return undefined
+    // if (trade?.trade) {
+    //   const { numerator, denominator } = trade.trade.routes[0].midPrice
+    //   return new Price(currency, stablecoin, denominator, numerator)
+    // }
+    // return undefined
   }, [currency, stablecoin, trade.trade])
 
   const lastPrice = useRef(price)
