@@ -4,7 +4,7 @@ import { atomWithReset } from 'jotai/utils'
 import { pickAtom } from '../atoms'
 
 export interface Slippage {
-  auto: boolean // if true, slippage will use the default calculation
+  default: boolean
   max: string | undefined // expressed as a percent (eg '0.42' is 0.42%)
 }
 
@@ -14,7 +14,7 @@ export interface Settings {
 }
 
 const initialSettings: Settings = {
-  slippage: { auto: true, max: undefined },
+  slippage: { default: true, max: undefined },
   transactionTtl: undefined,
 }
 

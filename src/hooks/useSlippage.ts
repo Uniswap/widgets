@@ -1,9 +1,10 @@
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
+import { Percent } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
 import { slippageAtom } from 'state/swap/settings'
+
+const THREE_PERCENT = new Percent(3, 100) // 3%
+export const DEFAULT_SLIPPAGE_PERCENT = THREE_PERCENT
 
 export function toPercent(maxSlippage: string | undefined): Percent | undefined {
   if (!maxSlippage) return undefined
@@ -13,34 +14,28 @@ export function toPercent(maxSlippage: string | undefined): Percent | undefined 
 }
 
 export interface Slippage {
-  auto: boolean
+  default: boolean
   allowed: Percent
   warning?: 'warning' | 'error'
 }
 
-export const DEFAULT_SLIPPAGE = { auto: true, allowed: DEFAULT_AUTO_SLIPPAGE }
+export const DEFAULT_SLIPPAGE = { default: true, allowed: DEFAULT_SLIPPAGE_PERCENT }
 
-/** Returns the allowed slippage, and whether it is auto-slippage. */
-export default function useSlippage(trade: {
-  trade?: InterfaceTrade
-  gasUseEstimateUSD?: CurrencyAmount<Token>
-}): Slippage {
+/** Returns the allowed slippage, and whether it is the default slippage. */
+export default function useSlippage(): Slippage {
   const slippage = useAtomValue(slippageAtom)
-  const autoSlippage = useAutoSlippageTolerance(slippage.auto ? trade : undefined)
   const maxSlippage = useMemo(() => toPercent(slippage.max), [slippage.max])
   return useMemo(() => {
-    const auto = slippage.auto || !slippage.max
-    const allowed = slippage.auto ? autoSlippage : maxSlippage ?? autoSlippage
-    const warning = auto ? undefined : getSlippageWarning(allowed)
-    if (auto && allowed === DEFAULT_AUTO_SLIPPAGE) {
+    if (slippage.default || !maxSlippage) {
       return DEFAULT_SLIPPAGE
     }
-    return { auto, allowed, warning }
-  }, [autoSlippage, maxSlippage, slippage])
+    const warning = getSlippageWarning(maxSlippage)
+    return { default: false, allowed: maxSlippage, warning }
+  }, [maxSlippage, slippage])
 }
 
 export const MAX_VALID_SLIPPAGE = new Percent(1, 2)
-export const MIN_HIGH_SLIPPAGE = new Percent(1, 100)
+export const MIN_HIGH_SLIPPAGE = new Percent(3, 100)
 
 export function getSlippageWarning(slippage?: Percent): 'warning' | 'error' | undefined {
   if (slippage?.greaterThan(MAX_VALID_SLIPPAGE)) return 'error'

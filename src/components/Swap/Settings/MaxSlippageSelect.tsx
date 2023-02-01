@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import Expando from 'components/Expando'
 import Popover from 'components/Popover'
 import { useTooltip } from 'components/Tooltip'
-import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
+import { DEFAULT_SLIPPAGE_PERCENT, getSlippageWarning, toPercent } from 'hooks/useSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -17,6 +17,8 @@ import Column from '../../Column'
 import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
 import { Label, optionCss } from './components'
+
+const DEFAULT_SLIPPAGE_LABEL = `${DEFAULT_SLIPPAGE_PERCENT.toFixed(0)}%`
 
 const Button = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
@@ -94,7 +96,7 @@ export default function MaxSlippageSelect() {
     },
     [onSlippageChange, setSlippageBase]
   )
-  const setAutoSlippage = useCallback(() => setSlippage({ ...slippage, auto: true }), [setSlippage, slippage])
+  const setDefaultSlippage = useCallback(() => setSlippage({ ...slippage, default: true }), [setSlippage, slippage])
   const [maxSlippageInput, setMaxSlippageInput] = useState(slippage.max?.toString() || '')
 
   const option = useRef<HTMLButtonElement>(null)
@@ -113,8 +115,8 @@ export default function MaxSlippageSelect() {
     focus()
     const percent = toPercent(slippage.max)
     const warning = getSlippageWarning(percent)
-    const auto = !percent || warning === 'error'
-    setSlippage({ ...slippage, auto })
+    const isDefault = !percent || warning === 'error'
+    setSlippage({ ...slippage, default: isDefault })
   }, [focus, slippage, setSlippage])
 
   const processInput = useCallback(
@@ -122,8 +124,8 @@ export default function MaxSlippageSelect() {
       setMaxSlippageInput(max || '')
       const percent = toPercent(max)
       const warning = getSlippageWarning(percent)
-      const auto = !percent || warning === 'error'
-      setSlippage({ auto, max })
+      const isDefault = !percent || warning === 'error'
+      setSlippage({ default: isDefault, max })
     },
     [setSlippage]
   )
@@ -147,20 +149,25 @@ export default function MaxSlippageSelect() {
             />
           </Row>
         }
-        iconPrefix={slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}
+        iconPrefix={slippage.default ? <Trans>{DEFAULT_SLIPPAGE_LABEL}</Trans> : `${maxSlippageInput}%`}
         maxHeight={5}
         open={open}
         onExpand={() => setOpen(!open)}
       >
         <ExpandoContent gap={0.5} grow="first">
-          <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
+          <Option
+            wrapper={Button}
+            selected={slippage.default}
+            onSelect={setDefaultSlippage}
+            data-testid="default-slippage"
+          >
             <ThemedText.ButtonMedium>
-              <Trans>Auto</Trans>
+              <Trans>{DEFAULT_SLIPPAGE_LABEL}</Trans>
             </ThemedText.ButtonMedium>
           </Option>
           <Option
             wrapper={Custom}
-            selected={!slippage.auto}
+            selected={!slippage.default}
             onSelect={onInputSelect}
             icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
             ref={option}

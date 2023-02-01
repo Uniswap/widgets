@@ -1,5 +1,4 @@
 import { BottomSheetModal } from 'components/BottomSheetModal'
-import Rule from 'components/Rule'
 import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { Settings as SettingsIcon } from 'icons'
@@ -11,7 +10,6 @@ import { IconButton } from '../../Button'
 import Column from '../../Column'
 import Popover, { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
-import TransactionTtlInput from './TransactionTtlInput'
 
 export function SettingsMenu() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
@@ -21,8 +19,8 @@ export function SettingsMenu() {
     <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
       <PopoverBoundaryProvider value={boundary}>
         <MaxSlippageSelect />
-        <Rule />
-        <TransactionTtlInput />
+        {/* <Rule /> */}
+        {/* <TransactionTtlInput /> */}
       </PopoverBoundaryProvider>
     </Column>
   )
