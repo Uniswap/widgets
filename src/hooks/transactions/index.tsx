@@ -66,7 +66,6 @@ export function useIsPendingApproval(token?: Token): boolean {
 }
 
 export type OnTxSubmit = (hash: string, tx: Transaction) => void
-type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 export type OnTxSuccess = (hash: string, tx: WithRequired<Transaction, 'receipt'>) => void
 export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void
 
