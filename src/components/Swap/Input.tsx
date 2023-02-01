@@ -156,6 +156,7 @@ export function FieldWrapper({
         loading={isLoading}
         approved={approved}
         disabled={isDisabled}
+        isDependentField={isDependentField}
         onChangeInput={updateAmount}
         onChangeCurrency={updateCurrency}
       >

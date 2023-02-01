@@ -39,12 +39,25 @@ interface TokenInputProps {
   approved?: boolean
   loading?: boolean
   disabled?: boolean
+  isDependentField?: boolean
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
 }
 
 export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenInputProps>>(function TokenInput(
-  { field, amount, currency, approved, loading, disabled, onChangeInput, onChangeCurrency, children, ...rest },
+  {
+    field,
+    amount,
+    currency,
+    approved,
+    loading,
+    disabled,
+    isDependentField,
+    onChangeInput,
+    onChangeCurrency,
+    children,
+    ...rest
+  },
   ref
 ) {
   const input = useRef<HTMLInputElement>(null)
@@ -73,7 +86,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
           <ValueInput
             value={amount}
             onChange={onChangeInput}
-            disabled={disabled || !currency}
+            disabled={disabled || !currency || isDependentField}
             isLoading={Boolean(loading)}
             ref={input}
           />
