@@ -35,6 +35,7 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
   top: 0;
   transition: visibility 0s linear 0s, opacity ${AnimationSpeed.Medium};
   visibility: visible;
+  z-index: ${({ theme }) => theme.zIndex.modal - 1};
 `
 
 const Wrapper = styled.div<{ open: boolean }>`
@@ -43,7 +44,9 @@ const Wrapper = styled.div<{ open: boolean }>`
   left: 0;
   margin: 0;
   overflow: hidden;
+  position: absolute;
   right: 0;
+  z-index: ${({ theme }) => theme.zIndex.modal};
 
   @supports (overflow: clip) {
     overflow: clip;
