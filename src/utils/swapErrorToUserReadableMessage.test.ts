@@ -13,7 +13,7 @@ describe('swapErrorToUserReadableMessage', () => {
       reason: 'UniswapV2Router: EXPIRED',
     }
     expect(swapErrorToUserReadableMessage(error)).toBe(
-      'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
+      'This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
     )
   })
 
