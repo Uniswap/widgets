@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
-import { SwapError } from 'errors'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
@@ -16,7 +15,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
 import { TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
-import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
@@ -94,12 +92,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
       // Only close the review modal if the swap submitted (ie no-throw).
       setOpen(false)
     } catch (e) {
-      throwAsync(
-        new SwapError({
-          header: 'Swap Failed',
-          message: swapErrorToUserReadableMessage(e),
-        })
-      )
+      throwAsync(e)
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, throwAsync, trade])
 

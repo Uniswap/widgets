@@ -1,14 +1,14 @@
 import { swapErrorToUserReadableMessage } from './swapErrorToUserReadableMessage'
 
 describe('swapErrorToUserReadableMessage', () => {
-  test('should return "Transaction rejected" when error code is 4001', () => {
+  it('should return "Transaction rejected" when error code is 4001', () => {
     const error = {
       code: 4001,
     }
     expect(swapErrorToUserReadableMessage(error)).toBe('Transaction rejected')
   })
 
-  test('UniswapV2Router: EXPIRED', () => {
+  it('UniswapV2Router: EXPIRED', () => {
     const error = {
       reason: 'UniswapV2Router: EXPIRED',
     }
@@ -17,7 +17,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT', () => {
+  it('UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT', () => {
     const error = {
       reason: 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT',
     }
@@ -26,7 +26,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('UniswapV2Router: EXCESSIVE_INPUT_AMOUNT', () => {
+  it('UniswapV2Router: EXCESSIVE_INPUT_AMOUNT', () => {
     const error = {
       reason: 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT',
     }
@@ -35,7 +35,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('TransferHelper: TRANSFER_FROM_FAILED', () => {
+  it('TransferHelper: TRANSFER_FROM_FAILED', () => {
     const error = {
       reason: 'TransferHelper: TRANSFER_FROM_FAILED',
     }
@@ -44,7 +44,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('UniswapV2: TRANSFER_FAILED', () => {
+  it('UniswapV2: TRANSFER_FAILED', () => {
     const error = {
       reason: 'UniswapV2: TRANSFER_FAILED',
     }
@@ -53,7 +53,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('UniswapV2: K', () => {
+  it('UniswapV2: K', () => {
     const error = {
       reason: 'UniswapV2: K',
     }
@@ -65,7 +65,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('Too little received', () => {
+  it('Too little received', () => {
     const error = {
       reason: 'Too little received',
     }
@@ -74,7 +74,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('Too much requested', () => {
+  it('Too much requested', () => {
     const error = {
       reason: 'Too much requested',
     }
@@ -83,7 +83,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('STF', () => {
+  it('STF', () => {
     const error = {
       reason: 'STF',
     }
@@ -92,7 +92,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('TF', () => {
+  it('TF', () => {
     const error = {
       reason: 'TF',
     }
@@ -101,7 +101,7 @@ describe('swapErrorToUserReadableMessage', () => {
     )
   })
 
-  test('Unknown error', () => {
+  it('Unknown error', () => {
     const error = {
       reason: '',
     }

@@ -3,6 +3,9 @@ import { t } from '@lingui/macro'
 export const DEFAULT_ERROR_HEADER = t`Please refresh the page and try again.`
 export const DEFAULT_ERROR_ACTION = t`Reload the page`
 
+export const DISMISS_ERROR_HEADER = t`Please try again.`
+export const DISMISS_ERROR_ACTION = t`Dismiss`
+
 interface WidgetErrorConfig {
   header?: string
   action?: string
@@ -12,6 +15,7 @@ interface WidgetErrorConfig {
 export abstract class WidgetError extends Error {
   header: string
   action: string
+  dismissable = false
 
   constructor(config: WidgetErrorConfig) {
     super(config.message)
@@ -38,6 +42,7 @@ export class SwapError extends WidgetError {
   constructor(config: WidgetErrorConfig) {
     super(config)
     this.name = 'SwapError'
+    this.dismissable = true
   }
 }
 
