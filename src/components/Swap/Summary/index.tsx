@@ -14,7 +14,8 @@ import styled from 'styled-components/macro'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import SpeedBumpDialog from '../Speedbump'
-import Details from './Details'
+import Details, { ToolTipBody } from './Details'
+import SwapInputOutputEstimate from './Estimate'
 import Summary from './Summary'
 
 export default Summary
@@ -23,16 +24,19 @@ const Body = styled(Column)`
   height: 100%;
   padding: 0.75em 0.875em;
 `
+
 const PriceImpactText = styled.span`
   color: ${({ theme }) => theme.error};
 `
 
 function ConfirmButton({
   trade,
+  slippage,
   onConfirm,
   onAcknowledgeNewTrade,
 }: {
   trade: InterfaceTrade
+  slippage: Slippage
   onConfirm: () => Promise<void>
   onAcknowledgeNewTrade: () => void
 }) {
@@ -64,7 +68,12 @@ function ConfirmButton({
       return {
         color: 'accent',
         message: <Trans>Price updated</Trans>,
-        icon: AlertTriangle,
+        icon: () => <AlertTriangle color="accent" />,
+        tooltipContent: (
+          <ToolTipBody>
+            <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+          </ToolTipBody>
+        ),
         onClick: () => {
           onSwapPriceUpdateAck?.(ackTrade, trade)
           setAckTrade(trade)
@@ -75,7 +84,7 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackTrade, doesTradeDiffer, isPending, onAcknowledgeNewTrade, onSwapPriceUpdateAck, trade])
+  }, [ackTrade, doesTradeDiffer, isPending, onAcknowledgeNewTrade, onSwapPriceUpdateAck, slippage, trade])
 
   return (
     <ActionButton onClick={onClick} action={action} color={isPending ? 'interactive' : 'accent'}>
