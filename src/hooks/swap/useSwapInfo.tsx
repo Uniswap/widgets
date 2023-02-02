@@ -79,7 +79,6 @@ function useComputeSwapInfo(): SwapInfo {
     currencyOut,
     isWrap || error ? RouterPreference.SKIP : RouterPreference.API
   )
-  console.log('📜 LOG > useComputeSwapInfo > trade', trade)
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
   const [amountIn, amountOut] = useMemo(() => {

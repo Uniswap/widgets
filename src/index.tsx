@@ -27,7 +27,7 @@ export type {
   OnSwitchChain,
   WidgetEventHandlers,
 } from 'hooks/useSyncWidgetEventHandlers'
-export { EMPTY_TOKEN_LIST, UNISWAP_TOKEN_LIST } from 'hooks/useTokenList'
+export { EMPTY_TOKEN_LIST } from 'hooks/useTokenList'
 export { validateTokenList, validateTokens } from 'hooks/useTokenList/validateTokenList'
 export type { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 export type {
@@ -63,7 +63,10 @@ export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 export { invertTradeType, toTradeType } from 'utils/tradeType'
 
-export type SwapWidgetProps = SwapProps & WidgetProps
+export type SwapWidgetProps = Omit<
+  SwapProps & WidgetProps,
+  'permit2' | 'convenienceFee' | 'convenienceFeeRecipient' | 'brandedFooter'
+>
 
 export function SwapWidget(props: SwapWidgetProps) {
   return (

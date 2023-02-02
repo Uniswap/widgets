@@ -6,14 +6,13 @@ import { SupportedChainId } from 'constants/chains'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
+import { getSupportedTokens } from 'wido'
 
 import fetchTokenList from './fetchTokenList'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
-import { validateTokens } from './validateTokenList'
 
 export { useQueryTokens } from './useQueryTokens'
 
-export const UNISWAP_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 export const EMPTY_TOKEN_LIST = []
 
 const MISSING_PROVIDER = Symbol()
@@ -64,7 +63,7 @@ export function TestableProvider({ list, children }: PropsWithChildren<{ list: T
   return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
 }
 
-export function Provider({ list = UNISWAP_TOKEN_LIST, children }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
+export function Provider({ list, children }: PropsWithChildren<{ list: string | TokenInfo[] }>) {
   const [chainTokenMap, setChainTokenMap] = useState<ChainTokenMap>()
 
   useEffect(() => setChainTokenMap(undefined), [list])
@@ -97,9 +96,8 @@ export function Provider({ list = UNISWAP_TOKEN_LIST, children }: PropsWithChild
         if (typeof list === 'string') {
           tokens = await fetchTokenList(list, resolver)
         } else {
-          // Empty lists will fail validation, but are valid (eg EMPTY_TOKEN_LIST)
-          // for integrators using their own token selection UI.
-          tokens = list.length > 0 ? await validateTokens(list) : EMPTY_TOKEN_LIST
+          list = await getSupportedTokens()
+          tokens = list //list.length > 0 ? await validateTokens(list) : EMPTY_TOKEN_LIST
         }
         // tokensToChainTokenMap also caches the fetched tokens, so it must be invoked even if stale.
         const map = tokensToChainTokenMap(tokens)
