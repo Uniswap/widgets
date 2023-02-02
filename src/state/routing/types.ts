@@ -77,7 +77,6 @@ export interface WidoTradeType<TradeInput extends Currency, TradeOutput extends 
   inputAmountUsdValue: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<TradeOutput>
   outputAmountUsdValue: CurrencyAmount<Currency>
-  // minOutputAmount: CurrencyAmount<TradeOutput>
   executionPrice: Price<TradeInput, TradeOutput>
   tradeType: TradeType
 }

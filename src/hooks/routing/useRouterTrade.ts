@@ -85,11 +85,9 @@ export function useRouterTrade(
     const trade: WidoTrade = {
       inputAmount: CurrencyAmount.fromRawAmount(currencyIn, quote.fromTokenAmount),
       outputAmount: CurrencyAmount.fromRawAmount(currencyOut, quote.toTokenAmount),
-      // minOutputAmount: CurrencyAmount.fromRawAmount(currencyOut, quote.minToTokenAmount),
       inputAmountUsdValue: calcStablecoinAmountFromFiatValue(quote.fromTokenAmountUsdValue, currencyIn.chainId),
       outputAmountUsdValue: calcStablecoinAmountFromFiatValue(quote.toTokenAmountUsdValue, currencyOut.chainId),
       executionPrice: new Price(currencyIn, currencyOut, quote.fromTokenAmount, quote.toTokenAmount),
-
       tradeType: TradeType.EXACT_INPUT,
     }
     return trade
