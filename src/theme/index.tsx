@@ -34,6 +34,8 @@ export const lightTheme: Colors = {
   // surface
   accent: brandLight,
   accentSoft: rgba(brandLight, 0.12),
+  action: brandLight,
+  actionSoft: rgba(brandLight, 0.24),
   container: 'hsl(0, 0%, 100%)',
   module: 'hsl(231, 54%, 97%)',
   interactive: 'hsl(227, 70%, 95%)',
@@ -63,6 +65,8 @@ export const darkTheme: Colors = {
   // surface
   accent: brandDark,
   accentSoft: rgba(brandDark, 0.12),
+  action: brandDark,
+  actionSoft: rgba(brandDark, 0.24),
   container: 'hsla(224, 37%, 8%, 1)',
   module: 'hsl(222, 37%, 12%)',
   interactive: 'hsla(223, 28%, 22%, 1)',
@@ -146,7 +150,7 @@ function toDefaultTheme(theme: Required<Theme>): DefaultTheme {
     ...theme,
     borderRadius: clamp(theme.borderRadius ? (theme.borderRadius as ThemeBorderRadius) : defaultBorderRadius),
     onHover: (color: string) =>
-      color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.16, theme.primary, color),
+      color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.06, theme.primary, color),
   }
 
   function clamp(value: ThemeBorderRadius): ThemeBorderRadius {
