@@ -3,7 +3,7 @@ import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
 import { ErrorCode } from 'constants/eip1193'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
@@ -33,7 +33,7 @@ export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
   provider: JsonRpcProvider | undefined,
-  trade: InterfaceTrade | undefined,
+  trade: WidoTrade | undefined,
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {

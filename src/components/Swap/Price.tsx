@@ -2,13 +2,13 @@ import { formatCurrencyAmount, formatPrice, NumberType } from '@uniswap/conediso
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { ThemedText } from 'theme'
 
 import { TextButton } from '../Button'
 
 export function useTradeExchangeRate(
-  trade: InterfaceTrade,
+  trade: WidoTrade,
   outputUSDC?: CurrencyAmount<Currency>,
   base: 'input' | 'output' = 'input'
 ): [string, string | undefined] {
@@ -42,7 +42,7 @@ export function useTradeExchangeRate(
 }
 
 interface PriceProps {
-  trade: InterfaceTrade
+  trade: WidoTrade
   outputUSDC?: CurrencyAmount<Currency>
 }
 

@@ -9,12 +9,12 @@ import { PriceImpact as PriceImpactType } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { AlertTriangle, ChevronDown, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, Color, ThemedText } from 'theme'
 
 import Price from '../Price'
-import { GasEstimateTooltip, TradeTooltip } from './GasEstimateTooltip'
+import { TradeTooltip } from './GasEstimateTooltip'
 
 const Loading = styled.span`
   color: ${({ theme }) => theme.secondary};
@@ -133,9 +133,7 @@ export function LoadingTrade({ gasUseEstimateUSD }: TradeTooltip) {
           </Loading>
         }
       />
-      <CaptionRow gap={0.25}>
-        <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} />
-      </CaptionRow>
+      <CaptionRow gap={0.25}>{/* <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} /> */}</CaptionRow>
     </>
   )
 }
@@ -165,7 +163,7 @@ export function Wrap({ inputCurrency, outputCurrency }: WrapProps) {
 }
 
 export interface TradeProps {
-  trade: InterfaceTrade
+  trade: WidoTrade
   outputUSDC?: CurrencyAmount<Currency>
 }
 
@@ -184,7 +182,7 @@ export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeP
       <CaptionRow gap={0.75}>
         {!expanded && (
           <CaptionRow gap={0.25}>
-            <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
+            {/* <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} /> */}
           </CaptionRow>
         )}
         <Expander expanded={expanded} />

@@ -6,7 +6,7 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
@@ -20,7 +20,7 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
-export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined, options: SwapOptions) {
+export function useUniversalRouterSwapCallback(trade: WidoTrade | undefined, options: SwapOptions) {
   const { account, chainId, provider } = useWeb3React()
 
   return useCallback(async (): Promise<TransactionResponse> => {

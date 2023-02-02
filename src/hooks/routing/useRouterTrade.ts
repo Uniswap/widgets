@@ -1,15 +1,16 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import useIsValidBlock from 'hooks/useIsValidBlock'
-import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
+import {
+  calcStablecoinAmountFromFiatValue,
+  useStablecoinAmountFromFiatValue,
+} from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
-import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
-import { InterfaceTrade, NO_ROUTE, TradeState } from 'state/routing/types'
-import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
+import { NO_ROUTE, TradeState, WidoTrade } from 'state/routing/types'
+import { QuoteResult } from 'wido'
 
 import { RouterPreference } from './types'
 
@@ -32,7 +33,7 @@ export function useRouterTrade(
   routerPreference: RouterPreference
 ): {
   state: TradeState
-  trade?: InterfaceTrade
+  trade?: WidoTrade
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
@@ -46,9 +47,11 @@ export function useRouterTrade(
     switch (routerPreference) {
       // PRICE fetching is informational and costly, so it is done less frequently.
       case RouterPreference.PRICE:
-        return ms`2m`
+        // return ms`2m` // TODO(daniel)
+        return Infinity
       case RouterPreference.API:
-        return ms`15s`
+        // return ms`15s` // TODO(daniel)
+        return Infinity
       case RouterPreference.SKIP:
         return Infinity
     }
@@ -60,32 +63,37 @@ export function useRouterTrade(
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
   // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
-  const [trigger] = useLazyGetQuoteQuery({ pollingInterval: 1000 * 100 })
+  const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
-    console.log('📜 LOG > request > queryArgs', queryArgs)
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
-    // if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
-    //   refetch()
-    // }
+    if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {
+      refetch()
+    }
   }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const quote = typeof data === 'object' ? data : undefined
+  const quote = typeof data === 'object' ? (data as Required<QuoteResult>) : undefined
+
+  const isValid = currentData === data
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue('999') // TODO(daniel)
+
   const trade = useMemo(() => {
-    console.log('📜 LOG > trade > routes')
-    const routes = computeRoutes(currencyIn, currencyOut, tradeType, quote)
-    console.log('📜 LOG > trade > routes', routes)
-    if (!routes || routes.length === 0) return
-    try {
-      return transformRoutesToTrade(routes, tradeType)
-    } catch (e: unknown) {
-      console.debug('transformRoutesToTrade failed: ', e)
-      return
+    if (!quote) return
+    if (!currencyIn) return
+    if (!currencyOut) return
+
+    const trade: WidoTrade = {
+      inputAmount: CurrencyAmount.fromRawAmount(currencyIn, quote.fromTokenAmount),
+      outputAmount: CurrencyAmount.fromRawAmount(currencyOut, quote.toTokenAmount),
+      // minOutputAmount: CurrencyAmount.fromRawAmount(currencyOut, quote.minToTokenAmount),
+      inputAmountUsdValue: calcStablecoinAmountFromFiatValue(quote.fromTokenAmountUsdValue, currencyIn.chainId),
+      outputAmountUsdValue: calcStablecoinAmountFromFiatValue(quote.toTokenAmountUsdValue, currencyOut.chainId),
+      executionPrice: new Price(currencyIn, currencyOut, quote.fromTokenAmount, quote.toTokenAmount),
+
+      tradeType: TradeType.EXACT_INPUT,
     }
-  }, [currencyIn, currencyOut, quote, tradeType])
-  const isValidBlock = useIsValidBlock(Number(quote?.blockNumber))
-  const isValid = currentData === data && isValidBlock
-  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quote?.gasUseEstimateUSD)
+    return trade
+  }, [quote, currencyIn, currencyOut])
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
@@ -96,7 +104,6 @@ export function useRouterTrade(
       return TRADE_LOADING
     } else {
       const state = isValid ? TradeState.VALID : TradeState.LOADING
-      console.log('📜 LOG > returnuseMemo > state', state)
       return { state, trade, gasUseEstimateUSD }
     }
   }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD])

@@ -53,14 +53,13 @@ export function useGetQuoteArgs(
   }>,
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
-  console.log('📜 LOG > skip', skip)
   const args = useMemo(() => {
-    console.log('📜 LOG > args > tradeType', tradeType)
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
+    if (!amountSpecified) return null
 
     return {
-      amount: amountSpecified?.quotient.toString() ?? null,
+      amount: amountSpecified.quotient.toString(),
       tokenInAddress: currencyIn.wrapped.address,
       tokenInChainId: currencyIn.wrapped.chainId,
       tokenInDecimals: currencyIn.wrapped.decimals,
@@ -76,9 +75,7 @@ export function useGetQuoteArgs(
   }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference])
 
   const isWindowVisible = useIsWindowVisible()
-  console.log('📜 LOG > isWindowVisible', isWindowVisible)
   if (skip || !isWindowVisible) return skipToken
 
-  console.log('📜 LOG > args', args)
   return args ?? skipToken
 }

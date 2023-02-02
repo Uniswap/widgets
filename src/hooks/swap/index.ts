@@ -4,7 +4,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
-import { invertTradeType, toTradeType } from 'utils/tradeType'
+import { toTradeType } from 'utils/tradeType'
 export { ChainError, default as useSwapInfo } from './useSwapInfo'
 
 function otherField(field: Field) {
@@ -24,10 +24,10 @@ export function useSwitchSwapCurrencies() {
   return useCallback(() => {
     setSwap((swap) => {
       onSwitchTokens?.()
-      swap.type = invertTradeType(swap.type)
       const oldOutput = swap[Field.OUTPUT]
       swap[Field.OUTPUT] = swap[Field.INPUT]
       swap[Field.INPUT] = oldOutput
+      swap.amount = ''
     })
   }, [onSwitchTokens, setSwap])
 }

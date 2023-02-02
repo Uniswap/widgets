@@ -1,5 +1,5 @@
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { renderComponent } from 'test'
 import { buildMultiV3Route, buildSingleV3Route, DAI, USDC } from 'test/utils'
 
@@ -19,7 +19,7 @@ describe('ToolbarOrderRouting', () => {
       <ToolbarOrderRouting
         gasUseEstimateUSD={CurrencyAmount.fromRawAmount(DAI, 1)}
         trade={
-          new InterfaceTrade({
+          new Trade({
             v2Routes: [],
             v3Routes: [testRoute],
             tradeType: TradeType.EXACT_INPUT,
@@ -38,7 +38,7 @@ describe('ToolbarOrderRouting', () => {
       <ToolbarOrderRouting
         gasUseEstimateUSD={CurrencyAmount.fromRawAmount(DAI, 1)}
         trade={
-          new InterfaceTrade({
+          new Trade({
             v2Routes: [],
             v3Routes: [buildMultiV3Route(usdc, dai)],
             tradeType: TradeType.EXACT_INPUT,
@@ -57,7 +57,7 @@ describe('ToolbarOrderRouting', () => {
       <ToolbarOrderRouting
         gasUseEstimateUSD={CurrencyAmount.fromRawAmount(DAI, 1)}
         trade={
-          new InterfaceTrade({
+          new Trade({
             v2Routes: [],
             v3Routes: [buildMultiV3Route(usdc, dai), buildSingleV3Route(usdc, dai)],
             tradeType: TradeType.EXACT_INPUT,

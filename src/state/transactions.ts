@@ -1,7 +1,7 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { atomWithImmer } from 'jotai/immer'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 
 export enum TransactionType {
   APPROVAL,
@@ -24,7 +24,7 @@ export interface ApprovalTransactionInfo extends BaseTransactionInfo {
 export interface SwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType
-  trade: InterfaceTrade
+  trade: WidoTrade
   slippageTolerance: Percent
 }
 

@@ -39,3 +39,25 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
     }
   }, [chainId, fiatValue, stablecoin])
 }
+
+/**
+ *
+ * @param fiatValue string representation of a USD amount
+ * @param chainId
+ * @returns CurrencyAmount where currency is stablecoin on active chain
+ */
+export function calcStablecoinAmountFromFiatValue(fiatValue: string | null | undefined, chainId: number) {
+  const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
+
+  if (fiatValue === null || fiatValue === undefined || !chainId || !stablecoin) {
+    throw Error('UsdValue missing.')
+  }
+
+  // trim for decimal precision when parsing
+  const parsedForDecimals = parseFloat(fiatValue).toFixed(stablecoin.decimals).toString()
+  const result = tryParseCurrencyAmount(parsedForDecimals, stablecoin)
+
+  if (!result) throw Error('UsdValue cannot be parsed.')
+
+  return result
+}

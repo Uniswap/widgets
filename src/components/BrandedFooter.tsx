@@ -32,11 +32,11 @@ const Wrapper = styled(Row)`
 export default memo(function BrandedFooter() {
   return (
     <Wrapper justify="center">
-      <UniswapA href={`https://uniswap.org/`}>
+      <UniswapA href={`https://joinwido.com`}>
         <Row gap={0.25}>
           <Logo />
           <ThemedText.Caption>
-            <Trans>Powered by the Uniswap protocol</Trans>
+            <Trans>Powered by Wido</Trans>
           </ThemedText.Caption>
         </Row>
       </UniswapA>

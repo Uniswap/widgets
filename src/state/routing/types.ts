@@ -1,8 +1,9 @@
 import { BaseProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
 import { RouterPreference } from 'hooks/routing/types'
+import { QuoteResult } from 'wido'
 
 export enum TradeState {
   LOADING,
@@ -52,35 +53,13 @@ export type V2PoolInRoute = {
 export interface GetQuoteArgs {
   tokenInAddress: string
   tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
   tokenOutAddress: string
   tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
   amount: string | null // passing null will initialize the client-side SOR
   routerPreference?: RouterPreference
   tradeType: TradeType
   provider: BaseProvider
-}
-
-export interface QuoteResult {
-  quoteId?: string
-  blockNumber: string
-  amount: string
-  amountDecimals: string
-  gasPriceWei: string
-  gasUseEstimate: string
-  gasUseEstimateQuote: string
-  gasUseEstimateQuoteDecimals: string
-  gasUseEstimateUSD: string
-  methodParameters?: { calldata: string; value: string }
-  quote: string
-  quoteDecimals: string
-  quoteGasAdjusted: string
-  quoteGasAdjustedDecimals: string
-  route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
-  routeString: string
+  userAddress?: string
 }
 
 export const INITIALIZED = 'Initialized'
@@ -88,4 +67,19 @@ export const NO_ROUTE = 'No Route'
 
 export type GetQuoteResult = QuoteResult | typeof INITIALIZED | typeof NO_ROUTE
 
+/**
+ * @deprecated
+ */
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}
+
+export interface WidoTradeType<TradeInput extends Currency, TradeOutput extends Currency> {
+  inputAmount: CurrencyAmount<TradeInput>
+  inputAmountUsdValue: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<TradeOutput>
+  outputAmountUsdValue: CurrencyAmount<Currency>
+  // minOutputAmount: CurrencyAmount<TradeOutput>
+  executionPrice: Price<TradeInput, TradeOutput>
+  tradeType: TradeType
+}
+
+export type WidoTrade = WidoTradeType<Currency, Currency>

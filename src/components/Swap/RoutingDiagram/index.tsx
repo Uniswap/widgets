@@ -9,7 +9,7 @@ import Rule from 'components/Rule'
 import TokenImg from 'components/TokenImg'
 import { AutoRouter } from 'icons'
 import { ComponentProps, forwardRef, useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Layer, ThemedText } from 'theme'
 
@@ -136,7 +136,7 @@ export default function RoutingDiagram({
   gasUseEstimateUSD,
   hideHeader,
 }: {
-  trade: InterfaceTrade
+  trade: WidoTrade
   gasUseEstimateUSD?: CurrencyAmount<Token> | null
   hideHeader?: boolean
 }) {

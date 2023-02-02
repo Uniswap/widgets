@@ -9,7 +9,7 @@ import { usePendingApproval } from 'hooks/transactions'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { TransactionType } from 'state/transactions'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
@@ -24,7 +24,7 @@ export default function ApproveButton({
   state,
   approve,
 }: {
-  trade?: InterfaceTrade
+  trade?: WidoTrade
   state: SwapApprovalState
   approve?: () => Promise<{
     response: TransactionResponse

@@ -144,9 +144,9 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
-      permit2
-      convenienceFee={convenienceFee}
-      convenienceFeeRecipient={convenienceFeeRecipient}
+      // permit2
+      // convenienceFee={convenienceFee}
+      // convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputTokenAddress={defaultInputToken}
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
@@ -154,11 +154,11 @@ function Fixture() {
       hideConnectionUI={hideConnectionUI}
       locale={locale}
       defaultChainId={defaultChainId}
-      provider={connector}
+      provider={connector} // TODO remove
       theme={theme}
-      tokenList={tokenList}
+      tokenList={tokenList} // TODO remove
       width={width}
-      brandedFooter={brandedFooter}
+      brandedFooter={brandedFooter} // TODO remove
       {...eventHandlers}
     />
   )

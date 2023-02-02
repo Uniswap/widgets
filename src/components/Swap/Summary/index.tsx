@@ -8,7 +8,7 @@ import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -32,7 +32,7 @@ function ConfirmButton({
   onConfirm,
   onAcknowledgeNewTrade,
 }: {
-  trade: InterfaceTrade
+  trade: WidoTrade
   onConfirm: () => Promise<void>
   onAcknowledgeNewTrade: () => void
 }) {
@@ -85,7 +85,7 @@ function ConfirmButton({
 }
 
 interface SummaryDialogProps {
-  trade: InterfaceTrade
+  trade: WidoTrade
   slippage: Slippage
   gasUseEstimateUSD?: CurrencyAmount<Token>
   inputUSDC?: CurrencyAmount<Currency>

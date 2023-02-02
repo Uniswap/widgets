@@ -5,7 +5,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 
 import { Slippage } from './settings'
 
@@ -86,10 +86,10 @@ interface InputEventHandlers {
 export type OnSwapApprove = () => void
 
 /** An integration hook called when the user receives an initial quote for a set of inputs. */
-export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
+export type OnInitialSwapQuote = (trade: WidoTrade) => void
 
 /** An integration hook called when the user acks a quote's price update. */
-export type OnSwapPriceUpdateAck = (stale: InterfaceTrade, update: InterfaceTrade) => void
+export type OnSwapPriceUpdateAck = (stale: WidoTrade, update: WidoTrade) => void
 
 /** An integration hook called when the user expands a swap's details. */
 export type OnExpandSwapDetails = () => void
@@ -101,7 +101,7 @@ export type OnExpandSwapDetails = () => void
 export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
 /** An integration hook called when the user confirms a swap, but before it is submitted. */
-export type OnSubmitSwapClick = (trade: InterfaceTrade) => void
+export type OnSubmitSwapClick = (trade: WidoTrade) => void
 
 export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
   onSwapApprove?: OnSwapApprove

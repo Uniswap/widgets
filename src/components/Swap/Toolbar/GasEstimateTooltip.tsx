@@ -9,13 +9,13 @@ import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { Gas } from 'icons'
 import { useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 import { ThemedText } from 'theme'
 
 import RoutingDiagram from '../RoutingDiagram'
 
 export interface TradeTooltip {
-  trade?: InterfaceTrade
+  trade?: WidoTrade
   gasUseEstimateUSD?: CurrencyAmount<Token> | null
 }
 

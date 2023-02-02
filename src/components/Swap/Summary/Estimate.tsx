@@ -2,7 +2,8 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Slippage } from 'hooks/useSlippage'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
+import { calcMinimumAmountOut } from 'state/routing/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { isExactInput } from 'utils/tradeType'
@@ -15,7 +16,7 @@ const StyledEstimate = styled(ThemedText.Caption)`
 
 interface EstimateProps {
   slippage: Slippage
-  trade: InterfaceTrade
+  trade: WidoTrade
 }
 
 export default function SwapInputOutputEstimate({ trade, slippage }: EstimateProps) {
@@ -23,13 +24,15 @@ export default function SwapInputOutputEstimate({ trade, slippage }: EstimatePro
   return <StyledEstimate color="secondary">{estimateMessage}</StyledEstimate>
 }
 
-export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
-  const { inputAmount, outputAmount } = trade
-  const inputCurrency = inputAmount.currency
+export function getEstimateMessage(trade: WidoTrade, slippage: Slippage) {
+  const { outputAmount } = trade
   const outputCurrency = outputAmount.currency
 
   if (isExactInput(trade.tradeType)) {
-    const localizedMinReceived = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), NumberType.TokenTx)
+    const localizedMinReceived = formatCurrencyAmount(
+      calcMinimumAmountOut(slippage.allowed, trade.outputAmount),
+      NumberType.TokenTx
+    )
     const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
 
     return {
@@ -38,13 +41,6 @@ export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
       value: minReceivedString,
     }
   } else {
-    const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), NumberType.TokenTx)
-    const maxSentString = `${localizedMaxSent} ${inputCurrency.symbol}`
-
-    return {
-      estimateMessage: t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`,
-      descriptor: t`Maximum input after slippage`,
-      value: maxSentString,
-    }
+    throw new Error('Not implemented: isExactOutput')
   }
 }

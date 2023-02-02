@@ -10,6 +10,7 @@ import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
 import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
+import { calcMinimumAmountOut } from 'state/routing/utils'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
@@ -18,7 +19,6 @@ import SwapInputOutputEstimate from '../Summary/Estimate'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'
-import ToolbarOrderRouting from './ToolbarOrderRouting'
 import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
 const StyledExpando = styled(Expando)`
@@ -101,7 +101,7 @@ export default memo(function Toolbar() {
       if (isWrap) {
         return { caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} /> }
       }
-      if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
+      if (state === TradeState.NO_ROUTE_FOUND) {
         return { caption: <Caption.InsufficientLiquidity /> }
       }
       if (trade?.inputAmount && trade.outputAmount) {
@@ -164,7 +164,9 @@ export default memo(function Toolbar() {
       },
       {
         name: t`Minimum output after slippage`,
-        value: trade ? `${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}` : '-',
+        value: trade
+          ? `${formatCurrencyAmount(calcMinimumAmountOut(slippage.allowed, trade?.outputAmount))} ${currencySymbol}`
+          : '-',
       },
       {
         name: t`Expected output`,
@@ -217,7 +219,6 @@ export default memo(function Toolbar() {
     >
       <Column>
         <ToolbarTradeSummary rows={tradeSummaryRows} />
-        <ToolbarOrderRouting trade={trade} />
       </Column>
     </StyledExpando>
   )

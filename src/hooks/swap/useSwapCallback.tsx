@@ -8,7 +8,7 @@ import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/usePermit'
 import { useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { WidoTrade } from 'state/routing/types'
 
 import useSendSwapTransaction from './useSendSwapTransaction'
 
@@ -24,7 +24,7 @@ interface UseSwapCallbackReturns {
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
-  trade: InterfaceTrade | undefined // trade to execute, required
+  trade: WidoTrade | undefined // trade to execute, required
   allowedSlippage: Percent // in bips
   recipientAddressOrName: string | null | undefined // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
