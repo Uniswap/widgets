@@ -101,18 +101,30 @@ function ConfirmButton({
   onAcknowledgeNewTrade: () => void
   allowance: Allowance
 }) {
+  const [reviewState, setReviewState] = useState(ReviewState.REVIEWING)
+
   const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
+  useEffect(() => {
+    if (doesTradeDiffer && reviewState === ReviewState.REVIEWING) {
+      setReviewState(ReviewState.TRADE_CHANGED)
+    } else if (!doesTradeDiffer && reviewState === ReviewState.TRADE_CHANGED) {
+      setReviewState(ReviewState.REVIEWING)
+    }
+  }, [reviewState, doesTradeDiffer])
 
   const isApproved = useMemo(
     () => (allowance.state === AllowanceState.REQUIRED ? allowance.isApproved : true),
     [allowance]
   )
-  const [reviewState, setReviewState] = useState(ReviewState.REVIEWING)
+
+  useEffect(() => {
+    console.log(allowance)
+  }, [allowance])
 
   const triggerSwap = useCallback(async () => {
     setReviewState(ReviewState.PENDING_SWAP)
