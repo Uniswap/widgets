@@ -7,7 +7,7 @@ import useTimeout from 'hooks/useTimeout'
 import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
-import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
+import { TradeResult, useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, NO_ROUTE, TradeState } from 'state/routing/types'
 
 import { RouterPreference } from './types'
@@ -71,21 +71,21 @@ export function useRouterTrade(
   }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const quoteResult = typeof data === 'object' ? data : undefined
-  const isValidBlock = useIsValidBlock(Number(quoteResult?.blockNumber))
+  const tradeResult: TradeResult | undefined = typeof data === 'object' ? data : undefined
+  const isValidBlock = useIsValidBlock(Number(tradeResult?.blockNumber))
   const isValid = currentData === data && isValidBlock
-  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD)
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(tradeResult?.gasUseEstimateUSD)
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
       return TRADE_INVALID
     } else if (data === NO_ROUTE) {
       return TRADE_NOT_FOUND
-    } else if (!quoteResult?.trade) {
+    } else if (!tradeResult?.trade) {
       return TRADE_LOADING
     } else {
       const state = isValid ? TradeState.VALID : TradeState.LOADING
-      return { state, trade: quoteResult?.trade, gasUseEstimateUSD }
+      return { state, trade: tradeResult?.trade, gasUseEstimateUSD }
     }
-  }, [amountSpecified, isError, queryArgs, data, quoteResult?.trade, isValid, gasUseEstimateUSD])
+  }, [amountSpecified, isError, queryArgs, data, tradeResult?.trade, isValid, gasUseEstimateUSD])
 }

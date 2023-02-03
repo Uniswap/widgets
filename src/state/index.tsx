@@ -17,8 +17,8 @@ export const store = configureStore({
     getDefaultMiddleware({
       thunk: true,
       serializableCheck: {
-        // meta.arg and meta.baseQueryMeta are defaults. trade is a nonserializable return value, but that's ok
-        // because we are not persisting it to a redux store
+        // meta.arg and meta.baseQueryMeta are defaults. payload.trade is a nonserializable return value, but that's ok
+        // because we are not adding it into any persisted store that requires serialization (e.g. localStorage)
         ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
         ignoredPaths: [routing.reducerPath],
       },

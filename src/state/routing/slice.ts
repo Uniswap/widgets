@@ -7,7 +7,7 @@ import { isExactInput } from 'utils/tradeType'
 
 import { serializeGetQuoteArgs } from './args'
 import { GetQuoteArgs, GetQuoteError, GetQuoteResult, InterfaceTrade, NO_ROUTE, QuoteResult } from './types'
-import { transformQuoteToTrade } from './utils'
+import { transformQuoteToTradeResult } from './utils'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
@@ -19,13 +19,14 @@ const DEFAULT_QUERY_PARAMS = {
 const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
 }
-type TradeQuoteResult =
-  | {
-      trade?: InterfaceTrade
-      gasUseEstimateUSD?: string
-      blockNumber: string
-    }
-  | GetQuoteError
+
+export type TradeResult = {
+  trade?: InterfaceTrade
+  gasUseEstimateUSD?: string
+  blockNumber: string
+}
+
+type TradeQuoteResult = TradeResult | GetQuoteError
 
 export const routing = createApi({
   reducerPath: 'routing',
@@ -71,8 +72,8 @@ export const routing = createApi({
             }
 
             const quote: QuoteResult = await response.json()
-            const trade = transformQuoteToTrade(args, quote)
-            return { data: { trade, gasUseEstimateUSD: quote.gasUseEstimateUSD, blockNumber: quote.blockNumber } }
+            const tradeResult = transformQuoteToTradeResult(args, quote)
+            return { data: tradeResult }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
@@ -86,8 +87,8 @@ export const routing = createApi({
           const quote: GetQuoteResult = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
           if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
 
-          const trade = transformQuoteToTrade(args, quote)
-          return { data: { trade, gasUseEstimateUSD: quote.gasUseEstimateUSD, blockNumber: quote.blockNumber } }
+          const tradeResult = transformQuoteToTradeResult(args, quote)
+          return { data: tradeResult }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
           return { error: { status: 'CUSTOM_ERROR', error: error?.message ?? error?.detail ?? error } }

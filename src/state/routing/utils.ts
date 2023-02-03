@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { isPolygonChain } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { PoolType } from 'hooks/routing/types'
-import { SwapRouterNativeAssets } from 'utils/currencyId'
+import { PoolType, SwapRouterNativeAssets } from 'hooks/routing/types'
 
+import { TradeResult } from './slice'
 import { GetQuoteArgs, InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
@@ -29,7 +30,6 @@ export function computeRoutes(
 
   const tokenIn = quoteResult.route[0]?.[0]?.tokenIn
   const tokenOut = quoteResult.route[0]?.[quoteResult.route[0]?.length - 1]?.tokenOut
-
   if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
 
   const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseToken(tokenIn)
@@ -40,15 +40,15 @@ export function computeRoutes(
       if (route.length === 0) {
         throw new Error('Expected route to have at least one pair or pool')
       }
-      const rawAmountIn = route[0]?.amountIn
-      const rawAmountOut = route[route.length - 1]?.amountOut
+      const rawAmountIn = route[0].amountIn
+      const rawAmountOut = route[route.length - 1].amountOut
 
       if (!rawAmountIn || !rawAmountOut) {
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
-      const isOnlyV2 = isV2OnlyRoute(route)
-      const isOnlyV3 = isV3OnlyRoute(route)
+      const isOnlyV2 = isVersionedRoute<V2PoolInRoute>(PoolType.V2Pool, route)
+      const isOnlyV3 = isVersionedRoute<V3PoolInRoute>(PoolType.V3Pool, route)
 
       return {
         routev3: isOnlyV3 ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
@@ -63,13 +63,13 @@ export function computeRoutes(
   }
 }
 
-export function transformQuoteToTrade(args: GetQuoteArgs, quoteResult: QuoteResult): InterfaceTrade {
+export function transformQuoteToTradeResult(args: GetQuoteArgs, quoteResult: QuoteResult): TradeResult {
   const { tokenInAddress, tokenOutAddress, tradeType } = args
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
   const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, quoteResult)
 
-  return new InterfaceTrade({
+  const trade = new InterfaceTrade({
     v2Routes:
       routes
         ?.filter(
@@ -92,6 +92,8 @@ export function transformQuoteToTrade(args: GetQuoteArgs, quoteResult: QuoteResu
         })) ?? [],
     tradeType,
   })
+
+  return { trade, gasUseEstimateUSD: quoteResult.gasUseEstimateUSD, blockNumber: quoteResult.blockNumber }
 }
 
 const parseToken = ({ address, chainId, decimals, symbol }: QuoteResult['route'][0][0]['tokenIn']): Token => {
@@ -114,10 +116,17 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
 
-function isV2OnlyRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V2PoolInRoute[] {
-  return route.every((pool) => pool.type === PoolType.V2Pool)
+function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
+  type: T['type'],
+  route: (V3PoolInRoute | V2PoolInRoute)[]
+): route is T[] {
+  return route.every((pool) => pool.type === type)
 }
 
-function isV3OnlyRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V3PoolInRoute[] {
-  return route.every((pool) => pool.type === PoolType.V3Pool)
+export function currencyAddressForSwapQuote(currency: Currency): string {
+  if (currency.isNative) {
+    return isPolygonChain(currency.chainId) ? SwapRouterNativeAssets.MATIC : SwapRouterNativeAssets.ETH
+  }
+
+  return currency.address
 }
