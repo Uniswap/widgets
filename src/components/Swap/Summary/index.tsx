@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import ActionButton, { Action } from 'components/ActionButton'
+import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import { TooltipText } from 'components/Tooltip'
@@ -59,6 +59,7 @@ function getAllowanceFailedAction(isApproved: boolean, retry: () => void): Actio
     ),
     onClick: retry,
     color: 'warning',
+    children: <Trans>Try again</Trans>,
   }
 }
 
@@ -79,6 +80,120 @@ function getAllowancePendingAction(isApproved: boolean, cancel: () => void): Act
     onClick: cancel,
     children: <Trans>Cancel</Trans>,
   }
+}
+
+enum ReviewState {
+  REVIEWING,
+  ALLOWANCE_PENDING,
+  ALLOWANCE_FAILED,
+  TRADE_CHANGED,
+  PENDING_SWAP,
+}
+
+function ConfirmButton2({
+  trade,
+  onConfirm,
+  onAcknowledgeNewTrade,
+  allowance,
+}: {
+  trade: InterfaceTrade
+  onConfirm: () => Promise<void>
+  onAcknowledgeNewTrade: () => void
+  allowance: Allowance
+}) {
+  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
+  const [ackTrade, setAckTrade] = useState(trade)
+  const doesTradeDiffer = useMemo(
+    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
+    [ackTrade, trade]
+  )
+
+  const isApproved = useMemo(
+    () => (allowance.state === AllowanceState.REQUIRED ? allowance.isApproved : true),
+    [allowance]
+  )
+  const [reviewState, setReviewState] = useState(ReviewState.REVIEWING)
+
+  const triggerSwap = useCallback(async () => {
+    setReviewState(ReviewState.PENDING_SWAP)
+    onSubmitSwapClick?.(trade)
+    await onConfirm()
+    setReviewState(ReviewState.REVIEWING)
+  }, [onConfirm, onSubmitSwapClick, trade])
+
+  const prevAllowanceRef = useRef(allowance)
+  // Ensures swap isn't submitted until allowance has been properly updated post-permit2 flow
+  useEffect(() => {
+    if (prevAllowanceRef.current.state === AllowanceState.REQUIRED && allowance.state === AllowanceState.ALLOWED) {
+      // Prevents swap if trade has updated mid permit2 flow
+      if (doesTradeDiffer) setReviewState(ReviewState.TRADE_CHANGED)
+      else triggerSwap()
+    }
+    prevAllowanceRef.current = allowance
+  }, [allowance, doesTradeDiffer, triggerSwap])
+
+  const triggerPermit2Flow = useCallback(async () => {
+    if (allowance.state === AllowanceState.REQUIRED) {
+      setReviewState(ReviewState.ALLOWANCE_PENDING)
+      try {
+        await allowance.approveAndPermit?.()
+      } catch (e) {
+        console.error(e)
+        setReviewState(ReviewState.ALLOWANCE_FAILED)
+      }
+    }
+  }, [allowance])
+
+  const onClick = useCallback(() => {
+    if (allowance.state === AllowanceState.REQUIRED) {
+      triggerPermit2Flow()
+      // if the user finishes permit2 allowance flow, triggerSwap() is called by useEffect above once state updates
+    } else if (allowance.state === AllowanceState.ALLOWED) {
+      triggerSwap()
+    }
+  }, [allowance, triggerPermit2Flow, triggerSwap])
+
+  const [action, color] = useMemo((): [Action | undefined, ActionButtonColor?] => {
+    switch (reviewState) {
+      case ReviewState.PENDING_SWAP:
+        return [
+          {
+            message: <Trans>Confirm in your wallet</Trans>,
+            icon: Spinner,
+            onClick: () => setReviewState(ReviewState.REVIEWING),
+            children: <Trans>Cancel</Trans>,
+          },
+          'interactive',
+        ]
+      case ReviewState.ALLOWANCE_PENDING:
+        return [getAllowancePendingAction(isApproved, () => setReviewState(ReviewState.REVIEWING))]
+      case ReviewState.ALLOWANCE_FAILED:
+        return [getAllowanceFailedAction(isApproved, () => triggerPermit2Flow()), 'warningSoft']
+      case ReviewState.TRADE_CHANGED:
+        return [
+          {
+            color: 'accent',
+            message: <Trans>Price updated</Trans>,
+            icon: AlertTriangle,
+            onClick: () => {
+              onSwapPriceUpdateAck?.(ackTrade, trade)
+              setAckTrade(trade)
+              // Prompts parent to show speedbump if new trade has high impact
+              onAcknowledgeNewTrade()
+            },
+            children: <Trans>Accept</Trans>,
+          },
+        ]
+      default:
+        return [undefined, undefined]
+    }
+  }, [ackTrade, isApproved, onAcknowledgeNewTrade, onSwapPriceUpdateAck, reviewState, trade, triggerPermit2Flow])
+
+  return (
+    <ActionButton onClick={onClick} action={action} color={color ?? 'accent'}>
+      <Trans>Swap</Trans>
+    </ActionButton>
+  )
 }
 
 function ConfirmButton({
@@ -242,7 +357,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
           <Body flex align="stretch">
             <Details {...props} />
           </Body>
-          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
+          <ConfirmButton2 {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
         </>
       )}
     </>
