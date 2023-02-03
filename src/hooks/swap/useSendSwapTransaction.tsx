@@ -124,7 +124,6 @@ export default function useSendSwapTransaction(
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, calldata, value)
               throw new SwapError({
-                header: t`Swap error`,
                 message: t`Swap failed: ${swapErrorToUserReadableMessage(error)}`,
               })
             }
