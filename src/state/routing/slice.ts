@@ -6,7 +6,8 @@ import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
 
 import { serializeGetQuoteArgs } from './args'
-import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from './types'
+import { GetQuoteArgs, GetQuoteError, GetQuoteResult, InterfaceTrade, NO_ROUTE, QuoteResult } from './types'
+import { transformQuoteToTrade } from './utils'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
@@ -18,6 +19,13 @@ const DEFAULT_QUERY_PARAMS = {
 const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
 }
+type TradeQuoteResult =
+  | {
+      trade?: InterfaceTrade
+      gasUseEstimateUSD?: string
+      blockNumber: string
+    }
+  | GetQuoteError
 
 export const routing = createApi({
   reducerPath: 'routing',
@@ -56,14 +64,15 @@ export const routing = createApi({
 
               // NO_ROUTE should be treated as a valid response to prevent retries.
               if (typeof data === 'object' && data.errorCode === 'NO_ROUTE') {
-                return { data: NO_ROUTE as GetQuoteResult }
+                return { data: NO_ROUTE as TradeQuoteResult }
               }
 
               throw data
             }
 
-            const quote: GetQuoteResult = await response.json()
-            return { data: quote }
+            const quote: QuoteResult = await response.json()
+            const trade = transformQuoteToTrade(args, quote)
+            return { data: { trade, gasUseEstimateUSD: quote.gasUseEstimateUSD, blockNumber: quote.blockNumber } }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
@@ -74,8 +83,13 @@ export const routing = createApi({
         // Lazy-load the client-side router to improve initial pageload times.
         const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
-          const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
-          return { data: quote }
+          const quote: GetQuoteResult = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
+
+          // TODO: handle errors using rtk-query errors instead of returning strings
+          if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
+
+          const trade = transformQuoteToTrade(args, quote)
+          return { data: { trade, gasUseEstimateUSD: quote.gasUseEstimateUSD, blockNumber: quote.blockNumber } }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
           return { error: { status: 'CUSTOM_ERROR', error: error?.message ?? error?.detail ?? error } }

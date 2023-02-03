@@ -9,7 +9,6 @@ import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, NO_ROUTE, TradeState } from 'state/routing/types'
-import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import { RouterPreference } from './types'
 
@@ -72,31 +71,21 @@ export function useRouterTrade(
   }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const quote = typeof data === 'object' ? data : undefined
-  const trade = useMemo(() => {
-    const routes = computeRoutes(currencyIn, currencyOut, tradeType, quote)
-    if (!routes || routes.length === 0) return
-    try {
-      return transformRoutesToTrade(routes, tradeType)
-    } catch (e: unknown) {
-      console.debug('transformRoutesToTrade failed: ', e)
-      return
-    }
-  }, [currencyIn, currencyOut, quote, tradeType])
-  const isValidBlock = useIsValidBlock(Number(quote?.blockNumber))
+  const quoteResult = typeof data === 'object' ? data : undefined
+  const isValidBlock = useIsValidBlock(Number(quoteResult?.blockNumber))
   const isValid = currentData === data && isValidBlock
-  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quote?.gasUseEstimateUSD)
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD)
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
       return TRADE_INVALID
     } else if (data === NO_ROUTE) {
       return TRADE_NOT_FOUND
-    } else if (!trade) {
+    } else if (!quoteResult?.trade) {
       return TRADE_LOADING
     } else {
       const state = isValid ? TradeState.VALID : TradeState.LOADING
-      return { state, trade, gasUseEstimateUSD }
+      return { state, trade: quoteResult?.trade, gasUseEstimateUSD }
     }
-  }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD])
+  }, [amountSpecified, isError, queryArgs, data, quoteResult?.trade, isValid, gasUseEstimateUSD])
 }
