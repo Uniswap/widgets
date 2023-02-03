@@ -52,7 +52,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         gasEstimate = await provider.estimateGas(tx)
       } catch (gasError) {
         console.warn(gasError)
-        throw new SwapError({ header: 'Swap Error', message: t`Your swap is expected to fail` })
+        throw new SwapError({ header: t`Swap Error`, message: t`Your swap is expected to fail` })
       }
       const gasLimit = calculateGasMargin(gasEstimate)
       response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
@@ -65,7 +65,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
     }
     if (tx.data !== response.data) {
       throw new SwapError({
-        header: 'Swap Error',
+        header: t`Swap Error`,
         message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
       })
     }

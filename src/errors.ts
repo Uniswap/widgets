@@ -24,6 +24,17 @@ export abstract class WidgetError extends Error {
   }
 }
 
+abstract class DismissableWidgetError extends WidgetError {
+  constructor(config: WidgetErrorConfig) {
+    super({
+      action: config.action ?? DEFAULT_DISMISSABLE_ERROR_ACTION,
+      header: config.header ?? DEFAULT_DISMISSABLE_ERROR_HEADER,
+      ...config,
+    })
+    this.dismissable = true
+  }
+}
+
 export class IntegrationError extends WidgetError {
   constructor(message: string) {
     super({ message })
@@ -38,15 +49,10 @@ class ConnectionError extends WidgetError {
   }
 }
 
-export class SwapError extends WidgetError {
+export class SwapError extends DismissableWidgetError {
   constructor(config: WidgetErrorConfig) {
-    super({
-      ...config,
-      header: config.header ?? DEFAULT_DISMISSABLE_ERROR_HEADER,
-      action: config.action ?? DEFAULT_DISMISSABLE_ERROR_ACTION,
-    })
+    super(config)
     this.name = 'SwapError'
-    this.dismissable = true
   }
 }
 
