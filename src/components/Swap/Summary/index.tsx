@@ -122,10 +122,6 @@ function ConfirmButton({
     [allowance]
   )
 
-  useEffect(() => {
-    console.log(allowance)
-  }, [allowance])
-
   const triggerSwap = useCallback(async () => {
     setReviewState(ReviewState.PENDING_SWAP)
     onSubmitSwapClick?.(trade)
