@@ -3,14 +3,17 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
+import { TooltipText } from 'components/Tooltip'
+import { Allowance, AllowanceRequired, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import SpeedBumpDialog from '../Speedbump'
@@ -27,14 +30,67 @@ const PriceImpactText = styled.span`
   color: ${({ theme }) => theme.error};
 `
 
+const PermitTooltipBody = styled.div`
+  max-width: 220px;
+`
+
+function PermitTooltipText({ text, content }: { text: ReactNode; content: ReactNode }) {
+  return (
+    <TooltipText placement="bottom" offset={10} text={text}>
+      <PermitTooltipBody>
+        <ThemedText.Caption>{content}</ThemedText.Caption>
+      </PermitTooltipBody>
+    </TooltipText>
+  )
+}
+
+function getAllowanceFailedAction(isApproved: boolean, retry: () => void): Action {
+  return {
+    message: isApproved ? (
+      <PermitTooltipText
+        text={t`Token approval failed`}
+        content={t`A signature is needed to trade this token on the Uniswap protocol. For security, signatures expire after 30 days.`}
+      />
+    ) : (
+      <PermitTooltipText
+        text={t`Permit approval failed`}
+        content={t`Permit2 allows safe sharing and management of token approvals across different smart contracts.`}
+      />
+    ),
+    onClick: retry,
+    color: 'warning',
+  }
+}
+
+function getAllowancePendingAction(isApproved: boolean, cancel: () => void): Action {
+  return {
+    message: isApproved ? (
+      <PermitTooltipText
+        text={t`Approve token for trading`}
+        content={t`Gives you the ability to trade this token on the Uniswap protocol. For security, this will expire in 30 days.`}
+      />
+    ) : (
+      <PermitTooltipText
+        text={t`Approve permit`}
+        content={t`Permit2 allows safe sharing and management of token approvals across different smart contracts.`}
+      />
+    ),
+    icon: Spinner,
+    onClick: cancel,
+    children: <Trans>Cancel</Trans>,
+  }
+}
+
 function ConfirmButton({
   trade,
   onConfirm,
   onAcknowledgeNewTrade,
+  allowance,
 }: {
   trade: InterfaceTrade
   onConfirm: () => Promise<void>
   onAcknowledgeNewTrade: () => void
+  allowance: Allowance
 }) {
   const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
@@ -43,16 +99,59 @@ function ConfirmButton({
     [ackTrade, trade]
   )
 
+  const [isAllowancePending, setIsAllowancePending] = useState(false)
+  const [isAllowanceFailed, setIsAllowanceFailed] = useState(false)
+
+  const triggerPermit2Flow = useCallback(async (allowance: AllowanceRequired) => {
+    setIsAllowancePending(true)
+    try {
+      setIsAllowanceFailed(false)
+      await allowance.approveAndPermit?.()
+    } catch (e) {
+      console.error(e)
+      setIsAllowanceFailed(true)
+    } finally {
+      setIsAllowancePending(false)
+    }
+  }, [])
+
   const [isPending, setIsPending] = useState(false)
-  const onClick = useCallback(async () => {
+  const triggerSwap = useCallback(async () => {
     setIsPending(true)
     onSubmitSwapClick?.(trade)
     await onConfirm()
     setIsPending(false)
   }, [onConfirm, onSubmitSwapClick, trade])
 
+  const onClick = useCallback(async () => {
+    if (allowance.state === AllowanceState.REQUIRED) {
+      triggerPermit2Flow(allowance)
+    } else if (allowance.state === AllowanceState.ALLOWED) {
+      triggerSwap()
+    }
+  }, [allowance, triggerPermit2Flow, triggerSwap])
+
+  const prevAllowanceRef = useRef(allowance)
+  useEffect(() => {
+    // Triggers swap when state has updated as a result of user finishing permit flow
+    if (
+      prevAllowanceRef.current.state === AllowanceState.REQUIRED &&
+      allowance.state === AllowanceState.ALLOWED &&
+      !doesTradeDiffer
+    ) {
+      triggerSwap()
+    }
+    prevAllowanceRef.current = allowance
+  }, [allowance, doesTradeDiffer, triggerSwap])
+
   const action = useMemo((): Action | undefined => {
-    if (isPending) {
+    if (allowance.state === AllowanceState.REQUIRED) {
+      if (isAllowanceFailed) {
+        return getAllowanceFailedAction(allowance.isApproved, () => triggerPermit2Flow(allowance))
+      } else if (isAllowancePending) {
+        return getAllowancePendingAction(allowance.isApproved, () => setIsAllowancePending(false))
+      }
+    } else if (isPending) {
       return {
         message: <Trans>Confirm in your wallet</Trans>,
         icon: Spinner,
@@ -75,11 +174,26 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackTrade, doesTradeDiffer, isPending, onAcknowledgeNewTrade, onSwapPriceUpdateAck, trade])
+  }, [
+    ackTrade,
+    allowance,
+    doesTradeDiffer,
+    isAllowanceFailed,
+    isAllowancePending,
+    isPending,
+    onAcknowledgeNewTrade,
+    onSwapPriceUpdateAck,
+    trade,
+    triggerPermit2Flow,
+  ])
 
   return (
-    <ActionButton onClick={onClick} action={action} color={isPending ? 'interactive' : 'accent'}>
-      {isPending ? <Trans>Cancel</Trans> : <Trans>Confirm swap</Trans>}
+    <ActionButton
+      onClick={onClick}
+      action={action}
+      color={isPending ? 'interactive' : isAllowanceFailed ? 'warningSoft' : 'accent'}
+    >
+      {isPending ? <Trans>Cancel</Trans> : isAllowanceFailed ? <Trans>Try again</Trans> : <Trans>Swap</Trans>}
     </ActionButton>
   )
 }
@@ -92,6 +206,7 @@ interface SummaryDialogProps {
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
   onConfirm: () => Promise<void>
+  allowance: Allowance
 }
 
 export function SummaryDialog(props: SummaryDialogProps) {
@@ -114,7 +229,6 @@ export function SummaryDialog(props: SummaryDialogProps) {
       setShowSpeedbump(false)
     }
   }, [ackPriceImpact, props.impact, showSpeedbump])
-
   return (
     <>
       {showSpeedbump && props.impact ? (

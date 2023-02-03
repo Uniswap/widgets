@@ -66,6 +66,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSubmit = useOnSubmit()
   const onSwap = useCallback(async () => {
+    console.log('onSwap')
     try {
       await onSubmit(async () => {
         const response = await swapCallback?.()
@@ -90,6 +91,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
       // Only close the review modal if the swap submitted (ie no-throw).
       setOpen(false)
     } catch (e) {
+      console.log('in error')
       console.error(e) // ignore error
     }
   }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, trade])
@@ -116,6 +118,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
             outputUSDC={outputUSDC}
             impact={impact}
             onConfirm={onSwap}
+            allowance={allowance}
           />
         </Dialog>
       )}
