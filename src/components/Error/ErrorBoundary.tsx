@@ -1,10 +1,4 @@
-import {
-  DEFAULT_ERROR_ACTION,
-  DEFAULT_ERROR_HEADER,
-  DISMISS_ERROR_ACTION,
-  DISMISS_ERROR_HEADER,
-  WidgetError,
-} from 'errors'
+import { DEFAULT_ERROR_ACTION, DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
 import { Component, ErrorInfo, PropsWithChildren, useCallback, useState } from 'react'
 
 import Dialog from '../Dialog'
@@ -60,10 +54,8 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
   }
 
   renderErrorDialog(error: Error) {
-    const header =
-      error instanceof WidgetError ? (error.dismissable ? DISMISS_ERROR_HEADER : error.header) : DEFAULT_ERROR_HEADER
-    const action =
-      error instanceof WidgetError ? (error.dismissable ? DISMISS_ERROR_ACTION : error.action) : DEFAULT_ERROR_ACTION
+    const header = error instanceof WidgetError ? error.header : DEFAULT_ERROR_HEADER
+    const action = error instanceof WidgetError ? error.action : DEFAULT_ERROR_ACTION
     return (
       <Dialog color="dialog">
         <ErrorDialog
