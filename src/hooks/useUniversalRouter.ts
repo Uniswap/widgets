@@ -5,6 +5,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { SwapError } from 'errors'
 import { useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -51,18 +52,22 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         gasEstimate = await provider.estimateGas(tx)
       } catch (gasError) {
         console.warn(gasError)
-        throw new Error('Your swap is expected to fail')
+        throw new SwapError({ header: t`Swap Error`, message: t`Your swap is expected to fail` })
       }
       const gasLimit = calculateGasMargin(gasEstimate)
       response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
     } catch (swapError: unknown) {
       const message = swapErrorToUserReadableMessage(swapError)
-      throw new Error(message)
+      throw new SwapError({
+        header: 'Swap Error',
+        message,
+      })
     }
     if (tx.data !== response.data) {
-      throw new Error(
-        t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
-      )
+      throw new SwapError({
+        header: t`Swap Error`,
+        message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
+      })
     }
     return response
   }, [

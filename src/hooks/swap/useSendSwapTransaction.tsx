@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
 import { ErrorCode } from 'constants/eip1193'
+import { SwapError } from 'errors'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -122,7 +123,10 @@ export default function useSendSwapTransaction(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, calldata, value)
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`) // FIXME: this prints to console as [object Object]
+              throw new SwapError({
+                header: t`Swap error`,
+                message: t`Swap failed: ${swapErrorToUserReadableMessage(error)}`,
+              })
             }
           })
       },
