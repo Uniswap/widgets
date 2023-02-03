@@ -4,7 +4,7 @@ import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
 import { TooltipText } from 'components/Tooltip'
-import { Allowance, AllowanceRequired, AllowanceState } from 'hooks/usePermit2Allowance'
+import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, Spinner } from 'icons'
@@ -192,123 +192,6 @@ function ConfirmButton2({
   return (
     <ActionButton onClick={onClick} action={action} color={color ?? 'accent'}>
       <Trans>Swap</Trans>
-    </ActionButton>
-  )
-}
-
-function ConfirmButton({
-  trade,
-  onConfirm,
-  onAcknowledgeNewTrade,
-  allowance,
-}: {
-  trade: InterfaceTrade
-  onConfirm: () => Promise<void>
-  onAcknowledgeNewTrade: () => void
-  allowance: Allowance
-}) {
-  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
-  const [ackTrade, setAckTrade] = useState(trade)
-  const doesTradeDiffer = useMemo(
-    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
-    [ackTrade, trade]
-  )
-
-  const [isPending, setIsPending] = useState(false)
-  const triggerSwap = useCallback(async () => {
-    setIsPending(true)
-    onSubmitSwapClick?.(trade)
-    await onConfirm()
-    setIsPending(false)
-  }, [onConfirm, onSubmitSwapClick, trade])
-
-  const prevAllowanceRef = useRef(allowance)
-  // Ensures swap isn't submitted until allowance has been properly updated post-permit2 flow
-  useEffect(() => {
-    if (
-      prevAllowanceRef.current.state === AllowanceState.REQUIRED &&
-      allowance.state === AllowanceState.ALLOWED &&
-      !doesTradeDiffer // Prevents swap if trade has updated mid permit2 flow
-    ) {
-      triggerSwap()
-    }
-    prevAllowanceRef.current = allowance
-  }, [allowance, doesTradeDiffer, triggerSwap])
-
-  const [isAllowancePending, setIsAllowancePending] = useState(false)
-  const [isAllowanceFailed, setIsAllowanceFailed] = useState(false)
-  const triggerPermit2Flow = useCallback(async (allowance: AllowanceRequired) => {
-    setIsAllowancePending(true)
-    try {
-      setIsAllowanceFailed(false)
-      await allowance.approveAndPermit?.()
-    } catch (e) {
-      console.error(e)
-      setIsAllowanceFailed(true)
-    } finally {
-      setIsAllowancePending(false)
-    }
-  }, [])
-
-  const onClick = useCallback(() => {
-    if (allowance.state === AllowanceState.REQUIRED) {
-      triggerPermit2Flow(allowance)
-      // if the user finishes permit2 allowance flow, triggerSwap() is called by useEffect above once state updates
-    } else if (allowance.state === AllowanceState.ALLOWED) {
-      triggerSwap()
-    }
-  }, [allowance, triggerPermit2Flow, triggerSwap])
-
-  const action = useMemo((): Action | undefined => {
-    if (allowance.state === AllowanceState.REQUIRED) {
-      if (isAllowanceFailed) {
-        return getAllowanceFailedAction(allowance.isApproved, () => triggerPermit2Flow(allowance))
-      } else if (isAllowancePending) {
-        return getAllowancePendingAction(allowance.isApproved, () => setIsAllowancePending(false))
-      }
-    } else if (isPending) {
-      return {
-        message: <Trans>Confirm in your wallet</Trans>,
-        icon: Spinner,
-        onClick: () => {
-          setIsPending(false)
-        },
-      }
-    } else if (doesTradeDiffer) {
-      return {
-        color: 'accent',
-        message: <Trans>Price updated</Trans>,
-        icon: AlertTriangle,
-        onClick: () => {
-          onSwapPriceUpdateAck?.(ackTrade, trade)
-          setAckTrade(trade)
-          // Prompts parent to show speedbump if new trade has high impact
-          onAcknowledgeNewTrade()
-        },
-        children: <Trans>Accept</Trans>,
-      }
-    }
-    return
-  }, [
-    ackTrade,
-    allowance,
-    doesTradeDiffer,
-    isAllowanceFailed,
-    isAllowancePending,
-    isPending,
-    onAcknowledgeNewTrade,
-    onSwapPriceUpdateAck,
-    trade,
-    triggerPermit2Flow,
-  ])
-
-  return (
-    <ActionButton
-      onClick={onClick}
-      action={action}
-      color={isPending ? 'interactive' : isAllowanceFailed ? 'warningSoft' : 'accent'}
-    >
-      {isPending ? <Trans>Cancel</Trans> : isAllowanceFailed ? <Trans>Try again</Trans> : <Trans>Swap</Trans>}
     </ActionButton>
   )
 }
