@@ -79,30 +79,6 @@ interface ExpandoProps extends ColumnProps {
   showBottomGradient?: boolean
 }
 
-const StyledTitleWrapper = ({
-  title,
-  open,
-  onExpand,
-  hideRulers,
-  iconPrefix,
-}: Pick<ExpandoProps, 'title' | 'open' | 'onExpand' | 'hideRulers' | 'iconPrefix'>) => {
-  return (
-    <HeaderColumn onClick={onExpand} gap={open ? 0.5 : 0.75}>
-      {!hideRulers && <Rule />}
-      <ThemedText.Subhead2 color="secondary">
-        <TitleRow gap={1}>
-          <TitleHeader>{title}</TitleHeader>
-          <Row gap={0.2}>
-            {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
-            <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
-          </Row>
-        </TitleRow>
-      </ThemedText.Subhead2>
-      {!hideRulers && open && <Rule />}
-    </HeaderColumn>
-  )
-}
-
 /** A scrollable Expando with an absolute height. */
 export default function Expando({
   title,
@@ -122,13 +98,19 @@ export default function Expando({
   return (
     <Column {...rest}>
       {styledTitleWrapper ? (
-        <StyledTitleWrapper
-          iconPrefix={iconPrefix}
-          hideRulers={hideRulers}
-          title={title}
-          open={open}
-          onExpand={onExpand}
-        />
+        <HeaderColumn onClick={onExpand} gap={open ? 0.5 : 0.75}>
+          {!hideRulers && <Rule />}
+          <ThemedText.Subhead2 color="secondary">
+            <TitleRow gap={1}>
+              <TitleHeader>{title}</TitleHeader>
+              <Row gap={0.2}>
+                {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
+                <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+              </Row>
+            </TitleRow>
+          </ThemedText.Subhead2>
+          {!hideRulers && open && <Rule />}
+        </HeaderColumn>
       ) : (
         title
       )}
