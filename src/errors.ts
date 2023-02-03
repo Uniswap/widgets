@@ -51,7 +51,7 @@ class ConnectionError extends WidgetError {
 
 export class SwapError extends DismissableWidgetError {
   constructor(config: WidgetErrorConfig) {
-    super({ header: t`Swap Error`, ...config })
+    super({ ...config, header: config.header ?? t`Swap Error` })
     this.name = 'SwapError'
   }
 }
