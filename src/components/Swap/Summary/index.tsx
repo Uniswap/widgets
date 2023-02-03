@@ -99,9 +99,29 @@ function ConfirmButton({
     [ackTrade, trade]
   )
 
+  const [isPending, setIsPending] = useState(false)
+  const triggerSwap = useCallback(async () => {
+    setIsPending(true)
+    onSubmitSwapClick?.(trade)
+    await onConfirm()
+    setIsPending(false)
+  }, [onConfirm, onSubmitSwapClick, trade])
+
+  const prevAllowanceRef = useRef(allowance)
+  // Ensures swap isn't submitted until allowance has been properly updated post-permit2 flow
+  useEffect(() => {
+    if (
+      prevAllowanceRef.current.state === AllowanceState.REQUIRED &&
+      allowance.state === AllowanceState.ALLOWED &&
+      !doesTradeDiffer // Prevents swap if trade has updated mid permit2 flow
+    ) {
+      triggerSwap()
+    }
+    prevAllowanceRef.current = allowance
+  }, [allowance, doesTradeDiffer, triggerSwap])
+
   const [isAllowancePending, setIsAllowancePending] = useState(false)
   const [isAllowanceFailed, setIsAllowanceFailed] = useState(false)
-
   const triggerPermit2Flow = useCallback(async (allowance: AllowanceRequired) => {
     setIsAllowancePending(true)
     try {
@@ -115,34 +135,14 @@ function ConfirmButton({
     }
   }, [])
 
-  const [isPending, setIsPending] = useState(false)
-  const triggerSwap = useCallback(async () => {
-    setIsPending(true)
-    onSubmitSwapClick?.(trade)
-    await onConfirm()
-    setIsPending(false)
-  }, [onConfirm, onSubmitSwapClick, trade])
-
-  const onClick = useCallback(async () => {
+  const onClick = useCallback(() => {
     if (allowance.state === AllowanceState.REQUIRED) {
       triggerPermit2Flow(allowance)
+      // if the user finishes permit2 allowance flow, triggerSwap() is called by useEffect above once state updates
     } else if (allowance.state === AllowanceState.ALLOWED) {
       triggerSwap()
     }
   }, [allowance, triggerPermit2Flow, triggerSwap])
-
-  const prevAllowanceRef = useRef(allowance)
-  useEffect(() => {
-    // Triggers swap when state has updated as a result of user finishing permit flow
-    if (
-      prevAllowanceRef.current.state === AllowanceState.REQUIRED &&
-      allowance.state === AllowanceState.ALLOWED &&
-      !doesTradeDiffer
-    ) {
-      triggerSwap()
-    }
-    prevAllowanceRef.current = allowance
-  }, [allowance, doesTradeDiffer, triggerSwap])
 
   const action = useMemo((): Action | undefined => {
     if (allowance.state === AllowanceState.REQUIRED) {
