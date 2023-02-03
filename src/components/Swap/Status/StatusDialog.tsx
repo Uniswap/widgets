@@ -42,7 +42,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   }, [tx.receipt?.status])
 
   return (
-    <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
+    <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }} data-testid="status-dialog">
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
         <ThemedText.H4>{heading}</ThemedText.H4>
         {tx.info.type === TransactionType.SWAP ? (
