@@ -59,13 +59,11 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
     } catch (swapError: unknown) {
       const message = swapErrorToUserReadableMessage(swapError)
       throw new SwapError({
-        header: 'Swap Error',
         message,
       })
     }
     if (tx.data !== response.data) {
       throw new SwapError({
-        header: t`Swap Error`,
         message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
       })
     }

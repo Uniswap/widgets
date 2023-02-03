@@ -27,9 +27,9 @@ export abstract class WidgetError extends Error {
 abstract class DismissableWidgetError extends WidgetError {
   constructor(config: WidgetErrorConfig) {
     super({
+      ...config,
       action: config.action ?? DEFAULT_DISMISSABLE_ERROR_ACTION,
       header: config.header ?? DEFAULT_DISMISSABLE_ERROR_HEADER,
-      ...config,
     })
     this.dismissable = true
   }
@@ -51,7 +51,7 @@ class ConnectionError extends WidgetError {
 
 export class SwapError extends DismissableWidgetError {
   constructor(config: WidgetErrorConfig) {
-    super(config)
+    super({ ...config, header: config.header ?? t`Swap Error` })
     this.name = 'SwapError'
   }
 }
