@@ -84,8 +84,6 @@ export const routing = createApi({
         const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
           const quote: GetQuoteResult = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
-
-          // TODO: handle errors using rtk-query errors instead of returning strings
           if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
 
           const trade = transformQuoteToTrade(args, quote)
