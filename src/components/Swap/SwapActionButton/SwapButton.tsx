@@ -68,7 +68,6 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const onSubmit = useOnSubmit()
   const throwAsync = useAsyncError()
   const onSwap = useCallback(async () => {
-    console.log('onSwap')
     try {
       await onSubmit(async () => {
         const response = await swapCallback?.()

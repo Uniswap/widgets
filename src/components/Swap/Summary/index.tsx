@@ -90,7 +90,7 @@ enum ReviewState {
   PENDING_SWAP,
 }
 
-function ConfirmButton2({
+function ConfirmButton({
   trade,
   onConfirm,
   onAcknowledgeNewTrade,
@@ -240,7 +240,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
           <Body flex align="stretch">
             <Details {...props} />
           </Body>
-          <ConfirmButton2 {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
+          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
         </>
       )}
     </>
