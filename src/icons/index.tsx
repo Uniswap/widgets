@@ -28,7 +28,6 @@ import {
   Clock as ClockIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
-  Lock as LockIcon,
   Search as SearchIcon,
   Settings as SettingsIcon,
   Slash as SlashIcon,
@@ -101,7 +100,6 @@ export const HelpCircle = icon(HelpCircleIcon)
 export const Identicon = icon(IdenticonIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
-export const Lock = icon(LockIcon)
 export const AutoRouter = icon(RouterIcon)
 export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)

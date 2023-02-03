@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 const MISSING_PROVIDER = Symbol()
 const BlockNumberContext = createContext<
@@ -32,13 +32,8 @@ export function Provider({ children }: PropsWithChildren) {
   const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
 
-  const isThrottle = useRef(false)
-
   const onBlock = useCallback(
     (block: number) => {
-      if (isThrottle.current) return
-
-      isThrottle.current = true
       setChainBlock((chainBlock) => {
         if (chainBlock.chainId === activeChainId) {
           if (!chainBlock.block || chainBlock.block < block) {
@@ -47,7 +42,6 @@ export function Provider({ children }: PropsWithChildren) {
         }
         return chainBlock
       })
-      setTimeout(() => (isThrottle.current = false), 300)
     },
     [activeChainId]
   )
