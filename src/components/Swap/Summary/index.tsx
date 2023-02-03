@@ -161,7 +161,7 @@ function ConfirmButton({
     }
   }, [allowance, triggerPermit2Flow, triggerSwap])
 
-  const [action, color] = useMemo((): [Action | undefined, ActionButtonColor?] => {
+  const [action, color] = useMemo((): [Action?, ActionButtonColor?] => {
     switch (reviewState) {
       case ReviewState.PENDING_SWAP:
         return [
@@ -193,7 +193,7 @@ function ConfirmButton({
           },
         ]
       default:
-        return [undefined, undefined]
+        return []
     }
   }, [ackTrade, isApproved, onAcknowledgeNewTrade, onSwapPriceUpdateAck, reviewState, trade, triggerPermit2Flow])
 
