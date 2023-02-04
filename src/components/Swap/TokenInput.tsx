@@ -25,7 +25,7 @@ const ValueInput = styled(DecimalInput)`
 `
 
 const TokenInputColumn = styled(Column)`
-  margin: 0.5em 1em 0;
+  margin: 0.25em 1em 0;
 `
 
 export interface TokenInputHandle {
