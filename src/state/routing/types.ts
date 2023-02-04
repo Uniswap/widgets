@@ -90,4 +90,10 @@ export const NO_ROUTE = 'No Route'
 export type GetQuoteError = typeof INITIALIZED | typeof NO_ROUTE
 export type GetQuoteResult = QuoteResult | GetQuoteError
 
+export type TradeResult = {
+  trade?: InterfaceTrade
+  gasUseEstimateUSD?: string
+  blockNumber: string
+}
+
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}

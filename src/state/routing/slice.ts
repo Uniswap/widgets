@@ -6,7 +6,7 @@ import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
 
 import { serializeGetQuoteArgs } from './args'
-import { GetQuoteArgs, GetQuoteError, GetQuoteResult, InterfaceTrade, NO_ROUTE, QuoteResult } from './types'
+import { GetQuoteArgs, GetQuoteError, GetQuoteResult, NO_ROUTE, QuoteResult, TradeResult } from './types'
 import { transformQuoteToTradeResult } from './utils'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
@@ -18,12 +18,6 @@ const DEFAULT_QUERY_PARAMS = {
 
 const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
-}
-
-export type TradeResult = {
-  trade?: InterfaceTrade
-  gasUseEstimateUSD?: string
-  blockNumber: string
 }
 
 type TradeQuoteResult = TradeResult | GetQuoteError

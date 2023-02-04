@@ -5,7 +5,7 @@ import { isPolygonChain } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { PoolType, SwapRouterNativeAssets } from 'hooks/routing/types'
 
-import { TradeResult } from './slice'
+import { TradeResult } from './types'
 import { GetQuoteArgs, InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**

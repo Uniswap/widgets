@@ -7,8 +7,8 @@ import useTimeout from 'hooks/useTimeout'
 import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
-import { TradeResult, useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
-import { InterfaceTrade, NO_ROUTE, TradeState } from 'state/routing/types'
+import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
+import { InterfaceTrade, NO_ROUTE, TradeResult, TradeState } from 'state/routing/types'
 
 import { RouterPreference } from './types'
 
