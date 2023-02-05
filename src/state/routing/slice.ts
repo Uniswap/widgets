@@ -9,7 +9,7 @@ import { serializeGetQuoteArgs } from './args'
 import { GetQuoteArgs, GetQuoteError, GetQuoteResult, NO_ROUTE, QuoteResult, TradeResult } from './types'
 import { transformQuoteToTradeResult } from './utils'
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
@@ -82,6 +82,7 @@ export const routing = createApi({
           if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
 
           const tradeResult = transformQuoteToTradeResult(args, quote)
+
           return { data: tradeResult }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)

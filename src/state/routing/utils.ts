@@ -1,3 +1,4 @@
+import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
@@ -20,6 +21,7 @@ export function computeRoutes(
   | {
       routev3: V3Route<Currency, Currency> | null
       routev2: V2Route<Currency, Currency> | null
+      mixedRoute: MixedRouteSDK<Currency, Currency> | null
       inputAmount: CurrencyAmount<Currency>
       outputAmount: CurrencyAmount<Currency>
     }[]
@@ -53,6 +55,10 @@ export function computeRoutes(
       return {
         routev3: isOnlyV3 ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev2: isOnlyV2 ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
+        mixedRoute:
+          !isOnlyV3 && !isOnlyV2
+            ? new MixedRouteSDK(route.map(parsePoolOrPair), parsedCurrencyIn, parsedCurrencyOut)
+            : null,
         inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
       }
@@ -90,6 +96,17 @@ export function transformQuoteToTradeResult(args: GetQuoteArgs, quoteResult: Quo
           inputAmount,
           outputAmount,
         })) ?? [],
+    mixedRoutes:
+      routes
+        ?.filter(
+          (r): r is typeof routes[0] & { mixedRoute: NonNullable<typeof routes[0]['mixedRoute']> } =>
+            r.mixedRoute !== null
+        )
+        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
+          mixedRoute,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
     tradeType,
   })
 
@@ -115,6 +132,10 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve0.token), reserve0.quotient),
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
+
+const parsePoolOrPair = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
+  return pool.type === PoolType.V3Pool ? parsePool(pool) : parsePair(pool)
+}
 
 function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
   type: T['type'],
