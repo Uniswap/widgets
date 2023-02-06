@@ -78,7 +78,9 @@ export const routing = createApi({
         // Lazy-load the client-side router to improve initial pageload times.
         const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
-          const quote: QuoteResult = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
+          const quote: QuoteResult | GetQuoteError = await clientSideSmartOrderRouter.getClientSideQuote(args, {
+            protocols,
+          })
           if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
 
           const tradeResult = transformQuoteToTradeResult(args, quote)
