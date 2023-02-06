@@ -60,7 +60,7 @@ const actionCss = css`
 export const Overlay = styled(Row)<{ hasAction: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.small}em;
   flex-flow: row-reverse nowrap;
-  margin-top: 0.75em;
+  margin-top: 0.25em;
   min-height: 3.5em;
   transition: padding ${AnimationSpeed.Medium} ease-out;
   ${({ hasAction }) => hasAction && actionCss}

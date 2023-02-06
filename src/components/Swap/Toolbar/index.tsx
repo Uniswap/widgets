@@ -22,7 +22,7 @@ const StyledExpando = styled(Expando)`
   overflow: hidden;
 `
 
-const COLLAPSED_TOOLBAR_HEIGHT_EM = 3.5
+const COLLAPSED_TOOLBAR_HEIGHT_EM = 3
 
 const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   cursor: ${({ isExpandable }) => isExpandable && 'pointer'};
@@ -97,9 +97,7 @@ export default memo(function Toolbar() {
         return { caption: <Caption.InsufficientLiquidity /> }
       }
       if (trade?.inputAmount && trade.outputAmount) {
-        const caption = impact?.warning ? (
-          <Caption.PriceImpact impact={impact} expanded={open} />
-        ) : (
+        const caption = (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
@@ -125,7 +123,6 @@ export default memo(function Toolbar() {
     insufficientBalance,
     isWrap,
     trade,
-    impact,
     open,
     outputUSDC,
   ])

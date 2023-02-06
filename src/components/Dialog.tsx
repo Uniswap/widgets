@@ -5,16 +5,7 @@ import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { largeIconCss } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
-import {
-  createContext,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
 import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
@@ -180,27 +171,6 @@ const AnimationWrapper = styled.div`
 // Accounts for any animation lag
 const PopoverAnimationUpdateDelay = ms`100`
 
-/* Allows slide in animation to occur without popovers appearing at pre-animated location. */
-function AnimatedPopoverProvider({ children }: PropsWithChildren) {
-  const popoverRef = useRef<HTMLDivElement>(null)
-  const [updatePopover, setUpdatePopover] = useState(false)
-  useEffect(() => {
-    setTimeout(() => {
-      setUpdatePopover(true)
-    }, TransitionDuration.Medium + PopoverAnimationUpdateDelay)
-  }, [])
-
-  return (
-    <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
-      <div ref={popoverRef}>
-        <HiddenWrapper>
-          <AnimationWrapper>{children}</AnimationWrapper>
-        </HiddenWrapper>
-      </div>
-    </PopoverBoundaryProvider>
-  )
-}
-
 interface DialogProps {
   color: Color
   children: ReactNode
@@ -214,13 +184,26 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     return () => context.setActive(false)
   }, [context])
 
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const [updatePopover, setUpdatePopover] = useState(false)
+  useEffect(() => {
+    // Allows slide in animation to occur without popovers appearing at pre-animated location.
+    setTimeout(() => {
+      setUpdatePopover(true)
+    }, TransitionDuration.Medium + PopoverAnimationUpdateDelay)
+  }, [])
+
   const modal = useRef<HTMLDivElement>(null)
-  useUnmountingAnimation(modal, () => {
-    // Returns the context element's child count at the time of unmounting.
-    // This cannot be done through state because the count is updated outside of React's lifecycle -
-    // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
-    return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
-  })
+  useUnmountingAnimation(
+    popoverRef,
+    () => {
+      // Returns the context element's child count at the time of unmounting.
+      // This cannot be done through state because the count is updated outside of React's lifecycle -
+      // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
+      return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
+    },
+    modal
+  )
 
   useOnEscapeHandler(onClose)
 
@@ -228,13 +211,19 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
     context.element &&
     createPortal(
       <ThemeProvider>
-        <AnimatedPopoverProvider>
-          <OnCloseContext.Provider value={onClose}>
-            <Modal color={color} ref={modal}>
-              {children}
-            </Modal>
-          </OnCloseContext.Provider>
-        </AnimatedPopoverProvider>
+        <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
+          <div ref={popoverRef}>
+            <HiddenWrapper>
+              <AnimationWrapper>
+                <OnCloseContext.Provider value={onClose}>
+                  <Modal color={color} ref={modal}>
+                    {children}
+                  </Modal>
+                </OnCloseContext.Provider>
+              </AnimationWrapper>
+            </HiddenWrapper>
+          </div>
+        </PopoverBoundaryProvider>
       </ThemeProvider>,
       context.element
     )
