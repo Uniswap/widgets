@@ -3,13 +3,13 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
-import { TooltipText } from 'components/Tooltip'
+import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -39,33 +39,7 @@ function useReviewState(
   const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
   const { onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
 
-  useEffect(() => {
-    if (doesTradeDiffer && currentState === ReviewState.REVIEWING) {
-      setCurrentState(ReviewState.TRADE_CHANGED)
-    } else if (!doesTradeDiffer && currentState === ReviewState.TRADE_CHANGED) {
-      setCurrentState(ReviewState.REVIEWING)
-    }
-  }, [currentState, doesTradeDiffer])
-
-  const triggerSwap = useCallback(async () => {
-    setCurrentState(ReviewState.SWAP_PENDING)
-    onSubmitSwapClick?.(trade)
-    await onConfirm()
-    setCurrentState(ReviewState.REVIEWING)
-  }, [onConfirm, onSubmitSwapClick, trade])
-
-  const prevAllowanceRef = useRef(allowance)
-  // Automatically triggers signing swap tx if allowance requirements are met
-  useEffect(() => {
-    if (prevAllowanceRef.current.state === AllowanceState.REQUIRED && allowance.state === AllowanceState.ALLOWED) {
-      // Prevents swap if trade has updated mid permit2 flow
-      if (doesTradeDiffer) setCurrentState(ReviewState.TRADE_CHANGED)
-      else triggerSwap()
-    }
-    prevAllowanceRef.current = allowance
-  }, [allowance, doesTradeDiffer, triggerSwap])
-
-  const triggerPermit2Flow = useCallback(async () => {
+  const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
       setCurrentState(ReviewState.ALLOWANCE_PENDING)
       try {
@@ -74,20 +48,28 @@ function useReviewState(
         console.error(e)
         setCurrentState(ReviewState.ALLOWANCE_FAILED)
       }
-    }
-  }, [allowance])
-
-  const onStartSwapFlow = useCallback(() => {
-    if (allowance.state === AllowanceState.REQUIRED) {
-      triggerPermit2Flow()
-      // if the user finishes permit2 allowance flow, triggerSwap() is called by useEffect above once state updates
+      // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
-      triggerSwap()
+      setCurrentState(ReviewState.SWAP_PENDING)
+      onSubmitSwapClick?.(trade)
+      await onConfirm()
+      setCurrentState(ReviewState.REVIEWING)
     }
-  }, [allowance, triggerPermit2Flow, triggerSwap])
+  }, [allowance, onConfirm, onSubmitSwapClick, trade])
+
+  // Automatically triggers signing swap tx if allowance requirements are met
+  useEffect(() => {
+    // Prevents swap if trade has updated mid permit2 flow
+    if (doesTradeDiffer && (currentState === ReviewState.REVIEWING || currentState === ReviewState.ALLOWANCE_PENDING)) {
+      setCurrentState(ReviewState.TRADE_CHANGED)
+    } else if (currentState === ReviewState.ALLOWANCE_PENDING && allowance.state === AllowanceState.ALLOWED) {
+      onStartSwapFlow()
+    } else if (!doesTradeDiffer && currentState === ReviewState.TRADE_CHANGED) {
+      setCurrentState(ReviewState.REVIEWING)
+    }
+  }, [allowance, currentState, doesTradeDiffer, onStartSwapFlow])
 
   const onCancel = useCallback(() => setCurrentState(ReviewState.REVIEWING), [])
-
   return { onStartSwapFlow, onCancel, currentState }
 }
 
@@ -99,16 +81,12 @@ const PriceImpactText = styled.span`
   color: ${({ theme }) => theme.error};
 `
 
-const PermitTooltipBody = styled.div`
-  max-width: 220px;
-`
-
 function PermitTooltipText({ text, content }: { text: ReactNode; content: ReactNode }) {
   return (
     <TooltipText placement="bottom" offset={10} text={text}>
-      <PermitTooltipBody>
+      <SmallToolTipBody>
         <ThemedText.Caption>{content}</ThemedText.Caption>
-      </PermitTooltipBody>
+      </SmallToolTipBody>
     </TooltipText>
   )
 }
@@ -162,8 +140,6 @@ function ConfirmButton({
   onAcknowledgeNewTrade: () => void
   allowance: Allowance
 }) {
-  //const [reviewState, setReviewState] = useState(ReviewState.REVIEWING)
-
   const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
