@@ -4,7 +4,6 @@ import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
-import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
 import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -60,15 +59,12 @@ export default memo(function Toolbar() {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     error,
-    approval,
-    allowance,
     trade: { trade, state, gasUseEstimateUSD },
     impact,
     slippage,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
-  const permit2Enabled = usePermit2Enabled()
   const { open, onToggleOpen } = useContext(Context)
 
   const insufficientBalance: boolean | undefined = useMemo(() => {
