@@ -7,7 +7,7 @@ import useTimeout from 'hooks/useTimeout'
 import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
-import { useGetQuoteQueryState, useLazyGetQuoteQuery } from 'state/routing/slice'
+import { useGetTradeQuoteQueryState, useLazyGetTradeQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, NO_ROUTE, TradeResult, TradeState } from 'state/routing/types'
 
 import { RouterPreference } from './types'
@@ -58,11 +58,11 @@ export function useRouterTrade(
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
-  const { isError, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
+  const { isError, data, currentData, fulfilledTimeStamp } = useGetTradeQuoteQueryState(queryArgs)
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
   // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
-  const [trigger] = useLazyGetQuoteQuery({ pollingInterval })
+  const [trigger] = useLazyGetTradeQuoteQuery({ pollingInterval })
   const request = useCallback(() => {
     const { refetch } = trigger(queryArgs, /*preferCacheValue=*/ true)
     if (fulfilledTimeStamp && Date.now() - fulfilledTimeStamp > pollingInterval) {

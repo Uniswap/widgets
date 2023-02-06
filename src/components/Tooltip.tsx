@@ -4,6 +4,7 @@ import useHasHover from 'hooks/useHasHover'
 import { HelpCircle, Icon } from 'icons'
 import { ComponentProps, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { IconButton } from './Button'
 import Popover from './Popover'
@@ -13,6 +14,10 @@ export function useTooltip(tooltip: Node | null | undefined): boolean {
   const focus = useHasFocus(tooltip)
   return hover || focus
 }
+
+export const SmallToolTipBody = styled(ThemedText.Caption)`
+  max-width: 220px;
+`
 
 const IconTooltip = styled(IconButton)`
   cursor: help;

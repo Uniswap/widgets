@@ -6,6 +6,7 @@ export interface RowProps {
   color?: Color
   align?: string
   justify?: string
+  flow?: string
   pad?: number
   gap?: number
   flex?: true
@@ -18,7 +19,7 @@ const Row = styled.div<RowProps>`
   align-items: ${({ align }) => align ?? 'center'};
   color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
-  flex-flow: wrap;
+  flex-flow: ${({ flow }) => flow ?? 'wrap'};
   flex-grow: ${({ grow }) => grow && 1};
   gap: ${({ gap }) => gap && `${gap}em`};
   grid-auto-flow: column;
