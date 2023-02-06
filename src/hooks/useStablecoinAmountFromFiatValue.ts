@@ -57,7 +57,7 @@ export function calcStablecoinAmountFromFiatValue(fiatValue: string | null | und
   const parsedForDecimals = parseFloat(fiatValue).toFixed(stablecoin.decimals).toString()
   const result = tryParseCurrencyAmount(parsedForDecimals, stablecoin)
 
-  if (!result) throw Error('UsdValue cannot be parsed.')
+  // if (!result) throw Error('UsdValue cannot be parsed.')
 
   return result
 }

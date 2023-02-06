@@ -1,14 +1,11 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { RouterPreference } from 'hooks/routing/types'
 import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
-import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { TradeState, WidoTrade } from 'state/routing/types'
@@ -44,7 +41,6 @@ interface SwapInfo {
     gasUseEstimateUSD?: CurrencyAmount<Token>
   }
   approval: SwapApproval
-  allowance: Allowance
   slippage: Slippage
   impact?: PriceImpact
 }
@@ -77,7 +73,8 @@ function useComputeSwapInfo(): SwapInfo {
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : RouterPreference.API
+    isWrap || error ? RouterPreference.SKIP : RouterPreference.API,
+    account
   )
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
@@ -96,18 +93,7 @@ function useComputeSwapInfo(): SwapInfo {
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
   const slippage = useSlippage()
   const impact = usePriceImpact(trade.trade)
-
-  const permit2Enabled = usePermit2Enabled()
-  const maximumAmountIn = useMemo(() => {
-    const maximumAmountIn = trade.trade?.inputAmount
-    return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
-  }, [trade.trade])
-
-  const approval = useSwapApproval(permit2Enabled ? undefined : maximumAmountIn)
-  const allowance = usePermit2Allowance(
-    permit2Enabled ? maximumAmountIn : undefined,
-    permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
-  )
+  const approval = useSwapApproval(trade.trade)
 
   return useMemo(() => {
     return {
@@ -126,24 +112,10 @@ function useComputeSwapInfo(): SwapInfo {
       error,
       trade,
       approval,
-      allowance,
       slippage,
       impact,
     }
-  }, [
-    allowance,
-    amountIn,
-    amountOut,
-    approval,
-    balanceIn,
-    balanceOut,
-    currencyIn,
-    currencyOut,
-    error,
-    impact,
-    slippage,
-    trade,
-  ])
+  }, [amountIn, amountOut, approval, balanceIn, balanceOut, currencyIn, currencyOut, error, impact, slippage, trade])
 }
 
 const DEFAULT_SWAP_INFO: SwapInfo = {
@@ -152,7 +124,6 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
   error: ChainError.UNCONNECTED_CHAIN,
   trade: { state: TradeState.INVALID, trade: undefined },
   approval: { state: SwapApprovalState.APPROVED },
-  allowance: { state: AllowanceState.LOADING },
   slippage: DEFAULT_SLIPPAGE,
 }
 

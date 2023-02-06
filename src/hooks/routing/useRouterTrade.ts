@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -30,7 +31,8 @@ export function useRouterTrade(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  routerPreference: RouterPreference
+  routerPreference: RouterPreference,
+  account?: string
 ): {
   state: TradeState
   trade?: WidoTrade
@@ -38,7 +40,7 @@ export function useRouterTrade(
 } {
   const { provider } = useWeb3React()
   const queryArgs = useGetQuoteArgs(
-    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference },
+    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference, account },
     /*skip=*/ routerPreference === RouterPreference.SKIP
   )
 
@@ -88,6 +90,14 @@ export function useRouterTrade(
       inputAmountUsdValue: calcStablecoinAmountFromFiatValue(quote.fromTokenAmountUsdValue, currencyIn.chainId),
       outputAmountUsdValue: calcStablecoinAmountFromFiatValue(quote.toTokenAmountUsdValue, currencyOut.chainId),
       executionPrice: new Price(currencyIn, currencyOut, quote.fromTokenAmount, quote.toTokenAmount),
+      fromToken: currencyIn,
+      toToken: currencyOut,
+      tx: {
+        from: quote.from,
+        to: quote.to,
+        data: quote.data,
+        value: BigNumber.from(quote.value),
+      },
       tradeType: TradeType.EXACT_INPUT,
     }
     return trade

@@ -1,10 +1,7 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
-import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
-import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
+import { SwapApproval, SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
@@ -22,16 +19,11 @@ import useOnSubmit from './useOnSubmit'
 export default function ApproveButton({
   trade,
   state,
+  spender,
   approve,
 }: {
   trade?: WidoTrade
-  state: SwapApprovalState
-  approve?: () => Promise<{
-    response: TransactionResponse
-    tokenAddress: string
-    spenderAddress: string
-  } | void>
-}) {
+} & SwapApproval) {
   const [isPending, setIsPending] = useState(false)
   const onSubmit = useOnSubmit()
   const onApprove = useCallback(async () => {
@@ -56,29 +48,18 @@ export default function ApproveButton({
   // Reset the pending state if currency changes.
   useEffect(() => setIsPending(false), [currency])
 
-  const { chainId } = useWeb3React()
-  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined, spender)
 
   const actionProps = useMemo(() => {
     switch (state) {
       case SwapApprovalState.REQUIRES_APPROVAL:
         if (isPending) {
-          return { message: <Trans>Approve in your wallet</Trans>, icon: Spinner }
+          return { message: <Trans>Approve in your wallet</Trans>, icon: Spinner, hideButton: true }
         }
         return {
           message: <Trans>Approve {symbol} first</Trans>,
           onClick: onApprove,
           children: <Trans>Approve</Trans>,
-        }
-      case SwapApprovalState.REQUIRES_SIGNATURE:
-        if (isPending) {
-          return { message: <Trans>Allow in your wallet</Trans>, icon: Spinner }
-        }
-        return {
-          message: <Trans>Allow {symbol} first</Trans>,
-          onClick: onApprove,
-          children: <Trans>Allow</Trans>,
         }
       case SwapApprovalState.PENDING_APPROVAL:
         return {
@@ -89,8 +70,6 @@ export default function ApproveButton({
           ),
           icon: Spinner,
         }
-      case SwapApprovalState.PENDING_SIGNATURE:
-        return { message: <Trans>Allowance pending</Trans>, icon: Spinner }
       default:
         return
     }

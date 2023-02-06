@@ -19,7 +19,7 @@ export const routing = createApi({
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
         try {
-          const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount } = args
+          const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, userAddress } = args
 
           const quoteResult = await quote({
             fromToken: tokenInAddress,
@@ -27,7 +27,7 @@ export const routing = createApi({
             toToken: tokenOutAddress,
             toChainId: tokenOutChainId as any, // TODO(Daniel)
             amount: amount ?? undefined,
-            user: tokenInAddress, // TODO
+            user: userAddress,
           })
 
           // NO_ROUTE should be treated as a valid response to prevent retries.

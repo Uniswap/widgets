@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { BaseProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
@@ -74,10 +75,18 @@ export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}
 
 export interface WidoTradeType<TradeInput extends Currency, TradeOutput extends Currency> {
   inputAmount: CurrencyAmount<TradeInput>
-  inputAmountUsdValue: CurrencyAmount<Currency>
+  inputAmountUsdValue?: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<TradeOutput>
-  outputAmountUsdValue: CurrencyAmount<Currency>
+  outputAmountUsdValue?: CurrencyAmount<Currency>
   executionPrice: Price<TradeInput, TradeOutput>
+  fromToken: Currency
+  toToken: Currency
+  tx?: {
+    from: Required<QuoteResult>['from']
+    to: Required<QuoteResult>['to']
+    data: Required<QuoteResult>['data']
+    value: BigNumber
+  }
   tradeType: TradeType
 }
 

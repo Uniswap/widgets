@@ -22,12 +22,12 @@ export function useSingleCallResult(...args: MulticallParams<typeof multicall.ho
   return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args)
 }
 
-export function useSingleContractMultipleData(
-  ...args: MulticallParams<typeof multicall.hooks.useSingleContractMultipleData>
-) {
-  const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
-}
+// export function useSingleContractMultipleData(
+//   ...args: MulticallParams<typeof multicall.hooks.useSingleContractMultipleData>
+// ) {
+//   const { chainId, latestBlock } = useCallContext()
+//   return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
+// }
 
 export function useSingleContractWithCallData(
   ...args: MulticallParams<typeof multicall.hooks.useSingleContractWithCallData>

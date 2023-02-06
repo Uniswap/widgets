@@ -43,6 +43,7 @@ export function useGetQuoteArgs(
     currencyIn,
     currencyOut,
     routerPreference,
+    account,
   }: Partial<{
     provider: BaseProvider
     tradeType: TradeType
@@ -50,6 +51,7 @@ export function useGetQuoteArgs(
     currencyIn: Currency
     currencyOut: Currency
     routerPreference: RouterPreference
+    account?: string
   }>,
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
@@ -68,11 +70,12 @@ export function useGetQuoteArgs(
       tokenOutChainId: currencyOut.wrapped.chainId,
       tokenOutDecimals: currencyOut.wrapped.decimals,
       tokenOutSymbol: currencyOut.wrapped.symbol,
+      userAddress: account,
       routerPreference,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference])
+  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken
