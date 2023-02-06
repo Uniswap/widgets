@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
@@ -22,8 +21,7 @@ import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
-import SwapActionButton from './SwapActionButton'
-import Toolbar, { Provider as ToolbarProvider } from './Toolbar'
+import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
 // SwapProps also currently includes props needed for wallet connection (eg hideConnectionUI),
@@ -41,8 +39,6 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
   useSyncSwapRouterUrl(props.routerUrl)
-
-  const { account } = useWeb3React()
 
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -62,10 +58,7 @@ export default function Swap(props: SwapProps) {
             <Input />
             <ReverseButton />
             <Output />
-            <ToolbarProvider>
-              {account && <Toolbar />}
-              <SwapActionButton hideConnectionUI={props.hideConnectionUI} />
-            </ToolbarProvider>
+            <Toolbar hideConnectionUI={props.hideConnectionUI} />
             {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
         </PopoverBoundaryProvider>
