@@ -8,7 +8,7 @@ import { ErrorCode } from 'constants/eip1193'
 export function swapErrorToUserReadableMessage(error: any): string {
   if (error.code) {
     if (error.code === ErrorCode.USER_REJECTED_REQUEST) {
-      return t`transaction rejected.`
+      return t`Transaction rejected`
     }
   }
 

@@ -120,6 +120,7 @@ export function useLogoSource(
   }, [address, chainId, isNative])
 
   const nextSrc = useCallback(() => {
+    console.log('here')
     if (current) {
       BAD_SRCS[current] = true
     }

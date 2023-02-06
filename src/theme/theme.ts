@@ -34,8 +34,19 @@ export interface Colors {
 
 export type Color = keyof Colors
 
+export type ThemeBorderRadius = {
+  large: number
+  medium: number
+  small: number
+}
+
+export type ZIndex = {
+  modal: number
+}
+
 export interface Attributes {
-  borderRadius: boolean | number
+  borderRadius: ThemeBorderRadius
+  zIndex: ZIndex
   fontFamily:
     | string
     | {

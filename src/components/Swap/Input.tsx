@@ -31,7 +31,7 @@ const Balance = styled(ThemedText.Body2)`
 
 const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.small}em;
   margin-bottom: 0.25em;
   padding: ${({ isWide }) => (isWide ? '1em 0' : '1em 0 1.5em')};
   position: relative;
@@ -83,7 +83,6 @@ export function useFormattedFieldAmount({
 interface FieldWrapperProps {
   field: Field
   maxAmount?: string
-  isSufficientBalance?: boolean
   approved?: boolean
   impact?: PriceImpact
   subheader: string
@@ -92,7 +91,6 @@ interface FieldWrapperProps {
 export function FieldWrapper({
   field,
   maxAmount,
-  isSufficientBalance,
   approved,
   impact,
   className,
@@ -173,7 +171,7 @@ export function FieldWrapper({
             </USDC>
             {balance && (
               <Row gap={0.5}>
-                <Balance color={isSufficientBalance === false ? 'error' : 'secondary'}>
+                <Balance color="secondary">
                   <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
                 </Balance>
                 {maxAmount && (
@@ -198,11 +196,6 @@ export default function Input() {
     approval: { state: approvalState },
   } = useSwapInfo()
 
-  const isSufficientBalance = useMemo(() => {
-    if (!balance || !currencyAmount) return undefined
-    return !currencyAmount.greaterThan(balance)
-  }, [balance, currencyAmount])
-
   const maxAmount = useMemo(() => {
     // account for gas needed if using max on native token
     const max = maxAmountSpend(balance)
@@ -216,7 +209,6 @@ export default function Input() {
     <FieldWrapper
       field={Field.INPUT}
       maxAmount={maxAmount}
-      isSufficientBalance={isSufficientBalance}
       approved={approvalState === SwapApprovalState.APPROVED}
       subheader={t`You pay`}
     />

@@ -25,6 +25,7 @@ const InputContainer = styled(Row)`
   display: flex;
   gap: 0.5em;
   justify-content: flex-start;
+  margin: 1em 0 0;
 `
 
 const TtlValue = styled.div`
@@ -47,7 +48,7 @@ export default function TransactionTtlInput() {
       <Expando
         hideRulers
         showBottomGradient={false}
-        height={4}
+        maxHeight={4}
         open={open}
         onExpand={() => setOpen(!open)}
         iconPrefix={<TtlValue>{ttlValue ?? placeholder}m</TtlValue>}

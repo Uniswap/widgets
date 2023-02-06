@@ -169,5 +169,4 @@ export const LargeArrow = styled(icon(LargeArrowIcon))<{ color?: Color }>`
 export const Gas = styled(icon(GasIcon))<{ color?: Color }>`
   fill: ${({ color = 'active', theme }) => theme[color]};
   stroke: ${({ color = 'active', theme }) => theme[color]};
-  stroke-width: 1px;
 `

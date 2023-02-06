@@ -7,7 +7,7 @@ import Tooltip from '../../Tooltip'
 
 export const optionCss = (selected: boolean) => css`
   border: 1px solid ${({ theme }) => (selected ? theme.active : '')};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border-radius: ${({ theme }) => theme.borderRadius.small}em;
   color: ${({ theme }) => theme.primary} !important;
   display: grid;
   grid-gap: 0.25em;

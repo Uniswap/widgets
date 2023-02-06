@@ -8,7 +8,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
-import { memo, useMemo, useState } from 'react'
+import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -18,27 +18,46 @@ import SwapInputOutputEstimate from '../Summary/Estimate'
 import AllowanceButton from '../SwapActionButton/AllowanceButton'
 import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'
-import ToolbarOrderRouting, { ORDER_ROUTING_HEIGHT_EM } from './ToolbarOrderRouting'
-import ToolbarTradeSummary, {
-  SUMMARY_COLUMN_GAP_EM,
-  SUMMARY_ROW_HEIGHT_EM,
-  SummaryRowProps,
-} from './ToolbarTradeSummary'
+import ToolbarOrderRouting from './ToolbarOrderRouting'
+import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
 const StyledExpando = styled(Expando)`
   border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.small}em;
   overflow: hidden;
 `
 
 const COLLAPSED_TOOLBAR_HEIGHT_EM = 3.5
 
-const ToolbarRow = styled(Row)`
+const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
+  cursor: ${({ isExpandable }) => isExpandable && 'pointer'};
   flex-wrap: nowrap;
   gap: 0.5em;
   height: ${COLLAPSED_TOOLBAR_HEIGHT_EM}em;
   padding: 0 1em;
 `
+
+const Context = createContext<{
+  open: boolean
+  collapse: () => void
+  onToggleOpen: () => void
+}>({
+  open: false,
+  collapse: () => null,
+  onToggleOpen: () => null,
+})
+
+export const Provider = ({ children }: PropsWithChildren) => {
+  const [open, setOpen] = useState(false)
+  const onToggleOpen = () => setOpen((open) => !open)
+  const collapse = () => setOpen(false)
+  return <Context.Provider value={{ open, onToggleOpen, collapse }}>{children}</Context.Provider>
+}
+
+export function useCollapseToolbar() {
+  const { collapse } = useContext(Context)
+  return collapse
+}
 
 export default memo(function Toolbar() {
   const {
@@ -54,59 +73,56 @@ export default memo(function Toolbar() {
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const permit2Enabled = usePermit2Enabled()
-  const [open, setOpen] = useState(false)
+  const { open, onToggleOpen } = useContext(Context)
 
   const insufficientBalance: boolean | undefined = useMemo(() => {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
 
-  const caption = useMemo(() => {
-    const onExpand = () => {
-      setOpen((open) => !open)
-    }
+  const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
-        return <Caption.Connecting />
+        return { caption: <Caption.Connecting /> }
       case ChainError.UNSUPPORTED_CHAIN:
-        return <Caption.UnsupportedNetwork />
+        return { caption: <Caption.UnsupportedNetwork /> }
       case ChainError.MISMATCHED_TOKEN_CHAINS:
-        return <Caption.Error />
+        return { caption: <Caption.Error /> }
       default:
     }
 
     if (state === TradeState.LOADING) {
-      return <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} />
+      return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
       if (insufficientBalance) {
-        return <Caption.InsufficientBalance currency={inputCurrency} />
+        return { caption: <Caption.InsufficientBalance currency={inputCurrency} /> }
       }
       if (isWrap) {
-        return <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+        return { caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} /> }
       }
       if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
-        return <Caption.InsufficientLiquidity />
+        return { caption: <Caption.InsufficientLiquidity /> }
       }
       if (trade?.inputAmount && trade.outputAmount) {
-        return impact?.warning ? (
-          <Caption.PriceImpact impact={impact} expanded={open} onToggleExpand={onExpand} />
+        const caption = impact?.warning ? (
+          <Caption.PriceImpact impact={impact} expanded={open} />
         ) : (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
-            onToggleExpand={onExpand}
           />
         )
+        return { caption, isExpandable: true }
       }
       if (state === TradeState.INVALID) {
-        return <Caption.Error />
+        return { caption: <Caption.Error /> }
       }
     }
 
-    return <Caption.MissingInputs />
+    return { caption: <Caption.MissingInputs /> }
   }, [
     error,
     state,
@@ -121,6 +137,12 @@ export default memo(function Toolbar() {
     open,
     outputUSDC,
   ])
+
+  const maybeToggleOpen = useCallback(() => {
+    if (isExpandable) {
+      onToggleOpen()
+    }
+  }, [isExpandable, onToggleOpen])
 
   const tradeSummaryRows: SummaryRowProps[] = useMemo(() => {
     const currencySymbol = trade?.outputAmount?.currency.symbol ?? ''
@@ -158,15 +180,6 @@ export default memo(function Toolbar() {
     return rows
   }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
-  /**
-   * The height of the expanded toolbar is dynamic based on the number of rows in the trade summary.
-   * Returns the total expanded height of the area below the base component.
-   */
-  const expandedHeight = useMemo(() => {
-    const summaryHeight = tradeSummaryRows.length * SUMMARY_ROW_HEIGHT_EM + SUMMARY_COLUMN_GAP_EM
-    return summaryHeight + ORDER_ROUTING_HEIGHT_EM + 1 /* accounts for the border */
-  }, [tradeSummaryRows.length])
-
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
   }
@@ -186,17 +199,21 @@ export default memo(function Toolbar() {
   return (
     <StyledExpando
       title={
-        <ToolbarRow flex justify="space-between" data-testid="toolbar">
+        <ToolbarRow
+          flex
+          justify="space-between"
+          data-testid="toolbar"
+          onClick={maybeToggleOpen}
+          isExpandable={isExpandable}
+        >
           {caption}
         </ToolbarRow>
       }
       styledTitleWrapper={false}
       showBottomGradient={false}
       open={open}
-      onExpand={() => {
-        setOpen((open) => !open)
-      }}
-      height={expandedHeight}
+      onExpand={maybeToggleOpen}
+      maxHeight={16}
     >
       <Column>
         <ToolbarTradeSummary rows={tradeSummaryRows} />

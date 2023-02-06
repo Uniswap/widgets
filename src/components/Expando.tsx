@@ -35,16 +35,27 @@ const bottomCss = css`
   }
 `
 
-const ExpandoColumn = styled(Column)<{ height: number; open: boolean; showBottomGradient: boolean }>`
-  height: ${({ height, open }) => (open ? height : 0)}em;
+const MAX_HEIGHT = 20
+
+function getExpandoContentHeight(height: number | undefined, maxHeight: number | undefined): number {
+  return Math.min(height ?? MAX_HEIGHT, maxHeight ?? MAX_HEIGHT)
+}
+
+const ExpandoColumn = styled(Column)<{
+  height?: number
+  maxHeight?: number
+  open: boolean
+  showBottomGradient: boolean
+}>`
+  max-height: ${({ open, height, maxHeight }) => (open ? getExpandoContentHeight(height, maxHeight) : 0)}em;
   overflow: hidden;
   position: relative;
-  transition: height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
+  transition: max-height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
   ${({ showBottomGradient }) => showBottomGradient && bottomCss}
 `
 
-const InnerColumn = styled(Column)<{ height: number }>`
-  height: ${({ height }) => height}em;
+const InnerColumn = styled(Column)<{ height?: number; maxHeight?: number }>`
+  max-height: ${({ height, maxHeight }) => getExpandoContentHeight(height, maxHeight)}em;
 `
 
 const IconPrefix = styled.div`
@@ -57,34 +68,15 @@ interface ExpandoProps extends ColumnProps {
   open: boolean
   onExpand: () => void
   // The absolute height of the expanded container, in em.
-  height: number
+  // If not provided, the container will expand to fit its contents up to {maxHeight}em.
+  height?: number
+  // The maximum height of the expanded container, in em.
+  // If relying on auto-sizing, this should be something close to (but still larger than)
+  // the content's height. Otherwise, the animation will feel fast.
+  maxHeight?: number
   hideRulers?: boolean
   styledTitleWrapper?: boolean
   showBottomGradient?: boolean
-}
-
-const StyledTitleWrapper = ({
-  title,
-  open,
-  onExpand,
-  hideRulers,
-  iconPrefix,
-}: Pick<ExpandoProps, 'title' | 'open' | 'onExpand' | 'hideRulers' | 'iconPrefix'>) => {
-  return (
-    <HeaderColumn onClick={onExpand} gap={open ? 0.5 : 0.75}>
-      {!hideRulers && <Rule />}
-      <ThemedText.Subhead2 color="secondary">
-        <TitleRow gap={1}>
-          <TitleHeader>{title}</TitleHeader>
-          <Row gap={0.2}>
-            {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
-            <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
-          </Row>
-        </TitleRow>
-      </ThemedText.Subhead2>
-      {!hideRulers && open && <Rule />}
-    </HeaderColumn>
-  )
 }
 
 /** A scrollable Expando with an absolute height. */
@@ -94,6 +86,7 @@ export default function Expando({
   open,
   onExpand,
   height,
+  maxHeight,
   children,
   hideRulers,
   styledTitleWrapper = true,
@@ -105,18 +98,24 @@ export default function Expando({
   return (
     <Column {...rest}>
       {styledTitleWrapper ? (
-        <StyledTitleWrapper
-          iconPrefix={iconPrefix}
-          hideRulers={hideRulers}
-          title={title}
-          open={open}
-          onExpand={onExpand}
-        />
+        <HeaderColumn onClick={onExpand} gap={open ? 0.5 : 0.75}>
+          {!hideRulers && <Rule />}
+          <ThemedText.Subhead2 color="secondary">
+            <TitleRow gap={1}>
+              <TitleHeader>{title}</TitleHeader>
+              <Row gap={0.2}>
+                {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
+                <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+              </Row>
+            </TitleRow>
+          </ThemedText.Subhead2>
+          {!hideRulers && open && <Rule />}
+        </HeaderColumn>
       ) : (
         title
       )}
-      <ExpandoColumn open={open} height={height} showBottomGradient={showBottomGradient}>
-        <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
+      <ExpandoColumn open={open} height={height} maxHeight={maxHeight} showBottomGradient={showBottomGradient}>
+        <InnerColumn flex align="stretch" height={height} maxHeight={maxHeight} ref={setScrollingEl} css={scrollbar}>
           {children}
         </InnerColumn>
       </ExpandoColumn>
