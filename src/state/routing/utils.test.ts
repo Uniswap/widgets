@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
+import { PoolType } from 'hooks/routing/types'
 import { amount, DAI, MKR, USDC } from 'test/utils'
 
 import { computeRoutes } from './utils'
@@ -194,6 +195,50 @@ describe('#useRoute', () => {
     expect(result?.[0].routev3?.input).toStrictEqual(DAI)
     expect(result?.[0].routev3?.output).toStrictEqual(USDC)
     expect(result?.[0].routev3?.tokenPath).toEqual([DAI, USDC])
+    expect(result?.[0].inputAmount.toSignificant()).toBe('1')
+  })
+
+  it('computes mixed routes correctly', () => {
+    const result = computeRoutes(false, false, {
+      route: [
+        [
+          {
+            type: PoolType.V3Pool,
+            address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+            amountIn: amount`1`,
+            amountOut: amount`5`,
+            fee: '500',
+            tokenIn: DAI,
+            tokenOut: USDC,
+            sqrtRatioX96: '2437312313659959819381354528',
+            liquidity: '10272714736694327408',
+            tickCurrent: '-69633',
+          },
+          {
+            type: PoolType.V2Pool,
+            address: 'x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+            amountIn: amount`10`,
+            amountOut: amount`50`,
+            tokenIn: USDC,
+            tokenOut: MKR,
+            reserve0: {
+              token: USDC,
+              quotient: amount`100`,
+            },
+            reserve1: {
+              token: MKR,
+              quotient: amount`200`,
+            },
+          },
+        ],
+      ],
+    })
+
+    expect(result).toBeDefined()
+    expect(result?.length).toBe(1)
+    expect(result?.[0].routev3).toBeNull()
+    expect(result?.[0].routev2).toBeNull()
+    expect(result?.[0].mixedRoute?.output).toStrictEqual(MKR)
     expect(result?.[0].inputAmount.toSignificant()).toBe('1')
   })
 
