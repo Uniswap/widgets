@@ -45,7 +45,7 @@ function useReviewState(onSwap: () => void, allowance: Allowance, doesTradeDiffe
       // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
       setCurrentState(ReviewState.SWAP_PENDING)
-      await onSwap
+      await onSwap()
       setCurrentState(ReviewState.REVIEWING)
     }
   }, [allowance, onSwap])
@@ -140,6 +140,7 @@ function ConfirmButton({
     [ackTrade, trade]
   )
   const onSwap = useCallback(async () => {
+    console.log('here')
     onSubmitSwapClick?.(trade)
     await onConfirm()
   }, [onConfirm, onSubmitSwapClick, trade])
@@ -240,7 +241,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
           <Body flex align="stretch">
             <Details {...props} />
           </Body>
-          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
+          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} data-testid="swap-button" />
         </>
       )}
     </>
