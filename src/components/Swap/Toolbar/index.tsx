@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
@@ -70,7 +69,6 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
     impact,
     slippage,
   } = useSwapInfo()
-  const { account } = useWeb3React()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const { open, onToggleOpen } = useContext(Context)
@@ -170,12 +168,8 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
     return rows
   }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
-  const hideToolbarRow = useMemo(() => {
-    return account == null || inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS
-  }, [account, error, inputCurrency, outputCurrency])
-
   const getCaptionRow = useMemo(() => {
-    if (hideToolbarRow) {
+    if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
       return null
     }
     return (
@@ -203,7 +197,7 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
         </Column>
       </StyledExpando>
     )
-  }, [caption, hideToolbarRow, isExpandable, maybeToggleOpen, open, trade, tradeSummaryRows])
+  }, [caption, error, inputCurrency, isExpandable, maybeToggleOpen, open, outputCurrency, trade, tradeSummaryRows])
 
   const getSwapActionButton = useMemo(() => {
     if (insufficientBalance) {

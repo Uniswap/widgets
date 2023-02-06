@@ -91,7 +91,7 @@ describe('Toolbar', () => {
   })
 
   // todo: test the loaded trade state by mocking the router API
-  xit('should render wxith both currencies specified, amount input, trade loaded', () => {
+  xit('should render with both currencies specified, amount input, trade loaded', () => {
     const component = renderComponent(
       <SwapInfoProvider>
         <Toolbar />
