@@ -64,7 +64,7 @@ export default function Swap(props: SwapProps) {
             <Output />
             <ToolbarProvider>
               {account && <Toolbar />}
-              <SwapActionButton />
+              <SwapActionButton hideConnectionUI={props.hideConnectionUI} />
             </ToolbarProvider>
             {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
