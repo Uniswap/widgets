@@ -12,19 +12,27 @@ export function isAnimating(node?: Animatable | Document) {
  * CSS should target the class returned from getAnimatingClass to determine when to apply the
  * animation.
  * Note that getAnimatingClass will be called when the node would normally begin unmounting.
+ *
+ * If the animation should be applied to an element that is not the root node of the removed subtree,
+ * pass that element as the animatedElement parameter.
  */
-export function useUnmountingAnimation(node: RefObject<HTMLElement>, getAnimatingClass: () => string) {
+export function useUnmountingAnimation(
+  node: RefObject<HTMLElement>,
+  getAnimatingClass: () => string,
+  animatedElement?: RefObject<HTMLElement>
+) {
   useEffect(() => {
     const current = node.current
+    const animated = animatedElement?.current ?? current
     const parent = current?.parentElement
     const removeChild = parent?.removeChild
     if (!(parent && removeChild)) return
 
     parent.removeChild = function <T extends Node>(child: T) {
-      if ((child as Node) === current) {
-        current.classList.add(getAnimatingClass())
-        if (isAnimating(current)) {
-          current.addEventListener('animationend', () => {
+      if ((child as Node) === current && animated) {
+        animated.classList.add(getAnimatingClass())
+        if (isAnimating(animated)) {
+          animated.addEventListener('animationend', () => {
             removeChild.call(parent, child)
           })
         } else {
@@ -38,5 +46,5 @@ export function useUnmountingAnimation(node: RefObject<HTMLElement>, getAnimatin
     return () => {
       parent.removeChild = removeChild
     }
-  }, [getAnimatingClass, node])
+  }, [animatedElement, getAnimatingClass, node])
 }
