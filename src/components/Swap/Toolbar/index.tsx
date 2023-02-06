@@ -232,10 +232,10 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
   )
 }
 
-export default memo(function WrappedToolbar() {
+export default memo(function WrappedToolbar(props: ToolbarProps) {
   return (
     <Provider>
-      <Toolbar />
+      <Toolbar {...props} />
     </Provider>
   )
 })
