@@ -30,14 +30,8 @@ enum ReviewState {
   SWAP_PENDING,
 }
 
-function useReviewState(
-  trade: InterfaceTrade,
-  onConfirm: () => Promise<void>,
-  allowance: Allowance,
-  doesTradeDiffer: boolean
-) {
+function useReviewState(onSwap: () => void, allowance: Allowance, doesTradeDiffer: boolean) {
   const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
-  const { onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
 
   const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
@@ -51,11 +45,10 @@ function useReviewState(
       // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
       setCurrentState(ReviewState.SWAP_PENDING)
-      onSubmitSwapClick?.(trade)
-      await onConfirm()
+      await onSwap
       setCurrentState(ReviewState.REVIEWING)
     }
-  }, [allowance, onConfirm, onSubmitSwapClick, trade])
+  }, [allowance, onSwap])
 
   // Automatically triggers signing swap tx if allowance requirements are met
   useEffect(() => {
@@ -140,14 +133,18 @@ function ConfirmButton({
   onAcknowledgeNewTrade: () => void
   allowance: Allowance
 }) {
-  const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
+  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
+  const onSwap = useCallback(async () => {
+    onSubmitSwapClick?.(trade)
+    await onConfirm()
+  }, [onConfirm, onSubmitSwapClick, trade])
 
-  const { onStartSwapFlow, onCancel, currentState } = useReviewState(trade, onConfirm, allowance, doesTradeDiffer)
+  const { onStartSwapFlow, onCancel, currentState } = useReviewState(onSwap, allowance, doesTradeDiffer)
 
   const isApproved = useMemo(
     () => (allowance.state === AllowanceState.REQUIRED ? allowance.isApproved : true),
