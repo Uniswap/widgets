@@ -123,6 +123,7 @@ function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
   return route.every((pool) => pool.type === type)
 }
 
+// TODO: deprecate this once we can use `NATIVE` as a string for native currencies and it can be imported from an SDK
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
     return isPolygonChain(currency.chainId) ? SwapRouterNativeAssets.MATIC : SwapRouterNativeAssets.ETH

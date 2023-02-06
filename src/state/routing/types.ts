@@ -88,12 +88,13 @@ export const INITIALIZED = 'Initialized'
 export const NO_ROUTE = 'No Route'
 
 export type GetQuoteError = typeof INITIALIZED | typeof NO_ROUTE
-export type GetQuoteResult = QuoteResult | GetQuoteError
 
 export type TradeResult = {
   trade?: InterfaceTrade
   gasUseEstimateUSD?: string
   blockNumber: string
 }
+
+export type TradeQuoteResult = TradeResult | GetQuoteError
 
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}

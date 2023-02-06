@@ -6,7 +6,7 @@ import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
 
 import { serializeGetQuoteArgs } from './args'
-import { GetQuoteArgs, GetQuoteError, GetQuoteResult, NO_ROUTE, QuoteResult, TradeResult } from './types'
+import { GetQuoteArgs, GetQuoteError, NO_ROUTE, QuoteResult, TradeResult } from './types'
 import { transformQuoteToTradeResult } from './utils'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
@@ -16,7 +16,7 @@ const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
-const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
+const baseQuery: BaseQueryFn<GetQuoteArgs, TradeQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
 }
 
@@ -27,7 +27,7 @@ export const routing = createApi({
   baseQuery,
   serializeQueryArgs: serializeGetQuoteArgs,
   endpoints: (build) => ({
-    getQuote: build.query({
+    getTradeQuote: build.query({
       async queryFn(args: GetQuoteArgs | SkipToken) {
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
@@ -78,7 +78,7 @@ export const routing = createApi({
         // Lazy-load the client-side router to improve initial pageload times.
         const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
-          const quote: GetQuoteResult = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
+          const quote: QuoteResult = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
           if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
 
           const tradeResult = transformQuoteToTradeResult(args, quote)
@@ -93,5 +93,5 @@ export const routing = createApi({
   }),
 })
 
-export const { useLazyGetQuoteQuery } = routing
-export const useGetQuoteQueryState = routing.endpoints.getQuote.useQueryState
+export const { useLazyGetTradeQuoteQuery } = routing
+export const useGetTradeQuoteQueryState = routing.endpoints.getTradeQuote.useQueryState
