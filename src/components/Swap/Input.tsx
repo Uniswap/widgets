@@ -18,6 +18,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
 import Row from '../Row'
+import { PriceImpactRow } from './PriceImpactRow'
 import TokenInput, { TokenInputHandle } from './TokenInput'
 
 const USDC = styled(Row)`
@@ -163,11 +164,7 @@ export function FieldWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
-              {impact && (
-                <ThemedText.Body2 userSelect={false} color={impact.warning ?? 'hint'}>
-                  ({impact.toString()})
-                </ThemedText.Body2>
-              )}
+              <PriceImpactRow impact={impact} />
             </USDC>
             {balance && (
               <Row gap={0.5}>
