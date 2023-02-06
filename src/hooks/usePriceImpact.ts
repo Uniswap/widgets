@@ -9,12 +9,12 @@ export interface PriceImpact {
   toString(): string
 }
 
-export function usePriceImpact(trade?: InterfaceTrade) {
+export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined {
   return useMemo(() => {
     const marketPriceImpact = trade ? computeRealizedPriceImpact(trade) : undefined
     return marketPriceImpact
       ? {
-          marketPriceImpact,
+          percent: marketPriceImpact,
           warning: getPriceImpactWarning(marketPriceImpact),
           toString: () => toHumanReadablePercent(marketPriceImpact),
         }
