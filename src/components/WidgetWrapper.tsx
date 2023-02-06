@@ -5,7 +5,7 @@ import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components/macro'
 import toLength from 'utils/toLength'
 
-const HORIZONTAL_PADDING = 8
+const ROOT_CONTAINER_PADDING = 8
 
 const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -19,7 +19,7 @@ const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   max-width: 600px;
   min-height: 360px;
   min-width: 300px;
-  padding: ${HORIZONTAL_PADDING}px;
+  padding: ${ROOT_CONTAINER_PADDING}px;
   position: relative;
   user-select: none;
   width: ${({ width }) => toLength(width)};
@@ -65,7 +65,7 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
     const observer = new ResizeObserver((entries) => {
       // contentRect doesn't include padding or borders
       const { width } = entries[0].contentRect
-      setWidgetWidth(width + 2 * HORIZONTAL_PADDING)
+      setWidgetWidth(width + 2 * ROOT_CONTAINER_PADDING)
     })
     const current = ref.current
     if (current) {
