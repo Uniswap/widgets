@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header } from 'components/Dialog'
+import { SmallToolTipBody } from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { AlertTriangle, Spinner } from 'icons'
@@ -14,7 +15,7 @@ import styled from 'styled-components/macro'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import SpeedBumpDialog from '../Speedbump'
-import Details, { ToolTipBody } from './Details'
+import Details from './Details'
 import SwapInputOutputEstimate from './Estimate'
 import Summary from './Summary'
 
@@ -68,11 +69,11 @@ function ConfirmButton({
       return {
         color: 'accent',
         message: <Trans>Price updated</Trans>,
-        icon: () => <AlertTriangle color="accent" />,
+        icon: AlertTriangle,
         tooltipContent: (
-          <ToolTipBody>
+          <SmallToolTipBody>
             <SwapInputOutputEstimate trade={trade} slippage={slippage} />
-          </ToolTipBody>
+          </SmallToolTipBody>
         ),
         onClick: () => {
           onSwapPriceUpdateAck?.(ackTrade, trade)
