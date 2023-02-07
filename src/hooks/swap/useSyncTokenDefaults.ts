@@ -60,8 +60,8 @@ export default function useSyncTokenDefaults({
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId, false)
   const defaultChainIdOutputToken = useDefaultToken(defaultOutputTokenAddress, defaultChainId, false)
 
-  const defaultInputToken = useDefaultToken(defaultInputTokenAddress, chainId, true)
-  const defaultChainIdInputToken = useDefaultToken(defaultInputTokenAddress, defaultChainId, true)
+  const defaultInputToken = useDefaultToken(defaultInputTokenAddress, chainId, false)
+  const defaultChainIdInputToken = useDefaultToken(defaultInputTokenAddress, defaultChainId, false)
 
   const setToDefaults = useCallback(
     (shouldUseDefaultChainId: boolean) => {

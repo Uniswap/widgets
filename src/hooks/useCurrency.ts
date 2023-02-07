@@ -1,14 +1,11 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TOKEN_SHORTHANDS } from 'constants/tokens'
 import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
-import useNativeCurrency from 'hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
-import { supportedChainId } from 'utils/supportedChainId'
 
 import { SupportedChainId } from '..'
 import { TokenMap, useTokenMap } from './useTokenList'
@@ -101,39 +98,4 @@ export function useToken(tokenAddress?: string | null, chainId?: SupportedChainI
   const tokens = useTokenMap(chainId)
   const skipNetwork = chainId && chainId !== activeChainId
   return useTokenFromMapOrNetwork(tokens, tokenAddress, skipNetwork)
-}
-
-/**
- * Returns a Currency from the currencyId.
- * Returns null if currency is loading or null was passed.
- * Returns undefined if currencyId is invalid or token does not exist.
- */
-export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
-  const nativeCurrency = useNativeCurrency()
-  const { chainId } = useWeb3React()
-  const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
-  const shorthandMatchAddress = useMemo(() => {
-    const chain = supportedChainId(chainId)
-    return chain && currencyId ? TOKEN_SHORTHANDS[currencyId.toUpperCase()]?.[chain] : undefined
-  }, [chainId, currencyId])
-
-  const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
-
-  if (currencyId === null || currencyId === undefined) return currencyId
-
-  // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
-  const wrappedNative = nativeCurrency?.wrapped
-  if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
-
-  return isNative ? nativeCurrency : token
-}
-
-/**
- * Returns a Currency from the currencyId.
- * Returns null if currency is loading or null was passed.
- * Returns undefined if currencyId is invalid or token does not exist.
- */
-export default function useCurrency(currencyId?: string | null): Currency | null | undefined {
-  const tokens = useTokenMap()
-  return useCurrencyFromMap(tokens, currencyId)
 }

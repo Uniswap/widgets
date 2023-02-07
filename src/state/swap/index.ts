@@ -1,7 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { SupportedChainId } from 'constants/chains'
-import { nativeOnChain } from 'constants/tokens'
 import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
@@ -24,7 +22,6 @@ export interface Swap {
 const initialSwap: Swap = {
   type: TradeType.EXACT_INPUT,
   amount: '',
-  [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
 }
 
 export const controlledAtom = atom<Swap | undefined>(undefined)
