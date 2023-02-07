@@ -10,7 +10,6 @@ import { ReactComponent as ReverseIcon } from 'assets/svg/reverse.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
-import { loadingCss } from 'css/loading'
 import { FunctionComponent, SVGProps } from 'react'
 // This file wraps react-feather, so its import is intentional.
 /* eslint-disable no-restricted-imports */
@@ -37,7 +36,7 @@ import {
 } from 'react-feather'
 /* eslint-enable no-restricted-imports */
 import styled, { css, keyframes } from 'styled-components/macro'
-import { AnimationSpeed, Color } from 'theme'
+import { AnimationSpeed, Color, TransitionDuration } from 'theme'
 
 import IdenticonIcon from './identicon'
 
@@ -132,12 +131,12 @@ export const WalletDisconnect = styled(icon(WalletDisconnectIcon))<{ color?: Col
   stroke: none;
 `
 
-const rotate = keyframes`
+export const rotate = keyframes`
   from {
-    transform: rotate(0deg);
+    transform: rotate(-45deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(315deg);
   }
 `
 
@@ -145,9 +144,9 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   color: ${({ color = 'active', theme }) => theme[color]};
   fill: ${({ color = 'active', theme }) => theme[color]};
-  #track {
-    stroke: ${({ theme }) => theme.secondary};
-    ${loadingCss};
+  transition: color ${TransitionDuration.Medium}ms ease, fill ${TransitionDuration.Medium}ms ease;
+  #dot {
+    fill: ${({ theme }) => theme.interactive};
   }
 `
 
