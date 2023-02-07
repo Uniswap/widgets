@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
@@ -77,7 +78,7 @@ function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
       <Row gap={0.375}>
         <ThemedText.Caption>{route.percent.toSignificant(2)}%</ThemedText.Caption>
         <RouteBadge>
-          <ThemedText.Badge color="secondary">{protocol}</ThemedText.Badge>
+          <ThemedText.Badge color="secondary">{protocol === Protocol.MIXED ? 'V3 + V2' : protocol}</ThemedText.Badge>
         </RouteBadge>
       </Row>
     </RouteNode>

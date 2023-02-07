@@ -23,13 +23,16 @@ const IconTooltip = styled(IconButton)`
   cursor: help;
 `
 
-interface TooltipProps {
-  icon?: Icon
-  iconProps?: ComponentProps<Icon>
+interface TooltipBaseProps {
   children: ReactNode
   placement?: Placement
   offset?: number
   contained?: true
+}
+
+interface TooltipProps extends TooltipBaseProps {
+  icon?: Icon
+  iconProps?: ComponentProps<Icon>
 }
 
 export default function Tooltip({
@@ -45,6 +48,20 @@ export default function Tooltip({
   return (
     <Popover content={children} show={showTooltip} placement={placement} offset={offset} contained={contained}>
       <IconTooltip icon={Icon} iconProps={iconProps} ref={setTooltip} />
+    </Popover>
+  )
+}
+
+interface TooltipTextProps extends TooltipBaseProps {
+  text?: ReactNode
+}
+
+export function TooltipText({ text, children, placement = 'auto', offset, contained }: TooltipTextProps) {
+  const [tooltip, setTooltip] = useState<HTMLDivElement | null>()
+  const showTooltip = useTooltip(tooltip)
+  return (
+    <Popover content={children} show={showTooltip} placement={placement} offset={offset} contained={contained}>
+      <div ref={setTooltip}>{text}</div>
     </Popover>
   )
 }
