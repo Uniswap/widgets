@@ -1,14 +1,18 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import assert from 'assert'
-import { DAI, USDC_MAINNET } from 'constants/tokens'
-import useSwapInfo, { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
+import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import * as usePermit2Allowance from 'hooks/usePermit2Allowance'
 import { flagsAtom } from 'hooks/useSyncFlags'
 import Module from 'module'
+import { InterfaceTrade } from 'state/routing/types'
 import { Field, stateAtom, Swap } from 'state/swap'
 import { act, queryByText, renderComponent } from 'test'
+import { buildMultiV3Route, buildSingleV3Route, DAI, USDC } from 'test/utils'
 
-import { SummaryDialog } from './index'
+import { ConfirmButton } from './index'
+
+const usdc = CurrencyAmount.fromRawAmount(USDC, 1)
+const dai = CurrencyAmount.fromRawAmount(DAI, 1)
 
 jest.mock('@web3-react/core', () => ({
   ...(jest.requireActual('@web3-react/core') as Module),
@@ -38,51 +42,42 @@ function getInitialTradeState(trade: Partial<Swap> = {}) {
     type: TradeType.EXACT_INPUT,
     amount: '',
     [Field.INPUT]: DAI,
-    [Field.OUTPUT]: USDC_MAINNET,
+    [Field.OUTPUT]: USDC,
     ...trade,
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const EMPTY_ASYNC_FUCTION = async () => {}
-function Summary() {
-  const {
-    [Field.INPUT]: { usdc: inputUSDC },
-    [Field.OUTPUT]: { usdc: outputUSDC },
-    trade: { trade, gasUseEstimateUSD },
-    allowance,
-    slippage,
-    impact,
-  } = useSwapInfo()
-
-  return trade ? (
-    <SummaryDialog
-      trade={trade}
-      onConfirm={EMPTY_ASYNC_FUCTION}
-      slippage={slippage}
-      gasUseEstimateUSD={gasUseEstimateUSD}
-      inputUSDC={inputUSDC}
-      outputUSDC={outputUSDC}
-      impact={impact}
+const EMPTY_PROMISE_FUNCTION = async () => {
+  return new Promise<void>(EMPTY_ASYNC_FUCTION)
+}
+function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
+  return (
+    <ConfirmButton
+      trade={
+        new InterfaceTrade({
+          v2Routes: [],
+          v3Routes: [buildMultiV3Route(usdc, dai), buildSingleV3Route(usdc, dai)],
+          tradeType: TradeType.EXACT_INPUT,
+        })
+      }
+      onConfirm={EMPTY_PROMISE_FUNCTION}
+      onAcknowledgeNewTrade={EMPTY_ASYNC_FUCTION}
       allowance={allowance}
     />
-  ) : (
-    <div />
   )
 }
 
 describe('ConfirmButton', () => {
-  it('should render with both currencies specified, no amount input', () => {
-    const component = renderComponent(<Summary />, {
-      initialAtomValues: [[stateAtom, getInitialTradeState()]],
-    })
-    expect(component.queryByText('Enter an amount')).toBeTruthy()
-  })
-
-  it('should render a request for approval', async () => {
+  it('should render a swap pending message', async () => {
     const component = renderComponent(
       <SwapInfoProvider>
-        <Toolbar />
+        <Summary
+          allowance={{
+            state: usePermit2Allowance.AllowanceState.ALLOWED,
+          }}
+        />
       </SwapInfoProvider>,
       {
         initialAtomValues: [
@@ -91,12 +86,74 @@ describe('ConfirmButton', () => {
         ],
       }
     )
-    const action = component.queryByTestId('action-button')
-    assert(action)
-    expect(queryByText(action, 'Approve token')).toBeTruthy()
+    const button = component.queryByTestId('swap-button')
+    assert(button)
+    expect(component.queryByText('Swap')).toBeTruthy()
+    await act(() => button?.click())
+    const button2 = component.queryByTestId('action-button')
+    assert(button2)
+    expect(component.queryByText('Confirm in your wallet')).toBeTruthy()
+  })
 
-    const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => void }).approveAndPermit
-    await act(() => action.querySelector('button')?.click())
+  it('should render a request for approval', async () => {
+    const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => Promise<void> })
+      .approveAndPermit
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Summary
+          allowance={{
+            token: USDC,
+            state: usePermit2Allowance.AllowanceState.REQUIRED,
+            isApprovalLoading: true,
+            isApproved: false,
+            approveAndPermit,
+          }}
+        />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [
+          [stateAtom, getInitialTradeState({ amount: '1' })],
+          [flagsAtom, { permit2: true }],
+        ],
+      }
+    )
+    const button = component.queryByTestId('swap-button')
+    assert(button)
+    expect(component.queryByText('Swap')).toBeTruthy()
+    await act(() => button?.click())
+    const button2 = component.queryByTestId('action-button')
+    assert(button2)
+    expect(queryByText(button2, 'Approve permit')).toBeTruthy()
+    expect(approveAndPermit).toHaveBeenCalled()
+  })
+
+  it('should render a request for approval', async () => {
+    const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => Promise<void> })
+      .approveAndPermit
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Summary
+          allowance={{
+            token: USDC,
+            state: usePermit2Allowance.AllowanceState.REQUIRED,
+            isApprovalLoading: true,
+            isApproved: true,
+            approveAndPermit,
+          }}
+        />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [
+          [stateAtom, getInitialTradeState({ amount: '1' })],
+          [flagsAtom, { permit2: true }],
+        ],
+      }
+    )
+    const button = component.queryByTestId('swap-button')
+    await act(() => button?.click())
+    const button2 = component.queryByTestId('action-button')
+    assert(button2)
+    expect(queryByText(button2, 'Approve token for trading')).toBeTruthy()
     expect(approveAndPermit).toHaveBeenCalled()
   })
 })

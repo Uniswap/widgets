@@ -1,12 +1,9 @@
 import { TradeType } from '@uniswap/sdk-core'
-import assert from 'assert'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
-import * as usePermit2Allowance from 'hooks/usePermit2Allowance'
-import { flagsAtom } from 'hooks/useSyncFlags'
 import Module from 'module'
 import { Field, stateAtom, Swap } from 'state/swap'
-import { act, queryByText, renderComponent } from 'test'
+import { renderComponent } from 'test'
 
 import Toolbar from './index'
 
@@ -59,26 +56,5 @@ describe('Toolbar', () => {
       }
     )
     expect(component.queryByText('Enter an amount')).toBeTruthy()
-  })
-
-  it('should render a request for approval', async () => {
-    const component = renderComponent(
-      <SwapInfoProvider>
-        <Toolbar />
-      </SwapInfoProvider>,
-      {
-        initialAtomValues: [
-          [stateAtom, getInitialTradeState({ amount: '1' })],
-          [flagsAtom, { permit2: true }],
-        ],
-      }
-    )
-    const action = component.queryByTestId('action-button')
-    assert(action)
-    expect(queryByText(action, 'Approve token')).toBeTruthy()
-
-    const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => void }).approveAndPermit
-    await act(() => action.querySelector('button')?.click())
-    expect(approveAndPermit).toHaveBeenCalled()
   })
 })

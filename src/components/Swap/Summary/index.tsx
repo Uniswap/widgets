@@ -32,9 +32,10 @@ enum ReviewState {
 
 function useReviewState(onSwap: () => void, allowance: Allowance, doesTradeDiffer: boolean) {
   const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
-
+  console.log('here')
   const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
+      console.log('requireddddd')
       setCurrentState(ReviewState.ALLOWANCE_PENDING)
       try {
         await allowance.approveAndPermit?.()
@@ -122,7 +123,7 @@ function getAllowancePendingAction(isApproved: boolean, cancel: () => void): Act
   }
 }
 
-function ConfirmButton({
+export function ConfirmButton({
   trade,
   onConfirm,
   onAcknowledgeNewTrade,
@@ -140,7 +141,6 @@ function ConfirmButton({
     [ackTrade, trade]
   )
   const onSwap = useCallback(async () => {
-    console.log('here')
     onSubmitSwapClick?.(trade)
     await onConfirm()
   }, [onConfirm, onSubmitSwapClick, trade])
@@ -164,7 +164,12 @@ function ConfirmButton({
       case ReviewState.SWAP_PENDING:
         return [
           {
-            message: <Trans>Confirm in your wallet</Trans>,
+            message: (
+              <PermitTooltipText
+                text={t`Confirm in your wallet`}
+                content={t`Gives you the ability to trade this token on the Uniswap protocol. For security, this will expire in 30 days.`}
+              />
+            ),
             icon: Spinner,
             onClick: onCancel,
             children: <Trans>Cancel</Trans>,
@@ -190,8 +195,12 @@ function ConfirmButton({
     }
   }, [currentState, isApproved, onAcknowledgeClick, onCancel, onStartSwapFlow])
 
+  useEffect(() => {
+    console.log(action)
+  }, [action])
+
   return (
-    <ActionButton onClick={onStartSwapFlow} action={action} color={color ?? 'accent'}>
+    <ActionButton onClick={onStartSwapFlow} action={action} color={color ?? 'accent'} data-testid="swap-button">
       <Trans>Swap</Trans>
     </ActionButton>
   )
@@ -241,7 +250,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
           <Body flex align="stretch">
             <Details {...props} />
           </Body>
-          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} data-testid="swap-button" />
+          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
         </>
       )}
     </>
