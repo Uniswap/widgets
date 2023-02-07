@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the Uniswap widgets! 🦄
 
 # Development
 
-Before developing locally, you'll need install the project's dependencies and create a `.env` file.
+Before developing locally, you'll need to install the project's dependencies and create a `.env` file.
 
 - `yarn install`
 
@@ -18,12 +18,12 @@ JSON_RPC_PROVIDER='<JSON_RPC_PROVIDER>`
 ## Running widgets locally
 
 1. `yarn start`
-- This will open a cosmos viewer for feedback in realtime.
+- This will open a cosmos viewer for feedback in real time.
 
 ## Running tests locally
 
 1. `yarn test`
-- You may also run `yarn test --watch` for feedback in realtime.
+- You may also run `yarn test --watch` for feedback in real time.
 
 Integration tests are run through a separate command, and require a hardhat node to be running:
 
@@ -36,7 +36,7 @@ _Releases are created through github workflows._
 
 1. `yarn tsc`
 1. `yarn build`
-- You may also run `yarn build --watch` for feedback in realtime.
+- You may also run `yarn build --watch` for feedback in real time.
 
 ## Engineering standards
 
