@@ -10,7 +10,7 @@ import { tokenComparator, useSortTokensByQuery } from './sorting'
 
 export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
   const { chainId, account } = useWeb3React()
-  const balances = useTokenBalances(account, tokens)
+  const balances = useTokenBalances(account)
   const sortedTokens = useMemo(
     // Create a new array because sort is in-place and returns a referentially equivalent array.
     () => Array.from(tokens).sort(tokenComparator.bind(null, balances)),
