@@ -80,9 +80,10 @@ export default memo(function Toolbar() {
         return { caption: <Caption.Connecting /> }
       case ChainError.UNSUPPORTED_CHAIN:
         return { caption: <Caption.UnsupportedNetwork /> }
-      case ChainError.MISMATCHED_TOKEN_CHAINS:
-        return { caption: <Caption.Error /> }
       default:
+    }
+    if (error) {
+      return { caption: <Caption.Caption icon={AlertTriangle} caption={error} /> }
     }
 
     if (state === TradeState.LOADING) {

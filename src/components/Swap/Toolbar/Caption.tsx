@@ -51,7 +51,7 @@ interface CaptionProps {
   tooltip?: CaptionTooltip
 }
 
-function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionProps) {
+export function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionProps) {
   return (
     <CaptionRow gap={0.5} shrink={0}>
       {tooltip ? (

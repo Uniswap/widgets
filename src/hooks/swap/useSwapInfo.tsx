@@ -34,7 +34,7 @@ interface SwapField {
 interface SwapInfo {
   [Field.INPUT]: SwapField
   [Field.OUTPUT]: SwapField
-  error?: ChainError
+  error?: ChainError | string
   trade: {
     state: TradeState
     trade?: WidoTrade
@@ -47,21 +47,16 @@ interface SwapInfo {
 
 /** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(): SwapInfo {
-  const { account, chainId, isActivating, isActive } = useWeb3React()
+  const { account, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
-  const chainIdIn = currencyIn?.chainId
-  const chainIdOut = currencyOut?.chainId
-  const tokenChainId = chainIdIn || chainIdOut
   const error = useMemo(() => {
     if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
-    if (chainIdIn && chainIdOut && chainIdIn !== chainIdOut) return ChainError.MISMATCHED_TOKEN_CHAINS
-    if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainId, chainIdIn, chainIdOut, isActivating, isActive, isSupported, tokenChainId])
+  }, [isActivating, isActive, isSupported])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),
@@ -109,7 +104,7 @@ function useComputeSwapInfo(): SwapInfo {
         balance: balanceOut,
         usdc: trade.trade?.outputAmountUsdValue,
       },
-      error,
+      error: error || trade?.error,
       trade,
       approval,
       slippage,

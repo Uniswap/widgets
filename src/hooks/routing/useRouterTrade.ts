@@ -36,6 +36,7 @@ export function useRouterTrade(
 ): {
   state: TradeState
   trade?: WidoTrade
+  error?: string
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
@@ -61,7 +62,11 @@ export function useRouterTrade(
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
-  const { isError, data, currentData, fulfilledTimeStamp } = useGetQuoteQueryState(queryArgs)
+  const { isError, data, currentData, fulfilledTimeStamp, error } = useGetQuoteQueryState(queryArgs)
+  let errorMessage = (error as any)?.error
+  if (typeof errorMessage == 'string') {
+    errorMessage = errorMessage.replace('SERVER_ERR: ', '')
+  }
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
   // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
@@ -105,7 +110,7 @@ export function useRouterTrade(
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
-      return TRADE_INVALID
+      return { ...TRADE_INVALID, error: errorMessage }
     } else if (data === NO_ROUTE) {
       return TRADE_NOT_FOUND
     } else if (!trade) {
@@ -114,5 +119,5 @@ export function useRouterTrade(
       const state = isValid ? TradeState.VALID : TradeState.LOADING
       return { state, trade, gasUseEstimateUSD }
     }
-  }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD])
+  }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD, errorMessage])
 }
