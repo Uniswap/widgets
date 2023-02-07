@@ -147,6 +147,20 @@ export function FieldWrapper({
     >
       <Row pad={1 /* em */}>
         <ThemedText.Subhead2 color={'secondary'}>{subheader}</ThemedText.Subhead2>
+        {balance && (
+          <Row gap={0.5}>
+            <Balance color="secondary">
+              <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
+            </Balance>
+            {maxAmount && (
+              <TextButton onClick={onClickMax}>
+                <ThemedText.ButtonSmall>
+                  <Trans>Max</Trans>
+                </ThemedText.ButtonSmall>
+              </TextButton>
+            )}
+          </Row>
+        )}
       </Row>
       <TokenInput
         ref={setInput}
@@ -162,6 +176,7 @@ export function FieldWrapper({
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
+            <ThemedText.Subhead2 color={'secondary'}>{currency?.name}</ThemedText.Subhead2>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
               {impact && (
@@ -170,20 +185,6 @@ export function FieldWrapper({
                 </ThemedText.Body2>
               )}
             </USDC>
-            {balance && (
-              <Row gap={0.5}>
-                <Balance color="secondary">
-                  <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
-                </Balance>
-                {maxAmount && (
-                  <TextButton onClick={onClickMax}>
-                    <ThemedText.ButtonSmall>
-                      <Trans>Max</Trans>
-                    </ThemedText.ButtonSmall>
-                  </TextButton>
-                )}
-              </Row>
-            )}
           </Row>
         </ThemedText.Body2>
       </TokenInput>
@@ -211,7 +212,7 @@ export default function Input() {
       field={Field.INPUT}
       maxAmount={maxAmount}
       approved={approvalState === SwapApprovalState.APPROVED}
-      subheader={t`You pay`}
+      subheader={t`From`}
     />
   )
 }

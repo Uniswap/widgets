@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { Logo } from 'icons'
 import { memo } from 'react'
 import styled from 'styled-components/macro'
-import { AnimationSpeed, brand, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 
 import ExternalLink from './ExternalLink'
 
@@ -13,25 +13,8 @@ const UniswapA = styled(ExternalLink)`
   text-decoration: none;
 
   ${Logo} {
-    & rect {
-      fill: ${({ theme }) => theme.accentSoft};
-      transition: fill ${AnimationSpeed.Medium} ease;
-    }
-    & path {
-      fill: ${({ theme }) => theme.secondary};
-      transition: fill ${AnimationSpeed.Medium} ease;
-    }
     height: 1em;
     width: 1em;
-  }
-
-  :hover ${Logo} {
-    & rect {
-      fill: ${brand};
-    }
-    & path {
-      fill: #282524;
-    }
   }
 `
 const Wrapper = styled(Row)`

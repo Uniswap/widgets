@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { getChainInfo } from 'constants/chainInfo'
+import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
 import { ChevronDown } from 'icons'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Button from '../Button'
 import Row from '../Row'
-import TokenImg from '../TokenImg'
+import TokenImg, { ChainImg, TokenGroup } from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
@@ -17,21 +19,34 @@ const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
     transition: none;
   }
 
-  ${TokenImg} {
+  ${TokenGroup} {
     filter: ${({ approved }) => approved === false && 'grayscale(1)'};
   }
 `
 
 const TokenButtonRow = styled(Row)<{ empty: boolean }>`
   flex-direction: row;
+  flex-flow: nowrap;
   max-width: 12em;
   overflow: hidden;
   padding-left: ${({ empty }) => empty && 0.5}em;
   width: max-content;
+`
 
-  img {
-    min-width: 1.2em;
+const SelectButton = styled(ThemedText.ButtonLarge)`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+`
+
+const DropDownIcon = styled(ChevronDown)`
+  min-width: 1em;
 `
 
 interface TokenButtonProps {
@@ -42,6 +57,9 @@ interface TokenButtonProps {
 }
 
 export default function TokenButton({ value, approved, disabled, onClick }: TokenButtonProps) {
+  const chainInfo = getChainInfo(value?.chainId)
+  const chainSrc = getNativeLogoURI(value?.chainId)
+
   return (
     <StyledTokenButton
       onClick={onClick}
@@ -53,17 +71,21 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
       <TokenButtonRow empty={!value} flex gap={0.4}>
         {value ? (
           <>
-            <TokenImg token={value} size={1.5} />
-            <ThemedText.ButtonLarge color={'currentColor'}>
+            <TokenGroup size={2}>
+              <TokenImg token={value} size={2} />
+              <ChainImg src={chainSrc} size={2} />
+            </TokenGroup>
+            <SelectButton color={'currentColor'}>
               <span>{value.symbol}</span>
-            </ThemedText.ButtonLarge>
+              <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
+            </SelectButton>
           </>
         ) : (
           <ThemedText.ButtonLarge color={'onAccent'}>
-            <Trans>Select a token</Trans>
+            <Trans>Select token</Trans>
           </ThemedText.ButtonLarge>
         )}
-        <ChevronDown strokeWidth={2} color={value ? 'primary' : 'onAccent'} />
+        <DropDownIcon strokeWidth={2} color={value ? 'primary' : 'onAccent'} />
       </TokenButtonRow>
     </StyledTokenButton>
   )

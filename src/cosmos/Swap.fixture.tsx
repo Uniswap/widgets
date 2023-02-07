@@ -31,7 +31,7 @@ function Fixture() {
 
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
 
-  const [width] = useValue('width', { defaultValue: 360 })
+  const [width] = useValue('width', { defaultValue: 420 })
 
   const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
   const locale = useOption('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })

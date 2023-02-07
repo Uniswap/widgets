@@ -19,6 +19,27 @@ const MissingTokenSymbol = styled.span<{ size?: number }>`
   font-size: ${({ size }) => (size || 1) * (7 / 20)}em;
   font-weight: 500;
 `
+export const TokenGroup = styled.div<{ size?: number }>`
+  display: flex;
+  min-height: ${({ size }) => (size || 1) * 1.25}em;
+  min-width: ${({ size }) => (size || 1) * 1.25}em;
+  position: relative;
+`
+
+export const ChainImg = styled.img<{ size?: number }>`
+  background: radial-gradient(
+    ${({ theme }) => theme.module} calc(100% / ${Math.sqrt(2)} - 1.5px),
+    ${({ theme }) => theme.outline} calc(100% / ${Math.sqrt(2)} - 1.5px)
+  );
+  border: 1px solid ${({ theme }) => theme.interactive};
+  border-radius: 100%;
+  bottom: 0px;
+  color: ${({ theme }) => theme.primary};
+  height: ${({ size }) => (size || 1) / 1.5}em;
+  position: absolute;
+  right: 0px;
+  width: ${({ size }) => (size || 1) / 1.5}em;
+`
 
 interface BaseProps {
   // TODO(1533): Include logoURI as an optional property of Currency.
@@ -68,4 +89,5 @@ export default styled(TokenImg)<{ size?: number }>`
   border-radius: 100%;
   height: ${({ size }) => size || 1}em;
   width: ${({ size }) => size || 1}em;
+  border: 1px solid ${({ theme }) => theme.interactive};
 `

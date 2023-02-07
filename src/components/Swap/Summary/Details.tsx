@@ -159,8 +159,8 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   return (
     <>
       <Column gap={0.75}>
-        <Amount label={t`You pay`} amount={inputAmount} usdcAmount={inputUSDC} />
-        <Amount label={t`You receive`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimateMessage} />
+        <Amount label={t`From`} amount={inputAmount} usdcAmount={inputUSDC} />
+        <Amount label={t`To`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimateMessage} />
         <RuleWrapper>
           <Rule />
         </RuleWrapper>

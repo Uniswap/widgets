@@ -1,6 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { getChainInfo } from 'constants/chainInfo'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
+import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
 import {
@@ -28,7 +30,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { BaseButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
-import TokenImg from '../TokenImg'
+import TokenImg, { ChainImg, TokenGroup } from '../TokenImg'
 
 const TokenButton = styled(BaseButton)`
   border-radius: 0;
@@ -89,6 +91,8 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
 
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, value)
+  const chainSrc = getNativeLogoURI(value?.chainId)
+  const { label } = getChainInfo(value?.chainId)
 
   return (
     <TokenButton
@@ -104,10 +108,13 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
       <ThemedText.Body1>
         <Row>
           <Row gap={0.5}>
-            <TokenImg token={value} size={1.5} />
+            <TokenGroup size={1.5}>
+              <TokenImg token={value} size={1.5} />
+              <ChainImg src={chainSrc} size={1.5} />
+            </TokenGroup>
             <Column flex gap={0.125} align="flex-start">
-              <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
-              <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
+              <ThemedText.Subhead1>{value.name}</ThemedText.Subhead1>
+              <ThemedText.Caption color="secondary"> on {label}</ThemedText.Caption>
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>

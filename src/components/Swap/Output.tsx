@@ -47,7 +47,7 @@ export default function Output() {
         field={Field.OUTPUT}
         impact={impact}
         hasColor={hasColor}
-        subheader={t`You receive`}
+        subheader={t`To`}
       />
     </DynamicThemeProvider>
   )

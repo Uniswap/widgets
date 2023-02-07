@@ -49,7 +49,7 @@ export default function Swap(props: SwapProps) {
 
   return (
     <>
-      <Header title={<Trans>Swap</Trans>}>
+      <Header title={<Trans>Zap</Trans>}>
         <Wallet disabled={props.hideConnectionUI} />
         <Settings />
       </Header>

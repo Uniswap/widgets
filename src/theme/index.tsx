@@ -48,7 +48,7 @@ export const lightTheme: Colors = {
   onInteractive: black,
 
   deepShadow: 'hsla(234, 17%, 24%, 0.04), hsla(234, 17%, 24%, 0.02), hsla(234, 17%, 24%, 0.04)',
-  networkDefaultShadow: 'hsla(328, 97%, 53%, 0.12)',
+  networkDefaultShadow: 'hsla(160, 71%, 56%, 0.12)',
 
   // state
   ...stateColors,

@@ -81,14 +81,14 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   if (!listHasTokens && isLoaded) {
     return (
       <Dialog color="container" onClose={onClose}>
-        <Header title={<Trans>Select a token</Trans>} />
+        <Header title={<Trans>Select token</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )
   }
   return (
     <Dialog color="container" onClose={onClose}>
-      <Header title={<Trans>Select a token</Trans>} />
+      <Header title={<Trans>Select token</Trans>} />
       <Column gap={0.75}>
         <Row pad={0.75} grow>
           <SearchInputContainer gap={0.75} justify="start" flex>

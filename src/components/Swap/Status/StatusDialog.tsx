@@ -52,7 +52,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     if (showConfirmation) {
       return <Trans>Transaction submitted</Trans>
     } else if (tx.info.type === TransactionType.SWAP) {
-      return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Swap pending</Trans>
+      return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Zap pending</Trans>
     } else if (tx.info.type === TransactionType.WRAP) {
       return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Unwrap pending</Trans>
     } else if (tx.info.type === TransactionType.UNWRAP) {

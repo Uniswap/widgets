@@ -23,7 +23,7 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
   }
 }
 
-function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
+export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
   switch (chainId) {
     case SupportedChainId.POLYGON_MUMBAI:
     case SupportedChainId.POLYGON:
