@@ -141,7 +141,7 @@ const slideOutRight = keyframes`
 `
 
 const HiddenWrapper = styled.div`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: 100%;
   left: 0;
   overflow: hidden;
