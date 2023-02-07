@@ -47,16 +47,18 @@ interface SwapInfo {
 
 /** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(): SwapInfo {
-  const { account, isActivating, isActive } = useWeb3React()
+  const { account, chainId, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
+  const chainIdIn = currencyIn?.chainId
   const error = useMemo(() => {
     if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
+    if (chainId && chainIdIn && chainId !== chainIdIn) return ChainError.MISMATCHED_CHAINS
     return
-  }, [isActivating, isActive, isSupported])
+  }, [chainIdIn, chainId, isActivating, isActive, isSupported])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),
