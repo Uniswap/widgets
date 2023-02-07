@@ -76,10 +76,7 @@ export interface Action {
   hideButton?: boolean
 }
 
-type ActionButtonColor = keyof Pick<
-  Colors,
-  'accent' | 'activeSoft' | 'accentSoft' | 'warningSoft' | 'interactive' | 'critical'
->
+type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive' | 'critical'>
 
 interface BaseProps {
   color?: ActionButtonColor
@@ -110,8 +107,6 @@ export default function ActionButton({
         return 'onAccent'
       case 'accentSoft':
         return 'accent'
-      case 'activeSoft':
-        return 'active'
       case 'warningSoft':
         return 'warning'
       default:
