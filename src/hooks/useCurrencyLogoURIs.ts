@@ -63,7 +63,7 @@ export default function useCurrencyLogoURIs(currency?: (Currency & { logoURI?: s
       } else if (currency.isToken) {
         const logoURI = getTokenLogoURI(currency.address, currency.chainId)
         if (logoURI) {
-          logoURIs.push(logoURI)
+          logoURIs.unshift(logoURI)
         }
       }
     }
