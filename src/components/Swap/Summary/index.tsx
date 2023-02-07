@@ -32,10 +32,9 @@ enum ReviewState {
 
 function useReviewState(onSwap: () => void, allowance: Allowance, doesTradeDiffer: boolean) {
   const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
-  console.log('here')
+
   const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
-      console.log('requireddddd')
       setCurrentState(ReviewState.ALLOWANCE_PENDING)
       try {
         await allowance.approveAndPermit?.()
@@ -164,12 +163,7 @@ export function ConfirmButton({
       case ReviewState.SWAP_PENDING:
         return [
           {
-            message: (
-              <PermitTooltipText
-                text={t`Confirm in your wallet`}
-                content={t`Gives you the ability to trade this token on the Uniswap protocol. For security, this will expire in 30 days.`}
-              />
-            ),
+            message: <Trans>Confirm in your wallet</Trans>,
             icon: Spinner,
             onClick: onCancel,
             children: <Trans>Cancel</Trans>,
@@ -194,10 +188,6 @@ export function ConfirmButton({
         return []
     }
   }, [currentState, isApproved, onAcknowledgeClick, onCancel, onStartSwapFlow])
-
-  useEffect(() => {
-    console.log(action)
-  }, [action])
 
   return (
     <ActionButton onClick={onStartSwapFlow} action={action} color={color ?? 'accent'} data-testid="swap-button">
