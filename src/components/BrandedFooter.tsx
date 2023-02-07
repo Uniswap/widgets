@@ -13,16 +13,25 @@ const UniswapA = styled(ExternalLink)`
   text-decoration: none;
 
   ${Logo} {
-    fill: ${({ theme }) => theme.secondary};
+    & rect {
+      fill: ${({ theme }) => theme.accentSoft};
+      transition: fill ${AnimationSpeed.Medium} ease;
+    }
+    & path {
+      fill: ${({ theme }) => theme.secondary};
+      transition: fill ${AnimationSpeed.Medium} ease;
+    }
     height: 1em;
-    transition: transform ${AnimationSpeed.Medium} ease, fill ${AnimationSpeed.Medium} ease;
     width: 1em;
-    will-change: transform;
   }
 
   :hover ${Logo} {
-    fill: ${brand};
-    transform: rotate(-5deg);
+    & rect {
+      fill: ${brand};
+    }
+    & path {
+      fill: #282524;
+    }
   }
 `
 const Wrapper = styled(Row)`
