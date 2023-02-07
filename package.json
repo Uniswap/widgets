@@ -1,8 +1,8 @@
 {
-  "name": "@uniswap/widgets",
-  "description": "Uniswap Interface",
-  "homepage": "https://github.com/Uniswap/widgets#readme",
-  "repository": "https://github.com/Uniswap/widgets",
+  "name": "wido-widget",
+  "description": "Wido widget",
+  "homepage": "https://github.com/widolabs/wido-widget#readme",
+  "repository": "https://github.com/widolabs/wido-widget",
   "files": [
     "dist"
   ],
