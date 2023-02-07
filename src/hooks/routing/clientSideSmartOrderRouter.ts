@@ -12,7 +12,7 @@ import {
   UniswapMulticallProvider,
 } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import { GetQuoteArgs, GetQuoteResult, INITIALIZED, NO_ROUTE } from 'state/routing/types'
+import { GetQuoteArgs, GetQuoteError, INITIALIZED, NO_ROUTE, QuoteResult } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -94,7 +94,7 @@ async function getQuote(
   },
   router: AlphaRouter,
   routerConfig: Partial<AlphaRouterConfig>
-): Promise<GetQuoteResult> {
+): Promise<QuoteResult | GetQuoteError> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
