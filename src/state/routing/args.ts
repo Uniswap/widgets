@@ -4,6 +4,7 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { RouterPreference } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
 import { useMemo } from 'react'
 
 import { GetQuoteArgs } from './types'
@@ -62,14 +63,14 @@ export function useGetQuoteArgs(
 
     return {
       amount: amountSpecified.quotient.toString(),
-      tokenInAddress: currencyIn.wrapped.address,
-      tokenInChainId: currencyIn.wrapped.chainId,
-      tokenInDecimals: currencyIn.wrapped.decimals,
-      tokenInSymbol: currencyIn.wrapped.symbol,
-      tokenOutAddress: currencyOut.wrapped.address,
-      tokenOutChainId: currencyOut.wrapped.chainId,
-      tokenOutDecimals: currencyOut.wrapped.decimals,
-      tokenOutSymbol: currencyOut.wrapped.symbol,
+      tokenInAddress: currencyIn.isNative ? NATIVE_ADDRESS : currencyIn.address,
+      tokenInChainId: currencyIn.chainId,
+      tokenInDecimals: currencyIn.decimals,
+      tokenInSymbol: currencyIn.symbol,
+      tokenOutAddress: currencyOut.isNative ? NATIVE_ADDRESS : currencyOut.address,
+      tokenOutChainId: currencyOut.chainId,
+      tokenOutDecimals: currencyOut.decimals,
+      tokenOutSymbol: currencyOut.symbol,
       userAddress: account,
       routerPreference,
       tradeType,

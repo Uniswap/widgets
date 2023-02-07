@@ -50,7 +50,8 @@ export function calcStablecoinAmountFromFiatValue(fiatValue: string | null | und
   const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
 
   if (fiatValue === null || fiatValue === undefined || !chainId || !stablecoin) {
-    throw Error('UsdValue missing.')
+    return tryParseCurrencyAmount('0', stablecoin)
+    // throw Error('UsdValue missing.')
   }
 
   // trim for decimal precision when parsing

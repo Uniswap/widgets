@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { inputCss, StringInput } from 'components/Input'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
-import useNativeCurrency from 'hooks/useNativeCurrency'
+import { useNativeCurrencies } from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
@@ -37,8 +37,8 @@ function usePrefetchBalances() {
 function useAreBalancesLoaded(): boolean {
   const { account } = useWeb3React()
   const tokens = useTokenList()
-  const native = useNativeCurrency()
-  const currencies = useMemo(() => [native, ...tokens], [native, tokens])
+  const nativeTokens = useNativeCurrencies()
+  const currencies = useMemo(() => [...nativeTokens, ...tokens], [nativeTokens, tokens])
   const balances = useCurrencyBalances(account, currencies).filter(Boolean)
   return !account || currencies.length === balances.length
 }

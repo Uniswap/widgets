@@ -3,11 +3,10 @@ import { useWeb3React } from '@web3-react/core'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { SupportedChainId } from 'constants/chains'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
 import { getSupportedTokens } from 'wido'
 
-import { ChainTokenMap, tokensToChainTokenMap } from './utils'
+import { ChainTokenMap, TokenListItem, tokensToChainTokenMap } from './utils'
 
 export { useQueryTokens } from './useQueryTokens'
 
@@ -28,11 +27,11 @@ export function useIsTokenListLoaded() {
   return Boolean(useChainTokenMapContext())
 }
 
-export default function useTokenList(): WrappedTokenInfo[] {
+export default function useTokenList(): TokenListItem[] {
   const chainTokenMap = useChainTokenMapContext()
   return useMemo(() => {
     if (!chainTokenMap) return []
-    const tokens: WrappedTokenInfo[] = []
+    const tokens: TokenListItem[] = []
     const tokenMaps = Object.values(chainTokenMap)
     tokenMaps.forEach((tokenMap) => {
       tokens.push(...Object.values(tokenMap).map(({ token }) => token))
@@ -41,7 +40,7 @@ export default function useTokenList(): WrappedTokenInfo[] {
   }, [chainTokenMap])
 }
 
-export type TokenMap = { [address: string]: WrappedTokenInfo }
+export type TokenMap = { [address: string]: TokenListItem }
 
 export function useTokenMap(chainId?: SupportedChainId): TokenMap {
   const { chainId: activeChainId } = useWeb3React()

@@ -1,8 +1,11 @@
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
+import { nativeOnChain } from 'constants/tokens'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { ZERO_ADDRESS } from 'wido'
 
-type TokenMap = Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list?: TokenList } }>
+export type TokenListItem = Token | NativeCurrency
+type TokenMap = Readonly<{ [tokenAddress: string]: { token: TokenListItem; list?: TokenList } }>
 export type ChainTokenMap = Readonly<{ [chainId: number]: TokenMap }>
 
 type Mutable<T> = {
@@ -19,17 +22,22 @@ export function tokensToChainTokenMap(tokens: TokenList | TokenInfo[]): ChainTok
 
   const [list, infos] = Array.isArray(tokens) ? [undefined, tokens] : [tokens, tokens.tokens]
   const map = infos.reduce<Mutable<ChainTokenMap>>((map, info) => {
-    if (info.address === ZERO_ADDRESS || info.address === NATIVE_ADDRESS) {
-      console.warn(`Skipping native tokens`)
+    if (info.address === ZERO_ADDRESS) {
+      console.warn(`Skipping zero address tokens`)
       return map
     }
+    if (!map[info.chainId]) {
+      map[info.chainId] = {}
+    }
+
+    if (info.address === NATIVE_ADDRESS) {
+      map[info.chainId][NATIVE_ADDRESS] = { token: nativeOnChain(info.chainId), list }
+    }
+
     const token = new WrappedTokenInfo(info)
     if (map[token.chainId]?.[token.address] !== undefined) {
       console.warn(`Duplicate token skipped: ${token.address}`)
       return map
-    }
-    if (!map[token.chainId]) {
-      map[token.chainId] = {}
     }
     map[token.chainId][token.address] = { token, list }
     return map

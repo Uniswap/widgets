@@ -1,7 +1,8 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { TokenInfo } from '@uniswap/token-lists'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { BalanceMap } from 'hooks/useCurrencyBalance'
 import { useMemo } from 'react'
+
+import { NATIVE_ADDRESS, TokenListItem } from './utils'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>) {
@@ -16,9 +17,12 @@ function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Curr
 }
 
 /** Sorts tokens by currency amount (descending), then symbol (ascending). */
-export function tokenComparator(balances: BalanceMap, a: Token, b: Token) {
+export function tokenComparator(balances: BalanceMap, a: TokenListItem, b: TokenListItem) {
   // Sorts by balances
-  const balanceComparison = balanceComparator(balances[a.chainId]?.[a.address], balances[b.chainId]?.[b.address])
+  const balanceComparison = balanceComparator(
+    balances[a.chainId]?.[a.isNative ? NATIVE_ADDRESS : a.address],
+    balances[b.chainId]?.[b.isNative ? NATIVE_ADDRESS : b.address]
+  )
   if (balanceComparison !== 0) return balanceComparison
 
   // Sorts by symbol
@@ -30,7 +34,7 @@ export function tokenComparator(balances: BalanceMap, a: Token, b: Token) {
 }
 
 /** Sorts tokens by query, giving precedence to exact matches and partial matches. */
-export function useSortTokensByQuery<T extends Token | TokenInfo>(query: string, tokens?: T[]): T[] {
+export function useSortTokensByQuery<T extends TokenListItem>(query: string, tokens?: T[]): T[] {
   return useMemo(() => {
     if (!tokens) {
       return []

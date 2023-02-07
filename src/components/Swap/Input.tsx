@@ -120,7 +120,7 @@ export function FieldWrapper({
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(currency)
 
-  const isDisabled = error !== undefined
+  const isDisabled = false //error !== undefined
   const isRouteLoading = isDisabled || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(field)
   const isLoading = isRouteLoading && isDependentField

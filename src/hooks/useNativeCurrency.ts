@@ -15,3 +15,7 @@ export default function useNativeCurrency(): NativeCurrency | Token {
     [chainId]
   )
 }
+
+export function useNativeCurrencies(): (NativeCurrency | Token)[] {
+  return useMemo(() => [nativeOnChain(SupportedChainId.MAINNET), nativeOnChain(SupportedChainId.POLYGON)], [])
+}

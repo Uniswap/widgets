@@ -92,7 +92,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, value)
   const chainSrc = getNativeLogoURI(value?.chainId)
-  const { label } = getChainInfo(value?.chainId)
+  const chainInfo = getChainInfo(value?.chainId)
 
   return (
     <TokenButton
@@ -114,7 +114,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
             </TokenGroup>
             <Column flex gap={0.125} align="flex-start">
               <ThemedText.Subhead1>{value.name}</ThemedText.Subhead1>
-              <ThemedText.Caption color="secondary"> on {label}</ThemedText.Caption>
+              <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>
