@@ -1,4 +1,4 @@
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import assert from 'assert'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import * as usePermit2Allowance from 'hooks/usePermit2Allowance'
@@ -65,6 +65,10 @@ function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
       onConfirm={EMPTY_PROMISE_FUNCTION}
       onAcknowledgeNewTrade={EMPTY_ASYNC_FUCTION}
       allowance={allowance}
+      slippage={{
+        auto: true,
+        allowed: new Percent(1, 100),
+      }}
     />
   )
 }
