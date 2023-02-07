@@ -1,6 +1,5 @@
 import { darkTheme, DEFAULT_LOCALE, defaultTheme, lightTheme, SUPPORTED_LOCALES, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
-import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
@@ -24,7 +23,7 @@ function Fixture() {
     DAI: DAI.address,
     USDC: USDC_MAINNET.address,
   }
-  const defaultInputToken = useOption('defaultInputToken', { options: currencies, defaultValue: 'Native' })
+  const defaultInputToken = useOption('defaultInputToken', { options: currencies })
   const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 0 })
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
@@ -40,13 +39,13 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  const defaultNetwork = useOption('defaultChainId', {
-    options: Object.keys(CHAIN_NAMES_TO_IDS),
-    defaultValue: 'mainnet',
-  })
-  const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
+  // const defaultNetwork = useOption('defaultChainId', {
+  //   options: Object.keys(CHAIN_NAMES_TO_IDS),
+  //   defaultValue: 'mainnet',
+  // })
+  // const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
-  const connector = useProvider(defaultChainId)
+  const connector = useProvider()
 
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -56,16 +55,16 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
-      defaultInputTokenAddress={defaultInputToken}
-      defaultInputAmount={defaultInputAmount}
-      defaultOutputTokenAddress={defaultOutputToken}
-      defaultOutputAmount={defaultOutputAmount}
-      hideConnectionUI={hideConnectionUI}
+      // defaultInputTokenAddress={defaultInputToken}
+      // defaultInputAmount={defaultInputAmount}
+      // defaultOutputTokenAddress={defaultOutputToken}
+      // defaultOutputAmount={defaultOutputAmount}
+      // hideConnectionUI={hideConnectionUI} // TODO(Daniel) remove
       locale={locale}
-      // defaultChainId={defaultChainId}
-      provider={connector} // TODO remove
+      // defaultChainId={defaultChainId} // TODO(Daniel) remove
+      provider={connector} // TODO(Daniel) remove
       theme={theme}
-      // tokenList={tokenList} // TODO remove
+      // tokenList={tokenList} // TODO(Daniel) remove
       width={width}
       {...eventHandlers}
     />

@@ -1,5 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
-import { TokenInfo, TokenList } from '@uniswap/token-lists'
+import { TokenInfo } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { SupportedChainId } from 'constants/chains'
@@ -8,7 +7,6 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
 import { getSupportedTokens } from 'wido'
 
-import fetchTokenList from './fetchTokenList'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 
 export { useQueryTokens } from './useQueryTokens'
@@ -31,16 +29,19 @@ export function useIsTokenListLoaded() {
 }
 
 export default function useTokenList(): WrappedTokenInfo[] {
-  const { chainId } = useWeb3React()
   const chainTokenMap = useChainTokenMapContext()
-  const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
-    if (!tokenMap) return []
-    return Object.values(tokenMap).map(({ token }) => token)
-  }, [tokenMap])
+    if (!chainTokenMap) return []
+    const tokens: WrappedTokenInfo[] = []
+    const tokenMaps = Object.values(chainTokenMap)
+    tokenMaps.forEach((tokenMap) => {
+      tokens.push(...Object.values(tokenMap).map(({ token }) => token))
+    })
+    return tokens
+  }, [chainTokenMap])
 }
 
-export type TokenMap = { [address: string]: Token }
+export type TokenMap = { [address: string]: WrappedTokenInfo }
 
 export function useTokenMap(chainId?: SupportedChainId): TokenMap {
   const { chainId: activeChainId } = useWeb3React()
@@ -85,20 +86,14 @@ export function Provider({ list, children }: PropsWithChildren<{ list: string | 
     if (chainTokenMap) return
 
     let stale = false
-    activateList(list)
+    activateList()
     return () => {
       stale = true
     }
 
-    async function activateList(list: string | TokenInfo[]) {
+    async function activateList() {
       try {
-        let tokens: TokenList | TokenInfo[]
-        if (typeof list === 'string') {
-          tokens = await fetchTokenList(list, resolver)
-        } else {
-          list = await getSupportedTokens()
-          tokens = list //list.length > 0 ? await validateTokens(list) : EMPTY_TOKEN_LIST
-        }
+        const tokens = await getSupportedTokens({ chainId: [1, 137] })
         // tokensToChainTokenMap also caches the fetched tokens, so it must be invoked even if stale.
         const map = tokensToChainTokenMap(tokens)
         if (!stale) {

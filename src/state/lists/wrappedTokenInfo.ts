@@ -1,5 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
+import { Tags, TokenInfo } from '@uniswap/token-lists'
 import { isAddress } from 'utils'
 
 type TagDetails = Tags[keyof Tags]
@@ -12,13 +12,10 @@ interface TagInfo extends TagDetails {
 export class WrappedTokenInfo implements Token {
   public readonly isNative: false = false
   public readonly isToken: true = true
-  public readonly list?: TokenList
-
   public readonly tokenInfo: TokenInfo
 
-  constructor(tokenInfo: TokenInfo, list?: TokenList) {
+  constructor(tokenInfo: TokenInfo) {
     this.tokenInfo = tokenInfo
-    this.list = list
   }
 
   private _checksummedAddress: string | null = null
