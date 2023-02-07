@@ -3,10 +3,7 @@ import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/co
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
-import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
-import { AllowanceState } from 'hooks/usePermit2Allowance'
-import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { AlertTriangle, Info } from 'icons'
 import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -15,8 +12,6 @@ import styled from 'styled-components/macro'
 
 import Row from '../../Row'
 import SwapInputOutputEstimate from '../Summary/Estimate'
-import AllowanceButton from '../SwapActionButton/AllowanceButton'
-import ApproveButton from '../SwapActionButton/ApproveButton'
 import * as Caption from './Caption'
 import ToolbarOrderRouting from './ToolbarOrderRouting'
 import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
@@ -64,15 +59,12 @@ export default memo(function Toolbar() {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     error,
-    approval,
-    allowance,
     trade: { trade, state, gasUseEstimateUSD },
     impact,
     slippage,
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
-  const permit2Enabled = usePermit2Enabled()
   const { open, onToggleOpen } = useContext(Context)
 
   const insufficientBalance: boolean | undefined = useMemo(() => {
@@ -179,18 +171,6 @@ export default memo(function Toolbar() {
 
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
-  }
-
-  if (!insufficientBalance) {
-    if (permit2Enabled) {
-      if (allowance.state === AllowanceState.REQUIRED) {
-        return <AllowanceButton {...allowance} />
-      }
-    } else {
-      if (approval.state !== SwapApprovalState.APPROVED) {
-        return <ApproveButton trade={trade} {...approval} />
-      }
-    }
   }
 
   return (
