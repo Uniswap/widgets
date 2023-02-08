@@ -30,6 +30,10 @@ import useValidate from './useValidate'
 // TODO(zzmp): refactor WalletConnection into Widget component
 export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
   hideConnectionUI?: boolean
+  /**
+   * @default false
+   */
+  testnetsVisible?: boolean
 }
 
 export default function Swap(props: SwapProps) {

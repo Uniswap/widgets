@@ -6,6 +6,7 @@ import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transaction
 import { Provider as BlockNumberProvider } from 'hooks/useBlockNumber'
 import { Flags, useInitialFlags } from 'hooks/useSyncFlags'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
+import useSyncWidgetSettings, { WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { Provider as TokenListProvider } from 'hooks/useTokenList'
 import { Provider as Web3Provider, ProviderProps as Web3Props } from 'hooks/web3'
 import { Provider as I18nProvider } from 'i18n'
@@ -77,5 +78,6 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
 /** A component in the scope of AtomProvider to set Widget-scoped state. */
 function WidgetUpdater(props: WidgetProps) {
   useSyncWidgetEventHandlers(props as WidgetEventHandlers)
+  useSyncWidgetSettings(props as WidgetSettings)
   return null
 }

@@ -43,6 +43,7 @@ function Fixture() {
   // const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
   // const connector = useProvider()
+  const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: false })
 
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -60,6 +61,7 @@ function Fixture() {
       // locale={locale}
       // defaultChainId={defaultChainId} // TODO(Daniel) remove
       // provider={connector} // TODO(Daniel) remove
+      testnetsVisible={testnetsVisible}
       theme={theme}
       // tokenList={tokenList} // TODO(Daniel) remove
       width={width}

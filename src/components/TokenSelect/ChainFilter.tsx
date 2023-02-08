@@ -1,8 +1,9 @@
 import Row from 'components/Row'
 import { ChainImg } from 'components/TokenImg'
 import { getChainInfo } from 'constants/chainInfo'
-import { VISIBLE_CHAIN_IDS } from 'constants/chains'
+import { VISIBLE_CHAIN_IDS, VISIBLE_TESTNET_CHAIN_IDS } from 'constants/chains'
 import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
+import { useTestnetsVisible } from 'hooks/useSyncWidgetSettings'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -37,8 +38,8 @@ export default function ChainFilter({
   selected?: number
   onSelect: (chainId?: number) => void
 }) {
-  console.log('📜 LOG > selected', selected)
-  const chainIds = VISIBLE_CHAIN_IDS
+  const testnetsVisible = useTestnetsVisible()
+  const chainIds = testnetsVisible ? [...VISIBLE_CHAIN_IDS, ...VISIBLE_TESTNET_CHAIN_IDS] : VISIBLE_CHAIN_IDS
 
   return (
     <BasesContainer gap={0.5} flex justify="start">
