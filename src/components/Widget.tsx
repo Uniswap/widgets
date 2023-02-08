@@ -20,8 +20,7 @@ import { Provider as ThemeProvider, Theme } from 'theme'
 import WidgetWrapper from './WidgetWrapper'
 
 export const DialogWrapper = styled.div`
-  border: ${({ theme }) => `1px solid ${theme.outline}`};
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   height: 100%;
   left: 0;
   padding: 0.5em;

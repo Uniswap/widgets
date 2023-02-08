@@ -128,11 +128,12 @@ export const Modal = styled.div<{ color: Color }>`
   ${globalFontStyles};
 
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   display: flex;
   flex-direction: column;
   height: 100%;
   left: 0;
+  outline: ${({ theme }) => `1px solid ${theme.outline}`};
   padding: 0.5em;
   position: absolute;
   right: 0;
