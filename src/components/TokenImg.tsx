@@ -33,8 +33,13 @@ export const ChainImg = styled.img<{ size?: number }>`
   );
   border: 1px solid ${({ theme }) => theme.interactive};
   border-radius: 100%;
-  bottom: 0px;
   color: ${({ theme }) => theme.primary};
+  height: ${({ size }) => size || 1}em;
+  width: ${({ size }) => size || 1}em;
+`
+
+export const ChainImgBadge = styled(ChainImg)<{ size?: number }>`
+  bottom: 0px;
   height: ${({ size }) => (size || 1) / 1.5}em;
   position: absolute;
   right: 0px;

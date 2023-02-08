@@ -8,7 +8,7 @@ import { ThemedText } from 'theme'
 
 import Button from '../Button'
 import Row from '../Row'
-import TokenImg, { ChainImg, TokenGroup } from '../TokenImg'
+import TokenImg, { ChainImgBadge, TokenGroup } from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
@@ -73,7 +73,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
           <>
             <TokenGroup size={2}>
               <TokenImg token={value} size={2} />
-              <ChainImg src={chainSrc} size={2} />
+              <ChainImgBadge src={chainSrc} size={2} />
             </TokenGroup>
             <SelectButton color={'currentColor'}>
               <span>{value.symbol}</span>

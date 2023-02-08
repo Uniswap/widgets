@@ -30,7 +30,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { BaseButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
-import TokenImg, { ChainImg, TokenGroup } from '../TokenImg'
+import TokenImg, { ChainImgBadge, TokenGroup } from '../TokenImg'
 
 const TokenButton = styled(BaseButton)`
   border-radius: 0;
@@ -110,7 +110,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
           <Row gap={0.5}>
             <TokenGroup size={1.5}>
               <TokenImg token={value} size={1.5} />
-              <ChainImg src={chainSrc} size={1.5} />
+              <ChainImgBadge src={chainSrc} size={1.5} />
             </TokenGroup>
             <Column flex gap={0.125} align="flex-start">
               <ThemedText.Subhead1>{value.name}</ThemedText.Subhead1>

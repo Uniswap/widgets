@@ -21,6 +21,8 @@ export enum SupportedChainId {
   CELO_ALFAJORES = 44787,
 }
 
+export const VISIBLE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI, SupportedChainId.POLYGON]
+
 export enum ChainName {
   MAINNET = 'mainnet',
   ROPSTEN = 'ropsten',

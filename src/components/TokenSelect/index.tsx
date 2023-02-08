@@ -17,7 +17,7 @@ import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
-import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
+import ChainFilter from './ChainFilter'
 import TokenButton from './TokenButton'
 import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
@@ -51,7 +51,13 @@ interface TokenSelectDialogProps {
 
 export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
-  const list = useTokenList()
+  const [chainIdFilter, setChainIdFilter] = useState<number | undefined>()
+  const allChainList = useTokenList()
+  const list = useMemo(() => {
+    if (!chainIdFilter) return allChainList
+    return allChainList.filter((x) => x.chainId === chainIdFilter)
+  }, [allChainList, chainIdFilter])
+
   const tokens = useQueryTokens(query, list)
 
   const isTokenListLoaded = useIsTokenListLoaded()
@@ -74,17 +80,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
-  const { chainId } = useWeb3React()
-  const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
-  if (!listHasTokens && isLoaded) {
-    return (
-      <Dialog color="container" onClose={onClose}>
-        <Header title={<Trans>Select token</Trans>} />
-        <NoTokensAvailableOnNetwork />
-      </Dialog>
-    )
-  }
   return (
     <Dialog color="container" onClose={onClose}>
       <Header title={<Trans>Select token</Trans>} />
@@ -103,6 +99,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
             </ThemedText.Body1>
           </SearchInputContainer>
         </Row>
+        <ChainFilter selected={chainIdFilter} onSelect={setChainIdFilter} />
         {/* <CommonBases chainId={chainId} onSelect={onSelect} selected={value} /> */}
         <Rule padded />
       </Column>
