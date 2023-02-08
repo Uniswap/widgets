@@ -2,7 +2,7 @@ import { SupportedChainId } from 'constants/chains'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import { useLogoSource } from './util'
+import { useTokenLogoSrcs } from './hooks'
 
 const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
@@ -54,10 +54,10 @@ export default function Logo({
     ...rest,
   }
 
-  const [src, nextSrc] = useLogoSource(address, chainId, isNative, backupImg)
+  const { src, invalidateSrc } = useTokenLogoSrcs(address, chainId, isNative)
 
   if (src) {
-    return <LogoImage {...imageProps} src={src} onError={nextSrc} />
+    return <LogoImage {...imageProps} src={src} onError={invalidateSrc} />
   } else {
     return (
       <MissingImageLogo size={size}>

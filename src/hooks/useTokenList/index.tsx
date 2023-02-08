@@ -7,6 +7,7 @@ import { createContext, PropsWithChildren, useCallback, useContext, useEffect, u
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
 
+import { Provider as TokenLogoProvider } from '../../components/Logo/hooks'
 import fetchTokenList from './fetchTokenList'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
@@ -115,5 +116,13 @@ export function Provider({ list = UNISWAP_TOKEN_LIST, children }: PropsWithChild
     }
   }, [chainTokenMap, list, resolver, throwError])
 
-  return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
+  return (
+    <ChainTokenMapContext.Provider value={chainTokenMap}>
+      <TokenListLogoProvider>{children}</TokenListLogoProvider>
+    </ChainTokenMapContext.Provider>
+  )
+}
+
+function TokenListLogoProvider({ children }: PropsWithChildren) {
+  return <TokenLogoProvider tokens={useTokenList()}>{children}</TokenLogoProvider>
 }

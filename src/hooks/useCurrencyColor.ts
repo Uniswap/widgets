@@ -1,6 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useTokenLogoTableEntry } from 'components/Logo/hooks'
+import { SupportedChainId } from 'constants/chains'
 import Vibrant from 'node-vibrant/lib/bundle.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTheme } from 'styled-components/macro'
 
 import useCurrencyLogoURIs from './useCurrencyLogoURIs'
@@ -52,15 +54,15 @@ export function usePrefetchCurrencyColor(token?: Currency) {
   }, [token, logoURIs, theme.tokenColorExtraction])
 }
 
-export default function useCurrencyColor(token?: Currency) {
+export default function useCurrencyColor(currency?: Currency) {
   const [color, setColor] = useState<string | undefined>(undefined)
   const theme = useTheme()
-  const logoURIs = useCurrencyLogoURIs(token)
-
+  const entry = useTokenLogoTableEntry(currency?.wrapped.address, currency?.wrapped.chainId ?? SupportedChainId.MAINNET)
+  const logoURIs = useMemo(() => entry?.getAllUris() ?? [], [entry])
   useEffect(() => {
     let stale = false
 
-    if (theme.tokenColorExtraction && token) {
+    if (theme.tokenColorExtraction && currency) {
       getColorFromLogoURIs(logoURIs, (color) => {
         if (!stale && color) {
           setColor(color)
@@ -72,7 +74,7 @@ export default function useCurrencyColor(token?: Currency) {
       stale = true
       setColor(undefined)
     }
-  }, [token, logoURIs, theme.tokenColorExtraction])
+  }, [currency, logoURIs, theme.tokenColorExtraction])
 
   return color
 }
