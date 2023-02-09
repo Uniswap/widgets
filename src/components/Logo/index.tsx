@@ -41,7 +41,7 @@ export type LogoBasePops = {
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
 type LogoProps = { currency: LogoTableInput } & LogoBasePops
-export default function Logo({ currency, symbol, backupImg, size = '24px', style, ...rest }: LogoProps) {
+export function Logo({ currency, symbol, backupImg, size = '24px', style, ...rest }: LogoProps) {
   const imageProps = {
     alt: `${symbol ?? 'token'} logo`,
     size,

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import Logo from 'components/Logo'
+import { Logo } from 'components/Logo'
 import { ChevronDown } from 'icons'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'

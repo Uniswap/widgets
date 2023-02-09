@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
-import Logo from './Logo'
+import { Logo } from './Logo'
 
 interface BaseProps {
   token: Currency & { logoURI?: string }
