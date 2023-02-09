@@ -1,18 +1,17 @@
 import { Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
-import CurrencyLogo from './Logo/CurrencyLogo'
+import Logo from './Logo'
 
 interface BaseProps {
-  // TODO(1533): Include logoURI as an optional property of Currency.
   token: Currency & { logoURI?: string }
   size?: number
 }
 
 type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>, keyof BaseProps>
 
-function TokenImg({ token, size, ...rest }: TokenImgProps) {
-  return <CurrencyLogo currency={token} size={(size ?? 1) + 'em'} />
+function TokenImg({ token, size }: TokenImgProps) {
+  return <Logo currency={token} size={(size ?? 1) + 'em'} />
 }
 
 export default styled(TokenImg)<{ size?: number }>`

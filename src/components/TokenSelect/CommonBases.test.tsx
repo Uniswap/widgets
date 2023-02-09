@@ -7,8 +7,8 @@ import CommonBases from './CommonBases'
 
 describe('CommonBases', () => {
   const itRendersCorrectCurrenciesForChainId = (chainId: SupportedChainId) => {
-    const component = renderComponent(<CommonBases chainId={chainId} onSelect={jest.fn()} />)
     const tokens = BASES_TO_CHECK_TRADES_AGAINST[chainId]
+    const component = renderComponent(<CommonBases chainId={chainId} onSelect={jest.fn()} />)
     tokens.forEach((token) => {
       expect(component.getAllByText(token.symbol as string)).toBeTruthy()
     })

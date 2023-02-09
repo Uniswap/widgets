@@ -118,6 +118,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
             outputUSDC={outputUSDC}
             impact={impact}
             onConfirm={onSwap}
+            allowance={allowance}
           />
         </Dialog>
       )}

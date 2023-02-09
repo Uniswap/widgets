@@ -1,16 +1,16 @@
-import { SupportedChainId } from 'constants/chains'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { isAddress } from 'utils'
 
-import { chainIdToNetworkName } from './util'
+import { chainIdToNetworkName, getNativeLogoURI } from './util'
 
-interface TokenLogoSrc {
-  key: string
-  getUri: () => string | undefined
-  getAlternateUri?: () => string | undefined
+export type LogoTableInput = { address?: string | null; chainId: number; isNative?: boolean; logoURI?: string }
+
+abstract class LogoSrc {
+  abstract key: string
+  abstract getUri: () => string | undefined
+  abstract useAlternateUri?: () => string | undefined
 }
 
-class UriSrc implements TokenLogoSrc {
+class UriSrc implements LogoSrc {
   key: string
   protected parsedUri: string | undefined | null = null
   protected unparsedUri: string
@@ -59,7 +59,7 @@ class UriSrc implements TokenLogoSrc {
     return this.parsedUri
   }
 
-  getAlternateUri() {
+  useAlternateUri() {
     this.parsedUri = this.alternateUri
     delete this.alternateUri
 
@@ -77,57 +77,75 @@ class CoingeckoSrc extends UriSrc {
   }
 }
 
-class AssetsRepoSrc implements TokenLogoSrc {
+class AssetsRepoSrc implements LogoSrc {
   key: string
   private uri: string | undefined | null = null
-  private address: string
-  private chainId: number
+  private asset: LogoTableInput
 
-  constructor(address: string, chainId: number) {
-    this.key = `UNI-AR-${address}:${chainId}`
-    this.address = address
-    this.chainId = chainId
+  constructor(asset: LogoTableInput) {
+    this.key = `UNI-AR-${asset.address}:${asset.chainId}`
+    this.asset = asset
   }
 
   getUri() {
     // Lazy-checksum
     if (this.uri === null) {
-      const networkName = chainIdToNetworkName(this.chainId)
-      const checksummedAddress = isAddress(this.address)
-      if (checksummedAddress && networkName) {
-        this.uri = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
-      } else {
+      const networkName = chainIdToNetworkName(this.asset.chainId)
+      if (!networkName) {
         this.uri = undefined
+      } else {
+        if (this.asset.isNative) {
+          this.uri = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/info/logo.png`
+        } else {
+          const checksummedAddress = isAddress(this.asset.address)
+          if (checksummedAddress)
+            this.uri = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+          else this.uri = undefined
+        }
       }
     }
     return this.uri
   }
 }
 
-const createKey = ({ address, chainId }: { address: string; chainId: number }) => `${address.toLowerCase()}:${chainId}`
+const getKey = ({ address, chainId }: LogoTableInput) => `${address?.toLowerCase()}:${chainId}`
 
-export class TokenEntry {
-  private srcs: { [key: string]: TokenLogoSrc | undefined } = {}
-  private keys: string[]
-  private currentSrc: TokenLogoSrc | undefined
+/** Contains all sources for a specific asset */
+export class LogoStore {
+  private srcs: { [key: string]: LogoSrc | undefined } = {}
+  private keys: string[] = []
 
-  constructor(address: string, chainId: number, uri?: string) {
-    const assetsRepoSrc = new AssetsRepoSrc(address, chainId)
-    this.keys = [assetsRepoSrc.key]
-    this.srcs[assetsRepoSrc.key] = assetsRepoSrc
-    if (!!uri) this.addSrc(uri)
+  constructor(asset: LogoTableInput) {
+    if (asset.isNative) this.addUri(getNativeLogoURI(asset.chainId))
 
-    this.currentSrc = assetsRepoSrc
+    this.addSrc(new AssetsRepoSrc(asset))
+    if (asset.logoURI) this.addUri(asset.logoURI)
   }
 
+  addSrc(newSrc: LogoSrc) {
+    if (this.srcs[newSrc.key]) return
+    this.srcs[newSrc.key] = newSrc
+    this.keys.push(newSrc.key)
+  }
+
+  addUri(uri: string) {
+    if (this.srcs[uri]) return
+    this.addSrc(uri.startsWith('https://assets.coingecko') ? new CoingeckoSrc(uri) : new UriSrc(uri))
+  }
+
+  /** Invalidates the current src and returns the new current source if available */
   invalidateSrc() {
-    const alternateUri = this.currentSrc?.getAlternateUri?.()
+    const currentSrc = this.getCurrent()
+    if (!currentSrc) return
 
-    if (!alternateUri) {
-      const prevKey = this.keys.shift()
-      if (prevKey) delete this.srcs[prevKey]
+    // Use a source's alternative uri if available before marking invalid
+    if (currentSrc.useAlternateUri?.()) {
+      return currentSrc
+    } else {
+      delete this.srcs[currentSrc.key]
+      this.keys.shift()
 
-      this.currentSrc = this.srcs[this.keys[0]]
+      return this.getCurrent()
     }
   }
 
@@ -135,53 +153,45 @@ export class TokenEntry {
     return this.keys.map((key) => this.srcs[key]?.getUri()).filter((uri) => !!uri) as string[]
   }
 
-  getSrc() {
-    return this.currentSrc
-  }
-
-  addSrc(uri: string) {
-    if (this.srcs[uri]) return
-
-    const uriSrc = uri.startsWith('https://assets.coingecko') ? new CoingeckoSrc(uri) : new UriSrc(uri)
-    this.srcs[uriSrc.key] = uriSrc
-    this.keys.push(uriSrc.key)
+  getCurrent() {
+    if (this.keys.length === 0) return
+    return this.srcs[this.keys[0]]
   }
 }
 
-type KeyTokenEntryMap = { [key: string]: TokenEntry | undefined }
-export class TokenLogoLookupTable {
-  private map: KeyTokenEntryMap = {}
+type KeyStoreMap = { [key: string]: LogoStore | undefined }
+export class LogoTable {
+  private map: KeyStoreMap = {}
   private initialized = false
-  private static instance: TokenLogoLookupTable
+  private static instance: LogoTable
 
-  // Implements Singleton pattern to keep one source of logos
-  public static getInstance(): TokenLogoLookupTable {
-    if (!TokenLogoLookupTable.instance) {
-      TokenLogoLookupTable.instance = new TokenLogoLookupTable()
+  /** Implements Singleton pattern to keep one source of logos */
+  public static getInstance(): LogoTable {
+    if (!LogoTable.instance) {
+      LogoTable.instance = new LogoTable()
     }
-    return TokenLogoLookupTable.instance
+    return LogoTable.instance
   }
 
   private constructor() {
-    if (!!TokenLogoLookupTable.instance) throw new Error('Cannot instantiate multiple multiple logo tables')
+    if (!!LogoTable.instance) throw new Error('Cannot instantiate multiple multiple logo tables')
   }
 
-  addTokensToMap(tokens: WrappedTokenInfo[]) {
-    tokens.forEach((token) => {
-      if (token.logoURI) {
-        const key = createKey(token)
-        const currentEntry = this.map[key]
-        if (currentEntry) {
-          currentEntry.addSrc(token.logoURI)
-        } else {
-          this.map[key] = new TokenEntry(token.address, token.chainId, token.logoURI)
-        }
-      }
-    })
+  /** Adds a new asset to the table and returns the newly added entry  */
+  addToTable(asset: LogoTableInput) {
+    const key = getKey(asset)
+    let currentEntry = this.map[key]
+    if (currentEntry) {
+      asset.logoURI && currentEntry.addUri(asset.logoURI)
+    } else {
+      currentEntry = new LogoStore(asset)
+      this.map[key] = currentEntry
+    }
+    return currentEntry
   }
 
-  initialize(tokens: WrappedTokenInfo[]) {
-    this.addTokensToMap(tokens)
+  initialize(tokens: LogoTableInput[]) {
+    tokens.forEach((asset) => this.addToTable(asset))
     this.initialized = true
   }
 
@@ -189,10 +199,8 @@ export class TokenLogoLookupTable {
     return this.initialized
   }
 
-  getEntry(address?: string | null, chainId: number = SupportedChainId.MAINNET) {
-    if (!address || !this.initialized) return undefined
-
-    const entry = this.map[createKey({ address, chainId })]
-    return entry
+  getEntry(asset: LogoTableInput | undefined) {
+    if (!asset) return undefined
+    return this.map[getKey(asset)] ?? this.addToTable(asset)
   }
 }

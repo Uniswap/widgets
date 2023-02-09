@@ -1,48 +1,37 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { TokenEntry, TokenLogoLookupTable } from './LogoTable'
-import { getNativeLogoURI } from './util'
+import { LogoTable, LogoTableInput } from './LogoTable'
+const table = LogoTable.getInstance()
 
-const table = TokenLogoLookupTable.getInstance()
-const TokenLogoProviderContext = createContext<TokenLogoLookupTable>(table)
-
-export function Provider({ children, tokens }: PropsWithChildren<{ tokens: WrappedTokenInfo[] }>) {
+/** An optional component to update table with logos as sources change */
+export function LogoUpdater({ assets }: { assets: LogoTableInput[] }) {
   const isFirstRender = useRef(true)
 
   if (isFirstRender.current) {
-    table.initialize(tokens)
+    table.initialize(assets)
     isFirstRender.current = false
   }
 
   useEffect(() => {
-    table.initialize(tokens)
-  }, [tokens])
+    table.initialize(assets)
+  }, [assets])
 
-  return <TokenLogoProviderContext.Provider value={table}>{children}</TokenLogoProviderContext.Provider>
+  return null
 }
 
-export function useTokenLogoTable() {
-  const table = useContext(TokenLogoProviderContext)
-  if (!table?.isInitialized()) throw new Error('Token Logo hooks must be wrapped in a <TokenLogoProvider>')
-  return table
+export function useLogos(currency: LogoTableInput | undefined): string[] | undefined {
+  return useMemo(() => table.getEntry(currency)?.getAllUris(), [currency])
 }
 
-export function useTokenLogoTableEntry(address: string | null | undefined, chainId: number): TokenEntry | undefined {
-  const table = useTokenLogoTable()
-  return useMemo(() => table.getEntry(address, chainId), [address, chainId, table])
-}
+export function useLogo(currency: LogoTableInput | undefined) {
+  const entry = useMemo(() => table.getEntry(currency), [currency])
 
-export function useTokenLogoSrcs(address: string | null | undefined, chainId: number, isNative = false) {
-  const entry = useTokenLogoTableEntry(address, chainId)
-  const [current, setCurrent] = useState<string | undefined>(entry?.getSrc()?.getUri())
+  const [src, setSrc] = useState(entry?.getCurrent()?.getUri())
 
   const invalidateSrc = useCallback(() => {
-    entry?.invalidateSrc()
-    setCurrent(entry?.getSrc()?.getUri())
+    const nextSrc = entry?.invalidateSrc()
+    nextSrc && setSrc(nextSrc.getUri())
   }, [entry])
 
-  if (isNative) return { src: getNativeLogoURI(chainId) }
-
-  return { src: current, invalidateSrc }
+  return { src, invalidateSrc }
 }

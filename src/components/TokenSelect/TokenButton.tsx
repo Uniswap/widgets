@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Logo from 'components/Logo'
 import { ChevronDown } from 'icons'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -54,7 +54,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
       <TokenButtonRow empty={!value} flex gap={0.4}>
         {value ? (
           <>
-            <CurrencyLogo currency={value} size="1.5em" />
+            <Logo currency={value} size="1.5em" />
             <ThemedText.ButtonLarge color={'currentColor'}>
               <span>{value.symbol}</span>
             </ThemedText.ButtonLarge>

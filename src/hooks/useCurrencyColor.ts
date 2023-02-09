@@ -1,11 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useTokenLogoTableEntry } from 'components/Logo/hooks'
-import { SupportedChainId } from 'constants/chains'
+import { useLogos } from 'components/Logo/hooks'
 import Vibrant from 'node-vibrant/lib/bundle.js'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components/macro'
-
-import useCurrencyLogoURIs from './useCurrencyLogoURIs'
 
 const colors = new Map<string, string | undefined>()
 
@@ -43,26 +40,25 @@ async function getColorFromUriPath(uri: string): Promise<string | undefined> {
   return
 }
 
-export function usePrefetchCurrencyColor(token?: Currency) {
+export function usePrefetchCurrencyColor(currency?: Currency) {
   const theme = useTheme()
-  const logoURIs = useCurrencyLogoURIs(token)
+  const logoURIs = useLogos(currency)
 
   useEffect(() => {
-    if (theme.tokenColorExtraction && token) {
+    if (theme.tokenColorExtraction && logoURIs) {
       getColorFromLogoURIs(logoURIs)
     }
-  }, [token, logoURIs, theme.tokenColorExtraction])
+  }, [logoURIs, theme.tokenColorExtraction])
 }
 
 export default function useCurrencyColor(currency?: Currency) {
   const [color, setColor] = useState<string | undefined>(undefined)
   const theme = useTheme()
-  const entry = useTokenLogoTableEntry(currency?.wrapped.address, currency?.wrapped.chainId ?? SupportedChainId.MAINNET)
-  const logoURIs = useMemo(() => entry?.getAllUris() ?? [], [entry])
+  const logoURIs = useLogos(currency)
   useEffect(() => {
     let stale = false
 
-    if (theme.tokenColorExtraction && currency) {
+    if (theme.tokenColorExtraction && logoURIs) {
       getColorFromLogoURIs(logoURIs, (color) => {
         if (!stale && color) {
           setColor(color)
@@ -74,7 +70,7 @@ export default function useCurrencyColor(currency?: Currency) {
       stale = true
       setColor(undefined)
     }
-  }, [currency, logoURIs, theme.tokenColorExtraction])
+  }, [logoURIs, theme.tokenColorExtraction])
 
   return color
 }

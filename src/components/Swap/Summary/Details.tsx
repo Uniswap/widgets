@@ -4,12 +4,13 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
-import Tooltip from 'components/Tooltip'
+import TokenImg from 'components/TokenImg'
+import Tooltip, { SmallToolTipBody } from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useWidgetWidth } from 'hooks/useWidgetWidth'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -18,6 +19,7 @@ import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 import { currencyId } from 'utils/currencyId'
 
 import { useTradeExchangeRate } from '../Price'
+import { PriceImpactRow } from '../PriceImpactRow'
 import { getEstimateMessage } from './Estimate'
 
 const Label = styled.span`
@@ -43,7 +45,7 @@ const MAX_AMOUNT_STR_LENGTH = 9
 
 interface DetailProps {
   label: string
-  value: string
+  value: string | ReactNode
   color?: Color
 }
 
@@ -57,10 +59,6 @@ function Detail({ label, value, color }: DetailProps) {
     </ThemedText.Body2>
   )
 }
-
-const ToolTipBody = styled(ThemedText.Caption)`
-  max-width: 220px;
-`
 
 interface AmountProps {
   tooltipText?: string
@@ -94,15 +92,18 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
         </ThemedText.Body2>
         {tooltipText && (
           <Tooltip placement="right" offset={8}>
-            <ToolTipBody>{tooltipText}</ToolTipBody>
+            <SmallToolTipBody>{tooltipText}</SmallToolTipBody>
           </Tooltip>
         )}
       </Row>
 
       <Column flex align="flex-end" grow>
-        <ThemedText.H1 color="primary" fontSize={amountFontSize} lineHeight={amountLineHeight}>
-          {formattedAmount} {amount.currency.symbol}
-        </ThemedText.H1>
+        <Row gap={0.5}>
+          {width > WIDGET_BREAKPOINTS.EXTRA_SMALL && <TokenImg token={amount.currency} size={1.75} />}
+          <ThemedText.H1 color="primary" fontSize={amountFontSize} lineHeight={amountLineHeight}>
+            {formattedAmount} {amount.currency.symbol}
+          </ThemedText.H1>
+        </Row>
         {usdcAmount && (
           <ThemedText.Body2>
             <Value color="secondary">{formatCurrencyAmount(usdcAmount, NumberType.FiatTokenPrice)}</Value>
@@ -130,7 +131,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   const [exchangeRate] = useTradeExchangeRate(trade)
 
   const { details, estimateMessage } = useMemo(() => {
-    const details: Array<[string, string] | [string, string, Color | undefined]> = []
+    const details: Array<[string, string] | [string, string | ReactNode, Color | undefined]> = []
 
     details.push([t`Exchange rate`, exchangeRate])
 
@@ -147,7 +148,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
     }
 
     if (impact) {
-      details.push([t`Price impact`, impact.toString(), impact.warning])
+      details.push([t`Price impact`, <PriceImpactRow key="impact" impact={impact} reverse />, impact.warning])
     }
 
     const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage)

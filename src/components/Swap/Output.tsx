@@ -15,7 +15,6 @@ export const colorAtom = atom<string | undefined>(undefined)
 const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.container};
   padding: ${({ isWide }) => (isWide ? '1em 0' : '1.5em 0 1em')};
-  margin-bottom: 0.75em;
 
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.

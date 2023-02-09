@@ -1,8 +1,11 @@
-import { SupportedChainId } from 'constants/chains'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import { useTokenLogoSrcs } from './hooks'
+import { useLogo } from './hooks'
+import { LogoTableInput } from './LogoTable'
+
+export * from './hooks'
+export * from './util'
 
 const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
@@ -31,22 +34,14 @@ export type LogoBasePops = {
   size?: string
   style?: React.CSSProperties
 }
-type LogoProps = LogoBasePops & { isNative?: boolean; address?: string | null; chainId?: number }
+// type LogoProps = LogoBasePops & { isNative?: boolean; address?: string | null; chainId?: number }
 
 // TODO(cartcrom): add prop to optionally render an L2Icon w/ the logo
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
-export default function Logo({
-  isNative,
-  address,
-  chainId = SupportedChainId.MAINNET,
-  symbol,
-  backupImg,
-  size = '24px',
-  style,
-  ...rest
-}: LogoProps) {
+type LogoProps = { currency: LogoTableInput } & LogoBasePops
+export default function Logo({ currency, symbol, backupImg, size = '24px', style, ...rest }: LogoProps) {
   const imageProps = {
     alt: `${symbol ?? 'token'} logo`,
     size,
@@ -54,7 +49,7 @@ export default function Logo({
     ...rest,
   }
 
-  const { src, invalidateSrc } = useTokenLogoSrcs(address, chainId, isNative)
+  const { src, invalidateSrc } = useLogo(currency)
 
   if (src) {
     return <LogoImage {...imageProps} src={src} onError={invalidateSrc} />
