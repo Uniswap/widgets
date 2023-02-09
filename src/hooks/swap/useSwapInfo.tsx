@@ -1,11 +1,11 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { RouterPreference } from 'hooks/routing/types'
 import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
+import { useEvmAccountAddress, useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { TradeState, WidoTrade } from 'state/routing/types'
@@ -47,18 +47,18 @@ interface SwapInfo {
 
 /** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(): SwapInfo {
-  const { account, chainId, isActivating, isActive } = useWeb3React()
+  const chainId = useEvmChainId()
+  const account = useEvmAccountAddress()
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
   const chainIdIn = currencyIn?.chainId
   const error = useMemo(() => {
-    if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
     if (chainId && chainIdIn && chainId !== chainIdIn) return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainIdIn, chainId, isActivating, isActive, isSupported])
+  }, [chainIdIn, chainId, isSupported])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),

@@ -1,5 +1,5 @@
-import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { Link } from 'icons'
 import { ReactNode, useMemo } from 'react'
 import styled from 'styled-components/macro'
@@ -29,7 +29,7 @@ export default function EtherscanLink({
   children,
   showIcon = true,
 }: EtherscanLinkProps) {
-  const { chainId } = useWeb3React()
+  const chainId = useEvmChainId()
   const url = useMemo(
     () => data && getExplorerLink(chainId || SupportedChainId.MAINNET, data, type),
     [chainId, data, type]

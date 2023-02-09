@@ -1,5 +1,5 @@
-import { useWeb3React } from '@web3-react/core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 const MISSING_PROVIDER = Symbol()
@@ -29,7 +29,8 @@ export function useFastForwardBlockNumber(): (block: number) => void {
 }
 
 export function Provider({ children }: PropsWithChildren) {
-  const { chainId: activeChainId, provider } = useWeb3React()
+  const activeChainId = useEvmChainId()
+  const provider = useEvmProvider()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
 
   const onBlock = useCallback(

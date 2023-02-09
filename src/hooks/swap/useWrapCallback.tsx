@@ -1,5 +1,5 @@
 import { ContractTransaction } from '@ethersproject/contracts'
-import { useWeb3React } from '@web3-react/core'
+import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useWETHContract } from 'hooks/useContract'
 import { useAtomValue } from 'jotai/utils'
@@ -14,7 +14,7 @@ interface UseWrapCallbackReturns {
 }
 
 export function useWrapType(): TransactionType.WRAP | TransactionType.UNWRAP | undefined {
-  const { chainId } = useWeb3React()
+  const chainId = useEvmChainId()
   const { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
   return useMemo(() => {
     if (chainId && inputCurrency && outputCurrency) {

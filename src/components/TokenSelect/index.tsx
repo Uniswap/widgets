@@ -1,10 +1,10 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { inputCss, StringInput } from 'components/Input'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { useNativeCurrencies } from 'hooks/useNativeCurrency'
+import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
@@ -27,7 +27,7 @@ const SearchInputContainer = styled(Row)`
 `
 
 function usePrefetchBalances() {
-  const { account } = useWeb3React()
+  const account = useEvmAccountAddress()
   const tokenList = useTokenList()
   const prefetchedTokenList = useRef<typeof tokenList>()
   useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
@@ -35,7 +35,7 @@ function usePrefetchBalances() {
 }
 
 function useAreBalancesLoaded(): boolean {
-  const { account } = useWeb3React()
+  const account = useEvmAccountAddress()
   const tokens = useTokenList()
   const nativeTokens = useNativeCurrencies()
   const currencies = useMemo(() => [...nativeTokens, ...tokens], [nativeTokens, tokens])

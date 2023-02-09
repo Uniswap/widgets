@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import useSwitchChain from 'hooks/useSwitchChain'
+import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
 /** A chain-switching ActionButton. */
 export default function ChainSwitchButton({ chainId }: { chainId: number }) {
-  const { account } = useWeb3React()
+  const account = useEvmAccountAddress()
   const [isPending, setIsPending] = useState(false)
   const color = useTokenColorExtraction()
 

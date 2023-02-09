@@ -1,6 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
 import { useTokenBalances } from 'hooks/useCurrencyBalance'
 import useDebounce from 'hooks/useDebounce'
+import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { useMemo } from 'react'
 
 import { getTokenFilter } from './filtering'
@@ -8,7 +8,7 @@ import { tokenComparator, useSortTokensByQuery } from './sorting'
 import { TokenListItem } from './utils'
 
 export function useQueryTokens(query: string, tokens: TokenListItem[]) {
-  const { account } = useWeb3React()
+  const account = useEvmAccountAddress()
   const balances = useTokenBalances(account)
   const sortedTokens = useMemo(
     // Create a new array because sort is in-place and returns a referentially equivalent array.

@@ -1,9 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useMemo } from 'react'
 
 function useOnSupportedNetwork(chainId?: SupportedChainId) {
-  const { chainId: activeChainId } = useWeb3React()
+  const activeChainId = useEvmChainId()
 
   chainId = chainId || activeChainId
 

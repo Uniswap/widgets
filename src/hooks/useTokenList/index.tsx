@@ -1,7 +1,8 @@
 import { TokenInfo } from '@uniswap/token-lists'
-import { useWeb3React } from '@web3-react/core'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
-import { SupportedChainId } from 'constants/chains'
+import { SupportedChainId, VISIBLE_CHAIN_IDS, VISIBLE_TESTNET_CHAIN_IDS } from 'constants/chains'
+import { useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
+import { useTestnetsVisible } from 'hooks/useSyncWidgetSettings'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
 import { getSupportedTokens } from 'wido'
@@ -29,6 +30,7 @@ export function useIsTokenListLoaded() {
 
 export default function useTokenList(): TokenListItem[] {
   const chainTokenMap = useChainTokenMapContext()
+  const testnetsVisible = useTestnetsVisible()
   return useMemo(() => {
     if (!chainTokenMap) return []
     const tokens: TokenListItem[] = []
@@ -36,14 +38,15 @@ export default function useTokenList(): TokenListItem[] {
     tokenMaps.forEach((tokenMap) => {
       tokens.push(...Object.values(tokenMap).map(({ token }) => token))
     })
-    return tokens
-  }, [chainTokenMap])
+    const chainIds = testnetsVisible ? [...VISIBLE_CHAIN_IDS, ...VISIBLE_TESTNET_CHAIN_IDS] : VISIBLE_CHAIN_IDS
+    return tokens.filter((x) => chainIds.includes(x.chainId))
+  }, [chainTokenMap, testnetsVisible])
 }
 
 export type TokenMap = { [address: string]: TokenListItem }
 
 export function useTokenMap(chainId?: SupportedChainId): TokenMap {
-  const { chainId: activeChainId } = useWeb3React()
+  const activeChainId = useEvmChainId()
 
   chainId = chainId || activeChainId
 
@@ -68,7 +71,8 @@ export function Provider({ list, children }: PropsWithChildren<{ list: string | 
 
   useEffect(() => setChainTokenMap(undefined), [list])
 
-  const { chainId, provider } = useWeb3React()
+  const chainId = useEvmChainId()
+  const provider = useEvmProvider()
   const resolver = useCallback(
     (ensName: string) => {
       if (provider && chainId === 1) {
@@ -92,7 +96,7 @@ export function Provider({ list, children }: PropsWithChildren<{ list: string | 
 
     async function activateList() {
       try {
-        const tokens = await getSupportedTokens({ chainId: [1, 137] })
+        const tokens = await getSupportedTokens()
         // tokensToChainTokenMap also caches the fetched tokens, so it must be invoked even if stale.
         const map = tokensToChainTokenMap(tokens)
         if (!stale) {

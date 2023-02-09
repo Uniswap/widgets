@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { calcStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
+import { useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import useTimeout from 'hooks/useTimeout'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
@@ -36,7 +36,7 @@ export function useRouterTrade(
   error?: string
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
-  const { provider } = useWeb3React()
+  const provider = useEvmProvider()
   const queryArgs = useGetQuoteArgs(
     { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference, account },
     /*skip=*/ routerPreference === RouterPreference.SKIP

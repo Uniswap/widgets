@@ -3,8 +3,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import useENS from 'hooks/useENS'
+import { useEvmAccountAddress, useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import { ReactNode, useMemo } from 'react'
 import { WidoTrade } from 'state/routing/types'
 
@@ -39,7 +39,9 @@ export function useSwapCallback({
   deadline,
   feeOptions,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
-  const { account, chainId, provider } = useWeb3React()
+  const chainId = useEvmChainId()
+  const provider = useEvmProvider()
+  const account = useEvmAccountAddress()
 
   const { callback } = useSendSwapTransaction(account, chainId, provider, trade)
 

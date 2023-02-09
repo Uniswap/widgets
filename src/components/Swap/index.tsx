@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import BrandedFooter from 'components/BrandedFooter'
-import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
@@ -9,6 +7,7 @@ import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncS
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
+import { useEvmAccountAddress, WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
@@ -28,12 +27,8 @@ import useValidate from './useValidate'
 // SwapProps also currently includes props needed for wallet connection (eg hideConnectionUI),
 // since the wallet connection component exists within the Swap component.
 // TODO(zzmp): refactor WalletConnection into Widget component
-export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers, TokenDefaults {
+export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers, TokenDefaults, WidgetSettings {
   hideConnectionUI?: boolean
-  /**
-   * @default false
-   */
-  testnetsVisible?: boolean
 }
 
 export default function Swap(props: SwapProps) {
@@ -43,7 +38,7 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
 
-  const { account } = useWeb3React()
+  const account = useEvmAccountAddress()
 
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -54,7 +49,6 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <Header title={<Trans>Zap</Trans>}>
-        <Wallet disabled={props.hideConnectionUI} />
         <Settings />
       </Header>
       <div ref={setWrapper}>

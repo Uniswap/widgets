@@ -1,9 +1,9 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
+import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
@@ -28,7 +28,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
-  const { chainId } = useWeb3React()
+  const chainId = useEvmChainId()
 
   const formattedAddress = isAddress(tokenAddress)
 
@@ -93,7 +93,7 @@ export function useTokenFromMapOrNetwork(
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useToken(tokenAddress?: string | null, chainId?: SupportedChainId): Token | null | undefined {
-  const { chainId: activeChainId } = useWeb3React()
+  const activeChainId = useEvmChainId()
 
   const tokens = useTokenMap(chainId)
   const skipNetwork = chainId && chainId !== activeChainId

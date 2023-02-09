@@ -1,9 +1,8 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
-import { Connector } from '@web3-react/types'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
+import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Field, Swap, swapAtom } from 'state/swap'
@@ -53,9 +52,8 @@ export default function useSyncTokenDefaults({
   defaultChainId,
 }: TokenDefaults) {
   const lastChainId = useRef<number | undefined>(undefined)
-  const lastConnector = useRef<Connector | undefined>(undefined)
   const updateSwap = useUpdateAtom(swapAtom)
-  const { chainId, connector } = useWeb3React()
+  const chainId = useEvmChainId()
 
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId, false)
   const defaultChainIdOutputToken = useDefaultToken(defaultOutputTokenAddress, defaultChainId, false)
@@ -95,15 +93,11 @@ export default function useSyncTokenDefaults({
 
   useEffect(() => {
     const isChainSwitched = chainId && chainId !== lastChainId.current
-    const isConnectorSwitched = connector && connector !== lastConnector.current
-    const shouldSync = isTokenListLoaded && (isChainSwitched || isConnectorSwitched)
-    const shouldUseDefaultChainId = Boolean(isConnectorSwitched && defaultChainId)
+    const shouldSync = isTokenListLoaded && isChainSwitched
 
     if (shouldSync) {
-      setToDefaults(shouldUseDefaultChainId)
-
+      setToDefaults(false)
       lastChainId.current = chainId
-      lastConnector.current = connector
     }
-  }, [isTokenListLoaded, chainId, setToDefaults, connector, defaultChainId])
+  }, [isTokenListLoaded, chainId, setToDefaults, defaultChainId])
 }

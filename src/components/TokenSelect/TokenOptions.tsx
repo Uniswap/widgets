@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
+import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
 import {
   ComponentClass,
   CSSProperties,
@@ -89,7 +89,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.ref = ref.current ?? undefined
   }
 
-  const { account } = useWeb3React()
+  const account = useEvmAccountAddress()
   const balance = useCurrencyBalance(account, value)
   const chainSrc = getNativeLogoURI(value?.chainId)
   const chainInfo = getChainInfo(value?.chainId)

@@ -1,14 +1,12 @@
 import type { Web3Provider } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ErrorCode } from 'constants/eip1193'
+import { useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import useJsonRpcUrlsMap from 'hooks/web3/useJsonRpcUrlsMap'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
-
-import useConnectors from './web3/useConnectors'
 
 /** Defined by EIP-3085. */
 export interface AddEthereumChainParameter {
@@ -64,8 +62,7 @@ async function switchChain(
 }
 
 export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
-  const { connector, provider } = useWeb3React()
-  const connectors = useConnectors()
+  const provider = useEvmProvider()
   const urlMap = useJsonRpcUrlsMap()
   const onSwitchChain = useAtomValue(onSwitchChainAtom)
   return useCallback(
@@ -82,38 +79,27 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
         rpcUrls: urlMap[chainId],
       }
       try {
-        // The network connector does not implement EIP--3326.
-        if (connector === connectors.network) return await connector.activate(chainId)
-
-        // The user connector may require custom logic: try onSwitchChain if it is available.
-        if (connector === connectors.user) {
-          try {
-            const switching = onSwitchChain?.(addChainParameter)
-            // If onSwitchChain returns a Promise, the integrator is responsible for any chain switching. Await and return.
-            if (switching) return await switching
-          } catch (error) {
-            return // ignores integrator-originated errors
-          }
-        }
-
         try {
-          // A custom Connector may use a customProvider, in which case it should handle its own chain switching.
-          if (!provider) throw new Error()
-
-          await Promise.all([
-            // Await both the user action (switchChain) and its result (chainChanged)
-            // so that the callback does not resolve before the chain switch has visibly occured.
-            new Promise((resolve) => provider.once('chainChanged', resolve)),
-            switchChain(provider, chainId, addChainParameter),
-          ])
+          const switching = onSwitchChain?.(addChainParameter)
+          // If onSwitchChain returns a Promise, the integrator is responsible for any chain switching. Await and return.
+          if (switching) return await switching
         } catch (error) {
-          if (error?.code === ErrorCode.USER_REJECTED_REQUEST) return
-          await connector.activate(chainId)
+          return // ignores integrator-originated errors
         }
+
+        // A custom Connector may use a customProvider, in which case it should handle its own chain switching.
+        if (!provider) throw new Error()
+
+        await Promise.all([
+          // Await both the user action (switchChain) and its result (chainChanged)
+          // so that the callback does not resolve before the chain switch has visibly occured.
+          new Promise((resolve) => provider.once('chainChanged', resolve)),
+          switchChain(provider, chainId, addChainParameter),
+        ])
       } catch (error) {
         throw new Error(`Failed to switch network: ${error}`)
       }
     },
-    [connector, connectors.network, connectors.user, onSwitchChain, provider, urlMap]
+    [onSwitchChain, provider, urlMap]
   )
 }

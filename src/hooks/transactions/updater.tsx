@@ -1,7 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
-import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import useBlockNumber, { useFastForwardBlockNumber } from 'hooks/useBlockNumber'
+import { useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
@@ -45,7 +45,8 @@ interface UpdaterProps {
 }
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const { chainId, provider } = useWeb3React()
+  const chainId = useEvmChainId()
+  const provider = useEvmProvider()
 
   const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()

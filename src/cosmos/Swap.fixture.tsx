@@ -1,5 +1,7 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { darkTheme, defaultTheme, lightTheme, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
+// import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
@@ -42,7 +44,6 @@ function Fixture() {
   // })
   // const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
-  // const connector = useProvider()
   const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: false })
 
   const eventHandlers = useMemo(
@@ -50,6 +51,15 @@ function Fixture() {
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
     [useHandleEvent]
   )
+  const [ethProvider, setEthProvider] = useState<Web3Provider | undefined>()
+
+  const handleMetamask = useCallback(() => {
+    if (ethProvider) {
+      setEthProvider(undefined)
+    } else {
+      setEthProvider(new Web3Provider(window.ethereum as any))
+    }
+  }, [ethProvider, setEthProvider])
 
   const widget = (
     <SwapWidget
@@ -61,6 +71,7 @@ function Fixture() {
       // locale={locale}
       // defaultChainId={defaultChainId} // TODO(Daniel) remove
       // provider={connector} // TODO(Daniel) remove
+      ethProvider={ethProvider}
       testnetsVisible={testnetsVisible}
       theme={theme}
       // tokenList={tokenList} // TODO(Daniel) remove
@@ -77,6 +88,8 @@ function Fixture() {
     <Row flex align="start" justify="start" gap={0.5}>
       {widget}
       <EventFeed events={events} onClear={() => setEvents([])} />
+      <button onClick={handleMetamask}>{ethProvider ? 'Disconnect' : 'Connect'} Metamask</button>
+      <button>Connect ArgentX</button>
     </Row>
   )
 }

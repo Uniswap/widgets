@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
+import { useEvmAccountAddress, useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useAtomValue } from 'jotai/utils'
@@ -23,7 +23,9 @@ import useOnSubmit from './useOnSubmit'
  * Should only be rendered if a valid swap exists.
  */
 export default function SwapButton({ disabled }: { disabled: boolean }) {
-  const { account, chainId } = useWeb3React()
+  const account = useEvmAccountAddress()
+  const chainId = useEvmChainId()
+
   const {
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },

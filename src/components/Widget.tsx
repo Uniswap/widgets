@@ -8,7 +8,7 @@ import { Flags, useInitialFlags } from 'hooks/useSyncFlags'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import useSyncWidgetSettings, { WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { Provider as TokenListProvider } from 'hooks/useTokenList'
-import { Provider as Web3Provider, ProviderProps as Web3Props } from 'hooks/web3'
+import { ProviderProps as Web3Props } from 'hooks/web3'
 import { Provider as I18nProvider } from 'i18n'
 import { Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useState } from 'react'
@@ -57,13 +57,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                   }
                   <AtomProvider initialValues={useInitialFlags(props as Flags)}>
                     <WidgetUpdater {...props} />
-                    <Web3Provider {...(props as Web3Props)}>
-                      <BlockNumberProvider>
-                        <MulticallUpdater />
-                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
-                        <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
-                      </BlockNumberProvider>
-                    </Web3Provider>
+                    <BlockNumberProvider>
+                      <MulticallUpdater />
+                      <TransactionsUpdater {...(props as TransactionEventHandlers)} />
+                      <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
+                    </BlockNumberProvider>
                   </AtomProvider>
                 </ReduxProvider>
               </ErrorBoundary>

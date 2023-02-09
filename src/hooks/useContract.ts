@@ -1,6 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import { useWeb3React } from '@web3-react/core'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
@@ -11,6 +10,7 @@ import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Weth } fr
 import WETH_ABI from 'abis/weth.json'
 import { ARGENT_WALLET_DETECTOR_ADDRESS, ENS_REGISTRAR_ADDRESSES, MULTICALL_ADDRESS } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useEvmAccountAddress, useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import { useMemo } from 'react'
 import { UniswapInterfaceMulticall } from 'types/v3'
 import { getContract } from 'utils'
@@ -23,7 +23,9 @@ export function useContract<T extends Contract = Contract>(
   ABI: any,
   withSignerIfPossible = true
 ): T | null {
-  const { provider, account, chainId } = useWeb3React()
+  const chainId = useEvmChainId()
+  const provider = useEvmProvider()
+  const account = useEvmAccountAddress()
 
   return useMemo(() => {
     if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
@@ -45,7 +47,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
-  const { chainId } = useWeb3React()
+  const chainId = useEvmChainId()
   return useContract<Weth>(
     chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
     WETH_ABI,
