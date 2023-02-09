@@ -22,6 +22,20 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
+function didUserReject(error: any): boolean {
+  const reason = getReason(error)
+  if (
+    error?.code === ErrorCode.USER_REJECTED_REQUEST ||
+    (reason?.match(/request/i) && reason?.match(/reject/i)) || // For Rainbow
+    reason?.match(/declined/i) || // For Frame
+    reason?.match(/cancelled by user/i) || // For SafePal
+    reason?.match(/user denied/i) // For Coinbase
+  ) {
+    return true
+  }
+  return false
+}
+
 /**
  * Returns a callback to submit a transaction to the universal router.
  *
@@ -31,7 +45,7 @@ interface SwapOptions {
 export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined, options: SwapOptions) {
   const { account, chainId, provider } = useWeb3React()
 
-  return useCallback(async (): Promise<TransactionResponse | undefined> => {
+  return useCallback(async (): Promise<TransactionResponse | null> => {
     let tx: TransactionRequest
     let response: TransactionResponse
     try {
@@ -64,19 +78,8 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       const gasLimit = calculateGasMargin(gasEstimate)
       response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
     } catch (swapError) {
-      const reason = getReason(swapError)
-      if (
-        swapError?.code === ErrorCode.USER_REJECTED_REQUEST ||
-        // For Rainbow :
-        (reason?.match(/request/i) && reason?.match(/reject/i)) ||
-        // For Frame:
-        reason?.match(/declined/i) ||
-        // For SafePal:
-        reason?.match(/cancelled by user/i) ||
-        // For Coinbase:
-        reason?.match(/user denied/i)
-      ) {
-        return
+      if (didUserReject(swapError)) {
+        return null
       }
       const message = swapErrorToUserReadableMessage(swapError)
       throw new SwapError({
