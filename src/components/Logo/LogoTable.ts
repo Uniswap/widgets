@@ -1,4 +1,5 @@
 import { isAddress } from 'utils'
+import uriToHttp from 'utils/uriToHttp'
 
 import { chainIdToNetworkName, getNativeLogoURI } from './util'
 
@@ -24,37 +25,7 @@ class UriSrc implements LogoSrc {
   getUri() {
     // Lazy-parse the address
     if (this.parsedUri === null) {
-      const protocol = this.unparsedUri.split(':')[0].toLowerCase()
-      switch (protocol) {
-        case 'http':
-          this.parsedUri = 'https' + this.unparsedUri.substr(4)
-          this.alternateUri = this.unparsedUri
-          break
-        case 'ipfs': {
-          const hash = this.unparsedUri.match(/^ipfs:(\/\/)?(.*)$/i)?.[2]
-          this.parsedUri = `https://cloudflare-ipfs.com/ipfs/${hash}/`
-          this.alternateUri = `https://ipfs.io/ipfs/${hash}/`
-          break
-        }
-        case 'ipns': {
-          const name = this.unparsedUri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
-          this.parsedUri = `https://cloudflare-ipfs.com/ipns/${name}/`
-          this.alternateUri = `https://ipfs.io/ipns/${name}/`
-          break
-        }
-        case 'ar': {
-          const tx = this.unparsedUri.match(/^ar:(\/\/)?(.*)$/i)?.[2]
-          this.parsedUri = `https://arweave.net/${tx}`
-          break
-        }
-        case 'data':
-        case 'https':
-          this.parsedUri = this.unparsedUri
-          break
-        default:
-          this.parsedUri = undefined
-          break
-      }
+      ;[this.parsedUri, this.alternateUri] = uriToHttp(this.unparsedUri)
     }
     return this.parsedUri
   }
@@ -83,7 +54,7 @@ class AssetsRepoSrc implements LogoSrc {
   private asset: LogoTableInput
 
   constructor(asset: LogoTableInput) {
-    this.key = `UNI-AR-${asset.address}:${asset.chainId}`
+    this.key = `UNI-AR-${asset.address?.toLowerCase()}:${asset.chainId}`
     this.asset = asset
   }
 
