@@ -32,7 +32,7 @@ Object {
                 class="Popover__Reference-sc-1liex6z-1 dxsTSY"
               >
                 <button
-                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW Settings__SettingsButton-sc-1hvqnx5-0 cnMPAK"
+                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Settings__SettingsButton-sc-1hvqnx5-0 cnMPAK"
                   data-testid="settings-button"
                 >
                   <svg
@@ -99,7 +99,7 @@ Object {
                                     class="Popover__Reference-sc-1liex6z-1 dxsTSY"
                                   >
                                     <button
-                                      class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                                      class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                                       style="outline: none;"
                                       tabindex="-1"
                                     >
@@ -144,7 +144,7 @@ Object {
                                 Auto
                               </div>
                               <button
-                                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW"
+                                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW"
                                 color="secondary"
                               />
                             </div>
@@ -161,7 +161,7 @@ Object {
                             class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContent-sc-9adwbi-2 gMSmq hhEkFu"
                           >
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe eyTUY gUnHND"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe iTVhWO TaTpc"
                               data-testid="auto-slippage"
                             >
                               <div
@@ -178,7 +178,7 @@ Object {
                               </div>
                             </button>
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe iiNNRv"
+                              class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe kRvBEX"
                               data-testid="custom-slippage"
                               style="outline: none;"
                               tabindex="-1"
@@ -249,7 +249,7 @@ Object {
                                   class="Popover__Reference-sc-1liex6z-1 dxsTSY"
                                 >
                                   <button
-                                    class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                                    class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                                     style="outline: none;"
                                     tabindex="-1"
                                   >
@@ -298,7 +298,7 @@ Object {
                                 </div>
                               </div>
                               <button
-                                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW"
+                                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW"
                                 color="secondary"
                               />
                             </div>
@@ -315,7 +315,7 @@ Object {
                             class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gpwEJV bpVbyU"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fBCrSN crRNBf"
+                              class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fBCrSN enSvbW"
                             >
                               <div
                                 class="type__TextWrapper-sc-16386l-0 dvdIBe body body-1 css-jmxshz"
@@ -409,7 +409,7 @@ Object {
               class="Popover__Reference-sc-1liex6z-1 dxsTSY"
             >
               <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW Settings__SettingsButton-sc-1hvqnx5-0 cnMPAK"
+                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Settings__SettingsButton-sc-1hvqnx5-0 cnMPAK"
                 data-testid="settings-button"
               >
                 <svg
@@ -476,7 +476,7 @@ Object {
                                   class="Popover__Reference-sc-1liex6z-1 dxsTSY"
                                 >
                                   <button
-                                    class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                                    class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                                     style="outline: none;"
                                     tabindex="-1"
                                   >
@@ -521,7 +521,7 @@ Object {
                               Auto
                             </div>
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW"
                               color="secondary"
                             />
                           </div>
@@ -538,7 +538,7 @@ Object {
                           class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContent-sc-9adwbi-2 gMSmq hhEkFu"
                         >
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe eyTUY gUnHND"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe iTVhWO TaTpc"
                             data-testid="auto-slippage"
                           >
                             <div
@@ -555,7 +555,7 @@ Object {
                             </div>
                           </button>
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe iiNNRv"
+                            class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe kRvBEX"
                             data-testid="custom-slippage"
                             style="outline: none;"
                             tabindex="-1"
@@ -626,7 +626,7 @@ Object {
                                 class="Popover__Reference-sc-1liex6z-1 dxsTSY"
                               >
                                 <button
-                                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                                   style="outline: none;"
                                   tabindex="-1"
                                 >
@@ -675,7 +675,7 @@ Object {
                               </div>
                             </div>
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe hoTLoq jwaziW"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW"
                               color="secondary"
                             />
                           </div>
@@ -692,7 +692,7 @@ Object {
                           class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gpwEJV bpVbyU"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fBCrSN crRNBf"
+                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fBCrSN enSvbW"
                           >
                             <div
                               class="type__TextWrapper-sc-16386l-0 dvdIBe body body-1 css-jmxshz"
