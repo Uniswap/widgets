@@ -17,7 +17,7 @@ const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   flex-direction: column;
 
   max-width: 600px;
-  min-height: 360px;
+  min-height: 300px;
   min-width: 300px;
   padding: ${ROOT_CONTAINER_PADDING}px;
   position: relative;
