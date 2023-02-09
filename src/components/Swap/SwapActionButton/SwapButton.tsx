@@ -2,11 +2,9 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { useSwapInfo } from 'hooks/swap'
-import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
-import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
@@ -27,12 +25,11 @@ import useOnSubmit from './useOnSubmit'
  * Should only be rendered if a valid swap exists.
  */
 export default function SwapButton({ disabled }: { disabled: boolean }) {
-  const { account, chainId } = useWeb3React()
+  const { chainId } = useWeb3React()
   const {
     [Field.INPUT]: { usdc: inputUSDC },
     [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
-    approval,
     allowance,
     slippage,
     impact,
@@ -41,22 +38,12 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const feeOptions = useAtomValue(feeOptionsAtom)
   const color = useTokenColorExtraction()
 
-  const permit2Enabled = usePermit2Enabled()
-  const { callback: swapRouterCallback } = useSwapCallback({
-    trade: permit2Enabled ? undefined : trade,
-    allowedSlippage: slippage.allowed,
-    recipientAddressOrName: account ?? null,
-    signatureData: approval?.signatureData,
-    deadline,
-    feeOptions,
-  })
-  const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, {
+  const universalRouterSwapCallback = useUniversalRouterSwapCallback(trade, {
     slippageTolerance: slippage.allowed,
     deadline,
     permit: allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
     feeOptions,
   })
-  const swapCallback = permit2Enabled ? universalRouterSwapCallback : swapRouterCallback
 
   const [open, setOpen] = useState(false)
   // Close the review modal if there is no available trade.
@@ -70,7 +57,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const onSwap = useCallback(async () => {
     try {
       await onSubmit(async () => {
-        const response = await swapCallback?.()
+        const response = await universalRouterSwapCallback?.()
         if (!response) return
 
         // Set the block containing the response to the oldest valid block to ensure that the
@@ -94,7 +81,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
     } catch (e) {
       throwAsync(e)
     }
-  }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, throwAsync, trade])
+  }, [onSubmit, setOldestValidBlock, slippage.allowed, throwAsync, trade, universalRouterSwapCallback])
 
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
   const collapseToolbar = useCollapseToolbar()

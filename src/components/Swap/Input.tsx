@@ -4,9 +4,9 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
-import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
@@ -190,7 +190,7 @@ export function FieldWrapper({
 export default function Input() {
   const {
     [Field.INPUT]: { balance, amount: currencyAmount },
-    approval: { state: approvalState },
+    allowance,
   } = useSwapInfo()
 
   const maxAmount = useMemo(() => {
@@ -206,7 +206,7 @@ export default function Input() {
     <FieldWrapper
       field={Field.INPUT}
       maxAmount={maxAmount}
-      approved={approvalState === SwapApprovalState.APPROVED}
+      approved={allowance.state === AllowanceState.ALLOWED}
       subheader={t`You pay`}
     />
   )

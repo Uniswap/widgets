@@ -57,7 +57,6 @@ function Fixture() {
   return (
     <Row flex align="start" justify="start" gap={0.5}>
       <SwapWidget
-        permit2
         value={{
           type,
           amount,
