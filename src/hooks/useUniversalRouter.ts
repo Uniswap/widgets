@@ -5,6 +5,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ErrorCode } from 'constants/eip1193'
 import { SwapError } from 'errors'
 import { useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -21,10 +22,16 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
+/**
+ * Returns a callback to submit a transaction to the universal router.
+ *
+ * The callback returns the TransactionResponse if the transaction was submitted,
+ * or undefined if the user rejected the transaction.
+ **/
 export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined, options: SwapOptions) {
   const { account, chainId, provider } = useWeb3React()
 
-  return useCallback(async (): Promise<TransactionResponse> => {
+  return useCallback(async (): Promise<TransactionResponse | undefined> => {
     let tx: TransactionRequest
     let response: TransactionResponse
     try {
@@ -56,7 +63,10 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       }
       const gasLimit = calculateGasMargin(gasEstimate)
       response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
-    } catch (swapError: unknown) {
+    } catch (swapError) {
+      if (swapError?.code === ErrorCode.USER_REJECTED_REQUEST) {
+        return
+      }
       const message = swapErrorToUserReadableMessage(swapError)
       throw new SwapError({
         message,
