@@ -1,6 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useRouterUrl } from 'hooks/swap/useRouterUrl'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
@@ -19,7 +20,6 @@ const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined }
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
- * @param routerUrl the base URL of the integrator's auto router API
  * @param amountSpecified the exact amount to swap in/out
  * @param currencyIn the input currency
  * @param currencyOut the output currency
@@ -29,14 +29,14 @@ export function useRouterTrade(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  routerPreference: RouterPreference,
-  routerUrl?: string
+  routerPreference: RouterPreference
 ): {
   state: TradeState
   trade?: InterfaceTrade
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
+  const routerUrl = useRouterUrl()
   const queryArgs = useGetQuoteArgs(
     { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference, routerUrl },
     /*skip=*/ routerPreference === RouterPreference.SKIP

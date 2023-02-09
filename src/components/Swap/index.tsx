@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
+import { RouterUrlProvider } from 'hooks/swap/useRouterUrl'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
@@ -58,16 +59,18 @@ export default function Swap(props: SwapProps) {
       </Header>
       <div ref={setWrapper}>
         <PopoverBoundaryProvider value={wrapper}>
-          <SwapInfoProvider routerUrl={props.routerUrl}>
-            <Input />
-            <ReverseButton />
-            <Output />
-            <ToolbarProvider>
-              {account && <Toolbar />}
-              <SwapActionButton hideConnectionUI={props.hideConnectionUI} />
-            </ToolbarProvider>
-            {useBrandedFooter() && <BrandedFooter />}
-          </SwapInfoProvider>
+          <RouterUrlProvider routerUrl={props.routerUrl}>
+            <SwapInfoProvider>
+              <Input />
+              <ReverseButton />
+              <Output />
+              <ToolbarProvider>
+                {account && <Toolbar />}
+                <SwapActionButton hideConnectionUI={props.hideConnectionUI} />
+              </ToolbarProvider>
+              {useBrandedFooter() && <BrandedFooter />}
+            </SwapInfoProvider>
+          </RouterUrlProvider>
         </PopoverBoundaryProvider>
       </div>
       {displayTx && (
