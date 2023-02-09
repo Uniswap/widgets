@@ -11,7 +11,7 @@ import { useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
-import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { getReason, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 import { PermitSignature } from './usePermitAllowance'
 
@@ -64,7 +64,18 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       const gasLimit = calculateGasMargin(gasEstimate)
       response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
     } catch (swapError) {
-      if (swapError?.code === ErrorCode.USER_REJECTED_REQUEST) {
+      const reason = getReason(swapError)
+      if (
+        swapError?.code === ErrorCode.USER_REJECTED_REQUEST ||
+        // For Rainbow :
+        (reason?.match(/request/i) && reason?.match(/reject/i)) ||
+        // For Frame:
+        reason?.match(/declined/i) ||
+        // For SafePal:
+        reason?.match(/cancelled by user/i) ||
+        // For Coinbase:
+        reason?.match(/user denied/i)
+      ) {
         return
       }
       const message = swapErrorToUserReadableMessage(swapError)

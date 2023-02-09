@@ -1,5 +1,15 @@
 import { t } from '@lingui/macro'
 import { ErrorCode } from 'constants/eip1193'
+
+export function getReason(error: any): string | undefined {
+  let reason: string | undefined
+  while (Boolean(error)) {
+    reason = error.reason ?? error.message ?? reason
+    error = error.error ?? error.data?.originalError
+  }
+  return reason
+}
+
 /**
  * This is hacking out the revert reason from the ethers provider thrown error however it can.
  * This object seems to be undocumented by ethers.
@@ -12,11 +22,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     }
   }
 
-  let reason: string | undefined
-  while (Boolean(error)) {
-    reason = error.reason ?? error.message ?? reason
-    error = error.error ?? error.data?.originalError
-  }
+  let reason = getReason(error)
 
   if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
 
