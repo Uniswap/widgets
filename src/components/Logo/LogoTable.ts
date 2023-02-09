@@ -1,7 +1,6 @@
-import { isAddress } from 'utils'
 import uriToHttp from 'utils/uriToHttp'
 
-import { chainIdToNetworkName, getNativeLogoURI } from './util'
+import { getAssetsRepoURI, getNativeLogoURI } from './util'
 
 export type LogoTableInput = { address?: string | null; chainId: number; isNative?: boolean; logoURI?: string }
 
@@ -59,21 +58,9 @@ class AssetsRepoSrc implements LogoSrc {
   }
 
   getUri() {
-    // Lazy-checksum
+    // Lazy-builds assets repo address since it uses checksum
     if (this.uri === null) {
-      const networkName = chainIdToNetworkName(this.asset.chainId)
-      if (!networkName) {
-        this.uri = undefined
-      } else {
-        if (this.asset.isNative) {
-          this.uri = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/info/logo.png`
-        } else {
-          const checksummedAddress = isAddress(this.asset.address)
-          if (checksummedAddress)
-            this.uri = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
-          else this.uri = undefined
-        }
-      }
+      this.uri = getAssetsRepoURI(this.asset)
     }
     return this.uri
   }

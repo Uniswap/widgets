@@ -1,8 +1,10 @@
 import { SupportedChainId } from 'constants/chains'
+import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
+import { LogoTableInput } from './LogoTable'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'celo'
 
@@ -21,6 +23,19 @@ export function chainIdToNetworkName(networkId: SupportedChainId): Network | und
     default:
       return 'ethereum'
   }
+}
+
+export function getAssetsRepoURI(asset: LogoTableInput): string | undefined {
+  const networkName = chainIdToNetworkName(asset.chainId)
+  if (!networkName) return
+
+  if (asset.isNative)
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/info/logo.png`
+
+  const checksummedAddress = isAddress(asset.address)
+  return checksummedAddress
+    ? `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    : undefined
 }
 
 export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
