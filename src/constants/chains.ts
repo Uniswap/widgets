@@ -20,8 +20,8 @@ export enum SupportedChainId {
   CELO = 42220,
   CELO_ALFAJORES = 44787,
 
-  STARKNET = 51400,
-  STARKNET_GOERLI = 51401,
+  STARKNET = 15366,
+  STARKNET_GOERLI = 15367,
 }
 
 export const VISIBLE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.POLYGON, SupportedChainId.STARKNET]

@@ -10,6 +10,13 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
+"@argent/get-starknet@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@argent/get-starknet/-/get-starknet-5.2.0.tgz#4368a4e030c5cad1ae47e0574bfe7cd3c20f5d6d"
+  integrity sha512-ovnnNHJD5SLxc/7MU6dHaaMd9mdzMD363LpQQpKIiUs0yGREFYaRdaPUbyuReaaJcQUByMYMH7Euz1UClUidQw==
+  dependencies:
+    get-starknet "^1.0.0"
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.12.11.tgz"
@@ -4962,6 +4969,11 @@ bottleneck@^2.18.1:
   resolved "https://registry.npmjs.org/bottleneck/-/bottleneck-2.19.5.tgz"
   integrity sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==
 
+bowser@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
+  integrity sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz"
@@ -7449,6 +7461,13 @@ get-package-type@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/get-package-type/-/get-package-type-0.1.0.tgz"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
+
+get-starknet@^1.0.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/get-starknet/-/get-starknet-1.5.0.tgz#b6df1b18cd8cb33c9277b75c32aa71c412c79ed0"
+  integrity sha512-6A14mdPoMwO4orETjG5D+wwaZOzuAyNp/5+ZlDJnU+UU7QRGMYILUo8WjgqeVTg0mcN0BZoUE0C/Qhgd7dBvVQ==
+  dependencies:
+    bowser "^2.11.0"
 
 get-stdin@^6.0.0:
   version "6.0.0"

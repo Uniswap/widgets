@@ -59,6 +59,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@argent/get-starknet": "^5.2.0",
     "@babel/runtime": ">=7.17.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",

@@ -1,82 +1,56 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useEffect, useMemo, useState } from 'react'
-import { Balance, getBalances } from 'wido'
+import { atom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useMemo } from 'react'
+import { Balance, getBalances, ZERO_ADDRESS } from 'wido'
 
+import { useSnAccountAddress } from './useSyncWidgetSettings'
 import { NATIVE_ADDRESS } from './useTokenList/utils'
 
 export type BalanceMap = { [chainId: number]: { [tokenAddress: string]: CurrencyAmount<Token> | undefined } }
 
-export function useTokenBalances(address?: string): BalanceMap {
-  const [rawBalances, setRawBalances] = useState<Balance[]>([])
+export const evmBalancesAtom = atom<Balance[]>([])
+export const evmFetchedBalancesAtom = atom<boolean>(false)
 
-  useEffect(() => {
-    if (!address) return
-    getBalances(address)
-      .then((x) => {
-        x.push(
-          {
-            chainId: 5,
-            address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            protocol: 'dex',
-            usdPrice: '1648.62',
-            symbol: 'ETH',
-            name: 'ETH',
-            decimals: 18,
-            logoURI: 'https://etherscan.io/images/main/empty-token.png',
-            balance: '42197516917118131',
-            balanceUsdValue: '26.7',
-          },
-          {
-            chainId: 51400,
-            address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            protocol: 'dex',
-            usdPrice: '1648.62',
-            symbol: 'ETH',
-            name: 'ETH',
-            decimals: 18,
-            logoURI: 'https://etherscan.io/images/main/empty-token.png',
-            balance: '42197516917118131',
-            balanceUsdValue: '26.7',
-          },
-          {
-            chainId: 51401,
-            address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            protocol: 'dex',
-            usdPrice: '1648.62',
-            symbol: 'ETH',
-            name: 'ETH',
-            decimals: 18,
-            logoURI: 'https://etherscan.io/images/main/empty-token.png',
-            balance: '42197516917118131',
-            balanceUsdValue: '26.7',
-          }
-        )
-        return x
-      })
-      .then(setRawBalances)
-  }, [address])
+export const snBalancesAtom = atom<Balance[]>([])
+export const snFetchedBalancesAtom = atom<boolean>(false)
+
+export function useTokenBalances(address?: string): BalanceMap {
+  const evmRawBalances = useAtomValue(evmBalancesAtom)
+  const evmFetchedBalances = useAtomValue(evmFetchedBalancesAtom)
+  const setEvmRawBalances = useUpdateAtom(evmBalancesAtom)
+  const setEvmFetchingBalances = useUpdateAtom(evmFetchedBalancesAtom)
+
+  if (!evmFetchedBalances && address) {
+    setEvmFetchingBalances(true)
+    getBalances(address).then(setEvmRawBalances)
+  }
+
+  const snAccount = useSnAccountAddress()
+  const snRawBalances = useAtomValue(snBalancesAtom)
+  const snFetchedBalances = useAtomValue(snFetchedBalancesAtom)
+  const setSnRawBalances = useUpdateAtom(snBalancesAtom)
+  const setSnFetchingBalances = useUpdateAtom(snFetchedBalancesAtom)
+
+  if (!snFetchedBalances && snAccount) {
+    setSnFetchingBalances(true)
+    getBalances(snAccount).then(setSnRawBalances)
+  }
 
   return useMemo(() => {
-    return rawBalances.reduce((map: BalanceMap, item) => {
+    return [...evmRawBalances, ...snRawBalances].reduce((map: BalanceMap, item) => {
       if (!map[item.chainId]) {
         map[item.chainId] = {}
       }
 
       map[item.chainId][item.address] = CurrencyAmount.fromRawAmount(
-        new Token(item.chainId, item.address, item.decimals, item.symbol, item.name),
+        new Token(item.chainId, ZERO_ADDRESS, item.decimals, item.symbol, item.name),
         item.balance
       )
       //current.balance
       return map
     }, {} as BalanceMap)
-  }, [rawBalances])
-}
-
-// get the balance for a single token/account combo
-export function useTokenBalance(account?: string, token?: Token): CurrencyAmount<Token> | undefined {
-  const tokenBalances = useTokenBalances(account)
-  if (!token) return undefined
-  return tokenBalances[token.chainId][token.address]
+  }, [evmRawBalances, snRawBalances])
 }
 
 export function useCurrencyBalances(

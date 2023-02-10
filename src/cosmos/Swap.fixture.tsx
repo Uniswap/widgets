@@ -1,6 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { darkTheme, defaultTheme, lightTheme, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
+import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 // import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
@@ -44,7 +45,7 @@ function Fixture() {
   // })
   // const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
-  const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: false })
+  const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: true })
 
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -61,6 +62,19 @@ function Fixture() {
     }
   }, [ethProvider, setEthProvider])
 
+  const [starknet, setStarknet] = useState<IStarknetWindowObject | undefined>()
+
+  const handleArgentX = useCallback(async () => {
+    if (starknet) {
+      setStarknet(undefined)
+      disconnect()
+    } else {
+      const connection = await connect()
+      connection?.enable()
+      setStarknet(connection)
+    }
+  }, [starknet, setStarknet])
+
   const widget = (
     <SwapWidget
       // defaultInputTokenAddress={defaultInputToken}
@@ -72,6 +86,7 @@ function Fixture() {
       // defaultChainId={defaultChainId} // TODO(Daniel) remove
       // provider={connector} // TODO(Daniel) remove
       ethProvider={ethProvider}
+      snAccount={starknet?.account}
       testnetsVisible={testnetsVisible}
       theme={theme}
       // tokenList={tokenList} // TODO(Daniel) remove
@@ -87,9 +102,10 @@ function Fixture() {
   return (
     <Row flex align="start" justify="start" gap={0.5}>
       {widget}
-      <EventFeed events={events} onClear={() => setEvents([])} />
       <button onClick={handleMetamask}>{ethProvider ? 'Disconnect' : 'Connect'} Metamask</button>
-      <button>Connect ArgentX</button>
+      <button onClick={handleArgentX}>{starknet ? 'Disconnect' : 'Connect'} ArgentX</button>
+      Starknet Address: {starknet?.account.address}
+      <EventFeed events={events} onClear={() => setEvents([])} />
     </Row>
   )
 }

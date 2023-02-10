@@ -17,58 +17,6 @@ const mapCache = typeof WeakMap !== 'undefined' ? new WeakMap<TokenList | TokenI
 export const NATIVE_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 
 export function tokensToChainTokenMap(tokens: WidoToken[]): ChainTokenMap {
-  tokens.push(
-    {
-      chainId: 5,
-      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-      protocol: 'dex',
-      usdPrice: '0.0',
-      symbol: 'ETH',
-      name: 'ETH',
-      decimals: 18,
-      logoURI: 'https://etherscan.io/images/main/empty-token.png',
-    },
-
-    {
-      chainId: 51400,
-      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-      protocol: 'dex',
-      usdPrice: '1648.62',
-      symbol: 'ETH',
-      name: 'ETH',
-      decimals: 18,
-      logoURI: 'https://etherscan.io/images/main/empty-token.png',
-    },
-    {
-      chainId: 51401,
-      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-      protocol: 'dex',
-      usdPrice: '1648.62',
-      symbol: 'ETH',
-      name: 'ETH',
-      decimals: 18,
-      logoURI: 'https://etherscan.io/images/main/empty-token.png',
-    },
-    {
-      chainId: 51400,
-      address: '0x03e85bfbb8e2a42b7bead9e88e9a1b19dbccf661471061807292120462396ec9',
-      protocol: 'dex',
-      symbol: 'DAI',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-      logoURI: 'https://etherscan.io/images/main/empty-token.png',
-    },
-    {
-      chainId: 51400,
-      address: '0x03e85bfbb8e2a42b7bead9e88e9a1b19dbccf661471061807292120462396ec9',
-      protocol: 'dex',
-      symbol: 'DAI',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-      logoURI: 'https://etherscan.io/images/main/empty-token.png',
-    }
-  )
-
   const cached = mapCache?.get(tokens)
   if (cached) return cached
 
