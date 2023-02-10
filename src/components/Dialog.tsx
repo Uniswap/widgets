@@ -7,7 +7,7 @@ import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components/macro'
 import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
@@ -21,7 +21,21 @@ declare global {
   }
 }
 
-export enum Animation {
+export interface DialogOptions {
+  animationType?: DialogAnimationType
+}
+
+export interface DialogWidgetProps {
+  dialog?: HTMLDivElement | null
+  dialogOptions?: DialogOptions
+}
+
+export enum DialogAnimationType {
+  SLIDE = 'slide', // default
+  FADE = 'fade',
+}
+
+export enum SlideAnimationType {
   /** Used when the Dialog is closing. */
   CLOSING = 'closing',
   /**
@@ -35,6 +49,7 @@ export enum Animation {
 
 const Context = createContext({
   element: null as HTMLElement | null,
+  options: {} as DialogOptions | undefined,
   active: false,
   setActive: (active: boolean) => undefined as void,
 })
@@ -42,13 +57,14 @@ const Context = createContext({
 interface ProviderProps {
   value: HTMLElement | null
   children: ReactNode
+  options?: DialogOptions
 }
 
-export function Provider({ value, children }: ProviderProps) {
+export function Provider({ value, children, options }: ProviderProps) {
   // If a Dialog is active, mark the main content inert
   const ref = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
-  const context = { element: value, active, setActive }
+  const context = { element: value, active, setActive, options }
   useEffect(() => {
     if (ref.current) {
       ref.current.inert = active
@@ -112,11 +128,12 @@ export const Modal = styled.div<{ color: Color }>`
   ${globalFontStyles};
 
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   display: flex;
   flex-direction: column;
   height: 100%;
   left: 0;
+  outline: ${({ theme }) => `1px solid ${theme.outline}`};
   padding: 0.5em;
   position: absolute;
   right: 0;
@@ -140,6 +157,18 @@ const slideOutRight = keyframes`
   }
 `
 
+const fadeIn = keyframes`
+  from {
+    transform: translateY(40px) scale(0.9);
+  }
+`
+
+const fadeOut = keyframes`
+  to {
+    transform: translateY(40px) scale(0.9);
+  }
+`
+
 const HiddenWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: 100%;
@@ -155,16 +184,27 @@ const HiddenWrapper = styled.div`
   }
 `
 
-const AnimationWrapper = styled.div`
-  ${Modal} {
-    animation: ${slideInLeft} ${AnimationSpeed.Medium} ease-in;
+const slideAnimationCss = css`
+  animation: ${slideInLeft} ${AnimationSpeed.Medium} ease-in;
 
-    &.${Animation.PAGING} {
-      animation: ${slideOutLeft} ${AnimationSpeed.Medium} ease-in;
-    }
-    &.${Animation.CLOSING} {
-      animation: ${slideOutRight} ${AnimationSpeed.Medium} ease-out;
-    }
+  &.${SlideAnimationType.PAGING} {
+    animation: ${slideOutLeft} ${AnimationSpeed.Medium} ease-in;
+  }
+  &.${SlideAnimationType.CLOSING} {
+    animation: ${slideOutRight} ${AnimationSpeed.Medium} ease-out;
+  }
+`
+
+const fadeAnimationCss = css`
+  animation: ${fadeIn} ${AnimationSpeed.Fast} ease-in-out;
+  &.${SlideAnimationType.CLOSING} {
+    animation: ${fadeOut} ${AnimationSpeed.Fast} ease-in-out;
+  }
+`
+
+const AnimationWrapper = styled.div<{ animationType: DialogAnimationType }>`
+  ${Modal} {
+    ${({ animationType }) => (animationType === DialogAnimationType.FADE ? fadeAnimationCss : slideAnimationCss)}
   }
 `
 
@@ -200,7 +240,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
       // Returns the context element's child count at the time of unmounting.
       // This cannot be done through state because the count is updated outside of React's lifecycle -
       // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
-      return (context.element?.childElementCount ?? 0) > 1 ? Animation.PAGING : Animation.CLOSING
+      return (context.element?.childElementCount ?? 0) > 1 ? SlideAnimationType.PAGING : SlideAnimationType.CLOSING
     },
     modal
   )
@@ -214,7 +254,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
             <HiddenWrapper>
-              <AnimationWrapper>
+              <AnimationWrapper animationType={context.options?.animationType ?? DialogAnimationType.SLIDE}>
                 <OnCloseContext.Provider value={onClose}>
                   <Modal color={color} ref={modal}>
                     {children}

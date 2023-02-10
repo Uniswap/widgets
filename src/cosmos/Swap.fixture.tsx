@@ -4,6 +4,7 @@ import {
   darkTheme,
   DEFAULT_LOCALE,
   defaultTheme,
+  DialogAnimationType,
   lightTheme,
   SUPPORTED_LOCALES,
   SupportedChainId,
@@ -87,6 +88,11 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
+  const dialogAnimation = useOption('dialogAnimation', {
+    defaultValue: DialogAnimationType.SLIDE,
+    options: [DialogAnimationType.SLIDE, DialogAnimationType.FADE],
+  })
+
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
@@ -111,6 +117,9 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       brandedFooter={brandedFooter}
+      dialogOptions={{
+        animationType: dialogAnimation,
+      }}
       {...eventHandlers}
     />
   )
