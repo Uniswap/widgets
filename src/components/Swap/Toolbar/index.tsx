@@ -6,7 +6,7 @@ import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AlertTriangle, Info } from 'icons'
-import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -15,6 +15,7 @@ import Row from '../../Row'
 import SwapInputOutputEstimate from '../Summary/Estimate'
 import SwapActionButton from '../SwapActionButton'
 import * as Caption from './Caption'
+import { Context as ToolbarContext, Provider as ToolbarContextProvider } from './ToolbarContext'
 import ToolbarOrderRouting from './ToolbarOrderRouting'
 import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
@@ -34,28 +35,6 @@ const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   padding: 0 1em;
 `
 
-const Context = createContext<{
-  open: boolean
-  collapse: () => void
-  onToggleOpen: () => void
-}>({
-  open: false,
-  collapse: () => null,
-  onToggleOpen: () => null,
-})
-
-export const Provider = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState(false)
-  const onToggleOpen = () => setOpen((open) => !open)
-  const collapse = () => setOpen(false)
-  return <Context.Provider value={{ open, onToggleOpen, collapse }}>{children}</Context.Provider>
-}
-
-export function useCollapseToolbar() {
-  const { collapse } = useContext(Context)
-  return collapse
-}
-
 interface ToolbarProps {
   hideConnectionUI?: boolean
 }
@@ -71,7 +50,7 @@ function CaptionRow() {
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
-  const { open, onToggleOpen } = useContext(Context)
+  const { open, onToggleOpen } = useContext(ToolbarContext)
 
   const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
     switch (error) {
@@ -235,8 +214,8 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
 
 export default memo(function WrappedToolbar(props: ToolbarProps) {
   return (
-    <Provider>
+    <ToolbarContextProvider>
       <Toolbar {...props} />
-    </Provider>
+    </ToolbarContextProvider>
   )
 })
