@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { darkTheme, defaultTheme, lightTheme, SwapWidget } from '@uniswap/widgets'
+import Column from 'components/Column'
 import Row from 'components/Row'
 import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 // import { ethers } from 'ethers'
@@ -58,6 +59,7 @@ function Fixture() {
     if (ethProvider) {
       setEthProvider(undefined)
     } else {
+      window.ethereum.enable()
       setEthProvider(new Web3Provider(window.ethereum as any))
     }
   }, [ethProvider, setEthProvider])
@@ -70,10 +72,12 @@ function Fixture() {
       disconnect()
     } else {
       const connection = await connect()
-      connection?.enable()
+      await connection?.enable()
       setStarknet(connection)
     }
   }, [starknet, setStarknet])
+
+  // useLocalApi()
 
   const widget = (
     <SwapWidget
@@ -100,13 +104,15 @@ function Fixture() {
   if (!window.frameElement) return widget
 
   return (
-    <Row flex align="start" justify="start" gap={0.5}>
-      {widget}
+    <Column flex align="start" justify="start" gap={0.5}>
+      <Row flex align="start" justify="start" gap={0.5}>
+        {widget}
+        <EventFeed events={events} onClear={() => setEvents([])} />
+      </Row>
       <button onClick={handleMetamask}>{ethProvider ? 'Disconnect' : 'Connect'} Metamask</button>
       <button onClick={handleArgentX}>{starknet ? 'Disconnect' : 'Connect'} ArgentX</button>
-      Starknet Address: {starknet?.account.address}
-      <EventFeed events={events} onClear={() => setEvents([])} />
-    </Row>
+      Starknet Address: {starknet?.account?.address}
+    </Column>
   )
 }
 

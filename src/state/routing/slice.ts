@@ -1,12 +1,9 @@
 import { BaseQueryFn, createApi, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import ms from 'ms.macro'
-import { quote, useLocalApi } from 'wido'
+import { quote } from 'wido'
 
 import { serializeGetQuoteArgs } from './args'
 import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from './types'
-
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useLocalApi()
 
 const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
