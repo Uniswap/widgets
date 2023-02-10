@@ -66,7 +66,7 @@ function Fixture() {
 
   const [starknet, setStarknet] = useState<IStarknetWindowObject | undefined>()
 
-  const handleArgentX = useCallback(async () => {
+  const handleStarknet = useCallback(async () => {
     if (starknet) {
       setStarknet(undefined)
       disconnect()
@@ -109,8 +109,8 @@ function Fixture() {
         {widget}
         <EventFeed events={events} onClear={() => setEvents([])} />
       </Row>
-      <button onClick={handleMetamask}>{ethProvider ? 'Disconnect' : 'Connect'} Metamask</button>
-      <button onClick={handleArgentX}>{starknet ? 'Disconnect' : 'Connect'} ArgentX</button>
+      <button onClick={handleMetamask}>{ethProvider ? 'Disconnect' : 'Connect'} ethereum wallet</button>
+      <button onClick={handleStarknet}>{starknet ? 'Disconnect' : 'Connect'} starknet wallet</button>
       Starknet Address: {starknet?.account?.address}
     </Column>
   )
