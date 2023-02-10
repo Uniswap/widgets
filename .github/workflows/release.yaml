@@ -1,11 +1,9 @@
 name: Release
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  # manual trigger
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   release:
