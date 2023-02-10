@@ -69,7 +69,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const throwAsync = useAsyncError()
   const onSwap = useCallback(async () => {
     try {
-      await onSubmit(async () => {
+      const submitted = await onSubmit(async () => {
         const response = await swapCallback?.()
         if (!response) return
 
@@ -90,7 +90,9 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
       })
 
       // Only close the review modal if the swap submitted (ie no-throw).
-      setOpen(false)
+      if (submitted) {
+        setOpen(false)
+      }
     } catch (e) {
       throwAsync(e)
     }
