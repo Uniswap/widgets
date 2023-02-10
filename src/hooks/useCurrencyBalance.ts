@@ -13,18 +13,44 @@ export function useTokenBalances(address?: string): BalanceMap {
     if (!address) return
     getBalances(address)
       .then((x) => {
-        x.push({
-          chainId: 5,
-          address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-          protocol: 'dex',
-          usdPrice: '1648.62',
-          symbol: 'ETH',
-          name: 'ETH',
-          decimals: 18,
-          logoURI: 'https://etherscan.io/images/main/empty-token.png',
-          balance: '42197516917118131',
-          balanceUsdValue: '26.7',
-        })
+        x.push(
+          {
+            chainId: 5,
+            address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+            protocol: 'dex',
+            usdPrice: '1648.62',
+            symbol: 'ETH',
+            name: 'ETH',
+            decimals: 18,
+            logoURI: 'https://etherscan.io/images/main/empty-token.png',
+            balance: '42197516917118131',
+            balanceUsdValue: '26.7',
+          },
+          {
+            chainId: 51400,
+            address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+            protocol: 'dex',
+            usdPrice: '1648.62',
+            symbol: 'ETH',
+            name: 'ETH',
+            decimals: 18,
+            logoURI: 'https://etherscan.io/images/main/empty-token.png',
+            balance: '42197516917118131',
+            balanceUsdValue: '26.7',
+          },
+          {
+            chainId: 51401,
+            address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+            protocol: 'dex',
+            usdPrice: '1648.62',
+            symbol: 'ETH',
+            name: 'ETH',
+            decimals: 18,
+            logoURI: 'https://etherscan.io/images/main/empty-token.png',
+            balance: '42197516917118131',
+            balanceUsdValue: '26.7',
+          }
+        )
         return x
       })
       .then(setRawBalances)

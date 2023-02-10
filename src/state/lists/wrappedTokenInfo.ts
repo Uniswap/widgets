@@ -1,6 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo } from '@uniswap/token-lists'
-import { isAddress } from 'utils'
 
 type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
@@ -21,10 +20,11 @@ export class WrappedTokenInfo implements Token {
   private _checksummedAddress: string | null = null
 
   public get address(): string {
-    if (this._checksummedAddress) return this._checksummedAddress
-    const checksummedAddress = isAddress(this.tokenInfo.address)
-    if (!checksummedAddress) throw new Error(`Invalid token address: ${this.tokenInfo.address}`)
-    return (this._checksummedAddress = checksummedAddress)
+    return this.tokenInfo.address
+    // if (this._checksummedAddress) return this._checksummedAddress
+    // const checksummedAddress = isAddress(this.tokenInfo.address)
+    // if (!checksummedAddress) throw new Error(`Invalid token address: ${this.tokenInfo.address}`)
+    // return (this._checksummedAddress = checksummedAddress)
   }
 
   public get chainId(): number {

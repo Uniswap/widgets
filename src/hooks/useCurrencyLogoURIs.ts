@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import CeloLogo from 'assets/svg/celo_logo.svg'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
+import starknetLogo from 'assets/svg/starknet-logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
@@ -31,6 +32,9 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
+    case SupportedChainId.STARKNET:
+    case SupportedChainId.STARKNET_GOERLI:
+      return starknetLogo
     default:
       return EthereumLogo
   }

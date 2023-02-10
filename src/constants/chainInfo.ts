@@ -3,6 +3,7 @@ import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+import starknetLogo from 'assets/svg/starknet-logo.svg'
 import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
@@ -220,6 +221,34 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Celo Alfajores',
     logoUrl: celoLogo,
     nativeCurrency: { name: 'Celo', symbol: 'aCELO', decimals: 18 },
+    color: '#35D07F',
+    backgroundColor: '#34d07f1f',
+  },
+  [SupportedChainId.STARKNET]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: '',
+    docs: '',
+    explorer: '',
+    infoLink: '',
+    safe: { label: 'StarkNet', symbol: 'ETH' },
+    label: 'StarkNet',
+    logoUrl: starknetLogo,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    color: '#35D07F',
+    backgroundColor: '#34d07f1f',
+  },
+  [SupportedChainId.STARKNET_GOERLI]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: '',
+    docs: '',
+    explorer: '',
+    infoLink: '',
+    safe: { label: 'StarkNet Görli', symbol: 'ETH' },
+    label: 'StarkNet Görli',
+    logoUrl: starknetLogo,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: '#35D07F',
     backgroundColor: '#34d07f1f',
   },

@@ -1,8 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
+import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
 import useCurrencyLogoURIs from 'hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
+
+import { SupportedChainId } from '..'
 
 const badSrcs = new Set<string>()
 
@@ -57,8 +60,17 @@ type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>,
 function TokenImg({ token, size, ...rest }: TokenImgProps) {
   // Use the wrapped token info so that it includes the logoURI...
   const currency = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
+  let isETH = false
+  switch (token.chainId) {
+    case SupportedChainId.STARKNET:
+    case SupportedChainId.STARKNET_GOERLI:
+      isETH = true
+      break
+    default:
+  }
   // ..but use the token directly if logoURI was included in its specification.
-  const srcs = useCurrencyLogoURIs(token?.logoURI ? token : currency)
+  const srcs = useCurrencyLogoURIs(isETH ? nativeOnChain(1) : token?.logoURI ? token : currency)
+
   const alt = currency.name || currency.symbol
 
   const [attempt, setAttempt] = useState(0)
