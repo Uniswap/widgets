@@ -19,7 +19,7 @@ import invariant from 'tiny-invariant'
 import ActionButton from '../../ActionButton'
 import Dialog from '../../Dialog'
 import { SummaryDialog } from '../Summary'
-import { useCollapseToolbar } from '../Toolbar'
+import { useCollapseToolbar } from '../Toolbar/ToolbarContext'
 import useOnSubmit from './useOnSubmit'
 
 /**
