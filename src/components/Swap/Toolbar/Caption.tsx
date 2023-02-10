@@ -79,40 +79,6 @@ export function Connecting() {
   )
 }
 
-export function UnsupportedNetwork() {
-  return <Caption icon={AlertTriangle} caption={<Trans>Switch to a supported network to trade</Trans>} />
-}
-
-export function InsufficientBalance({ currency }: { currency: Currency }) {
-  return (
-    <Caption
-      color="warning"
-      icon={AlertTriangle}
-      caption={
-        <Trans>
-          You don{"'"}t have enough {currency?.symbol}
-        </Trans>
-      }
-    />
-  )
-}
-
-export function InsufficientLiquidity() {
-  return (
-    <Caption
-      color="warning"
-      icon={AlertTriangle}
-      caption={<Trans>Insufficient liquidity</Trans>}
-      tooltip={{
-        content: (
-          <ThemedText.Caption>Not enough liquidity in pool to swap between these two tokens.</ThemedText.Caption>
-        ),
-        placement: 'auto',
-      }}
-    />
-  )
-}
-
 export function Error() {
   return <Caption icon={AlertTriangle} caption={<Trans>Error fetching trade</Trans>} />
 }
