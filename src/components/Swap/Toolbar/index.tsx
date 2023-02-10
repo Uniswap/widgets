@@ -60,9 +60,9 @@ interface ToolbarProps {
   hideConnectionUI?: boolean
 }
 
-function Toolbar({ hideConnectionUI }: ToolbarProps) {
+function CaptionRow() {
   const {
-    [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
+    [Field.INPUT]: { currency: inputCurrency },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     error,
     trade: { trade, state, gasUseEstimateUSD },
@@ -72,10 +72,6 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
   const { open, onToggleOpen } = useContext(Context)
-
-  const insufficientBalance: boolean | undefined = useMemo(() => {
-    return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
-  }, [inputAmount, inputBalance])
 
   const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
     switch (error) {
@@ -168,60 +164,71 @@ function Toolbar({ hideConnectionUI }: ToolbarProps) {
     return rows
   }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
-  const getCaptionRow = useMemo(() => {
-    if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
-      return null
-    }
+  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
+    return null
+  }
+  return (
+    <StyledExpando
+      title={
+        <ToolbarRow
+          flex
+          justify="space-between"
+          data-testid="toolbar"
+          onClick={maybeToggleOpen}
+          isExpandable={isExpandable}
+        >
+          {caption}
+        </ToolbarRow>
+      }
+      styledTitleWrapper={false}
+      showBottomGradient={false}
+      open={open}
+      onExpand={maybeToggleOpen}
+      maxHeight={16}
+    >
+      <Column>
+        <ToolbarTradeSummary rows={tradeSummaryRows} />
+        <ToolbarOrderRouting trade={trade} />
+      </Column>
+    </StyledExpando>
+  )
+}
+
+function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
+  const {
+    [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
+    [Field.OUTPUT]: { currency: outputCurrency },
+    trade: { trade, state },
+  } = useSwapInfo()
+  const isAmountPopulated = useIsAmountPopulated()
+
+  const insufficientBalance: boolean | undefined = useMemo(() => {
+    return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
+  }, [inputAmount, inputBalance])
+
+  if (insufficientBalance) {
     return (
-      <StyledExpando
-        title={
-          <ToolbarRow
-            flex
-            justify="space-between"
-            data-testid="toolbar"
-            onClick={maybeToggleOpen}
-            isExpandable={isExpandable}
-          >
-            {caption}
-          </ToolbarRow>
-        }
-        styledTitleWrapper={false}
-        showBottomGradient={false}
-        open={open}
-        onExpand={maybeToggleOpen}
-        maxHeight={16}
-      >
-        <Column>
-          <ToolbarTradeSummary rows={tradeSummaryRows} />
-          <ToolbarOrderRouting trade={trade} />
-        </Column>
-      </StyledExpando>
+      <ActionButton disabled>
+        <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+      </ActionButton>
     )
-  }, [caption, error, inputCurrency, isExpandable, maybeToggleOpen, open, outputCurrency, trade, tradeSummaryRows])
+  }
+  const hasValidInputs = inputCurrency && outputCurrency && isAmountPopulated
+  if (hasValidInputs && (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps))) {
+    return (
+      <ActionButton disabled>
+        <Trans>Insufficient liquidity</Trans>
+      </ActionButton>
+    )
+  }
+  return <SwapActionButton hideConnectionUI={hideConnectionUI} />
+}
 
-  const getSwapActionButton = useMemo(() => {
-    if (insufficientBalance) {
-      return (
-        <ActionButton disabled={true}>
-          <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
-        </ActionButton>
-      )
-    }
-    const hasValidInputs = inputCurrency && outputCurrency && isAmountPopulated
-    if (hasValidInputs && (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps))) {
-      return (
-        <ActionButton disabled={true}>
-          <Trans>Insufficient liquidity</Trans>
-        </ActionButton>
-      )
-    }
-    return <SwapActionButton hideConnectionUI={hideConnectionUI} />
-  }, [hideConnectionUI, inputCurrency, insufficientBalance, isAmountPopulated, outputCurrency, state, trade])
-
+function Toolbar({ hideConnectionUI }: ToolbarProps) {
   return (
     <>
-      {getCaptionRow}
-      {getSwapActionButton}
+      <CaptionRow />
+      <ToolbarActionButton hideConnectionUI={hideConnectionUI} />
     </>
   )
 }
