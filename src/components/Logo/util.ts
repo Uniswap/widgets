@@ -8,7 +8,7 @@ import { LogoTableInput } from './LogoTable'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'celo'
 
-export function chainIdToNetworkName(networkId: SupportedChainId): Network | undefined {
+function chainIdToNetworkName(networkId: SupportedChainId): Network | undefined {
   switch (networkId) {
     case SupportedChainId.MAINNET:
       return 'ethereum'
