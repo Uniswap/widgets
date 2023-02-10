@@ -1,10 +1,18 @@
 export enum RouterPreference {
-  PRICE_API,
-  PRICE_CLIENT,
-  SKIP,
   API,
   CLIENT,
 }
+
+export enum QuoteType {
+  TRADE = 'trade',
+  PRICE = 'price',
+  SKIP = 'skip',
+}
+
+export type QuoteConfig =
+  | { type: QuoteType.TRADE; preference: RouterPreference }
+  | { type: QuoteType.PRICE; preference: RouterPreference }
+  | { type: QuoteType.SKIP; preference?: undefined }
 
 export enum PoolType {
   V2Pool = 'v2-pool',

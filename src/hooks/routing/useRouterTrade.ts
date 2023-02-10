@@ -1,17 +1,18 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useRouterUrl } from 'hooks/swap/useRouterUrl'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
+import { useAtomValue } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetTradeQuoteQueryState, useLazyGetTradeQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, NO_ROUTE, TradeResult, TradeState } from 'state/routing/types'
+import { swapRouterUrlAtom } from 'state/swap'
 
-import { RouterPreference } from './types'
+import { QuoteConfig, QuoteType } from './types'
 
 const TRADE_INVALID = { state: TradeState.INVALID, trade: undefined }
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
@@ -29,33 +30,39 @@ export function useRouterTrade(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  routerPreference: RouterPreference
+  quoteConfig: QuoteConfig
 ): {
   state: TradeState
   trade?: InterfaceTrade
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
-  const routerUrl = useRouterUrl()
+  const routerUrl = useAtomValue(swapRouterUrlAtom)
   const queryArgs = useGetQuoteArgs(
-    { provider, tradeType, amountSpecified, currencyIn, currencyOut, routerPreference, routerUrl },
-    /*skip=*/ routerPreference === RouterPreference.SKIP
+    {
+      provider,
+      tradeType,
+      amountSpecified,
+      currencyIn,
+      currencyOut,
+      routerPreference: quoteConfig.preference,
+      routerUrl,
+    },
+    /*skip=*/ quoteConfig.type === QuoteType.SKIP
   )
 
   const pollingInterval = useMemo(() => {
     if (!amountSpecified) return Infinity
-    switch (routerPreference) {
+    switch (quoteConfig.type) {
       // PRICE fetching is informational and costly, so it is done less frequently.
-      case RouterPreference.PRICE_API:
-      case RouterPreference.PRICE_CLIENT:
+      case QuoteType.PRICE:
         return ms`2m`
-      case RouterPreference.API:
-      case RouterPreference.CLIENT:
+      case QuoteType.TRADE:
         return ms`15s`
-      case RouterPreference.SKIP:
+      case QuoteType.SKIP:
         return Infinity
     }
-  }, [amountSpecified, routerPreference])
+  }, [amountSpecified, quoteConfig])
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
   // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.

@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { RouterPreference } from 'hooks/routing/types'
+import { QuoteType } from 'hooks/routing/types'
 import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
@@ -82,7 +82,7 @@ function useComputeSwapInfo(): SwapInfo {
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : routerPreference
+    isWrap || error ? { type: QuoteType.SKIP } : { preference: routerPreference, type: QuoteType.TRADE }
   )
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
