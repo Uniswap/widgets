@@ -90,16 +90,16 @@ function PermitTooltipText({ text, content }: { text: ReactNode; content: ReactN
   )
 }
 
-function getAllowanceFailedAction(shouldRequestApproval: boolean, retry: () => void): Action {
+function getAllowanceFailedAction(shouldRequestApproval: boolean, retry: () => void, currency: Currency): Action {
   return {
     message: shouldRequestApproval ? (
       <PermitTooltipText
-        text={t`Permit approval failed`}
+        text={t`Permit2 approval failed`}
         content={t`Permit2 allows safe sharing and management of token approvals across different smart contracts.`}
       />
     ) : (
       <PermitTooltipText
-        text={t`Token approval failed`}
+        text={t`${currency.symbol ?? 'token'} approval failed`}
         content={t`A signature is needed to trade this token on the Uniswap protocol. For security, signatures expire after 30 days.`}
       />
     ),
