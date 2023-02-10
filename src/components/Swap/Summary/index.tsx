@@ -25,7 +25,7 @@ export default Summary
 
 enum ReviewState {
   REVIEWING,
-  ALLOWANCE_PROMPTED,
+  ALLOWING,
   ALLOWANCE_FAILED,
   TRADE_CHANGED,
   SWAP_PENDING,
@@ -36,7 +36,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
 
   const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
-      setCurrentState(ReviewState.ALLOWANCE_PROMPTED)
+      setCurrentState(ReviewState.ALLOWING)
       try {
         await allowance.approveAndPermit?.()
       } catch (e) {
@@ -60,7 +60,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
     // Prevents swap if trade has updated mid permit2 flow
     if (doesTradeDiffer && currentState === ReviewState.REVIEWING) {
       setCurrentState(ReviewState.TRADE_CHANGED)
-    } else if (currentState === ReviewState.ALLOWANCE_PROMPTED && allowance.state === AllowanceState.ALLOWED) {
+    } else if (currentState === ReviewState.ALLOWING && allowance.state === AllowanceState.ALLOWED) {
       onStartSwapFlow()
     } else if (!doesTradeDiffer && currentState === ReviewState.TRADE_CHANGED) {
       setCurrentState(ReviewState.REVIEWING)
@@ -196,7 +196,7 @@ export function ConfirmButton({
           },
           'interactive',
         ]
-      case ReviewState.ALLOWANCE_PROMPTED:
+      case ReviewState.ALLOWING:
         return isApprovalLoading || allowance.state === AllowanceState.ALLOWED
           ? [getApprovalLoadingAction()]
           : [getAllowancePendingAction(shouldRequestApproval, onCancel, trade.inputAmount.currency)]

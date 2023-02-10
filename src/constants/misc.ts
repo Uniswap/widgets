@@ -17,6 +17,9 @@ export const L2_DEADLINE_FROM_NOW = 60 * 5
 export const DEFAULT_TXN_DISMISS_MS = 25000
 export const L2_TXN_DISMISS_MS = 5000
 
+// threshold for when to show a price changed warning
+export const DEFAULT_PRICE_CHANGED_THRESHOLD = 0.01
+
 // used for rewards deadlines
 export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
 
