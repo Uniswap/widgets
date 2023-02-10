@@ -74,6 +74,7 @@ export interface Action {
   color?: Color
   children?: ReactNode
   hideButton?: boolean
+  disableButton?: boolean
 }
 
 export type ActionButtonColor = keyof Pick<Colors, 'accent' | 'accentSoft' | 'warningSoft' | 'interactive' | 'critical'>
@@ -119,7 +120,7 @@ export default function ActionButton({
       {!action?.hideButton && (
         <StyledButton
           color={color}
-          disabled={disabled}
+          disabled={disabled || action?.disableButton}
           shouldUseDisabledColor={shouldUseDisabledColor}
           onClick={action?.onClick || onClick}
           {...rest}
