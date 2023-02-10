@@ -18,6 +18,7 @@ import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import SpeedBumpDialog from '../Speedbump'
 import Details from './Details'
+import SwapInputOutputEstimate from './Estimate'
 import Summary from './Summary'
 
 export default Summary
@@ -70,6 +71,7 @@ const Body = styled(Column)`
   height: 100%;
   padding: 0.75em 0.875em;
 `
+
 const PriceImpactText = styled.span`
   color: ${({ theme }) => theme.error};
 `
@@ -124,11 +126,13 @@ function getAllowancePendingAction(isApproved: boolean, cancel: () => void): Act
 
 export function ConfirmButton({
   trade,
+  slippage,
   onConfirm,
   onAcknowledgeNewTrade,
   allowance,
 }: {
   trade: InterfaceTrade
+  slippage: Slippage
   onConfirm: () => Promise<void>
   onAcknowledgeNewTrade: () => void
   allowance: Allowance
@@ -180,6 +184,11 @@ export function ConfirmButton({
             color: 'accent',
             message: <Trans>Price updated</Trans>,
             icon: AlertTriangle,
+            tooltipContent: (
+              <SmallToolTipBody>
+                <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+              </SmallToolTipBody>
+            ),
             onClick: onAcknowledgeClick,
             children: <Trans>Accept</Trans>,
           },
@@ -187,7 +196,7 @@ export function ConfirmButton({
       default:
         return []
     }
-  }, [currentState, isApproved, onAcknowledgeClick, onCancel, onStartSwapFlow])
+  }, [currentState, isApproved, onAcknowledgeClick, onCancel, onStartSwapFlow, slippage, trade])
 
   return (
     <ActionButton onClick={onStartSwapFlow} action={action} color={color ?? 'accent'} data-testid="swap-button">

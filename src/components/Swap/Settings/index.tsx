@@ -69,7 +69,7 @@ export default function Settings() {
       ) : (
         <PopoverBoundaryProvider value={wrapper}>
           <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsMenu />}>
-            <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
+            <SettingsButton data-testid="settings-button" onClick={() => setOpen(!open)} icon={SettingsIcon} />
           </Popover>
         </PopoverBoundaryProvider>
       )}

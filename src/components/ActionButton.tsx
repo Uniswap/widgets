@@ -135,12 +135,12 @@ export default function ActionButton({
             <Tooltip
               placement="right"
               icon={LargeIcon}
-              iconProps={{ color: 'currentColor', icon: action.icon || AlertTriangle }}
+              iconProps={{ color: action.color ?? 'currentColor', icon: action.icon || AlertTriangle }}
             >
               {action.tooltipContent}
             </Tooltip>
           ) : (
-            <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />
+            <LargeIcon color={action.color ?? 'currentColor'} icon={action.icon || AlertTriangle} />
           )}
           <ThemedText.Subhead2>{action?.message}</ThemedText.Subhead2>
         </ActionRow>
