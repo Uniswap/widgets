@@ -201,7 +201,10 @@ export function ConfirmButton({
           ? [getApprovalLoadingAction()]
           : [getAllowancePendingAction(shouldRequestApproval, onCancel, trade.inputAmount.currency)]
       case ReviewState.ALLOWANCE_FAILED:
-        return [getAllowanceFailedAction(shouldRequestApproval, onStartSwapFlow), 'warningSoft']
+        return [
+          getAllowanceFailedAction(shouldRequestApproval, onStartSwapFlow, trade.inputAmount.currency),
+          'warningSoft',
+        ]
       case ReviewState.TRADE_CHANGED:
         return [
           {

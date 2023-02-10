@@ -108,8 +108,8 @@ describe('ConfirmButton', () => {
           allowance={{
             token: USDC,
             state: usePermit2Allowance.AllowanceState.REQUIRED,
-            isApprovalLoading: true,
-            isApproved: false,
+            isApprovalLoading: false,
+            shouldRequestApproval: true,
             approveAndPermit,
           }}
         />
@@ -127,7 +127,7 @@ describe('ConfirmButton', () => {
     await act(() => button?.click())
     const button2 = component.queryByTestId('action-button')
     assert(button2)
-    expect(queryByText(button2, 'Approve permit')).toBeTruthy()
+    expect(queryByText(button2, 'Approve Permit2')).toBeTruthy()
     expect(approveAndPermit).toHaveBeenCalled()
   })
 
@@ -140,8 +140,8 @@ describe('ConfirmButton', () => {
           allowance={{
             token: USDC,
             state: usePermit2Allowance.AllowanceState.REQUIRED,
-            isApprovalLoading: true,
-            isApproved: true,
+            isApprovalLoading: false,
+            shouldRequestApproval: false,
             approveAndPermit,
           }}
         />
@@ -157,7 +157,36 @@ describe('ConfirmButton', () => {
     await act(() => button?.click())
     const button2 = component.queryByTestId('action-button')
     assert(button2)
-    expect(queryByText(button2, 'Approve token for trading')).toBeTruthy()
+    expect(queryByText(button2, 'Approve USDC for trading')).toBeTruthy()
     expect(approveAndPermit).toHaveBeenCalled()
+  })
+
+  it('should render a confirming state ', async () => {
+    const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => Promise<void> })
+      .approveAndPermit
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Summary
+          allowance={{
+            token: USDC,
+            state: usePermit2Allowance.AllowanceState.REQUIRED,
+            isApprovalLoading: true,
+            shouldRequestApproval: false,
+            approveAndPermit,
+          }}
+        />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [
+          [stateAtom, getInitialTradeState({ amount: '1' })],
+          [flagsAtom, { permit2: true }],
+        ],
+      }
+    )
+    const button = component.queryByTestId('swap-button')
+    await act(() => button?.click())
+    const button2 = component.queryByTestId('action-button')
+    assert(button2)
+    expect(queryByText(button2, 'Confirming approval')).toBeTruthy()
   })
 })
