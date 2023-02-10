@@ -34,7 +34,6 @@ export type LogoBasePops = {
   size?: string
   style?: React.CSSProperties
 }
-// type LogoProps = LogoBasePops & { isNative?: boolean; address?: string | null; chainId?: number }
 
 // TODO(cartcrom): add prop to optionally render an L2Icon w/ the logo
 /**
