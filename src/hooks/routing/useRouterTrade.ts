@@ -46,7 +46,8 @@ export function useRouterTrade(
     if (!amountSpecified) return Infinity
     switch (routerPreference) {
       // PRICE fetching is informational and costly, so it is done less frequently.
-      case RouterPreference.PRICE:
+      case RouterPreference.PRICE_API:
+      case RouterPreference.PRICE_CLIENT:
         return ms`2m`
       case RouterPreference.API:
       case RouterPreference.CLIENT:

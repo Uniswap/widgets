@@ -33,7 +33,7 @@ export const routing = createApi({
 
         if (
           // If enabled, try the routing API, falling back to client-side routing.
-          (args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.PRICE) &&
+          (args.routerPreference === RouterPreference.API || args.routerPreference === RouterPreference.PRICE_API) &&
           Boolean(args.routerUrl) &&
           // A null amount may be passed to initialize the client-side routing.
           args.amount !== null

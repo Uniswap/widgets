@@ -1,5 +1,6 @@
 export enum RouterPreference {
-  PRICE,
+  PRICE_API,
+  PRICE_CLIENT,
   SKIP,
   API,
   CLIENT,
