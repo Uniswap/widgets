@@ -106,7 +106,7 @@
     "tiny-invariant": "^1.2.0",
     "wcag-contrast": "^3.0.0",
     "wicg-inert": "^3.1.1",
-    "wido": "^0.2.0"
+    "wido": "^0.2.1"
   },
   "peerDependencies": {
     "@babel/runtime": ">=7.17.0",

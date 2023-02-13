@@ -4,6 +4,7 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { RouterPreference } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
 import { useMemo } from 'react'
 
@@ -56,6 +57,7 @@ export function useGetQuoteArgs(
   }>,
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
+  const snAccount = useSnAccountAddress()
   const args = useMemo(() => {
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
@@ -72,11 +74,12 @@ export function useGetQuoteArgs(
       tokenOutDecimals: currencyOut.decimals,
       tokenOutSymbol: currencyOut.symbol,
       userAddress: account,
+      recipientAddress: snAccount,
       routerPreference,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account])
+  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account, snAccount])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken

@@ -61,6 +61,7 @@ export interface GetQuoteArgs {
   tradeType: TradeType
   provider: BaseProvider
   userAddress?: string
+  recipientAddress?: string
 }
 
 export const INITIALIZED = 'Initialized'
