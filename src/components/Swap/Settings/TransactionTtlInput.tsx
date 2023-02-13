@@ -14,7 +14,7 @@ const Input = styled(Row)`
   ${inputCss};
 
   background-color: transparent;
-  width: 4em;
+  max-width: 360px;
 
   input {
     text-align: right;
@@ -22,9 +22,7 @@ const Input = styled(Row)`
 `
 
 const InputContainer = styled(Row)`
-  display: flex;
   gap: 0.5em;
-  justify-content: flex-start;
   margin: 1em 0 0;
 `
 
@@ -62,20 +60,19 @@ export default function TransactionTtlInput() {
           />
         }
       >
-        <InputContainer grow>
-          <Input pad={0.5} justify="start" onClick={() => input.current?.focus()}>
-            <ThemedText.Body1>
-              <IntegerInput
-                placeholder={placeholder}
-                value={ttlValue ?? ''}
-                onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
-                ref={input}
-              />
-            </ThemedText.Body1>
+        <InputContainer flex grow justify="flex-end">
+          <Input gap={0.5} pad={0.5} onClick={() => input.current?.focus()} flex grow flow="nowrap">
+            <IntegerInput
+              placeholder={placeholder}
+              value={ttlValue ?? ''}
+              onChange={(value) => setTtl(value ? parseFloat(value) : undefined)}
+              ref={input}
+              maxLength={10}
+            />
+            <ThemedText.Body2 color="secondary" margin="0 0.5rem 0 0">
+              <Trans>minutes</Trans>
+            </ThemedText.Body2>
           </Input>
-          <Trans>
-            <ThemedText.Body2 color="secondary">minutes</ThemedText.Body2>
-          </Trans>
         </InputContainer>
       </Expando>
     </Column>

@@ -20,14 +20,23 @@ import { Label, optionCss } from './components'
 
 const Button = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
+  display: flex;
+  flex-grow: 1;
+  max-width: 180px;
 `
 
 const Custom = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
+  display: flex;
+  flex-grow: 1;
+  max-width: 180px;
+  * input {
+    text-align: right;
+  }
 `
 
-const ExpandoContent = styled(Row)`
+const ExpandoContentRow = styled(Row)`
   margin: 1em 0 0;
 `
 
@@ -36,20 +45,21 @@ interface OptionProps {
   selected: boolean
   onSelect: () => void
   'data-testid': string
+  justify?: 'flex-end' | 'flex-start'
   icon?: ReactNode
   tabIndex?: number
   children: ReactNode
 }
 
 const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
-  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex, 'data-testid': testid }: OptionProps,
+  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex, 'data-testid': testid, justify }: OptionProps,
   ref
 ) {
   return (
     <Wrapper selected={selected} onClick={onSelect} ref={ref} tabIndex={tabIndex} data-testid={testid}>
-      <Row gap={0.5}>
+      <Row gap={0.5} flex grow flow="nowrap" justify={justify}>
         {children}
-        {icon ? icon : <LargeIcon icon={selected ? Check : undefined} size={1.25} />}
+        {icon ? icon : <LargeIcon icon={Check} size={1.25} color={selected ? 'active' : 'hint'} />}
       </Row>
     </Wrapper>
   )
@@ -152,7 +162,7 @@ export default function MaxSlippageSelect() {
         open={open}
         onExpand={() => setOpen(!open)}
       >
-        <ExpandoContent gap={0.5} grow="first">
+        <ExpandoContentRow gap={0.5} grow="first" flex justify="flex-end">
           <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
             <ThemedText.ButtonMedium>
               <Trans>Auto</Trans>
@@ -165,9 +175,10 @@ export default function MaxSlippageSelect() {
             icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
             ref={option}
             tabIndex={-1}
+            justify="flex-end"
             data-testid="custom-slippage"
           >
-            <Row color={warning === 'error' ? 'error' : undefined}>
+            <Row color={warning === 'error' ? 'error' : undefined} flex grow flow="nowrap">
               <DecimalInput
                 size={Math.max(maxSlippageInput.length, 4)}
                 value={maxSlippageInput}
@@ -175,11 +186,12 @@ export default function MaxSlippageSelect() {
                 placeholder={'0.10'}
                 ref={input}
                 data-testid="input-slippage"
+                maxLength={10}
               />
               %
             </Row>
           </Option>
-        </ExpandoContent>
+        </ExpandoContentRow>
       </Expando>
     </Column>
   )

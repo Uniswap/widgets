@@ -1,3 +1,4 @@
+import { Info } from 'icons'
 import { ReactNode } from 'react'
 import styled, { AnyStyledComponent, css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -42,7 +43,7 @@ export function Label({ name, tooltip }: LabelProps) {
     <Row gap={0.5} justify="flex-start">
       <ThemedText.Subhead2>{name}</ThemedText.Subhead2>
       {tooltip && (
-        <Tooltip placement="top" contained>
+        <Tooltip placement="top" contained icon={Info}>
           <ThemedText.Caption>{tooltip}</ThemedText.Caption>
         </Tooltip>
       )}

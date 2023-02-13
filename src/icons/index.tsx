@@ -109,9 +109,9 @@ export const XOctagon = icon(XOctagonIcon)
 export const Reverse = icon(ReverseIcon)
 export const Search = icon(SearchIcon)
 
-export const Check = styled(icon(CheckIcon))`
+export const Check = styled(icon(CheckIcon))<{ color?: Color }>`
   circle {
-    fill: ${({ theme }) => theme.active};
+    fill: ${({ theme, color }) => theme[color ?? 'active']};
     stroke: none;
   }
 `

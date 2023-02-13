@@ -110,13 +110,14 @@ const Title = styled.div`
 
 interface HeaderProps {
   title?: ReactElement
+  closeButton?: ReactElement
 }
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, closeButton }: HeaderProps) {
   const onClose = useCloseDialog()
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
-      <StyledBackButton onClick={onClose} />
+      {closeButton ? <div onClick={onClose}>{closeButton}</div> : <StyledBackButton onClick={onClose} />}
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
       </Title>
