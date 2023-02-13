@@ -148,7 +148,7 @@ export function ConfirmButton({
   trade: InterfaceTrade
   slippage: Slippage
   onConfirm: () => Promise<void>
-  triggerImpactSpeedbump: () => void | true
+  triggerImpactSpeedbump: () => boolean
   allowance: Allowance
 }) {
   const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
@@ -177,9 +177,9 @@ export function ConfirmButton({
     onSwapPriceUpdateAck?.(ackTrade, trade)
     setAckTrade(trade)
 
-    const interrupted = triggerImpactSpeedbump()
+    const wasInterrupted = triggerImpactSpeedbump()
     // Prevents immeadiate swap if price impact speedbump was triggered
-    if (!interrupted) onStartSwapFlow()
+    if (!wasInterrupted) onStartSwapFlow()
   }, [ackTrade, triggerImpactSpeedbump, onStartSwapFlow, onSwapPriceUpdateAck, trade])
 
   const [action, color] = useMemo((): [Action?, ActionButtonColor?] => {
@@ -261,11 +261,12 @@ export function SummaryDialog(props: SummaryDialogProps) {
     setShowSpeedbump(false)
   }, [])
 
-  const triggerImpactSpeedbump = useCallback((): true | void => {
+  const triggerImpactSpeedbump = useCallback((): boolean => {
     if (!showSpeedbump && !ackPriceImpact && props.impact?.warning === 'error') {
       setShowSpeedbump(true)
       return true
     }
+    return false
   }, [ackPriceImpact, props.impact?.warning, showSpeedbump])
 
   useEffect(() => {
