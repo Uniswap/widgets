@@ -9,7 +9,6 @@ export function tradeMeaningfullyDiffers(tradeA: InterfaceTrade, tradeB: Interfa
   return (
     tradeA.tradeType !== tradeB.tradeType ||
     !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
-    tradeB.inputAmount.greaterThan(tradeA.maximumAmountIn(slippage)) ||
     !tradeA.outputAmount.currency.equals(tradeB.outputAmount.currency) ||
     tradeB.executionPrice.lessThan(tradeA.worstExecutionPrice(slippage))
   )

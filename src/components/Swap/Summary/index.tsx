@@ -44,7 +44,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
       }
       // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
-      // Prevents immeadiate swap if trade has updated mid permit2 flow
+      // Prevents immediate swap if trade has updated mid permit2 flow
       if (currentState === ReviewState.ALLOWING && doesTradeDiffer) {
         setCurrentState(ReviewState.REVIEWING)
         return

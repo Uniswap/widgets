@@ -47,13 +47,6 @@ function getInitialTradeState(trade: Partial<Swap> = {}) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const EMPTY_FUCTION = () => {}
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const EMPTY_ASYNC_FUCTION = async () => {}
-const EMPTY_PROMISE_FUNCTION = async () => {
-  return new Promise<void>(EMPTY_ASYNC_FUCTION)
-}
 function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
   return (
     <ConfirmButton
@@ -64,8 +57,8 @@ function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
           tradeType: TradeType.EXACT_INPUT,
         })
       }
-      onConfirm={EMPTY_PROMISE_FUNCTION}
-      triggerImpactSpeedbump={EMPTY_FUCTION}
+      onConfirm={jest.fn()}
+      triggerImpactSpeedbump={jest.fn()}
       allowance={allowance}
       slippage={{
         auto: true,
