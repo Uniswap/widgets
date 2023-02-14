@@ -90,7 +90,7 @@ function Fixture() {
 
   const dialogAnimation = useOption('dialogAnimation', {
     defaultValue: DialogAnimationType.SLIDE,
-    options: [DialogAnimationType.SLIDE, DialogAnimationType.FADE],
+    options: [DialogAnimationType.SLIDE, DialogAnimationType.FADE, DialogAnimationType.NONE],
   })
 
   const eventHandlers = useMemo(
