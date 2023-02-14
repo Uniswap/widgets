@@ -47,6 +47,9 @@ function getInitialTradeState(trade: Partial<Swap> = {}) {
   }
 }
 
+const noopAsync = async () => {
+  return new Promise<void>(jest.fn)
+}
 function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
   return (
     <ConfirmButton
@@ -57,8 +60,8 @@ function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
           tradeType: TradeType.EXACT_INPUT,
         })
       }
-      onConfirm={jest.fn()}
-      triggerImpactSpeedbump={jest.fn()}
+      onConfirm={noopAsync}
+      triggerImpactSpeedbump={() => false}
       allowance={allowance}
       slippage={{
         auto: true,
