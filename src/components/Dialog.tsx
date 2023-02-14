@@ -33,6 +33,7 @@ export interface DialogWidgetProps {
 export enum DialogAnimationType {
   SLIDE = 'slide', // default
   FADE = 'fade',
+  NONE = 'none',
 }
 
 export enum SlideAnimationType {
@@ -202,9 +203,21 @@ const fadeAnimationCss = css`
   }
 `
 
-const AnimationWrapper = styled.div<{ animationType: DialogAnimationType }>`
+const getAnimation = (animationType?: DialogAnimationType) => {
+  switch (animationType) {
+    case DialogAnimationType.NONE:
+      return css``
+    case DialogAnimationType.FADE:
+      return fadeAnimationCss
+    case DialogAnimationType.SLIDE:
+    default:
+      return slideAnimationCss
+  }
+}
+
+const AnimationWrapper = styled.div<{ animationType?: DialogAnimationType }>`
   ${Modal} {
-    ${({ animationType }) => (animationType === DialogAnimationType.FADE ? fadeAnimationCss : slideAnimationCss)}
+    ${({ animationType }) => getAnimation(animationType)}
   }
 `
 
@@ -254,7 +267,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
             <HiddenWrapper>
-              <AnimationWrapper animationType={context.options?.animationType ?? DialogAnimationType.SLIDE}>
+              <AnimationWrapper animationType={context.options?.animationType}>
                 <OnCloseContext.Provider value={onClose}>
                   <Modal color={color} ref={modal}>
                     {children}
