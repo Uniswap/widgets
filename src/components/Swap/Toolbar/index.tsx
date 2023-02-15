@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
@@ -117,7 +117,7 @@ function CaptionRow() {
       {
         color: impact?.warning,
         name: t`Price impact`,
-        value: impact?.percent ? formatPriceImpact(impact?.percent) : '-',
+        value: impact?.percent ? impact?.toString() : '-',
         valueTooltip: impact?.warning
           ? {
               icon: AlertTriangle,
@@ -141,7 +141,7 @@ function CaptionRow() {
       },
     ]
     return rows
-  }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
+  }, [gasUseEstimateUSD, impact, slippage, trade])
 
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
