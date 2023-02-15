@@ -45,10 +45,9 @@ export function useRouterTrade(
       amountSpecified,
       currencyIn,
       currencyOut,
-      routerPreference: quoteConfig.preference,
       routerUrl,
     },
-    /*skip=*/ quoteConfig.type === QuoteType.SKIP
+    quoteConfig
   )
 
   const pollingInterval = useMemo(() => {

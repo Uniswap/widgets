@@ -1,6 +1,6 @@
 export enum RouterPreference {
-  API,
-  CLIENT,
+  API = 'api',
+  CLIENT = 'client',
 }
 
 export enum QuoteType {
@@ -12,7 +12,7 @@ export enum QuoteType {
 export type QuoteConfig =
   | { type: QuoteType.TRADE; preference: RouterPreference }
   | { type: QuoteType.PRICE; preference: RouterPreference }
-  | { type: QuoteType.SKIP; preference?: undefined }
+  | { type: QuoteType.SKIP }
 
 export enum PoolType {
   V2Pool = 'v2-pool',
