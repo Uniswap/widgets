@@ -1,7 +1,7 @@
 import { Placement } from '@popperjs/core'
 import useHasFocus from 'hooks/useHasFocus'
 import useHasHover from 'hooks/useHasHover'
-import { HelpCircle, Icon } from 'icons'
+import { Icon, Info } from 'icons'
 import { ComponentProps, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -36,7 +36,7 @@ interface TooltipProps extends TooltipBaseProps {
 }
 
 export default function Tooltip({
-  icon: Icon = HelpCircle,
+  icon: Icon = Info,
   iconProps,
   children,
   placement = 'auto',
