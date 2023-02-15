@@ -27,7 +27,6 @@ enum ReviewState {
   REVIEWING,
   ALLOWING,
   ALLOWANCE_FAILED,
-  TRADE_CHANGED,
   SWAP_PENDING,
 }
 
@@ -45,25 +44,22 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
       }
       // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
-      if (doesTradeDiffer) {
-        setCurrentState(ReviewState.TRADE_CHANGED)
+      // Prevents immediate swap if trade has updated mid permit2 flow
+      if (currentState === ReviewState.ALLOWING && doesTradeDiffer) {
+        setCurrentState(ReviewState.REVIEWING)
         return
+      } else {
+        setCurrentState(ReviewState.SWAP_PENDING)
+        await onSwap()
+        setCurrentState(ReviewState.REVIEWING)
       }
-      setCurrentState(ReviewState.SWAP_PENDING)
-      await onSwap()
-      setCurrentState(ReviewState.REVIEWING)
     }
-  }, [allowance, doesTradeDiffer, onSwap])
+  }, [allowance, currentState, doesTradeDiffer, onSwap])
 
   // Automatically triggers signing swap tx if allowance requirements are met
   useEffect(() => {
-    // Prevents swap if trade has updated mid permit2 flow
-    if (doesTradeDiffer && currentState === ReviewState.REVIEWING) {
-      setCurrentState(ReviewState.TRADE_CHANGED)
-    } else if (currentState === ReviewState.ALLOWING && allowance.state === AllowanceState.ALLOWED) {
+    if (currentState === ReviewState.ALLOWING && allowance.state === AllowanceState.ALLOWED) {
       onStartSwapFlow()
-    } else if (!doesTradeDiffer && currentState === ReviewState.TRADE_CHANGED) {
-      setCurrentState(ReviewState.REVIEWING)
     }
   }, [allowance, currentState, doesTradeDiffer, onStartSwapFlow])
 
@@ -146,20 +142,20 @@ export function ConfirmButton({
   trade,
   slippage,
   onConfirm,
-  onAcknowledgeNewTrade,
+  triggerImpactSpeedbump,
   allowance,
 }: {
   trade: InterfaceTrade
   slippage: Slippage
   onConfirm: () => Promise<void>
-  onAcknowledgeNewTrade: () => void
+  triggerImpactSpeedbump: () => boolean
   allowance: Allowance
 }) {
   const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
-    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
-    [ackTrade, trade]
+    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade, slippage.allowed)),
+    [ackTrade, trade, slippage]
   )
   const onSwap = useCallback(async () => {
     onSubmitSwapClick?.(trade)
@@ -180,9 +176,11 @@ export function ConfirmButton({
   const onAcknowledgeClick = useCallback(() => {
     onSwapPriceUpdateAck?.(ackTrade, trade)
     setAckTrade(trade)
-    // Prompts parent to show speedbump if new trade has high impact
-    onAcknowledgeNewTrade()
-  }, [ackTrade, onAcknowledgeNewTrade, onSwapPriceUpdateAck, trade])
+
+    const wasInterrupted = triggerImpactSpeedbump()
+    // Prevents immeadiate swap if price impact speedbump was triggered
+    if (!wasInterrupted) onStartSwapFlow()
+  }, [ackTrade, triggerImpactSpeedbump, onStartSwapFlow, onSwapPriceUpdateAck, trade])
 
   const [action, color] = useMemo((): [Action?, ActionButtonColor?] => {
     switch (currentState) {
@@ -205,27 +203,28 @@ export function ConfirmButton({
           getAllowanceFailedAction(shouldRequestApproval, onStartSwapFlow, trade.inputAmount.currency),
           'warningSoft',
         ]
-      case ReviewState.TRADE_CHANGED:
-        return [
-          {
-            color: 'accent',
-            message: <Trans>Price updated</Trans>,
-            icon: AlertTriangle,
-            tooltipContent: (
-              <SmallToolTipBody>
-                <SwapInputOutputEstimate trade={trade} slippage={slippage} />
-              </SmallToolTipBody>
-            ),
-            onClick: onAcknowledgeClick,
-            children: <Trans>Accept</Trans>,
-          },
-        ]
-      default:
-        return []
+      case ReviewState.REVIEWING:
+        return doesTradeDiffer
+          ? [
+              {
+                color: 'accent',
+                message: <Trans>Price updated</Trans>,
+                icon: AlertTriangle,
+                tooltipContent: (
+                  <SmallToolTipBody>
+                    <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+                  </SmallToolTipBody>
+                ),
+                onClick: onAcknowledgeClick,
+                children: <Trans>Swap</Trans>,
+              },
+            ]
+          : []
     }
   }, [
     allowance.state,
     currentState,
+    doesTradeDiffer,
     isApprovalLoading,
     onAcknowledgeClick,
     onCancel,
@@ -257,15 +256,17 @@ export function SummaryDialog(props: SummaryDialogProps) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
   const [showSpeedbump, setShowSpeedbump] = useState(props.impact?.warning === 'error')
 
-  const onAcknowledgePriceImpact = useCallback(() => {
+  const onAcknowledgeSpeedbump = useCallback(() => {
     setAckPriceImpact(true)
     setShowSpeedbump(false)
   }, [])
 
-  const onAcknowledgeNewTrade = useCallback(() => {
+  const triggerImpactSpeedbump = useCallback((): boolean => {
     if (!showSpeedbump && !ackPriceImpact && props.impact?.warning === 'error') {
       setShowSpeedbump(true)
+      return true
     }
+    return false
   }, [ackPriceImpact, props.impact?.warning, showSpeedbump])
 
   useEffect(() => {
@@ -273,10 +274,11 @@ export function SummaryDialog(props: SummaryDialogProps) {
       setShowSpeedbump(false)
     }
   }, [ackPriceImpact, props.impact, showSpeedbump])
+
   return (
     <>
       {showSpeedbump && props.impact ? (
-        <SpeedBumpDialog onAcknowledge={onAcknowledgePriceImpact}>
+        <SpeedBumpDialog onAcknowledge={onAcknowledgeSpeedbump}>
           {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
           {t`price impact on the market price of this pool. Do you wish to continue? `}
         </SpeedBumpDialog>
@@ -286,7 +288,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
           <Body flex align="stretch">
             <Details {...props} />
           </Body>
-          <ConfirmButton {...props} onAcknowledgeNewTrade={onAcknowledgeNewTrade} />
+          <ConfirmButton {...props} triggerImpactSpeedbump={triggerImpactSpeedbump} />
         </>
       )}
     </>

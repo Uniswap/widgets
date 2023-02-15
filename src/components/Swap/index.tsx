@@ -54,7 +54,7 @@ export default function Swap(props: SwapProps) {
       </Header>
       <div ref={setWrapper}>
         <PopoverBoundaryProvider value={wrapper}>
-          <SwapInfoProvider routerUrl={props.routerUrl}>
+          <SwapInfoProvider>
             <Input />
             <ReverseButton />
             <Output />
