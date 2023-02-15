@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export function useOutsideClickHandler(node: HTMLDivElement, onOutsideClick: () => void) {
+export function useOutsideClickHandler(node: HTMLDivElement | null, onOutsideClick: () => void) {
   const handleClickOutside = (event: MouseEvent) => {
     if (node && !node.contains(event.target as Node)) {
       onOutsideClick()
