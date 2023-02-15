@@ -1,6 +1,6 @@
 import { Icon } from 'icons'
 import { ComponentProps, forwardRef } from 'react'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { AnimationSpeed, Color } from 'theme'
 
 export const BaseButton = styled.button`
@@ -25,19 +25,11 @@ export const BaseButton = styled.button`
     filter: opacity(0.6);
   }
 `
-const transitionCss = css`
-  transition: background-color ${AnimationSpeed.Fast} linear, border-color ${AnimationSpeed.Fast} linear,
-    filter ${AnimationSpeed.Fast} linear;
-`
 
 export default styled(BaseButton)<{ color?: Color }>`
   background-color: ${({ color = 'interactive', theme }) => theme[color]};
   border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
-
-  :enabled {
-    ${transitionCss};
-  }
 
   :enabled:hover {
     background-color: ${({ color = 'interactive', theme }) => theme.onHover(theme[color])};
