@@ -61,7 +61,7 @@ function CaptionRow() {
       default:
     }
 
-    if (state === TradeState.LOADING) {
+    if (state === TradeState.LOADING && trade == null) {
       return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
@@ -78,6 +78,7 @@ function CaptionRow() {
             outputUSDC={outputUSDC}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
+            loading={state === TradeState.LOADING}
           />
         )
         return { caption, isExpandable: true }

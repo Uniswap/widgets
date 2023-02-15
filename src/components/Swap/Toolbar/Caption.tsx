@@ -48,10 +48,11 @@ interface CaptionProps {
   icon?: Icon | null
   caption: ReactNode
   color?: Color
+  loading?: boolean
   tooltip?: CaptionTooltip
 }
 
-function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionProps) {
+function Caption({ icon: Icon, caption, color = 'secondary', tooltip, loading }: CaptionProps) {
   return (
     <CaptionRow gap={0.5} shrink={0}>
       {tooltip ? (
@@ -61,7 +62,9 @@ function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionP
       ) : (
         Icon && <LargeIcon icon={Icon} color={color} />
       )}
-      <ThemedText.Body2 color={color}>{caption}</ThemedText.Body2>
+      <ThemedText.Body2 color={color} opacity={loading ? 0.4 : 1}>
+        {caption}
+      </ThemedText.Body2>
     </CaptionRow>
   )
 }
@@ -132,6 +135,7 @@ export function Wrap({ inputCurrency, outputCurrency }: WrapProps) {
 
 export interface TradeProps {
   trade: InterfaceTrade
+  loading: boolean
   outputUSDC?: CurrencyAmount<Currency>
 }
 
@@ -143,10 +147,20 @@ const Expander = ({ expanded }: ExpandProps) => {
   return <ExpandIcon $expanded={expanded} />
 }
 
-export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeProps & TradeTooltip & ExpandProps) {
+export function Trade({
+  trade,
+  outputUSDC,
+  gasUseEstimateUSD,
+  expanded,
+  loading,
+}: TradeProps & TradeTooltip & ExpandProps) {
   return (
     <>
-      <Caption caption={<Price trade={trade} outputUSDC={outputUSDC} />} />
+      <Caption
+        caption={<Price trade={trade} outputUSDC={outputUSDC} />}
+        icon={loading ? Spinner : null}
+        loading={loading}
+      />
       <CaptionRow gap={0.75}>
         {!expanded && (
           <CaptionRow gap={0.25}>
