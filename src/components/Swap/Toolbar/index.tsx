@@ -1,18 +1,21 @@
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { AlertTriangle, Info } from 'icons'
-import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import Row from '../../Row'
 import SwapInputOutputEstimate from '../Summary/Estimate'
+import SwapActionButton from '../SwapActionButton'
 import * as Caption from './Caption'
+import { Context as ToolbarContext, Provider as ToolbarContextProvider } from './ToolbarContext'
 import ToolbarOrderRouting from './ToolbarOrderRouting'
 import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
@@ -32,31 +35,13 @@ const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   padding: 0 1em;
 `
 
-const Context = createContext<{
-  open: boolean
-  collapse: () => void
-  onToggleOpen: () => void
-}>({
-  open: false,
-  collapse: () => null,
-  onToggleOpen: () => null,
-})
-
-export const Provider = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState(false)
-  const onToggleOpen = () => setOpen((open) => !open)
-  const collapse = () => setOpen(false)
-  return <Context.Provider value={{ open, onToggleOpen, collapse }}>{children}</Context.Provider>
+interface ToolbarProps {
+  hideConnectionUI?: boolean
 }
 
-export function useCollapseToolbar() {
-  const { collapse } = useContext(Context)
-  return collapse
-}
-
-export default memo(function Toolbar() {
+function CaptionRow() {
   const {
-    [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
+    [Field.INPUT]: { currency: inputCurrency },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     error,
     trade: { trade, state, gasUseEstimateUSD },
@@ -65,18 +50,12 @@ export default memo(function Toolbar() {
   } = useSwapInfo()
   const isAmountPopulated = useIsAmountPopulated()
   const isWrap = useIsWrap()
-  const { open, onToggleOpen } = useContext(Context)
-
-  const insufficientBalance: boolean | undefined = useMemo(() => {
-    return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
-  }, [inputAmount, inputBalance])
+  const { open, onToggleOpen } = useContext(ToolbarContext)
 
   const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
     switch (error) {
       case ChainError.ACTIVATING_CHAIN:
         return { caption: <Caption.Connecting /> }
-      case ChainError.UNSUPPORTED_CHAIN:
-        return { caption: <Caption.UnsupportedNetwork /> }
       case ChainError.MISMATCHED_TOKEN_CHAINS:
         return { caption: <Caption.Error /> }
       default:
@@ -87,14 +66,10 @@ export default memo(function Toolbar() {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (insufficientBalance) {
-        return { caption: <Caption.InsufficientBalance currency={inputCurrency} /> }
-      }
       if (isWrap) {
-        return { caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} /> }
-      }
-      if (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps)) {
-        return { caption: <Caption.InsufficientLiquidity /> }
+        return {
+          caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />,
+        }
       }
       if (trade?.inputAmount && trade.outputAmount) {
         const caption = (
@@ -120,7 +95,6 @@ export default memo(function Toolbar() {
     outputCurrency,
     isAmountPopulated,
     gasUseEstimateUSD,
-    insufficientBalance,
     isWrap,
     trade,
     open,
@@ -172,7 +146,6 @@ export default memo(function Toolbar() {
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
   }
-
   return (
     <StyledExpando
       title={
@@ -197,5 +170,52 @@ export default memo(function Toolbar() {
         <ToolbarOrderRouting trade={trade} />
       </Column>
     </StyledExpando>
+  )
+}
+
+function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
+  const {
+    [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
+    [Field.OUTPUT]: { currency: outputCurrency },
+    trade: { trade, state },
+  } = useSwapInfo()
+  const isAmountPopulated = useIsAmountPopulated()
+
+  const insufficientBalance: boolean | undefined = useMemo(() => {
+    return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
+  }, [inputAmount, inputBalance])
+
+  if (insufficientBalance) {
+    return (
+      <ActionButton disabled>
+        <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
+      </ActionButton>
+    )
+  }
+  const hasValidInputs = inputCurrency && outputCurrency && isAmountPopulated
+  if (hasValidInputs && (state === TradeState.NO_ROUTE_FOUND || (trade && !trade.swaps))) {
+    return (
+      <ActionButton disabled>
+        <Trans>Insufficient liquidity</Trans>
+      </ActionButton>
+    )
+  }
+  return <SwapActionButton hideConnectionUI={hideConnectionUI} />
+}
+
+function Toolbar({ hideConnectionUI }: ToolbarProps) {
+  return (
+    <>
+      <CaptionRow />
+      <ToolbarActionButton hideConnectionUI={hideConnectionUI} />
+    </>
+  )
+}
+
+export default memo(function WrappedToolbar(props: ToolbarProps) {
+  return (
+    <ToolbarContextProvider>
+      <Toolbar {...props} />
+    </ToolbarContextProvider>
   )
 })

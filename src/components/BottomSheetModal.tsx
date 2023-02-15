@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
 import { AnimationSpeed } from 'theme'
 
-import Dialog, { Animation, Header, Modal, Provider as DialogProvider } from './Dialog'
+import Dialog, { Header, Modal, Provider as DialogProvider, SlideAnimationType } from './Dialog'
 
 const slideInBottom = keyframes`
   from {
@@ -56,7 +56,7 @@ const Wrapper = styled.div<{ open: boolean }>`
     animation: ${slideInBottom} ${AnimationSpeed.Medium} ease-in;
     border-bottom-left-radius: 0;
 
-    &.${Animation.CLOSING} {
+    &.${SlideAnimationType.CLOSING} {
       animation: ${slideOutBottom} ${AnimationSpeed.Medium} ease-out;
     }
 

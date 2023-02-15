@@ -39,11 +39,11 @@ jobs:
         env:
           JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
 
-  typecheck:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn prepare
 
-      - run: yarn typecheck
+      - run: yarn build

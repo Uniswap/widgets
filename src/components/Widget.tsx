@@ -1,5 +1,5 @@
 import { TokenInfo } from '@uniswap/token-lists'
-import { Provider as DialogProvider } from 'components/Dialog'
+import { DialogWidgetProps, Provider as DialogProvider } from 'components/Dialog'
 import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
 import { SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
@@ -20,8 +20,7 @@ import { Provider as ThemeProvider, Theme } from 'theme'
 import WidgetWrapper from './WidgetWrapper'
 
 export const DialogWrapper = styled.div`
-  border: ${({ theme }) => `1px solid ${theme.outline}`};
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   height: 100%;
   left: 0;
   padding: 0.5em;
@@ -30,12 +29,16 @@ export const DialogWrapper = styled.div`
   width: 100%;
 `
 
-export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props, WidgetEventHandlers {
+export interface WidgetProps
+  extends Flags,
+    TransactionEventHandlers,
+    Web3Props,
+    WidgetEventHandlers,
+    DialogWidgetProps {
   theme?: Theme
   locale?: SupportedLocale
   tokenList?: string | TokenInfo[]
   width?: string | number
-  dialog?: HTMLDivElement | null
   className?: string
   onError?: OnError
 }
@@ -48,7 +51,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
         <WidgetWrapper width={props.width} className={props.className}>
           <I18nProvider locale={props.locale}>
             <DialogWrapper ref={setDialog} />
-            <DialogProvider value={props.dialog || dialog}>
+            <DialogProvider value={props.dialog || dialog} options={props.dialogOptions}>
               <ErrorBoundary onError={props.onError}>
                 <ReduxProvider store={store}>
                   {

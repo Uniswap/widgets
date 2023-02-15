@@ -10,7 +10,8 @@ const ROOT_CONTAINER_PADDING = 8
 const StyledWidgetWrapper = styled.div<{ width: number | string }>`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border: ${({ theme }) => `1px solid ${theme.outline}`};
+  border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   box-shadow: ${({ theme }) => `0px 40px 120px 0px ${theme.networkDefaultShadow}`};
   box-sizing: border-box;
   display: flex;
