@@ -2,9 +2,11 @@ import { BaseProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { RouterPreference } from 'hooks/routing/types'
+import { QuoteConfig, QuoteType } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { swapRouterUrlAtom } from 'state/swap'
 
 import { GetQuoteArgs } from './types'
 import { currencyAddressForSwapQuote } from './utils'
@@ -43,22 +45,20 @@ export function useGetQuoteArgs(
     amountSpecified,
     currencyIn,
     currencyOut,
-    routerPreference,
-    routerUrl,
   }: Partial<{
     provider: BaseProvider
     tradeType: TradeType
     amountSpecified: CurrencyAmount<Currency>
     currencyIn: Currency
     currencyOut: Currency
-    routerPreference: RouterPreference
-    routerUrl: string
   }>,
-  skip?: boolean
+  quoteConfig: QuoteConfig
 ): GetQuoteArgs | SkipToken {
+  const routerUrl = useAtomValue(swapRouterUrlAtom)
   const args = useMemo(() => {
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
+    if (quoteConfig.type === QuoteType.SKIP) return null
 
     return {
       amount: amountSpecified?.quotient.toString() ?? null,
@@ -70,15 +70,15 @@ export function useGetQuoteArgs(
       tokenOutChainId: currencyOut.chainId,
       tokenOutDecimals: currencyOut.decimals,
       tokenOutSymbol: currencyOut.symbol,
-      routerPreference,
+      routerPreference: quoteConfig.preference,
       routerUrl,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, routerUrl])
+  }, [provider, tradeType, currencyIn, currencyOut, amountSpecified?.quotient, quoteConfig, routerUrl])
 
   const isWindowVisible = useIsWindowVisible()
-  if (skip || !isWindowVisible) return skipToken
+  if (quoteConfig.type === QuoteType.SKIP || !isWindowVisible) return skipToken
 
   return args ?? skipToken
 }

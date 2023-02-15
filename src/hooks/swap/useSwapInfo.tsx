@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { RouterPreference } from 'hooks/routing/types'
+import { QuoteType } from 'hooks/routing/types'
 import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
@@ -53,7 +53,7 @@ interface SwapInfo {
 }
 
 /** Returns the best computed swap (trade/wrap). */
-function useComputeSwapInfo(routerUrl?: string): SwapInfo {
+function useComputeSwapInfo(): SwapInfo {
   const { account, chainId, isActivating, isActive } = useWeb3React()
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
@@ -82,8 +82,7 @@ function useComputeSwapInfo(routerUrl?: string): SwapInfo {
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : routerPreference,
-    routerUrl
+    isWrap || error ? { type: QuoteType.SKIP } : { preference: routerPreference, type: QuoteType.TRADE }
   )
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
@@ -169,8 +168,8 @@ const DEFAULT_SWAP_INFO: SwapInfo = {
 
 const SwapInfoContext = createContext(DEFAULT_SWAP_INFO)
 
-export function SwapInfoProvider({ children, routerUrl }: PropsWithChildren<{ routerUrl?: string }>) {
-  const swapInfo = useComputeSwapInfo(routerUrl)
+export function SwapInfoProvider({ children }: PropsWithChildren) {
+  const swapInfo = useComputeSwapInfo()
 
   const swap = useAtomValue(swapAtom)
   const lastQuotedSwap = useRef<typeof swap | null>(null)
