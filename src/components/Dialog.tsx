@@ -203,10 +203,12 @@ const fadeAnimationCss = css`
   }
 `
 
+const EMPTY_CSS = css``
+
 const getAnimation = (animationType?: DialogAnimationType) => {
   switch (animationType) {
     case DialogAnimationType.NONE:
-      return css``
+      return EMPTY_CSS
     case DialogAnimationType.FADE:
       return fadeAnimationCss
     case DialogAnimationType.SLIDE:
