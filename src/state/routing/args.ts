@@ -4,7 +4,9 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { QuoteConfig, QuoteType } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { swapRouterUrlAtom } from 'state/swap'
 
 import { GetQuoteArgs } from './types'
 import { currencyAddressForSwapQuote } from './utils'
@@ -43,17 +45,16 @@ export function useGetQuoteArgs(
     amountSpecified,
     currencyIn,
     currencyOut,
-    routerUrl,
   }: Partial<{
     provider: BaseProvider
     tradeType: TradeType
     amountSpecified: CurrencyAmount<Currency>
     currencyIn: Currency
     currencyOut: Currency
-    routerUrl: string
   }>,
   quoteConfig: QuoteConfig
 ): GetQuoteArgs | SkipToken {
+  const routerUrl = useAtomValue(swapRouterUrlAtom)
   const args = useMemo(() => {
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null

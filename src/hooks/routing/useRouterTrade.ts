@@ -4,13 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import useIsValidBlock from 'hooks/useIsValidBlock'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
-import { useAtomValue } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetTradeQuoteQueryState, useLazyGetTradeQuoteQuery } from 'state/routing/slice'
 import { InterfaceTrade, NO_ROUTE, TradeResult, TradeState } from 'state/routing/types'
-import { swapRouterUrlAtom } from 'state/swap'
 
 import { QuoteConfig, QuoteType } from './types'
 
@@ -37,7 +35,6 @@ export function useRouterTrade(
   gasUseEstimateUSD?: CurrencyAmount<Token>
 } {
   const { provider } = useWeb3React()
-  const routerUrl = useAtomValue(swapRouterUrlAtom)
   const queryArgs = useGetQuoteArgs(
     {
       provider,
@@ -45,7 +42,6 @@ export function useRouterTrade(
       amountSpecified,
       currencyIn,
       currencyOut,
-      routerUrl,
     },
     quoteConfig
   )
