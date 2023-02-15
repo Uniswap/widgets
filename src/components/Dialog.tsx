@@ -2,7 +2,7 @@ import 'wicg-inert'
 
 import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
-import { largeIconCss } from 'icons'
+import { largeIconCss, X } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
@@ -86,6 +86,11 @@ export function useCloseDialog() {
   return useContext(OnCloseContext)
 }
 
+export function useDialogAnimationType() {
+  const { options } = useContext(Context)
+  return options?.animationType
+}
+
 const HeaderRow = styled(Row)`
   display: flex;
   height: 1.75em;
@@ -97,6 +102,13 @@ const HeaderRow = styled(Row)`
 `
 
 const StyledBackButton = styled(ArrowLeft)`
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
+
+const StyledXButton = styled(X)`
   :hover {
     cursor: pointer;
     opacity: 0.6;
@@ -115,9 +127,14 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
   const onClose = useCloseDialog()
+  const animationType = useDialogAnimationType()
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
-      <StyledBackButton onClick={onClose} />
+      {animationType === DialogAnimationType.SLIDE ? (
+        <StyledBackButton onClick={onClose} />
+      ) : (
+        <StyledXButton onClick={onClose} />
+      )}
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
       </Title>
