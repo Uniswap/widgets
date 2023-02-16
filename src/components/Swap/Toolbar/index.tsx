@@ -61,7 +61,7 @@ function CaptionRow() {
       default:
     }
 
-    if (state === TradeState.LOADING) {
+    if (state === TradeState.LOADING && !trade) {
       return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
@@ -71,17 +71,22 @@ function CaptionRow() {
           caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />,
         }
       }
-      if (trade?.inputAmount && trade.outputAmount) {
-        const caption = (
-          <Caption.Trade
-            trade={trade}
-            outputUSDC={outputUSDC}
-            gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
-            expanded={open}
-          />
-        )
-        return { caption, isExpandable: true }
+
+      if (trade) {
+        return {
+          caption: (
+            <Caption.Trade
+              trade={trade}
+              outputUSDC={outputUSDC}
+              gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
+              expanded={open}
+              loading={state === TradeState.LOADING}
+            />
+          ),
+          isExpandable: true,
+        }
       }
+
       if (state === TradeState.INVALID) {
         return { caption: <Caption.Error /> }
       }
