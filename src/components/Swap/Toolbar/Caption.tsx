@@ -155,7 +155,7 @@ export function Trade({
     <>
       <Caption
         caption={
-          <ThemedText.Body2 color="secondary" opacity={loading ? 0.4 : 1}>
+          <ThemedText.Body2 opacity={loading ? 0.4 : 1}>
             <Price trade={trade} outputUSDC={outputUSDC} />
           </ThemedText.Body2>
         }
