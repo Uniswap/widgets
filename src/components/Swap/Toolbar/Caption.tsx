@@ -48,11 +48,10 @@ interface CaptionProps {
   icon?: Icon | null
   caption: ReactNode
   color?: Color
-  loading?: boolean
   tooltip?: CaptionTooltip
 }
 
-function Caption({ icon: Icon, caption, color = 'secondary', tooltip, loading }: CaptionProps) {
+function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionProps) {
   return (
     <CaptionRow gap={0.5} shrink={0}>
       {tooltip ? (
@@ -62,9 +61,7 @@ function Caption({ icon: Icon, caption, color = 'secondary', tooltip, loading }:
       ) : (
         Icon && <LargeIcon icon={Icon} color={color} />
       )}
-      <ThemedText.Body2 color={color} opacity={loading ? 0.4 : 1}>
-        {caption}
-      </ThemedText.Body2>
+      <ThemedText.Body2 color={color}>{caption}</ThemedText.Body2>
     </CaptionRow>
   )
 }
@@ -157,9 +154,12 @@ export function Trade({
   return (
     <>
       <Caption
-        caption={<Price trade={trade} outputUSDC={outputUSDC} />}
+        caption={
+          <ThemedText.Body2 color="secondary" opacity={loading ? 0.4 : 1}>
+            <Price trade={trade} outputUSDC={outputUSDC} />
+          </ThemedText.Body2>
+        }
         icon={loading ? Spinner : null}
-        loading={loading}
       />
       <CaptionRow gap={0.75}>
         {!expanded && (
