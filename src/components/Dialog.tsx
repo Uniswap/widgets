@@ -258,6 +258,9 @@ const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
       width: 100%;
       z-index: ${Layer.DIALOG};
     `}
+  ${HiddenWrapper} {
+    box-shadow: 0px 40px 120px ${({ theme }) => theme.networkDefaultShadow};
+  }
 `
 
 // Accounts for any animation lag
