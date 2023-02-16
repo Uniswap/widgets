@@ -2,7 +2,7 @@ import 'wicg-inert'
 
 import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
-import { largeIconCss } from 'icons'
+import { largeIconCss, X } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
@@ -33,6 +33,7 @@ export interface DialogWidgetProps {
 export enum DialogAnimationType {
   SLIDE = 'slide', // default
   FADE = 'fade',
+  NONE = 'none',
 }
 
 export enum SlideAnimationType {
@@ -85,6 +86,11 @@ export function useCloseDialog() {
   return useContext(OnCloseContext)
 }
 
+export function useDialogAnimationType() {
+  const { options } = useContext(Context)
+  return options?.animationType
+}
+
 const HeaderRow = styled(Row)`
   display: flex;
   height: 1.75em;
@@ -96,6 +102,13 @@ const HeaderRow = styled(Row)`
 `
 
 const StyledBackButton = styled(ArrowLeft)`
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
+
+const StyledXButton = styled(X)`
   :hover {
     cursor: pointer;
     opacity: 0.6;
@@ -115,9 +128,16 @@ interface HeaderProps {
 
 export function Header({ title, closeButton }: HeaderProps) {
   const onClose = useCloseDialog()
+  const animationType = useDialogAnimationType()
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
-      {closeButton ? <div onClick={onClose}>{closeButton}</div> : <StyledBackButton onClick={onClose} />}
+      {closeButton ? (
+        <div onClick={onClose}>{closeButton}</div>
+      ) : animationType === DialogAnimationType.SLIDE ? (
+        <StyledBackButton onClick={onClose} />
+      ) : (
+        <StyledXButton onClick={onClose} />
+      )}
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
       </Title>
@@ -203,9 +223,23 @@ const fadeAnimationCss = css`
   }
 `
 
-const AnimationWrapper = styled.div<{ animationType: DialogAnimationType }>`
+const EMPTY_CSS = css``
+
+const getAnimation = (animationType?: DialogAnimationType) => {
+  switch (animationType) {
+    case DialogAnimationType.NONE:
+      return EMPTY_CSS
+    case DialogAnimationType.FADE:
+      return fadeAnimationCss
+    case DialogAnimationType.SLIDE:
+    default:
+      return slideAnimationCss
+  }
+}
+
+const AnimationWrapper = styled.div<{ animationType?: DialogAnimationType }>`
   ${Modal} {
-    ${({ animationType }) => (animationType === DialogAnimationType.FADE ? fadeAnimationCss : slideAnimationCss)}
+    ${({ animationType }) => getAnimation(animationType)}
   }
 `
 
@@ -255,7 +289,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
             <HiddenWrapper>
-              <AnimationWrapper animationType={context.options?.animationType ?? DialogAnimationType.SLIDE}>
+              <AnimationWrapper animationType={context.options?.animationType}>
                 <OnCloseContext.Provider value={onClose}>
                   <Modal color={color} ref={modal}>
                     {children}
