@@ -23,6 +23,7 @@ declare global {
 
 export interface DialogOptions {
   animationType?: DialogAnimationType
+  pageCentered?: boolean
 }
 
 export interface DialogWidgetProps {
@@ -65,7 +66,9 @@ export function Provider({ value, children, options }: ProviderProps) {
   // If a Dialog is active, mark the main content inert
   const ref = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
-  const context = { element: value, active, setActive, options }
+  // If pageCentered dialogs are enabled, we should mount them directly to the document body
+  // and adjust the styling in the renderer below so that they are centered and sized correctly.
+  const context = { element: options?.pageCentered ? document.body : value, active, setActive, options }
   useEffect(() => {
     if (ref.current) {
       ref.current.inert = active
@@ -142,18 +145,18 @@ export function Header({ title }: HeaderProps) {
   )
 }
 
-export const Modal = styled.div<{ color: Color }>`
+export const Modal = styled.div<{ color: Color; constrain?: boolean }>`
   ${globalFontStyles};
 
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: ${({ constrain }) => (constrain ? '420px' : '100%')};
   left: 0;
   outline: ${({ theme }) => `1px solid ${theme.outline}`};
   padding: 0.5em;
-  position: absolute;
+  position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   right: 0;
   top: 0;
   z-index: ${Layer.DIALOG};
@@ -187,15 +190,15 @@ const fadeOut = keyframes`
   }
 `
 
-const HiddenWrapper = styled.div`
+const HiddenWrapper = styled.div<{ constrain?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
-  height: 100%;
+  height: ${({ constrain }) => (constrain ? '460px' : '100%')};
   left: 0;
+
   overflow: hidden;
-  padding: 0.5em;
-  position: absolute;
+  position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   top: 0;
-  width: 100%;
+  width: ${({ constrain }) => (constrain ? '460px' : '100%')};
 
   @supports (overflow: clip) {
     overflow: clip;
@@ -235,9 +238,28 @@ const getAnimation = (animationType?: DialogAnimationType) => {
 }
 
 const AnimationWrapper = styled.div<{ animationType?: DialogAnimationType }>`
+  height: 100%;
+  width: 100%;
   ${Modal} {
     ${({ animationType }) => getAnimation(animationType)}
   }
+`
+
+const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
+  ${({ enabled }) =>
+    enabled &&
+    css`
+      align-items: center;
+      background-color: ${({ theme }) => theme.scrim};
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: ${Layer.DIALOG};
+    `}
 `
 
 // Accounts for any animation lag
@@ -269,10 +291,21 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
   useUnmountingAnimation(
     popoverRef,
     () => {
-      // Returns the context element's child count at the time of unmounting.
-      // This cannot be done through state because the count is updated outside of React's lifecycle -
-      // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
-      return (context.element?.childElementCount ?? 0) > 1 ? SlideAnimationType.PAGING : SlideAnimationType.CLOSING
+      switch (context.options?.animationType) {
+        case DialogAnimationType.NONE:
+          return ''
+        case DialogAnimationType.FADE:
+          return SlideAnimationType.CLOSING
+        case DialogAnimationType.SLIDE:
+        default:
+          if (context.options?.pageCentered) {
+            return SlideAnimationType.CLOSING
+          }
+          // Returns the context element's child count at the time of unmounting.
+          // This cannot be done through state because the count is updated outside of React's lifecycle -
+          // it *must* be checked at the time of unmounting in order to include the next page of Dialog.
+          return (context.element?.childElementCount ?? 0) > 1 ? SlideAnimationType.PAGING : SlideAnimationType.CLOSING
+      }
     },
     modal
   )
@@ -285,15 +318,24 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
       <ThemeProvider>
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
-            <HiddenWrapper>
-              <AnimationWrapper animationType={context.options?.animationType}>
-                <OnCloseContext.Provider value={onClose}>
-                  <Modal color={color} ref={modal}>
-                    {children}
-                  </Modal>
-                </OnCloseContext.Provider>
-              </AnimationWrapper>
-            </HiddenWrapper>
+            <FullScreenWrapper enabled={context.options?.pageCentered} onClick={onClose}>
+              <HiddenWrapper constrain={context.options?.pageCentered}>
+                <AnimationWrapper animationType={context.options?.animationType}>
+                  <OnCloseContext.Provider value={onClose}>
+                    <Modal
+                      color={color}
+                      ref={modal}
+                      constrain={context.options?.pageCentered}
+                      onClick={(e) => {
+                        context.options?.pageCentered && e.stopPropagation()
+                      }}
+                    >
+                      {children}
+                    </Modal>
+                  </OnCloseContext.Provider>
+                </AnimationWrapper>
+              </HiddenWrapper>
+            </FullScreenWrapper>
           </div>
         </PopoverBoundaryProvider>
       </ThemeProvider>,
