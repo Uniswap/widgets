@@ -57,7 +57,7 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
     const header = error instanceof WidgetError ? error.header : DEFAULT_ERROR_HEADER
     const action = error instanceof WidgetError ? error.action : DEFAULT_ERROR_ACTION
     return (
-      <Dialog color="dialog">
+      <Dialog color="dialog" forceContain>
         <ErrorDialog
           message={header}
           error={error}
