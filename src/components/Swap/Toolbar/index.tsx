@@ -65,14 +65,17 @@ function CaptionRow() {
       return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
-    if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (isWrap) {
-        return {
-          caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />,
-        }
+    const allInputsFilled = inputCurrency && outputCurrency && isAmountPopulated
+
+    if (isWrap && allInputsFilled) {
+      return {
+        caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />,
       }
-      if (trade?.inputAmount && trade.outputAmount) {
-        const caption = (
+    }
+
+    if (trade && allInputsFilled) {
+      return {
+        caption: (
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
@@ -80,12 +83,13 @@ function CaptionRow() {
             expanded={open}
             loading={state === TradeState.LOADING}
           />
-        )
-        return { caption, isExpandable: true }
+        ),
+        isExpandable: true,
       }
-      if (state === TradeState.INVALID) {
-        return { caption: <Caption.Error /> }
-      }
+    }
+
+    if (state === TradeState.INVALID) {
+      return { caption: <Caption.Error /> }
     }
 
     return { caption: <Caption.MissingInputs /> }
