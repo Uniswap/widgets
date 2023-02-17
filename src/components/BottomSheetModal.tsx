@@ -84,7 +84,7 @@ const StyledXButton = styled(X)`
 type BottomSheetModalProps = PropsWithChildren<{
   onClose: () => void
   open: boolean
-  title: string
+  title?: string
 }>
 
 export function BottomSheetModal({ children, onClose, open, title }: BottomSheetModalProps) {
@@ -97,7 +97,7 @@ export function BottomSheetModal({ children, onClose, open, title }: BottomSheet
         {open && (
           <Dialog color="dialog" onClose={onClose}>
             <>
-              <Header title={<Trans>{title}</Trans>} closeButton={<StyledXButton />} />
+              {title && <Header title={<Trans>{title}</Trans>} closeButton={<StyledXButton />} />}
               {children}
             </>
           </Dialog>

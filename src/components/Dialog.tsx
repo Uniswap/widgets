@@ -94,6 +94,11 @@ export function useDialogAnimationType() {
   return options?.animationType
 }
 
+export function useIsDialogPageCentered() {
+  const { options } = useContext(Context)
+  return options?.pageCentered
+}
+
 const HeaderRow = styled(Row)`
   display: flex;
   height: 1.75em;
