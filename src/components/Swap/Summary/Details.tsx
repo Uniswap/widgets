@@ -71,8 +71,8 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const [amountFontSize, amountLineHeight] =
     width < WIDGET_BREAKPOINTS.MEDIUM
       ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
-        ? ['24px', '30px']
-        : ['30px', '36px']
+        ? ['20px', '28px']
+        : ['28px', '36px']
       : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
