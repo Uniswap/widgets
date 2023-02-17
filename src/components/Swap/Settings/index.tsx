@@ -59,7 +59,6 @@ export default function Settings() {
   const [open, setOpen] = useState(false)
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
   useOutsideClickHandler(wrapper, () => setOpen(false))
-
   useOnEscapeHandler(() => setOpen(false))
 
   const isMobile = useIsMobileWidth()
