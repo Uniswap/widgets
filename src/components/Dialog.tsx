@@ -123,14 +123,17 @@ const Title = styled.div`
 
 interface HeaderProps {
   title?: ReactElement
+  closeButton?: ReactElement
 }
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, closeButton }: HeaderProps) {
   const onClose = useCloseDialog()
   const animationType = useDialogAnimationType()
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
-      {animationType === DialogAnimationType.SLIDE ? (
+      {closeButton ? (
+        <div onClick={onClose}>{closeButton}</div>
+      ) : animationType === DialogAnimationType.SLIDE ? (
         <StyledBackButton onClick={onClose} />
       ) : (
         <StyledXButton onClick={onClose} />

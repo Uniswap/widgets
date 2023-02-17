@@ -160,14 +160,14 @@ Object {
                           class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fScoqQ fbFiQW"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContent-sc-9adwbi-2 gMSmq hhEkFu"
+                            class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
                           >
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe iTVhWO TaTpc"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe iTVhWO bnctWB"
                               data-testid="auto-slippage"
                             >
                               <div
-                                class="Row-sc-1nzvhrh-0 fZrFzq"
+                                class="Row-sc-1nzvhrh-0 iFLCZk"
                               >
                                 <div
                                   class="type__TextWrapper-sc-16386l-0 hBKeLq button button-medium css-17g4kvt"
@@ -176,20 +176,21 @@ Object {
                                 </div>
                                 <div
                                   class="icons__LargeWrapper-sc-lekdau-1 gyYXVl"
+                                  color="active"
                                 />
                               </div>
                             </button>
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe kRvBEX"
+                              class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe hXefAh"
                               data-testid="custom-slippage"
                               style="outline: none;"
                               tabindex="-1"
                             >
                               <div
-                                class="Row-sc-1nzvhrh-0 fZrFzq"
+                                class="Row-sc-1nzvhrh-0 fFwGMy"
                               >
                                 <div
-                                  class="Row-sc-1nzvhrh-0 kSeFcF"
+                                  class="Row-sc-1nzvhrh-0 fUVNpP"
                                 >
                                   <input
                                     autocomplete="off"
@@ -197,7 +198,7 @@ Object {
                                     class="Input-sc-1e35ws5-0 qhvlL"
                                     data-testid="input-slippage"
                                     inputmode="decimal"
-                                    maxlength="79"
+                                    maxlength="10"
                                     minlength="1"
                                     pattern="^[0-9]*[.,]?[0-9]*$"
                                     placeholder="0.10"
@@ -210,6 +211,7 @@ Object {
                                 </div>
                                 <div
                                   class="icons__LargeWrapper-sc-lekdau-1 gyYXVl"
+                                  color="hint"
                                 />
                               </div>
                             </button>
@@ -317,33 +319,29 @@ Object {
                           class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fRDzgd fbFiQW"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gpwEJV bpVbyU"
+                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fBCrSN enSvbW"
+                              class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 eljOnX fAOjbi"
                             >
+                              <input
+                                autocomplete="off"
+                                autocorrect="off"
+                                class="Input-sc-1e35ws5-0 qhvlL"
+                                inputmode="decimal"
+                                maxlength="10"
+                                minlength="1"
+                                pattern="^[0-9]*$"
+                                placeholder="30"
+                                spellcheck="false"
+                                type="text"
+                                value=""
+                              />
                               <div
-                                class="type__TextWrapper-sc-16386l-0 dvdIBe body body-1 css-jmxshz"
+                                class="type__TextWrapper-sc-16386l-0 bkyFtK body body-2 css-ijlljt"
                               >
-                                <input
-                                  autocomplete="off"
-                                  autocorrect="off"
-                                  class="Input-sc-1e35ws5-0 qhvlL"
-                                  inputmode="decimal"
-                                  maxlength="79"
-                                  minlength="1"
-                                  pattern="^[0-9]*$"
-                                  placeholder="30"
-                                  spellcheck="false"
-                                  type="text"
-                                  value=""
-                                />
+                                minutes
                               </div>
-                            </div>
-                            <div
-                              class="type__TextWrapper-sc-16386l-0 bkyFtK body body-2 css-d5fsiy"
-                            >
-                              minutes
                             </div>
                           </div>
                         </div>
@@ -542,14 +540,14 @@ Object {
                         class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fScoqQ fbFiQW"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContent-sc-9adwbi-2 gMSmq hhEkFu"
+                          class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
                         >
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe iTVhWO TaTpc"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe iTVhWO bnctWB"
                             data-testid="auto-slippage"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 fZrFzq"
+                              class="Row-sc-1nzvhrh-0 iFLCZk"
                             >
                               <div
                                 class="type__TextWrapper-sc-16386l-0 hBKeLq button button-medium css-17g4kvt"
@@ -558,20 +556,21 @@ Object {
                               </div>
                               <div
                                 class="icons__LargeWrapper-sc-lekdau-1 gyYXVl"
+                                color="active"
                               />
                             </div>
                           </button>
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe kRvBEX"
+                            class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe hXefAh"
                             data-testid="custom-slippage"
                             style="outline: none;"
                             tabindex="-1"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 fZrFzq"
+                              class="Row-sc-1nzvhrh-0 fFwGMy"
                             >
                               <div
-                                class="Row-sc-1nzvhrh-0 kSeFcF"
+                                class="Row-sc-1nzvhrh-0 fUVNpP"
                               >
                                 <input
                                   autocomplete="off"
@@ -579,7 +578,7 @@ Object {
                                   class="Input-sc-1e35ws5-0 qhvlL"
                                   data-testid="input-slippage"
                                   inputmode="decimal"
-                                  maxlength="79"
+                                  maxlength="10"
                                   minlength="1"
                                   pattern="^[0-9]*[.,]?[0-9]*$"
                                   placeholder="0.10"
@@ -592,6 +591,7 @@ Object {
                               </div>
                               <div
                                 class="icons__LargeWrapper-sc-lekdau-1 gyYXVl"
+                                color="hint"
                               />
                             </div>
                           </button>
@@ -699,33 +699,29 @@ Object {
                         class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fRDzgd fbFiQW"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gpwEJV bpVbyU"
+                          class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fBCrSN enSvbW"
+                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 eljOnX fAOjbi"
                           >
+                            <input
+                              autocomplete="off"
+                              autocorrect="off"
+                              class="Input-sc-1e35ws5-0 qhvlL"
+                              inputmode="decimal"
+                              maxlength="10"
+                              minlength="1"
+                              pattern="^[0-9]*$"
+                              placeholder="30"
+                              spellcheck="false"
+                              type="text"
+                              value=""
+                            />
                             <div
-                              class="type__TextWrapper-sc-16386l-0 dvdIBe body body-1 css-jmxshz"
+                              class="type__TextWrapper-sc-16386l-0 bkyFtK body body-2 css-ijlljt"
                             >
-                              <input
-                                autocomplete="off"
-                                autocorrect="off"
-                                class="Input-sc-1e35ws5-0 qhvlL"
-                                inputmode="decimal"
-                                maxlength="79"
-                                minlength="1"
-                                pattern="^[0-9]*$"
-                                placeholder="30"
-                                spellcheck="false"
-                                type="text"
-                                value=""
-                              />
+                              minutes
                             </div>
-                          </div>
-                          <div
-                            class="type__TextWrapper-sc-16386l-0 bkyFtK body body-2 css-d5fsiy"
-                          >
-                            minutes
                           </div>
                         </div>
                       </div>
