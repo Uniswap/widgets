@@ -66,6 +66,7 @@ function Fixture() {
 
   const [brandedFooter] = useValue('brandedFooter', { defaultValue: true })
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+  const [pageCentered] = useValue('pageCentered', { defaultValue: true })
 
   const [width] = useValue('width', { defaultValue: 360 })
 
@@ -89,7 +90,7 @@ function Fixture() {
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
   const dialogAnimation = useOption('dialogAnimation', {
-    defaultValue: DialogAnimationType.SLIDE,
+    defaultValue: DialogAnimationType.FADE,
     options: [DialogAnimationType.SLIDE, DialogAnimationType.FADE, DialogAnimationType.NONE],
   })
 
@@ -119,6 +120,7 @@ function Fixture() {
       brandedFooter={brandedFooter}
       dialogOptions={{
         animationType: dialogAnimation,
+        pageCentered,
       }}
       {...eventHandlers}
     />
