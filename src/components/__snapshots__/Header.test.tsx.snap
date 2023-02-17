@@ -32,7 +32,7 @@ Object {
                 class="Popover__Reference-sc-1liex6z-1 dxsTSY"
               >
                 <button
-                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Settings__SettingsButton-sc-1hvqnx5-0 cnMPAK"
+                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Settings__SettingsButton-sc-1hvqnx5-1 evHSmT"
                   data-testid="settings-button"
                 >
                   <svg
@@ -59,12 +59,11 @@ Object {
                 </button>
               </div>
               <div
-                class="Popover__PopoverContainer-sc-1liex6z-0 bQxSWU"
+                class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
                 style="position: absolute; left: 0px; top: 0px;"
               >
                 <div
-                  class="Column-sc-1ul9eki-0 bgmzb"
-                  style="padding-top: 1em; padding-bottom: 1em;"
+                  class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 MgXuH kNwgA-d"
                 >
                   <div
                     class="Column-sc-1ul9eki-0 ffUVrO"
@@ -352,7 +351,7 @@ Object {
                     </div>
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 bQxSWU"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
@@ -366,7 +365,7 @@ Object {
                     />
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 bQxSWU"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
@@ -415,7 +414,7 @@ Object {
               class="Popover__Reference-sc-1liex6z-1 dxsTSY"
             >
               <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Settings__SettingsButton-sc-1hvqnx5-0 cnMPAK"
+                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe bbtvxg jwaziW Settings__SettingsButton-sc-1hvqnx5-1 evHSmT"
                 data-testid="settings-button"
               >
                 <svg
@@ -442,12 +441,11 @@ Object {
               </button>
             </div>
             <div
-              class="Popover__PopoverContainer-sc-1liex6z-0 bQxSWU"
+              class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
               style="position: absolute; left: 0px; top: 0px;"
             >
               <div
-                class="Column-sc-1ul9eki-0 bgmzb"
-                style="padding-top: 1em; padding-bottom: 1em;"
+                class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 MgXuH kNwgA-d"
               >
                 <div
                   class="Column-sc-1ul9eki-0 ffUVrO"
@@ -735,7 +733,7 @@ Object {
                   </div>
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 bQxSWU"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div
@@ -749,7 +747,7 @@ Object {
                   />
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 bQxSWU"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div

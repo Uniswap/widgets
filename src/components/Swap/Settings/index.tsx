@@ -2,6 +2,7 @@ import { BottomSheetModal } from 'components/BottomSheetModal'
 import Rule from 'components/Rule'
 import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
+import { useOutsideClickHandler } from 'hooks/useOutsideClickHandler'
 import { Settings as SettingsIcon } from 'icons'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
@@ -16,13 +17,17 @@ import MaxSlippageSelect from './MaxSlippageSelect'
 import RouterPreferenceToggle from './RouterPreferenceToggle'
 import TransactionTtlInput from './TransactionTtlInput'
 
+const SettingsColumn = styled(Column)`
+  margin: 0.5rem 0.25rem;
+`
+
 export function SettingsMenu() {
   const [routerUrl] = useAtom(swapRouterUrlAtom)
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
 
   // TODO (WEB-2754): add back reset settings functionality
   return (
-    <Column gap={1} style={{ paddingTop: '1em', paddingBottom: '1em' }} ref={setBoundary} padded>
+    <SettingsColumn gap={1} ref={setBoundary}>
       <PopoverBoundaryProvider value={boundary}>
         {/*
         If consumer doesn't pass in `routerUrl` as a prop, they have no choice but to use the client-side router,
@@ -38,7 +43,7 @@ export function SettingsMenu() {
         <Rule />
         <TransactionTtlInput />
       </PopoverBoundaryProvider>
-    </Column>
+    </SettingsColumn>
   )
 }
 
@@ -53,7 +58,7 @@ const SettingsButton = styled(IconButton)`
 export default function Settings() {
   const [open, setOpen] = useState(false)
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
-
+  useOutsideClickHandler(wrapper, () => setOpen(false))
   useOnEscapeHandler(() => setOpen(false))
 
   const isMobile = useIsMobileWidth()

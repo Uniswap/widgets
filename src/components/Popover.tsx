@@ -24,7 +24,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
   opacity: ${(props) => (props.show ? 1 : 0)};
-  padding: 10px 12px;
+  padding: 0.75rem;
   transition: visibility ${AnimationSpeed.Medium} linear, opacity ${AnimationSpeed.Medium} linear;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   z-index: ${Layer.TOOLTIP};
