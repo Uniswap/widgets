@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
@@ -61,7 +61,7 @@ function CaptionRow() {
       default:
     }
 
-    if (state === TradeState.LOADING) {
+    if (state === TradeState.LOADING && !trade) {
       return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
@@ -71,17 +71,22 @@ function CaptionRow() {
           caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} />,
         }
       }
-      if (trade?.inputAmount && trade.outputAmount) {
-        const caption = (
-          <Caption.Trade
-            trade={trade}
-            outputUSDC={outputUSDC}
-            gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
-            expanded={open}
-          />
-        )
-        return { caption, isExpandable: true }
+
+      if (trade) {
+        return {
+          caption: (
+            <Caption.Trade
+              trade={trade}
+              outputUSDC={outputUSDC}
+              gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
+              expanded={open}
+              loading={state === TradeState.LOADING}
+            />
+          ),
+          isExpandable: true,
+        }
       }
+
       if (state === TradeState.INVALID) {
         return { caption: <Caption.Error /> }
       }
@@ -117,7 +122,7 @@ function CaptionRow() {
       {
         color: impact?.warning,
         name: t`Price impact`,
-        value: impact?.percent ? formatPriceImpact(impact?.percent) : '-',
+        value: impact?.percent ? impact?.toString() : '-',
         valueTooltip: impact?.warning
           ? {
               icon: AlertTriangle,
@@ -141,7 +146,7 @@ function CaptionRow() {
       },
     ]
     return rows
-  }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
+  }, [gasUseEstimateUSD, impact, slippage, trade])
 
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null

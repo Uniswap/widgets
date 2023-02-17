@@ -132,6 +132,7 @@ export function Wrap({ inputCurrency, outputCurrency }: WrapProps) {
 
 export interface TradeProps {
   trade: InterfaceTrade
+  loading: boolean
   outputUSDC?: CurrencyAmount<Currency>
 }
 
@@ -143,10 +144,23 @@ const Expander = ({ expanded }: ExpandProps) => {
   return <ExpandIcon $expanded={expanded} />
 }
 
-export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeProps & TradeTooltip & ExpandProps) {
+export function Trade({
+  trade,
+  outputUSDC,
+  gasUseEstimateUSD,
+  expanded,
+  loading,
+}: TradeProps & TradeTooltip & ExpandProps) {
   return (
     <>
-      <Caption caption={<Price trade={trade} outputUSDC={outputUSDC} />} />
+      <Caption
+        caption={
+          <ThemedText.Body2 opacity={loading ? 0.4 : 1}>
+            <Price trade={trade} outputUSDC={outputUSDC} />
+          </ThemedText.Body2>
+        }
+        icon={loading ? Spinner : null}
+      />
       <CaptionRow gap={0.75}>
         {!expanded && (
           <CaptionRow gap={0.25}>

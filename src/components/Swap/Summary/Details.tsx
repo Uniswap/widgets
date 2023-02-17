@@ -19,7 +19,6 @@ import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 import { currencyId } from 'utils/currencyId'
 
 import { useTradeExchangeRate } from '../Price'
-import { PriceImpactRow } from '../PriceImpactRow'
 import { getEstimateMessage } from './Estimate'
 
 const Label = styled.span`
@@ -72,8 +71,8 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const [amountFontSize, amountLineHeight] =
     width < WIDGET_BREAKPOINTS.MEDIUM
       ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
-        ? ['24px', '30px']
-        : ['30px', '36px']
+        ? ['20px', '28px']
+        : ['28px', '36px']
       : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
@@ -148,7 +147,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
     }
 
     if (impact) {
-      details.push([t`Price impact`, <PriceImpactRow key="impact" impact={impact} reverse />, impact.warning])
+      details.push([t`Price impact`, impact?.percent ? impact?.toString() : '-', impact.warning])
     }
 
     const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage)
