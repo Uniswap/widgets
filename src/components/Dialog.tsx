@@ -190,18 +190,18 @@ const fadeOut = keyframes`
   }
 `
 
-const HiddenWrapper = styled.div<{ constrain?: boolean }>`
+const HiddenWrapper = styled.div<{ hidden?: boolean; constrain?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
 
-  overflow: hidden;
+  overflow: ${({ hidden }) => (hidden ? 'hidden' : 'visible')};
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   top: 0;
   width: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
 
   @supports (overflow: clip) {
-    overflow: clip;
+    overflow: ${({ hidden }) => (hidden ? 'clip' : 'visible')};
   }
 `
 
@@ -324,7 +324,10 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
             <FullScreenWrapper enabled={pageCentered} onClick={onClose}>
-              <HiddenWrapper constrain={pageCentered}>
+              <HiddenWrapper
+                constrain={pageCentered}
+                hidden={context.options?.animationType === DialogAnimationType.SLIDE}
+              >
                 <AnimationWrapper animationType={context.options?.animationType}>
                   <OnCloseContext.Provider value={onClose}>
                     <Modal
