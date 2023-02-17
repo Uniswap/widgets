@@ -1,4 +1,4 @@
-import { DEFAULT_ERROR_ACTION, DEFAULT_ERROR_HEADER, SwapError, WidgetError } from 'errors'
+import { DEFAULT_ERROR_ACTION, DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
 import { Component, ErrorInfo, PropsWithChildren, useCallback, useState } from 'react'
 
 import Dialog from '../Dialog'
@@ -46,10 +46,7 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
 
   constructor(props: ErrorBoundaryProps) {
     super(props)
-    this.state = {
-      // todo: remove this
-      error: new SwapError({}),
-    }
+    this.state = {}
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
