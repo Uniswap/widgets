@@ -62,6 +62,7 @@ export interface GetQuoteArgs {
   provider: BaseProvider
   userAddress?: string
   recipientAddress?: string
+  slippagePercentage: number
 }
 
 export const INITIALIZED = 'Initialized'

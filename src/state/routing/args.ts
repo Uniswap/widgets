@@ -1,12 +1,15 @@
 import { BaseProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { RouterPreference } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { DEFAULT_SLIPPAGE_PERCENT, toPercent } from 'hooks/useSlippage'
 import { useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
+import { useAtom } from 'jotai'
 import { useMemo } from 'react'
+import { slippageAtom } from 'state/swap/settings'
 
 import { GetQuoteArgs } from './types'
 
@@ -58,10 +61,17 @@ export function useGetQuoteArgs(
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
   const snAccount = useSnAccountAddress()
+  const [slippage] = useAtom(slippageAtom)
+
   const args = useMemo(() => {
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
     if (!amountSpecified) return null
+
+    const slippagePercentage =
+      slippage.default || !slippage.max
+        ? DEFAULT_SLIPPAGE_PERCENT.divide(100).toSignificant()
+        : (toPercent(slippage.max) as Percent).divide(100).toSignificant()
 
     return {
       amount: amountSpecified.quotient.toString(),
@@ -75,11 +85,12 @@ export function useGetQuoteArgs(
       tokenOutSymbol: currencyOut.symbol,
       userAddress: account,
       recipientAddress: snAccount,
+      slippagePercentage: parseFloat(slippagePercentage),
       routerPreference,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account, snAccount])
+  }, [slippage, provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account, snAccount])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken

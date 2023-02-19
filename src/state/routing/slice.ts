@@ -27,6 +27,7 @@ export const routing = createApi({
             amount,
             userAddress,
             recipientAddress,
+            slippagePercentage,
           } = args
 
           const quoteResult = await quote({
@@ -37,6 +38,7 @@ export const routing = createApi({
             amount: amount ?? undefined,
             user: userAddress,
             recipient: recipientAddress,
+            slippagePercentage,
           })
 
           // NO_ROUTE should be treated as a valid response to prevent retries.
