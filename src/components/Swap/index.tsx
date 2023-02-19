@@ -39,9 +39,7 @@ async function getFistValidTxHash(snBlockNumber?: number, snAccount?: string) {
     chunk_size: 1000,
   })
 
-  console.log('📜 LOG > listEvents > events', events)
   events = events.filter((event) => event.data.length === 5 && event.data[2] === snAccount)
-  console.log('📜 LOG > listEvents > events', events)
 
   for (let i = events.length - 1; i >= 0; i--) {
     const event = events[i]
@@ -81,7 +79,6 @@ export default function Swap(props: SwapProps) {
   useInterval(() => {
     if (dstTxHash) return
     getFistValidTxHash(snBlockNumber, snAccount).then((txHash) => {
-      console.log('📜 LOG > useEffect > getFistValidTxHash > txHash', txHash)
       if (txHash) {
         setDstTxHash(txHash)
       }
