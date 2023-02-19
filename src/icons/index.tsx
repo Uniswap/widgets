@@ -26,6 +26,7 @@ import {
   ChevronDown as ChevronDownIcon,
   ChevronUp as ChevronUpIcon,
   Clock as ClockIcon,
+  ExternalLink as ExternalLinkIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
   Search as SearchIcon,
@@ -100,6 +101,7 @@ export const HelpCircle = icon(HelpCircleIcon)
 export const Identicon = icon(IdenticonIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
+export const ExternalLink = icon(ExternalLinkIcon)
 export const AutoRouter = icon(RouterIcon)
 export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)

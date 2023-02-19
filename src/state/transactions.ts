@@ -1,5 +1,6 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { WidoTrade } from 'state/routing/types'
 
@@ -62,3 +63,5 @@ export interface Transaction<T extends TransactionInfo = TransactionInfo> {
 export const transactionsAtom = atomWithImmer<{
   [chainId: string]: { [hash: string]: Transaction }
 }>({})
+
+export const snBlockNumberAtom = atom<number>(0)

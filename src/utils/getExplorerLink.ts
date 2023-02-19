@@ -56,6 +56,20 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
+  if (chainId === SupportedChainId.STARKNET_GOERLI) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `https://testnet.starkscan.co/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
+        return `https://testnet.starkscan.co/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://testnet.starkscan.co/block/${data}`
+      default:
+        return `https://testnet.starkscan.co/`
+    }
+  }
+
   const prefix = ETHERSCAN_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {

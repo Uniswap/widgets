@@ -11,7 +11,6 @@ import Row from './Row'
 
 const StyledExternalLink = styled(ExternalLink)<{ color: Color }>`
   color: ${({ theme, color }) => theme[color]};
-  text-decoration: none;
 `
 
 interface EtherscanLinkProps {
@@ -20,6 +19,7 @@ interface EtherscanLinkProps {
   color?: Color
   children: ReactNode
   showIcon?: boolean
+  chainIdOverride?: number
 }
 
 export default function EtherscanLink({
@@ -28,8 +28,10 @@ export default function EtherscanLink({
   color = 'currentColor',
   children,
   showIcon = true,
+  chainIdOverride,
 }: EtherscanLinkProps) {
-  const chainId = useEvmChainId()
+  const evmChainId = useEvmChainId()
+  const chainId = chainIdOverride || evmChainId
   const url = useMemo(
     () => data && getExplorerLink(chainId || SupportedChainId.MAINNET, data, type),
     [chainId, data, type]

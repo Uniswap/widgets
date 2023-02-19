@@ -4,11 +4,16 @@ import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
-import { Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
+import { RpcProvider } from 'starknet'
+import { snBlockNumberAtom, Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
 
 import useBlockNumber from '../useBlockNumber'
 import Updater from './updater'
+
+export const SN_PROVIDER = new RpcProvider({
+  nodeUrl: 'https://starknet-goerli.infura.io/v3/d8bc6187de214a4c956d4c64dbde2cc7',
+})
 
 function isTransactionRecent(transaction: Transaction) {
   return Date.now() - transaction.addedTime < ms`1d`
@@ -24,6 +29,7 @@ export function useAddTransactionInfo() {
   const chainId = useEvmChainId()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)
+  const updateSnBlockNumber = useUpdateAtom(snBlockNumberAtom)
 
   return useCallback(
     (info: TransactionInfo) => {
@@ -36,8 +42,10 @@ export function useAddTransactionInfo() {
         txs[hash] = { addedTime: new Date().getTime(), lastCheckedBlockNumber: blockNumber, info }
         chainTxs[chainId] = txs
       })
+
+      SN_PROVIDER.getBlockNumber().then(updateSnBlockNumber)
     },
-    [blockNumber, chainId, updateTxs]
+    [blockNumber, chainId, updateTxs, updateSnBlockNumber]
   )
 }
 
