@@ -19,10 +19,10 @@ export function useTokenBalances(address?: string): BalanceMap {
   const evmRawBalances = useAtomValue(evmBalancesAtom)
   const evmFetchedBalances = useAtomValue(evmFetchedBalancesAtom)
   const setEvmRawBalances = useUpdateAtom(evmBalancesAtom)
-  const setEvmFetchingBalances = useUpdateAtom(evmFetchedBalancesAtom)
+  const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
 
   if (!evmFetchedBalances && address) {
-    setEvmFetchingBalances(true)
+    setEvmFetchedBalances(true)
     getBalances(address).then(setEvmRawBalances)
   }
 
@@ -30,10 +30,10 @@ export function useTokenBalances(address?: string): BalanceMap {
   const snRawBalances = useAtomValue(snBalancesAtom)
   const snFetchedBalances = useAtomValue(snFetchedBalancesAtom)
   const setSnRawBalances = useUpdateAtom(snBalancesAtom)
-  const setSnFetchingBalances = useUpdateAtom(snFetchedBalancesAtom)
+  const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
 
   if (!snFetchedBalances && snAccount) {
-    setSnFetchingBalances(true)
+    setSnFetchedBalances(true)
     getBalances(snAccount).then(setSnRawBalances)
   }
 

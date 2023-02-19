@@ -6,11 +6,12 @@ import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenience
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { SN_PROVIDER, usePendingTransactions } from 'hooks/transactions'
+import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
 import useInterval from 'hooks/useInterval'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
 import { useEvmAccountAddress, useSnAccountAddress, WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useMemo, useState } from 'react'
 import { displayTxHashAtom } from 'state/swap'
 import { snBlockNumberAtom } from 'state/transactions'
@@ -87,6 +88,9 @@ export default function Swap(props: SwapProps) {
     })
   }, 1000)
 
+  const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
+  const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
+
   return (
     <>
       <Header title={<Trans>Zap</Trans>}>
@@ -114,6 +118,8 @@ export default function Swap(props: SwapProps) {
             onClose={() => {
               setDisplayTxHash()
               setDstTxHash(undefined)
+              setSnFetchedBalances(false)
+              setEvmFetchedBalances(false)
             }}
           />
         </Dialog>
