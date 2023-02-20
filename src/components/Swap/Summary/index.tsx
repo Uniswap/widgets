@@ -124,7 +124,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
         </SpeedBumpDialog>
       ) : (
         <>
-          <Header title={<Trans>Review swap</Trans>} />
+          <Header title={<Trans>Review zap</Trans>} />
           <Body flex align="stretch">
             <Details {...props} />
           </Body>
