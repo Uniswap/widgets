@@ -97,7 +97,7 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
           switchChain(provider, chainId, addChainParameter),
         ])
       } catch (error) {
-        throw new Error(`Failed to switch network: ${error}`)
+        // throw new Error(`Failed to switch network: ${error}`)
       }
     },
     [onSwitchChain, provider, urlMap]

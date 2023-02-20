@@ -1,5 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { darkTheme, defaultTheme, lightTheme, SwapWidget } from '@uniswap/widgets'
+import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
+import { InjectedConnector } from '@web3-react/injected-connector'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
@@ -53,16 +55,15 @@ function Fixture() {
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
     [useHandleEvent]
   )
-  const [ethProvider, setEthProvider] = useState<Web3Provider | undefined>()
+  const { library: ethProvider, activate, deactivate } = useWeb3React()
 
-  const handleMetamask = useCallback(() => {
+  const handleMetamask = useCallback(async () => {
     if (ethProvider) {
-      setEthProvider(undefined)
+      deactivate()
     } else {
-      window.ethereum.enable()
-      setEthProvider(new Web3Provider(window.ethereum as any))
+      await activate(injected)
     }
-  }, [ethProvider, setEthProvider])
+  }, [ethProvider, activate, deactivate])
 
   const [starknet, setStarknet] = useState<IStarknetWindowObject | undefined>()
 
@@ -116,4 +117,16 @@ function Fixture() {
   )
 }
 
-export default <Fixture />
+function getLibrary(provider: any) {
+  return new Web3Provider(provider) // this will vary according to whether you use e.g. ethers or web3.js
+}
+
+export const injected = new InjectedConnector({})
+
+export default function App() {
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Fixture />
+    </Web3ReactProvider>
+  )
+}

@@ -8,7 +8,6 @@ import { Flags, useInitialFlags } from 'hooks/useSyncFlags'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import useSyncWidgetSettings, { WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { Provider as TokenListProvider } from 'hooks/useTokenList'
-import { ProviderProps as Web3Props } from 'hooks/web3'
 import { Provider as I18nProvider } from 'i18n'
 import { Provider as AtomProvider } from 'jotai'
 import { PropsWithChildren, StrictMode, useState } from 'react'
@@ -31,7 +30,7 @@ export const DialogWrapper = styled.div`
   width: 100%;
 `
 
-export interface WidgetProps extends Flags, TransactionEventHandlers, Web3Props, WidgetEventHandlers {
+export interface WidgetProps extends Flags, TransactionEventHandlers, WidgetEventHandlers {
   theme?: Theme
   locale?: SupportedLocale
   tokenList?: string | TokenInfo[]
