@@ -29,8 +29,9 @@ const TOKEN_WITH_NO_LOGO = {
 }
 
 const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
-const tokenLists: Record<string, TokenInfo[]> = {
+const tokenLists: Record<string, TokenInfo[] | string> = {
   Default: tokens,
+  Extended: 'https://extendedtokens.uniswap.org/',
   'Mainnet only': mainnetTokens,
   Logoless: [TOKEN_WITH_NO_LOGO],
 }

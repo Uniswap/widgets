@@ -3,6 +3,7 @@ import 'polyfills'
 import Swap, { SwapProps } from 'components/Swap'
 import Widget, { WidgetProps } from 'components/Widget'
 
+export { getAssetsRepoURI, getNativeLogoURI, Logo, LogoUpdater, useLogo, useLogos } from './components/Logo'
 export type { Provider as EthersProvider } from '@ethersproject/abstract-provider'
 export type { JsonRpcProvider } from '@ethersproject/providers'
 export type { Currency } from '@uniswap/sdk-core'
