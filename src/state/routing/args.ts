@@ -10,6 +10,7 @@ import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 import { slippageAtom } from 'state/swap/settings'
+import { isStarknet } from 'utils/starknet'
 
 import { GetQuoteArgs } from './types'
 
@@ -84,7 +85,7 @@ export function useGetQuoteArgs(
       tokenOutDecimals: currencyOut.decimals,
       tokenOutSymbol: currencyOut.symbol,
       userAddress: account,
-      recipientAddress: snAccount,
+      recipientAddress: isStarknet(currencyOut?.chainId) ? snAccount : account,
       slippagePercentage: parseFloat(slippagePercentage),
       routerPreference,
       tradeType,
