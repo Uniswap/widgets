@@ -2,7 +2,7 @@ import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ERC20ABI from 'abis/erc20.json'
-import { Erc20Interface } from 'abis/types/Erc20'
+import { Erc20, Erc20Interface } from 'abis/types/Erc20'
 import { nativeOnChain } from 'constants/tokens'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'hooks/multicall'
 import { useInterfaceMulticall } from 'hooks/useContract'
@@ -61,7 +61,7 @@ export function useTokenBalancesWithLoadingIndicator(
   )
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
-  const balances = useMultipleContractSingleData(
+  const balances = useMultipleContractSingleData<Erc20, 'balanceOf'>(
     validatedTokenAddresses,
     ERC20Interface,
     'balanceOf',

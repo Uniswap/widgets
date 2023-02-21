@@ -7,7 +7,7 @@ import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
 import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Weth } from 'abis/types'
+import { ArgentWalletDetector, Eip2612, EnsPublicResolver, EnsRegistrar, Erc20, Erc20Bytes32, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import { ARGENT_WALLET_DETECTOR_ADDRESS, ENS_REGISTRAR_ADDRESSES, MULTICALL_ADDRESS } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
@@ -18,7 +18,7 @@ import { getContract } from 'utils'
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
 
 // returns null on errors
-export function useContract<T extends Contract = Contract>(
+export function useContract<T extends Contract>(
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: any,
   withSignerIfPossible = true
@@ -65,12 +65,12 @@ export function useENSResolverContract(address: string | undefined, withSignerIf
   return useContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
 }
 
-export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
+export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract<Erc20Bytes32>(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
-export function useEIP2612Contract(tokenAddress?: string): Contract | null {
-  return useContract(tokenAddress, EIP_2612, false)
+export function useEIP2612Contract(tokenAddress?: string) {
+  return useContract<Eip2612>(tokenAddress, EIP_2612, false)
 }
 
 export function useInterfaceMulticall() {
