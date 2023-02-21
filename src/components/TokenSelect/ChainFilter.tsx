@@ -34,12 +34,18 @@ const BaseWrapper = styled(Row)<{ active?: boolean }>`
 export default function ChainFilter({
   onSelect,
   selected,
+  chainIdsAllowed,
 }: {
   selected?: number
   onSelect: (chainId?: number) => void
+  chainIdsAllowed?: number[]
 }) {
   const testnetsVisible = useTestnetsVisible()
-  const chainIds = testnetsVisible ? [...VISIBLE_CHAIN_IDS, ...VISIBLE_TESTNET_CHAIN_IDS] : VISIBLE_CHAIN_IDS
+  let chainIds = testnetsVisible ? [...VISIBLE_CHAIN_IDS, ...VISIBLE_TESTNET_CHAIN_IDS] : VISIBLE_CHAIN_IDS
+
+  if (chainIdsAllowed && chainIdsAllowed.length !== 0) {
+    chainIds = chainIds.filter((x) => chainIdsAllowed.includes(x))
+  }
 
   return (
     <BasesContainer gap={0.5} flex justify="start">

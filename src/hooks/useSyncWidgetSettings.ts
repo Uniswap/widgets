@@ -13,13 +13,21 @@ export interface WidgetSettings {
   ethProvider?: Web3Provider
   snAccount?: AccountInterface
   testnetsVisible?: boolean
+  srcChainIds?: number[]
+  dstChainIds?: number[]
 }
 
-export default function useSyncWidgetSettings({ testnetsVisible, ethProvider, snAccount }: WidgetSettings): void {
+export default function useSyncWidgetSettings({
+  testnetsVisible,
+  ethProvider,
+  snAccount,
+  srcChainIds,
+  dstChainIds,
+}: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
-    updateWidgetSettingsAtom({ testnetsVisible, ethProvider, snAccount })
-  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount])
+    updateWidgetSettingsAtom({ testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds })
+  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds])
 }
 
 export function useTestnetsVisible() {
@@ -70,4 +78,11 @@ export function useSnAccountInterface() {
 export function useSnAccountAddress() {
   const accountInterface = useSnAccountInterface()
   return accountInterface?.address
+}
+
+export function useSrcChainIds() {
+  return useAtomValue(widgetSettingsAtom).srcChainIds
+}
+export function useDstChainIds() {
+  return useAtomValue(widgetSettingsAtom).dstChainIds
 }

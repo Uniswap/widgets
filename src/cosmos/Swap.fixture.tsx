@@ -8,6 +8,7 @@ import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 // import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { useLocalApi } from 'wido'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 
@@ -42,11 +43,12 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  // const defaultNetwork = useOption('defaultChainId', {
-  //   options: Object.keys(CHAIN_NAMES_TO_IDS),
-  //   defaultValue: 'mainnet',
-  // })
-  // const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
+  const [srcChainIds] = useValue('srcChainIds', {
+    defaultValue: '[1,5,137,15367]',
+  })
+  const [dstChainIds] = useValue('dstChainIds', {
+    defaultValue: '[1,137,15367]',
+  })
 
   const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: true })
 
@@ -78,7 +80,7 @@ function Fixture() {
     }
   }, [starknet, setStarknet])
 
-  // useLocalApi()
+  useLocalApi()
 
   const widget = (
     <SwapWidget
@@ -96,6 +98,8 @@ function Fixture() {
       theme={theme}
       // tokenList={tokenList} // TODO(Daniel) remove
       width={width}
+      srcChainIds={JSON.parse(srcChainIds)}
+      dstChainIds={JSON.parse(dstChainIds)}
       {...eventHandlers}
     />
   )

@@ -47,9 +47,10 @@ interface TokenSelectDialogProps {
   value?: Currency
   onSelect: (token: Currency) => void
   onClose: () => void
+  chainIdsAllowed?: number[]
 }
 
-export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialogProps) {
+export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
   const [chainIdFilter, setChainIdFilter] = useState<number | undefined>()
   const allChainList = useTokenList()
@@ -99,7 +100,7 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
             </ThemedText.Body1>
           </SearchInputContainer>
         </Row>
-        <ChainFilter selected={chainIdFilter} onSelect={setChainIdFilter} />
+        <ChainFilter selected={chainIdFilter} onSelect={setChainIdFilter} chainIdsAllowed={chainIdsAllowed} />
         {/* <CommonBases chainId={chainId} onSelect={onSelect} selected={value} /> */}
         <Rule padded />
       </Column>
@@ -128,9 +129,17 @@ interface TokenSelectProps {
   approved?: boolean
   disabled?: boolean
   onSelect: (value: Currency) => void
+  chainIdsAllowed?: number[]
 }
 
-export default memo(function TokenSelect({ field, value, approved, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({
+  field,
+  value,
+  approved,
+  disabled,
+  onSelect,
+  chainIdsAllowed,
+}: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
@@ -148,7 +157,14 @@ export default memo(function TokenSelect({ field, value, approved, disabled, onS
   return (
     <>
       <TokenButton value={value} approved={approved} disabled={disabled} onClick={onOpen} />
-      {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
+      {open && (
+        <TokenSelectDialog
+          value={value}
+          onSelect={selectAndClose}
+          onClose={() => setOpen(false)}
+          chainIdsAllowed={chainIdsAllowed}
+        />
+      )}
     </>
   )
 })
