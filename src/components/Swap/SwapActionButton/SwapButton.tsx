@@ -115,23 +115,9 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
       <ActionButton color={color} onClick={onClick} disabled={disabled}>
         <Trans>Review swap</Trans>
       </ActionButton>
-      {isMobile && trade && pageCenteredDialogsEnabled ? (
-        <BottomSheetModal onClose={() => setOpen(false)} open={open && Boolean(trade)}>
-          <SummaryDialog
-            trade={trade}
-            slippage={slippage}
-            gasUseEstimateUSD={gasUseEstimateUSD}
-            inputUSDC={inputUSDC}
-            outputUSDC={outputUSDC}
-            impact={impact}
-            onConfirm={onSwap}
-            allowance={allowance}
-          />
-        </BottomSheetModal>
-      ) : (
-        open &&
-        trade && (
-          <Dialog color="container" onClose={() => setOpen(false)}>
+      {trade &&
+        (isMobile && pageCenteredDialogsEnabled ? (
+          <BottomSheetModal onClose={() => setOpen(false)} open={open && Boolean(trade)}>
             <SummaryDialog
               trade={trade}
               slippage={slippage}
@@ -142,9 +128,23 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
               onConfirm={onSwap}
               allowance={allowance}
             />
-          </Dialog>
-        )
-      )}
+          </BottomSheetModal>
+        ) : (
+          open && (
+            <Dialog color="container" onClose={() => setOpen(false)}>
+              <SummaryDialog
+                trade={trade}
+                slippage={slippage}
+                gasUseEstimateUSD={gasUseEstimateUSD}
+                inputUSDC={inputUSDC}
+                outputUSDC={outputUSDC}
+                impact={impact}
+                onConfirm={onSwap}
+                allowance={allowance}
+              />
+            </Dialog>
+          )
+        ))}
     </>
   )
 }
