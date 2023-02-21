@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { LogoTable, LogoTableInput } from './LogoTable'
 const table = LogoTable.getInstance()
@@ -26,11 +26,10 @@ export function useLogos(currency: LogoTableInput | undefined): string[] | undef
 export function useLogo(currency: LogoTableInput | undefined) {
   const entry = useMemo(() => table.getEntry(currency), [currency])
 
-  const [src, setSrc] = useState(entry?.getCurrent()?.getUri())
+  const src = useMemo(() => entry?.getCurrent()?.getUri(), [entry])
 
   const invalidateSrc = useCallback(() => {
-    const nextSrc = entry?.invalidateSrc()
-    nextSrc && setSrc(nextSrc.getUri())
+    entry?.invalidateSrc()
   }, [entry])
 
   return { src, invalidateSrc }
