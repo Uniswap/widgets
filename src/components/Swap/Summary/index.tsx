@@ -283,7 +283,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
           {t`price impact on the market price of this pool. Do you wish to continue? `}
         </SpeedBumpDialog>
       ) : (
-        <div style={{ minHeight: 400, minWidth: 400 }}>
+        <div style={{ minWidth: 400 }}>
           <Header title={<Trans>Review swap</Trans>} />
           <Body flex align="stretch">
             <Details {...props} />

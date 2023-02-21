@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { BottomSheetModal } from 'components/BottomSheetModal'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
@@ -17,7 +19,7 @@ import { TransactionType } from 'state/transactions'
 import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
-import Dialog from '../../Dialog'
+import Dialog, { useIsDialogPageCentered } from '../../Dialog'
 import { SummaryDialog } from '../Summary'
 import { useCollapseToolbar } from '../Toolbar/ToolbarContext'
 import useOnSubmit from './useOnSubmit'
@@ -105,25 +107,44 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
     setOpen(await onReviewSwapClick())
   }, [onReviewSwapClick, collapseToolbar])
 
+  const isMobile = useIsMobileWidth()
+  const pageCenteredDialogsEnabled = useIsDialogPageCentered()
+
   return (
     <>
       <ActionButton color={color} onClick={onClick} disabled={disabled}>
         <Trans>Review swap</Trans>
       </ActionButton>
-      {open && trade && (
-        <Dialog color="container" onClose={() => setOpen(false)}>
-          <SummaryDialog
-            trade={trade}
-            slippage={slippage}
-            gasUseEstimateUSD={gasUseEstimateUSD}
-            inputUSDC={inputUSDC}
-            outputUSDC={outputUSDC}
-            impact={impact}
-            onConfirm={onSwap}
-            allowance={allowance}
-          />
-        </Dialog>
-      )}
+      {trade &&
+        (isMobile && pageCenteredDialogsEnabled ? (
+          <BottomSheetModal onClose={() => setOpen(false)} open={open && Boolean(trade)}>
+            <SummaryDialog
+              trade={trade}
+              slippage={slippage}
+              gasUseEstimateUSD={gasUseEstimateUSD}
+              inputUSDC={inputUSDC}
+              outputUSDC={outputUSDC}
+              impact={impact}
+              onConfirm={onSwap}
+              allowance={allowance}
+            />
+          </BottomSheetModal>
+        ) : (
+          open && (
+            <Dialog color="container" onClose={() => setOpen(false)}>
+              <SummaryDialog
+                trade={trade}
+                slippage={slippage}
+                gasUseEstimateUSD={gasUseEstimateUSD}
+                inputUSDC={inputUSDC}
+                outputUSDC={outputUSDC}
+                impact={impact}
+                onConfirm={onSwap}
+                allowance={allowance}
+              />
+            </Dialog>
+          )
+        ))}
     </>
   )
 }
