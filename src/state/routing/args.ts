@@ -1,4 +1,3 @@
-import { BaseProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
@@ -43,7 +42,6 @@ export function serializeGetQuoteArgs({ endpointName, queryArgs }: { endpointNam
  */
 export function useGetQuoteArgs(
   {
-    provider,
     tradeType,
     amountSpecified,
     currencyIn,
@@ -51,7 +49,6 @@ export function useGetQuoteArgs(
     routerPreference,
     account,
   }: Partial<{
-    provider: BaseProvider
     tradeType: TradeType
     amountSpecified: CurrencyAmount<Currency>
     currencyIn: Currency
@@ -65,7 +62,6 @@ export function useGetQuoteArgs(
   const [slippage] = useAtom(slippageAtom)
 
   const args = useMemo(() => {
-    if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
     if (!amountSpecified) return null
 
@@ -89,9 +85,8 @@ export function useGetQuoteArgs(
       slippagePercentage: parseFloat(slippagePercentage),
       routerPreference,
       tradeType,
-      provider,
     }
-  }, [slippage, provider, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account, snAccount])
+  }, [slippage, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account, snAccount])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken

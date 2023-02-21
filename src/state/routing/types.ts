@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BaseProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
@@ -58,8 +57,7 @@ export interface GetQuoteArgs {
   tokenOutChainId: ChainId
   amount: string | null // passing null will initialize the client-side SOR
   routerPreference?: RouterPreference
-  tradeType: TradeType
-  provider: BaseProvider
+  // tradeType: TradeType
   userAddress?: string
   recipientAddress?: string
   slippagePercentage: number

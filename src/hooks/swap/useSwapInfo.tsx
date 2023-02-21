@@ -70,7 +70,8 @@ function useComputeSwapInfo(): SwapInfo {
     parsedAmount,
     currencyIn,
     currencyOut,
-    isWrap || error ? RouterPreference.SKIP : RouterPreference.API,
+    // isWrap || error ? RouterPreference.SKIP : RouterPreference.API,
+    RouterPreference.API,
     account
   )
 
