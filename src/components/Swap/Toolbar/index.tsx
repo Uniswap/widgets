@@ -87,7 +87,7 @@ function CaptionRow() {
         }
       }
 
-      if (state === TradeState.INVALID) {
+      if (state === TradeState.INVALID || state === TradeState.NO_ROUTE_FOUND) {
         return { caption: <Caption.Error /> }
       }
     }
