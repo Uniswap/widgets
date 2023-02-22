@@ -41,6 +41,9 @@ const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: 
 
   :enabled:hover {
     color: ${({ color = defaultColor, theme }) => theme.onHover(theme[color])};
+    * {
+      color: ${({ color = defaultColor, theme }) => theme.onHover(theme[color])};
+    }
   }
 `
 
