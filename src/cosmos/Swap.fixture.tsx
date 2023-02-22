@@ -8,7 +8,6 @@ import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 // import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { useLocalApi } from 'wido'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 
@@ -80,7 +79,7 @@ function Fixture() {
     }
   }, [starknet, setStarknet])
 
-  useLocalApi()
+  // useLocalApi()
 
   const widget = (
     <SwapWidget
