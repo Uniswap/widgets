@@ -19,14 +19,15 @@ export function isAnimating(node?: Animatable | Document) {
 export function useUnmountingAnimation(
   node: RefObject<HTMLElement>,
   getAnimatingClass: () => string,
-  animatedElement?: RefObject<HTMLElement>
+  animatedElement?: RefObject<HTMLElement>,
+  skip = false
 ) {
   useEffect(() => {
     const current = node.current
     const animated = animatedElement?.current ?? current
     const parent = current?.parentElement
     const removeChild = parent?.removeChild
-    if (!(parent && removeChild)) return
+    if (!(parent && removeChild) || skip) return
 
     parent.removeChild = function <T extends Node>(child: T) {
       if ((child as Node) === current && animated) {
@@ -46,5 +47,5 @@ export function useUnmountingAnimation(
     return () => {
       parent.removeChild = removeChild
     }
-  }, [animatedElement, getAnimatingClass, node])
+  }, [animatedElement, getAnimatingClass, node, skip])
 }
