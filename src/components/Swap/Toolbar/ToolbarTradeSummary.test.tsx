@@ -16,7 +16,7 @@ describe('ToolbarTradeSummary', () => {
             value: '0.5%',
           },
           {
-            name: 'Minimum output',
+            name: 'Minimum output after slippage',
             value: '0.9999 DAI',
           },
           {
@@ -28,7 +28,7 @@ describe('ToolbarTradeSummary', () => {
     )
     expect(component.getByText('Network fee')).toBeTruthy()
     expect(component.getByText('Price impact')).toBeTruthy()
-    expect(component.getByText('Minimum output')).toBeTruthy()
+    expect(component.getByText('Minimum output after slippage')).toBeTruthy()
     expect(component.getByText('Expected output')).toBeTruthy()
   })
 })

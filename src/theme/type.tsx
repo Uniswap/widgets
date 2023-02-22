@@ -7,9 +7,16 @@ import type { Color } from './theme'
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color' | 'userSelect'> & {
   color?: Color
   userSelect?: boolean
+  $inline?: boolean
 }
 
-const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string; noWrap?: true; userSelect?: boolean }>`
+const TextWrapper = styled(Text)<{
+  color?: Color
+  lineHeight: string
+  noWrap?: true
+  userSelect?: boolean
+  $inline?: boolean
+}>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
   // Avoid the need for placeholders by setting min-height to line-height.
   min-height: ${({ lineHeight }) => lineHeight};
@@ -17,6 +24,7 @@ const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string; noWrap?: t
   // user-select must be configured through styled-components for cross-browser compat (eg to auto-generate prefixed properties).
   user-select: ${({ userSelect }) => (userSelect === true ? 'text' : userSelect === false ? 'none' : undefined)};
   white-space: ${({ noWrap }) => noWrap && 'nowrap'};
+  display: ${({ $inline }) => $inline && 'inline'};
 `
 
 const TransitionTextWrapper = styled(TextWrapper)`
