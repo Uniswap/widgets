@@ -220,7 +220,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onBlur={onBlur}
       onFocus={onFocus}
       onMouseMove={onMouseMove}
-      style={{ overflow: 'hidden', minWidth: 400, minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE }}
+      style={{ overflow: 'hidden', minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
       <OnHover hover={hover} ref={onHover} />

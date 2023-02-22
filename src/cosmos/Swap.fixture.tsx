@@ -67,7 +67,7 @@ function Fixture() {
 
   const [brandedFooter] = useValue('brandedFooter', { defaultValue: true })
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
-  const [pageCentered] = useValue('pageCentered', { defaultValue: true })
+  const [pageCentered] = useValue('pageCentered', { defaultValue: false })
 
   const [width] = useValue('width', { defaultValue: 360 })
 
