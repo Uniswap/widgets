@@ -5,7 +5,7 @@ import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { largeIconCss, X } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
-import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
@@ -302,6 +302,13 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
   const pageCentered = context.options?.pageCentered && !forceContain
   const mountPoint = pageCentered ? document.body : context.element
 
+  const closeOnBackgroundClick = useCallback(() => {
+    if (pageCentered) {
+      onClose && onClose()
+    }
+  }, [onClose, pageCentered])
+
+  const skipUnmountAnimation = context.options?.animationType === DialogAnimationType.NONE
   const modal = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(
     popoverRef,
@@ -323,7 +330,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
       }
     },
     modal,
-    context.options?.animationType === DialogAnimationType.NONE
+    skipUnmountAnimation
   )
 
   useOnEscapeHandler(onClose)
@@ -334,7 +341,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
       <ThemeProvider>
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
-            <FullScreenWrapper enabled={pageCentered} onClick={pageCentered ? onClose : () => null}>
+            <FullScreenWrapper enabled={pageCentered} onClick={closeOnBackgroundClick}>
               <HiddenWrapper constrain={pageCentered} hideOverflow={!pageCentered}>
                 <AnimationWrapper animationType={context.options?.animationType}>
                   <OnCloseContext.Provider value={onClose}>
