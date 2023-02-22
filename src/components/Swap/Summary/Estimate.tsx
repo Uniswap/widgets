@@ -34,7 +34,7 @@ export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
 
     return {
       estimateMessage: t`Output is estimated. You will receive at least ${minReceivedString} or the transaction will revert.`,
-      descriptor: t`Minimum output after slippage`,
+      descriptor: t`Minimum output`,
       value: minReceivedString,
     }
   } else {
@@ -43,7 +43,7 @@ export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
 
     return {
       estimateMessage: t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`,
-      descriptor: t`Maximum input after slippage`,
+      descriptor: t`Maximum input`,
       value: maxSentString,
     }
   }

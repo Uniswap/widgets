@@ -131,7 +131,7 @@ function CaptionRow() {
           : undefined,
       },
       {
-        name: t`Minimum output after slippage`,
+        name: t`Minimum output`,
         value: trade ? `${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}` : '-',
       },
       {
