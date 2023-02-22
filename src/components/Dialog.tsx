@@ -161,6 +161,7 @@ export const Modal = styled.div<{ color: Color; constrain?: boolean }>`
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
   outline: ${({ theme }) => `1px solid ${theme.outline}`};
+  outline: transparent;
   padding: 0.5em;
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   right: 0;
@@ -200,7 +201,7 @@ const HiddenWrapper = styled.div<{ hideOverflow?: boolean; constrain?: boolean }
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
-
+  outline: transparent;
   overflow: ${({ hideOverflow }) => (hideOverflow ? 'hidden' : 'visible')};
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   top: 0;

@@ -24,7 +24,7 @@ interface StatusHeaderProps {
   children: ReactNode
 }
 
-export function StatusHeader({ icon: Icon, iconColor, iconSize = 5, children }: StatusHeaderProps) {
+export function StatusHeader({ icon: Icon, iconColor, iconSize = 2.5, children }: StatusHeaderProps) {
   return (
     <>
       <Column flex style={{ flexGrow: 1 }}>
