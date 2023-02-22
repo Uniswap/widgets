@@ -27,6 +27,9 @@ export function useLogo(currency: LogoTableInput | undefined) {
   const entry = useMemo(() => table.getEntry(currency), [currency])
 
   const [src, setSrc] = useState(entry?.getCurrent()?.getUri())
+  useEffect(() => {
+    setSrc(entry?.getCurrent()?.getUri())
+  }, [currency, entry])
 
   const invalidateSrc = useCallback(() => {
     const nextSrc = entry?.invalidateSrc()

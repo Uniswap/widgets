@@ -160,8 +160,7 @@ export const Modal = styled.div<{ color: Color; constrain?: boolean }>`
   flex-direction: column;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
-  outline: ${({ theme }) => `1px solid ${theme.outline}`};
-  outline: transparent;
+  outline: ${({ theme, constrain }) => (constrain ? `1px solid ${theme.outline}` : 'transparent')};
   padding: 0.5em;
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   right: 0;
