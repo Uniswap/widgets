@@ -57,7 +57,7 @@ const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
 ) {
   return (
     <Wrapper selected={selected} onClick={onSelect} ref={ref} tabIndex={tabIndex} data-testid={testid}>
-      <Row gap={0.5} flex grow flow="nowrap" justify={justify}>
+      <Row gap={0.5} flex grow flow="nowrap" justify={justify} align="center">
         {children}
         {icon ? icon : <LargeIcon icon={Check} size={1.25} color={selected ? 'active' : 'hint'} />}
       </Row>
@@ -104,7 +104,12 @@ export default function MaxSlippageSelect() {
     },
     [onSlippageChange, setSlippageBase]
   )
-  const setAutoSlippage = useCallback(() => setSlippage({ ...slippage, auto: true }), [setSlippage, slippage])
+  const setAutoSlippage = useCallback(() => {
+    setSlippage({
+      auto: true,
+      max: undefined,
+    })
+  }, [setSlippage])
   const [maxSlippageInput, setMaxSlippageInput] = useState(slippage.max?.toString() || '')
 
   const option = useRef<HTMLButtonElement>(null)

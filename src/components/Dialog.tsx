@@ -331,7 +331,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
       <ThemeProvider>
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
-            <FullScreenWrapper enabled={pageCentered} onClick={onClose}>
+            <FullScreenWrapper enabled={pageCentered} onClick={() => (pageCentered ? onClose?.() : null)}>
               <HiddenWrapper
                 constrain={pageCentered}
                 hidden={context.options?.animationType === DialogAnimationType.SLIDE}
