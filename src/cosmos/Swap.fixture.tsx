@@ -1,5 +1,4 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { darkTheme, defaultTheme, lightTheme, SwapWidget } from '@uniswap/widgets'
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import Column from 'components/Column'
@@ -8,6 +7,7 @@ import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 // import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { darkTheme, defaultTheme, lightTheme, SwapWidget } from 'wido-widget'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 

@@ -1,6 +1,6 @@
-import { darkTheme, defaultTheme, lightTheme, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { darkTheme, defaultTheme, lightTheme, SwapWidgetSkeleton } from 'wido-widget'
 
 function Fixture() {
   const [width] = useValue('width', { defaultValue: 360 })

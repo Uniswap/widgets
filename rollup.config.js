@@ -22,8 +22,8 @@ const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
  * This exports scheme works for nextjs and for CRA5.
  *
  * It will also work for CRA4 if you use direct imports:
- *   instead of `import { SwapWidget } from '@uniswap/widgets'`,
- *              `import { SwapWidget } from '@uniswap/widgets/dist/index.js'`.
+ *   instead of `import { SwapWidget } from 'wido-widget'`,
+ *              `import { SwapWidget } from 'wido-widget/dist/index.js'`.
  * I do not know why CRA4 does not seem to use exports for resolution.
  *
  * Note that chunks are enabled. This is so the tokenlist spec can be loaded async,

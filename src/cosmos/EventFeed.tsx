@@ -1,7 +1,7 @@
-import { defaultTheme, SwapEventHandlers, TransactionEventHandlers, WidgetEventHandlers } from '@uniswap/widgets'
 import Row from 'components/Row'
 import styled from 'styled-components/macro'
 import * as Type from 'theme/type'
+import { defaultTheme, SwapEventHandlers, TransactionEventHandlers, WidgetEventHandlers } from 'wido-widget'
 
 const EventFeedWrapper = styled.div`
   background-color: ${defaultTheme.container};
