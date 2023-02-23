@@ -64,7 +64,7 @@ function TokenImg({ token, size, ...rest }: TokenImgProps) {
   switch (token.chainId) {
     case SupportedChainId.STARKNET:
     case SupportedChainId.STARKNET_GOERLI:
-      isETH = true
+      isETH = token.wrapped.address === '0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7'
       break
     default:
   }
