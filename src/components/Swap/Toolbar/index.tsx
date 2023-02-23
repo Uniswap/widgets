@@ -156,6 +156,7 @@ function CaptionRow() {
       title={
         <ToolbarRow
           flex
+          align="center"
           justify="space-between"
           data-testid="toolbar"
           onClick={maybeToggleOpen}
