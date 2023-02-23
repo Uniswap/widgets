@@ -1,4 +1,5 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
@@ -95,20 +96,20 @@ export const USDC_CELO_ALFAJORES = new Token(
   'USDC',
   'USD Coin'
 )
-export const USDC_STARKNET = new Token(
-  SupportedChainId.MAINNET,
-  '0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8',
-  6,
-  'USDC',
-  'USD Coin'
-)
-export const USDC_STARKNET_GOERLI = new Token(
-  SupportedChainId.MAINNET,
-  '0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426',
-  6,
-  'USDC',
-  'USD Coin'
-)
+export const USDC_STARKNET = new WrappedTokenInfo({
+  chainId: SupportedChainId.STARKNET,
+  address: '0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8',
+  decimals: 6,
+  symbol: 'USDC',
+  name: 'USD Coin',
+})
+export const USDC_STARKNET_GOERLI = new WrappedTokenInfo({
+  chainId: SupportedChainId.STARKNET_GOERLI,
+  address: '0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426',
+  decimals: 6,
+  symbol: 'USDC',
+  name: 'USD Coin',
+})
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
