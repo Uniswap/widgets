@@ -186,13 +186,19 @@ const slideOutRight = keyframes`
 
 const fadeIn = keyframes`
   from {
-    transform: translateY(40px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 `
 
 const fadeOut = keyframes`
   to {
-    transform: translateY(40px) scale(0.9);
+    opacity: 0;
+  }
+  from {
+    opacity: 1;
   }
 `
 
@@ -223,9 +229,9 @@ const slideAnimationCss = css`
 `
 
 const fadeAnimationCss = css`
-  animation: ${fadeIn} ${AnimationSpeed.Fast} ease-in-out;
+  animation: ${fadeIn} ${AnimationSpeed.Medium} ease-in-out;
   &.${SlideAnimationType.CLOSING} {
-    animation: ${fadeOut} ${AnimationSpeed.Fast} ease-in-out;
+    animation: ${fadeOut} ${AnimationSpeed.Medium} ease-in-out;
   }
 `
 
@@ -243,9 +249,15 @@ const getAnimation = (animationType?: DialogAnimationType) => {
   }
 }
 
-const AnimationWrapper = styled.div<{ animationType?: DialogAnimationType }>`
-  ${Modal} {
-    ${({ animationType }) => getAnimation(animationType)}
+const ModalBackdropFadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+`
+
+const ModalBackdropFadeOut = keyframes`
+  to {
+    opacity: 0;
   }
 `
 
@@ -254,6 +266,7 @@ const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
     enabled &&
     css`
       align-items: center;
+      animation: ${ModalBackdropFadeIn} ${AnimationSpeed.Medium} ease-in-out;
       background-color: ${({ theme }) => theme.scrim};
       display: flex;
       height: 100%;
@@ -262,13 +275,23 @@ const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
       position: fixed;
       top: 0;
       width: 100%;
+
       z-index: ${Layer.DIALOG};
+      &.${SlideAnimationType.CLOSING} {
+        animation: ${ModalBackdropFadeOut} ${AnimationSpeed.Medium} ease-in-out;
+      }
 
       ${HiddenWrapper} {
         box-shadow: 0px 40px 120px ${({ theme }) => theme.networkDefaultShadow};
         min-width: 400px;
       }
     `}
+`
+
+const AnimationWrapper = styled.div<{ animationType?: DialogAnimationType }>`
+  ${Modal} {
+    ${({ animationType }) => getAnimation(animationType)}
+  }
 `
 
 // Accounts for any animation lag
@@ -308,6 +331,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
 
   const skipUnmountAnimation = context.options?.animationType === DialogAnimationType.NONE
   const modal = useRef<HTMLDivElement>(null)
+  const fullScreenWrapperRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(
     popoverRef,
     () => {
@@ -327,7 +351,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
           return (mountPoint?.childElementCount ?? 0) > 1 ? SlideAnimationType.PAGING : SlideAnimationType.CLOSING
       }
     },
-    modal,
+    [fullScreenWrapperRef, modal],
     skipUnmountAnimation
   )
 
@@ -339,7 +363,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
       <ThemeProvider>
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
-            <FullScreenWrapper enabled={pageCentered} onClick={closeOnBackgroundClick}>
+            <FullScreenWrapper enabled={pageCentered} onClick={closeOnBackgroundClick} ref={fullScreenWrapperRef}>
               <HiddenWrapper constrain={pageCentered} hideOverflow={!pageCentered}>
                 <AnimationWrapper animationType={context.options?.animationType}>
                   <OnCloseContext.Provider value={onClose}>

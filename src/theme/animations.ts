@@ -1,6 +1,6 @@
 export enum TransitionDuration {
   Fast = 125,
-  Medium = 250,
+  Medium = 200,
   Slow = 250,
 }
 
