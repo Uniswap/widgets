@@ -172,7 +172,7 @@ function CaptionRow() {
     >
       <Column>
         <ToolbarTradeSummary rows={tradeSummaryRows} />
-        <ToolbarOrderRouting trade={trade} />
+        <ToolbarOrderRouting trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
       </Column>
     </StyledExpando>
   )
