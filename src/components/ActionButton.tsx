@@ -8,7 +8,7 @@ import Row, { RowProps } from './Row'
 import Tooltip from './Tooltip'
 
 const StyledButton = styled(Button)<{ shouldUseDisabledColor?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius.small}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   flex-grow: 1;
   max-height: 56px;
   transition: background-color ${AnimationSpeed.Medium} ease-out, border-radius ${AnimationSpeed.Medium} ease-out,
@@ -51,14 +51,14 @@ const actionCss = css`
 
   ${StyledButton} {
     /* Subtract the padding from the borderRadius so that it nests properly. */
-    border-radius: ${({ theme }) => theme.borderRadius.small}em;
+    border-radius: ${({ theme }) => theme.borderRadius.medium}em;
     flex-grow: 0;
     padding: 0 0.75em;
   }
 `
 
 export const Overlay = styled(Row)<{ hasAction: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius.small}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   flex-flow: row-reverse nowrap;
   margin-top: 0.25em;
   min-height: 3.5em;

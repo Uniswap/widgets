@@ -197,7 +197,7 @@ const fadeOut = keyframes`
 `
 
 const HiddenWrapper = styled.div<{ hideOverflow?: boolean; constrain?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}em;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
   outline: transparent;
