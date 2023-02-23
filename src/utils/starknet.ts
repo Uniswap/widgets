@@ -1,4 +1,4 @@
-import { SupportedChainId } from '..'
+import { SupportedChainId } from 'constants/chains'
 
 export function isStarknet(chainId?: number): boolean {
   if (!chainId) return false

@@ -1,11 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
 import useCurrencyLogoURIs from 'hooks/useCurrencyLogoURIs'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
-
-import { SupportedChainId } from '..'
 
 const badSrcs = new Set<string>()
 
