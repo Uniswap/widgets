@@ -149,7 +149,7 @@ function CaptionRow() {
         nameTooltip: trade
           ? {
               icon: Info,
-              content: <SwapInputOutputEstimate trade={trade} slippage={slippage} impact={impact} />,
+              content: <SwapInputOutputEstimate trade={trade} slippage={slippage} />,
             }
           : undefined,
       },

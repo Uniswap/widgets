@@ -17,11 +17,10 @@ const StyledEstimate = styled(ThemedText.Caption)`
 interface EstimateProps {
   slippage: Slippage
   trade: InterfaceTrade
-  impact: PriceImpact | undefined
 }
 
-export default function SwapInputOutputEstimate({ trade, slippage, impact }: EstimateProps) {
-  const { estimateMessage } = useMemo(() => getEstimateMessage(trade, slippage, impact), [impact, slippage, trade])
+export default function SwapInputOutputEstimate({ trade, slippage }: EstimateProps) {
+  const { estimateMessage } = useMemo(() => getEstimateMessage(trade, slippage, undefined), [slippage, trade])
   return <StyledEstimate color="secondary">{estimateMessage}</StyledEstimate>
 }
 
