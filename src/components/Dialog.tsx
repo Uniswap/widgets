@@ -66,8 +66,6 @@ export function Provider({ value, children, options }: ProviderProps) {
   // If a Dialog is active, mark the main content inert
   const ref = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
-  // If pageCentered dialogs are enabled, we should mount them directly to the document body
-  // and adjust the styling in the renderer below so that they are centered and sized correctly.
   const context = { element: value, active, setActive, options }
   useEffect(() => {
     if (ref.current) {
@@ -198,18 +196,18 @@ const fadeOut = keyframes`
   }
 `
 
-const HiddenWrapper = styled.div<{ hidden?: boolean; constrain?: boolean }>`
+const HiddenWrapper = styled.div<{ hideOverflow?: boolean; constrain?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
 
-  overflow: ${({ hidden }) => (hidden ? 'hidden' : 'visible')};
+  overflow: ${({ hideOverflow }) => (hideOverflow ? 'hidden' : 'visible')};
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   top: 0;
   width: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
 
   @supports (overflow: clip) {
-    overflow: ${({ hidden }) => (hidden ? 'clip' : 'visible')};
+    overflow: ${({ hideOverflow }) => (hideOverflow ? 'clip' : 'visible')};
   }
 `
 
@@ -265,10 +263,12 @@ const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
       top: 0;
       width: 100%;
       z-index: ${Layer.DIALOG};
+
+      ${HiddenWrapper} {
+        box-shadow: 0px 40px 120px ${({ theme }) => theme.networkDefaultShadow};
+        min-width: 400px;
+      }
     `}
-  ${HiddenWrapper} {
-    box-shadow: 0px 40px 120px ${({ theme }) => theme.networkDefaultShadow};
-  }
 `
 
 // Accounts for any animation lag
@@ -297,6 +297,8 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
     }, TransitionDuration.Medium + PopoverAnimationUpdateDelay)
   }, [])
 
+  // If pageCentered dialogs are enabled, we should mount them directly to the document body
+  // and adjust the styling in the renderer below so that they are centered and sized correctly.
   const pageCentered = context.options?.pageCentered && !forceContain
   const mountPoint = pageCentered ? document.body : context.element
 
@@ -320,7 +322,8 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
           return (mountPoint?.childElementCount ?? 0) > 1 ? SlideAnimationType.PAGING : SlideAnimationType.CLOSING
       }
     },
-    modal
+    modal,
+    context.options?.animationType === DialogAnimationType.NONE
   )
 
   useOnEscapeHandler(onClose)
@@ -331,11 +334,8 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
       <ThemeProvider>
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
-            <FullScreenWrapper enabled={pageCentered} onClick={onClose}>
-              <HiddenWrapper
-                constrain={pageCentered}
-                hidden={context.options?.animationType === DialogAnimationType.SLIDE}
-              >
+            <FullScreenWrapper enabled={pageCentered} onClick={pageCentered ? onClose : () => null}>
+              <HiddenWrapper constrain={pageCentered} hideOverflow={!pageCentered}>
                 <AnimationWrapper animationType={context.options?.animationType}>
                   <OnCloseContext.Provider value={onClose}>
                     <Modal
