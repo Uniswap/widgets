@@ -249,24 +249,12 @@ const getAnimation = (animationType?: DialogAnimationType) => {
   }
 }
 
-const ModalBackdropFadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-`
-
-const ModalBackdropFadeOut = keyframes`
-  to {
-    opacity: 0;
-  }
-`
-
-const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
-  ${({ enabled }) =>
+const FullScreenWrapper = styled.div<{ enabled?: boolean; animationType?: DialogAnimationType }>`
+  ${({ enabled, animationType }) =>
     enabled &&
     css`
       align-items: center;
-      animation: ${ModalBackdropFadeIn} ${AnimationSpeed.Medium} ease-in-out;
+      ${animationType === DialogAnimationType.FADE ? fadeAnimationCss : ''}
       background-color: ${({ theme }) => theme.scrim};
       display: flex;
       height: 100%;
@@ -277,9 +265,6 @@ const FullScreenWrapper = styled.div<{ enabled?: boolean }>`
       width: 100%;
 
       z-index: ${Layer.DIALOG};
-      &.${SlideAnimationType.CLOSING} {
-        animation: ${ModalBackdropFadeOut} ${AnimationSpeed.Medium} ease-in-out;
-      }
 
       ${HiddenWrapper} {
         box-shadow: 0px 40px 120px ${({ theme }) => theme.networkDefaultShadow};
@@ -363,7 +348,12 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
       <ThemeProvider>
         <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
           <div ref={popoverRef}>
-            <FullScreenWrapper enabled={pageCentered} onClick={closeOnBackgroundClick} ref={fullScreenWrapperRef}>
+            <FullScreenWrapper
+              enabled={pageCentered}
+              onClick={closeOnBackgroundClick}
+              ref={fullScreenWrapperRef}
+              animationType={context.options?.animationType}
+            >
               <HiddenWrapper constrain={pageCentered} hideOverflow={!pageCentered}>
                 <AnimationWrapper animationType={context.options?.animationType}>
                   <OnCloseContext.Provider value={onClose}>
