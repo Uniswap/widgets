@@ -10,7 +10,7 @@ const Input = styled.input`
   appearance: none;
   background: ${({ theme }) => theme.interactive};
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   cursor: pointer;
   display: flex;
   font-size: inherit;
