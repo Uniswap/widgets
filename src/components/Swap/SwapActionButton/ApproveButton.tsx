@@ -30,7 +30,7 @@ export default function ApproveButton({
     setIsPending(true)
     try {
       await onSubmit(async () => {
-        const info = await approve?.()
+        const info: any = await approve?.()
         if (!info) return
 
         return { type: TransactionType.APPROVAL, ...info }

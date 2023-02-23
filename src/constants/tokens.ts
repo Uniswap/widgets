@@ -9,77 +9,77 @@ export const USDC_MAINNET = new Token(
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_ROPSTEN = new Token(
   SupportedChainId.ROPSTEN,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_RINKEBY = new Token(
   SupportedChainId.RINKEBY,
   '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
   6,
   'tUSDC',
-  'test USD//C'
+  'test USD Coin'
 )
 export const USDC_GOERLI = new Token(
   SupportedChainId.GOERLI,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_KOVAN = new Token(
   SupportedChainId.KOVAN,
   '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 const USDC_OPTIMISM_GOERLI = new Token(
   SupportedChainId.OPTIMISM_GOERLI,
   '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_ARBITRUM_RINKEBY = new Token(
   SupportedChainId.ARBITRUM_RINKEBY,
   '0x09b98f8b2395d076514037ff7d39a091a536206c',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const PORTAL_USDC_CELO = new Token(
   SupportedChainId.CELO,
@@ -93,7 +93,21 @@ export const USDC_CELO_ALFAJORES = new Token(
   '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
+)
+export const USDC_STARKNET = new Token(
+  SupportedChainId.MAINNET,
+  '0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8',
+  6,
+  'USDC',
+  'USD Coin'
+)
+export const USDC_STARKNET_GOERLI = new Token(
+  SupportedChainId.MAINNET,
+  '0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426',
+  6,
+  'USDC',
+  'USD Coin'
 )
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -137,6 +151,8 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
+  [SupportedChainId.STARKNET]: USDC_STARKNET,
+  [SupportedChainId.STARKNET_GOERLI]: USDC_STARKNET_GOERLI,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,

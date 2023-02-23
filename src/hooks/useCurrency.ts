@@ -80,7 +80,7 @@ export function useTokenFromMapOrNetwork(
   skipNetwork = false
 ): Token | null | undefined {
   const address = isAddress(tokenAddress)
-  const token: Token | undefined = address ? tokens[address] : undefined
+  const token: Token | undefined = address ? (tokens[address] as Token) : undefined
 
   const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
 

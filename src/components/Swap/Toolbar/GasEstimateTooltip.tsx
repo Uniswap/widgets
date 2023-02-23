@@ -12,7 +12,7 @@ import { useState } from 'react'
 import { WidoTrade } from 'state/routing/types'
 import { ThemedText } from 'theme'
 
-import RoutingDiagram from '../RoutingDiagram'
+// import RoutingDiagram from '../RoutingDiagram'
 
 export interface TradeTooltip {
   trade?: WidoTrade
@@ -47,14 +47,16 @@ export function GasEstimateTooltip({ gasUseEstimateUSD, trade }: TradeTooltip) {
       <BottomSheetModal title="Route details" onClose={() => setOpen(false)} open={Boolean(trade) && open}>
         {trade && (
           <Column padded>
-            <RoutingDiagram trade={trade} hideHeader gasUseEstimateUSD={gasUseEstimateUSD} />
+            N/A
+            {/* <RoutingDiagram trade={trade} hideHeader gasUseEstimateUSD={gasUseEstimateUSD} /> */}
           </Column>
         )}
       </BottomSheetModal>
     </>
   ) : (
     <Popover
-      content={trade ? <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} /> : null}
+      content={null}
+      // content={trade ? <RoutingDiagram trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} /> : null}
       placement="bottom"
       show={Boolean(trade) && showTooltip}
     >

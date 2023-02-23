@@ -5,7 +5,7 @@ import { useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
 import { useTestnetsVisible } from 'hooks/useSyncWidgetSettings'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
-import { getSupportedTokens } from 'wido'
+import { getSupportedTokens, Token } from 'wido'
 
 import { ChainTokenMap, TokenListItem, tokensToChainTokenMap } from './utils'
 
@@ -61,12 +61,12 @@ export function useTokenMap(chainId?: SupportedChainId): TokenMap {
   }, [tokenMap])
 }
 
-export function TestableProvider({ list, children }: PropsWithChildren<{ list: TokenInfo[] }>) {
+export function TestableProvider({ list, children }: PropsWithChildren<{ list: Token[] }>) {
   const chainTokenMap = useMemo(() => tokensToChainTokenMap(list), [list])
   return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
 }
 
-export function Provider({ list, children }: PropsWithChildren<{ list: string | TokenInfo[] }>) {
+export function Provider({ list, children }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
   const [chainTokenMap, setChainTokenMap] = useState<ChainTokenMap>()
 
   useEffect(() => setChainTokenMap(undefined), [list])
