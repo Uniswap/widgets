@@ -5,12 +5,14 @@ import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
+import { useEvmAccountAddress, useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { AlertTriangle, Info } from 'icons'
 import { createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { calcMinimumAmountOut } from 'state/routing/utils'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
+import { isStarknet } from 'utils/starknet'
 
 import Row from '../../Row'
 import SwapInputOutputEstimate from '../Summary/Estimate'
@@ -75,25 +77,11 @@ export default memo(function Toolbar() {
   }, [inputAmount, inputBalance])
 
   const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
-    switch (error) {
-      case ChainError.ACTIVATING_CHAIN:
-        return { caption: <Caption.Connecting /> }
-      case ChainError.UNSUPPORTED_CHAIN:
-        return { caption: <Caption.UnsupportedNetwork /> }
-      default:
-    }
-    if (error) {
-      return { caption: <Caption.Caption icon={AlertTriangle} caption={error} /> }
-    }
-
     if (state === TradeState.LOADING) {
       return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (insufficientBalance) {
-        return { caption: <Caption.InsufficientBalance currency={inputCurrency} /> }
-      }
       if (isWrap) {
         return { caption: <Caption.Wrap inputCurrency={inputCurrency} outputCurrency={outputCurrency} /> }
       }
@@ -120,19 +108,40 @@ export default memo(function Toolbar() {
 
     return { caption: <Caption.MissingInputs /> }
   }, [
-    error,
     state,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
     gasUseEstimateUSD,
-    insufficientBalance,
     isWrap,
     trade,
     impact,
     open,
     outputUSDC,
   ])
+
+  const { caption: walletErrorCaption } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
+    switch (error) {
+      case ChainError.ACTIVATING_CHAIN:
+        return { caption: <Caption.Connecting /> }
+      case ChainError.UNSUPPORTED_CHAIN:
+        return { caption: <Caption.UnsupportedNetwork /> }
+      case ChainError.MISMATCHED_CHAINS:
+        return { caption: null }
+      default:
+    }
+    if (error) {
+      return { caption: <Caption.Caption icon={AlertTriangle} caption={error} /> }
+    }
+
+    if (inputCurrency && outputCurrency && isAmountPopulated) {
+      if (insufficientBalance) {
+        return { caption: <Caption.InsufficientBalance currency={inputCurrency} /> }
+      }
+    }
+
+    return { caption: null }
+  }, [error, inputCurrency, outputCurrency, isAmountPopulated, insufficientBalance])
 
   const maybeToggleOpen = useCallback(() => {
     if (isExpandable) {
@@ -178,38 +187,66 @@ export default memo(function Toolbar() {
     return rows
   }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
-  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
+  const account = useEvmAccountAddress()
+  const snAccount = useSnAccountAddress()
+
+  const srcWalletConnected = isStarknet(inputCurrency?.chainId) ? snAccount : account
+  const dstWalletConnected = isStarknet(outputCurrency?.chainId) ? snAccount : account
+  const walletsConnected = srcWalletConnected && dstWalletConnected
+
+  if (inputCurrency == null || outputCurrency == null) {
     return null
   }
 
+  let approveButton = null
   if (!insufficientBalance) {
     if (approval.state !== SwapApprovalState.APPROVED) {
-      return <ApproveButton trade={trade} {...approval} />
+      approveButton = <ApproveButton trade={trade} {...approval} />
     }
   }
 
   return (
-    <StyledExpando
-      title={
-        <ToolbarRow
-          flex
-          justify="space-between"
-          data-testid="toolbar"
-          onClick={maybeToggleOpen}
-          isExpandable={isExpandable}
+    <Column gap={approveButton ? 0 : 0.5}>
+      <StyledExpando
+        title={
+          <ToolbarRow
+            flex
+            justify="space-between"
+            data-testid="toolbar"
+            onClick={maybeToggleOpen}
+            isExpandable={isExpandable}
+          >
+            {caption}
+          </ToolbarRow>
+        }
+        styledTitleWrapper={false}
+        showBottomGradient={false}
+        open={open}
+        onExpand={maybeToggleOpen}
+        maxHeight={16}
+      >
+        <Column>
+          <ToolbarTradeSummary rows={tradeSummaryRows} />
+        </Column>
+      </StyledExpando>
+      {approveButton && approveButton}
+      {walletsConnected && walletErrorCaption && !approveButton && (
+        <StyledExpando
+          title={
+            <ToolbarRow flex justify="space-between" data-testid="error-toolbar">
+              {walletErrorCaption}
+            </ToolbarRow>
+          }
+          styledTitleWrapper={false}
+          showBottomGradient={false}
+          open={false}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onExpand={() => {}}
+          maxHeight={16}
         >
-          {caption}
-        </ToolbarRow>
-      }
-      styledTitleWrapper={false}
-      showBottomGradient={false}
-      open={open}
-      onExpand={maybeToggleOpen}
-      maxHeight={16}
-    >
-      <Column>
-        <ToolbarTradeSummary rows={tradeSummaryRows} />
-      </Column>
-    </StyledExpando>
+          <div />
+        </StyledExpando>
+      )}
+    </Column>
   )
 })

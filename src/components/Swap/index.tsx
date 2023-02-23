@@ -9,7 +9,7 @@ import { SN_PROVIDER, usePendingTransactions } from 'hooks/transactions'
 import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
 import useInterval from 'hooks/useInterval'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
-import { useEvmAccountAddress, useSnAccountAddress, WidgetSettings } from 'hooks/useSyncWidgetSettings'
+import { useSnAccountAddress, WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useMemo, useState } from 'react'
@@ -65,7 +65,6 @@ export default function Swap(props: SwapProps) {
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
 
-  const account = useEvmAccountAddress()
   const snAccount = useSnAccountAddress()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -100,7 +99,7 @@ export default function Swap(props: SwapProps) {
             <ReverseButton />
             <Output />
             <ToolbarProvider>
-              {account && <Toolbar />}
+              <Toolbar />
               <SwapActionButton />
             </ToolbarProvider>
             {useBrandedFooter() && <BrandedFooter />}
