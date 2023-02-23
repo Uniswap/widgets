@@ -303,9 +303,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
   const mountPoint = pageCentered ? document.body : context.element
 
   const closeOnBackgroundClick = useCallback(() => {
-    if (pageCentered) {
-      onClose && onClose()
-    }
+    if (pageCentered && onClose) onClose()
   }, [onClose, pageCentered])
 
   const skipUnmountAnimation = context.options?.animationType === DialogAnimationType.NONE
