@@ -107,7 +107,7 @@ function useComputeSwapInfo(): SwapInfo {
         balance: balanceOut,
         usdc: trade.trade?.outputAmountUsdValue,
       },
-      error: error || trade?.error,
+      error: trade?.error || error,
       trade,
       approval,
       slippage,

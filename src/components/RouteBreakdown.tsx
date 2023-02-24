@@ -49,8 +49,7 @@ const ExpandButton = styled(IconButton)`
 `
 
 const CONTAINER_VERTICAL_PADDING_EM = 1
-export const ORDER_ROUTING_HEIGHT_EM =
-  CONTAINER_VERTICAL_PADDING_EM * 2 + Body2LineHeightRem + 2 /* Body2 line height */
+export const ORDER_ROUTING_HEIGHT_EM = CONTAINER_VERTICAL_PADDING_EM * 2 + Body2LineHeightRem /* Body2 line height */
 
 const OrderRoutingRow = styled(Row)`
   height: ${ORDER_ROUTING_HEIGHT_EM}em;
@@ -73,7 +72,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
   return (
     <OrderRoutingRow flex>
       <ThemedText.Body2 color="secondary">
-        <Trans>Order routing</Trans>
+        <Trans>Route preview</Trans>
       </ThemedText.Body2>
       <Popover
         content={

@@ -73,6 +73,13 @@ export default memo(function Toolbar() {
   const isWrap = useIsWrap()
   const { open, onToggleOpen } = useContext(Context)
 
+  const account = useEvmAccountAddress()
+  const snAccount = useSnAccountAddress()
+
+  const srcWalletConnected = isStarknet(inputCurrency?.chainId) ? snAccount : account
+  const dstWalletConnected = isStarknet(outputCurrency?.chainId) ? snAccount : account
+  const walletsConnected = srcWalletConnected && dstWalletConnected
+
   const insufficientBalance: boolean | undefined = useMemo(() => {
     return inputBalance && inputAmount && inputBalance.lessThan(inputAmount)
   }, [inputAmount, inputBalance])
@@ -103,13 +110,19 @@ export default memo(function Toolbar() {
         return { caption, isExpandable: true }
       }
       if (state === TradeState.INVALID) {
-        return { caption: <Caption.Error /> }
+        if (!walletsConnected && error) {
+          return { caption: <Caption.Caption icon={AlertTriangle} caption={error} /> }
+        } else {
+          return { caption: <Caption.Error /> }
+        }
       }
     }
 
     return { caption: <Caption.MissingInputs /> }
   }, [
+    walletsConnected,
     state,
+    error,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
@@ -186,14 +199,7 @@ export default memo(function Toolbar() {
       },
     ]
     return rows
-  }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
-
-  const account = useEvmAccountAddress()
-  const snAccount = useSnAccountAddress()
-
-  const srcWalletConnected = isStarknet(inputCurrency?.chainId) ? snAccount : account
-  const dstWalletConnected = isStarknet(outputCurrency?.chainId) ? snAccount : account
-  const walletsConnected = srcWalletConnected && dstWalletConnected
+  }, [impact?.percent, impact?.warning, slippage, trade])
 
   if (inputCurrency == null || outputCurrency == null) {
     return null

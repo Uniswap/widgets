@@ -22,7 +22,7 @@ export function tokensToChainTokenMap(tokens: WidoToken[]): ChainTokenMap {
 
   const map = tokens.reduce<Mutable<ChainTokenMap>>((map, info) => {
     if (info.address === ZERO_ADDRESS) {
-      console.warn(`Skipping zero address tokens`)
+      // console.warn(`Skipping zero address tokens`)
       return map
     }
     if (!map[info.chainId]) {
@@ -35,7 +35,7 @@ export function tokensToChainTokenMap(tokens: WidoToken[]): ChainTokenMap {
 
     const token = new WrappedTokenInfo(info)
     if (map[token.chainId]?.[token.address] !== undefined) {
-      console.warn(`Duplicate token skipped: ${token.address}`)
+      // console.warn(`Duplicate token skipped: ${token.address}`)
       return map
     }
     map[token.chainId][token.address] = { token }

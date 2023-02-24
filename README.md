@@ -14,11 +14,11 @@ You can customize the theme (colors, fonts, border radius, and more) to match th
 Install the widget via `npm` or `yarn`.
 
 ```js
-yarn add wido-widget
+yarn add wido-widget react-redux
 ```
 
 ```js
-npm i --save wido-widget
+npm i --save wido-widget react-redux
 ```
 
 ## Documentation
