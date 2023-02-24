@@ -2,12 +2,13 @@ import { Trans } from '@lingui/macro'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
 import Row from 'components/Row'
 import { useChainTokenMapContext } from 'hooks/useTokenList'
+import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
 import { ChevronRight, HelpCircle } from 'icons'
 import React, { ComponentProps, forwardRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import { Layer, ThemedText } from 'theme'
 import { Body2LineHeightRem } from 'theme/type'
-import { Step } from 'wido'
+import { Step, ZERO_ADDRESS } from 'wido'
 
 import { IconButton } from './Button'
 import Popover from './Popover'
@@ -57,6 +58,11 @@ const OrderRoutingRow = styled(Row)`
   padding: ${CONTAINER_VERTICAL_PADDING_EM}em 0;
 `
 
+export function getToken(chainTokenMap: any, chainId: any, address: any) {
+  const actualAddress = address === ZERO_ADDRESS ? NATIVE_ADDRESS : address
+  return chainTokenMap[chainId][actualAddress].token
+}
+
 export function RouteBreakdown(props: { steps: Step[] }) {
   const { steps } = props
 
@@ -75,7 +81,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
             {steps.map((step, index) => {
               return (
                 <React.Fragment key={index}>
-                  {index === 0 && <TokenImg size={2} token={chainTokenMap[step.chainId][step.fromToken].token} />}
+                  {index === 0 && <TokenImg size={2} token={getToken(chainTokenMap, step.chainId, step.fromToken)} />}
                   <Dots />
                   <RouteNode>
                     <Row gap={0.375}>
@@ -85,7 +91,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
                       </RouteBadge> */}
                     </Row>
                   </RouteNode>
-                  <TokenImg size={2} token={chainTokenMap[step.chainId][step.toToken].token} />
+                  <TokenImg size={2} token={getToken(chainTokenMap, step.toChainId, step.toToken)} />
                 </React.Fragment>
               )
             })}
@@ -99,9 +105,9 @@ export function RouteBreakdown(props: { steps: Step[] }) {
             {steps.map((step, index) => {
               return (
                 <React.Fragment key={index}>
-                  {index === 0 && chainTokenMap[step.chainId][step.fromToken].token.symbol}
+                  {index === 0 && getToken(chainTokenMap, step.chainId, step.fromToken).symbol}
                   <ChevronRight />
-                  {chainTokenMap[step.chainId][step.toToken].token.symbol}
+                  {getToken(chainTokenMap, step.toChainId, step.toToken).symbol}
                 </React.Fragment>
               )
             })}
