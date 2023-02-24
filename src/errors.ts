@@ -1,9 +1,8 @@
 import { t } from '@lingui/macro'
 
-export const DEFAULT_ERROR_HEADER = t`Please refresh the page and try again.`
+export const DEFAULT_ERROR_HEADER = t`Sorry, an error occured while processing your request. Please try again or contact support.`
 export const DEFAULT_ERROR_ACTION = t`Reload the page`
 
-const DEFAULT_DISMISSABLE_ERROR_HEADER = t`Please try again.`
 const DEFAULT_DISMISSABLE_ERROR_ACTION = t`Dismiss`
 
 interface WidgetErrorConfig {
@@ -29,7 +28,7 @@ abstract class DismissableWidgetError extends WidgetError {
     super({
       ...config,
       action: config.action ?? DEFAULT_DISMISSABLE_ERROR_ACTION,
-      header: config.header ?? DEFAULT_DISMISSABLE_ERROR_HEADER,
+      header: config.header ?? DEFAULT_ERROR_HEADER,
     })
     this.dismissable = true
   }
@@ -51,7 +50,7 @@ class ConnectionError extends WidgetError {
 
 export class SwapError extends DismissableWidgetError {
   constructor(config: WidgetErrorConfig) {
-    super({ ...config, header: config.header ?? t`Swap Error` })
+    super(config)
     this.name = 'SwapError'
   }
 }
