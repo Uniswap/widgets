@@ -39,7 +39,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
       try {
         await allowance.approveAndPermit?.()
       } catch (e) {
-        if (e === 'User rejected request') {
+        if (e.message === 'User rejected request') {
           setCurrentState(ReviewState.REVIEWING)
         } else {
           setCurrentState(ReviewState.ALLOWANCE_FAILED)
@@ -209,19 +209,19 @@ export function ConfirmButton({
       case ReviewState.REVIEWING:
         return doesTradeDiffer
           ? [
-            {
-              color: 'accent',
-              message: <Trans>Price updated</Trans>,
-              icon: AlertTriangle,
-              tooltipContent: (
-                <SmallToolTipBody>
-                  <SwapInputOutputEstimate trade={trade} slippage={slippage} />
-                </SmallToolTipBody>
-              ),
-              onClick: onAcknowledgeClick,
-              children: <Trans>Swap</Trans>,
-            },
-          ]
+              {
+                color: 'accent',
+                message: <Trans>Price updated</Trans>,
+                icon: AlertTriangle,
+                tooltipContent: (
+                  <SmallToolTipBody>
+                    <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+                  </SmallToolTipBody>
+                ),
+                onClick: onAcknowledgeClick,
+                children: <Trans>Swap</Trans>,
+              },
+            ]
           : []
     }
   }, [
