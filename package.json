@@ -24,7 +24,7 @@
       "require": "./dist/fonts.css"
     }
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*.json\"",
