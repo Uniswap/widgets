@@ -21,7 +21,7 @@ import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
 const StyledExpando = styled(Expando)`
   border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius.small}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   overflow: hidden;
 `
 

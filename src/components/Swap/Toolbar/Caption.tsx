@@ -127,7 +127,7 @@ export function Wrap({ inputCurrency, outputCurrency }: WrapProps) {
     [inputCurrency.symbol, isWideWidget, outputCurrency.symbol]
   )
 
-  return <Caption icon={Info} caption={<Text />} />
+  return <Caption caption={<Text />} />
 }
 
 export interface TradeProps {

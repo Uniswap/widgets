@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
+import { useIsDialogPageCentered } from 'components/Dialog'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import TokenImg from 'components/TokenImg'
@@ -9,6 +10,7 @@ import Tooltip, { SmallToolTipBody } from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useWidgetWidth } from 'hooks/useWidgetWidth'
+import { useWindowWidth } from 'hooks/useWindowWidth'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -67,7 +69,11 @@ interface AmountProps {
 }
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
-  const width = useWidgetWidth()
+  const widgetWidth = useWidgetWidth()
+  const screenWidth = useWindowWidth()
+  const isDialogPageCenterd = useIsDialogPageCentered()
+  const width = isDialogPageCenterd ? screenWidth : widgetWidth
+
   const [amountFontSize, amountLineHeight] =
     width < WIDGET_BREAKPOINTS.MEDIUM
       ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
@@ -84,7 +90,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   }
 
   return (
-    <Row flex align="flex-start">
+    <Row flex align="flex-start" gap={0.5}>
       <Row>
         <ThemedText.Body2 userSelect>
           <Label>{label}</Label>

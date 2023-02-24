@@ -13,7 +13,6 @@ import { FieldWrapper } from './Input'
 export const colorAtom = atom<string | undefined>(undefined)
 
 const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: boolean }>`
-  border-bottom: 1px solid ${({ theme }) => theme.container};
   padding: ${({ isWide }) => (isWide ? '1em 0' : '1.5em 0 1em')};
 
   // Set transitions to reduce color flashes when switching color/token.

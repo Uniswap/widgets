@@ -30,7 +30,7 @@ const TitleColumn = styled(Column)`
 
 const InputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius.small}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   display: flex;
   gap: 1.875em;
   margin-bottom: 0.25em;
