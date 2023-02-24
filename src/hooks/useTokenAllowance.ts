@@ -2,6 +2,7 @@ import { BigNumberish } from '@ethersproject/bignumber'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Erc20 } from 'abis/types'
 import { ErrorCode } from 'constants/eip1193'
+import { UserRejectedRequestError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -67,7 +68,7 @@ export function useUpdateTokenAllowance(
     } catch (e: unknown) {
       const symbol = amount?.currency.symbol ?? 'Token'
       if ((e as any)?.code === ErrorCode.USER_REJECTED_REQUEST) {
-        throw new Error('User rejected request')
+        throw new UserRejectedRequestError()
       } else {
         throw new Error(`${symbol} token allowance failed: ${(e as any)?.message ?? e}`)
       }
