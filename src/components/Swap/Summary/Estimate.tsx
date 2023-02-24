@@ -20,14 +20,17 @@ interface EstimateProps {
 }
 
 export default function SwapInputOutputEstimate({ trade, slippage }: EstimateProps) {
-  const { estimateMessage } = useMemo(() => getEstimateMessage(trade, slippage, undefined), [slippage, trade])
+  const { estimateMessage } = useMemo(
+    () => getEstimateMessage(trade, slippage, undefined /* priceImpact */),
+    [slippage, trade]
+  )
   return <StyledEstimate color="secondary">{estimateMessage}</StyledEstimate>
 }
 
 export function getEstimateMessage(
   trade: InterfaceTrade,
   slippage: Slippage,
-  impact: PriceImpact | undefined
+  priceImpact: PriceImpact | undefined
 ): {
   estimateMessage: string
   descriptor: ReactNode
@@ -46,10 +49,10 @@ export function getEstimateMessage(
       descriptor: (
         <ThemedText.Body2>
           <Trans>Minimum output after slippage</Trans>
-          {impact && (
+          {priceImpact && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({impact?.toString()})
+              ({priceImpact?.toString()})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>
@@ -65,10 +68,10 @@ export function getEstimateMessage(
       descriptor: (
         <ThemedText.Body2>
           <Trans>Maximum input after slippage</Trans>
-          {impact && (
+          {priceImpact && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({impact?.toString()})
+              ({priceImpact?.toString()})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>
