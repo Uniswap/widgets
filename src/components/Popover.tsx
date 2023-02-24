@@ -9,15 +9,14 @@ import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, Layer } from 'theme'
 
-type PopoverBoundary = { boundary?: HTMLDivElement | null }
-const BoundaryContext = createContext<PopoverBoundary>({})
+const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
 /* Defines a boundary component past which a Popover should not overflow. */
 export function PopoverBoundaryProvider({
   value,
   children,
 }: PropsWithChildren<{ value: HTMLDivElement | null; updateTrigger?: any }>) {
-  return <BoundaryContext.Provider value={{ boundary: value }}>{children}</BoundaryContext.Provider>
+  return <BoundaryContext.Provider value={value}>{children}</BoundaryContext.Provider>
 }
 
 const PopoverContainer = styled.div<{ show: boolean }>`
@@ -108,7 +107,7 @@ export default function Popover({
   contained,
   showArrow = true,
 }: PopoverProps) {
-  const { boundary } = useContext(BoundaryContext)
+  const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
