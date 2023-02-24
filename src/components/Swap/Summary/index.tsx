@@ -2,8 +2,9 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
-import { Header } from 'components/Dialog'
+import { Header, useCloseDialog } from 'components/Dialog'
 import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
+import { UserRejectedRequestError } from 'errors'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
@@ -32,6 +33,7 @@ enum ReviewState {
 
 function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesTradeDiffer: boolean) {
   const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
+  const closeDialog = useCloseDialog()
 
   const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
@@ -39,8 +41,12 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
       try {
         await allowance.approveAndPermit?.()
       } catch (e) {
-        console.error(e)
-        setCurrentState(ReviewState.ALLOWANCE_FAILED)
+        if (e instanceof UserRejectedRequestError) {
+          closeDialog?.()
+          setCurrentState(ReviewState.REVIEWING)
+        } else {
+          setCurrentState(ReviewState.ALLOWANCE_FAILED)
+        }
       }
       // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
@@ -54,7 +60,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
         setCurrentState(ReviewState.REVIEWING)
       }
     }
-  }, [allowance, currentState, doesTradeDiffer, onSwap])
+  }, [allowance, currentState, doesTradeDiffer, onSwap, closeDialog])
 
   // Automatically triggers signing swap tx if allowance requirements are met
   useEffect(() => {

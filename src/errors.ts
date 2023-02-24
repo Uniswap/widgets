@@ -56,6 +56,16 @@ export class SwapError extends DismissableWidgetError {
   }
 }
 
+export class UserRejectedRequestError extends DismissableWidgetError {
+  constructor() {
+    super({
+      header: t`Request rejected`,
+      message: t`This error was prompted by denying a request in your wallet.`,
+    })
+    this.name = 'UserRejectedRequestError'
+  }
+}
+
 export class MetaMaskConnectionError extends ConnectionError {
   constructor() {
     super({
