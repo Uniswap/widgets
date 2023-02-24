@@ -1,7 +1,7 @@
 import Row from 'components/Row'
 import styled from 'styled-components/macro'
 import * as Type from 'theme/type'
-import { defaultTheme, SwapEventHandlers, TransactionEventHandlers, WidgetEventHandlers } from 'wido-widget'
+import { defaultTheme } from 'wido-widget'
 
 const EventFeedWrapper = styled.div`
   background-color: ${defaultTheme.container};
@@ -25,7 +25,8 @@ const EventData = styled.pre`
   margin: 0.5em 0 0;
 `
 
-export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers | keyof WidgetEventHandlers)[] = [
+// export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers | keyof WidgetEventHandlers)[] = [
+export const HANDLERS: string[] = [
   'onAmountChange',
   'onConnectWalletClick',
   'onError',

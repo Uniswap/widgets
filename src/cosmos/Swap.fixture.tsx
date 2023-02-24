@@ -4,7 +4,6 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
-// import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 import { useLocalApi, useProdApi } from 'wido'
@@ -21,19 +20,6 @@ function Fixture() {
     []
   )
 
-  // TODO(zzmp): Changing defaults has no effect if done after the first render.
-  // const currencies: Record<string, string> = {
-  //   Native: 'NATIVE',
-  //   DAI: DAI.address,
-  //   USDC: USDC_MAINNET.address,
-  // }
-  // const defaultInputToken = useOption('defaultInputToken', { options: currencies })
-  // const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 0 })
-  // const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
-  // const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
-
-  // const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
-
   const [width] = useValue('width', { defaultValue: 420 })
 
   // const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
@@ -44,10 +30,12 @@ function Fixture() {
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
   const [srcChainIds] = useValue('srcChainIds', {
-    defaultValue: '[5]',
+    defaultValue: '[1,5,137,15367]',
+    // defaultValue: '[5]',
   })
   const [dstChainIds] = useValue('dstChainIds', {
-    defaultValue: '[15367]',
+    defaultValue: '[1,137,15367]',
+    // defaultValue: '[15367]',
   })
 
   const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: true })
@@ -91,19 +79,11 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
-      // defaultInputTokenAddress={defaultInputToken}
-      // defaultInputAmount={defaultInputAmount}
-      // defaultOutputTokenAddress={defaultOutputToken}
-      // defaultOutputAmount={defaultOutputAmount}
-      // hideConnectionUI={hideConnectionUI} // TODO(Daniel) remove
-      // locale={locale}
-      // defaultChainId={defaultChainId} // TODO(Daniel) remove
-      // provider={connector} // TODO(Daniel) remove
+      // locale={locale} // TODO
       ethProvider={ethProvider}
       snAccount={starknet?.account}
       testnetsVisible={testnetsVisible}
       theme={theme}
-      // tokenList={tokenList} // TODO(Daniel) remove
       width={width}
       srcChainIds={JSON.parse(srcChainIds)}
       dstChainIds={JSON.parse(dstChainIds)}
