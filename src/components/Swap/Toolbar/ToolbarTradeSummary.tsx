@@ -11,7 +11,7 @@ export const SUMMARY_COLUMN_GAP_EM = 0.75
 export const SUMMARY_ROW_HEIGHT_EM = Body2LineHeightRem + SUMMARY_COLUMN_GAP_EM
 
 const TradeSummaryColumn = styled(Column)`
-  /* border-bottom: 1px solid ${({ theme }) => theme.outline}; */
+  border-bottom: 1px solid ${({ theme }) => theme.outline};
   border-top: 1px solid ${({ theme }) => theme.outline};
   margin: 0 1em;
   padding: ${SUMMARY_COLUMN_GAP_EM}em 0;
@@ -21,7 +21,7 @@ const TradeAttributeName = styled(ThemedText.Body2)`
   color: ${({ theme, color }) => color ?? theme.secondary};
 `
 
-const TradeAttributeValue = styled(ThemedText.Body2)`
+export const TradeAttributeValue = styled(ThemedText.Body2)`
   color: ${({ theme, color }) => color ?? theme.primary};
 `
 

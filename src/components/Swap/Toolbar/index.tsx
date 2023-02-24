@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
+import { RouteBreakdown } from 'components/RouteBreakdown'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
@@ -227,6 +228,7 @@ export default memo(function Toolbar() {
       >
         <Column>
           <ToolbarTradeSummary rows={tradeSummaryRows} />
+          {trade && <RouteBreakdown steps={trade.steps} />}
         </Column>
       </StyledExpando>
       {approveButton && approveButton}
@@ -242,7 +244,7 @@ export default memo(function Toolbar() {
           open={false}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           onExpand={() => {}}
-          maxHeight={16}
+          maxHeight={18}
         >
           <div />
         </StyledExpando>

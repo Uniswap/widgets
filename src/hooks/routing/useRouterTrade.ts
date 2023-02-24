@@ -101,6 +101,7 @@ export function useRouterTrade(
           }
         : undefined,
       tradeType: TradeType.EXACT_INPUT,
+      steps: quote.steps,
     }
     return trade
   }, [quote, currencyIn, currencyOut])

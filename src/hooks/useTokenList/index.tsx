@@ -14,14 +14,14 @@ export { useQueryTokens } from './useQueryTokens'
 export const EMPTY_TOKEN_LIST = []
 
 const MISSING_PROVIDER = Symbol()
-const ChainTokenMapContext = createContext<ChainTokenMap | undefined | typeof MISSING_PROVIDER>(MISSING_PROVIDER)
+const ChainTokenMapContext = createContext<ChainTokenMap | typeof MISSING_PROVIDER>(MISSING_PROVIDER)
 
-function useChainTokenMapContext() {
+export function useChainTokenMapContext() {
   const chainTokenMap = useContext(ChainTokenMapContext)
   if (chainTokenMap === MISSING_PROVIDER) {
     throw new Error('TokenList hooks must be wrapped in a <TokenListProvider>')
   }
-  return chainTokenMap
+  return chainTokenMap || {}
 }
 
 export function useIsTokenListLoaded() {

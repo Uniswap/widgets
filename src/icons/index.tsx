@@ -24,11 +24,14 @@ import {
   ArrowUpRight as LinkIcon,
   BarChart2 as BarChart2Icon,
   ChevronDown as ChevronDownIcon,
+  ChevronRight as ChevronRightIcon,
   ChevronUp as ChevronUpIcon,
   Clock as ClockIcon,
   ExternalLink as ExternalLinkIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
+  Maximize2 as MaximizeIcon,
+  Minimize2 as MinimizeIcon,
   Search as SearchIcon,
   Settings as SettingsIcon,
   Slash as SlashIcon,
@@ -95,6 +98,7 @@ export const ArrowLeft = icon(ArrowLeftIcon)
 export const ArrowUp = icon(ArrowUpIcon)
 export const BarChart = icon(BarChart2Icon)
 export const ChevronDown = icon(ChevronDownIcon)
+export const ChevronRight = icon(ChevronRightIcon)
 export const ChevronUp = icon(ChevronUpIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
@@ -111,6 +115,8 @@ export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
 export const Reverse = icon(ReverseIcon)
 export const Search = icon(SearchIcon)
+export const Maximize = icon(MaximizeIcon)
+export const Minimize = icon(MinimizeIcon)
 
 export const Check = styled(icon(CheckIcon))`
   circle {

@@ -3,7 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
 import { RouterPreference } from 'hooks/routing/types'
-import { QuoteResult } from 'wido'
+import { QuoteResult, Step } from 'wido'
 
 export enum TradeState {
   LOADING,
@@ -88,6 +88,7 @@ export interface WidoTradeType<TradeInput extends Currency, TradeOutput extends 
     value: BigNumber
   }
   tradeType: TradeType
+  steps: Step[]
 }
 
 export type WidoTrade = WidoTradeType<Currency, Currency>
