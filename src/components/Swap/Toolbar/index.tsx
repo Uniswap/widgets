@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact } from '@uniswap/conedison/format'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { RouteBreakdown } from 'components/RouteBreakdown'
@@ -153,10 +153,10 @@ export default memo(function Toolbar() {
   const tradeSummaryRows: SummaryRowProps[] = useMemo(() => {
     const currencySymbol = trade?.outputAmount?.currency.symbol ?? ''
     const rows: SummaryRowProps[] = [
-      {
-        name: t`Network fee`,
-        value: gasUseEstimateUSD ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}` : '-',
-      },
+      // {
+      //   name: t`Network fee`,
+      //   value: gasUseEstimateUSD ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}` : '-',
+      // },
       {
         color: impact?.warning,
         name: t`Price impact`,
