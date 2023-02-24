@@ -7,6 +7,7 @@ import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 // import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { useLocalApi, useProdApi } from 'wido'
 import { darkTheme, defaultTheme, lightTheme, SwapWidget } from 'wido-widget'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
@@ -43,10 +44,10 @@ function Fixture() {
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
   const [srcChainIds] = useValue('srcChainIds', {
-    defaultValue: '[1,5,137,15367]',
+    defaultValue: '[5]',
   })
   const [dstChainIds] = useValue('dstChainIds', {
-    defaultValue: '[1,137,15367]',
+    defaultValue: '[15367]',
   })
 
   const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: true })
@@ -79,7 +80,14 @@ function Fixture() {
     }
   }, [starknet, setStarknet])
 
-  // useLocalApi()
+  const [localApi] = useValue('localApi', { defaultValue: false })
+  if (localApi) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useLocalApi()
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useProdApi()
+  }
 
   const widget = (
     <SwapWidget
