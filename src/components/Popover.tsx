@@ -1,6 +1,7 @@
 import { Options, Placement } from '@popperjs/core'
 import { globalFontStyles } from 'css/font'
 import useInterval from 'hooks/useInterval'
+import ms from 'ms.macro'
 import maxSize from 'popper-max-size-modifier'
 import React, { createContext, PropsWithChildren, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -16,8 +17,7 @@ export function PopoverBoundaryProvider({
   value,
   children,
 }: PropsWithChildren<{ value: HTMLDivElement | null; updateTrigger?: any }>) {
-  const boundaryContextValue = useMemo(() => ({ boundary: value }), [value])
-  return <BoundaryContext.Provider value={boundaryContextValue}>{children}</BoundaryContext.Provider>
+  return <BoundaryContext.Provider value={{ boundary: value }}>{children}</BoundaryContext.Provider>
 }
 
 const PopoverContainer = styled.div<{ show: boolean }>`
@@ -155,7 +155,7 @@ export default function Popover({
     update && update()
   }, [update])
 
-  useInterval(updateCallback, show ? 100 : null)
+  useInterval(updateCallback, show ? ms`0.1s` : null)
 
   return (
     <>
