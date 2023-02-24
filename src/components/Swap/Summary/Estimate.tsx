@@ -1,7 +1,8 @@
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -19,11 +20,22 @@ interface EstimateProps {
 }
 
 export default function SwapInputOutputEstimate({ trade, slippage }: EstimateProps) {
-  const { estimateMessage } = useMemo(() => getEstimateMessage(trade, slippage), [slippage, trade])
+  const { estimateMessage } = useMemo(
+    () => getEstimateMessage(trade, slippage, undefined /* priceImpact */),
+    [slippage, trade]
+  )
   return <StyledEstimate color="secondary">{estimateMessage}</StyledEstimate>
 }
 
-export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
+export function getEstimateMessage(
+  trade: InterfaceTrade,
+  slippage: Slippage,
+  priceImpact: PriceImpact | undefined
+): {
+  estimateMessage: string
+  descriptor: ReactNode
+  value: string
+} {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
@@ -34,7 +46,17 @@ export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
 
     return {
       estimateMessage: t`Output is estimated. You will receive at least ${minReceivedString} or the transaction will revert.`,
-      descriptor: t`Minimum output after slippage`,
+      descriptor: (
+        <ThemedText.Body2>
+          <Trans>Minimum output after slippage</Trans>
+          {priceImpact && (
+            <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
+              {' '}
+              ({priceImpact?.toString()})
+            </ThemedText.Body2>
+          )}
+        </ThemedText.Body2>
+      ),
       value: minReceivedString,
     }
   } else {
@@ -43,7 +65,17 @@ export function getEstimateMessage(trade: InterfaceTrade, slippage: Slippage) {
 
     return {
       estimateMessage: t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`,
-      descriptor: t`Maximum input after slippage`,
+      descriptor: (
+        <ThemedText.Body2>
+          <Trans>Maximum input after slippage</Trans>
+          {priceImpact && (
+            <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
+              {' '}
+              ({priceImpact?.toString()})
+            </ThemedText.Body2>
+          )}
+        </ThemedText.Body2>
+      ),
       value: maxSentString,
     }
   }

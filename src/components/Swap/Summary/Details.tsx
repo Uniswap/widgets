@@ -45,7 +45,7 @@ const RuleWrapper = styled.div`
 const MAX_AMOUNT_STR_LENGTH = 9
 
 interface DetailProps {
-  label: string
+  label: string | ReactNode
   value: string | ReactNode
   color?: Color
 }
@@ -136,7 +136,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   const [exchangeRate] = useTradeExchangeRate(trade)
 
   const { details, estimateMessage } = useMemo(() => {
-    const details: Array<[string, string] | [string, string | ReactNode, Color | undefined]> = []
+    const details: Array<[ReactNode, string] | [ReactNode, string | ReactNode, Color | undefined]> = []
 
     details.push([t`Exchange rate`, exchangeRate])
 
@@ -156,7 +156,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       details.push([t`Price impact`, impact?.percent ? impact?.toString() : '-', impact.warning])
     }
 
-    const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage)
+    const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage, impact)
     details.push([descriptor, value])
 
     return { details, estimateMessage }
@@ -172,8 +172,8 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
         </RuleWrapper>
       </Column>
       <Column gap={0.75}>
-        {details.map(([label, detail, color]) => (
-          <Detail key={label} label={label} value={detail} color={color} />
+        {details.map(([label, detail, color], i) => (
+          <Detail key={i} label={label} value={detail} color={color} />
         ))}
       </Column>
     </>

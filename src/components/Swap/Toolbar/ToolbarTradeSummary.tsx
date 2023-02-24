@@ -26,8 +26,8 @@ const TradeAttributeValue = styled(ThemedText.Body2)`
 `
 
 export interface SummaryRowProps {
-  name: string
-  value: string
+  name: ReactNode
+  value: ReactNode
   color?: Color
   nameTooltip?: {
     content: ReactNode
@@ -74,7 +74,7 @@ export default function ToolbarTradeSummary({ rows }: ToolbarTradeSummaryProps) 
   return (
     <TradeSummaryColumn gap={SUMMARY_COLUMN_GAP_EM}>
       {rows.map((row, i) => (
-        <SummaryRow key={row.name} {...row} />
+        <SummaryRow key={i} {...row} />
       ))}
     </TradeSummaryColumn>
   )

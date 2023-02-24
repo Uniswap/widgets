@@ -18,7 +18,7 @@ Object {
             data-testid="header-title"
           >
             <div
-              class="type__TextWrapper-sc-16386l-0 ctzQJz subhead subhead-1 css-mxz2od"
+              class="type__TextWrapper-sc-16386l-0 bRHiaw subhead subhead-1 css-mxz2od"
             >
               Swap
             </div>
@@ -75,7 +75,7 @@ Object {
                         class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
                       >
                         <div
-                          class="type__TextWrapper-sc-16386l-0 fVMALP subhead subhead-2 css-19as5gp"
+                          class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
                         >
                           <div
                             class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
@@ -90,7 +90,7 @@ Object {
                                   class="Row-sc-1nzvhrh-0 iKBbTz"
                                 >
                                   <div
-                                    class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                                    class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
                                   >
                                     Max slippage
                                   </div>
@@ -170,7 +170,7 @@ Object {
                                 class="Row-sc-1nzvhrh-0 iFLCZk"
                               >
                                 <div
-                                  class="type__TextWrapper-sc-16386l-0 hBKeLq button button-medium css-17g4kvt"
+                                  class="type__TextWrapper-sc-16386l-0 fMszLd button button-medium css-17g4kvt"
                                 >
                                   Auto
                                 </div>
@@ -233,7 +233,7 @@ Object {
                         class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
                       >
                         <div
-                          class="type__TextWrapper-sc-16386l-0 fVMALP subhead subhead-2 css-19as5gp"
+                          class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
                         >
                           <div
                             class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
@@ -245,7 +245,7 @@ Object {
                                 class="Row-sc-1nzvhrh-0 iKBbTz"
                               >
                                 <div
-                                  class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                                  class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
                                 >
                                   Transaction deadline
                                 </div>
@@ -338,7 +338,7 @@ Object {
                                 value=""
                               />
                               <div
-                                class="type__TextWrapper-sc-16386l-0 bkyFtK body body-2 css-ijlljt"
+                                class="type__TextWrapper-sc-16386l-0 hnjWoB body body-2 css-ijlljt"
                               >
                                 minutes
                               </div>
@@ -353,7 +353,7 @@ Object {
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
-                      class="type__TextWrapper-sc-16386l-0 dMHOaH caption css-1up6pmj"
+                      class="type__TextWrapper-sc-16386l-0 ihjAsA caption css-1up6pmj"
                     >
                       Your transaction will revert if the price changes unfavorably by more than this percentage.
                     </div>
@@ -367,7 +367,7 @@ Object {
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
-                      class="type__TextWrapper-sc-16386l-0 dMHOaH caption css-1up6pmj"
+                      class="type__TextWrapper-sc-16386l-0 ihjAsA caption css-1up6pmj"
                     >
                       Your transaction will revert if it has been pending for longer than this period of time.
                     </div>
@@ -398,7 +398,7 @@ Object {
           data-testid="header-title"
         >
           <div
-            class="type__TextWrapper-sc-16386l-0 ctzQJz subhead subhead-1 css-mxz2od"
+            class="type__TextWrapper-sc-16386l-0 bRHiaw subhead subhead-1 css-mxz2od"
           >
             Swap
           </div>
@@ -455,7 +455,7 @@ Object {
                       class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
                     >
                       <div
-                        class="type__TextWrapper-sc-16386l-0 fVMALP subhead subhead-2 css-19as5gp"
+                        class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
                       >
                         <div
                           class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
@@ -470,7 +470,7 @@ Object {
                                 class="Row-sc-1nzvhrh-0 iKBbTz"
                               >
                                 <div
-                                  class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                                  class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
                                 >
                                   Max slippage
                                 </div>
@@ -550,7 +550,7 @@ Object {
                               class="Row-sc-1nzvhrh-0 iFLCZk"
                             >
                               <div
-                                class="type__TextWrapper-sc-16386l-0 hBKeLq button button-medium css-17g4kvt"
+                                class="type__TextWrapper-sc-16386l-0 fMszLd button button-medium css-17g4kvt"
                               >
                                 Auto
                               </div>
@@ -613,7 +613,7 @@ Object {
                       class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
                     >
                       <div
-                        class="type__TextWrapper-sc-16386l-0 fVMALP subhead subhead-2 css-19as5gp"
+                        class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
                       >
                         <div
                           class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
@@ -625,7 +625,7 @@ Object {
                               class="Row-sc-1nzvhrh-0 iKBbTz"
                             >
                               <div
-                                class="type__TextWrapper-sc-16386l-0 kDfZL subhead subhead-2 css-e17nie"
+                                class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
                               >
                                 Transaction deadline
                               </div>
@@ -718,7 +718,7 @@ Object {
                               value=""
                             />
                             <div
-                              class="type__TextWrapper-sc-16386l-0 bkyFtK body body-2 css-ijlljt"
+                              class="type__TextWrapper-sc-16386l-0 hnjWoB body body-2 css-ijlljt"
                             >
                               minutes
                             </div>
@@ -733,7 +733,7 @@ Object {
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div
-                    class="type__TextWrapper-sc-16386l-0 dMHOaH caption css-1up6pmj"
+                    class="type__TextWrapper-sc-16386l-0 ihjAsA caption css-1up6pmj"
                   >
                     Your transaction will revert if the price changes unfavorably by more than this percentage.
                   </div>
@@ -747,7 +747,7 @@ Object {
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div
-                    class="type__TextWrapper-sc-16386l-0 dMHOaH caption css-1up6pmj"
+                    class="type__TextWrapper-sc-16386l-0 ihjAsA caption css-1up6pmj"
                   >
                     Your transaction will revert if it has been pending for longer than this period of time.
                   </div>
