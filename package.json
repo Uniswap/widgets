@@ -4,7 +4,9 @@
   "homepage": "https://github.com/widolabs/wido-widget#readme",
   "repository": "https://github.com/widolabs/wido-widget",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "docs"
   ],
   "types": "dist/index.d.ts",
   "main": "dist/cjs/index.cjs",
