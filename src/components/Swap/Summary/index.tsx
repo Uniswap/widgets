@@ -211,19 +211,19 @@ export function ConfirmButton({
       case ReviewState.REVIEWING:
         return doesTradeDiffer
           ? [
-            {
-              color: 'accent',
-              message: <Trans>Price updated</Trans>,
-              icon: AlertTriangle,
-              tooltipContent: (
-                <SmallToolTipBody>
-                  <SwapInputOutputEstimate trade={trade} slippage={slippage} />
-                </SmallToolTipBody>
-              ),
-              onClick: onAcknowledgeClick,
-              children: <Trans>Swap</Trans>,
-            },
-          ]
+              {
+                color: 'accent',
+                message: <Trans>Price updated</Trans>,
+                icon: AlertTriangle,
+                tooltipContent: (
+                  <SmallToolTipBody>
+                    <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+                  </SmallToolTipBody>
+                ),
+                onClick: onAcknowledgeClick,
+                children: <Trans>Swap</Trans>,
+              },
+            ]
           : []
     }
   }, [
