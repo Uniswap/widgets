@@ -3,8 +3,7 @@ import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import Row from 'components/Row'
-import { iconHoverCss } from 'css/hover'
-import { AlertTriangle, Icon, LargeIcon, X } from 'icons'
+import { AlertTriangle, Icon, LargeIcon, StyledXButton } from 'icons'
 import { Info as InfoIcon } from 'icons'
 import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -51,10 +50,6 @@ const ErrorHeader = styled(Column)<{ open: boolean }>`
 
 const ExpandoContent = styled(ThemedText.Code)`
   margin: 0.5em 0;
-`
-
-const StyledXButton = styled(X)`
-  ${iconHoverCss}
 `
 
 interface ErrorDialogProps {
