@@ -2,7 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
-import { Header } from 'components/Dialog'
+import { Header, useCloseDialog } from 'components/Dialog'
 import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
@@ -32,6 +32,7 @@ enum ReviewState {
 
 function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesTradeDiffer: boolean) {
   const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
+  const closeDialog = useCloseDialog()
 
   const onStartSwapFlow = useCallback(async () => {
     if (allowance.state === AllowanceState.REQUIRED) {
@@ -40,6 +41,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
         await allowance.approveAndPermit?.()
       } catch (e) {
         if (e.message === 'User rejected request') {
+          closeDialog?.()
           setCurrentState(ReviewState.REVIEWING)
         } else {
           setCurrentState(ReviewState.ALLOWANCE_FAILED)
