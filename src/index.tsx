@@ -10,10 +10,10 @@ export { TradeType } from '@uniswap/sdk-core'
 export type { TokenInfo } from '@uniswap/token-lists'
 export type { SwapWidgetSkeletonProps } from 'components/Swap/Skeleton'
 export { SwapWidgetSkeleton } from 'components/Swap/Skeleton'
-export { SupportedChainId } from 'constants/chains'
+// export { SupportedChainId } from 'constants/chains'
 export type { SupportedLocale } from 'constants/locales'
 export { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
-export { RouterPreference } from 'hooks/routing/types'
+// export { RouterPreference } from 'hooks/routing/types'
 export type { SwapController } from 'hooks/swap/useSyncController'
 export type { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 export type { DefaultAddress, TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
@@ -26,7 +26,7 @@ export type {
   OnSwitchChain,
   WidgetEventHandlers,
 } from 'hooks/useSyncWidgetEventHandlers'
-export { EMPTY_TOKEN_LIST } from 'hooks/useTokenList'
+// export { EMPTY_TOKEN_LIST } from 'hooks/useTokenList'
 export type { JsonRpcConnectionMap } from 'hooks/web3/useJsonRpcUrlsMap'
 export type {
   OnAmountChange,
@@ -44,7 +44,7 @@ export type {
   OnTransactionDeadlineChange,
   SwapEventHandlers,
 } from 'state/swap'
-export { Field } from 'state/swap'
+// export { Field } from 'state/swap'
 export type { Slippage } from 'state/swap/settings'
 export type {
   ApprovalTransactionInfo,
@@ -56,10 +56,10 @@ export type {
   UnwrapTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions'
-export { TransactionType } from 'state/transactions'
+// export { TransactionType } from 'state/transactions'
 export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
-export { invertTradeType, toTradeType } from 'utils/tradeType'
+// export { invertTradeType, toTradeType } from 'utils/tradeType'
 
 export type SwapWidgetProps = Omit<
   SwapProps & WidgetProps,

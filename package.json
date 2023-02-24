@@ -43,7 +43,9 @@
     "deduplicate": "yarn-deduplicate --strategy=highest",
     "lint": "eslint .",
     "test": "jest src",
-    "test:e2e": "jest e2e"
+    "test:e2e": "jest e2e",
+    "docs": "typedoc --out docs src/index.tsx --excludePrivate --excludeInternal  --readme none --sort source-order",
+    "docs:watch": "yarn docs --watch"
   },
   "browserslist": {
     "production": [
@@ -106,6 +108,7 @@
     "starknet": "^4.17.1",
     "styled-components": ">=5",
     "tiny-invariant": "^1.2.0",
+    "typedoc": "^0.23.25",
     "wcag-contrast": "^3.0.0",
     "web3": "^1.8.2",
     "wicg-inert": "^3.1.1",

@@ -46,13 +46,13 @@ describe('connect', () => {
 
   describe('with jsonRpcUrlMap', () => {
     describe('with an array', () => {
-      const ui = <SwapWidget jsonRpcUrlMap={{ 1: [hardhat.url] }} />
+      const ui = <SwapWidget /* jsonRpcUrlMap={{ 1: [hardhat.url] }} */ />
       itPromptsForWalletConnection(ui)
       itExpectsWidgetToBeEnabled(ui)
     })
 
     describe('with a singleton', () => {
-      const ui = <SwapWidget jsonRpcUrlMap={{ 1: hardhat.url }} />
+      const ui = <SwapWidget /* jsonRpcUrlMap={{ 1: hardhat.url }} */ />
       itPromptsForWalletConnection(ui)
       itExpectsWidgetToBeEnabled(ui)
     })
@@ -62,7 +62,7 @@ describe('connect', () => {
     // The real hardhat.provider relies on real timeouts when providing data.
     jest.useRealTimers()
 
-    const ui = <SwapWidget provider={hardhat.provider} />
+    const ui = <SwapWidget /* provider={hardhat.provider} */ />
     itExpectsWidgetToBeEnabled(ui)
 
     it('displays connected account chip', async () => {

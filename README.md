@@ -1,48 +1,30 @@
 # Wido Widget
 
 [![npm](https://img.shields.io/npm/v/wido-widget)](https://www.npmjs.com/package/wido-widget)
-[![Unit tests](https://github.com/Uniswap/interface/actions/workflows/test.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/test.yaml)
-[![Integration tests](https://github.com/Uniswap/interface/actions/workflows/e2e.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/e2e.yaml)
-[![Lint](https://github.com/Uniswap/interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/lint.yml)
-[![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
+<!-- [![Unit tests](https://github.com/Uniswap/interface/actions/workflows/test.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/test.yaml) -->
+<!-- [![Integration tests](https://github.com/Uniswap/interface/actions/workflows/e2e.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/e2e.yaml) -->
+<!-- [![Lint](https://github.com/Uniswap/interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/lint.yml) -->
+<!-- [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface) -->
 
-The `wido-widget` package is an [npm package](https://www.npmjs.com/package/wido-widget) of React components used to provide subsets of the Uniswap Protocol functionality in a small and configurable user interface element.
+The `wido-widget` package is an [npm package](https://www.npmjs.com/package/wido-widget) of React components used to provide Wido zap functionality in a small and configurable user interface element.
 
-The Swap Widget bundles the whole swapping experience into a single React component that developers can easily embed in their app with one line of code. 
+![widget screenshot](https://1709844881-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F4AaJqYK7Ftrytj6lOYPa%2Fuploads%2F5XYpcZkADyIWHTaXT7eH%2FScreenshot%202023-02-21%20at%2015.44.29.png?alt=media&token=b2216672-677e-47cb-83c0-f03e5c3a31ee)
 
-![swap widget screenshot](https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/widget-screenshot.png)
-
-You can customize the theme (colors, fonts, border radius, and more) to match the style of your application. You can also configure your own default token list and optionally set a convenience fee on swaps executed through the widget on your site.
+You can customize the theme (colors, fonts, border radius, and more) to match the style of your application.
 
 ## Installation
 
-Install the widgets library via `npm` or `yarn`.
+Install the widget via `npm` or `yarn`.
 
 ```js
 yarn add wido-widget
 ```
+
 ```js
 npm i --save wido-widget
 ```
 
 ## Documentation
 
-- [overview](https://docs.uniswap.org/sdk/widgets/swap-widget)
-- [api reference](https://docs.uniswap.org/sdk/widgets/swap-widget/api)
-
-## Example Apps
-
-Uniswap Labs maintains two demo apps in branches of the [widgets-demo](https://github.com/Uniswap/widgets-demo) repo:
-
-- [NextJS](https://github.com/Uniswap/widgets-demo/tree/nextjs)
-- [Create React App](https://github.com/Uniswap/widgets-demo/tree/cra)
-
-Others have also also released the widget in production to their userbase:
-
-- [OpenSea](https://opensea.io/)
-- [Friends With Benefits](https://www.fwb.help/)
-- [Oasis](https://oasis.app/)
-
-## Legal notice
-
-Uniswap Labs encourages integrators to evaluate their own regulatory obligations when integrating this widget into their products, including, but not limited to, those related to economic or trade sanctions compliance.
+- [overview](https://docs.joinwido.com/integrate-wido/widget)
+- [api reference](https://unpkg.com/wido-widget@latest/docs/index.html)

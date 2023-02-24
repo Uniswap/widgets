@@ -1,13 +1,13 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Token } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
-import { SupportedChainId } from '..'
 import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response

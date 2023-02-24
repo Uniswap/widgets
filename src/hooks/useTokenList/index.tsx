@@ -67,9 +67,8 @@ export function TestableProvider({ list, children }: PropsWithChildren<{ list: T
 }
 
 export function Provider({ list, children }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
-  const [chainTokenMap, setChainTokenMap] = useState<ChainTokenMap>()
-
-  useEffect(() => setChainTokenMap(undefined), [list])
+  const [chainTokenMap, setChainTokenMap] = useState<ChainTokenMap>({})
+  useEffect(() => setChainTokenMap({}), [list])
 
   const chainId = useEvmChainId()
   const provider = useEvmProvider()
@@ -86,7 +85,7 @@ export function Provider({ list, children }: PropsWithChildren<{ list?: string |
   const throwError = useAsyncError()
   useEffect(() => {
     // If the list was already loaded, don't reload it.
-    if (chainTokenMap) return
+    if (chainTokenMap && Object.keys(chainTokenMap).length > 0) return
 
     let stale = false
     activateList()

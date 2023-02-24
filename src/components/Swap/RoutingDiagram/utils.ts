@@ -2,8 +2,8 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { WidoTrade } from 'state/routing/types'
-import { getFeeAmount } from 'utils/prices'
-import { isExactInput } from 'utils/tradeType'
+// import { getFeeAmount } from 'utils/prices'
+// import { isExactInput } from 'utils/tradeType'
 
 export interface RoutingDiagramEntry {
   percent: Percent
@@ -15,23 +15,24 @@ export interface RoutingDiagramEntry {
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
 export function getTokenPath(trade: WidoTrade): RoutingDiagramEntry[] {
-  return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
-    const portion = isExactInput(trade.tradeType)
-      ? inputAmount.divide(trade.inputAmount)
-      : outputAmount.divide(trade.outputAmount)
-    const percent = new Percent(portion.numerator, portion.denominator)
-    const path: RoutingDiagramEntry['path'] = []
-    for (let i = 0; i < pools.length; i++) {
-      const nextPool = pools[i]
-      const tokenIn = tokenPath[i]
-      const tokenOut = tokenPath[i + 1]
-      const entry: RoutingDiagramEntry['path'][0] = [tokenIn, tokenOut, getFeeAmount(nextPool)]
-      path.push(entry)
-    }
-    return {
-      percent,
-      path,
-      protocol,
-    }
-  })
+  return []
+  // return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
+  //   const portion = isExactInput(trade.tradeType)
+  //     ? inputAmount.divide(trade.inputAmount)
+  //     : outputAmount.divide(trade.outputAmount)
+  //   const percent = new Percent(portion.numerator, portion.denominator)
+  //   const path: RoutingDiagramEntry['path'] = []
+  //   for (let i = 0; i < pools.length; i++) {
+  //     const nextPool = pools[i]
+  //     const tokenIn = tokenPath[i]
+  //     const tokenOut = tokenPath[i + 1]
+  //     const entry: RoutingDiagramEntry['path'][0] = [tokenIn, tokenOut, getFeeAmount(nextPool)]
+  //     path.push(entry)
+  //   }
+  //   return {
+  //     percent,
+  //     path,
+  //     protocol,
+  //   }
+  // })
 }
