@@ -31,8 +31,10 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 `
 
 const Reference = styled.div`
-  display: inline-block;
-  height: 1em;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 1em;
 `
 
 const Arrow = styled.div`
