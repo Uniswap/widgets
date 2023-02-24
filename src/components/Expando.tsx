@@ -54,7 +54,7 @@ const InnerColumn = styled(Column)<{ height?: number; maxHeight?: number }>`
   max-height: ${({ height, maxHeight }) => getExpandoContentHeight(height, maxHeight)}em;
 `
 
-const IconPrefix = styled.div`
+export const IconPrefix = styled.div`
   color: ${({ theme }) => theme.primary};
 `
 
