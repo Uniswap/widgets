@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import ErrorDialog, { StatusHeader } from 'components/Error/ErrorDialog'
+import ErrorDialog, { StatusHeader } from 'components/Error/ErrorView'
 import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
 import SwapSummary from 'components/Swap/Summary'

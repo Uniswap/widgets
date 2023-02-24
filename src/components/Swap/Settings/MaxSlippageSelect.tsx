@@ -142,8 +142,6 @@ export default function MaxSlippageSelect() {
   return (
     <Column gap={0.75}>
       <Expando
-        hideRulers
-        showBottomGradient={false}
         title={
           <Row grow>
             <Label

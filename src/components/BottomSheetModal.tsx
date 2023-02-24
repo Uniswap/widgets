@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { iconHoverCss } from 'css/hover'
 import { X } from 'icons'
 import { forwardRef, PropsWithChildren, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -75,10 +76,7 @@ const Wrapper = styled.div<{ open: boolean }>`
 `
 
 const StyledXButton = styled(X)`
-  :hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
+  ${iconHoverCss}
 `
 
 type BottomSheetModalProps = PropsWithChildren<{

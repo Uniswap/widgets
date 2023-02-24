@@ -51,7 +51,11 @@ class ConnectionError extends WidgetError {
 
 export class SwapError extends DismissableWidgetError {
   constructor(config: WidgetErrorConfig) {
-    super({ ...config, header: config.header ?? t`Swap Error` })
+    super({
+      ...config,
+      header:
+        config.header ?? t`Sorry, an error occured while processing your request. Please try again or contact support.`,
+    })
     this.name = 'SwapError'
   }
 }
