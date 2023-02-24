@@ -39,8 +39,11 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
       try {
         await allowance.approveAndPermit?.()
       } catch (e) {
-        console.error(e)
-        setCurrentState(ReviewState.ALLOWANCE_FAILED)
+        if (e === 'User rejected request') {
+          setCurrentState(ReviewState.REVIEWING)
+        } else {
+          setCurrentState(ReviewState.ALLOWANCE_FAILED)
+        }
       }
       // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
     } else if (allowance.state === AllowanceState.ALLOWED) {
@@ -206,19 +209,19 @@ export function ConfirmButton({
       case ReviewState.REVIEWING:
         return doesTradeDiffer
           ? [
-              {
-                color: 'accent',
-                message: <Trans>Price updated</Trans>,
-                icon: AlertTriangle,
-                tooltipContent: (
-                  <SmallToolTipBody>
-                    <SwapInputOutputEstimate trade={trade} slippage={slippage} />
-                  </SmallToolTipBody>
-                ),
-                onClick: onAcknowledgeClick,
-                children: <Trans>Swap</Trans>,
-              },
-            ]
+            {
+              color: 'accent',
+              message: <Trans>Price updated</Trans>,
+              icon: AlertTriangle,
+              tooltipContent: (
+                <SmallToolTipBody>
+                  <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+                </SmallToolTipBody>
+              ),
+              onClick: onAcknowledgeClick,
+              children: <Trans>Swap</Trans>,
+            },
+          ]
           : []
     }
   }, [
