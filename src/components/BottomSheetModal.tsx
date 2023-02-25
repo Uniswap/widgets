@@ -95,7 +95,7 @@ export function BottomSheetModal({ children, onClose, open, title }: BottomSheet
       <RootElement ref={setRootElement} open={open} />
       <DialogProvider value={rootElement}>
         {open && (
-          <Dialog color="dialog" onClose={onClose}>
+          <Dialog color="dialog" onClose={onClose} forceContain>
             <>
               {title && <Header title={<Trans>{title}</Trans>} closeButton={<StyledXButton />} />}
               {children}
