@@ -12,11 +12,7 @@ import SwapButton from './SwapButton'
 import SwitchChainButton from './SwitchChainButton'
 import WrapButton from './WrapButton'
 
-interface SwapActionButtonProps {
-  hideConnectionUI?: boolean
-}
-
-export default function SwapActionButton({ hideConnectionUI }: SwapActionButtonProps) {
+export default function SwapActionButton() {
   const { account, isActive } = useWeb3React()
   const {
     [Field.INPUT]: { currency: inputCurrency, amount: inputCurrencyAmount, balance: inputCurrencyBalance },
@@ -38,7 +34,7 @@ export default function SwapActionButton({ hideConnectionUI }: SwapActionButtonP
   )
 
   if (!account || !isActive) {
-    return hideConnectionUI ? null : <ConnectWalletButton />
+    return <ConnectWalletButton />
   } else if (error === ChainError.MISMATCHED_CHAINS) {
     const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId ?? SupportedChainId.MAINNET
     return <SwitchChainButton chainId={tokenChainId} />
