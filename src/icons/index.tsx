@@ -1,4 +1,3 @@
-import { ReactComponent as RouterIcon } from 'assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'assets/svg/expando.svg'
 import { ReactComponent as GasIcon } from 'assets/svg/gasIcon.svg'
@@ -38,6 +37,7 @@ import {
 import styled, { css, keyframes } from 'styled-components/macro'
 import { AnimationSpeed, Color, TransitionDuration } from 'theme'
 
+import AutoRouterIcon from './AutoRouterIcon'
 import IdenticonIcon from './identicon'
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
@@ -99,7 +99,7 @@ export const HelpCircle = icon(HelpCircleIcon)
 export const Identicon = icon(IdenticonIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
-export const AutoRouter = icon(RouterIcon)
+export const AutoRouter = icon(AutoRouterIcon)
 export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)
