@@ -15,7 +15,7 @@ const svgr = require('@svgr/rollup')
 const { default: multi } = require('rollup-plugin-multi-input')
 const externals = require('rollup-plugin-node-externals')
 const sass = require('rollup-plugin-scss')
-
+const alias = require('@rollup/plugin-alias')
 const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
 
 /**
@@ -40,10 +40,14 @@ const transpile = {
     return source.startsWith('@ethersproject/')
   },
   plugins: [
+    alias({
+      entries: [{ find: '@uniswap/conedison/format', replacement: '@uniswap/conedison/format.js' }],
+    }),
     // Dependency resolution
     externals({
       exclude: [
         'constants',
+        '@uniswap/conedison/format.js',
         /@lingui\/(core|react)/, // @lingui incorrectly exports esm, so it must be bundled in
         /\.json$/, // esm does not support JSON loading, so it must be bundled in
       ], // marks dependencies as external so they are not bundled inline
