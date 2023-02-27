@@ -1,6 +1,15 @@
 import { Options, Placement } from '@popperjs/core'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
@@ -112,7 +121,7 @@ export default function Popover({
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
-  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
+  const popover = useRef<HTMLDivElement | null>(null)
   const [arrow, setArrow] = useState<HTMLDivElement | null>(null)
 
   const options = useMemo((): Options => {
@@ -149,19 +158,29 @@ export default function Popover({
     }
   }, [offset, arrow, contained, placement, boundary])
 
-  const { styles, attributes, update } = usePopper(reference.current, popover, options)
+  const { styles, attributes, update } = usePopper(reference.current, popover?.current, options)
 
   // Manually triggers an update, if prop is provided
   useEffect(() => {
     update?.()
   }, [update, updateTrigger])
 
+  const containerOnClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
+  }, [])
+
   return (
     <>
       <Reference ref={reference}>{children}</Reference>
       {boundary &&
         createPortal(
-          <PopoverContainer show={show} ref={setPopover} style={styles.popper} {...attributes.popper}>
+          <PopoverContainer
+            show={show}
+            ref={popover}
+            style={styles.popper}
+            {...attributes.popper}
+            onClick={containerOnClick}
+          >
             {content}
             {showArrow && (
               <Arrow
