@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/dist/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'

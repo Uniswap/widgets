@@ -41,3 +41,7 @@ declare module '*.svg' {
   const src: string
   export default src
 }
+
+declare module '@uniswap/conedison/dist/format' {
+  export * from '@uniswap/conedison/format'
+}

@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact } from '@uniswap/conedison/dist/format'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { RouteBreakdown } from 'components/RouteBreakdown'

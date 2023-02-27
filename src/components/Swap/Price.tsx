@@ -1,4 +1,4 @@
-import { formatCurrencyAmount, formatPrice, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPrice, NumberType } from '@uniswap/conedison/dist/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'

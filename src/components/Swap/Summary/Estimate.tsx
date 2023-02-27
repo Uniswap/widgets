@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/dist/format'
 import { Slippage } from 'hooks/useSlippage'
 import { useMemo } from 'react'
 import { WidoTrade } from 'state/routing/types'
