@@ -63,7 +63,6 @@ module.exports = (webpackConfig) => {
       ...resolve,
       alias: {
         'wido-widget': path.resolve(__dirname, 'dist/'),
-        '@uniswap/conedison/dist/format': '@uniswap/conedison/format',
       },
     },
     module: {

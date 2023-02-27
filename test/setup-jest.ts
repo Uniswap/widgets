@@ -7,7 +7,7 @@ import fetch from 'jest-fetch-mock'
 
 fetch.enableMocks()
 
-jest.mock('@uniswap/conedison/dist/format', () => ({
+jest.mock('@uniswap/conedison/format', () => ({
   formatCurrencyAmount: jest.fn((amount: CurrencyAmount<Currency>) => amount.toFixed(2)),
   formatPriceImpact: jest.fn((percent: Percent) => percent.toFixed(2) + '%'),
   NumberType: {

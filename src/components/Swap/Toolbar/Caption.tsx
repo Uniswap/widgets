@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
-import { formatPriceImpact } from '@uniswap/conedison/dist/format'
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
