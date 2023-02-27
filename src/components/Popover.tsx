@@ -1,6 +1,15 @@
 import { Options, Placement } from '@popperjs/core'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
@@ -156,6 +165,10 @@ export default function Popover({
     update?.()
   }, [update, updateTrigger])
 
+  const containerOnClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
+  }, [])
+
   return (
     <>
       <Reference ref={reference}>{children}</Reference>
@@ -166,7 +179,7 @@ export default function Popover({
             ref={popover}
             style={styles.popper}
             {...attributes.popper}
-            onClick={(e) => e.stopPropagation()}
+            onClick={containerOnClick}
           >
             {content}
             {showArrow && (
