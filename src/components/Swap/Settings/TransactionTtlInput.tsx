@@ -53,7 +53,6 @@ export default function TransactionTtlInput() {
         title={
           <Label
             name={<Trans>Transaction deadline</Trans>}
-            // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
             tooltip={
               <Trans>Your transaction will revert if it has been pending for longer than this period of time.</Trans>
             }

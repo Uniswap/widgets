@@ -36,7 +36,6 @@ export default function RouterPreferenceToggle() {
       <Row flex align="center">
         <Label
           name={<Trans>Auto Router API</Trans>}
-          // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
           tooltip={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>}
         />
         <Toggle onToggle={onToggle} checked={routerPreference === RouterPreference.API} />

@@ -153,7 +153,6 @@ export default function MaxSlippageSelect() {
           <Row grow>
             <Label
               name={<Trans>Max slippage</Trans>}
-              // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
               tooltip={
                 <Trans>
                   Your transaction will revert if the price changes unfavorably by more than this percentage.

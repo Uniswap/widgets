@@ -113,7 +113,7 @@ export default function Popover({
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
-  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
+  const popover = useRef<HTMLDivElement | null>(null)
   const [arrow, setArrow] = useState<HTMLDivElement | null>(null)
 
   const options = useMemo((): Options => {
@@ -150,7 +150,7 @@ export default function Popover({
     }
   }, [offset, arrow, contained, placement, boundary])
 
-  const { styles, attributes, update } = usePopper(reference.current, popover, options)
+  const { styles, attributes, update } = usePopper(reference.current, popover?.current, options)
 
   const updateCallback = useCallback(() => {
     update && update()
@@ -158,12 +158,22 @@ export default function Popover({
 
   useInterval(updateCallback, show ? ms`0.1s` : null)
 
+  const containerOnClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
+  }, [])
+
   return (
     <>
       <Reference ref={reference}>{children}</Reference>
       {boundary &&
         createPortal(
-          <PopoverContainer show={show} ref={setPopover} style={styles.popper} {...attributes.popper}>
+          <PopoverContainer
+            show={show}
+            ref={popover}
+            style={styles.popper}
+            {...attributes.popper}
+            onClick={containerOnClick}
+          >
             {content}
             {showArrow && (
               <Arrow
