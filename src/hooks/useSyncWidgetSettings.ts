@@ -3,6 +3,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { AccountInterface } from 'starknet'
+
 export type { OnError } from 'components/Error/ErrorBoundary'
 export type { AddEthereumChainParameter, OnSwitchChain } from 'hooks/useSwitchChain'
 export type { OnConnectWalletClick } from 'state/wallet'
@@ -15,6 +16,8 @@ export interface WidgetSettings {
   testnetsVisible?: boolean
   srcChainIds?: number[]
   dstChainIds?: number[]
+  toToken?: { chainId: number; address: string }
+  fromToken?: { chainId: number; address: string }
 }
 
 export default function useSyncWidgetSettings({
@@ -23,11 +26,13 @@ export default function useSyncWidgetSettings({
   snAccount,
   srcChainIds,
   dstChainIds,
+  toToken,
+  fromToken,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
-    updateWidgetSettingsAtom({ testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds })
-  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds])
+    updateWidgetSettingsAtom({ testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds, toToken, fromToken })
+  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds, toToken, fromToken])
 }
 
 export function useTestnetsVisible() {
@@ -83,6 +88,15 @@ export function useSnAccountAddress() {
 export function useSrcChainIds() {
   return useAtomValue(widgetSettingsAtom).srcChainIds
 }
+
 export function useDstChainIds() {
   return useAtomValue(widgetSettingsAtom).dstChainIds
+}
+
+export function useWidgetFromToken() {
+  return useAtomValue(widgetSettingsAtom).fromToken
+}
+
+export function useWidgetToToken() {
+  return useAtomValue(widgetSettingsAtom).toToken
 }

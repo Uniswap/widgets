@@ -79,7 +79,8 @@ export type SwapWidgetProps = {
   snAccount?: AccountInterface
   srcChainIds?: number[]
   dstChainIds?: number[]
-
+  toToken?: { chainId: number; address: string }
+  fromToken?: { chainId: number; address: string }
   theme?: Theme
   width?: string | number
   className?: string

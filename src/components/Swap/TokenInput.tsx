@@ -44,6 +44,7 @@ interface TokenInputProps {
   isDependentField?: boolean
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
+  presetValue?: boolean
 }
 
 export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenInputProps>>(function TokenInput(
@@ -55,6 +56,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
     loading,
     disabled,
     isDependentField,
+    presetValue,
     onChangeInput,
     onChangeCurrency,
     children,
@@ -95,6 +97,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
           disabled={disabled}
           onSelect={onSelect}
           chainIdsAllowed={chainIdsAllowed}
+          presetValue={presetValue}
         />
         <ThemedText.H2>
           <ValueInput

@@ -1,6 +1,8 @@
 import { t } from '@lingui/macro'
 import { useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import useCurrencyColor from 'hooks/useCurrencyColor'
+import usePresetCurrency from 'hooks/usePresetCurrency'
+import { useWidgetToToken } from 'hooks/useSyncWidgetSettings'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -40,6 +42,9 @@ export default function Output() {
   // different state true/null/false allow smoother color transition
   const hasColor = currency ? Boolean(color) || null : false
 
+  const toToken = useWidgetToToken()
+  const presetCurrency = usePresetCurrency(toToken?.chainId, toToken?.address)
+
   return (
     <DynamicThemeProvider color={color}>
       <OutputWrapper
@@ -48,6 +53,7 @@ export default function Output() {
         impact={impact}
         hasColor={hasColor}
         subheader={t`To`}
+        presetCurrency={presetCurrency}
       />
     </DynamicThemeProvider>
   )

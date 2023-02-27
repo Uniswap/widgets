@@ -7,9 +7,11 @@ import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo 
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { usePrefetchCurrencyColor } from 'hooks/useCurrencyColor'
+import usePresetCurrency from 'hooks/usePresetCurrency'
 import { PriceImpact } from 'hooks/usePriceImpact'
+import { useWidgetFromToken } from 'hooks/useSyncWidgetSettings'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
-import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -86,6 +88,7 @@ interface FieldWrapperProps {
   approved?: boolean
   impact?: PriceImpact
   subheader: string
+  presetCurrency?: Currency
 }
 
 export function FieldWrapper({
@@ -95,6 +98,7 @@ export function FieldWrapper({
   impact,
   className,
   subheader,
+  presetCurrency,
 }: FieldWrapperProps & { className?: string }) {
   const {
     [field]: { balance, amount: currencyAmount, usdc },
@@ -105,6 +109,12 @@ export function FieldWrapper({
   const [amount, updateAmount] = useSwapAmount(field)
   const [currency, updateCurrency] = useSwapCurrency(field)
   const isWideWidget = useIsWideWidget()
+
+  useEffect(() => {
+    if (presetCurrency) {
+      updateCurrency(presetCurrency)
+    }
+  }, [presetCurrency, updateCurrency])
 
   const wrapper = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState<TokenInputHandle | null>(null)
@@ -169,6 +179,7 @@ export function FieldWrapper({
         currency={currency}
         loading={isLoading}
         approved={approved}
+        presetValue={!!presetCurrency}
         disabled={isDisabled}
         isDependentField={isDependentField}
         onChangeInput={updateAmount}
@@ -207,11 +218,15 @@ export default function Input() {
     return max.toExact()
   }, [balance, currencyAmount])
 
+  const fromToken = useWidgetFromToken()
+  const presetCurrency = usePresetCurrency(fromToken?.chainId, fromToken?.address)
+
   return (
     <FieldWrapper
       field={Field.INPUT}
       maxAmount={maxAmount}
       approved={approvalState === SwapApprovalState.APPROVED}
+      presetCurrency={presetCurrency}
       subheader={t`From`}
     />
   )

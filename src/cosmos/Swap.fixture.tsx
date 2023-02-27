@@ -77,6 +77,9 @@ function Fixture() {
     useProdApi()
   }
 
+  const [presetFromToken] = useValue('presetFromToken', { defaultValue: false })
+  const [presetToToken] = useValue('presetToToken', { defaultValue: false })
+
   const widget = (
     <SwapWidget
       // locale={locale} // TODO
@@ -87,6 +90,22 @@ function Fixture() {
       width={width}
       srcChainIds={JSON.parse(srcChainIds)}
       dstChainIds={JSON.parse(dstChainIds)}
+      fromToken={
+        presetFromToken
+          ? {
+              chainId: 5,
+              address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+            }
+          : undefined
+      }
+      toToken={
+        presetToToken
+          ? {
+              chainId: 15367,
+              address: '0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426',
+            }
+          : undefined
+      }
       {...eventHandlers}
     />
   )
