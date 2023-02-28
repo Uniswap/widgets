@@ -40,7 +40,7 @@ interface LabelProps {
 
 export function Label({ name, tooltip }: LabelProps) {
   return (
-    <Row gap={0.5} justify="flex-start">
+    <Row gap={0.5} justify="flex-start" flex align="center">
       <ThemedText.Subhead2>{name}</ThemedText.Subhead2>
       {tooltip && (
         <Tooltip placement="top" contained icon={Info}>

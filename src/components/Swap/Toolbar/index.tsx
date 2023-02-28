@@ -214,7 +214,7 @@ function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
       </ActionButton>
     )
   }
-  return <SwapActionButton hideConnectionUI={hideConnectionUI} />
+  return <SwapActionButton />
 }
 
 function Toolbar({ hideConnectionUI }: ToolbarProps) {

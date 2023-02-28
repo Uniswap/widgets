@@ -29,7 +29,7 @@ Object {
           >
             <div>
               <div
-                class="Popover__Reference-sc-1liex6z-1 dxsTSY"
+                class="Popover__Reference-sc-1liex6z-1 dFwFDV"
               >
                 <button
                   class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 evHSmT"
@@ -59,7 +59,7 @@ Object {
                 </button>
               </div>
               <div
-                class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
+                class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
                 style="position: absolute; left: 0px; top: 0px;"
               >
                 <div
@@ -76,7 +76,7 @@ Object {
                         style="cursor: pointer;"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 iKBbTz"
+                          class="Row-sc-1nzvhrh-0 bAZdWs"
                         >
                           <div
                             class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -84,7 +84,7 @@ Object {
                             Max slippage
                           </div>
                           <div
-                            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
+                            class="Popover__Reference-sc-1liex6z-1 dFwFDV"
                           >
                             <button
                               class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
@@ -219,7 +219,7 @@ Object {
                         style="cursor: pointer;"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 iKBbTz"
+                          class="Row-sc-1nzvhrh-0 bAZdWs"
                         >
                           <div
                             class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -227,7 +227,7 @@ Object {
                             Transaction deadline
                           </div>
                           <div
-                            class="Popover__Reference-sc-1liex6z-1 dxsTSY"
+                            class="Popover__Reference-sc-1liex6z-1 dFwFDV"
                           >
                             <button
                               class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
@@ -323,7 +323,7 @@ Object {
                     </div>
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
@@ -337,7 +337,7 @@ Object {
                     />
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
@@ -383,7 +383,7 @@ Object {
         >
           <div>
             <div
-              class="Popover__Reference-sc-1liex6z-1 dxsTSY"
+              class="Popover__Reference-sc-1liex6z-1 dFwFDV"
             >
               <button
                 class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 evHSmT"
@@ -413,7 +413,7 @@ Object {
               </button>
             </div>
             <div
-              class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
+              class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
               style="position: absolute; left: 0px; top: 0px;"
             >
               <div
@@ -430,7 +430,7 @@ Object {
                       style="cursor: pointer;"
                     >
                       <div
-                        class="Row-sc-1nzvhrh-0 iKBbTz"
+                        class="Row-sc-1nzvhrh-0 bAZdWs"
                       >
                         <div
                           class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -438,7 +438,7 @@ Object {
                           Max slippage
                         </div>
                         <div
-                          class="Popover__Reference-sc-1liex6z-1 dxsTSY"
+                          class="Popover__Reference-sc-1liex6z-1 dFwFDV"
                         >
                           <button
                             class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
@@ -573,7 +573,7 @@ Object {
                       style="cursor: pointer;"
                     >
                       <div
-                        class="Row-sc-1nzvhrh-0 iKBbTz"
+                        class="Row-sc-1nzvhrh-0 bAZdWs"
                       >
                         <div
                           class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -581,7 +581,7 @@ Object {
                           Transaction deadline
                         </div>
                         <div
-                          class="Popover__Reference-sc-1liex6z-1 dxsTSY"
+                          class="Popover__Reference-sc-1liex6z-1 dFwFDV"
                         >
                           <button
                             class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
@@ -677,7 +677,7 @@ Object {
                   </div>
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div
@@ -691,7 +691,7 @@ Object {
                   />
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 DPpIY"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div
