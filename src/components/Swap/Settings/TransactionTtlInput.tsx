@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { IconButton } from 'components/Button'
+import Column from 'components/Column'
 import Expando, { IconPrefix } from 'components/Expando'
+import { inputCss, IntegerInput } from 'components/Input'
+import Row from 'components/Row'
 import { useDefaultTransactionTtl, useTransactionTtl } from 'hooks/useTransactionDeadline'
 import { Expando as ExpandoIcon } from 'icons'
 import { useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import Column from '../../Column'
-import { inputCss, IntegerInput } from '../../Input'
-import Row from '../../Row'
 import { Label } from './components'
 
 const Input = styled(Row)`
@@ -51,7 +51,7 @@ export default function TransactionTtlInput() {
         onExpand={() => setOpen(!open)}
         styledWrapper={false}
         title={
-          <Row style={{ cursor: 'pointer' }} onClick={() => setOpen(!open)}>
+          <Row style={{ cursor: 'pointer' }} onClick={() => setOpen((open) => !open)}>
             <Label
               name={<Trans>Transaction deadline</Trans>}
               // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando

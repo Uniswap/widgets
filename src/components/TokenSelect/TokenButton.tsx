@@ -54,7 +54,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
       <TokenButtonRow empty={!value} flex gap={0.4}>
         {value ? (
           <>
-            <Logo currency={value} size="1.5em" />
+            <Logo currency={value} symbol={value.symbol} />
             <ThemedText.ButtonLarge color={'currentColor'}>
               <span>{value.symbol}</span>
             </ThemedText.ButtonLarge>
