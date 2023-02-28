@@ -7,7 +7,7 @@ import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 import { useLocalApi, useProdApi } from 'wido'
-import { darkTheme, defaultTheme, lightTheme, SwapWidget } from 'wido-widget'
+import { darkTheme, defaultTheme, isStarknetChain, lightTheme, SwapWidget } from 'wido-widget'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 
@@ -80,6 +80,21 @@ function Fixture() {
   const [presetFromToken] = useValue('presetFromToken', { defaultValue: false })
   const [presetToToken] = useValue('presetToToken', { defaultValue: false })
 
+  const handleConnectWalletClick = useCallback(
+    (chainId: number) => {
+      if ('onConnectWalletClick' in eventHandlers) {
+        eventHandlers['onConnectWalletClick'](chainId)
+      }
+
+      if (isStarknetChain(chainId)) {
+        handleStarknet()
+      } else {
+        handleMetamask()
+      }
+    },
+    [handleStarknet, handleMetamask, eventHandlers]
+  )
+
   const widget = (
     <SwapWidget
       // locale={locale} // TODO
@@ -107,6 +122,7 @@ function Fixture() {
           : undefined
       }
       {...eventHandlers}
+      onConnectWalletClick={handleConnectWalletClick}
     />
   )
 
@@ -120,8 +136,6 @@ function Fixture() {
         {widget}
         <EventFeed events={events} onClear={() => setEvents([])} />
       </Row>
-      <button onClick={handleMetamask}>{ethProvider ? 'Disconnect' : 'Connect'} ethereum wallet</button>
-      <button onClick={handleStarknet}>{starknet ? 'Disconnect' : 'Connect'} starknet wallet</button>
       Starknet Address: {starknet?.account?.address}
     </Column>
   )
