@@ -144,7 +144,7 @@ export default function MaxSlippageSelect() {
     <Column gap={0.75}>
       <Expando
         title={
-          <Row style={{ cursor: 'pointer' }} grow justify="space-between" onClick={() => setOpen(!open)}>
+          <Row style={{ cursor: 'pointer' }} grow justify="space-between" onClick={() => setOpen((open) => !open)}>
             <Label
               name={<Trans>Max slippage</Trans>}
               // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando

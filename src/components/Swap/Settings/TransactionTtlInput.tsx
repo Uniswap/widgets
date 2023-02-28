@@ -51,7 +51,7 @@ export default function TransactionTtlInput() {
         onExpand={() => setOpen(!open)}
         styledWrapper={false}
         title={
-          <Row style={{ cursor: 'pointer' }} onClick={() => setOpen(!open)}>
+          <Row style={{ cursor: 'pointer' }} onClick={() => setOpen((open) => !open)}>
             <Label
               name={<Trans>Transaction deadline</Trans>}
               // TODO (tina): clicking on this tooltip on mobile shouldn't open/close expando
