@@ -174,8 +174,7 @@ function CaptionRow() {
           {caption}
         </ToolbarRow>
       }
-      styledTitleWrapper={false}
-      showBottomGradient={false}
+      styledWrapper={false}
       open={open}
       onExpand={maybeToggleOpen}
       maxHeight={16}

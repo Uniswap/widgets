@@ -72,92 +72,77 @@ Object {
                       class="Column-sc-1ul9eki-0 jgGrBm"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
+                        class="Row-sc-1nzvhrh-0 gpwEJV"
+                        style="cursor: pointer;"
                       >
                         <div
-                          class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
+                          class="Row-sc-1nzvhrh-0 bAZdWs"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
+                            class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
                           >
-                            <div
-                              class="Expando__TitleHeader-sc-yzkwmi-2 gSKTNM"
-                            >
-                              <div
-                                class="Row-sc-1nzvhrh-0 houru"
-                              >
-                                <div
-                                  class="Row-sc-1nzvhrh-0 bAZdWs"
-                                >
-                                  <div
-                                    class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
-                                  >
-                                    Max slippage
-                                  </div>
-                                  <div
-                                    class="Popover__Reference-sc-1liex6z-1 dFwFDV"
-                                  >
-                                    <button
-                                      class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
-                                      style="outline: none;"
-                                      tabindex="-1"
-                                    >
-                                      <svg
-                                        class="icons-sc-lekdau-0 iSRwlR"
-                                        fill="none"
-                                        height="24"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        width="24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          cx="12"
-                                          cy="12"
-                                          r="10"
-                                        />
-                                        <line
-                                          x1="12"
-                                          x2="12"
-                                          y1="16"
-                                          y2="12"
-                                        />
-                                        <line
-                                          x1="12"
-                                          x2="12.01"
-                                          y1="8"
-                                          y2="8"
-                                        />
-                                      </svg>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              class="Row-sc-1nzvhrh-0 fRHLjp"
-                            >
-                              <div
-                                class="Expando__IconPrefix-sc-yzkwmi-6 goBXKJ"
-                              >
-                                Auto
-                              </div>
-                              <button
-                                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
-                                color="secondary"
-                              />
-                            </div>
+                            Max slippage
                           </div>
+                          <div
+                            class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                          >
+                            <button
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                              style="outline: none;"
+                              tabindex="-1"
+                            >
+                              <svg
+                                class="icons-sc-lekdau-0 iSRwlR"
+                                fill="none"
+                                height="24"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <circle
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                />
+                                <line
+                                  x1="12"
+                                  x2="12"
+                                  y1="16"
+                                  y2="12"
+                                />
+                                <line
+                                  x1="12"
+                                  x2="12.01"
+                                  y1="8"
+                                  y2="8"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          class="Row-sc-1nzvhrh-0 icKASA"
+                        >
+                          <div
+                            class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
+                          >
+                            Auto
+                          </div>
+                          <button
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                            color="secondary"
+                          />
                         </div>
                       </div>
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-3 jgGrBm dAGgXo"
+                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
                       >
                         <div
-                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fScoqQ fbFiQW"
+                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NVvmR gyFZzL"
                         >
                           <div
                             class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
@@ -230,93 +215,82 @@ Object {
                       class="Column-sc-1ul9eki-0 jgGrBm"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
+                        class="Row-sc-1nzvhrh-0 kSeFcF"
+                        style="cursor: pointer;"
                       >
                         <div
-                          class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
+                          class="Row-sc-1nzvhrh-0 bAZdWs"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
+                            class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
+                          >
+                            Transaction deadline
+                          </div>
+                          <div
+                            class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                          >
+                            <button
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                              style="outline: none;"
+                              tabindex="-1"
+                            >
+                              <svg
+                                class="icons-sc-lekdau-0 iSRwlR"
+                                fill="none"
+                                height="24"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <circle
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                />
+                                <line
+                                  x1="12"
+                                  x2="12"
+                                  y1="16"
+                                  y2="12"
+                                />
+                                <line
+                                  x1="12"
+                                  x2="12.01"
+                                  y1="8"
+                                  y2="8"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          class="Row-sc-1nzvhrh-0 icKASA"
+                        >
+                          <div
+                            class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
                           >
                             <div
-                              class="Expando__TitleHeader-sc-yzkwmi-2 gSKTNM"
+                              class="TransactionTtlInput__TtlValue-sc-1fem02o-2 fyRhSr"
                             >
-                              <div
-                                class="Row-sc-1nzvhrh-0 bAZdWs"
-                              >
-                                <div
-                                  class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
-                                >
-                                  Transaction deadline
-                                </div>
-                                <div
-                                  class="Popover__Reference-sc-1liex6z-1 dFwFDV"
-                                >
-                                  <button
-                                    class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
-                                    style="outline: none;"
-                                    tabindex="-1"
-                                  >
-                                    <svg
-                                      class="icons-sc-lekdau-0 iSRwlR"
-                                      fill="none"
-                                      height="24"
-                                      stroke="currentColor"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      viewBox="0 0 24 24"
-                                      width="24"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                      />
-                                      <line
-                                        x1="12"
-                                        x2="12"
-                                        y1="16"
-                                        y2="12"
-                                      />
-                                      <line
-                                        x1="12"
-                                        x2="12.01"
-                                        y1="8"
-                                        y2="8"
-                                      />
-                                    </svg>
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              class="Row-sc-1nzvhrh-0 fRHLjp"
-                            >
-                              <div
-                                class="Expando__IconPrefix-sc-yzkwmi-6 goBXKJ"
-                              >
-                                <div
-                                  class="TransactionTtlInput__TtlValue-sc-1fem02o-2 fyRhSr"
-                                >
-                                  30
-                                  m
-                                </div>
-                              </div>
-                              <button
-                                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
-                                color="secondary"
-                              />
+                              30
+                              m
                             </div>
                           </div>
+                          <button
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                            color="secondary"
+                          />
                         </div>
                       </div>
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-3 jgGrBm dAGgXo"
+                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
                       >
                         <div
-                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fRDzgd fbFiQW"
+                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NNzpo gyFZzL"
                         >
                           <div
                             class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
@@ -452,92 +426,77 @@ Object {
                     class="Column-sc-1ul9eki-0 jgGrBm"
                   >
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
+                      class="Row-sc-1nzvhrh-0 gpwEJV"
+                      style="cursor: pointer;"
                     >
                       <div
-                        class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
+                        class="Row-sc-1nzvhrh-0 bAZdWs"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
+                          class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
                         >
-                          <div
-                            class="Expando__TitleHeader-sc-yzkwmi-2 gSKTNM"
-                          >
-                            <div
-                              class="Row-sc-1nzvhrh-0 houru"
-                            >
-                              <div
-                                class="Row-sc-1nzvhrh-0 bAZdWs"
-                              >
-                                <div
-                                  class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
-                                >
-                                  Max slippage
-                                </div>
-                                <div
-                                  class="Popover__Reference-sc-1liex6z-1 dFwFDV"
-                                >
-                                  <button
-                                    class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
-                                    style="outline: none;"
-                                    tabindex="-1"
-                                  >
-                                    <svg
-                                      class="icons-sc-lekdau-0 iSRwlR"
-                                      fill="none"
-                                      height="24"
-                                      stroke="currentColor"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      viewBox="0 0 24 24"
-                                      width="24"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                      />
-                                      <line
-                                        x1="12"
-                                        x2="12"
-                                        y1="16"
-                                        y2="12"
-                                      />
-                                      <line
-                                        x1="12"
-                                        x2="12.01"
-                                        y1="8"
-                                        y2="8"
-                                      />
-                                    </svg>
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            class="Row-sc-1nzvhrh-0 fRHLjp"
-                          >
-                            <div
-                              class="Expando__IconPrefix-sc-yzkwmi-6 goBXKJ"
-                            >
-                              Auto
-                            </div>
-                            <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
-                              color="secondary"
-                            />
-                          </div>
+                          Max slippage
                         </div>
+                        <div
+                          class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                        >
+                          <button
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                            style="outline: none;"
+                            tabindex="-1"
+                          >
+                            <svg
+                              class="icons-sc-lekdau-0 iSRwlR"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                              <line
+                                x1="12"
+                                x2="12"
+                                y1="16"
+                                y2="12"
+                              />
+                              <line
+                                x1="12"
+                                x2="12.01"
+                                y1="8"
+                                y2="8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="Row-sc-1nzvhrh-0 icKASA"
+                      >
+                        <div
+                          class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
+                        >
+                          Auto
+                        </div>
+                        <button
+                          class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                          color="secondary"
+                        />
                       </div>
                     </div>
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-3 jgGrBm dAGgXo"
+                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fScoqQ fbFiQW"
+                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NVvmR gyFZzL"
                       >
                         <div
                           class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
@@ -610,93 +569,82 @@ Object {
                     class="Column-sc-1ul9eki-0 jgGrBm"
                   >
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__HeaderColumn-sc-yzkwmi-0 ffUVrO cRUqIm"
+                      class="Row-sc-1nzvhrh-0 kSeFcF"
+                      style="cursor: pointer;"
                     >
                       <div
-                        class="type__TextWrapper-sc-16386l-0 jSRqbA subhead subhead-2 css-19as5gp"
+                        class="Row-sc-1nzvhrh-0 bAZdWs"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 Expando__TitleRow-sc-yzkwmi-1 iEAisM fkZuZi"
+                          class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
+                        >
+                          Transaction deadline
+                        </div>
+                        <div
+                          class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                        >
+                          <button
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                            style="outline: none;"
+                            tabindex="-1"
+                          >
+                            <svg
+                              class="icons-sc-lekdau-0 iSRwlR"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                              <line
+                                x1="12"
+                                x2="12"
+                                y1="16"
+                                y2="12"
+                              />
+                              <line
+                                x1="12"
+                                x2="12.01"
+                                y1="8"
+                                y2="8"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="Row-sc-1nzvhrh-0 icKASA"
+                      >
+                        <div
+                          class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
                         >
                           <div
-                            class="Expando__TitleHeader-sc-yzkwmi-2 gSKTNM"
+                            class="TransactionTtlInput__TtlValue-sc-1fem02o-2 fyRhSr"
                           >
-                            <div
-                              class="Row-sc-1nzvhrh-0 bAZdWs"
-                            >
-                              <div
-                                class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
-                              >
-                                Transaction deadline
-                              </div>
-                              <div
-                                class="Popover__Reference-sc-1liex6z-1 dFwFDV"
-                              >
-                                <button
-                                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
-                                  style="outline: none;"
-                                  tabindex="-1"
-                                >
-                                  <svg
-                                    class="icons-sc-lekdau-0 iSRwlR"
-                                    fill="none"
-                                    height="24"
-                                    stroke="currentColor"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    viewBox="0 0 24 24"
-                                    width="24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <circle
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                    />
-                                    <line
-                                      x1="12"
-                                      x2="12"
-                                      y1="16"
-                                      y2="12"
-                                    />
-                                    <line
-                                      x1="12"
-                                      x2="12.01"
-                                      y1="8"
-                                      y2="8"
-                                    />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            class="Row-sc-1nzvhrh-0 fRHLjp"
-                          >
-                            <div
-                              class="Expando__IconPrefix-sc-yzkwmi-6 goBXKJ"
-                            >
-                              <div
-                                class="TransactionTtlInput__TtlValue-sc-1fem02o-2 fyRhSr"
-                              >
-                                30
-                                m
-                              </div>
-                            </div>
-                            <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
-                              color="secondary"
-                            />
+                            30
+                            m
                           </div>
                         </div>
+                        <button
+                          class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                          color="secondary"
+                        />
                       </div>
                     </div>
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-3 jgGrBm dAGgXo"
+                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-4 Expando___StyledInnerColumn-sc-yzkwmi-5 iSonrV fRDzgd fbFiQW"
+                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NNzpo gyFZzL"
                       >
                         <div
                           class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"

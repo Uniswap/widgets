@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import Expando from 'components/Expando'
+import Expando, { IconPrefix } from 'components/Expando'
 import Popover from 'components/Popover'
 import { useTooltip } from 'components/Tooltip'
 import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
+import { Expando as ExpandoIcon } from 'icons'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -12,7 +13,7 @@ import { slippageAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { BaseButton, TextButton } from '../../Button'
+import { BaseButton, IconButton, TextButton } from '../../Button'
 import Column from '../../Column'
 import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
@@ -147,10 +148,8 @@ export default function MaxSlippageSelect() {
   return (
     <Column gap={0.75}>
       <Expando
-        hideRulers
-        showBottomGradient={false}
         title={
-          <Row grow>
+          <Row style={{ cursor: 'pointer' }} grow justify="space-between" onClick={() => setOpen((open) => !open)}>
             <Label
               name={<Trans>Max slippage</Trans>}
               tooltip={
@@ -159,9 +158,13 @@ export default function MaxSlippageSelect() {
                 </Trans>
               }
             />
+            <Row gap={0.2} justify="flex-end" flex>
+              <IconPrefix>{slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}</IconPrefix>
+              <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+            </Row>
           </Row>
         }
-        iconPrefix={slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}
+        styledWrapper={false}
         maxHeight={5}
         open={open}
         onExpand={() => setOpen(!open)}
