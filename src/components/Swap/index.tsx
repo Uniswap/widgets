@@ -4,7 +4,6 @@ import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
-import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { SN_PROVIDER, usePendingTransactions } from 'hooks/transactions'
 import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
 import useInterval from 'hooks/useInterval'
@@ -54,7 +53,7 @@ async function getFistValidTxHash(snBlockNumber?: number, snAccount?: string) {
 // SwapProps also currently includes props needed for wallet connection (eg hideConnectionUI),
 // since the wallet connection component exists within the Swap component.
 // TODO(zzmp): refactor WalletConnection into Widget component
-export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers, TokenDefaults, WidgetSettings {
+export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers, WidgetSettings {
   hideConnectionUI?: boolean
 }
 
@@ -63,7 +62,6 @@ export default function Swap(props: SwapProps) {
   useSyncController(props as SwapController)
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
-  useSyncTokenDefaults(props as TokenDefaults)
 
   const snAccount = useSnAccountAddress()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
