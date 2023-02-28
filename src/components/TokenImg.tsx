@@ -10,8 +10,8 @@ interface BaseProps {
 
 type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>, keyof BaseProps>
 
-function TokenImg({ token, size }: TokenImgProps) {
-  return <Logo currency={token} size={(size ?? 1) + 'em'} />
+function TokenImg({ token, size = 1.5 }: TokenImgProps) {
+  return <Logo currency={token} size={size + 'rem'} symbol={token.symbol} />
 }
 
 export default styled(TokenImg)<{ size?: number }>`

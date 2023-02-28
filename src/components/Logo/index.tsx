@@ -8,7 +8,7 @@ export * from './hooks'
 export * from './util'
 
 const MissingImageLogo = styled.div<{ size?: string }>`
-  --size: ${({ size }) => size};
+  --size: ${({ size }) => size ?? '24px'};
   background-color: ${({ theme }) => theme.interactive};
   border-radius: 100px;
   color: ${({ theme }) => theme.primary};
