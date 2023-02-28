@@ -55,9 +55,16 @@ export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed }:
   const [chainIdFilter, setChainIdFilter] = useState<number | undefined>()
   const allChainList = useTokenList()
   const list = useMemo(() => {
-    if (!chainIdFilter) return allChainList
-    return allChainList.filter((x) => x.chainId === chainIdFilter)
-  }, [allChainList, chainIdFilter])
+    if (!chainIdFilter) {
+      if (chainIdsAllowed && Array.isArray(chainIdsAllowed)) {
+        return allChainList.filter((x) => chainIdsAllowed.includes(x.chainId))
+      }
+
+      return allChainList
+    } else {
+      return allChainList.filter((x) => x.chainId === chainIdFilter)
+    }
+  }, [allChainList, chainIdFilter, chainIdsAllowed])
 
   const tokens = useQueryTokens(query, list)
 
