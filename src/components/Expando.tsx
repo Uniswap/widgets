@@ -8,7 +8,7 @@ import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, ThemedText } from 'theme'
 
-const HeaderRow = styled(Column)`
+const HeaderColumn = styled(Column)`
   cursor: pointer;
   padding: 1.25em 1.5em;
 `
@@ -91,7 +91,7 @@ export default function Expando({
     <Column {...rest}>
       {styledWrapper ? (
         <StyledWrapper expanded={open}>
-          <HeaderRow onClick={onExpand}>
+          <HeaderColumn onClick={onExpand}>
             <ThemedText.ButtonSmall color="secondary">
               <TitleRow gap={1}>
                 <TitleHeader>{title}</TitleHeader>
@@ -101,7 +101,7 @@ export default function Expando({
                 </Row>
               </TitleRow>
             </ThemedText.ButtonSmall>
-          </HeaderRow>
+          </HeaderColumn>
           {open && <Rule padded />}
           <ExpandoColumn open={open} height={height} maxHeight={maxHeight}>
             <InnerColumn
