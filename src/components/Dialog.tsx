@@ -2,7 +2,7 @@ import 'wicg-inert'
 
 import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
-import { largeIconCss, X } from 'icons'
+import { largeIconCss, StyledXButton } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
 import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
@@ -108,13 +108,6 @@ const HeaderRow = styled(Row)`
 `
 
 const StyledBackButton = styled(ArrowLeft)`
-  :hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
-`
-
-const StyledXButton = styled(X)`
   :hover {
     cursor: pointer;
     opacity: 0.6;

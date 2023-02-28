@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { X } from 'icons'
+import { StyledXButton } from 'icons'
 import { forwardRef, PropsWithChildren, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
@@ -71,13 +71,6 @@ const Wrapper = styled.div<{ open: boolean }>`
     * {
       box-sizing: border-box;
     }
-  }
-`
-
-const StyledXButton = styled(X)`
-  :hover {
-    cursor: pointer;
-    opacity: 0.6;
   }
 `
 

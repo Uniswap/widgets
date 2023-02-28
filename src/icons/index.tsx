@@ -9,6 +9,7 @@ import { ReactComponent as ReverseIcon } from 'assets/svg/reverse.svg'
 import { ReactComponent as SpinnerIcon } from 'assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'assets/svg/wallet.svg'
 import { ReactComponent as WalletDisconnectIcon } from 'assets/svg/wallet_disconnect.svg'
+import { iconHoverCss } from 'css/hover'
 import { FunctionComponent, SVGProps } from 'react'
 // This file wraps react-feather, so its import is intentional.
 /* eslint-disable no-restricted-imports */
@@ -168,4 +169,8 @@ export const LargeArrow = styled(icon(LargeArrowIcon))<{ color?: Color }>`
 export const Gas = styled(icon(GasIcon))<{ color?: Color }>`
   fill: ${({ color = 'active', theme }) => theme[color]};
   stroke: ${({ color = 'active', theme }) => theme[color]};
+`
+
+export const StyledXButton = styled(X)`
+  ${iconHoverCss}
 `
