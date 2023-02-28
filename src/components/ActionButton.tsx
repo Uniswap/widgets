@@ -117,7 +117,7 @@ export default function ActionButton({
     }
   }, [color, disabled])
 
-  const buttonSize = useMemo(() => narrow ? 'small' : action ? 'medium' : 'large', [narrow, action])
+  const buttonSize = useMemo(() => (narrow ? 'small' : action ? 'medium' : 'large'), [narrow, action])
 
   return (
     <Overlay
