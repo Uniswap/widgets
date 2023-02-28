@@ -2,7 +2,8 @@ import { Trans } from '@lingui/macro'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
-import { AlertTriangle, Icon, LargeIcon } from 'icons'
+import Row from 'components/Row'
+import { AlertTriangle, Icon, LargeIcon, StyledXButton } from 'icons'
 import { Info as InfoIcon } from 'icons'
 import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -65,6 +66,9 @@ export default function ErrorDialog({ header, message, error, action, onClick }:
 
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
+      <Row flex flow="row-reverse">
+        <LargeIcon icon={StyledXButton} onClick={onClick} />
+      </Row>
       <StatusHeader icon={AlertTriangle} iconColor="critical" iconSize={open ? 3 : 4}>
         <ErrorHeader gap={open ? 0 : 0.75} open={open}>
           <ThemedText.Subhead1>{header || <Trans>Something went wrong.</Trans>}</ThemedText.Subhead1>

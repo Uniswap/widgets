@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { X } from 'icons'
+import { StyledXButton } from 'icons'
 import { forwardRef, PropsWithChildren, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
@@ -74,13 +74,6 @@ const Wrapper = styled.div<{ open: boolean }>`
   }
 `
 
-const StyledXButton = styled(X)`
-  :hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
-`
-
 type BottomSheetModalProps = PropsWithChildren<{
   onClose: () => void
   open: boolean
@@ -95,7 +88,7 @@ export function BottomSheetModal({ children, onClose, open, title }: BottomSheet
       <RootElement ref={setRootElement} open={open} />
       <DialogProvider value={rootElement}>
         {open && (
-          <Dialog color="dialog" onClose={onClose}>
+          <Dialog color="dialog" onClose={onClose} forceContain>
             <>
               {title && <Header title={<Trans>{title}</Trans>} closeButton={<StyledXButton />} />}
               {children}

@@ -2,13 +2,21 @@ import 'wicg-inert'
 
 import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
-import { largeIconCss, X } from 'icons'
+import { largeIconCss, StyledXButton } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
 import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
-import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
+import {
+  AnimationSpeed,
+  Color,
+  fadeAnimationCss,
+  Layer,
+  Provider as ThemeProvider,
+  ThemedText,
+  TransitionDuration,
+} from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
 
 import { PopoverBoundaryProvider } from './Popover'
@@ -114,13 +122,6 @@ const StyledBackButton = styled(ArrowLeft)`
   }
 `
 
-const StyledXButton = styled(X)`
-  :hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
-`
-
 const Title = styled.div`
   left: 50%;
   position: absolute;
@@ -184,24 +185,6 @@ const slideOutRight = keyframes`
   }
 `
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`
-
-const fadeOut = keyframes`
-  to {
-    opacity: 0;
-  }
-  from {
-    opacity: 1;
-  }
-`
-
 const HiddenWrapper = styled.div<{ hideOverflow?: boolean; constrain?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.large}em;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
@@ -228,13 +211,6 @@ const slideAnimationCss = css`
   }
 `
 
-const fadeAnimationCss = css`
-  animation: ${fadeIn} ${AnimationSpeed.Medium} ease-in-out;
-  &.${SlideAnimationType.CLOSING} {
-    animation: ${fadeOut} ${AnimationSpeed.Medium} ease-in-out;
-  }
-`
-
 const EMPTY_CSS = css``
 
 const getAnimation = (animationType?: DialogAnimationType) => {
@@ -249,12 +225,12 @@ const getAnimation = (animationType?: DialogAnimationType) => {
   }
 }
 
-const FullScreenWrapper = styled.div<{ enabled?: boolean; animationType?: DialogAnimationType }>`
-  ${({ enabled, animationType }) =>
+const FullScreenWrapper = styled.div<{ enabled?: boolean; fadeAnimation?: boolean }>`
+  ${({ enabled, fadeAnimation }) =>
     enabled &&
     css`
       align-items: center;
-      ${animationType === DialogAnimationType.FADE ? fadeAnimationCss : ''}
+      ${fadeAnimation ? fadeAnimationCss : ''}
       background-color: ${({ theme }) => theme.scrim};
       display: flex;
       height: 100%;
@@ -350,9 +326,9 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
           <div ref={popoverRef}>
             <FullScreenWrapper
               enabled={pageCentered}
+              fadeAnimation={context.options?.animationType === DialogAnimationType.FADE}
               onClick={closeOnBackgroundClick}
               ref={fullScreenWrapperRef}
-              animationType={context.options?.animationType}
             >
               <HiddenWrapper constrain={pageCentered} hideOverflow={!pageCentered}>
                 <AnimationWrapper animationType={context.options?.animationType}>

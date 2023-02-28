@@ -10,6 +10,7 @@ import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import Row from '../../Row'
 import SwapInputOutputEstimate from '../Summary/Estimate'
@@ -131,7 +132,15 @@ function CaptionRow() {
           : undefined,
       },
       {
-        name: t`Minimum output after slippage`,
+        name: (
+          <ThemedText.Body2 marginRight="0.25em">
+            <Trans>Minimum output after slippage </Trans>
+            <ThemedText.Body2 $inline color={impact?.warning ?? 'secondary'}>
+              {' '}
+              ({impact?.toString()})
+            </ThemedText.Body2>
+          </ThemedText.Body2>
+        ),
         value: trade ? `${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}` : '-',
       },
       {
@@ -156,6 +165,7 @@ function CaptionRow() {
       title={
         <ToolbarRow
           flex
+          align="center"
           justify="space-between"
           data-testid="toolbar"
           onClick={maybeToggleOpen}
@@ -164,15 +174,14 @@ function CaptionRow() {
           {caption}
         </ToolbarRow>
       }
-      styledTitleWrapper={false}
-      showBottomGradient={false}
+      styledWrapper={false}
       open={open}
       onExpand={maybeToggleOpen}
       maxHeight={16}
     >
       <Column>
         <ToolbarTradeSummary rows={tradeSummaryRows} />
-        <ToolbarOrderRouting trade={trade} />
+        <ToolbarOrderRouting trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
       </Column>
     </StyledExpando>
   )
@@ -205,7 +214,7 @@ function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
       </ActionButton>
     )
   }
-  return <SwapActionButton hideConnectionUI={hideConnectionUI} />
+  return <SwapActionButton />
 }
 
 function Toolbar({ hideConnectionUI }: ToolbarProps) {
