@@ -58,10 +58,10 @@ const SettingsButton = styled(IconButton)`
 export default function Settings() {
   const [open, setOpen] = useState(false)
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
-  useOutsideClickHandler(wrapper, () => setOpen(false))
+  const isMobile = useIsMobileWidth()
+  useOutsideClickHandler(isMobile ? null : wrapper, () => setOpen(false))
   useOnEscapeHandler(() => setOpen(false))
 
-  const isMobile = useIsMobileWidth()
   return (
     <div ref={setWrapper}>
       {isMobile ? (
