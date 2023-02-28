@@ -1,34 +1,26 @@
 import { Options, Placement } from '@popperjs/core'
+import { globalFontStyles } from 'css/font'
+import useInterval from 'hooks/useInterval'
+import ms from 'ms.macro'
 import maxSize from 'popper-max-size-modifier'
-import React, {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { createContext, PropsWithChildren, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, Layer } from 'theme'
 
-type PopoverBoundary = { boundary?: HTMLDivElement | null; updateTrigger?: any }
-const BoundaryContext = createContext<PopoverBoundary>({})
+const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
 /* Defines a boundary component past which a Popover should not overflow. */
 export function PopoverBoundaryProvider({
   value,
-  updateTrigger,
   children,
 }: PropsWithChildren<{ value: HTMLDivElement | null; updateTrigger?: any }>) {
-  const boundaryContextValue = useMemo(() => ({ boundary: value, updateTrigger }), [updateTrigger, value])
-  return <BoundaryContext.Provider value={boundaryContextValue}>{children}</BoundaryContext.Provider>
+  return <BoundaryContext.Provider value={value}>{children}</BoundaryContext.Provider>
 }
 
 const PopoverContainer = styled.div<{ show: boolean }>`
+  ${globalFontStyles}
   background-color: ${({ theme }) => theme.dialog};
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
@@ -117,7 +109,7 @@ export default function Popover({
   contained,
   showArrow = true,
 }: PopoverProps) {
-  const { boundary, updateTrigger } = useContext(BoundaryContext)
+  const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
@@ -160,10 +152,11 @@ export default function Popover({
 
   const { styles, attributes, update } = usePopper(reference.current, popover?.current, options)
 
-  // Manually triggers an update, if prop is provided
-  useEffect(() => {
-    update?.()
-  }, [update, updateTrigger])
+  const updateCallback = useCallback(() => {
+    update && update()
+  }, [update])
+
+  useInterval(updateCallback, show ? ms`0.1s` : null)
 
   const containerOnClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation()

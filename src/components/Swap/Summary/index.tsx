@@ -3,11 +3,13 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
 import { Header, useCloseDialog } from 'components/Dialog'
+import { PopoverBoundaryProvider } from 'components/Popover'
 import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
 import { UserRejectedRequestError } from 'errors'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
+import { useWindowWidth } from 'hooks/useWindowWidth'
 import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -261,6 +263,8 @@ interface SummaryDialogProps {
 export function SummaryDialog(props: SummaryDialogProps) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
   const [showSpeedbump, setShowSpeedbump] = useState(props.impact?.warning === 'error')
+  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  const width = useWindowWidth()
 
   const onAcknowledgeSpeedbump = useCallback(() => {
     setAckPriceImpact(true)
@@ -289,13 +293,15 @@ export function SummaryDialog(props: SummaryDialogProps) {
           {t`price impact on the market price of this pool. Do you wish to continue? `}
         </SpeedBumpDialog>
       ) : (
-        <>
-          <Header title={<Trans>Review swap</Trans>} />
-          <Body flex align="stretch">
-            <Details {...props} />
-          </Body>
-          <ConfirmButton {...props} triggerImpactSpeedbump={triggerImpactSpeedbump} />
-        </>
+        <div style={{ minWidth: Math.min(400, width) }} ref={setBoundary}>
+          <PopoverBoundaryProvider value={boundary}>
+            <Header title={<Trans>Review swap</Trans>} />
+            <Body flex align="stretch">
+              <Details {...props} />
+            </Body>
+            <ConfirmButton {...props} triggerImpactSpeedbump={triggerImpactSpeedbump} />
+          </PopoverBoundaryProvider>
+        </div>
       )}
     </>
   )
