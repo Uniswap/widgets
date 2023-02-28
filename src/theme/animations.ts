@@ -1,4 +1,3 @@
-import { SlideAnimationType } from 'components/Dialog'
 import { css, keyframes } from 'styled-components/macro'
 
 export enum TransitionDuration {
@@ -11,6 +10,18 @@ export const AnimationSpeed = {
   Fast: `${TransitionDuration.Fast}ms`,
   Medium: `${TransitionDuration.Medium}ms`,
   Slow: `${TransitionDuration.Slow}ms`,
+}
+
+export enum SlideAnimationType {
+  /** Used when the Dialog is closing. */
+  CLOSING = 'closing',
+  /**
+   * Used when the Dialog is paging to another Dialog screen.
+   * Paging occurs when multiple screens are sequenced in the Dialog, so that an action that closes
+   * one will simultaneously open the next. Special-casing paging animations can make the user feel
+   * like they are not leaving the Dialog, despite the initial screen closing.
+   */
+  PAGING = 'paging',
 }
 
 export const fadeIn = keyframes`
