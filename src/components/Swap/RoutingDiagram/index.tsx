@@ -48,27 +48,28 @@ const Dots = styled(DotLine)`
 
 const RouteRow = styled(Row)`
   flex-wrap: nowrap;
+  margin: 0 0.5em;
+  position: relative;
 `
 
 const GasEstimateRow = styled(Row)`
   border-top: 1px solid ${({ theme }) => theme.outline};
-  margin: 0 0.75em;
   max-width: 350px;
-  padding: 0.5em 0;
+  padding: 0.5em 0 0;
 `
 
 const RouteNode = styled(Row)`
-  background-color: ${({ theme }) => theme.interactive};
+  background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.5}em`};
-  margin-left: 1.625em;
-  padding: 0.25em 0.375em;
+  margin-left: 0.5em;
+  padding: 0.25em;
   width: max-content;
 `
 
 const RouteBadge = styled.div`
-  background-color: ${({ theme }) => theme.module};
+  background-color: ${({ theme }) => theme.interactive};
   border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.25}em`};
-  padding: 0.125em;
+  padding: 0.25em;
 `
 
 function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
@@ -76,10 +77,12 @@ function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
   return (
     <RouteNode>
       <Row gap={0.375}>
-        <ThemedText.Caption>{route.percent.toSignificant(2)}%</ThemedText.Caption>
         <RouteBadge>
-          <ThemedText.Badge color="secondary">{protocol === Protocol.MIXED ? 'V3 + V2' : protocol}</ThemedText.Badge>
+          <ThemedText.Badge fontSize={'12px'} color="secondary">
+            {protocol === Protocol.MIXED ? 'V3 + V2' : protocol}
+          </ThemedText.Badge>
         </RouteBadge>
+        <ThemedText.Caption>{route.percent.toSignificant(2)}%</ThemedText.Caption>
       </Row>
     </RouteNode>
   )
@@ -87,6 +90,7 @@ function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
 
 const RoutePool = styled(RouteNode)`
   margin: 0 0.75em;
+  padding: 0.25em;
 `
 
 function Pool({
@@ -100,13 +104,15 @@ function Pool({
 }) {
   return (
     <RoutePool>
-      <ThemedText.Caption>
-        <Row gap={0.25}>
-          <TokenImg token={originCurrency} />
-          <TokenImg token={targetCurrency} style={{ marginLeft: '-0.65em' }} />
-          {feeAmount / 10_000}%
+      <Row gap={0.25}>
+        <Row flex align="center">
+          <TokenImg token={originCurrency} size={0.75} />
+          <Row style={{ marginLeft: '-0.25em' }} flex align="center">
+            <TokenImg token={targetCurrency} size={0.75} />
+          </Row>
         </Row>
-      </ThemedText.Caption>
+        <ThemedText.Caption>{feeAmount / 10_000}%</ThemedText.Caption>
+      </Row>
     </RoutePool>
   )
 }
@@ -116,12 +122,14 @@ function Route({ route }: { route: RoutingDiagramEntry }) {
   const [, targetCurrency] = route.path[route.path.length - 1]
 
   return (
-    <Row align="center" style={{ gridTemplateColumns: '1em 1fr 1em' }}>
-      <TokenImg token={originCurrency} />
-      <RouteRow flex style={{ position: 'relative' }}>
-        <Dots />
+    <Row align="center" justify="space-between" flex grow>
+      <Row align="center" justify="flex-start" flex>
+        <TokenImg token={originCurrency} />
         <RouteDetail route={route} />
-        <RouteRow justify="space-evenly" flex>
+      </Row>
+      <RouteRow flex grow>
+        <Dots />
+        <RouteRow justify="space-around" flex grow>
           {route.path.map(([originCurrency, targetCurrency, feeAmount], index) => (
             <Pool key={index} originCurrency={originCurrency} targetCurrency={targetCurrency} feeAmount={feeAmount} />
           ))}
@@ -144,7 +152,7 @@ export default function RoutingDiagram({
   const routes: RoutingDiagramEntry[] = useMemo(() => getTokenPath(trade), [trade])
 
   return (
-    <Column gap={0.75}>
+    <Column gap={0.75} padding="0.5rem">
       {!hideHeader && (
         <>
           <AutoRouterHeader />
