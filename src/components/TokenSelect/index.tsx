@@ -27,6 +27,15 @@ const SearchInputContainer = styled(Row)`
   ${inputCss}
 `
 
+const TokenSelectContainer = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  overflow: hidden;
+  padding: 0.5em 0 0;
+  @supports (overflow: clip) {
+    overflow: 'clip';
+  }
+`
+
 function usePrefetchBalances() {
   const { account } = useWeb3React()
   const tokenList = useTokenList()
@@ -87,41 +96,45 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
     )
   }
   return (
-    <Dialog color="container" onClose={onClose}>
-      <Header title={<Trans>Select a token</Trans>} />
-      <Column gap={0.75}>
-        <Row pad={0.75} grow>
-          <SearchInputContainer gap={0.75} justify="start" flex>
-            <Search color="secondary" />
-            <ThemedText.Body1 flexGrow={1}>
-              <StringInput
-                value={query}
-                onChange={setQuery}
-                placeholder={t`Search by token name or address`}
-                onKeyDown={options?.onKeyDown}
-                ref={input}
-              />
-            </ThemedText.Body1>
-          </SearchInputContainer>
-        </Row>
-        <CommonBases chainId={chainId} onSelect={onSelect} selected={value} />
-        <Rule padded />
-      </Column>
-      {isLoaded ? (
-        tokens.length ? (
-          <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
-        ) : (
-          <Column padded>
-            <Row justify="center">
-              <ThemedText.Body1 color="secondary">
-                <Trans>No results found.</Trans>
-              </ThemedText.Body1>
+    <Dialog color="container" onClose={onClose} padded={false}>
+      <TokenSelectContainer>
+        <Header title={<Trans>Select a token</Trans>} />
+        <Column gap={0.75}>
+          <Column gap={0.75} style={{ margin: '0 0.5em' }}>
+            <Row pad={0.75} grow>
+              <SearchInputContainer gap={0.75} justify="start" flex>
+                <Search color="secondary" />
+                <ThemedText.Body1 flexGrow={1}>
+                  <StringInput
+                    value={query}
+                    onChange={setQuery}
+                    placeholder={t`Search by token name or address`}
+                    onKeyDown={options?.onKeyDown}
+                    ref={input}
+                  />
+                </ThemedText.Body1>
+              </SearchInputContainer>
             </Row>
+            <CommonBases chainId={chainId} onSelect={onSelect} selected={value} />
           </Column>
-        )
-      ) : (
-        <TokenOptionsSkeleton />
-      )}
+          <Rule padded />
+        </Column>
+        {isLoaded ? (
+          tokens.length ? (
+            <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
+          ) : (
+            <Column padded>
+              <Row justify="center">
+                <ThemedText.Body1 color="secondary">
+                  <Trans>No results found.</Trans>
+                </ThemedText.Body1>
+              </Row>
+            </Column>
+          )
+        ) : (
+          <TokenOptionsSkeleton />
+        )}
+      </TokenSelectContainer>
     </Dialog>
   )
 }
