@@ -173,4 +173,5 @@ export const Gas = styled(icon(GasIcon))<{ color?: Color }>`
 
 export const StyledXButton = styled(X)`
   ${iconHoverCss}
+  stroke-width: 2.5px;
 `

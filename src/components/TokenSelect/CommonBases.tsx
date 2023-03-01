@@ -63,10 +63,8 @@ export default function CommonBases({
             key={currencyId(currency)}
             gap={0.25}
           >
-            <TokenImg token={currency} />
-            <ThemedText.ButtonMedium fontWeight={600} lineHeight="1.25em">
-              {currency.symbol}
-            </ThemedText.ButtonMedium>
+            <TokenImg token={currency} size={1.25} />
+            <ThemedText.ButtonMedium lineHeight="1.25em">{currency.symbol}</ThemedText.ButtonMedium>
           </BaseWrapper>
         )
       })}

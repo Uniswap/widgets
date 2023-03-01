@@ -112,9 +112,9 @@ const StyledBackButton = styled(ArrowLeft)`
 `
 
 const Title = styled.div`
-  left: 50%;
-  position: absolute;
-  transform: translateX(-50%);
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
 `
 
 interface HeaderProps {
@@ -129,19 +129,18 @@ export function Header({ title, closeButton }: HeaderProps) {
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
       {closeButton ? (
         <div onClick={onClose}>{closeButton}</div>
-      ) : animationType === DialogAnimationType.SLIDE ? (
-        <StyledBackButton onClick={onClose} />
       ) : (
-        <StyledXButton onClick={onClose} />
+        animationType === DialogAnimationType.SLIDE && <StyledBackButton onClick={onClose} />
       )}
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
       </Title>
+      {!closeButton && animationType !== DialogAnimationType.SLIDE && <StyledXButton onClick={onClose} />}
     </HeaderRow>
   )
 }
 
-export const Modal = styled.div<{ color: Color; constrain?: boolean }>`
+export const Modal = styled.div<{ color: Color; constrain?: boolean; padded?: boolean }>`
   ${globalFontStyles};
 
   background-color: ${({ color, theme }) => theme[color]};
@@ -151,7 +150,7 @@ export const Modal = styled.div<{ color: Color; constrain?: boolean }>`
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
   outline: ${({ theme, constrain }) => (constrain ? `1px solid ${theme.outline}` : 'transparent')};
-  padding: 0.5em;
+  padding: ${({ padded }) => (padded ? '0.5rem' : '0')};
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   right: 0;
   top: 0;
@@ -182,8 +181,8 @@ const HiddenWrapper = styled.div<{ hideOverflow?: boolean; constrain?: boolean }
   overflow: ${({ hideOverflow }) => (hideOverflow ? 'hidden' : 'visible')};
   position: ${({ constrain }) => (constrain ? 'relative' : 'absolute')};
   top: 0;
-  width: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
 
+  width: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   @supports (overflow: clip) {
     overflow: ${({ hideOverflow }) => (hideOverflow ? 'clip' : 'visible')};
   }
@@ -252,9 +251,10 @@ interface DialogProps {
   children: ReactNode
   onClose?: () => void
   forceContain?: boolean
+  padded?: boolean
 }
 
-export default function Dialog({ color, children, onClose, forceContain }: DialogProps) {
+export default function Dialog({ color, children, onClose, forceContain, padded = true }: DialogProps) {
   const context = useContext(Context)
   useEffect(() => {
     context.setActive(true)
@@ -326,6 +326,7 @@ export default function Dialog({ color, children, onClose, forceContain }: Dialo
                       color={color}
                       ref={modal}
                       constrain={pageCentered}
+                      padded={padded}
                       onClick={(e) => {
                         pageCentered && e.stopPropagation()
                       }}
