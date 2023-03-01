@@ -1,7 +1,7 @@
+import { namehash } from 'ethers/lib/utils'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useMemo } from 'react'
 import isZero from 'utils/isZero'
-import { safeNamehash } from 'utils/safeNamehash'
 
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 
@@ -9,7 +9,7 @@ import { useENSRegistrarContract, useENSResolverContract } from './useContract'
  * Does a lookup for an ENS name to find its contenthash.
  */
 export default function useENSContentHash(ensName?: string | null): { loading: boolean; contenthash: string | null } {
-  const ensNodeArgument = useMemo(() => [ensName === null ? undefined : safeNamehash(ensName)], [ensName])
+  const ensNodeArgument = useMemo(() => [!ensName ? undefined : namehash(ensName)], [ensName])
   const registrarContract = useENSRegistrarContract(false)
   const resolverAddressResult = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
   const resolverAddress = resolverAddressResult.result?.[0]
