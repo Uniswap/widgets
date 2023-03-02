@@ -43,7 +43,7 @@ export function Label({ name, tooltip }: LabelProps) {
     <Row gap={0.5} justify="flex-start" flex align="center">
       <ThemedText.Subhead2>{name}</ThemedText.Subhead2>
       {tooltip && (
-        <Tooltip placement="top" contained icon={Info}>
+        <Tooltip placement="top" contained icon={Info} iconProps={{ style: { height: '100%' } }}>
           <ThemedText.Caption>{tooltip}</ThemedText.Caption>
         </Tooltip>
       )}
