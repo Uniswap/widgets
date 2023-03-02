@@ -3528,10 +3528,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-2.2.0.tgz#d85a5c2520f57f4920bd989dfc9f01e1b701a567"
   integrity sha512-vFPWoGzDjHP4i2l7yLaober/lZMmzOZXXirVF8XNyfNzRxgmYCWKO6SzKtfEUwxpd3/KUebgdK55II4Mnak62A==
 
-"@uniswap/default-token-list@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-4.1.0.tgz#bbda8b946096f248b92809f71b77b4d407768796"
-  integrity sha512-NxFW4OhYpnAunD37CKDRadG5ujp3r6cYnfBzTD1Eq4jwdr3ULt01xGqGljq0SuGAGhTsD+bmR46vPg3TdDwW0g==
+"@uniswap/default-token-list@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-8.2.0.tgz#f6036d43ecd504f2ede0baf3ba9aa78433f5e735"
+  integrity sha512-MH467ulu3n+pf7qiVucd2+Kn+dHetwvtFMoXkupgUVrOdPBVEwuAv/+HetDxPolMRNuI1noAYxsos+hEI9sTVg==
 
 "@uniswap/lib@^4.0.1-alpha":
   version "4.0.1-alpha"
