@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import ErrorDialog, { StatusHeader } from 'components/Error/ErrorDialog'
+import ErrorView from 'components/Error/ErrorView'
+import { StatusHeader } from 'components/Error/ErrorView'
 import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
 import SwapSummary from 'components/Swap/Summary'
@@ -56,7 +57,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 
 export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
   return tx.receipt?.status === 0 ? (
-    <ErrorDialog
+    <ErrorView
       header={<Trans>Your swap failed.</Trans>}
       message={
         <Trans>
@@ -67,6 +68,7 @@ export default function TransactionStatusDialog({ tx, onClose }: TransactionStat
       }
       action={<Trans>Dismiss</Trans>}
       onClick={onClose}
+      onDismiss={onClose}
     />
   ) : (
     <TransactionStatus tx={tx} onClose={onClose} />
