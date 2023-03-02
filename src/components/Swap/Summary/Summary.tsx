@@ -5,6 +5,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { ArrowDown, ArrowRight, ExternalLink as ExternalLinkIcon } from 'icons'
 import { PropsWithChildren } from 'react'
+import { Fragment } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -27,24 +28,33 @@ interface TokenValueProps {
 
 function TokenValue({ input, usdc, open, children, txHash }: PropsWithChildren<TokenValueProps>) {
   const chainInfo = getChainInfo(input.currency.chainId)
-  return (
-    <CollapsingColumn justify="flex-start" open={open} flex>
-      <Row gap={0.375} justify="flex-start">
+
+  const Wrapper = txHash
+    ? ({ children }: any) => (
         <EtherscanLink
           type={ExplorerDataType.TRANSACTION}
           data={txHash}
           showIcon={false}
           chainIdOverride={input.currency.chainId}
         >
-          <TokenImg token={input.currency} />
-          <ThemedText.Body2 userSelect>
-            {formatCurrencyAmount({ amount: input })} {input.currency.symbol}
-          </ThemedText.Body2>
+          {children}
           on {chainInfo?.label}
           <Tooltip placement="top" contained icon={ExternalLinkIcon}>
             <ThemedText.Caption>View on block explorer</ThemedText.Caption>
           </Tooltip>
         </EtherscanLink>
+      )
+    : Fragment
+
+  return (
+    <CollapsingColumn justify="flex-start" open={open} flex>
+      <Row gap={0.375} justify="flex-start">
+        <Wrapper>
+          <TokenImg token={input.currency} />
+          <ThemedText.Body2 userSelect>
+            {formatCurrencyAmount({ amount: input })} {input.currency.symbol}
+          </ThemedText.Body2>
+        </Wrapper>
       </Row>
       {usdc && (
         <ThemedText.Caption color="secondary" userSelect>
@@ -67,12 +77,40 @@ interface SummaryProps {
   open?: boolean // if expando is open
   srcTxHash?: string
   dstTxHash?: string
+  isSingleChain?: boolean
 }
 
-export default function Summary({ input, output, inputUSDC, outputUSDC, impact, srcTxHash, dstTxHash }: SummaryProps) {
+export default function Summary({
+  input,
+  output,
+  inputUSDC,
+  outputUSDC,
+  impact,
+  srcTxHash,
+  dstTxHash,
+  isSingleChain,
+}: SummaryProps) {
   const open = false
 
-  const summaryContents = (
+  const summaryContents = isSingleChain ? (
+    <>
+      <TokenValue input={input} usdc={inputUSDC} open={open} />
+      {open ? <ArrowRight /> : <ArrowDown />}
+      <TokenValue input={output} usdc={outputUSDC} open={open}>
+        {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
+      </TokenValue>
+      {srcTxHash && (
+        <EtherscanLink
+          type={ExplorerDataType.TRANSACTION}
+          data={srcTxHash}
+          showIcon={false}
+          chainIdOverride={input.currency.chainId}
+        >
+          View on block explorer <ExternalLinkIcon />
+        </EtherscanLink>
+      )}
+    </>
+  ) : (
     <>
       <TokenValue input={input} usdc={inputUSDC} open={open} txHash={srcTxHash} />
       {open ? <ArrowRight /> : <ArrowDown />}
