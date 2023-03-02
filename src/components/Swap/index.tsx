@@ -27,7 +27,7 @@ import SwapActionButton from './SwapActionButton'
 import Toolbar, { Provider as ToolbarProvider } from './Toolbar'
 import useValidate from './useValidate'
 
-const WIDO_ROUTER = '0x018f877d8ab63df34c70366555aaea71ef20315a544bb018ef9b059475cc93ad'
+const WIDO_ROUTER = '0x05a0a35f386dc7e41621afcf3de7e6a74bc88ffe1c2c7e3fef0c3fa3f5154c06'
 
 async function getFistValidTxHash(snBlockNumber?: number, snAccount?: string) {
   if (!snBlockNumber || !snAccount) return
