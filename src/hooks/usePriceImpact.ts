@@ -1,7 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { computeRealizedPriceImpact, getPriceImpactWarning, largerPercentValue } from 'utils/prices'
+
+import { useUSDCValue } from './useUSDCPrice'
 
 export interface PriceImpact {
   percent: Percent
@@ -9,17 +12,23 @@ export interface PriceImpact {
   toString(): string
 }
 
-export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined {
+export function usePriceImpact(trade?: InterfaceTrade) {
+  const [inputUSDCValue, outputUSDCValue] = [useUSDCValue(trade?.inputAmount), useUSDCValue(trade?.outputAmount)]
   return useMemo(() => {
+    const fiatPriceImpact = computeFiatValuePriceImpact(inputUSDCValue, outputUSDCValue)
     const marketPriceImpact = trade ? computeRealizedPriceImpact(trade) : undefined
-    return marketPriceImpact
+    if (!fiatPriceImpact && !marketPriceImpact) {
+      return undefined
+    }
+    const percent = largerPercentValue(marketPriceImpact, fiatPriceImpact)
+    return percent
       ? {
-          percent: marketPriceImpact,
-          warning: getPriceImpactWarning(marketPriceImpact),
-          toString: () => toHumanReadablePercent(marketPriceImpact),
+          percent,
+          warning: getPriceImpactWarning(percent),
+          toString: () => toHumanReadablePercent(percent),
         }
       : undefined
-  }, [trade])
+  }, [inputUSDCValue, outputUSDCValue, trade])
 }
 
 export function toHumanReadablePercent(priceImpact: Percent): string {
