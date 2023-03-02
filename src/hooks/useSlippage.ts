@@ -24,7 +24,7 @@ export interface Slippage {
 export const DEFAULT_SLIPPAGE = {
   auto: true,
   allowed: DEFAULT_AUTO_SLIPPAGE,
-  toString: () => '0.10',
+  toString: () => toHumanReadablePercent(DEFAULT_AUTO_SLIPPAGE),
 }
 
 /** Returns the allowed slippage, and whether it is auto-slippage. */
