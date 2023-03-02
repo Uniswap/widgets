@@ -27,10 +27,9 @@ const SearchInputContainer = styled(Row)`
 `
 
 function usePrefetchBalances() {
-  const account = useEvmAccountAddress()
   const tokenList = useTokenList()
   const prefetchedTokenList = useRef<typeof tokenList>()
-  useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
+  useCurrencyBalances(tokenList !== prefetchedTokenList.current ? tokenList : undefined)
   prefetchedTokenList.current = tokenList
 }
 
@@ -39,7 +38,7 @@ function useAreBalancesLoaded(): boolean {
   const tokens = useTokenList()
   const nativeTokens = useNativeCurrencies()
   const currencies = useMemo(() => [...nativeTokens, ...tokens], [nativeTokens, tokens])
-  const balances = useCurrencyBalances(account, currencies).filter(Boolean)
+  const balances = useCurrencyBalances(currencies).filter(Boolean)
   return !account || currencies.length === balances.length
 }
 

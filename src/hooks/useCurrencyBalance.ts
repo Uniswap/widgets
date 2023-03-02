@@ -4,7 +4,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useMemo } from 'react'
 import { Balance, getBalances, ZERO_ADDRESS } from 'wido'
 
-import { useSnAccountAddress } from './useSyncWidgetSettings'
+import { useEvmAccountAddress, useSnAccountAddress } from './useSyncWidgetSettings'
 import { NATIVE_ADDRESS } from './useTokenList/utils'
 
 export type BalanceMap = { [chainId: number]: { [tokenAddress: string]: CurrencyAmount<Token> | undefined } }
@@ -15,7 +15,8 @@ export const evmFetchedBalancesAtom = atom<boolean>(false)
 export const snBalancesAtom = atom<Balance[]>([])
 export const snFetchedBalancesAtom = atom<boolean>(false)
 
-export function useTokenBalances(address?: string): BalanceMap {
+export function useTokenBalances(): BalanceMap {
+  const address = useEvmAccountAddress()
   const evmRawBalances = useAtomValue(evmBalancesAtom)
   const evmFetchedBalances = useAtomValue(evmFetchedBalancesAtom)
   const setEvmRawBalances = useUpdateAtom(evmBalancesAtom)
@@ -47,36 +48,26 @@ export function useTokenBalances(address?: string): BalanceMap {
         new Token(item.chainId, ZERO_ADDRESS, item.decimals, item.symbol, item.name),
         item.balance
       )
-      //current.balance
       return map
     }, {} as BalanceMap)
   }, [evmRawBalances, snRawBalances])
 }
 
-export function useCurrencyBalances(
-  account?: string,
-  currencies?: (Currency | undefined)[]
-): (CurrencyAmount<Currency> | undefined)[] {
-  const tokenBalances = useTokenBalances(account)
+export function useCurrencyBalances(currencies?: (Currency | undefined)[]): (CurrencyAmount<Currency> | undefined)[] {
+  const tokenBalances = useTokenBalances()
 
   return useMemo(
     () =>
       currencies?.map((currency) => {
-        if (!account || !currency) return undefined
+        if (!currency) return undefined
         if (currency.isToken) return tokenBalances[currency.chainId]?.[currency.address]
         if (currency.isNative) return tokenBalances[currency.chainId]?.[NATIVE_ADDRESS]
         return undefined
       }) ?? [],
-    [account, currencies, tokenBalances]
+    [currencies, tokenBalances]
   )
 }
 
-export default function useCurrencyBalance(
-  account?: string,
-  currency?: Currency
-): CurrencyAmount<Currency> | undefined {
-  return useCurrencyBalances(
-    account,
-    useMemo(() => [currency], [currency])
-  )[0]
+export default function useCurrencyBalance(currency?: Currency): CurrencyAmount<Currency> | undefined {
+  return useCurrencyBalances(useMemo(() => [currency], [currency]))[0]
 }

@@ -90,7 +90,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   }
 
   const account = useEvmAccountAddress()
-  const balance = useCurrencyBalance(account, value)
+  const balance = useCurrencyBalance(value)
   const chainSrc = getNativeLogoURI(value?.chainId)
   const chainInfo = getChainInfo(value?.chainId)
 
