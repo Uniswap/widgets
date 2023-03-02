@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useIsDialogPageCentered } from 'components/Dialog'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
@@ -140,6 +141,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   ref
 ) {
   const width = useWindowWidth()
+  const isPageCentered = useIsDialogPageCentered()
   const [focused, setFocused] = useState(false)
 
   const [selected, setSelected] = useState<Currency>(tokens[0])
@@ -224,8 +226,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onMouseMove={onMouseMove}
       style={{
         overflow: 'hidden',
-        minWidth: Math.min(400, width),
-        minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE,
+        minWidth: isPageCentered ? Math.min(400, width) : 'auto',
+        minHeight: isPageCentered ? Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE : '100%',
       }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
