@@ -105,7 +105,7 @@ export default function Popover({
   show,
   children,
   placement,
-  offset,
+  offset = 8,
   contained,
   showArrow = true,
 }: PopoverProps) {
