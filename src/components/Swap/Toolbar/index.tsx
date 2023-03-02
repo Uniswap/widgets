@@ -10,10 +10,9 @@ import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
 import Row from '../../Row'
-import SwapInputOutputEstimate from '../Summary/Estimate'
+import SwapInputOutputEstimate, { getEstimateMessage } from '../Summary/Estimate'
 import SwapActionButton from '../SwapActionButton'
 import * as Caption from './Caption'
 import { Context as ToolbarContext, Provider as ToolbarContextProvider } from './ToolbarContext'
@@ -115,6 +114,7 @@ function CaptionRow() {
 
   const tradeSummaryRows: SummaryRowProps[] = useMemo(() => {
     const currencySymbol = trade?.outputAmount?.currency.symbol ?? ''
+    const { descriptor, value } = getEstimateMessage(trade, slippage)
     const rows: SummaryRowProps[] = [
       {
         name: t`Network fee`,
@@ -132,16 +132,8 @@ function CaptionRow() {
           : undefined,
       },
       {
-        name: (
-          <ThemedText.Body2 marginRight="0.25em">
-            <Trans>Minimum output after slippage </Trans>
-            <ThemedText.Body2 $inline color={impact?.warning ?? 'secondary'}>
-              {' '}
-              ({impact?.toString()})
-            </ThemedText.Body2>
-          </ThemedText.Body2>
-        ),
-        value: trade ? `${formatCurrencyAmount(trade?.minimumAmountOut(slippage.allowed))} ${currencySymbol}` : '-',
+        name: <div style={{ marginRight: '0.25em' }}>{descriptor}</div>,
+        value,
       },
       {
         name: t`Expected output`,

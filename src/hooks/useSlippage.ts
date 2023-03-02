@@ -5,6 +5,8 @@ import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { slippageAtom } from 'state/swap/settings'
 
+import { toHumanReadablePercent } from './usePriceImpact'
+
 export function toPercent(maxSlippage: string | undefined): Percent | undefined {
   if (!maxSlippage) return undefined
   if (Number.isNaN(maxSlippage)) return undefined
@@ -16,9 +18,14 @@ export interface Slippage {
   auto: boolean
   allowed: Percent
   warning?: 'warning' | 'error'
+  toString: () => string
 }
 
-export const DEFAULT_SLIPPAGE = { auto: true, allowed: DEFAULT_AUTO_SLIPPAGE }
+export const DEFAULT_SLIPPAGE = {
+  auto: true,
+  allowed: DEFAULT_AUTO_SLIPPAGE,
+  toString: () => '0.10',
+}
 
 /** Returns the allowed slippage, and whether it is auto-slippage. */
 export default function useSlippage(trade: {
@@ -35,7 +42,7 @@ export default function useSlippage(trade: {
     if (auto && allowed === DEFAULT_AUTO_SLIPPAGE) {
       return DEFAULT_SLIPPAGE
     }
-    return { auto, allowed, warning }
+    return { auto, allowed, warning, toString: () => toHumanReadablePercent(allowed) }
   }, [autoSlippage, maxSlippage, slippage])
 }
 
