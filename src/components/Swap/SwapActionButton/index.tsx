@@ -28,8 +28,8 @@ export default function SwapActionButton() {
       (!permit2Enabled && approval.state !== SwapApprovalState.APPROVED) ||
       error !== undefined ||
       (!isWrap && !trade) ||
-      !(inputCurrencyAmount && inputCurrencyBalance) ||
-      inputCurrencyBalance.lessThan(inputCurrencyAmount),
+      !inputCurrencyAmount ||
+      (Boolean(inputCurrencyBalance) && Boolean(inputCurrencyBalance?.lessThan(inputCurrencyAmount))),
     [permit2Enabled, approval.state, error, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
   )
 
