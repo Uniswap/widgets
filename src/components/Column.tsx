@@ -23,7 +23,7 @@ const Column = styled.div<ColumnProps>`
   grid-auto-flow: row;
   grid-template-columns: 1fr;
   justify-content: ${({ justify }) => justify ?? 'space-between'};
-  padding: ${({ padded, padding }) => padding ?? (padded && '0.75em')};
+  padding: ${({ padded, padding }) => padding ?? (padded ? '0.75em' : 'unset')};
 
   ${({ css }) => css}
 `

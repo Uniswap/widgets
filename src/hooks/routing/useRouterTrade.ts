@@ -59,8 +59,8 @@ export function useRouterTrade(
     }
   }, [amountSpecified, quoteConfig])
 
-  // Get the cached state *immediately* to update the UI without sending a request - using useGetQuoteQueryState -
-  // but debounce the actual request - using useLazyGetQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
+  // Get the cached state *immediately* to update the UI without sending a request - using useGetTradeQuoteQueryState -
+  // but debounce the actual request - using useLazyGetTradeQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
   const { isError, data, currentData, fulfilledTimeStamp } = useGetTradeQuoteQueryState(queryArgs)
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
@@ -82,7 +82,7 @@ export function useRouterTrade(
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
       return TRADE_INVALID
-    } else if (data === NO_ROUTE) {
+    } else if (data === NO_ROUTE && isValid) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
       return TRADE_LOADING

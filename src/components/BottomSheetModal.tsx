@@ -3,9 +3,9 @@ import { StyledXButton } from 'icons'
 import { forwardRef, PropsWithChildren, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components/macro'
-import { AnimationSpeed } from 'theme'
+import { AnimationSpeed, SlideAnimationType } from 'theme'
 
-import Dialog, { Header, Modal, Provider as DialogProvider, SlideAnimationType } from './Dialog'
+import Dialog, { Header, Modal, Provider as DialogProvider } from './Dialog'
 
 const slideInBottom = keyframes`
   from {

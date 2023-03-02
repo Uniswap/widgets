@@ -32,7 +32,7 @@ Object {
                 class="Popover__Reference-sc-1liex6z-1 dFwFDV"
               >
                 <button
-                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 evHSmT"
+                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 ewOqAq"
                   data-testid="settings-button"
                 >
                   <svg
@@ -59,17 +59,17 @@ Object {
                 </button>
               </div>
               <div
-                class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
+                class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
                 style="position: absolute; left: 0px; top: 0px;"
               >
                 <div
-                  class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 MgXuH kNwgA-d"
+                  class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 kHYWpm kNwgA-d"
                 >
                   <div
-                    class="Column-sc-1ul9eki-0 ffUVrO"
+                    class="Column-sc-1ul9eki-0 fcaTif"
                   >
                     <div
-                      class="Column-sc-1ul9eki-0 jgGrBm"
+                      class="Column-sc-1ul9eki-0 kcFdvT"
                     >
                       <div
                         class="Row-sc-1nzvhrh-0 gpwEJV"
@@ -99,6 +99,7 @@ Object {
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
+                                style="height: 100%;"
                                 viewBox="0 0 24 24"
                                 width="24"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -139,10 +140,10 @@ Object {
                         </div>
                       </div>
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
+                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
                       >
                         <div
-                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NVvmR gyFZzL"
+                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NVvmR gyFZzL"
                         >
                           <div
                             class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
@@ -209,10 +210,10 @@ Object {
                     class="Rule-sc-1568p9j-0 RJyeV"
                   />
                   <div
-                    class="Column-sc-1ul9eki-0 ffUVrO"
+                    class="Column-sc-1ul9eki-0 fcaTif"
                   >
                     <div
-                      class="Column-sc-1ul9eki-0 jgGrBm"
+                      class="Column-sc-1ul9eki-0 kcFdvT"
                     >
                       <div
                         class="Row-sc-1nzvhrh-0 kSeFcF"
@@ -242,6 +243,7 @@ Object {
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
+                                style="height: 100%;"
                                 viewBox="0 0 24 24"
                                 width="24"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -287,10 +289,10 @@ Object {
                         </div>
                       </div>
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
+                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
                       >
                         <div
-                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NNzpo gyFZzL"
+                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NNzpo gyFZzL"
                         >
                           <div
                             class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
@@ -323,7 +325,7 @@ Object {
                     </div>
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
@@ -337,7 +339,7 @@ Object {
                     />
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
                     <div
@@ -386,7 +388,7 @@ Object {
               class="Popover__Reference-sc-1liex6z-1 dFwFDV"
             >
               <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 evHSmT"
+                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 ewOqAq"
                 data-testid="settings-button"
               >
                 <svg
@@ -413,17 +415,17 @@ Object {
               </button>
             </div>
             <div
-              class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
+              class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
               style="position: absolute; left: 0px; top: 0px;"
             >
               <div
-                class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 MgXuH kNwgA-d"
+                class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 kHYWpm kNwgA-d"
               >
                 <div
-                  class="Column-sc-1ul9eki-0 ffUVrO"
+                  class="Column-sc-1ul9eki-0 fcaTif"
                 >
                   <div
-                    class="Column-sc-1ul9eki-0 jgGrBm"
+                    class="Column-sc-1ul9eki-0 kcFdvT"
                   >
                     <div
                       class="Row-sc-1nzvhrh-0 gpwEJV"
@@ -453,6 +455,7 @@ Object {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
+                              style="height: 100%;"
                               viewBox="0 0 24 24"
                               width="24"
                               xmlns="http://www.w3.org/2000/svg"
@@ -493,10 +496,10 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
+                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NVvmR gyFZzL"
+                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NVvmR gyFZzL"
                       >
                         <div
                           class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
@@ -563,10 +566,10 @@ Object {
                   class="Rule-sc-1568p9j-0 RJyeV"
                 />
                 <div
-                  class="Column-sc-1ul9eki-0 ffUVrO"
+                  class="Column-sc-1ul9eki-0 fcaTif"
                 >
                   <div
-                    class="Column-sc-1ul9eki-0 jgGrBm"
+                    class="Column-sc-1ul9eki-0 kcFdvT"
                   >
                     <div
                       class="Row-sc-1nzvhrh-0 kSeFcF"
@@ -596,6 +599,7 @@ Object {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
+                              style="height: 100%;"
                               viewBox="0 0 24 24"
                               width="24"
                               xmlns="http://www.w3.org/2000/svg"
@@ -641,10 +645,10 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 jgGrBm jYVfac"
+                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 iSonrV NNzpo gyFZzL"
+                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NNzpo gyFZzL"
                       >
                         <div
                           class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
@@ -677,7 +681,7 @@ Object {
                   </div>
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div
@@ -691,7 +695,7 @@ Object {
                   />
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 bSKTJc"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
                   <div

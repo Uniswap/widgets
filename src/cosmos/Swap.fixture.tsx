@@ -2,11 +2,9 @@ import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
-  DEFAULT_LOCALE,
   defaultTheme,
   DialogAnimationType,
   lightTheme,
-  SUPPORTED_LOCALES,
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
@@ -71,9 +69,6 @@ function Fixture() {
 
   const [width] = useValue('width', { defaultValue: 360 })
 
-  const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
-  const locale = useOption('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })
-
   const [theme, setTheme] = useValue('theme', { defaultValue: defaultTheme })
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
@@ -111,7 +106,6 @@ function Fixture() {
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
       hideConnectionUI={hideConnectionUI}
-      locale={locale}
       defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
