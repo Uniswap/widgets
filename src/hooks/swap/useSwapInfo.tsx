@@ -2,14 +2,14 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { RouterPreference } from 'hooks/routing/types'
 import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
-import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import { useEvmAccountAddress, useEvmChainId } from 'hooks/useSyncWidgetSettings'
+import { useEvmAccountAddress, useEvmChainId, useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { TradeState, WidoTrade } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
+import { isStarknet } from 'utils/starknet'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -47,18 +47,20 @@ interface SwapInfo {
 
 /** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(): SwapInfo {
-  const chainId = useEvmChainId()
-  const account = useEvmAccountAddress()
-  const isSupported = useOnSupportedNetwork()
+  const evmChainId = useEvmChainId()
+  const evmAccount = useEvmAccountAddress()
+  const snAccount = useSnAccountAddress()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
   const chainIdIn = currencyIn?.chainId
   const error = useMemo(() => {
-    if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
-    if (chainId && chainIdIn && chainId !== chainIdIn) return ChainError.MISMATCHED_CHAINS
+    if (isStarknet(chainIdIn) && snAccount) {
+      return
+    }
+    if (evmChainId && chainIdIn && evmChainId !== chainIdIn) return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainIdIn, chainId, isSupported])
+  }, [chainIdIn, evmChainId, snAccount])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),
@@ -72,7 +74,7 @@ function useComputeSwapInfo(): SwapInfo {
     currencyOut,
     // isWrap || error ? RouterPreference.SKIP : RouterPreference.API,
     RouterPreference.API,
-    account
+    evmAccount
   )
 
   // Use the parsed amount when applicable (exact amounts and wraps) immediately responsive UI.
@@ -85,7 +87,7 @@ function useComputeSwapInfo(): SwapInfo {
     return isExactInput(type) ? [parsedAmount, trade.trade?.outputAmount] : [trade.trade?.inputAmount, parsedAmount]
   }, [amount, currencyIn, currencyOut, isWrap, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount, type])
   const currencies = useMemo(() => [currencyIn, currencyOut], [currencyIn, currencyOut])
-  const [balanceIn, balanceOut] = useCurrencyBalances(account, currencies)
+  const [balanceIn, balanceOut] = useCurrencyBalances(currencies)
 
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
