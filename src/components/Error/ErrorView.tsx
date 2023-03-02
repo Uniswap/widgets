@@ -3,8 +3,7 @@ import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import Row from 'components/Row'
-import { iconHoverCss } from 'css/hover'
-import { AlertTriangle, Icon, LargeIcon, X } from 'icons'
+import { AlertTriangle, Icon, LargeIcon, StyledXButton } from 'icons'
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
@@ -36,10 +35,6 @@ export function StatusHeader({ icon: Icon, iconColor, iconSize = 2.5, children }
 
 const ExpandoContent = styled(ThemedText.Code)`
   margin: 0.5em;
-`
-
-const StyledXButton = styled(X)`
-  ${iconHoverCss}
 `
 
 const ErrorDialogWrapper = styled(Column)`
