@@ -58,7 +58,7 @@ export default function Swap(props: SwapProps) {
             <Input />
             <ReverseButton />
             <Output />
-            <Toolbar hideConnectionUI={props.hideConnectionUI} />
+            <Toolbar />
             {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
         </PopoverBoundaryProvider>
