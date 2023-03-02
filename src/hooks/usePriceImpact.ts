@@ -2,7 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
-import { computeRealizedPriceImpact, getPriceImpactWarning, largerPercentValue } from 'utils/prices'
+import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
 import { useUSDCValue } from './useUSDCPrice'
 
@@ -12,23 +12,32 @@ export interface PriceImpact {
   toString(): string
 }
 
-export function usePriceImpact(trade?: InterfaceTrade) {
+export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined {
+  return useMemo(() => {
+    const marketPriceImpact = trade ? computeRealizedPriceImpact(trade) : undefined
+    return marketPriceImpact
+      ? {
+          percent: marketPriceImpact,
+          warning: getPriceImpactWarning(marketPriceImpact),
+          toString: () => toHumanReadablePercent(marketPriceImpact),
+        }
+      : undefined
+  }, [trade])
+}
+
+export function useFiatPriceImpact(trade?: InterfaceTrade) {
   const [inputUSDCValue, outputUSDCValue] = [useUSDCValue(trade?.inputAmount), useUSDCValue(trade?.outputAmount)]
   return useMemo(() => {
     const fiatPriceImpact = computeFiatValuePriceImpact(inputUSDCValue, outputUSDCValue)
-    const marketPriceImpact = trade ? computeRealizedPriceImpact(trade) : undefined
-    if (!fiatPriceImpact && !marketPriceImpact) {
+    if (!fiatPriceImpact) {
       return undefined
     }
-    const percent = largerPercentValue(marketPriceImpact, fiatPriceImpact)
-    return percent
-      ? {
-          percent,
-          warning: getPriceImpactWarning(percent),
-          toString: () => toHumanReadablePercent(percent),
-        }
-      : undefined
-  }, [inputUSDCValue, outputUSDCValue, trade])
+    return {
+      percent: fiatPriceImpact,
+      warning: getPriceImpactWarning(fiatPriceImpact),
+      toString: () => toHumanReadablePercent(fiatPriceImpact),
+    }
+  }, [inputUSDCValue, outputUSDCValue])
 }
 
 export function toHumanReadablePercent(priceImpact: Percent): string {
