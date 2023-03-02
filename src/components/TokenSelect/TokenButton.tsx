@@ -24,7 +24,6 @@ const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
 `
 
 const TokenButtonRow = styled(Row)<{ empty: boolean }>`
-  flex-direction: row;
   max-width: 12em;
   overflow: hidden;
   padding-left: ${({ empty }) => empty && 0.5}em;
@@ -51,7 +50,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
       disabled={disabled}
       data-testid="token-select"
     >
-      <TokenButtonRow empty={!value} flex gap={0.4}>
+      <TokenButtonRow empty={!value} flex gap={0.4} flow="nowrap">
         {value ? (
           <>
             <Logo currency={value} symbol={value.symbol} />
@@ -60,7 +59,10 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
             </ThemedText.ButtonLarge>
           </>
         ) : (
-          <ThemedText.ButtonLarge color={'onAccent'}>
+          <ThemedText.ButtonLarge
+            color={'onAccent'}
+            style={{ maxWidth: '10rem', textOverflow: 'ellipsis', overflow: 'hidden' }}
+          >
             <Trans>Select a token</Trans>
           </ThemedText.ButtonLarge>
         )}
