@@ -32,14 +32,16 @@ export default function RouterPreferenceToggle() {
   }
 
   return (
-    <ThemedText.Subhead2 color="secondary">
-      <Row flex align="center">
-        <Label
-          name={<Trans>Auto Router API</Trans>}
-          tooltip={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>}
-        />
-        <Toggle onToggle={onToggle} checked={routerPreference === RouterPreference.API} />
-      </Row>
-    </ThemedText.Subhead2>
+    <Row flex align="center">
+      <Label
+        name={
+          <ThemedText.Subhead2 color="primary">
+            <Trans>Auto Router API</Trans>
+          </ThemedText.Subhead2>
+        }
+        tooltip={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>}
+      />
+      <Toggle onToggle={onToggle} checked={routerPreference === RouterPreference.API} />
+    </Row>
   )
 }
