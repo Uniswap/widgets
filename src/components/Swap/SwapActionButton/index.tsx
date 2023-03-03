@@ -28,8 +28,9 @@ export default function SwapActionButton() {
       (!permit2Enabled && approval.state !== SwapApprovalState.APPROVED) ||
       error !== undefined ||
       (!isWrap && !trade) ||
-      !(inputCurrencyAmount && inputCurrencyBalance) ||
-      inputCurrencyBalance.lessThan(inputCurrencyAmount),
+      !inputCurrencyAmount ||
+      // If there is no balance loaded, we should default to isDisabled=false
+      Boolean(inputCurrencyBalance?.lessThan(inputCurrencyAmount)),
     [permit2Enabled, approval.state, error, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
   )
 
