@@ -36,4 +36,7 @@ describe('#getExplorerLink', () => {
   it('enum', () => {
     expect(getExplorerLink(4, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://rinkeby.etherscan.io/address/abc')
   })
+  it('bnb chain', () => {
+    expect(getExplorerLink(56, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://bscscan.com/address/abc')
+  })
 })
