@@ -17,7 +17,7 @@ export enum SwapApprovalState {
 export interface SwapApproval {
   state: SwapApprovalState
   spender?: string
-  approve?: () => Promise<void>
+  approve?: () => Promise<any>
 }
 
 /**
