@@ -67,8 +67,8 @@ export default function Swap(props: SwapProps) {
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
-  const pendingTxs = usePendingTransactions()
-  const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash], [displayTxHash, pendingTxs])
+  const pendingTxs = usePendingTransactions(displayTxHash?.chainId)
+  const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash.hash], [displayTxHash, pendingTxs])
   const snBlockNumber = useAtomValue(snBlockNumberAtom)
 
   const [dstTxHash, setDstTxHash] = useState<string | undefined>()

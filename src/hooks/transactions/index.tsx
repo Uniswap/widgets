@@ -6,7 +6,6 @@ import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
 import { RpcProvider } from 'starknet'
 import { snBlockNumberAtom, Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
-import invariant from 'tiny-invariant'
 
 import useBlockNumber from '../useBlockNumber'
 import Updater from './updater'
@@ -19,33 +18,31 @@ function isTransactionRecent(transaction: Transaction) {
   return Date.now() - transaction.addedTime < ms`1d`
 }
 
-export function usePendingTransactions() {
+export function usePendingTransactions(chainIdOverride?: number) {
   const chainId = useEvmChainId()
+  const actualChainId = chainIdOverride || chainId
   const txs = useAtomValue(transactionsAtom)
-  return (chainId ? txs[chainId] : null) ?? {}
+  return (actualChainId ? txs[actualChainId] : null) ?? {}
 }
 
 export function useAddTransactionInfo() {
-  const chainId = useEvmChainId()
   const blockNumber = useBlockNumber()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const updateSnBlockNumber = useUpdateAtom(snBlockNumberAtom)
 
   return useCallback(
     (info: TransactionInfo) => {
-      invariant(chainId)
-      const txChainId = chainId
-      const { hash } = info.response
+      const { hash, chainId } = info.response
 
       updateTxs((chainTxs) => {
-        const txs = chainTxs[txChainId] || {}
+        const txs = chainTxs[chainId] || {}
         txs[hash] = { addedTime: new Date().getTime(), lastCheckedBlockNumber: blockNumber, info }
         chainTxs[chainId] = txs
       })
 
       SN_PROVIDER.getBlockNumber().then(updateSnBlockNumber)
     },
-    [blockNumber, chainId, updateTxs, updateSnBlockNumber]
+    [blockNumber, updateTxs, updateSnBlockNumber]
   )
 }
 

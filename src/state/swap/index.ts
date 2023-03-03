@@ -32,7 +32,7 @@ export const swapAtom = atom((get) => {
 }, stateAtom.write)
 
 // If set to a transaction hash, that transaction will display in a status dialog.
-export const displayTxHashAtom = atom<string | undefined>(undefined)
+export const displayTxHashAtom = atom<{ hash: string; chainId: number } | undefined>(undefined)
 
 export const feeOptionsAtom = atom<FeeOptions | undefined>(undefined)
 

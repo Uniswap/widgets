@@ -24,7 +24,10 @@ export default function useOnSubmit() {
         case TransactionType.SWAP:
         case TransactionType.WRAP:
         case TransactionType.UNWRAP:
-          setDisplayTxHash(info.response.hash)
+          setDisplayTxHash({
+            chainId: info.response.chainId,
+            hash: info.response.hash,
+          })
 
           if (isAnimating(document)) {
             // Only reset the input amount after any queued animations to avoid layout thrashing,
