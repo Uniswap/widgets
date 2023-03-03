@@ -69,6 +69,7 @@ export default function ApproveButton({
             </EtherscanLink>
           ),
           icon: Spinner,
+          hideButton: true,
         }
       default:
         return

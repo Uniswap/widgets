@@ -43,12 +43,13 @@ export function useSwapApproval(trade?: WidoTrade): SwapApproval {
     if (approval !== ApprovalState.NOT_APPROVED) return
     return async () => {
       try {
-        await approve()
+        const result = await approve()
+        onSwapApprove?.()
+        return result
       } catch (e) {
         // Swallow approval errors - user rejections do not need to be displayed.
         return
       }
-      onSwapApprove?.()
     }
   }, [approval, approve, onSwapApprove])
 

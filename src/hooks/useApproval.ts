@@ -89,7 +89,10 @@ export function useApproval(
         gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response) => ({
-        response,
+        response: {
+          ...response,
+          chainId,
+        },
         tokenAddress: token.address,
         spenderAddress: spender,
       }))
