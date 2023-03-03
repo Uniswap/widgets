@@ -8,7 +8,6 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
-import { useWindowWidth } from 'hooks/useWindowWidth'
 import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -30,8 +29,10 @@ const SearchInputContainer = styled(Row)`
   ${inputCss}
 `
 
-const TokenSelectContainer = styled.div`
+const TokenSelectContainer = styled.div<{ $pageCentered: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  min-height: ${($pageCentered) => ($pageCentered ? 'unset' : '100%')};
+  min-width: ${({ $pageCentered }) => ($pageCentered ? "min(400px, '100vw')" : 'auto')};
   overflow: hidden;
   padding: 0.5em 0 0;
   @supports (overflow: clip) {
@@ -67,7 +68,6 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
   const list = useTokenList()
   const tokens = useQueryTokens(query, list)
 
-  const width = useWindowWidth()
   const isPageCentered = useIsDialogPageCentered()
 
   const isTokenListLoaded = useIsTokenListLoaded()
@@ -102,12 +102,7 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
     )
   }
   return (
-    <TokenSelectContainer
-      style={{
-        minWidth: isPageCentered ? Math.min(400, width) : 'auto',
-        minHeight: isPageCentered ? 'unset' : '100%',
-      }}
-    >
+    <TokenSelectContainer $pageCentered={isPageCentered ?? false}>
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
         <Column gap={0.75} style={{ margin: '0 0.5em' }}>
