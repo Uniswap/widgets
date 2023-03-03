@@ -18,6 +18,7 @@ export interface WidgetSettings {
   dstChainIds?: number[]
   toToken?: { chainId: number; address: string }
   fromToken?: { chainId: number; address: string }
+  toProtocols?: string[]
 }
 
 export default function useSyncWidgetSettings({
@@ -28,11 +29,31 @@ export default function useSyncWidgetSettings({
   dstChainIds,
   toToken,
   fromToken,
+  toProtocols,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
-    updateWidgetSettingsAtom({ testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds, toToken, fromToken })
-  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, srcChainIds, dstChainIds, toToken, fromToken])
+    updateWidgetSettingsAtom({
+      testnetsVisible,
+      ethProvider,
+      snAccount,
+      srcChainIds,
+      dstChainIds,
+      toToken,
+      fromToken,
+      toProtocols,
+    })
+  }, [
+    updateWidgetSettingsAtom,
+    testnetsVisible,
+    ethProvider,
+    snAccount,
+    srcChainIds,
+    dstChainIds,
+    toToken,
+    fromToken,
+    toProtocols,
+  ])
 }
 
 export function useTestnetsVisible() {
@@ -99,4 +120,8 @@ export function useWidgetFromToken() {
 
 export function useWidgetToToken() {
   return useAtomValue(widgetSettingsAtom).toToken
+}
+
+export function useWidgetToProtocols() {
+  return useAtomValue(widgetSettingsAtom).toProtocols
 }

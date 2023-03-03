@@ -79,6 +79,7 @@ function Fixture() {
 
   const [presetFromToken] = useValue('presetFromToken', { defaultValue: false })
   const [presetToToken] = useValue('presetToToken', { defaultValue: false })
+  const [presetToProtocols] = useValue('presetToProtocols', { defaultValue: false })
 
   const handleConnectWalletClick = useCallback(
     (chainId: number) => {
@@ -105,6 +106,7 @@ function Fixture() {
       width={width}
       srcChainIds={JSON.parse(srcChainIds)}
       dstChainIds={JSON.parse(dstChainIds)}
+      toProtocols={presetToProtocols ? ['jediswap.xyz'] : undefined}
       fromToken={
         presetFromToken
           ? {

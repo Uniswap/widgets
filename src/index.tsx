@@ -85,6 +85,7 @@ export type SwapWidgetProps = {
   dstChainIds?: number[]
   toToken?: { chainId: number; address: string }
   fromToken?: { chainId: number; address: string }
+  toProtocols?: string[]
   theme?: Theme
   width?: string | number
   className?: string

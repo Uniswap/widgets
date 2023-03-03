@@ -4,7 +4,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { Token as WidoToken, ZERO_ADDRESS } from 'wido'
 
-export type TokenListItem = Token | NativeCurrency
+export type TokenListItem = WrappedTokenInfo | Token | NativeCurrency
 type TokenMap = Readonly<{ [tokenAddress: string]: { token: TokenListItem; list?: TokenList } }>
 export type ChainTokenMap = Readonly<{ [chainId: number]: TokenMap }>
 

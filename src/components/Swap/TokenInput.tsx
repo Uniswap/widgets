@@ -2,7 +2,7 @@ import 'setimmediate'
 
 import { Currency } from '@uniswap/sdk-core'
 import { loadingTransitionCss } from 'css/loading'
-import { useDstChainIds, useSrcChainIds } from 'hooks/useSyncWidgetSettings'
+import { useDstChainIds, useSrcChainIds, useWidgetToProtocols } from 'hooks/useSyncWidgetSettings'
 import { forwardRef, PropsWithChildren, useCallback, useImperativeHandle, useRef } from 'react'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -86,6 +86,8 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
   const srcChainIds = useSrcChainIds()
   const dstChainIds = useDstChainIds()
   const chainIdsAllowed = field === Field.INPUT ? srcChainIds : dstChainIds
+  const toProtocols = useWidgetToProtocols()
+  const protocolsAllowed = field === Field.INPUT ? undefined : toProtocols
 
   return (
     <TokenInputColumn gap={0.5} {...rest}>
@@ -97,6 +99,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
           disabled={disabled}
           onSelect={onSelect}
           chainIdsAllowed={chainIdsAllowed}
+          protocolsAllowed={protocolsAllowed}
           presetValue={presetValue}
         />
         <ThemedText.H2>

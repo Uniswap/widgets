@@ -47,23 +47,37 @@ interface TokenSelectDialogProps {
   onSelect: (token: Currency) => void
   onClose: () => void
   chainIdsAllowed?: number[]
+  protocolsAllowed?: string[]
 }
 
-export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed }: TokenSelectDialogProps) {
+export function TokenSelectDialog({
+  value,
+  onSelect,
+  onClose,
+  chainIdsAllowed,
+  protocolsAllowed,
+}: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
   const [chainIdFilter, setChainIdFilter] = useState<number | undefined>()
   const allChainList = useTokenList()
   const list = useMemo(() => {
+    let chainFilteredList = []
     if (!chainIdFilter) {
       if (chainIdsAllowed && Array.isArray(chainIdsAllowed)) {
-        return allChainList.filter((x) => chainIdsAllowed.includes(x.chainId))
+        chainFilteredList = allChainList.filter((x) => chainIdsAllowed.includes(x.chainId))
       }
 
-      return allChainList
+      chainFilteredList = allChainList
     } else {
-      return allChainList.filter((x) => x.chainId === chainIdFilter)
+      chainFilteredList = allChainList.filter((x) => x.chainId === chainIdFilter)
     }
-  }, [allChainList, chainIdFilter, chainIdsAllowed])
+
+    if (Array.isArray(protocolsAllowed)) {
+      return chainFilteredList.filter((x) => protocolsAllowed.includes(x.protocol ?? 'unknown'))
+    }
+
+    return chainFilteredList
+  }, [allChainList, chainIdFilter, chainIdsAllowed, protocolsAllowed])
 
   const tokens = useQueryTokens(query, list)
 
@@ -137,6 +151,7 @@ interface TokenSelectProps {
   onSelect: (value: Currency) => void
   chainIdsAllowed?: number[]
   presetValue?: boolean
+  protocolsAllowed?: string[]
 }
 
 export default memo(function TokenSelect({
@@ -147,6 +162,7 @@ export default memo(function TokenSelect({
   onSelect,
   chainIdsAllowed,
   presetValue,
+  protocolsAllowed,
 }: TokenSelectProps) {
   usePrefetchBalances()
 
@@ -171,6 +187,7 @@ export default memo(function TokenSelect({
           onSelect={selectAndClose}
           onClose={() => setOpen(false)}
           chainIdsAllowed={chainIdsAllowed}
+          protocolsAllowed={protocolsAllowed}
         />
       )}
     </>

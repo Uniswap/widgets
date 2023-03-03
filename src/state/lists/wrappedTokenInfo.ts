@@ -5,15 +5,19 @@ type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
   id: string
 }
+
+type AugmentedTokenInfo = TokenInfo & {
+  protocol?: string
+}
 /**
  * Token instances created from token info on a token list.
  */
 export class WrappedTokenInfo implements Token {
   public readonly isNative: false = false
   public readonly isToken: true = true
-  public readonly tokenInfo: TokenInfo
+  public readonly tokenInfo: AugmentedTokenInfo
 
-  constructor(tokenInfo: TokenInfo) {
+  constructor(tokenInfo: AugmentedTokenInfo) {
     this.tokenInfo = tokenInfo
   }
 
@@ -45,6 +49,10 @@ export class WrappedTokenInfo implements Token {
 
   public get logoURI(): string | undefined {
     return this.tokenInfo.logoURI
+  }
+
+  public get protocol(): string | undefined {
+    return this.tokenInfo.protocol
   }
 
   private _tags: TagInfo[] | null = null
