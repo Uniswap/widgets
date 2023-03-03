@@ -8,6 +8,7 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { useWindowWidth } from 'hooks/useWindowWidth'
 import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -66,6 +67,9 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
   const list = useTokenList()
   const tokens = useQueryTokens(query, list)
 
+  const width = useWindowWidth()
+  const isPageCentered = useIsDialogPageCentered()
+
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
   const [isLoaded, setIsLoaded] = useState(isTokenListLoaded && areBalancesLoaded)
@@ -98,7 +102,12 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
     )
   }
   return (
-    <TokenSelectContainer>
+    <TokenSelectContainer
+      style={{
+        minWidth: isPageCentered ? Math.min(400, width) : 'auto',
+        minHeight: isPageCentered ? 'unset' : '100%',
+      }}
+    >
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
         <Column gap={0.75} style={{ margin: '0 0.5em' }}>
