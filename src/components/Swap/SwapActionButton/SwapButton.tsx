@@ -57,12 +57,12 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const onSwap = useCallback(async () => {
     try {
       await onSubmit(async () => {
-        const response = await swapCallback?.()
+        const response: any = await swapCallback?.()
         if (!response) return
 
         // Set the block containing the response to the oldest valid block to ensure that the
         // completed trade's impact is reflected in future fetched trades.
-        response.wait(1).then((receipt) => {
+        response.wait(1).then((receipt: any) => {
           setOldestValidBlock(receipt.blockNumber)
         })
 

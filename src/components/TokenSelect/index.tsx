@@ -73,7 +73,7 @@ export function TokenSelectDialog({
     }
 
     if (Array.isArray(protocolsAllowed)) {
-      return chainFilteredList.filter((x) => protocolsAllowed.includes(x.protocol ?? 'unknown'))
+      return chainFilteredList.filter((x) => protocolsAllowed.includes((x as any).protocol ?? 'unknown'))
     }
 
     return chainFilteredList

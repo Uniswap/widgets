@@ -84,7 +84,7 @@ function Fixture() {
   const handleConnectWalletClick = useCallback(
     (chainId: number) => {
       if ('onConnectWalletClick' in eventHandlers) {
-        eventHandlers['onConnectWalletClick'](chainId)
+        ;(eventHandlers as any)['onConnectWalletClick'](chainId)
       }
 
       if (isStarknetChain(chainId)) {

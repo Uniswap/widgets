@@ -74,6 +74,10 @@ export default function useSendSwapTransaction(
       }
     }
 
+    if (!provider) {
+      return { callback: null }
+    }
+
     return {
       callback: async function onSwap(): Promise<TransactionResponse> {
         const { tx } = trade as Required<WidoTrade>
