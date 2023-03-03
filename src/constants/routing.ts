@@ -4,14 +4,11 @@ import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
-  BTC_BSC,
-  BUSD_BSC,
   CEUR_CELO,
   CMC02_CELO,
   CUSD_CELO,
   DAI,
   DAI_ARBITRUM_ONE,
-  DAI_BSC,
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH2X_FLI,
@@ -89,7 +86,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     PORTAL_USDC_CELO,
     PORTAL_ETH_CELO,
   ],
-  [SupportedChainId.BSC]: [nativeOnChain(SupportedChainId.BSC), DAI_BSC, USDC_BSC, USDT_BSC, BTC_BSC, BUSD_BSC],
+  [SupportedChainId.BSC]: [
+    nativeOnChain(SupportedChainId.BSC),
+    USDC_BSC,
+    USDT_BSC,
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BSC],
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
