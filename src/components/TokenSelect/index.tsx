@@ -65,9 +65,9 @@ export function TokenSelectDialog({
     if (!chainIdFilter) {
       if (chainIdsAllowed && Array.isArray(chainIdsAllowed)) {
         chainFilteredList = allChainList.filter((x) => chainIdsAllowed.includes(x.chainId))
+      } else {
+        chainFilteredList = allChainList
       }
-
-      chainFilteredList = allChainList
     } else {
       chainFilteredList = allChainList.filter((x) => x.chainId === chainIdFilter)
     }
