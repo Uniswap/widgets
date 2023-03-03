@@ -5,6 +5,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
 import { RpcProvider } from 'starknet'
+import { displayTxHashAtom } from 'state/swap'
 import { snBlockNumberAtom, Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
 
 import useBlockNumber from '../useBlockNumber'
@@ -81,7 +82,10 @@ export interface TransactionEventHandlers {
 }
 
 export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionEventHandlers) {
-  const currentPendingTxs = usePendingTransactions()
+  const displayTxHash = useAtomValue(displayTxHashAtom)
+  const chainId = displayTxHash?.chainId
+  const currentPendingTxs = usePendingTransactions(chainId)
+
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
     ({ chainId, hash, blockNumber }: { chainId: number; hash: string; blockNumber: number }) => {
@@ -128,5 +132,13 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
     }
   }, [currentPendingTxs, onTxSubmit])
 
-  return <Updater pendingTransactions={currentPendingTxs} onCheck={onCheck} onReceipt={onReceipt} />
+  return (
+    <Updater
+      pendingTransactions={currentPendingTxs}
+      onCheck={onCheck}
+      onReceipt={onReceipt}
+      chainId={chainId}
+      snProvider={SN_PROVIDER}
+    />
+  )
 }

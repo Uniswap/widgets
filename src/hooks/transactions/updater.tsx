@@ -1,10 +1,14 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { SupportedChainId } from 'constants/chains'
 import useBlockNumber, { useFastForwardBlockNumber } from 'hooks/useBlockNumber'
-import { useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
+import { useEvmProvider } from 'hooks/useSyncWidgetSettings'
+import { useAtomValue } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
+import { RpcProvider } from 'starknet'
+import { snBlockNumberAtom } from 'state/transactions'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
+import { isStarknet } from 'utils/starknet'
 
 interface Transaction {
   addedTime: number
@@ -35,6 +39,8 @@ const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: { n: 10, minWait: 250, maxWait: 1000 },
   [SupportedChainId.OPTIMISM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
   [SupportedChainId.OPTIMISM]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.STARKNET]: { n: 300, minWait: 5000, maxWait: 5000 },
+  [SupportedChainId.STARKNET_GOERLI]: { n: 300, minWait: 5000, maxWait: 5000 },
 }
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
@@ -42,18 +48,47 @@ interface UpdaterProps {
   pendingTransactions: { [hash: string]: Transaction }
   onCheck: (tx: { chainId: number; hash: string; blockNumber: number }) => void
   onReceipt: (tx: { chainId: number; hash: string; receipt: TransactionReceipt }) => void
+  chainId?: number
+  snProvider: RpcProvider
 }
 
-export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const chainId = useEvmChainId()
+export default function Updater({ pendingTransactions, onCheck, onReceipt, chainId, snProvider }: UpdaterProps): null {
   const provider = useEvmProvider()
+  const snBlockNumber = useAtomValue(snBlockNumberAtom)
+  const evmBlockNumber = useBlockNumber()
 
-  const lastBlockNumber = useBlockNumber()
+  const lastBlockNumber = isStarknet(chainId) ? snBlockNumber : evmBlockNumber
   const fastForwardBlockNumber = useFastForwardBlockNumber()
 
   const getReceipt = useCallback(
     (hash: string) => {
-      if (!provider || !chainId) throw new Error('No library or chainId')
+      if (!chainId) throw new Error('No chainId')
+
+      if (isStarknet(chainId)) {
+        const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
+        return retry(
+          () =>
+            snProvider
+              .getTransactionReceipt(hash)
+              .then((receipt) => {
+                if (!receipt || !['ACCEPTED_ON_L2', 'ACCEPTED_ON_L1', 'REJECTED'].includes(receipt.status)) {
+                  throw new RetryableError()
+                }
+                return {
+                  ...receipt,
+                  blockHash: receipt.block_hash,
+                  blockNumber: Number(receipt.block_number),
+                  status: receipt.status,
+                } as any
+              })
+              .catch(() => {
+                throw new RetryableError()
+              }),
+          retryOptions
+        )
+      }
+
+      if (!provider) throw new Error('No provider')
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
@@ -67,11 +102,11 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions
       )
     },
-    [chainId, provider]
+    [chainId, provider, snProvider]
   )
 
   useEffect(() => {
-    if (!chainId || !provider || !lastBlockNumber) return
+    if (!chainId || !lastBlockNumber) return
 
     const cancels = Object.keys(pendingTransactions)
       .filter((hash) => shouldCheck(lastBlockNumber, pendingTransactions[hash]))
@@ -97,7 +132,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, provider, lastBlockNumber, getReceipt, fastForwardBlockNumber, onReceipt, onCheck, pendingTransactions])
+  }, [chainId, lastBlockNumber, getReceipt, fastForwardBlockNumber, onReceipt, onCheck, pendingTransactions])
 
   return null
 }
