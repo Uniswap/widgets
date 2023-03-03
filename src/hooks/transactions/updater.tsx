@@ -70,7 +70,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt, chain
           () =>
             snProvider
               .getTransactionReceipt(hash)
-              .then((receipt) => {
+              .then((receipt: any) => {
                 if (!receipt || !['ACCEPTED_ON_L2', 'ACCEPTED_ON_L1', 'REJECTED'].includes(receipt.status)) {
                   throw new RetryableError()
                 }
