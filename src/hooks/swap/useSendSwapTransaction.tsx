@@ -85,7 +85,10 @@ export default function useSendSwapTransaction(
           .getSigner()
           .sendTransaction(tx)
           .then((response) => {
-            return response
+            return {
+              ...response,
+              chainId: trade.fromToken.chainId,
+            }
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
