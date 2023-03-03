@@ -10,7 +10,7 @@ import { Color, ThemedText } from 'theme'
 
 const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
-  margin: 2em 0;
+  margin: 2rem 0;
 `
 
 interface StatusHeaderProps {
@@ -34,7 +34,7 @@ export function StatusHeader({ icon: Icon, iconColor, iconSize = 2.5, children }
 }
 
 const ExpandoContent = styled(ThemedText.Code)`
-  margin: 0.5em;
+  margin: 0.5rem;
 `
 
 const ErrorDialogWrapper = styled(Column)`
@@ -54,7 +54,7 @@ export default function ErrorDialog({ header, message, error, action, onClick, o
   const [open, setOpen] = useState(false)
 
   return (
-    <ErrorDialogWrapper flex padding="1em 0.5em 0.25em" gap={0.5} align="stretch">
+    <ErrorDialogWrapper flex padding="1rem 0.5rem 0.25rem" gap={0.5} align="stretch">
       <Row flex flow="row-reverse">
         <LargeIcon icon={StyledXButton} onClick={onDismiss} />
       </Row>
@@ -69,14 +69,14 @@ export default function ErrorDialog({ header, message, error, action, onClick, o
           title={open ? <Trans>Show less</Trans> : <Trans>Show more</Trans>}
           open={open}
           onExpand={() => setOpen((open) => !open)}
-          maxHeight={11.5 /* em */}
+          maxHeight={11.5 /* rem */}
         >
           <Column flex grow padded>
             <ExpandoContent userSelect>{error.toString()}</ExpandoContent>
           </Column>
         </Expando>
       ) : (
-        <Column style={{ height: '7.5em' }} />
+        <Column style={{ height: '7.5rem' }} />
       )}
       <ActionButton color="accentSoft" onClick={onClick} narrow>
         {action}

@@ -43,6 +43,7 @@ import IdenticonIcon from './identicon'
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
+// Intentionally uses `em` in order to scale with font size.
 function icon(Icon: FeatherIcon | SVGIcon) {
   return styled(Icon)<{ color?: Color }>`
     clip-path: stroke-box;

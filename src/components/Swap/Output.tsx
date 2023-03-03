@@ -13,7 +13,7 @@ import { FieldWrapper } from './Input'
 export const colorAtom = atom<string | undefined>(undefined)
 
 const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: boolean }>`
-  padding: ${({ isWide }) => (isWide ? '1em 0' : '1.5em 0 1em')};
+  padding: ${({ isWide }) => (isWide ? '1rem 0' : '1.5rem 0 1rem')};
 
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.

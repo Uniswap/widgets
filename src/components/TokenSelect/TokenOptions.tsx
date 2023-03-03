@@ -33,7 +33,7 @@ import TokenImg from '../TokenImg'
 const TokenButton = styled(BaseButton)`
   border-radius: 0;
   outline: none;
-  padding: 0.5em 1.25em;
+  padding: 0.5rem 1.25rem;
 `
 
 const ITEM_SIZE = 56
@@ -74,8 +74,8 @@ interface BubbledEvent extends SyntheticEvent {
 
 const TokenBalance = styled.div<{ isLoading: boolean }>`
   background-color: ${({ theme, isLoading }) => isLoading && theme.secondary};
-  border-radius: 0.25em;
-  padding: 0.375em 0;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0;
 `
 
 function TokenOption({ index, value, style }: TokenOptionProps) {

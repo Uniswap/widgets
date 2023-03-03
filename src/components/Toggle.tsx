@@ -10,27 +10,27 @@ const Input = styled.input`
   appearance: none;
   background: ${({ theme }) => theme.interactive};
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   cursor: pointer;
   display: flex;
   font-size: inherit;
   font-weight: inherit;
-  height: 2em;
+  height: 2rem;
   margin: 0;
   padding: 0;
 
   position: relative;
-  width: 3.5em;
+  width: 3.5rem;
 
   :before {
     background-color: ${({ theme }) => theme.secondary};
     border-radius: ${({ theme }) => theme.borderRadius.medium * 50}%;
     content: '';
     display: inline-block;
-    height: 1.5em;
-    margin-left: 0.25em;
+    height: 1.5rem;
+    margin-left: 0.25rem;
     position: absolute;
-    width: 1.5em;
+    width: 1.5rem;
   }
 
   :hover:before {
@@ -39,7 +39,7 @@ const Input = styled.input`
 
   :checked:before {
     background-color: ${({ theme }) => theme.accent};
-    margin-left: 1.75em;
+    margin-left: 1.75rem;
   }
 
   :hover:checked:before {

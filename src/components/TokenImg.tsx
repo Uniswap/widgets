@@ -21,6 +21,6 @@ export default styled(TokenImg)<{ size?: number }>`
     ${({ theme }) => theme.outline} calc(100% / ${Math.sqrt(2)} - 1.5px)
   );
   border-radius: 100%;
-  height: ${({ size }) => size || 1}em;
-  width: ${({ size }) => size || 1}em;
+  height: ${({ size }) => size || 1}rem;
+  width: ${({ size }) => size || 1}rem;
 `

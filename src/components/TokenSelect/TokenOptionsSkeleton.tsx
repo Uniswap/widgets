@@ -6,28 +6,28 @@ import Row from '../Row'
 
 const Img = styled.div`
   clip-path: circle(50%);
-  height: 1.5em;
-  width: 1.5em;
+  height: 1.5rem;
+  width: 1.5rem;
 `
 const Symbol = styled.div`
-  height: 0.75em;
-  width: 7em;
+  height: 0.75rem;
+  width: 7rem;
 `
 const Name = styled.div`
-  height: 0.5em;
-  width: 5.5em;
+  height: 0.5rem;
+  width: 5.5rem;
 `
 const Balance = styled.div`
-  padding: 0.375em 0;
-  width: 1.5em;
+  padding: 0.375rem 0;
+  width: 1.5rem;
 `
 const TokenRow = styled.div`
   outline: none;
-  padding: 0.6875em 0.75em;
+  padding: 0.6875rem 0.75rem;
 
   ${Img}, ${Symbol}, ${Name}, ${Balance} {
     background-color: ${({ theme }) => theme.secondary};
-    border-radius: 0.25em;
+    border-radius: 0.25rem;
   }
 `
 

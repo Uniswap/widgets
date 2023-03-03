@@ -14,13 +14,13 @@ import { Body2LineHeightRem } from 'theme/type'
 
 import RoutingDiagram, { AutoRouterHeader } from '../RoutingDiagram'
 
-const CONTAINER_VERTICAL_PADDING_EM = 1
-export const ORDER_ROUTING_HEIGHT_EM = CONTAINER_VERTICAL_PADDING_EM * 2 + Body2LineHeightRem /* Body2 line height */
+const CONTAINER_VERTICAL_PADDING_REM = 1
+export const ORDER_ROUTING_HEIGHT_REM = CONTAINER_VERTICAL_PADDING_REM * 2 + Body2LineHeightRem /* Body2 line height */
 
 const OrderRoutingRow = styled(Row)`
-  height: ${ORDER_ROUTING_HEIGHT_EM}em;
-  margin: 0 1em;
-  padding: ${CONTAINER_VERTICAL_PADDING_EM}em 0;
+  height: ${ORDER_ROUTING_HEIGHT_REM}rem;
+  margin: 0 1rem;
+  padding: ${CONTAINER_VERTICAL_PADDING_REM}rem 0;
 `
 
 interface ToolbarOrderRoutingProps {

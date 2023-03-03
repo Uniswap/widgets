@@ -24,8 +24,8 @@ const Input = styled(Row)`
 `
 
 const InputContainer = styled(Row)`
-  gap: 0.5em;
-  margin: 1em 0 0;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
 `
 
 const TtlValue = styled.div`

@@ -6,8 +6,8 @@ import { ThemedText } from 'theme'
 import Row from './Row'
 
 const HeaderRow = styled(Row)`
-  height: 1.5em;
-  margin: 0.5em 0.75em 1em;
+  height: 1.5rem;
+  margin: 0.5rem 0.75rem 1rem;
   ${largeIconCss}
 `
 

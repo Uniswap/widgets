@@ -10,7 +10,7 @@ import { AnimationSpeed, ThemedText } from 'theme'
 
 const HeaderColumn = styled(Column)`
   cursor: pointer;
-  padding: 1.25em 1.5em;
+  padding: 1.25rem 1.5rem;
 `
 
 const StyledWrapper = styled(Column)<{ expanded: boolean }>`
@@ -33,7 +33,7 @@ const TitleHeader = styled.div`
   justify-content: center;
 `
 
-const MAX_HEIGHT = 20 // em
+const MAX_HEIGHT = 20 // rem
 
 function getExpandoContentHeight(height: number | undefined, maxHeight: number | undefined): number {
   return Math.min(height ?? MAX_HEIGHT, maxHeight ?? MAX_HEIGHT)
@@ -44,14 +44,14 @@ const ExpandoColumn = styled(Column)<{
   maxHeight?: number
   open: boolean
 }>`
-  max-height: ${({ open, height, maxHeight }) => (open ? getExpandoContentHeight(height, maxHeight) : 0)}em;
+  max-height: ${({ open, height, maxHeight }) => (open ? getExpandoContentHeight(height, maxHeight) : 0)}rem;
   overflow: hidden;
   position: relative;
   transition: max-height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
 `
 
 const InnerColumn = styled(Column)<{ height?: number; maxHeight?: number }>`
-  max-height: ${({ height, maxHeight }) => getExpandoContentHeight(height, maxHeight)}em;
+  max-height: ${({ height, maxHeight }) => getExpandoContentHeight(height, maxHeight)}rem;
 `
 
 export const IconPrefix = styled.div`
@@ -63,10 +63,10 @@ interface ExpandoProps extends ColumnProps {
   iconPrefix?: ReactNode
   open: boolean
   onExpand: () => void
-  // The absolute height of the expanded container, in em.
-  // If not provided, the container will expand to fit its contents up to {maxHeight}em.
+  // The absolute height of the expanded container, in rem.
+  // If not provided, the container will expand to fit its contents up to {maxHeight}rem.
   height?: number
-  // The maximum height of the expanded container, in em.
+  // The maximum height of the expanded container, in rem.
   // If relying on auto-sizing, this should be something close to (but still larger than)
   // the content's height. Otherwise, the animation will feel fast.
   maxHeight?: number

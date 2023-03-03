@@ -14,30 +14,30 @@ const scrollbarCss = (padded: boolean) => css`
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
-    width: 1.25em;
+    width: 1.25rem;
   }
 
   ::-webkit-scrollbar-thumb {
     background: radial-gradient(
-        closest-corner at 0.25em 0.25em,
-        ${({ theme }) => theme.interactive} 0.25em,
-        transparent 0.25em
+        closest-corner at 0.25rem 0.25rem,
+        ${({ theme }) => theme.interactive} 0.25rem,
+        transparent 0.25rem
       ),
       linear-gradient(
         to bottom,
         #ffffff00 0.25em,
-        ${({ theme }) => theme.interactive} 0.25em,
-        ${({ theme }) => theme.interactive} calc(100% - 0.25em),
-        #ffffff00 calc(100% - 0.25em)
+        ${({ theme }) => theme.interactive} 0.25rem,
+        ${({ theme }) => theme.interactive} calc(100% - 0.25rem),
+        #ffffff00 calc(100% - 0.25rem)
       ),
       radial-gradient(
-        closest-corner at 0.25em calc(100% - 0.25em),
-        ${({ theme }) => theme.interactive} 0.25em,
-        #ffffff00 0.25em
+        closest-corner at 0.25em calc(100% - 0.25rem),
+        ${({ theme }) => theme.interactive} 0.25rem,
+        #ffffff00 0.25rem
       );
     background-clip: padding-box;
     border: none;
-    ${padded ? 'border-right' : 'border-left'}: 0.75em solid transparent;
+    ${padded ? 'border-right' : 'border-left'}: 0.75rem solid transparent;
   }
 
   @supports not selector(::-webkit-scrollbar-thumb) {

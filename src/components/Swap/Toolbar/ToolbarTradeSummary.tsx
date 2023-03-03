@@ -7,14 +7,14 @@ import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { Body2LineHeightRem } from 'theme/type'
 
-export const SUMMARY_COLUMN_GAP_EM = 0.75
-export const SUMMARY_ROW_HEIGHT_EM = Body2LineHeightRem + SUMMARY_COLUMN_GAP_EM
+export const SUMMARY_COLUMN_GAP_REM = 0.75
+export const SUMMARY_ROW_HEIGHT_REM = Body2LineHeightRem + SUMMARY_COLUMN_GAP_REM
 
 const TradeSummaryColumn = styled(Column)`
   border-bottom: 1px solid ${({ theme }) => theme.outline};
   border-top: 1px solid ${({ theme }) => theme.outline};
-  margin: 0 1em;
-  padding: ${SUMMARY_COLUMN_GAP_EM}em 0;
+  margin: 0 1rem;
+  padding: ${SUMMARY_COLUMN_GAP_REM}rem 0;
 `
 
 const TradeAttributeName = styled(ThemedText.Body2)`
@@ -72,7 +72,7 @@ interface ToolbarTradeSummaryProps {
 
 export default function ToolbarTradeSummary({ rows }: ToolbarTradeSummaryProps) {
   return (
-    <TradeSummaryColumn gap={SUMMARY_COLUMN_GAP_EM}>
+    <TradeSummaryColumn gap={SUMMARY_COLUMN_GAP_REM}>
       {rows.map((row, i) => (
         <SummaryRow key={i} {...row} />
       ))}
