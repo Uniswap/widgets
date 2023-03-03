@@ -97,7 +97,7 @@ export function useRouterTrade(
             from: quote.from,
             to: quote.to,
             data: quote.data,
-            value: BigNumber.from(quote.value),
+            value: quote.value ? BigNumber.from(quote.value) : BigNumber.from(0),
           }
         : undefined,
       tradeType: TradeType.EXACT_INPUT,

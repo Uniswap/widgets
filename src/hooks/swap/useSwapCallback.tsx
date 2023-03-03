@@ -1,14 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import useENS from 'hooks/useENS'
-import { useEvmAccountAddress, useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
+import { useEvmAccountAddress, useEvmChainId, useEvmProvider, useSnAccountInterface } from 'hooks/useSyncWidgetSettings'
 import { ReactNode, useMemo } from 'react'
 import { WidoTrade } from 'state/routing/types'
 
-import useSendSwapTransaction from './useSendSwapTransaction'
+import useSendSwapTransaction, { ExecTxResponse } from './useSendSwapTransaction'
 
 export enum SwapCallbackState {
   INVALID,
@@ -18,7 +16,7 @@ export enum SwapCallbackState {
 
 interface UseSwapCallbackReturns {
   state: SwapCallbackState
-  callback?: () => Promise<TransactionResponse>
+  callback?: () => Promise<ExecTxResponse>
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
@@ -42,27 +40,18 @@ export function useSwapCallback({
   const chainId = useEvmChainId()
   const provider = useEvmProvider()
   const account = useEvmAccountAddress()
+  const snAccInterface = useSnAccountInterface()
 
-  const { callback } = useSendSwapTransaction(account, chainId, provider, trade)
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName)
-  const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const { callback } = useSendSwapTransaction(account, chainId, provider, trade, snAccInterface)
 
   return useMemo(() => {
-    if (!trade || !provider || !account || !chainId || !callback) {
+    if (!trade || !callback) {
       return { state: SwapCallbackState.INVALID, error: <Trans>Missing dependencies</Trans> }
-    }
-    if (!recipient) {
-      if (recipientAddressOrName !== null) {
-        return { state: SwapCallbackState.INVALID, error: <Trans>Invalid recipient</Trans> }
-      } else {
-        return { state: SwapCallbackState.LOADING }
-      }
     }
 
     return {
       state: SwapCallbackState.VALID,
       callback: async () => callback(),
     }
-  }, [trade, provider, account, chainId, callback, recipient, recipientAddressOrName])
+  }, [trade, callback])
 }

@@ -80,7 +80,7 @@ export function useGetQuoteArgs(
       tokenOutChainId: currencyOut.chainId,
       tokenOutDecimals: currencyOut.decimals,
       tokenOutSymbol: currencyOut.symbol,
-      userAddress: account,
+      userAddress: isStarknet(currencyIn?.chainId) ? snAccount : account,
       recipientAddress: isStarknet(currencyOut?.chainId) ? snAccount : account,
       slippagePercentage: parseFloat(slippagePercentage),
       routerPreference,

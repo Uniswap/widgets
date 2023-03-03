@@ -4,7 +4,7 @@ import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
-import { useEvmAccountAddress, useEvmChainId } from 'hooks/useSyncWidgetSettings'
+import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useAtomValue } from 'jotai/utils'
@@ -23,8 +23,7 @@ import useOnSubmit from './useOnSubmit'
  * Should only be rendered if a valid swap exists.
  */
 export default function SwapButton({ disabled }: { disabled: boolean }) {
-  const account = useEvmAccountAddress()
-  const chainId = useEvmChainId()
+  const evmChainId = useEvmChainId()
 
   const {
     [Field.INPUT]: { usdc: inputUSDC },
@@ -42,7 +41,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const { callback: swapCallback } = useSwapCallback({
     trade: permit2Enabled ? undefined : trade,
     allowedSlippage: slippage.allowed,
-    recipientAddressOrName: account ?? null,
+    recipientAddressOrName: null,
     // signatureData: approval?.signatureData,
     deadline,
     feeOptions,
@@ -52,7 +51,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   // Close the review modal if there is no available trade.
   useEffect(() => setOpen((open) => (trade ? open : false)), [trade])
   // Close the review modal on chain change.
-  useEffect(() => setOpen(false), [chainId])
+  useEffect(() => setOpen(false), [evmChainId])
   const setOldestValidBlock = useSetOldestValidBlock()
   const onSubmit = useOnSubmit()
   const onSwap = useCallback(async () => {
