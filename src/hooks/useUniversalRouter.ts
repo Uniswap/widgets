@@ -7,6 +7,7 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { ErrorCode } from 'constants/eip1193'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { SwapError } from 'errors'
 import { useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -68,7 +69,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      response = await sendTransaction(provider, tx, 0.2)
+      response = await sendTransaction(provider, tx, TX_GAS_MARGIN)
     } catch (swapError) {
       if (didUserReject(swapError)) {
         return null
