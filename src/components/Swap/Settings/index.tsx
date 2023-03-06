@@ -1,8 +1,6 @@
-import { BottomSheetModal } from 'components/BottomSheetModal'
+import { ResponsiveDialog } from 'components/ResponsiveDialog'
 import Rule from 'components/Rule'
-import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
-import { useOutsideClickHandler } from 'hooks/useOutsideClickHandler'
 import { Settings as SettingsIcon } from 'icons'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
@@ -12,7 +10,7 @@ import { AnimationSpeed } from 'theme'
 
 import { IconButton } from '../../Button'
 import Column from '../../Column'
-import Popover, { PopoverBoundaryProvider } from '../../Popover'
+import { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import RouterPreferenceToggle from './RouterPreferenceToggle'
 import TransactionTtlInput from './TransactionTtlInput'
@@ -57,27 +55,18 @@ const SettingsButton = styled(IconButton)`
 
 export default function Settings() {
   const [open, setOpen] = useState(false)
-  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
-  const isMobile = useIsMobileWidth()
-  useOutsideClickHandler(isMobile ? null : wrapper, () => setOpen(false))
+
   useOnEscapeHandler(() => setOpen(false))
 
   return (
-    <div ref={setWrapper}>
-      {isMobile ? (
-        <>
-          <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
-          <BottomSheetModal title="Settings" onClose={() => setOpen(false)} open={open}>
-            <SettingsMenu />
-          </BottomSheetModal>
-        </>
-      ) : (
-        <PopoverBoundaryProvider value={wrapper}>
-          <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsMenu />}>
-            <SettingsButton data-testid="settings-button" onClick={() => setOpen(!open)} icon={SettingsIcon} />
-          </Popover>
-        </PopoverBoundaryProvider>
-      )}
-    </div>
+    <ResponsiveDialog
+      open={open}
+      setOpen={setOpen}
+      defaultView="popover"
+      anchor={<SettingsButton data-testid="settings-button" onClick={() => setOpen(!open)} icon={SettingsIcon} />}
+      mobileBottomSheet={true}
+    >
+      <SettingsMenu />
+    </ResponsiveDialog>
   )
 }
