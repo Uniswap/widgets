@@ -3518,10 +3518,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
-"@uniswap/conedison@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.5.0.tgz#6d2ae3779256425ad04e955dbb5388fd1c671e98"
-  integrity sha512-zzP3+YZ+a0g1zo2GVbdBDHH17A0qURohrVqJ1nPrhDER/5VSeO8KLTi5KgAvS2Jc7QEpAPhgvMgui9g+u0wHCA==
+"@uniswap/conedison@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.5.1.tgz#91527cc9928ce0187f30a5eb4abb705b8f0cd013"
+  integrity sha512-VJqUW4l54QVj5a4vAzAlWWd193iCcT8HMugFPB28S2Uqhs2elAg/RDQmiPOf9TOFB635MdBlD0S6xUuqo7FB4A==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
