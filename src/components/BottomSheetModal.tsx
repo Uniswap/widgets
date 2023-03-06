@@ -39,7 +39,7 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
   z-index: ${({ theme }) => theme.zIndex.modal - 1};
 `
 
-const Wrapper = styled.div<{ open: boolean }>`
+const Wrapper = styled.div`
   border-radius: 0;
   bottom: 0;
   left: 0;
@@ -119,7 +119,7 @@ const RootElement = forwardRef<HTMLDivElement, RootElementProps>(function RootWr
           e.stopPropagation()
         }}
       />
-      <Wrapper open={open} ref={ref}>
+      <Wrapper data-testid="BottomSheetModal__Wrapper" ref={ref}>
         {children}
       </Wrapper>
     </>,

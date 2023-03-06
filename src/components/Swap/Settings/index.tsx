@@ -65,6 +65,7 @@ export default function Settings() {
       defaultView="popover"
       anchor={<SettingsButton data-testid="settings-button" onClick={() => setOpen(!open)} icon={SettingsIcon} />}
       mobileBottomSheet={true}
+      bottomSheetTitle="Settings"
     >
       <SettingsMenu />
     </ResponsiveDialog>

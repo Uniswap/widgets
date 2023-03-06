@@ -173,6 +173,7 @@ export default function Popover({
             style={styles.popper}
             {...attributes.popper}
             onClick={containerOnClick}
+            data-testid="popover-container"
           >
             {content}
             {showArrow && (

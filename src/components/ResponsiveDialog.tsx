@@ -19,10 +19,11 @@ interface ResponsiveDialogProps {
   // If true, always render the dialog as a bottom sheet on mobile.
   // If false, it will only be a bottom sheet if it was page-centered.
   mobileBottomSheet?: boolean
+  bottomSheetTitle?: string
 }
 
 /**
- * A dialog that renders as a bottom sheet on mobile.
+ * A Dialog or Popover that renders as a bottom sheet on mobile.
  */
 export function ResponsiveDialog({
   children,
@@ -31,6 +32,7 @@ export function ResponsiveDialog({
   defaultView = 'dialog',
   anchor,
   mobileBottomSheet,
+  bottomSheetTitle,
 }: PropsWithChildren<ResponsiveDialogProps>) {
   const isMobile = useIsMobileWidth()
   const pageCenteredDialogsEnabled = useIsDialogPageCentered()
@@ -41,7 +43,7 @@ export function ResponsiveDialog({
     return (
       <>
         {anchor}
-        <BottomSheetModal onClose={() => setOpen(false)} open={open}>
+        <BottomSheetModal onClose={() => setOpen(false)} open={open} title={bottomSheetTitle}>
           {children}
         </BottomSheetModal>
       </>
