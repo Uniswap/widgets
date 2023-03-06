@@ -210,5 +210,8 @@
     "wcag-contrast": "^3.0.0",
     "webpack": "^5.72.0",
     "yarn-deduplicate": "^6.0.0"
+  },
+  "resolutions": {
+    "decode-uri-component": "^0.2.2"
   }
 }
