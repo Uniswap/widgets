@@ -39,8 +39,8 @@ const TokenButton = styled(BaseButton)`
 const ITEM_SIZE = 56
 const MIN_VISIBLE_TOKENS = 6
 type ItemData = Currency[]
-interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
-const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
+interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> { }
+const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList) <{
   hover: number
   scrollbar?: ReturnType<typeof useScrollbar>
 }>`
@@ -138,6 +138,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   { tokens, onSelect }: TokenOptionsProps,
   ref
 ) {
+  const width = useWindowWidth()
   const [focused, setFocused] = useState(false)
 
   const [selected, setSelected] = useState<Currency>(tokens[0])
@@ -221,8 +222,9 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onFocus={onFocus}
       onMouseMove={onMouseMove}
       style={{
-        minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE,
         overflow: 'hidden',
+        minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE,
+        minWidth: Math.min(400, width),
       }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
