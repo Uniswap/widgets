@@ -10,5 +10,5 @@ updates:
       - dependency-name: '@uniswap/default-token-list'
       - dependency-name: '@uniswap/redux-multicall'
     reviewers:
-      - 'just-toby'
+      - 'Uniswap/dependabot-reviewers'
       - 'Uniswap/web-tokens'
