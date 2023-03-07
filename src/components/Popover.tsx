@@ -23,7 +23,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   ${globalFontStyles}
   background-color: ${({ theme }) => theme.dialog};
   border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
   opacity: ${(props) => (props.show ? 1 : 0)};
   padding: 0.75rem;
   transition: visibility ${AnimationSpeed.Medium} linear, opacity ${AnimationSpeed.Medium} linear;
@@ -35,7 +35,7 @@ const Reference = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  min-height: 1em;
+  min-height: 1rem;
 `
 
 const Arrow = styled.div`
@@ -105,7 +105,7 @@ export default function Popover({
   show,
   children,
   placement,
-  offset,
+  offset = 8,
   contained,
   showArrow = true,
 }: PopoverProps) {

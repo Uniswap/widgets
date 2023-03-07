@@ -9,9 +9,9 @@ import { ThemedText } from 'theme'
 import { isExactInput } from 'utils/tradeType'
 
 const StyledEstimate = styled(ThemedText.Caption)`
-  margin-bottom: 0.5em;
-  margin-top: 0.5em;
-  max-height: 3em;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  max-height: 3rem;
 `
 
 interface EstimateProps {

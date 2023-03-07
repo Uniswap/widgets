@@ -10,9 +10,9 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
-  min-height: 2em;
-  padding: 0.25em 0.5em 0.25em 0.25em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
 
   :enabled {
     transition: none;
@@ -24,13 +24,13 @@ const StyledTokenButton = styled(Button)<{ approved?: boolean }>`
 `
 
 const TokenButtonRow = styled(Row)<{ empty: boolean }>`
-  max-width: 12em;
+  max-width: 12rem;
   overflow: hidden;
-  padding-left: ${({ empty }) => empty && 0.5}em;
+  padding-left: ${({ empty }) => empty && 0.5}rem;
   width: max-content;
 
   img {
-    min-width: 1.2em;
+    min-width: 1.2rem;
   }
 `
 

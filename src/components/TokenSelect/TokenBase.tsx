@@ -7,8 +7,8 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 
 const TokenButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
-  padding: 0.25em 0.75em 0.25em 0.25em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
 `
 
 interface TokenBaseProps {

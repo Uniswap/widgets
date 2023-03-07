@@ -24,7 +24,7 @@ const Loading = styled.span`
 const CaptionRow = styled(Row)<{ gap: number; shrink?: number }>`
   align-items: center;
   flex-shrink: ${({ shrink }) => shrink ?? 1};
-  gap: ${({ gap }) => gap}em;
+  gap: ${({ gap }) => gap}rem;
   height: 100%;
 `
 
@@ -141,7 +141,7 @@ interface ExpandProps {
   expanded: boolean
 }
 
-const Expander = ({ expanded }: ExpandProps) => {
+function Expander({ expanded }: ExpandProps) {
   return <ExpandIcon $expanded={expanded} />
 }
 
@@ -178,11 +178,13 @@ interface PriceImpactProps {
   impact: PriceImpactType
 }
 
-export const PriceImpactWarningTooltipContent = () => (
-  <ThemedText.Caption>
-    There will be a large difference between your input and output values due to current liquidity.
-  </ThemedText.Caption>
-)
+export function PriceImpactWarningTooltipContent() {
+  return (
+    <ThemedText.Caption>
+      There will be a large difference between your input and output values due to current liquidity.
+    </ThemedText.Caption>
+  )
+}
 
 export function PriceImpact({ impact, expanded }: PriceImpactProps & ExpandProps) {
   return (

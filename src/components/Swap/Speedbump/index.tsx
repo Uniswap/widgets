@@ -13,19 +13,19 @@ const SpeedBumpWrapper = styled(Column)`
   display: flex;
   height: 100%;
   justify-content: space-between;
-  padding: 1em;
+  padding: 1rem;
   text-align: center;
 `
 const BodyText = styled(ThemedText.Body1)`
-  padding: 0 0.5em;
+  padding: 0 0.5rem;
 `
 
 const IconWrapper = styled.div`
-  padding: 2em;
+  padding: 2rem;
 `
 const SpeedbumpButtonStyle = css`
-  border-radius: 1em;
-  padding: 1em;
+  border-radius: 1rem;
+  padding: 1rem;
 `
 const HeaderRow = styled(Row)`
   align-items: flex-start;

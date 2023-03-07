@@ -29,11 +29,11 @@ const SearchInputContainer = styled(Row)`
 `
 
 const TokenSelectContainer = styled.div<{ $pageCentered: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   min-height: ${($pageCentered) => ($pageCentered ? 'unset' : '100%')};
   min-width: ${({ $pageCentered }) => ($pageCentered ? "min(400px, '100vw')" : 'auto')};
   overflow: hidden;
-  padding: 0.5em 0 0;
+  padding: 0.5rem 0 0;
   @supports (overflow: clip) {
     overflow: 'clip';
   }
@@ -104,7 +104,7 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
     <TokenSelectContainer $pageCentered={isPageCentered ?? false}>
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
-        <Column gap={0.75} style={{ margin: '0 0.5em' }}>
+        <Column gap={0.75} style={{ margin: '0 0.5rem' }}>
           <Row pad={0.75} grow>
             <SearchInputContainer gap={0.75} justify="start" flex>
               <Search color="secondary" />

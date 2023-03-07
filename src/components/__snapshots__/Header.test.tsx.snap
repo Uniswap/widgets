@@ -10,11 +10,11 @@ Object {
         style="isolation: isolate;"
       >
         <div
-          class="Row-sc-1nzvhrh-0 Header__HeaderRow-sc-1a8935c-0 iYjZBm ekqyUq"
+          class="Row-sc-1nzvhrh-0 Header__HeaderRow-sc-1a8935c-0 iYjZBm jTGDHe"
           data-testid="header-container"
         >
           <div
-            class="Row-sc-1nzvhrh-0 fZrFzq"
+            class="Row-sc-1nzvhrh-0 lkMSnc"
             data-testid="header-title"
           >
             <div
@@ -24,15 +24,15 @@ Object {
             </div>
           </div>
           <div
-            class="Row-sc-1nzvhrh-0 iEAisM"
+            class="Row-sc-1nzvhrh-0 jeLwvy"
             data-testid="header-children"
           >
             <div>
               <div
-                class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                class="Popover__Reference-sc-1liex6z-1 hplZxv"
               >
                 <button
-                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 ewOqAq"
+                  class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw Settings__SettingsButton-sc-1hvqnx5-1 ewOqAq"
                   data-testid="settings-button"
                 >
                   <svg
@@ -59,15 +59,15 @@ Object {
                 </button>
               </div>
               <div
-                class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
+                class="Popover__PopoverContainer-sc-1liex6z-0 blItxa"
                 data-testid="popover-container"
                 style="position: absolute; left: 0px; top: 0px;"
               >
                 <div
-                  class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 kHYWpm kNwgA-d"
+                  class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 dsMBcY kNwgA-d"
                 >
                   <div
-                    class="Column-sc-1ul9eki-0 fcaTif"
+                    class="Column-sc-1ul9eki-0 jowptB"
                   >
                     <div
                       class="Column-sc-1ul9eki-0 kcFdvT"
@@ -77,7 +77,7 @@ Object {
                         style="cursor: pointer;"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 bAZdWs"
+                          class="Row-sc-1nzvhrh-0 jIdqqq"
                         >
                           <div
                             class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -85,10 +85,10 @@ Object {
                             Max slippage
                           </div>
                           <div
-                            class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                            class="Popover__Reference-sc-1liex6z-1 hplZxv"
                           >
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                               style="outline: none;"
                               tabindex="-1"
                             >
@@ -127,7 +127,7 @@ Object {
                           </div>
                         </div>
                         <div
-                          class="Row-sc-1nzvhrh-0 icKASA"
+                          class="Row-sc-1nzvhrh-0 dZQqZC"
                         >
                           <div
                             class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
@@ -135,26 +135,26 @@ Object {
                             Auto
                           </div>
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw"
                             color="secondary"
                           />
                         </div>
                       </div>
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
+                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT fcnTlu"
                       >
                         <div
-                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NVvmR gyFZzL"
+                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI cMnglD gyFZzL"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
+                            class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 cfUpfx gnYxGO"
                           >
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe cQhCRX bnctWB"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gccXME cQhCRX iOvcmB"
                               data-testid="auto-slippage"
                             >
                               <div
-                                class="Row-sc-1nzvhrh-0 iFLCZk"
+                                class="Row-sc-1nzvhrh-0 BEuty"
                               >
                                 <div
                                   class="type__TextWrapper-sc-16386l-0 fMszLd button button-medium css-17g4kvt"
@@ -168,13 +168,13 @@ Object {
                               </div>
                             </button>
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe hXefAh"
+                              class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gccXME ePlutd"
                               data-testid="custom-slippage"
                               style="outline: none;"
                               tabindex="-1"
                             >
                               <div
-                                class="Row-sc-1nzvhrh-0 fFwGMy"
+                                class="Row-sc-1nzvhrh-0 eSaSDE"
                               >
                                 <div
                                   class="Row-sc-1nzvhrh-0 fUVNpP"
@@ -211,7 +211,7 @@ Object {
                     class="Rule-sc-1568p9j-0 RJyeV"
                   />
                   <div
-                    class="Column-sc-1ul9eki-0 fcaTif"
+                    class="Column-sc-1ul9eki-0 jowptB"
                   >
                     <div
                       class="Column-sc-1ul9eki-0 kcFdvT"
@@ -221,7 +221,7 @@ Object {
                         style="cursor: pointer;"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 bAZdWs"
+                          class="Row-sc-1nzvhrh-0 jIdqqq"
                         >
                           <div
                             class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -229,10 +229,10 @@ Object {
                             Transaction deadline
                           </div>
                           <div
-                            class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                            class="Popover__Reference-sc-1liex6z-1 hplZxv"
                           >
                             <button
-                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                              class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                               style="outline: none;"
                               tabindex="-1"
                             >
@@ -271,7 +271,7 @@ Object {
                           </div>
                         </div>
                         <div
-                          class="Row-sc-1nzvhrh-0 icKASA"
+                          class="Row-sc-1nzvhrh-0 dZQqZC"
                         >
                           <div
                             class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
@@ -284,22 +284,22 @@ Object {
                             </div>
                           </div>
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw"
                             color="secondary"
                           />
                         </div>
                       </div>
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
+                        class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT fcnTlu"
                       >
                         <div
-                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NNzpo gyFZzL"
+                          class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI cHlJMW gyFZzL"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
+                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv eMmnPF"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 eljOnX fAOjbi"
+                              class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fcddMn ehOYyS"
                             >
                               <input
                                 autocomplete="off"
@@ -326,7 +326,7 @@ Object {
                     </div>
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 blItxa"
                     data-testid="popover-container"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
@@ -341,7 +341,7 @@ Object {
                     />
                   </div>
                   <div
-                    class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
+                    class="Popover__PopoverContainer-sc-1liex6z-0 blItxa"
                     data-testid="popover-container"
                     style="position: absolute; left: 0px; top: 0px;"
                   >
@@ -369,11 +369,11 @@ Object {
       style="isolation: isolate;"
     >
       <div
-        class="Row-sc-1nzvhrh-0 Header__HeaderRow-sc-1a8935c-0 iYjZBm ekqyUq"
+        class="Row-sc-1nzvhrh-0 Header__HeaderRow-sc-1a8935c-0 iYjZBm jTGDHe"
         data-testid="header-container"
       >
         <div
-          class="Row-sc-1nzvhrh-0 fZrFzq"
+          class="Row-sc-1nzvhrh-0 lkMSnc"
           data-testid="header-title"
         >
           <div
@@ -383,15 +383,15 @@ Object {
           </div>
         </div>
         <div
-          class="Row-sc-1nzvhrh-0 iEAisM"
+          class="Row-sc-1nzvhrh-0 jeLwvy"
           data-testid="header-children"
         >
           <div>
             <div
-              class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+              class="Popover__Reference-sc-1liex6z-1 hplZxv"
             >
               <button
-                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Settings__SettingsButton-sc-1hvqnx5-1 ewOqAq"
+                class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw Settings__SettingsButton-sc-1hvqnx5-1 ewOqAq"
                 data-testid="settings-button"
               >
                 <svg
@@ -418,15 +418,15 @@ Object {
               </button>
             </div>
             <div
-              class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
+              class="Popover__PopoverContainer-sc-1liex6z-0 blItxa"
               data-testid="popover-container"
               style="position: absolute; left: 0px; top: 0px;"
             >
               <div
-                class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 kHYWpm kNwgA-d"
+                class="Column-sc-1ul9eki-0 Settings__SettingsColumn-sc-1hvqnx5-0 dsMBcY kNwgA-d"
               >
                 <div
-                  class="Column-sc-1ul9eki-0 fcaTif"
+                  class="Column-sc-1ul9eki-0 jowptB"
                 >
                   <div
                     class="Column-sc-1ul9eki-0 kcFdvT"
@@ -436,7 +436,7 @@ Object {
                       style="cursor: pointer;"
                     >
                       <div
-                        class="Row-sc-1nzvhrh-0 bAZdWs"
+                        class="Row-sc-1nzvhrh-0 jIdqqq"
                       >
                         <div
                           class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -444,10 +444,10 @@ Object {
                           Max slippage
                         </div>
                         <div
-                          class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                          class="Popover__Reference-sc-1liex6z-1 hplZxv"
                         >
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                             style="outline: none;"
                             tabindex="-1"
                           >
@@ -486,7 +486,7 @@ Object {
                         </div>
                       </div>
                       <div
-                        class="Row-sc-1nzvhrh-0 icKASA"
+                        class="Row-sc-1nzvhrh-0 dZQqZC"
                       >
                         <div
                           class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
@@ -494,26 +494,26 @@ Object {
                           Auto
                         </div>
                         <button
-                          class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                          class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw"
                           color="secondary"
                         />
                       </div>
                     </div>
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
+                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT fcnTlu"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NVvmR gyFZzL"
+                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI cMnglD gyFZzL"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 ftQsXL cheHiA"
+                          class="Row-sc-1nzvhrh-0 MaxSlippageSelect__ExpandoContentRow-sc-9adwbi-2 cfUpfx gnYxGO"
                         >
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gleKKe cQhCRX bnctWB"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 MaxSlippageSelect__Button-sc-9adwbi-0 gccXME cQhCRX iOvcmB"
                             data-testid="auto-slippage"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 iFLCZk"
+                              class="Row-sc-1nzvhrh-0 BEuty"
                             >
                               <div
                                 class="type__TextWrapper-sc-16386l-0 fMszLd button button-medium css-17g4kvt"
@@ -527,13 +527,13 @@ Object {
                             </div>
                           </button>
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gleKKe hXefAh"
+                            class="Button__BaseButton-sc-1soikk5-0 MaxSlippageSelect__Custom-sc-9adwbi-1 gccXME ePlutd"
                             data-testid="custom-slippage"
                             style="outline: none;"
                             tabindex="-1"
                           >
                             <div
-                              class="Row-sc-1nzvhrh-0 fFwGMy"
+                              class="Row-sc-1nzvhrh-0 eSaSDE"
                             >
                               <div
                                 class="Row-sc-1nzvhrh-0 fUVNpP"
@@ -570,7 +570,7 @@ Object {
                   class="Rule-sc-1568p9j-0 RJyeV"
                 />
                 <div
-                  class="Column-sc-1ul9eki-0 fcaTif"
+                  class="Column-sc-1ul9eki-0 jowptB"
                 >
                   <div
                     class="Column-sc-1ul9eki-0 kcFdvT"
@@ -580,7 +580,7 @@ Object {
                       style="cursor: pointer;"
                     >
                       <div
-                        class="Row-sc-1nzvhrh-0 bAZdWs"
+                        class="Row-sc-1nzvhrh-0 jIdqqq"
                       >
                         <div
                           class="type__TextWrapper-sc-16386l-0 jukanU subhead subhead-2 css-e17nie"
@@ -588,10 +588,10 @@ Object {
                           Transaction deadline
                         </div>
                         <div
-                          class="Popover__Reference-sc-1liex6z-1 dFwFDV"
+                          class="Popover__Reference-sc-1liex6z-1 hplZxv"
                         >
                           <button
-                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
+                            class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw Tooltip__IconTooltip-sc-tsxpgp-1 fPAwBP"
                             style="outline: none;"
                             tabindex="-1"
                           >
@@ -630,7 +630,7 @@ Object {
                         </div>
                       </div>
                       <div
-                        class="Row-sc-1nzvhrh-0 icKASA"
+                        class="Row-sc-1nzvhrh-0 dZQqZC"
                       >
                         <div
                           class="Expando__IconPrefix-sc-yzkwmi-8 cffTyD"
@@ -643,22 +643,22 @@ Object {
                           </div>
                         </div>
                         <button
-                          class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gleKKe jBWboA jwaziW"
+                          class="Button__BaseButton-sc-1soikk5-0 Button__transparentButton-sc-1soikk5-2 Button__StyledIconButton-sc-1soikk5-3 gccXME jBWboA cguYJw"
                           color="secondary"
                         />
                       </div>
                     </div>
                     <div
-                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT eJCkeI"
+                      class="Column-sc-1ul9eki-0 Expando__ExpandoColumn-sc-yzkwmi-4 kcFdvT fcnTlu"
                     >
                       <div
-                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI NNzpo gyFZzL"
+                        class="Column-sc-1ul9eki-0 Expando__InnerColumn-sc-yzkwmi-5 Expando___StyledInnerColumn2-sc-yzkwmi-6 hUSZUI cHlJMW gyFZzL"
                       >
                         <div
-                          class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv knpWPV"
+                          class="Row-sc-1nzvhrh-0 TransactionTtlInput__InputContainer-sc-1fem02o-1 gQrhhv eMmnPF"
                         >
                           <div
-                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 eljOnX fAOjbi"
+                            class="Row-sc-1nzvhrh-0 TransactionTtlInput__Input-sc-1fem02o-0 fcddMn ehOYyS"
                           >
                             <input
                               autocomplete="off"
@@ -685,7 +685,7 @@ Object {
                   </div>
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 blItxa"
                   data-testid="popover-container"
                   style="position: absolute; left: 0px; top: 0px;"
                 >
@@ -700,7 +700,7 @@ Object {
                   />
                 </div>
                 <div
-                  class="Popover__PopoverContainer-sc-1liex6z-0 koqvVY"
+                  class="Popover__PopoverContainer-sc-1liex6z-0 blItxa"
                   data-testid="popover-container"
                   style="position: absolute; left: 0px; top: 0px;"
                 >

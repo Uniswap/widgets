@@ -5,10 +5,10 @@ import * as Type from 'theme/type'
 
 const EventFeedWrapper = styled.div`
   background-color: ${defaultTheme.container};
-  border-radius: ${defaultTheme.borderRadius.medium}em;
+  border-radius: ${defaultTheme.borderRadius.medium}rem;
   box-sizing: border-box;
   font-family: ${defaultTheme.fontFamily.font};
-  padding: 1em;
+  padding: 1rem;
   width: 360px;
 `
 const EventColumn = styled.div`
@@ -17,12 +17,12 @@ const EventColumn = styled.div`
 `
 const EventRow = styled.div`
   background-color: ${defaultTheme.module};
-  border-radius: ${defaultTheme.borderRadius.medium / 2}em;
-  margin: 0.5em 0;
-  padding: 0.2em 0.2em 0.5em;
+  border-radius: ${defaultTheme.borderRadius.medium / 2}rem;
+  margin: 0.5rem 0;
+  padding: 0.2rem 0.2rem 0.5rem;
 `
 const EventData = styled.pre`
-  margin: 0.5em 0 0;
+  margin: 0.5rem 0 0;
 `
 
 export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers | keyof WidgetEventHandlers)[] = [
