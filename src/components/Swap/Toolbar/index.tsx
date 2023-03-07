@@ -36,10 +36,6 @@ const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   padding: 0 1rem;
 `
 
-interface ToolbarProps {
-  hideConnectionUI?: boolean
-}
-
 function CaptionRow() {
   const {
     [Field.INPUT]: { currency: inputCurrency },
@@ -187,7 +183,7 @@ function CaptionRow() {
   )
 }
 
-function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
+function ToolbarActionButton() {
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency },
@@ -217,19 +213,19 @@ function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
   return <SwapActionButton />
 }
 
-function Toolbar({ hideConnectionUI }: ToolbarProps) {
+function Toolbar() {
   return (
     <>
       <CaptionRow />
-      <ToolbarActionButton hideConnectionUI={hideConnectionUI} />
+      <ToolbarActionButton />
     </>
   )
 }
 
-export default memo(function WrappedToolbar(props: ToolbarProps) {
+export default memo(function WrappedToolbar() {
   return (
     <ToolbarContextProvider>
-      <Toolbar {...props} />
+      <Toolbar />
     </ToolbarContextProvider>
   )
 })
