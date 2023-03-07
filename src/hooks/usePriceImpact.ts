@@ -25,7 +25,7 @@ export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined 
   }, [trade])
 }
 
-export function useFiatPriceImpact(trade?: InterfaceTrade) {
+export function useFiatValueChange(trade?: InterfaceTrade) {
   const [inputUSDCValue, outputUSDCValue] = [useUSDCValue(trade?.inputAmount), useUSDCValue(trade?.outputAmount)]
   return useMemo(() => {
     const fiatPriceImpact = computeFiatValuePriceImpact(inputUSDCValue, outputUSDCValue)

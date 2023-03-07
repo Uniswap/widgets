@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { Slippage } from 'hooks/useSlippage'
+import { formatSlippage, Slippage } from 'hooks/useSlippage'
 import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
@@ -54,7 +54,7 @@ export function getEstimateMessage(
           {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({slippage?.toString()})
+              ({formatSlippage(slippage)})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>
@@ -73,7 +73,7 @@ export function getEstimateMessage(
           {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({slippage?.toString()})
+              ({formatSlippage(slippage)})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>

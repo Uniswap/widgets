@@ -18,13 +18,11 @@ export interface Slippage {
   auto: boolean
   allowed: Percent
   warning?: 'warning' | 'error'
-  toString: () => string
 }
 
 export const DEFAULT_SLIPPAGE = {
   auto: true,
   allowed: DEFAULT_AUTO_SLIPPAGE,
-  toString: () => toHumanReadablePercent(DEFAULT_AUTO_SLIPPAGE),
 }
 
 /** Returns the allowed slippage, and whether it is auto-slippage. */
@@ -42,7 +40,7 @@ export default function useSlippage(trade: {
     if (auto && allowed === DEFAULT_AUTO_SLIPPAGE) {
       return DEFAULT_SLIPPAGE
     }
-    return { auto, allowed, warning, toString: () => toHumanReadablePercent(allowed) }
+    return { auto, allowed, warning }
   }, [autoSlippage, maxSlippage, slippage])
 }
 
@@ -53,4 +51,8 @@ export function getSlippageWarning(slippage?: Percent): 'warning' | 'error' | un
   if (slippage?.greaterThan(MAX_VALID_SLIPPAGE)) return 'error'
   if (slippage?.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
   return
+}
+
+export function formatSlippage(slippage: Slippage): string {
+  return toHumanReadablePercent(slippage.allowed)
 }
