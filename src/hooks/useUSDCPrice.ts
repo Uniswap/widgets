@@ -1,8 +1,10 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useAtom } from 'jotai'
+import { useMemo, useRef } from 'react'
+import { routerPreferenceAtom } from 'state/swap/settings'
 
-import { RouterPreference, useRouterTrade } from './routing/useRouterTrade'
-import useLast from './useLast'
+import { QuoteType } from './routing/types'
+import { useRouterTrade } from './routing/useRouterTrade'
 import { STABLECOIN_AMOUNT_OUT } from './useStablecoinAmountFromFiatValue'
 
 /**
@@ -14,8 +16,11 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
-
-  const trade = useRouterTrade(TradeType.EXACT_OUTPUT, amountOut, currency, RouterPreference.PRICE)
+  const [routerPreference] = useAtom(routerPreferenceAtom)
+  const trade = useRouterTrade(TradeType.EXACT_OUTPUT, amountOut, currency, stablecoin, {
+    type: QuoteType.PRICE,
+    preference: routerPreference,
+  })
 
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
@@ -34,7 +39,11 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     return undefined
   }, [currency, stablecoin, trade.trade])
 
-  return useLast(price, (value, current) => !value || !current || !value.equalTo(current))
+  const lastPrice = useRef(price)
+  if (!price || !lastPrice.current || !price.equalTo(lastPrice.current)) {
+    lastPrice.current = price
+  }
+  return lastPrice.current
 }
 
 export function useUSDCValue(

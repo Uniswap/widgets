@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 export default function useHasHover(node: Node | null | undefined): boolean {
   const [hasHover, setHasHover] = useState(false)
   const onMouseEnter = useCallback(() => setHasHover(true), [])
-  const onMouseLeave = useCallback((e) => setHasHover(false), [])
+  const onMouseLeave = useCallback(() => setHasHover(false), [])
   useEffect(() => {
     node?.addEventListener('mouseenter', onMouseEnter)
     node?.addEventListener('mouseleave', onMouseLeave)

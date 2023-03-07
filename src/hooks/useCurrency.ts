@@ -10,6 +10,7 @@ import { useMemo } from 'react'
 import { isAddress } from 'utils'
 import { supportedChainId } from 'utils/supportedChainId'
 
+import { SupportedChainId } from '..'
 import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
@@ -76,13 +77,17 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
+export function useTokenFromMapOrNetwork(
+  tokens: TokenMap,
+  tokenAddress?: string | null,
+  skipNetwork = false
+): Token | null | undefined {
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
 
   const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
 
-  return tokenFromNetwork ?? token
+  return skipNetwork ? token : tokenFromNetwork || token
 }
 
 /**
@@ -90,9 +95,12 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useToken(tokenAddress?: string | null): Token | null | undefined {
-  const tokens = useTokenMap()
-  return useTokenFromMapOrNetwork(tokens, tokenAddress)
+export function useToken(tokenAddress?: string | null, chainId?: SupportedChainId): Token | null | undefined {
+  const { chainId: activeChainId } = useWeb3React()
+
+  const tokens = useTokenMap(chainId)
+  const skipNetwork = chainId && chainId !== activeChainId
+  return useTokenFromMapOrNetwork(tokens, tokenAddress, skipNetwork)
 }
 
 /**

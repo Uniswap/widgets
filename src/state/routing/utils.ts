@@ -1,32 +1,41 @@
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { MixedRouteSDK } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { isPolygonChain } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
+import { PoolType, SwapRouterNativeAssets } from 'hooks/routing/types'
 
-import { InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
+import { TradeResult } from './types'
+import { GetQuoteArgs, InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
- * Transforms a Routing API quote into an array of routes that can be used to create
- * a `Trade`.
+ * Transforms a Routing API quote into an array of routes that can be used to
+ * create a `Trade`.
  */
 export function computeRoutes(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
-  tradeType: TradeType,
-  quoteResult: Pick<QuoteResult, 'route'> | undefined
-) {
-  if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
+  tokenInIsNative: boolean,
+  tokenOutIsNative: boolean,
+  quoteResult?: Pick<QuoteResult, 'route'>
+):
+  | {
+      routev3: V3Route<Currency, Currency> | null
+      routev2: V2Route<Currency, Currency> | null
+      mixedRoute: MixedRouteSDK<Currency, Currency> | null
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
+    }[]
+  | undefined {
+  if (!quoteResult || !quoteResult.route) return
 
   if (quoteResult.route.length === 0) return []
 
-  const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
-  const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
+  const tokenIn = quoteResult.route[0]?.[0]?.tokenIn
+  const tokenOut = quoteResult.route[0]?.[quoteResult.route[0]?.length - 1]?.tokenOut
+  if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
 
-  if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
-  if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
-
-  const parsedCurrencyIn = currencyIn.isNative ? nativeOnChain(currencyIn.chainId) : parsedTokenIn
-  const parsedCurrencyOut = currencyOut.isNative ? nativeOnChain(currencyOut.chainId) : parsedTokenOut
+  const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseToken(tokenIn)
+  const parsedCurrencyOut = tokenOutIsNative ? nativeOnChain(tokenOut.chainId) : parseToken(tokenOut)
 
   try {
     return quoteResult.route.map((route) => {
@@ -40,37 +49,68 @@ export function computeRoutes(
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
+      const isOnlyV2 = isVersionedRoute<V2PoolInRoute>(PoolType.V2Pool, route)
+      const isOnlyV3 = isVersionedRoute<V3PoolInRoute>(PoolType.V3Pool, route)
+
       return {
-        routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev3: isOnlyV3 ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev2: isOnlyV2 ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
+        mixedRoute:
+          !isOnlyV3 && !isOnlyV2
+            ? new MixedRouteSDK(route.map(parsePoolOrPair), parsedCurrencyIn, parsedCurrencyOut)
+            : null,
         inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
       }
     })
   } catch (e) {
-    // `Route` constructor may throw if inputs/outputs are temporarily out of sync
-    // (RTK-Query always returns the latest data which may not be the right inputs/outputs)
-    // This is not fatal and will fix itself in future render cycles
     console.error('computeRoutes error', e)
-    return undefined
+    return
   }
 }
 
-export function transformRoutesToTrade<TTradeType extends TradeType>(
-  route: ReturnType<typeof computeRoutes>,
-  tradeType: TTradeType
-): InterfaceTrade {
-  return new InterfaceTrade({
+export function transformQuoteToTradeResult(args: GetQuoteArgs, quoteResult: QuoteResult): TradeResult {
+  const { tokenInAddress, tokenOutAddress, tradeType } = args
+  const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
+  const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
+  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, quoteResult)
+
+  const trade = new InterfaceTrade({
     v2Routes:
-      route
-        ?.filter((r): r is typeof route[0] & { routev2: NonNullable<typeof route[0]['routev2']> } => r.routev2 !== null)
-        .map(({ routev2, inputAmount, outputAmount }) => ({ routev2, inputAmount, outputAmount })) ?? [],
+      routes
+        ?.filter(
+          (r): r is typeof routes[0] & { routev2: NonNullable<typeof routes[0]['routev2']> } => r.routev2 !== null
+        )
+        .map(({ routev2, inputAmount, outputAmount }) => ({
+          routev2,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
     v3Routes:
-      route
-        ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
-        .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
+      routes
+        ?.filter(
+          (r): r is typeof routes[0] & { routev3: NonNullable<typeof routes[0]['routev3']> } => r.routev3 !== null
+        )
+        .map(({ routev3, inputAmount, outputAmount }) => ({
+          routev3,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    mixedRoutes:
+      routes
+        ?.filter(
+          (r): r is typeof routes[0] & { mixedRoute: NonNullable<typeof routes[0]['mixedRoute']> } =>
+            r.mixedRoute !== null
+        )
+        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
+          mixedRoute,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
     tradeType,
   })
+
+  return { trade, gasUseEstimateUSD: quoteResult.gasUseEstimateUSD, blockNumber: quoteResult.blockNumber }
 }
 
 const parseToken = ({ address, chainId, decimals, symbol }: QuoteResult['route'][0][0]['tokenIn']): Token => {
@@ -93,6 +133,22 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
 
-function isV3Route(route: V3PoolInRoute[] | V2PoolInRoute[]): route is V3PoolInRoute[] {
-  return route[0].type === 'v3-pool'
+const parsePoolOrPair = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
+  return pool.type === PoolType.V3Pool ? parsePool(pool) : parsePair(pool)
+}
+
+function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
+  type: T['type'],
+  route: (V3PoolInRoute | V2PoolInRoute)[]
+): route is T[] {
+  return route.every((pool) => pool.type === type)
+}
+
+// TODO: deprecate this once we can use `NATIVE` as a string for native currencies and it can be imported from an SDK
+export function currencyAddressForSwapQuote(currency: Currency): string {
+  if (currency.isNative) {
+    return isPolygonChain(currency.chainId) ? SwapRouterNativeAssets.MATIC : SwapRouterNativeAssets.ETH
+  }
+
+  return currency.address
 }

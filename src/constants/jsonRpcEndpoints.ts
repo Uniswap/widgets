@@ -39,11 +39,6 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
   [SupportedChainId.POLYGON]: [
     // "Safe" URLs
     'https://polygon-rpc.com/',
-    'https://rpc-mainnet.matic.network',
-    'https://matic-mainnet.chainstacklabs.com',
-    'https://rpc-mainnet.maticvigil.com',
-    'https://rpc-mainnet.matic.quiknode.pro',
-    'https://matic-mainnet-full-rpc.bwarelabs.com',
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     // "Safe" URLs
@@ -67,8 +62,16 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Fallback" URLs
     'https://rpc.ankr.com/optimism',
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [
+  [SupportedChainId.OPTIMISM_GOERLI]: [
     // "Safe" URLs
-    'https://kovan.optimism.io',
+    'https://goerli.optimism.io',
+  ],
+  [SupportedChainId.CELO]: [
+    // "Safe" URLs
+    'https://forno.celo.org',
+  ],
+  [SupportedChainId.CELO_ALFAJORES]: [
+    // "Safe" URLs
+    'https://alfajores-forno.celo-testnet.org',
   ],
 }

@@ -1,34 +1,43 @@
 import { BaseQueryFn, createApi, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+import { RouterPreference } from 'hooks/routing/types'
 import ms from 'ms.macro'
 import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
 
 import { serializeGetQuoteArgs } from './args'
-import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from './types'
+import { GetQuoteArgs, GetQuoteError, NO_ROUTE, QuoteResult, TradeResult } from './types'
+import { transformQuoteToTradeResult } from './utils'
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
-const baseQuery: BaseQueryFn<GetQuoteArgs, GetQuoteResult> = () => {
+const baseQuery: BaseQueryFn<GetQuoteArgs, TradeQuoteResult> = () => {
   return { error: { reason: 'Unimplemented baseQuery' } }
 }
+
+type TradeQuoteResult = TradeResult | GetQuoteError
 
 export const routing = createApi({
   reducerPath: 'routing',
   baseQuery,
   serializeQueryArgs: serializeGetQuoteArgs,
   endpoints: (build) => ({
-    getQuote: build.query({
+    getTradeQuote: build.query({
       async queryFn(args: GetQuoteArgs | SkipToken) {
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
-        // If enabled, try routing API, falling back to clientside SOR.
-        if (Boolean(args.routerUrl)) {
+        if (
+          // If enabled, try the routing API, falling back to client-side routing.
+          args.routerPreference === RouterPreference.API &&
+          Boolean(args.routerUrl) &&
+          // A null amount may be passed to initialize the client-side routing.
+          args.amount !== null
+        ) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'
@@ -50,28 +59,35 @@ export const routing = createApi({
 
               // NO_ROUTE should be treated as a valid response to prevent retries.
               if (typeof data === 'object' && data.errorCode === 'NO_ROUTE') {
-                return { data: NO_ROUTE as GetQuoteResult }
+                return { data: NO_ROUTE as TradeQuoteResult }
               }
 
               throw data
             }
 
-            const quote: GetQuoteResult = await response.json()
-            return { data: quote }
-          } catch (error) {
-            console.warn(`GetQuote failed on routing API, falling back to client: ${error}`)
+            const quote: QuoteResult = await response.json()
+            const tradeResult = transformQuoteToTradeResult(args, quote)
+            return { data: tradeResult }
+          } catch (error: any) {
+            console.warn(
+              `GetQuote failed on routing API, falling back to client: ${error?.message ?? error?.detail ?? error}`
+            )
           }
         }
 
-        // If integrator did not provide a routing API URL param, use clientside SOR
+        // Lazy-load the client-side router to improve initial pageload times.
+        const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
         try {
-          // Lazy-load the client-side router to improve initial pageload times.
-          const clientSideSmartOrderRouter = await import('../../hooks/routing/clientSideSmartOrderRouter')
-          const quote = await clientSideSmartOrderRouter.getClientSideQuote(args, { protocols })
-          return { data: quote }
-        } catch (error) {
+          const quote: QuoteResult | GetQuoteError = await clientSideSmartOrderRouter.getClientSideQuote(args, {
+            protocols,
+          })
+          if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
+
+          const tradeResult = transformQuoteToTradeResult(args, quote)
+          return { data: tradeResult }
+        } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } }
+          return { error: { status: 'CUSTOM_ERROR', error: error?.message ?? error?.detail ?? error } }
         }
       },
       keepUnusedDataFor: ms`10s`,
@@ -79,5 +95,5 @@ export const routing = createApi({
   }),
 })
 
-export const { useLazyGetQuoteQuery } = routing
-export const useGetQuoteQueryState = routing.endpoints.getQuote.useQueryState
+export const { useLazyGetTradeQuoteQuery } = routing
+export const useGetTradeQuoteQueryState = routing.endpoints.getTradeQuote.useQueryState

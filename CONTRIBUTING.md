@@ -10,11 +10,9 @@ Before developing locally, you'll need install the project's dependencies and cr
 
 The `.env` file specifies third-party APIs for use in e2e testing and the cosmos viewer:
 - `JSON_RPC_PROVIDER` must be specified for e2e tests to work.
-- `INFURA_KEY` must be specified to use a network provider in the cosmos viewer.
 
 ```
 JSON_RPC_PROVIDER='<JSON_RPC_PROVIDER>`
-INFURA_KEY='<INFURA_KEY>'
 ```
 
 ## Running widgets locally

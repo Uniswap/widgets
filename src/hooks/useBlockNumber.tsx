@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 const MISSING_PROVIDER = Symbol()
 const BlockNumberContext = createContext<
@@ -28,7 +28,7 @@ export function useFastForwardBlockNumber(): (block: number) => void {
   return useBlockNumberContext().fastForward
 }
 
-export function BlockNumberProvider({ children }: { children: ReactNode }) {
+export function Provider({ children }: PropsWithChildren) {
   const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
 
@@ -43,12 +43,12 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
         return chainBlock
       })
     },
-    [activeChainId, setChainBlock]
+    [activeChainId]
   )
 
-  const windowVisible = useIsWindowVisible()
+  const isWindowVisible = useIsWindowVisible()
   useEffect(() => {
-    if (provider && activeChainId && windowVisible) {
+    if (provider && activeChainId && isWindowVisible) {
       // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
       setChainBlock((chainBlock) => (chainBlock.chainId === activeChainId ? chainBlock : { chainId: activeChainId }))
 
@@ -71,12 +71,16 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
       }
     }
     return undefined
-  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible])
+  }, [activeChainId, provider, onBlock, setChainBlock, isWindowVisible])
 
   const value = useMemo(
     () => ({
       value: chainId === activeChainId ? block : undefined,
-      fastForward: (block: number) => setChainBlock({ chainId: activeChainId, block }),
+      fastForward: (update: number) => {
+        if (block && update > block) {
+          setChainBlock({ chainId: activeChainId, block: update })
+        }
+      },
     }),
     [activeChainId, block, chainId]
   )

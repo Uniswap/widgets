@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { DefinePlugin } = require('webpack')
 const EventEmitter = require('events')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const rollup = require('rollup')
@@ -78,7 +77,6 @@ module.exports = (webpackConfig) => {
     },
     plugins: [
       new RollupPlugin({ config: rollupConfig, assetConfigs, watch: mode !== 'production' }),
-      new DefinePlugin({ 'process.env.INFURA_KEY': JSON.stringify(process.env.INFURA_KEY) }),
       new HtmlWebpackPlugin(),
     ],
     stats: 'errors-warnings',

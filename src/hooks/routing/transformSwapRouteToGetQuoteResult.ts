@@ -1,6 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import type { SwapRoute } from '@uniswap/smart-order-router'
-import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
+import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
@@ -16,7 +16,7 @@ export function transformSwapRouteToGetQuoteResult({
   methodParameters,
   blockNumber,
   trade: { tradeType, inputAmount, outputAmount },
-}: SwapRoute & { routeString: string }): GetQuoteResult {
+}: SwapRoute & { routeString: string }): QuoteResult {
   const routeResponse: Array<V3PoolInRoute[] | V2PoolInRoute[]> = []
 
   for (const subRoute of route) {

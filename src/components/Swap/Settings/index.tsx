@@ -1,72 +1,83 @@
-import { Trans } from '@lingui/macro'
+import { BottomSheetModal } from 'components/BottomSheetModal'
+import Rule from 'components/Rule'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
+import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
+import { useOutsideClickHandler } from 'hooks/useOutsideClickHandler'
 import { Settings as SettingsIcon } from 'icons'
-import { useAtomValue, useResetAtom } from 'jotai/utils'
-import { useCallback, useState } from 'react'
-import { swapEventHandlersAtom } from 'state/swap'
-import { settingsAtom } from 'state/swap/settings'
+import { useAtom } from 'jotai'
+import { useState } from 'react'
+import { swapRouterUrlAtom } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { AnimationSpeed } from 'theme'
 
-import { IconButton, TextButton } from '../../Button'
+import { IconButton } from '../../Button'
 import Column from '../../Column'
-import Dialog, { Header } from '../../Dialog'
-import { BoundaryProvider } from '../../Popover'
+import Popover, { PopoverBoundaryProvider } from '../../Popover'
 import MaxSlippageSelect from './MaxSlippageSelect'
+import RouterPreferenceToggle from './RouterPreferenceToggle'
 import TransactionTtlInput from './TransactionTtlInput'
 
-export function SettingsDialog() {
+const SettingsColumn = styled(Column)`
+  margin: 0.5rem 0.25rem;
+`
+
+export function SettingsMenu() {
+  const [routerUrl] = useAtom(swapRouterUrlAtom)
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const { onSettingsReset } = useAtomValue(swapEventHandlersAtom)
-  const resetSettingsBase = useResetAtom(settingsAtom)
-  const resetSettings = useCallback(() => {
-    onSettingsReset?.()
-    resetSettingsBase()
-  }, [onSettingsReset, resetSettingsBase])
+
+  // TODO (WEB-2754): add back reset settings functionality
   return (
-    <>
-      <Header title={<Trans>Settings</Trans>} ruled>
-        <TextButton onClick={resetSettings}>
-          <ThemedText.ButtonSmall>
-            <Trans>Reset</Trans>
-          </ThemedText.ButtonSmall>
-        </TextButton>
-      </Header>
-      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded>
-        <BoundaryProvider value={boundary}>
-          <MaxSlippageSelect />
-          <TransactionTtlInput />
-        </BoundaryProvider>
-      </Column>
-    </>
+    <SettingsColumn gap={1} ref={setBoundary}>
+      <PopoverBoundaryProvider value={boundary}>
+        {/*
+        If consumer doesn't pass in `routerUrl` as a prop, they have no choice but to use the client-side router,
+        so don't show them the settings option.
+        */}
+        {Boolean(routerUrl) && (
+          <>
+            <RouterPreferenceToggle />
+            <Rule />
+          </>
+        )}
+        <MaxSlippageSelect />
+        <Rule />
+        <TransactionTtlInput />
+      </PopoverBoundaryProvider>
+    </SettingsColumn>
   )
 }
 
-const SettingsButton = styled(IconButton)<{ hover: boolean }>`
-  ${SettingsIcon} {
-    transform: ${({ hover }) => hover && 'rotate(45deg)'};
-    transition: ${({ hover }) => hover && 'transform 0.25s'};
-    will-change: transform;
+const SettingsButton = styled(IconButton)`
+  // Don't rotate back when un-hovering so that clicking (and losing hover due to the modal backdrop) doesn't cause unintentional back-rotation.
+  ${SettingsIcon}:hover {
+    transform: rotate(45deg);
+    transition: transform ${AnimationSpeed.Medium};
   }
 `
 
-export default function Settings({ disabled }: { disabled?: boolean }) {
+export default function Settings() {
   const [open, setOpen] = useState(false)
-  const [hover, setHover] = useState(false)
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
+  const isMobile = useIsMobileWidth()
+  useOutsideClickHandler(isMobile ? null : wrapper, () => setOpen(false))
+  useOnEscapeHandler(() => setOpen(false))
+
   return (
-    <>
-      <SettingsButton
-        disabled={disabled}
-        hover={hover}
-        onClick={() => setOpen(true)}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        icon={SettingsIcon}
-      />
-      {open && (
-        <Dialog color="module" onClose={() => setOpen(false)}>
-          <SettingsDialog />
-        </Dialog>
+    <div ref={setWrapper}>
+      {isMobile ? (
+        <>
+          <SettingsButton onClick={() => setOpen(!open)} icon={SettingsIcon} />
+          <BottomSheetModal title="Settings" onClose={() => setOpen(false)} open={open}>
+            <SettingsMenu />
+          </BottomSheetModal>
+        </>
+      ) : (
+        <PopoverBoundaryProvider value={wrapper}>
+          <Popover showArrow={false} offset={10} show={open} placement="top-end" content={<SettingsMenu />}>
+            <SettingsButton data-testid="settings-button" onClick={() => setOpen(!open)} icon={SettingsIcon} />
+          </Popover>
+        </PopoverBoundaryProvider>
       )}
-    </>
+    </div>
   )
 }

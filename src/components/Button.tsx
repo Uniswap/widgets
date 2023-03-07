@@ -1,7 +1,7 @@
 import { Icon } from 'icons'
 import { ComponentProps, forwardRef } from 'react'
-import styled, { css } from 'styled-components/macro'
-import { Color } from 'theme'
+import styled from 'styled-components/macro'
+import { AnimationSpeed, Color } from 'theme'
 
 export const BaseButton = styled.button`
   background-color: transparent;
@@ -17,26 +17,19 @@ export const BaseButton = styled.button`
   padding: 0;
 
   :enabled {
-    transition: filter 0.125s linear;
+    transition: filter ${AnimationSpeed.Fast} linear;
   }
 
   :disabled {
     cursor: initial;
-    filter: opacity(0.4);
+    filter: opacity(0.6);
   }
 `
-const transitionCss = css`
-  transition: background-color 0.125s linear, border-color 0.125s linear, filter 0.125s linear;
-`
 
-export default styled(BaseButton)<{ color?: Color; transition?: boolean }>`
+export default styled(BaseButton)<{ color?: Color }>`
   background-color: ${({ color = 'interactive', theme }) => theme[color]};
   border: 1px solid transparent;
   color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
-
-  :enabled {
-    ${({ transition = true }) => transition && transitionCss};
-  }
 
   :enabled:hover {
     background-color: ${({ color = 'interactive', theme }) => theme.onHover(theme[color])};
@@ -48,6 +41,9 @@ const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: 
 
   :enabled:hover {
     color: ${({ color = defaultColor, theme }) => theme.onHover(theme[color])};
+    * {
+      color: ${({ color = defaultColor, theme }) => theme.onHover(theme[color])};
+    }
   }
 `
 

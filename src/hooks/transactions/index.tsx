@@ -1,7 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
@@ -43,9 +42,8 @@ export function useAddTransactionInfo() {
 }
 
 /** Returns the hash of a pending approval transaction, if it exists. */
-export function usePendingApproval(token?: Token): string | undefined {
+export function usePendingApproval(token?: Token, spender?: string): string | undefined {
   const { chainId } = useWeb3React()
-  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const txs = useAtomValue(transactionsAtom)
   if (!chainId || !token || !spender) return undefined
 
@@ -63,8 +61,12 @@ export function usePendingApproval(token?: Token): string | undefined {
   )?.info.response.hash
 }
 
+export function useIsPendingApproval(token?: Token): boolean {
+  return Boolean(usePendingApproval(token))
+}
+
 export type OnTxSubmit = (hash: string, tx: Transaction) => void
-export type OnTxSuccess = (hash: string, receipt: TransactionReceipt) => void
+export type OnTxSuccess = (hash: string, tx: WithRequired<Transaction, 'receipt'>) => void
 export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void
 
 export interface TransactionEventHandlers {
@@ -77,7 +79,7 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
   const currentPendingTxs = usePendingTransactions()
   const updateTxs = useUpdateAtom(transactionsAtom)
   const onCheck = useCallback(
-    ({ chainId, hash, blockNumber }) => {
+    ({ chainId, hash, blockNumber }: { chainId: number; hash: string; blockNumber: number }) => {
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
@@ -90,7 +92,7 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
     [updateTxs]
   )
   const onReceipt = useCallback(
-    ({ chainId, hash, receipt }) => {
+    ({ chainId, hash, receipt }: { chainId: number; hash: string; receipt: TransactionReceipt }) => {
       updateTxs((txs) => {
         const tx = txs[chainId]?.[hash]
         if (tx) {
@@ -100,10 +102,13 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
       if (receipt.status === 0) {
         onTxFail?.(hash, receipt)
       } else {
-        onTxSuccess?.(hash, receipt)
+        onTxSuccess?.(hash, {
+          ...currentPendingTxs[hash],
+          receipt,
+        })
       }
     },
-    [updateTxs, onTxFail, onTxSuccess]
+    [updateTxs, onTxFail, onTxSuccess, currentPendingTxs]
   )
 
   const oldPendingTxs = useRef({})

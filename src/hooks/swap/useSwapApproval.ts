@@ -1,36 +1,18 @@
-import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ErrorCode } from 'constants/eip1193'
-import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
+import { useIsPendingApproval } from 'hooks/transactions'
+import { PermitState, SignatureData, usePermit } from 'hooks/usePermit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { useMemo } from 'react'
 import { swapEventHandlersAtom } from 'state/swap'
 
 import { ApprovalState, useApproval } from '../useApproval'
 export { ApprovalState } from '../useApproval'
 
-// wraps useApproveCallback in the context of a swap
-export default function useSwapApproval(
-  trade: InterfaceTrade | undefined,
-  allowedSlippage: Percent,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-  amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
-) {
-  const { chainId } = useWeb3React()
-  const amountToApprove = useMemo(
-    () => amount || (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [amount, trade, allowedSlippage]
-  )
-  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-
-  const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
-  return approval
-}
-
-export enum ApproveOrPermitState {
+export enum SwapApprovalState {
   REQUIRES_APPROVAL,
   PENDING_APPROVAL,
   REQUIRES_SIGNATURE,
@@ -38,68 +20,70 @@ export enum ApproveOrPermitState {
   APPROVED,
 }
 
+export interface SwapApproval {
+  state: SwapApprovalState
+  signatureData?: SignatureData
+  approve?: () => Promise<void>
+}
+
 /**
  * Returns all relevant statuses and callback functions for approvals.
  * Considers both standard approval and ERC20 permit.
  */
-export const useApproveOrPermit = (
-  trade: InterfaceTrade | undefined,
-  allowedSlippage: Percent,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-  amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
-) => {
+export function useSwapApproval(amount?: CurrencyAmount<Currency>): SwapApproval {
+  const { chainId } = useWeb3React()
   const deadline = useTransactionDeadline()
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
 
-  // Check approvals on ERC20 contract based on amount.
-  const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useIsPendingApproval, amount)
+  // Check EIP-20 approval.
+  const [approval, approve] = useApproval(amount, spender, useIsPendingApproval)
 
-  // Check status of permit and whether token supports it.
-  const {
-    state: signatureState,
-    signatureData,
-    gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
+  // Check EIP-2162 approval.
+  const { state: permitState, signatureData, sign } = usePermit(amount, spender, deadline, null)
 
-  // If permit is supported, trigger a signature, if not create approval transaction.
+  // If permit is supported, sign a permit; if not, submit an approval.
   const { onSwapApprove } = useAtomValue(swapEventHandlersAtom)
-  const handleApproveOrPermit = useCallback(async () => {
-    try {
-      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-        try {
-          await gatherPermitSignature()
-        } catch (error) {
-          // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
-          if (error?.code !== ErrorCode.USER_REJECTED_REQUEST) {
-            await getApproval()
+  const approveOrSign = useMemo(() => {
+    if (approval !== ApprovalState.NOT_APPROVED && permitState !== PermitState.NOT_SIGNED) return
+    return async () => {
+      try {
+        if (permitState === PermitState.NOT_SIGNED && sign) {
+          try {
+            await sign()
+          } catch (error) {
+            // Try to approve if signing failed for any reason other than the user rejecting it.
+            if (error?.code !== ErrorCode.USER_REJECTED_REQUEST) {
+              await approve()
+            }
           }
+        } else {
+          await approve()
         }
-      } else {
-        await getApproval()
+      } catch (e) {
+        // Swallow approval errors - user rejections do not need to be displayed.
+        return
       }
-    } catch (e) {
-      // Swallow approval errors - user rejections do not need to be displayed.
-      return
+      onSwapApprove?.()
     }
-    onSwapApprove?.()
-  }, [onSwapApprove, signatureState, gatherPermitSignature, getApproval])
+  }, [approval, approve, onSwapApprove, permitState, sign])
 
-  const approvalState = useMemo(() => {
+  const state = useMemo(() => {
     if (approval === ApprovalState.PENDING) {
-      return ApproveOrPermitState.PENDING_APPROVAL
-    } else if (signatureState === UseERC20PermitState.LOADING) {
-      return ApproveOrPermitState.PENDING_SIGNATURE
-    } else if (approval !== ApprovalState.NOT_APPROVED || signatureState === UseERC20PermitState.SIGNED) {
-      return ApproveOrPermitState.APPROVED
-    } else if (gatherPermitSignature) {
-      return ApproveOrPermitState.REQUIRES_SIGNATURE
+      return SwapApprovalState.PENDING_APPROVAL
+    } else if (permitState === PermitState.LOADING) {
+      return SwapApprovalState.PENDING_SIGNATURE
+    } else if (approval !== ApprovalState.NOT_APPROVED || permitState === PermitState.SIGNED) {
+      return SwapApprovalState.APPROVED
+    } else if (sign) {
+      return SwapApprovalState.REQUIRES_SIGNATURE
     } else {
-      return ApproveOrPermitState.REQUIRES_APPROVAL
+      return SwapApprovalState.REQUIRES_APPROVAL
     }
-  }, [approval, gatherPermitSignature, signatureState])
+  }, [approval, permitState, sign])
 
   return {
-    approvalState,
+    state,
     signatureData,
-    handleApproveOrPermit,
+    approve: approveOrSign,
   }
 }

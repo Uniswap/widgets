@@ -1,152 +1,250 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import ActionButton, { Action } from 'components/ActionButton'
+import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
-import { Header } from 'components/Dialog'
-import BaseExpando from 'components/Expando'
-import Row from 'components/Row'
+import { Header, useCloseDialog, useIsDialogPageCentered } from 'components/Dialog'
+import { PopoverBoundaryProvider } from 'components/Popover'
+import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
+import { UserRejectedRequestError } from 'errors'
+import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
-import { AlertTriangle, BarChart, Info, Spinner } from 'icons'
+import { useWindowWidth } from 'hooks/useWindowWidth'
+import { AlertTriangle, Spinner } from 'icons'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
-import { isExactInput } from 'utils/tradeType'
 
-import Price from '../Price'
+import SpeedBumpDialog from '../Speedbump'
 import Details from './Details'
+import SwapInputOutputEstimate from './Estimate'
 import Summary from './Summary'
 
 export default Summary
 
-const Expando = styled(BaseExpando)`
-  margin-bottom: 3.2em;
-  transition: gap 0.25s;
-`
-const Heading = styled(Column)`
-  flex-grow: 1;
-  transition: flex-grow 0.25s;
-`
-const StyledEstimate = styled(ThemedText.Caption)`
-  margin-bottom: 0.5em;
-  margin-top: 0.5em;
-  max-height: 3em;
-`
+enum ReviewState {
+  REVIEWING,
+  ALLOWING,
+  ALLOWANCE_FAILED,
+  SWAP_PENDING,
+}
+
+function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesTradeDiffer: boolean) {
+  const [currentState, setCurrentState] = useState(ReviewState.REVIEWING)
+  const closeDialog = useCloseDialog()
+
+  const onStartSwapFlow = useCallback(async () => {
+    if (allowance.state === AllowanceState.REQUIRED) {
+      setCurrentState(ReviewState.ALLOWING)
+      try {
+        await allowance.approveAndPermit?.()
+      } catch (e) {
+        if (e instanceof UserRejectedRequestError) {
+          closeDialog?.()
+          setCurrentState(ReviewState.REVIEWING)
+        } else {
+          setCurrentState(ReviewState.ALLOWANCE_FAILED)
+        }
+      }
+      // if the user finishes permit2 allowance flow, onStartSwapFlow() will be called again by useEffect below to trigger swap
+    } else if (allowance.state === AllowanceState.ALLOWED) {
+      // Prevents immediate swap if trade has updated mid permit2 flow
+      if (currentState === ReviewState.ALLOWING && doesTradeDiffer) {
+        setCurrentState(ReviewState.REVIEWING)
+        return
+      } else {
+        setCurrentState(ReviewState.SWAP_PENDING)
+        await onSwap()
+        setCurrentState(ReviewState.REVIEWING)
+      }
+    }
+  }, [allowance, currentState, doesTradeDiffer, onSwap, closeDialog])
+
+  // Automatically triggers signing swap tx if allowance requirements are met
+  useEffect(() => {
+    if (currentState === ReviewState.ALLOWING && allowance.state === AllowanceState.ALLOWED) {
+      onStartSwapFlow()
+    }
+  }, [allowance, currentState, doesTradeDiffer, onStartSwapFlow])
+
+  const onCancel = useCallback(() => setCurrentState(ReviewState.REVIEWING), [])
+  return { onStartSwapFlow, onCancel, currentState }
+}
+
 const Body = styled(Column)`
-  height: calc(100% - 2.5em);
+  height: 100%;
+  padding: 0.75em 0.875em;
 `
 
-function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
-  const showWarning = Boolean(impact?.warning || slippage.warning)
+const PriceImpactText = styled.span`
+  color: ${({ theme }) => theme.error};
+`
+
+function PermitTooltipText({ text, content }: { text: ReactNode; content: ReactNode }) {
   return (
-    <Row gap={0.5}>
-      {showWarning ? <AlertTriangle color={impact?.warning || slippage.warning} /> : <Info color="secondary" />}
-      <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
-        {impact?.warning ? (
-          <Trans>High price impact</Trans>
-        ) : slippage.warning ? (
-          <Trans>High slippage</Trans>
-        ) : (
-          <Trans>Swap details</Trans>
-        )}
-      </ThemedText.Subhead2>
-    </Row>
+    <TooltipText placement="bottom" offset={10} text={text}>
+      <SmallToolTipBody>
+        <ThemedText.Caption>{content}</ThemedText.Caption>
+      </SmallToolTipBody>
+    </TooltipText>
   )
 }
 
-interface EstimateProps {
-  slippage: Slippage
-  trade: InterfaceTrade
+function getAllowanceFailedAction(shouldRequestApproval: boolean, retry: () => void, currency: Currency): Action {
+  return {
+    message: shouldRequestApproval ? (
+      <PermitTooltipText
+        text={t`Permit2 approval failed`}
+        content={t`Permit2 allows safe sharing and management of token approvals across different smart contracts.`}
+      />
+    ) : (
+      <PermitTooltipText
+        text={t`${currency.symbol ?? 'token'} approval failed`}
+        content={t`A signature is needed to trade this token on the Uniswap protocol. For security, signatures expire after 30 days.`}
+      />
+    ),
+    onClick: retry,
+    color: 'warning',
+    children: <Trans>Try again</Trans>,
+  }
 }
 
-function Estimate({ trade, slippage }: EstimateProps) {
-  const text = useMemo(
-    () =>
-      isExactInput(trade.tradeType) ? (
-        <Trans>
-          Output is estimated. You will receive at least{' '}
-          {formatCurrencyAmount({ amount: trade.minimumAmountOut(slippage.allowed) })}{' '}
-          {trade.outputAmount.currency.symbol} or the transaction will revert.
-        </Trans>
-      ) : (
-        <Trans>
-          Output is estimated. You will send at most{' '}
-          {formatCurrencyAmount({ amount: trade.maximumAmountIn(slippage.allowed) })}{' '}
-          {trade.inputAmount.currency.symbol} or the transaction will revert.
-        </Trans>
-      ),
-    [slippage.allowed, trade]
-  )
-  return <StyledEstimate color="secondary">{text}</StyledEstimate>
+function getAllowancePendingAction(shouldRequestApproval: boolean, cancel: () => void, currency: Currency): Action {
+  return {
+    message: shouldRequestApproval ? (
+      <PermitTooltipText
+        text={t`Approve Permit2`}
+        content={t`Permit2 allows safe sharing and management of token approvals across different smart contracts.`}
+      />
+    ) : (
+      <PermitTooltipText
+        text={t`Approve ${currency.symbol ?? 'token'} for trading`}
+        content={t`Gives you the ability to trade this token on the Uniswap protocol. For security, this will expire in 30 days.`}
+      />
+    ),
+    icon: Spinner,
+    onClick: cancel,
+    children: <Trans>Cancel</Trans>,
+  }
 }
 
-function ConfirmButton({
+function getApprovalLoadingAction(): Action {
+  return {
+    message: (
+      <PermitTooltipText
+        text={t`Confirming approval`}
+        content={t`The network is confirming your Permit2 approval before you can swap.`}
+      />
+    ),
+    icon: Spinner,
+    children: <Trans>Cancel</Trans>,
+    disableButton: true,
+  }
+}
+
+export function ConfirmButton({
   trade,
-  highPriceImpact,
+  slippage,
   onConfirm,
+  triggerImpactSpeedbump,
+  allowance,
 }: {
   trade: InterfaceTrade
-  highPriceImpact: boolean
+  slippage: Slippage
   onConfirm: () => Promise<void>
+  triggerImpactSpeedbump: () => boolean
+  allowance: Allowance
 }) {
-  const [ackPriceImpact, setAckPriceImpact] = useState(false)
-
   const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
-    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
-    [ackTrade, trade]
+    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade, slippage.allowed)),
+    [ackTrade, trade, slippage]
   )
-
-  const [isPending, setIsPending] = useState(false)
-  const onClick = useCallback(async () => {
-    setIsPending(true)
+  const onSwap = useCallback(async () => {
     onSubmitSwapClick?.(trade)
     await onConfirm()
-    setIsPending(false)
   }, [onConfirm, onSubmitSwapClick, trade])
 
-  const action = useMemo((): Action | undefined => {
-    if (isPending) {
-      return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner }
-    } else if (doesTradeDiffer) {
-      return {
-        message: <Trans>Price updated</Trans>,
-        icon: BarChart,
-        onClick: () => {
-          onSwapPriceUpdateAck?.(ackTrade, trade)
-          setAckTrade(trade)
-        },
-        children: <Trans>Accept</Trans>,
-      }
-    } else if (highPriceImpact && !ackPriceImpact) {
-      return {
-        message: <Trans>High price impact</Trans>,
-        onClick: () => setAckPriceImpact(true),
-        children: <Trans>Acknowledge</Trans>,
-      }
+  const { onStartSwapFlow, onCancel, currentState } = useReviewState(onSwap, allowance, doesTradeDiffer)
+
+  // Used to determine specific message to render while in ALLOWANCE_PROMPTED state
+  const [shouldRequestApproval, isApprovalLoading] = useMemo(
+    () =>
+      allowance.state === AllowanceState.REQUIRED
+        ? [allowance.shouldRequestApproval, allowance.isApprovalLoading]
+        : [false, false],
+    [allowance]
+  )
+
+  const onAcknowledgeClick = useCallback(() => {
+    onSwapPriceUpdateAck?.(ackTrade, trade)
+    setAckTrade(trade)
+
+    const wasInterrupted = triggerImpactSpeedbump()
+    // Prevents immeadiate swap if price impact speedbump was triggered
+    if (!wasInterrupted) onStartSwapFlow()
+  }, [ackTrade, triggerImpactSpeedbump, onStartSwapFlow, onSwapPriceUpdateAck, trade])
+
+  const [action, color] = useMemo((): [Action?, ActionButtonColor?] => {
+    switch (currentState) {
+      case ReviewState.SWAP_PENDING:
+        return [
+          {
+            message: <Trans>Confirm in your wallet</Trans>,
+            icon: Spinner,
+            onClick: onCancel,
+            children: <Trans>Cancel</Trans>,
+          },
+          'interactive',
+        ]
+      case ReviewState.ALLOWING:
+        return isApprovalLoading || allowance.state === AllowanceState.ALLOWED
+          ? [getApprovalLoadingAction()]
+          : [getAllowancePendingAction(shouldRequestApproval, onCancel, trade.inputAmount.currency)]
+      case ReviewState.ALLOWANCE_FAILED:
+        return [
+          getAllowanceFailedAction(shouldRequestApproval, onStartSwapFlow, trade.inputAmount.currency),
+          'warningSoft',
+        ]
+      case ReviewState.REVIEWING:
+        return doesTradeDiffer
+          ? [
+              {
+                color: 'accent',
+                message: <Trans>Price updated</Trans>,
+                icon: AlertTriangle,
+                tooltipContent: (
+                  <SmallToolTipBody>
+                    <SwapInputOutputEstimate trade={trade} slippage={slippage} />
+                  </SmallToolTipBody>
+                ),
+                onClick: onAcknowledgeClick,
+                children: <Trans>Swap</Trans>,
+              },
+            ]
+          : []
     }
-    return
-  }, [ackPriceImpact, ackTrade, doesTradeDiffer, highPriceImpact, isPending, onSwapPriceUpdateAck, trade])
+  }, [
+    allowance.state,
+    currentState,
+    doesTradeDiffer,
+    isApprovalLoading,
+    onAcknowledgeClick,
+    onCancel,
+    onStartSwapFlow,
+    shouldRequestApproval,
+    slippage,
+    trade,
+  ])
 
   return (
-    <ActionButton
-      onClick={onClick}
-      action={action}
-      wrapperProps={{
-        style: {
-          bottom: '0.25em',
-          position: 'absolute',
-          width: 'calc(100% - 1.5em)',
-        },
-      }}
-    >
-      <Trans>Confirm swap</Trans>
+    <ActionButton onClick={onStartSwapFlow} action={action} color={color ?? 'accent'} data-testid="swap-button">
+      <Trans>Swap</Trans>
     </ActionButton>
   )
 }
@@ -159,56 +257,53 @@ interface SummaryDialogProps {
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
   onConfirm: () => Promise<void>
+  allowance: Allowance
 }
 
-export function SummaryDialog({
-  trade,
-  slippage,
-  gasUseEstimateUSD,
-  inputUSDC,
-  outputUSDC,
-  impact,
-  onConfirm,
-}: SummaryDialogProps) {
-  const { inputAmount, outputAmount } = trade
+export function SummaryDialog(props: SummaryDialogProps) {
+  const [ackPriceImpact, setAckPriceImpact] = useState(false)
+  const [showSpeedbump, setShowSpeedbump] = useState(props.impact?.warning === 'error')
+  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  const width = useWindowWidth()
+  const isPageCentered = useIsDialogPageCentered()
 
-  const [open, setOpen] = useState(false)
-  const { onExpandSwapDetails } = useAtomValue(swapEventHandlersAtom)
-  const onExpand = useCallback(() => {
-    onExpandSwapDetails?.()
-    setOpen((open) => !open)
-  }, [onExpandSwapDetails])
+  const onAcknowledgeSpeedbump = useCallback(() => {
+    setAckPriceImpact(true)
+    setShowSpeedbump(false)
+  }, [])
+
+  const triggerImpactSpeedbump = useCallback((): boolean => {
+    if (!showSpeedbump && !ackPriceImpact && props.impact?.warning === 'error') {
+      setShowSpeedbump(true)
+      return true
+    }
+    return false
+  }, [ackPriceImpact, props.impact?.warning, showSpeedbump])
+
+  useEffect(() => {
+    if (showSpeedbump && props.impact?.warning !== 'error') {
+      setShowSpeedbump(false)
+    }
+  }, [ackPriceImpact, props.impact, showSpeedbump])
 
   return (
     <>
-      <Header title={<Trans>Swap summary</Trans>} ruled />
-      <Body flex align="stretch" padded gap={0.75}>
-        <Heading gap={0.75} flex justify="center">
-          <Summary
-            input={inputAmount}
-            output={outputAmount}
-            inputUSDC={inputUSDC}
-            outputUSDC={outputUSDC}
-            impact={impact}
-            open={open}
-          />
-          <Price trade={trade} />
-        </Heading>
-        <Expando
-          title={<Subhead impact={impact} slippage={slippage} />}
-          open={open}
-          onExpand={onExpand}
-          height={6}
-          gap={open ? 0 : 0.75}
-        >
-          <Column gap={0.5}>
-            <Details trade={trade} slippage={slippage} gasUseEstimateUSD={gasUseEstimateUSD} impact={impact} />
-            <Estimate trade={trade} slippage={slippage} />
-          </Column>
-        </Expando>
-
-        <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
-      </Body>
+      {showSpeedbump && props.impact ? (
+        <SpeedBumpDialog onAcknowledge={onAcknowledgeSpeedbump}>
+          {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
+          {t`price impact on the market price of this pool. Do you wish to continue? `}
+        </SpeedBumpDialog>
+      ) : (
+        <Column style={{ minWidth: isPageCentered ? Math.min(400, width) : 'auto', height: '100%' }} ref={setBoundary}>
+          <PopoverBoundaryProvider value={boundary}>
+            <Header title={<Trans>Review swap</Trans>} />
+            <Body flex align="stretch">
+              <Details {...props} />
+            </Body>
+            <ConfirmButton {...props} triggerImpactSpeedbump={triggerImpactSpeedbump} />
+          </PopoverBoundaryProvider>
+        </Column>
+      )}
     </>
   )
 }

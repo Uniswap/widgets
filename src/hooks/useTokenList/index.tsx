@@ -1,10 +1,13 @@
 import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
+import { useAsyncError } from 'components/Error/ErrorBoundary'
+import { SupportedChainId } from 'constants/chains'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
 
+import { LogoUpdater } from '../../components/Logo/'
 import fetchTokenList from './fetchTokenList'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
@@ -41,8 +44,11 @@ export default function useTokenList(): WrappedTokenInfo[] {
 
 export type TokenMap = { [address: string]: Token }
 
-export function useTokenMap(): TokenMap {
-  const { chainId } = useWeb3React()
+export function useTokenMap(chainId?: SupportedChainId): TokenMap {
+  const { chainId: activeChainId } = useWeb3React()
+
+  chainId = chainId || activeChainId
+
   const chainTokenMap = useChainTokenMapContext()
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
@@ -54,14 +60,12 @@ export function useTokenMap(): TokenMap {
   }, [tokenMap])
 }
 
-export function TokenListProvider({
-  list = UNISWAP_TOKEN_LIST,
-  children,
-}: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
-  // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
-  const [error, setError] = useState<Error>()
-  if (error) throw error
+export function TestableProvider({ list, children }: PropsWithChildren<{ list: TokenInfo[] }>) {
+  const chainTokenMap = useMemo(() => tokensToChainTokenMap(list), [list])
+  return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
+}
 
+export function Provider({ list = UNISWAP_TOKEN_LIST, children }: PropsWithChildren<{ list?: string | TokenInfo[] }>) {
   const [chainTokenMap, setChainTokenMap] = useState<ChainTokenMap>()
 
   useEffect(() => setChainTokenMap(undefined), [list])
@@ -77,6 +81,7 @@ export function TokenListProvider({
     [chainId, provider]
   )
 
+  const throwError = useAsyncError()
   useEffect(() => {
     // If the list was already loaded, don't reload it.
     if (chainTokenMap) return
@@ -101,16 +106,24 @@ export function TokenListProvider({
         const map = tokensToChainTokenMap(tokens)
         if (!stale) {
           setChainTokenMap(map)
-          setError(undefined)
         }
       } catch (e: unknown) {
         if (!stale) {
           // Do not update the token map, in case the map was already resolved without error on mainnet.
-          setError(e as Error)
+          throwError(e as Error)
         }
       }
     }
-  }, [chainTokenMap, list, resolver])
+  }, [chainTokenMap, list, resolver, throwError])
 
-  return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
+  return (
+    <ChainTokenMapContext.Provider value={chainTokenMap}>
+      <TokenListLogoUpdater />
+      {children}
+    </ChainTokenMapContext.Provider>
+  )
+}
+
+function TokenListLogoUpdater() {
+  return <LogoUpdater assets={useTokenList()} />
 }

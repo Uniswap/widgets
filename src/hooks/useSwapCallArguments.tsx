@@ -10,7 +10,7 @@ import approveAmountCalldata from 'utils/approveAmountCalldata'
 
 import { useArgentWalletContract } from './useArgentWalletContract'
 import useENS from './useENS'
-import { SignatureData } from './useERC20Permit'
+import { SignatureData } from './usePermit'
 
 interface SwapCall {
   address: string

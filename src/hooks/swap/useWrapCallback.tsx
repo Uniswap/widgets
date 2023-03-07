@@ -8,8 +8,6 @@ import { Field, swapAtom } from 'state/swap'
 import { TransactionType } from 'state/transactions'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
-import useCurrencyBalance from '../useCurrencyBalance'
-
 interface UseWrapCallbackReturns {
   callback: () => Promise<ContractTransaction | void>
   type?: TransactionType.WRAP | TransactionType.UNWRAP
@@ -36,7 +34,6 @@ export function useIsWrap(): boolean {
 }
 
 export default function useWrapCallback(): UseWrapCallbackReturns {
-  const { account } = useWeb3React()
   const wrappedNativeCurrencyContract = useWETHContract()
   const { amount, [Field.INPUT]: inputCurrency } = useAtomValue(swapAtom)
   const wrapType = useWrapType()
@@ -45,24 +42,20 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     () => tryParseCurrencyAmount(amount, inputCurrency ?? undefined),
     [inputCurrency, amount]
   )
-  const balanceIn = useCurrencyBalance(account, inputCurrency)
 
   const callback = useMemo(() => {
-    if (!parsedAmountIn || !balanceIn || balanceIn.lessThan(parsedAmountIn) || !wrappedNativeCurrencyContract) {
-      return async () => undefined
-    }
-
     return async () => {
+      if (!parsedAmountIn) return
       switch (wrapType) {
         case TransactionType.WRAP:
-          return wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
+          return wrappedNativeCurrencyContract?.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
         case TransactionType.UNWRAP:
-          return wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
+          return wrappedNativeCurrencyContract?.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
         case undefined:
           return undefined
       }
     }
-  }, [parsedAmountIn, balanceIn, wrappedNativeCurrencyContract, wrapType])
+  }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
 
   return useMemo(() => ({ callback, type: wrapType }), [callback, wrapType])
 }

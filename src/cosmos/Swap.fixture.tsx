@@ -2,10 +2,9 @@ import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
 import {
   darkTheme,
-  DEFAULT_LOCALE,
   defaultTheme,
+  DialogAnimationType,
   lightTheme,
-  SUPPORTED_LOCALES,
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
@@ -17,7 +16,7 @@ import { useValue } from 'react-cosmos/fixture'
 import { DAI, USDC_MAINNET } from '../constants/tokens'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
-import useProvider, { INFURA_NETWORK_URLS } from './useProvider'
+import useProvider from './useProvider'
 
 const TOKEN_WITH_NO_LOGO = {
   chainId: 1,
@@ -28,8 +27,9 @@ const TOKEN_WITH_NO_LOGO = {
 }
 
 const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
-const tokenLists: Record<string, TokenInfo[]> = {
+const tokenLists: Record<string, TokenInfo[] | string> = {
   Default: tokens,
+  Extended: 'https://extendedtokens.uniswap.org/',
   'Mainnet only': mainnetTokens,
   Logoless: [TOKEN_WITH_NO_LOGO],
 }
@@ -59,18 +59,15 @@ function Fixture() {
     USDC: USDC_MAINNET.address,
   }
   const defaultInputToken = useOption('defaultInputToken', { options: currencies, defaultValue: 'Native' })
-  const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 1 })
+  const [defaultInputAmount] = useValue('defaultInputAmount', { defaultValue: 0 })
   const defaultOutputToken = useOption('defaultOutputToken', { options: currencies })
   const [defaultOutputAmount] = useValue('defaultOutputAmount', { defaultValue: 0 })
 
-  const [disableBranding] = useValue('disableBranding', { defaultValue: false })
-
+  const [brandedFooter] = useValue('brandedFooter', { defaultValue: true })
   const [hideConnectionUI] = useValue('hideConnectionUI', { defaultValue: false })
+  const [pageCentered] = useValue('pageCentered', { defaultValue: false })
 
   const [width] = useValue('width', { defaultValue: 360 })
-
-  const locales = [...SUPPORTED_LOCALES, 'fa-KE (unsupported)', 'pseudo']
-  const locale = useOption('locale', { options: locales, defaultValue: DEFAULT_LOCALE, nullable: false })
 
   const [theme, setTheme] = useValue('theme', { defaultValue: defaultTheme })
   const [darkMode] = useValue('darkMode', { defaultValue: false })
@@ -88,6 +85,11 @@ function Fixture() {
 
   const [routerUrl] = useValue('routerUrl', { defaultValue: 'https://api.uniswap.org/v1/' })
 
+  const dialogAnimation = useOption('dialogAnimation', {
+    defaultValue: DialogAnimationType.FADE,
+    options: [DialogAnimationType.SLIDE, DialogAnimationType.FADE, DialogAnimationType.NONE],
+  })
+
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
@@ -96,22 +98,25 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
+      permit2
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputTokenAddress={defaultInputToken}
       defaultInputAmount={defaultInputAmount}
       defaultOutputTokenAddress={defaultOutputToken}
       defaultOutputAmount={defaultOutputAmount}
-      disableBranding={disableBranding}
       hideConnectionUI={hideConnectionUI}
-      locale={locale}
-      jsonRpcUrlMap={INFURA_NETWORK_URLS}
       defaultChainId={defaultChainId}
       provider={connector}
       theme={theme}
       tokenList={tokenList}
       width={width}
       routerUrl={routerUrl}
+      brandedFooter={brandedFooter}
+      dialogOptions={{
+        animationType: dialogAnimation,
+        pageCentered,
+      }}
       {...eventHandlers}
     />
   )

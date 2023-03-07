@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import {
   af,
   ar,
@@ -34,7 +34,7 @@ import {
   zh,
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useMemo } from 'react'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -87,20 +87,32 @@ export async function dynamicActivate(locale: SupportedLocale) {
 }
 
 interface ProviderProps {
-  locale: SupportedLocale
+  locale?: SupportedLocale
   forceRenderAfterLocaleChange?: boolean
   onActivate?: (locale: SupportedLocale) => void
   children: ReactNode
 }
 
+export function TestableProvider({ locale, forceRenderAfterLocaleChange, children }: ProviderProps) {
+  return <I18nProvider i18n={i18n}>{children}</I18nProvider>
+}
+
 export function Provider({ locale, forceRenderAfterLocaleChange = true, onActivate, children }: ProviderProps) {
+  const processedLocale = useMemo(() => {
+    if (locale && ![...SUPPORTED_LOCALES, 'pseudo'].includes(locale)) {
+      console.warn(`Unsupported locale: ${locale}. Falling back to ${DEFAULT_LOCALE}.`)
+      return DEFAULT_LOCALE
+    }
+    return locale ?? DEFAULT_LOCALE
+  }, [locale])
+
   useEffect(() => {
-    dynamicActivate(locale)
-      .then(() => onActivate?.(locale))
+    dynamicActivate(processedLocale)
+      .then(() => onActivate?.(processedLocale))
       .catch((error) => {
-        console.error('Failed to activate locale', locale, error)
+        console.error('Failed to activate locale', processedLocale, error)
       })
-  }, [locale, onActivate])
+  }, [processedLocale, onActivate])
 
   // Initialize the locale immediately if it is DEFAULT_LOCALE, so that keys are shown while the translation messages load.
   // This renders the translation _keys_, not the translation _messages_, which is only acceptable while loading the DEFAULT_LOCALE,

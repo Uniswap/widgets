@@ -9,6 +9,7 @@ import {
   forwardRef,
   KeyboardEvent,
   memo,
+  ReactNode,
   SyntheticEvent,
   useCallback,
   useEffect,
@@ -18,7 +19,7 @@ import {
   useState,
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
+import { areEqual, FixedSizeList, FixedSizeListProps, ListChildComponentProps } from 'react-window'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
@@ -32,10 +33,11 @@ import TokenImg from '../TokenImg'
 const TokenButton = styled(BaseButton)`
   border-radius: 0;
   outline: none;
-  padding: 0.5em 0.75em;
+  padding: 0.5em 1.25em;
 `
 
 const ITEM_SIZE = 56
+const MIN_VISIBLE_TOKENS = 6
 type ItemData = Currency[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
@@ -100,37 +102,28 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
       onKeyDown={onEvent}
       ref={ref}
     >
-      <ThemedText.Body1>
-        <Row>
-          <Row gap={0.5}>
-            <TokenImg token={value} size={1.5} />
-            <Column flex gap={0.125} align="flex-start">
-              <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
-              <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
-            </Column>
-          </Row>
-          <TokenBalance isLoading={Boolean(account) && !balance}>
-            {balance?.greaterThan(0) && formatCurrencyAmount({ amount: balance })}
-          </TokenBalance>
+      <Row>
+        <Row gap={0.5}>
+          <TokenImg token={value} size={2.25} />
+          <Column flex gap={0.125} align="flex-start">
+            <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
+            <ThemedText.Body2 color="secondary">{value.name}</ThemedText.Body2>
+          </Column>
         </Row>
-      </ThemedText.Body1>
+        <TokenBalance isLoading={Boolean(account) && !balance}>
+          <ThemedText.Subhead1>
+            {balance?.greaterThan(0) && formatCurrencyAmount({ amount: balance })}
+          </ThemedText.Subhead1>
+        </TokenBalance>
+      </Row>
     </TokenButton>
   )
 }
 
 const itemKey = (index: number, tokens: ItemData) => currencyId(tokens[index])
-const ItemRow = memo(function ItemRow({
-  data: tokens,
-  index,
-  style,
-}: {
-  data: ItemData
-  index: number
-  style: CSSProperties
-}) {
+const ItemRow = memo(function ItemRow({ data: tokens, index, style }: ListChildComponentProps<ItemData>) {
   return <TokenOption index={index} value={tokens[index]} style={style} />
-},
-areEqual)
+}, areEqual)
 
 export interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
@@ -227,7 +220,10 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onBlur={onBlur}
       onFocus={onFocus}
       onMouseMove={onMouseMove}
-      style={{ overflow: 'hidden' }}
+      style={{
+        minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE,
+        overflow: 'hidden',
+      }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
       <OnHover hover={hover} ref={onHover} />
@@ -246,7 +242,10 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             outerRef={setElement}
             scrollbar={scrollbar}
           >
-            {ItemRow}
+            {
+              // AutoSizer incorrectly requires this to be typed `& ReactNode`:
+              ItemRow as typeof ItemRow & ReactNode
+            }
           </TokenList>
         )}
       </AutoSizer>

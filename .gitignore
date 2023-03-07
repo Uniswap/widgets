@@ -6,8 +6,7 @@
 
 # generated locales
 /src/locales/**/*.js
-/src/locales/**/en-US.po
-/src/locales/**/pseudo.po
+/src/locales/**/*.po
 
 # dependency management
 package-lock.json

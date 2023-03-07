@@ -1,7 +1,7 @@
+import { namehash } from 'ethers/lib/utils'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useMemo } from 'react'
 import isZero from 'utils/isZero'
-import { safeNamehash } from 'utils/safeNamehash'
 
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'
@@ -11,10 +11,7 @@ import useDebounce from './useDebounce'
  */
 export default function useENSAddress(ensName?: string | null): { loading: boolean; address: string | null } {
   const debouncedName = useDebounce(ensName, 200)
-  const ensNodeArgument = useMemo(
-    () => [debouncedName === null ? undefined : safeNamehash(debouncedName)],
-    [debouncedName]
-  )
+  const ensNodeArgument = useMemo(() => [!debouncedName ? undefined : namehash(debouncedName)], [debouncedName])
   const registrarContract = useENSRegistrarContract(false)
   const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
   const resolverAddressResult = resolverAddress.result?.[0]

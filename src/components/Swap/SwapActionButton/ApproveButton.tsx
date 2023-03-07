@@ -1,53 +1,54 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
-import { ApproveOrPermitState } from 'hooks/swap/useSwapApproval'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
+import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
+import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import { Spinner } from 'icons'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
-import { Colors } from 'theme'
+import { TransactionType } from 'state/transactions'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
-export function useIsPendingApproval(token?: Token): boolean {
-  return Boolean(usePendingApproval(token))
-}
+import useOnSubmit from './useOnSubmit'
 
 /**
  * An approving ActionButton.
  * Should only be rendered if a valid trade exists that is not yet approved.
  */
 export default function ApproveButton({
-  color,
   trade,
-  approvalState,
-  handleApproveOrPermit,
-  onSubmit,
+  state,
+  approve,
 }: {
-  color: keyof Colors
   trade?: InterfaceTrade
-  approvalState: ApproveOrPermitState
-  handleApproveOrPermit: () => Promise<{
+  state: SwapApprovalState
+  approve?: () => Promise<{
     response: TransactionResponse
     tokenAddress: string
     spenderAddress: string
   } | void>
-  onSubmit: (submit: () => Promise<ApprovalTransactionInfo | undefined>) => Promise<boolean>
 }) {
   const [isPending, setIsPending] = useState(false)
+  const onSubmit = useOnSubmit()
   const onApprove = useCallback(async () => {
     setIsPending(true)
-    await onSubmit(async () => {
-      const info = await handleApproveOrPermit()
-      if (!info) return
+    try {
+      await onSubmit(async () => {
+        const info = await approve?.()
+        if (!info) return
 
-      return { type: TransactionType.APPROVAL, ...info }
-    })
-    setIsPending(false)
-  }, [handleApproveOrPermit, onSubmit])
+        return { type: TransactionType.APPROVAL, ...info }
+      })
+    } catch (e) {
+      console.error(e) // ignore error
+    } finally {
+      setIsPending(false)
+    }
+  }, [approve, onSubmit])
 
   const currency = trade?.inputAmount?.currency
   const symbol = currency?.symbol || ''
@@ -55,11 +56,13 @@ export default function ApproveButton({
   // Reset the pending state if currency changes.
   useEffect(() => setIsPending(false), [currency])
 
-  const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined)
+  const { chainId } = useWeb3React()
+  const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+  const pendingApprovalHash = usePendingApproval(currency?.isToken ? currency : undefined, spender)
 
   const actionProps = useMemo(() => {
-    switch (approvalState) {
-      case ApproveOrPermitState.REQUIRES_APPROVAL:
+    switch (state) {
+      case SwapApprovalState.REQUIRES_APPROVAL:
         if (isPending) {
           return { message: <Trans>Approve in your wallet</Trans>, icon: Spinner }
         }
@@ -68,7 +71,7 @@ export default function ApproveButton({
           onClick: onApprove,
           children: <Trans>Approve</Trans>,
         }
-      case ApproveOrPermitState.REQUIRES_SIGNATURE:
+      case SwapApprovalState.REQUIRES_SIGNATURE:
         if (isPending) {
           return { message: <Trans>Allow in your wallet</Trans>, icon: Spinner }
         }
@@ -77,7 +80,7 @@ export default function ApproveButton({
           onClick: onApprove,
           children: <Trans>Allow</Trans>,
         }
-      case ApproveOrPermitState.PENDING_APPROVAL:
+      case SwapApprovalState.PENDING_APPROVAL:
         return {
           message: (
             <EtherscanLink type={ExplorerDataType.TRANSACTION} data={pendingApprovalHash}>
@@ -86,12 +89,12 @@ export default function ApproveButton({
           ),
           icon: Spinner,
         }
-      case ApproveOrPermitState.PENDING_SIGNATURE:
+      case SwapApprovalState.PENDING_SIGNATURE:
         return { message: <Trans>Allowance pending</Trans>, icon: Spinner }
       default:
         return
     }
-  }, [approvalState, symbol, isPending, onApprove, pendingApprovalHash])
+  }, [isPending, onApprove, pendingApprovalHash, state, symbol])
 
-  return <ActionButton color={color} action={actionProps} />
+  return <ActionButton color={useTokenColorExtraction()} action={actionProps} />
 }

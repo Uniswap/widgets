@@ -21,11 +21,11 @@ const ValueInput = styled(DecimalInput)`
   height: 1.5em;
   margin: -0.25em 0;
 
-  ${loadingTransitionCss}
+  ${loadingTransitionCss};
 `
 
 const TokenInputColumn = styled(Column)`
-  margin: 0 16px;
+  margin: 0.25em 1em 0;
 `
 
 export interface TokenInputHandle {
@@ -33,18 +33,18 @@ export interface TokenInputHandle {
 }
 
 interface TokenInputProps {
+  field: Field
   amount: string
   currency?: Currency
+  approved?: boolean
+  loading?: boolean
   disabled?: boolean
-  field: Field
-  max?: string
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
-  loading?: boolean
 }
 
 export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenInputProps>>(function TokenInput(
-  { amount, currency, disabled, field, onChangeInput, onChangeCurrency, loading, children, ...rest },
+  { field, amount, currency, approved, loading, disabled, onChangeInput, onChangeCurrency, children, ...rest },
   ref
 ) {
   const input = useRef<HTMLInputElement>(null)
@@ -69,7 +69,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
   return (
     <TokenInputColumn gap={0.25} {...rest}>
       <TokenInputRow gap={0.5}>
-        <ThemedText.H2>
+        <ThemedText.H1>
           <ValueInput
             value={amount}
             onChange={onChangeInput}
@@ -77,8 +77,8 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
             isLoading={Boolean(loading)}
             ref={input}
           />
-        </ThemedText.H2>
-        <TokenSelect value={currency} disabled={disabled} onSelect={onSelect} field={field} />
+        </ThemedText.H1>
+        <TokenSelect field={field} value={currency} approved={approved} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}
     </TokenInputColumn>

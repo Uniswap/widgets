@@ -10,5 +10,5 @@ export default function useTimeout(callback: () => void, delay: null | number) {
     if (delay === null) return
     const timeout = setTimeout(callback, delay)
     return () => clearTimeout(timeout)
-  })
+  }, [callback, delay])
 }

@@ -1,30 +1,41 @@
 import { Options, Placement } from '@popperjs/core'
+import { globalFontStyles } from 'css/font'
+import useInterval from 'hooks/useInterval'
+import ms from 'ms.macro'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
+import React, { createContext, PropsWithChildren, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
-import { Layer } from 'theme'
+import { AnimationSpeed, Layer } from 'theme'
 
 const BoundaryContext = createContext<HTMLDivElement | null>(null)
 
-export const BoundaryProvider = BoundaryContext.Provider
+/* Defines a boundary component past which a Popover should not overflow. */
+export function PopoverBoundaryProvider({
+  value,
+  children,
+}: PropsWithChildren<{ value: HTMLDivElement | null; updateTrigger?: any }>) {
+  return <BoundaryContext.Provider value={value}>{children}</BoundaryContext.Provider>
+}
 
 const PopoverContainer = styled.div<{ show: boolean }>`
+  ${globalFontStyles}
   background-color: ${({ theme }) => theme.dialog};
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
   opacity: ${(props) => (props.show ? 1 : 0)};
-  padding: 10px 12px;
-  transition: visibility 0.25s linear, opacity 0.25s linear;
+  padding: 0.75rem;
+  transition: visibility ${AnimationSpeed.Medium} linear, opacity ${AnimationSpeed.Medium} linear;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   z-index: ${Layer.TOOLTIP};
 `
 
 const Reference = styled.div`
-  align-self: flex-start;
-  display: inline-block;
-  height: 1em;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 1em;
 `
 
 const Arrow = styled.div`
@@ -86,19 +97,28 @@ export interface PopoverProps {
   placement: Placement
   offset?: number
   contained?: true
+  showArrow?: boolean
 }
 
-export default function Popover({ content, show, children, placement, offset, contained }: PopoverProps) {
+export default function Popover({
+  content,
+  show,
+  children,
+  placement,
+  offset,
+  contained,
+  showArrow = true,
+}: PopoverProps) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
-  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
+  const popover = useRef<HTMLDivElement | null>(null)
   const [arrow, setArrow] = useState<HTMLDivElement | null>(null)
 
   const options = useMemo((): Options => {
     const modifiers: Options['modifiers'] = [
-      { name: 'offset', options: { offset: [4, offset || 4] } },
+      { name: 'offset', options: { offset: [0, offset || 4] } },
       { name: 'arrow', options: { element: arrow, padding: 4 } },
     ]
     if (contained) {
@@ -130,21 +150,39 @@ export default function Popover({ content, show, children, placement, offset, co
     }
   }, [offset, arrow, contained, placement, boundary])
 
-  const { styles, attributes } = usePopper(reference.current, popover, options)
+  const { styles, attributes, update } = usePopper(reference.current, popover?.current, options)
+
+  const updateCallback = useCallback(() => {
+    update && update()
+  }, [update])
+
+  useInterval(updateCallback, show ? ms`0.1s` : null)
+
+  const containerOnClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
+  }, [])
 
   return (
     <>
       <Reference ref={reference}>{children}</Reference>
       {boundary &&
         createPortal(
-          <PopoverContainer show={show} ref={setPopover} style={styles.popper} {...attributes.popper}>
+          <PopoverContainer
+            show={show}
+            ref={popover}
+            style={styles.popper}
+            {...attributes.popper}
+            onClick={containerOnClick}
+          >
             {content}
-            <Arrow
-              className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-              ref={setArrow}
-              style={styles.arrow}
-              {...attributes.arrow}
-            />
+            {showArrow && (
+              <Arrow
+                className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
+                ref={setArrow}
+                style={styles.arrow}
+                {...attributes.arrow}
+              />
+            )}
           </PopoverContainer>,
           boundary
         )}

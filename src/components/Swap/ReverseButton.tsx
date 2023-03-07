@@ -1,29 +1,30 @@
 import { useSwapInfo, useSwitchSwapCurrencies } from 'hooks/swap'
-import { ArrowDown } from 'icons'
-import { transparentize } from 'polished'
+import { LargeIcon, Reverse } from 'icons'
 import styled from 'styled-components/macro'
 import { Layer } from 'theme'
 
 import Button from '../Button'
 
+const Underlayer = styled.div`
+  background-color: ${({ theme }) => theme.container};
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  height: 48px;
+  left: 50%;
+  position: absolute;
+  /* Adjust by 2px to account for border display. */
+  transform: translate(-50%, calc(-50% - 2px));
+  width: 48px;
+  z-index: ${Layer.OVERLAY};
+`
+
 const StyledReverseButton = styled(Button)`
   align-items: center;
   background-color: ${({ theme }) => theme.module};
-  border: 4px solid;
-  border-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border: 4px solid ${({ theme }) => theme.container};
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   display: flex;
-  height: 40px;
   justify-content: center;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -60%);
-  transition: 125ms ease background-color;
-  width: 40px;
-  z-index: ${Layer.OVERLAY};
-  :hover {
-    background-color: ${({ theme }) => transparentize(0.2, theme.module)};
-  }
+  width: 100%;
 `
 
 export default function ReverseButton() {
@@ -32,8 +33,10 @@ export default function ReverseButton() {
   const switchCurrencies = useSwitchSwapCurrencies()
 
   return (
-    <StyledReverseButton disabled={isDisabled} onClick={switchCurrencies}>
-      <ArrowDown />
-    </StyledReverseButton>
+    <Underlayer>
+      <StyledReverseButton disabled={isDisabled} onClick={switchCurrencies}>
+        <LargeIcon icon={Reverse} />
+      </StyledReverseButton>
+    </Underlayer>
   )
 }

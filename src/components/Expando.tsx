@@ -6,18 +6,25 @@ import useScrollbar from 'hooks/useScrollbar'
 import { Expando as ExpandoIcon } from 'icons'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
+import { AnimationSpeed, ThemedText } from 'theme'
 
 const HeaderColumn = styled(Column)`
   cursor: pointer;
-  transition: gap 0.25s;
+  padding: 1.25em 1.5em;
+`
+
+const StyledWrapper = styled(Column)<{ expanded: boolean }>`
+  background-color: ${({ theme }) => theme.module};
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
+  overflow: hidden;
+
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
 `
 
 const TitleRow = styled(Row)`
-  color: ${({ theme }) => theme.secondary};
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
 `
 
 const TitleHeader = styled.div`
@@ -26,55 +33,106 @@ const TitleHeader = styled.div`
   justify-content: center;
 `
 
-const ExpandoColumn = styled(Column)<{ height: number; open: boolean }>`
-  height: ${({ height, open }) => (open ? height : 0)}em;
+const MAX_HEIGHT = 20 // em
+
+function getExpandoContentHeight(height: number | undefined, maxHeight: number | undefined): number {
+  return Math.min(height ?? MAX_HEIGHT, maxHeight ?? MAX_HEIGHT)
+}
+
+const ExpandoColumn = styled(Column)<{
+  height?: number
+  maxHeight?: number
+  open: boolean
+}>`
+  max-height: ${({ open, height, maxHeight }) => (open ? getExpandoContentHeight(height, maxHeight) : 0)}em;
   overflow: hidden;
   position: relative;
-  transition: height 0.25s, padding 0.25s;
-
-  :after {
-    background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
-    bottom: 0;
-    content: '';
-    height: 0.75em;
-    pointer-events: none;
-    position: absolute;
-    width: calc(100% - 1em);
-  }
+  transition: max-height ${AnimationSpeed.Medium}, padding ${AnimationSpeed.Medium};
 `
 
-const InnerColumn = styled(Column)<{ height: number }>`
-  height: ${({ height }) => height}em;
-  padding: 0.5em 0;
+const InnerColumn = styled(Column)<{ height?: number; maxHeight?: number }>`
+  max-height: ${({ height, maxHeight }) => getExpandoContentHeight(height, maxHeight)}em;
+`
+
+export const IconPrefix = styled.div`
+  color: ${({ theme }) => theme.primary};
 `
 
 interface ExpandoProps extends ColumnProps {
   title: ReactNode
+  iconPrefix?: ReactNode
   open: boolean
   onExpand: () => void
   // The absolute height of the expanded container, in em.
-  height: number
+  // If not provided, the container will expand to fit its contents up to {maxHeight}em.
+  height?: number
+  // The maximum height of the expanded container, in em.
+  // If relying on auto-sizing, this should be something close to (but still larger than)
+  // the content's height. Otherwise, the animation will feel fast.
+  maxHeight?: number
+  styledWrapper?: boolean
 }
 
 /** A scrollable Expando with an absolute height. */
-export default function Expando({ title, open, onExpand, height, children, ...rest }: PropsWithChildren<ExpandoProps>) {
+export default function Expando({
+  title,
+  iconPrefix,
+  open,
+  onExpand,
+  height,
+  maxHeight,
+  children,
+  styledWrapper = true,
+  ...rest
+}: PropsWithChildren<ExpandoProps>) {
   const [scrollingEl, setScrollingEl] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(scrollingEl)
+  const scrollbar = useScrollbar(scrollingEl, { hideScrollbar: true })
   return (
     <Column {...rest}>
-      <HeaderColumn gap={open ? 0.5 : 0.75} onClick={onExpand}>
-        <Rule />
-        <TitleRow>
-          <TitleHeader>{title}</TitleHeader>
-          <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
-        </TitleRow>
-        {open && <Rule />}
-      </HeaderColumn>
-      <ExpandoColumn open={open} height={height}>
-        <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
-          {children}
-        </InnerColumn>
-      </ExpandoColumn>
+      {styledWrapper ? (
+        <StyledWrapper expanded={open}>
+          <HeaderColumn onClick={onExpand}>
+            <ThemedText.ButtonSmall color="secondary">
+              <TitleRow gap={1}>
+                <TitleHeader>{title}</TitleHeader>
+                <Row gap={0.2}>
+                  {iconPrefix && <IconPrefix>{iconPrefix}</IconPrefix>}
+                  <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+                </Row>
+              </TitleRow>
+            </ThemedText.ButtonSmall>
+          </HeaderColumn>
+          {open && <Rule padded />}
+          <ExpandoColumn open={open} height={height} maxHeight={maxHeight}>
+            <InnerColumn
+              flex
+              align="stretch"
+              height={height}
+              maxHeight={maxHeight}
+              ref={setScrollingEl}
+              css={scrollbar}
+            >
+              {children}
+            </InnerColumn>
+          </ExpandoColumn>
+        </StyledWrapper>
+      ) : (
+        <>
+          {title}
+          <ExpandoColumn open={open} height={height} maxHeight={maxHeight}>
+            <InnerColumn
+              flex
+              align="stretch"
+              height={height}
+              maxHeight={maxHeight}
+              ref={setScrollingEl}
+              css={scrollbar}
+            >
+              {children}
+            </InnerColumn>
+          </ExpandoColumn>
+        </>
+      )}
     </Column>
   )
 }

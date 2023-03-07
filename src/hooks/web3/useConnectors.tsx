@@ -22,7 +22,11 @@ export function Provider({ connectors, children }: PropsWithChildren<{ connector
   // The network chainId must be kept synchronized to avoid a loop when disconnecting and for a better UX.
   useEffect(() => {
     if (connector !== connectors.network) {
-      connectors.network.activate(chainId)
+      try {
+        connectors.network.activate(chainId)
+      } catch (e) {
+        // Unknown chains (eg hardhat) will fail to connect, and should not crash
+      }
     }
   }, [chainId, connector, connectors.network])
 

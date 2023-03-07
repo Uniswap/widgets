@@ -1,10 +1,14 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { BottomSheetModal } from 'components/BottomSheetModal'
+import { inputCss, StringInput } from 'components/Input'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field, swapEventHandlersAtom } from 'state/swap'
@@ -12,17 +16,28 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Column from '../Column'
-import Dialog, { Header } from '../Dialog'
-import { inputCss, StringInput } from '../Input'
+import Dialog, { Header, useIsDialogPageCentered } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
+import CommonBases from './CommonBases'
 import NoTokensAvailableOnNetwork from './NoTokensAvailableOnNetwork'
 import TokenButton from './TokenButton'
 import TokenOptions, { TokenOptionsHandle } from './TokenOptions'
 import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
-const SearchInput = styled(StringInput)`
+const SearchInputContainer = styled(Row)`
   ${inputCss}
+`
+
+const TokenSelectContainer = styled.div<{ $pageCentered: boolean }>`
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  min-height: ${($pageCentered) => ($pageCentered ? 'unset' : '100%')};
+  min-width: ${({ $pageCentered }) => ($pageCentered ? "min(400px, '100vw')" : 'auto')};
+  overflow: hidden;
+  padding: 0.5em 0 0;
+  @supports (overflow: clip) {
+    overflow: 'clip';
+  }
 `
 
 function usePrefetchBalances() {
@@ -48,10 +63,12 @@ interface TokenSelectDialogProps {
   onClose: () => void
 }
 
-export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialogProps) {
+export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
   const list = useTokenList()
   const tokens = useQueryTokens(query, list)
+
+  const isPageCentered = useIsDialogPageCentered()
 
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
@@ -78,27 +95,33 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
 
   if (!listHasTokens && isLoaded) {
     return (
-      <Dialog color="module" onClose={onClose}>
+      <Dialog color="container" onClose={onClose}>
         <Header title={<Trans>Select a token</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )
   }
   return (
-    <Dialog color="module" onClose={onClose}>
+    <TokenSelectContainer $pageCentered={isPageCentered ?? false}>
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
-        <Row pad={0.75} grow>
-          <ThemedText.Body1>
-            <SearchInput
-              value={query}
-              onChange={setQuery}
-              placeholder={t`Search by token name or address`}
-              onKeyDown={options?.onKeyDown}
-              ref={input}
-            />
-          </ThemedText.Body1>
-        </Row>
+        <Column gap={0.75} style={{ margin: '0 0.5em' }}>
+          <Row pad={0.75} grow>
+            <SearchInputContainer gap={0.75} justify="start" flex>
+              <Search color="secondary" />
+              <ThemedText.Body1 flexGrow={1}>
+                <StringInput
+                  value={query}
+                  onChange={setQuery}
+                  placeholder={t`Search by token name or address`}
+                  onKeyDown={options?.onKeyDown}
+                  ref={input}
+                />
+              </ThemedText.Body1>
+            </SearchInputContainer>
+          </Row>
+          <CommonBases chainId={chainId} onSelect={onSelect} selected={value} />
+        </Column>
         <Rule padded />
       </Column>
       {isLoaded ? (
@@ -116,18 +139,19 @@ export function TokenSelectDialog({ value, onSelect, onClose }: TokenSelectDialo
       ) : (
         <TokenOptionsSkeleton />
       )}
-    </Dialog>
+    </TokenSelectContainer>
   )
 }
 
 interface TokenSelectProps {
-  disabled?: boolean
   field: Field
-  onSelect: (value: Currency) => void
   value?: Currency
+  approved?: boolean
+  disabled?: boolean
+  onSelect: (value: Currency) => void
 }
 
-export default memo(function TokenSelect({ disabled, field, onSelect, value }: TokenSelectProps) {
+export default memo(function TokenSelect({ field, value, approved, disabled, onSelect }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
@@ -142,10 +166,23 @@ export default memo(function TokenSelect({ disabled, field, onSelect, value }: T
     },
     [onSelect, setOpen]
   )
+  const isMobile = useIsMobileWidth()
+  const pageCenteredDialogsEnabled = useIsDialogPageCentered()
+
   return (
     <>
-      <TokenButton value={value} disabled={disabled} onClick={onOpen} />
-      {open && <TokenSelectDialog value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />}
+      <TokenButton value={value} approved={approved} disabled={disabled} onClick={onOpen} />
+      {isMobile && pageCenteredDialogsEnabled ? (
+        <BottomSheetModal onClose={() => setOpen(false)} open={open}>
+          <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
+        </BottomSheetModal>
+      ) : (
+        open && (
+          <Dialog onClose={() => setOpen(false)} color="container" padded={false}>
+            <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
+          </Dialog>
+        )
+      )}
     </>
   )
 })

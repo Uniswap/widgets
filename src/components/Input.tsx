@@ -1,7 +1,6 @@
-import { loadingOpacity } from 'css/loading'
-import { transparentize } from 'polished'
 import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
 import styled, { css } from 'styled-components/macro'
+import { AnimationSpeed } from 'theme'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -34,20 +33,11 @@ const Input = styled.input`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.hint};
   }
 
   :enabled {
-    transition: color 0.125s linear;
-  }
-
-  :disabled {
-    // Overrides WebKit's override of input:disabled color.
-    -webkit-text-fill-color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    ::placeholder {
-      color: ${({ theme }) => transparentize(1 - loadingOpacity, theme.primary)};
-    }
+    transition: color ${AnimationSpeed.Fast} linear;
   }
 `
 
@@ -151,9 +141,9 @@ export const DecimalInput = forwardRef(function DecimalInput(props: InputProps, 
 })
 
 export const inputCss = css`
-  background-color: ${({ theme }) => theme.container};
-  border: 1px solid ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  background-color: ${({ theme }) => theme.module};
+  border: 1px solid ${({ theme }) => theme.outline};
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   cursor: text;
   padding: calc(0.75em - 1px);
 
@@ -163,6 +153,6 @@ export const inputCss = css`
   }
 
   :focus-within {
-    border-color: ${({ theme }) => theme.active};
+    border-color: ${({ theme }) => theme.accentSoft};
   }
 `

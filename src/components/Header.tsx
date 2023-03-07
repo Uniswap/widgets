@@ -1,31 +1,33 @@
 import { largeIconCss } from 'icons'
-import { ReactElement, ReactNode } from 'react'
+import { PropsWithChildren, ReactElement } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Row from './Row'
 
 const HeaderRow = styled(Row)`
-  height: 1.75em;
-  margin: 0 0.75em 0.75em;
-  padding-top: 0.5em;
+  height: 1.5em;
+  margin: 0.5em 0.75em 1em;
   ${largeIconCss}
-
-  button {
-    height: ${({ iconSize }) => iconSize}em;
-  }
 `
 
 export interface HeaderProps {
   title?: ReactElement
-  children: ReactNode
 }
 
-export default function Header({ title, children }: HeaderProps) {
+export default function Header({ title, children }: PropsWithChildren<HeaderProps>) {
   return (
-    <HeaderRow iconSize={1.2}>
-      <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>
-      <Row gap={1}>{children}</Row>
+    <HeaderRow iconSize={1.2} flex align="center" data-testid="header-container">
+      {title && (
+        <Row gap={0.5} data-testid="header-title">
+          <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
+        </Row>
+      )}
+      {children && (
+        <Row gap={1} data-testid="header-children">
+          {children}
+        </Row>
+      )}
     </HeaderRow>
   )
 }

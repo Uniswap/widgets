@@ -1,13 +1,11 @@
 name: Release
 
 on:
-  workflow_dispatch: # manually
-    inputs:
-      dry_run:
-        description: Skip publishing
-        required: false
-        default: true
-        type: boolean
+  push:
+    branches:
+      - main
+  # manual trigger
+  workflow_dispatch:
 
 jobs:
   release:
@@ -17,15 +15,29 @@ jobs:
       - uses: ./.github/actions/setup
       - run: yarn prepare
 
-      - run: yarn test
-        if: success()
+      - run: yarn prei18n:compile
+      - uses: crowdin/github-action@1.4.8
+        with:
+          upload_sources: true
+          download_translations: true
+          create_pull_request: false
+          push_translations: false
+          localization_branch_name: main
+          source: 'src/locales/en-US.po'
+          translation: 'src/locales/%locale%.po'
+          crowdin_branch_name: widgets
+          token: ${{ secrets.CROWDIN_TOKEN }}
+          project_id: 458284
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: yarn i18n:compile
 
-      - run: yarn test:e2e
+      - run: yarn test
         if: success()
         env:
           JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
 
-      - run: yarn release --dry-run=${{ inputs.dry_run }}
+      - run: yarn release
         if: success()
         env:
           NPM_CONFIG_USERCONFIG: /dev/null

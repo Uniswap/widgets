@@ -2,6 +2,7 @@ import { BaseProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Token, TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
+import { RouterPreference } from 'hooks/routing/types'
 
 export enum TradeState {
   LOADING,
@@ -57,7 +58,8 @@ export interface GetQuoteArgs {
   tokenOutChainId: ChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
-  amount: string
+  amount: string | null // passing null will initialize the client-side SOR
+  routerPreference?: RouterPreference
   routerUrl?: string
   tradeType: TradeType
   provider: BaseProvider
@@ -78,12 +80,21 @@ export interface QuoteResult {
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
+  route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
 }
 
+export const INITIALIZED = 'Initialized'
 export const NO_ROUTE = 'No Route'
 
-export type GetQuoteResult = QuoteResult | typeof NO_ROUTE
+export type GetQuoteError = typeof INITIALIZED | typeof NO_ROUTE
+
+export type TradeResult = {
+  trade?: InterfaceTrade
+  gasUseEstimateUSD?: string
+  blockNumber: string
+}
+
+export type TradeQuoteResult = TradeResult | GetQuoteError
 
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}

@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { Logo } from 'icons'
 import { memo } from 'react'
 import styled from 'styled-components/macro'
-import { brand, ThemedText } from 'theme'
+import { AnimationSpeed, brand, ThemedText } from 'theme'
 
 import ExternalLink from './ExternalLink'
 
@@ -15,7 +15,7 @@ const UniswapA = styled(ExternalLink)`
   ${Logo} {
     fill: ${({ theme }) => theme.secondary};
     height: 1em;
-    transition: transform 0.25s ease, fill 0.25s ease;
+    transition: transform ${AnimationSpeed.Medium} ease, fill ${AnimationSpeed.Medium} ease;
     width: 1em;
     will-change: transform;
   }

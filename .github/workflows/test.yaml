@@ -1,9 +1,6 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -11,6 +8,22 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+
+      - run: yarn lint
+
+  deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn yarn-deduplicate --strategy=highest --list --fail
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -19,15 +32,18 @@ jobs:
       - run: yarn prepare
 
       - run: yarn test
+        env:
+          JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
+
       - run: yarn test:e2e
         env:
           JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
 
-  typecheck:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn prepare
 
-      - run: yarn typecheck
+      - run: yarn build

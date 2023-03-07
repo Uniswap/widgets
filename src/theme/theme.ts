@@ -1,11 +1,13 @@
 export interface Colors {
   // surface
   accent: string
+  accentSoft: string
   container: string
   module: string
   interactive: string
   outline: string
   dialog: string
+  scrim: string
 
   // text
   primary: string
@@ -16,17 +18,35 @@ export interface Colors {
 
   // state
   active: string
+  activeSoft: string
   success: string
   warning: string
+  warningSoft: string
   error: string
+  critical: string
+  criticalSoft: string
+
+  networkDefaultShadow: string
+  deepShadow: string
 
   currentColor: 'currentColor'
 }
 
 export type Color = keyof Colors
 
+export type ThemeBorderRadius = {
+  large: number
+  medium: number
+  small: number
+}
+
+export type ZIndex = {
+  modal: number
+}
+
 export interface Attributes {
-  borderRadius: boolean | number
+  borderRadius: ThemeBorderRadius
+  zIndex: ZIndex
   fontFamily:
     | string
     | {

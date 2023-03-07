@@ -1,7 +1,7 @@
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
-import { controlledAtom as swapAtom, Swap } from 'state/swap'
-import { controlledAtom as settingsAtom, Settings } from 'state/swap/settings'
+import { controlledAtom as controlledSwapAtom, Swap } from 'state/swap'
+import { controlledAtom as controlledSettingsAtom, Settings } from 'state/swap/settings'
 
 export interface SwapController {
   value?: Swap
@@ -21,10 +21,15 @@ export default function useSyncController({ value, settings }: SwapController): 
     }
   }, [settings, value])
 
-  const setSwap = useUpdateAtom(swapAtom)
-  useEffect(() => setSwap(value), [value, setSwap])
-  const setSettings = useUpdateAtom(settingsAtom)
-  useEffect(() => setSettings(settings), [settings, setSettings])
+  const [controlledSwap, setControlledSwap] = useAtom(controlledSwapAtom)
+  if (controlledSwap !== value) {
+    setControlledSwap(value)
+  }
+
+  const [controlledSettings, setControlledSettings] = useAtom(controlledSettingsAtom)
+  if (controlledSettings !== settings) {
+    setControlledSettings(settings)
+  }
 }
 
 function warnOnControlChange({ state, prop }: { state: string; prop: string }) {

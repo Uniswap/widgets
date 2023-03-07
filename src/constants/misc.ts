@@ -7,6 +7,8 @@ export const NetworkContextName = 'NETWORK'
 
 export const IS_IN_IFRAME = window.parent !== window
 
+export const MS_IN_SECOND = 1000
+
 // 30 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 30
 export const L2_DEADLINE_FROM_NOW = 60 * 5
@@ -38,3 +40,6 @@ export const BETTER_TRADE_LESS_HOPS_THRESHOLD = new Percent(JSBI.BigInt(50), BIP
 export const ZERO_PERCENT = new Percent('0')
 export const TWO_PERCENT = new Percent(JSBI.BigInt(200), BIPS_BASE)
 export const ONE_HUNDRED_PERCENT = new Percent('1')
+
+// gas margin to ensure successful transactions
+export const TX_GAS_MARGIN = 0.2
