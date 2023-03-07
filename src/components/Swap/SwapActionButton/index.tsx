@@ -36,9 +36,7 @@ export default function SwapActionButton() {
 
   if (!account || !isActive) {
     return <ConnectWalletButton />
-  } else if (error === ChainError.UNSUPPORTED_CHAIN) {
-    return <SwitchChainButton chainId={SupportedChainId.MAINNET} />
-  } else if (error === ChainError.MISMATCHED_CHAINS) {
+  } else if (error === ChainError.MISMATCHED_CHAINS || error === ChainError.UNSUPPORTED_CHAIN) {
     const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId ?? SupportedChainId.MAINNET
     return <SwitchChainButton chainId={tokenChainId} />
   } else if (isWrap) {
