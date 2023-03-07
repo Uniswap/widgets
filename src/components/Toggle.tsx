@@ -1,17 +1,16 @@
-import { t } from '@lingui/macro'
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { AnimationSpeed, ThemedText } from 'theme'
 
-const Input = styled.input<{ text: string }>`
+const Input = styled.input`
   -moz-appearance: none;
   -webkit-appearance: none;
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.interactive};
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadius * 1.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   cursor: pointer;
   display: flex;
   font-size: inherit;
@@ -21,11 +20,11 @@ const Input = styled.input<{ text: string }>`
   padding: 0;
 
   position: relative;
-  width: 4.5em;
+  width: 3.5em;
 
   :before {
     background-color: ${({ theme }) => theme.secondary};
-    border-radius: ${({ theme }) => theme.borderRadius * 50}%;
+    border-radius: ${({ theme }) => theme.borderRadius.medium * 50}%;
     content: '';
     display: inline-block;
     height: 1.5em;
@@ -40,18 +39,11 @@ const Input = styled.input<{ text: string }>`
 
   :checked:before {
     background-color: ${({ theme }) => theme.accent};
-    margin-left: 2.75em;
+    margin-left: 1.75em;
   }
 
   :hover:checked:before {
     background-color: ${({ theme }) => transparentize(0.3, theme.accent)};
-  }
-
-  :after {
-    content: '${({ text }) => text}';
-    margin-left: 1.75em;
-    text-align: center;
-    width: 2.75em;
   }
 
   :checked:after {
@@ -59,7 +51,7 @@ const Input = styled.input<{ text: string }>`
   }
 
   :before {
-    transition: margin 0.25s ease;
+    transition: margin ${AnimationSpeed.Medium} ease;
   }
 `
 
@@ -79,13 +71,7 @@ export default function Toggle({ checked, onToggle }: ToggleProps) {
   )
   return (
     <ThemedText.ButtonMedium>
-      <Input
-        type="checkbox"
-        checked={checked}
-        text={checked ? t`ON` : t`OFF`}
-        onChange={() => onToggle()}
-        onKeyDown={onKeyDown}
-      />
+      <Input type="checkbox" checked={checked} onChange={() => onToggle()} onKeyDown={onKeyDown} />
     </ThemedText.ButtonMedium>
   )
 }

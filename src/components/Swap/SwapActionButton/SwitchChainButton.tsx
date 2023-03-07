@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
+import { getChainInfo } from 'constants/chainInfo'
 import useSwitchChain from 'hooks/useSwitchChain'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
-import { Spinner } from 'icons'
 import { useCallback, useMemo, useState } from 'react'
 
 /** A chain-switching ActionButton. */
@@ -26,23 +26,20 @@ export default function ChainSwitchButton({ chainId }: { chainId: number }) {
     }
   }, [chainId, switchChain, throwError])
 
-  const actionProps = useMemo(
-    () =>
-      isPending
-        ? {
-            message: account ? <Trans>Switch network in your wallet</Trans> : <Trans>Switching network</Trans>,
-            icon: Spinner,
-          }
-        : {
-            message: <Trans>Switch network</Trans>,
-            onClick: onSwitchChain,
-          },
-    [account, isPending, onSwitchChain]
-  )
+  const message = useMemo(() => {
+    if (isPending) {
+      return account ? <Trans>Switch network in your wallet</Trans> : <Trans>Switching network</Trans>
+    }
+    return getChainInfo(chainId) ? (
+      <Trans>Connect to {getChainInfo(chainId)?.label}</Trans>
+    ) : (
+      <Trans>Switch network</Trans>
+    )
+  }, [account, chainId, isPending])
 
   return (
-    <ActionButton color={color} disabled={isPending} action={actionProps}>
-      <Trans>Switch</Trans>
+    <ActionButton color={color} disabled={isPending} onClick={onSwitchChain}>
+      {message}
     </ActionButton>
   )
 }

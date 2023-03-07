@@ -2,6 +2,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
+import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { InterfaceTrade } from 'state/routing/types'
@@ -47,10 +48,13 @@ export type OnSlippageChange = (slippage: Slippage) => void
 /** An integration hook called when the user changes transaction deadline settings. */
 export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
 
+export type OnRouterPreferenceChange = (routerPreference: RouterPreference) => void
+
 interface SettingsEventHandlers {
   onSettingsReset?: OnSettingsReset
   onSlippageChange?: OnSlippageChange
   onTransactionDeadlineChange?: OnTransactionDeadlineChange
+  onRouterPreferenceChange?: OnRouterPreferenceChange
 }
 
 /** An integration hook called when the user selects a new token. */
@@ -109,3 +113,5 @@ export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHand
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})
+
+export const swapRouterUrlAtom = atom<string | undefined>(undefined)

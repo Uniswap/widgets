@@ -1,7 +1,7 @@
 import { useIsWideWidget, useWidgetWidth } from 'hooks/useWidgetWidth'
 import { renderComponent } from 'test'
 
-import WidgetContainer from './WidgetContainer'
+import WidgetWrapper from './WidgetWrapper'
 
 const widgetWidthValueTestId = 'widgetWidthValue'
 const widgetWidthTypeTestId = 'widgetWidthType'
@@ -19,14 +19,14 @@ function TestComponent() {
   )
 }
 
-describe('WidgetContainer', () => {
+describe('WidgetWrapper', () => {
   beforeEach(() => jest.spyOn(console, 'warn').mockReturnValue(undefined))
 
   it('should handle valid number width, narrow', () => {
     const component = renderComponent(
-      <WidgetContainer width={300}>
+      <WidgetWrapper width={300}>
         <TestComponent />
-      </WidgetContainer>
+      </WidgetWrapper>
     )
     // 300 is the lowest width allowed
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('300')
@@ -36,9 +36,9 @@ describe('WidgetContainer', () => {
 
   it('should handle valid number width, wide', () => {
     const component = renderComponent(
-      <WidgetContainer width={500}>
+      <WidgetWrapper width={500}>
         <TestComponent />
-      </WidgetContainer>
+      </WidgetWrapper>
     )
     // 300 is the lowest width allowed
     expect(component.getByTestId(widgetWidthValueTestId).textContent).toBe('500')
@@ -48,9 +48,9 @@ describe('WidgetContainer', () => {
 
   it('should constrain to max width', () => {
     const component = renderComponent(
-      <WidgetContainer width={700}>
+      <WidgetWrapper width={700}>
         <TestComponent />
-      </WidgetContainer>
+      </WidgetWrapper>
     )
     // 600 is the largest width allowed
     expect(console.warn).toHaveBeenCalled()
@@ -61,9 +61,9 @@ describe('WidgetContainer', () => {
 
   it('should handle invalid number width', () => {
     const component = renderComponent(
-      <WidgetContainer width={200}>
+      <WidgetWrapper width={200}>
         <TestComponent />
-      </WidgetContainer>
+      </WidgetWrapper>
     )
     // 300 is the lowest width allowed
     expect(console.warn).toHaveBeenCalled()
@@ -74,9 +74,9 @@ describe('WidgetContainer', () => {
 
   it('should handle undefined width', () => {
     const component = renderComponent(
-      <WidgetContainer width={undefined}>
+      <WidgetWrapper width={undefined}>
         <TestComponent />
-      </WidgetContainer>
+      </WidgetWrapper>
     )
 
     // We default to 360px if width is undefined

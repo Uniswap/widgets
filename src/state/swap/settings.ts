@@ -1,3 +1,4 @@
+import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 
@@ -11,11 +12,16 @@ export interface Slippage {
 export interface Settings {
   slippage: Slippage
   transactionTtl: number | undefined
+  routerPreference: RouterPreference
 }
 
 const initialSettings: Settings = {
   slippage: { auto: true, max: undefined },
   transactionTtl: undefined,
+
+  // Set to API by default so that if the consumer passes in the `routerUrl` prop, it is
+  // automatically set to use that url. Otherwise, it will fallback to client side routing.
+  routerPreference: RouterPreference.API,
 }
 
 export const controlledAtom = atom<Settings | undefined>(undefined)
@@ -27,3 +33,4 @@ export const settingsAtom = atom((get) => {
 
 export const slippageAtom = pickAtom(settingsAtom, 'slippage')
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
+export const routerPreferenceAtom = pickAtom(settingsAtom, 'routerPreference')

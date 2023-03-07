@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
+import Expando, { IconPrefix } from 'components/Expando'
 import Popover from 'components/Popover'
 import { useTooltip } from 'components/Tooltip'
 import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
+import { Expando as ExpandoIcon } from 'icons'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -11,7 +13,7 @@ import { slippageAtom } from 'state/swap/settings'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { BaseButton, TextButton } from '../../Button'
+import { BaseButton, IconButton, TextButton } from '../../Button'
 import Column from '../../Column'
 import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
@@ -19,11 +21,24 @@ import { Label, optionCss } from './components'
 
 const Button = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
+  display: flex;
+  flex-grow: 1;
+  max-width: 180px;
 `
 
 const Custom = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
+  display: flex;
+  flex-grow: 1;
+  max-width: 180px;
+  * input {
+    text-align: right;
+  }
+`
+
+const ExpandoContentRow = styled(Row)`
+  margin: 1em 0 0;
 `
 
 interface OptionProps {
@@ -31,20 +46,21 @@ interface OptionProps {
   selected: boolean
   onSelect: () => void
   'data-testid': string
+  justify?: 'flex-end' | 'flex-start'
   icon?: ReactNode
   tabIndex?: number
   children: ReactNode
 }
 
 const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
-  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex, 'data-testid': testid }: OptionProps,
+  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex, 'data-testid': testid, justify }: OptionProps,
   ref
 ) {
   return (
     <Wrapper selected={selected} onClick={onSelect} ref={ref} tabIndex={tabIndex} data-testid={testid}>
-      <Row gap={0.5}>
+      <Row gap={0.5} flex grow flow="nowrap" justify={justify} align="center">
         {children}
-        {icon ? icon : <LargeIcon icon={selected ? Check : undefined} size={1.25} />}
+        {icon ? icon : <LargeIcon icon={Check} size={1.25} color={selected ? 'active' : 'hint'} />}
       </Row>
     </Wrapper>
   )
@@ -89,7 +105,12 @@ export default function MaxSlippageSelect() {
     },
     [onSlippageChange, setSlippageBase]
   )
-  const setAutoSlippage = useCallback(() => setSlippage({ ...slippage, auto: true }), [setSlippage, slippage])
+  const setAutoSlippage = useCallback(() => {
+    setSlippage({
+      auto: true,
+      max: undefined,
+    })
+  }, [setSlippage])
   const [maxSlippageInput, setMaxSlippageInput] = useState(slippage.max?.toString() || '')
 
   const option = useRef<HTMLButtonElement>(null)
@@ -123,42 +144,62 @@ export default function MaxSlippageSelect() {
     [setSlippage]
   )
 
+  const [open, setOpen] = useState(false)
   return (
     <Column gap={0.75}>
-      <Label
-        name={<Trans>Max slippage</Trans>}
-        tooltip={
-          <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-        }
-      />
-      <Row gap={0.5} grow="last">
-        <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
-          <ThemedText.ButtonMedium>
-            <Trans>Auto</Trans>
-          </ThemedText.ButtonMedium>
-        </Option>
-        <Option
-          wrapper={Custom}
-          selected={!slippage.auto}
-          onSelect={onInputSelect}
-          icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
-          ref={option}
-          tabIndex={-1}
-          data-testid="custom-slippage"
-        >
-          <Row color={warning === 'error' ? 'error' : undefined}>
-            <DecimalInput
-              size={Math.max(maxSlippageInput.length, 4)}
-              value={maxSlippageInput}
-              onChange={(input) => processInput(input)}
-              placeholder={'0.10'}
-              ref={input}
-              data-testid="input-slippage"
+      <Expando
+        title={
+          <Row style={{ cursor: 'pointer' }} grow justify="space-between" onClick={() => setOpen((open) => !open)}>
+            <Label
+              name={<Trans>Max slippage</Trans>}
+              tooltip={
+                <Trans>
+                  Your transaction will revert if the price changes unfavorably by more than this percentage.
+                </Trans>
+              }
             />
-            %
+            <Row gap={0.2} justify="flex-end" flex>
+              <IconPrefix>{slippage.auto ? <Trans>Auto</Trans> : `${maxSlippageInput}%`}</IconPrefix>
+              <IconButton color="secondary" icon={ExpandoIcon} iconProps={{ open }} />
+            </Row>
           </Row>
-        </Option>
-      </Row>
+        }
+        styledWrapper={false}
+        maxHeight={5}
+        open={open}
+        onExpand={() => setOpen(!open)}
+      >
+        <ExpandoContentRow gap={0.5} grow="first" flex justify="flex-end">
+          <Option wrapper={Button} selected={slippage.auto} onSelect={setAutoSlippage} data-testid="auto-slippage">
+            <ThemedText.ButtonMedium>
+              <Trans>Auto</Trans>
+            </ThemedText.ButtonMedium>
+          </Option>
+          <Option
+            wrapper={Custom}
+            selected={!slippage.auto}
+            onSelect={onInputSelect}
+            icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
+            ref={option}
+            tabIndex={-1}
+            justify="flex-end"
+            data-testid="custom-slippage"
+          >
+            <Row color={warning === 'error' ? 'error' : undefined} flex grow flow="nowrap">
+              <DecimalInput
+                size={Math.max(maxSlippageInput.length, 4)}
+                value={maxSlippageInput}
+                onChange={(input) => processInput(input)}
+                placeholder={'0.10'}
+                ref={input}
+                data-testid="input-slippage"
+                maxLength={10}
+              />
+              %
+            </Row>
+          </Option>
+        </ExpandoContentRow>
+      </Expando>
     </Column>
   )
 }

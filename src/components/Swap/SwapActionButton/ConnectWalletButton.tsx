@@ -19,7 +19,7 @@ export default function ConnectWalletButton() {
   return (
     <>
       <ActionButton color="accentSoft" onClick={onClick} data-testid="connect-wallet">
-        <Trans>Connect Wallet</Trans>
+        <Trans>Connect wallet</Trans>
       </ActionButton>
       {open && (
         <Dialog color="dialog" onClose={onClose}>

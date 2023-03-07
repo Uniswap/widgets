@@ -7,7 +7,7 @@ import Button from '../Button'
 
 const Underlayer = styled.div`
   background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: 48px;
   left: 50%;
   position: absolute;
@@ -21,7 +21,7 @@ const StyledReverseButton = styled(Button)`
   align-items: center;
   background-color: ${({ theme }) => theme.module};
   border: 4px solid ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   display: flex;
   justify-content: center;
   width: 100%;

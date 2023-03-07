@@ -1,23 +1,11 @@
-import { TradeType } from '@uniswap/sdk-core'
-import assert from 'assert'
-import { DAI, USDC_MAINNET } from 'constants/tokens'
+import { SupportedChainId, TradeType } from '@uniswap/sdk-core'
+import { DAI, ExtendedEther, USDC_MAINNET, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
-import * as usePermit2Allowance from 'hooks/usePermit2Allowance'
-import { flagsAtom } from 'hooks/useSyncFlags'
 import Module from 'module'
 import { Field, stateAtom, Swap } from 'state/swap'
-import { act, queryByText, renderComponent } from 'test'
+import { renderComponent } from 'test'
 
 import Toolbar from './index'
-
-jest.mock('@web3-react/core', () => ({
-  ...(jest.requireActual('@web3-react/core') as Module),
-  useWeb3React: () => ({
-    isActive: true,
-    chainId: 1,
-    account: '0x0000000000000000000000000000000000000000',
-  }),
-}))
 
 jest.mock('hooks/usePermit2Allowance', () => {
   const approveAndPermit = jest.fn().mockResolvedValue(undefined)
@@ -33,7 +21,7 @@ jest.mock('hooks/usePermit2Allowance', () => {
   }
 })
 
-function getInitialTradeState(trade: Partial<Swap> = {}) {
+export function getInitialTradeState(trade: Partial<Swap> = {}) {
   return {
     type: TradeType.EXACT_INPUT,
     amount: '',
@@ -43,10 +31,34 @@ function getInitialTradeState(trade: Partial<Swap> = {}) {
   }
 }
 
+jest.mock('@web3-react/core', () => ({
+  ...(jest.requireActual('@web3-react/core') as Module),
+  useWeb3React: () => ({
+    isActive: true,
+    chainId: 1,
+    account: '0x0000000000000000000000000000000000000000',
+  }),
+}))
+
 describe('Toolbar', () => {
-  it('should not render without currencies specified', () => {
-    const component = renderComponent(<Toolbar />)
+  it('should show review swap button with one currency specified, no amount input', () => {
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Toolbar />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [
+          [
+            stateAtom,
+            getInitialTradeState({
+              [Field.OUTPUT]: undefined,
+            }),
+          ],
+        ],
+      }
+    )
     expect(component.queryByTestId('toolbar')).toBeNull()
+    expect(component.queryByText('Review swap')).toBeTruthy() // should be disabled
   })
 
   it('should render with both currencies specified, no amount input', () => {
@@ -58,27 +70,91 @@ describe('Toolbar', () => {
         initialAtomValues: [[stateAtom, getInitialTradeState()]],
       }
     )
+    expect(component.queryByTestId('toolbar')).toBeTruthy()
     expect(component.queryByText('Enter an amount')).toBeTruthy()
+    expect(component.queryByText('Review swap')).toBeTruthy() // should be disabled
   })
 
-  it('should render a request for approval', async () => {
+  // todo: test the loading state by mocking the router API
+  xit('should render with both currencies specified, amount input, trade loading', () => {
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Toolbar />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [[stateAtom, getInitialTradeState({ amount: '1' })]],
+      }
+    )
+    expect(component.queryByTestId('toolbar')).toBeTruthy()
+    expect(component.getByText('Fetching best price')).toBeTruthy()
+    expect(component.queryByText('Review swap')).toBeTruthy() // should be disabled
+  })
+
+  // todo: test the loaded trade state by mocking the router API
+  xit('should render with both currencies specified, amount input, trade loaded', () => {
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Toolbar />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [[stateAtom, getInitialTradeState({ amount: '1' })]],
+      }
+    )
+    expect(component.queryByTestId('toolbar')).toBeTruthy()
+    expect(component.getByText('1 DAI = ')).toBeTruthy() // todo: mock the exchange rate
+    expect(component.queryByText('Review swap')).toBeTruthy() // should be enabled
+  })
+
+  // todo: test the liquidity warning state by mocking the router API and using long tail tokens
+  xit('should render with both currencies specified, amount input, trade loaded, liquidity warning', () => {
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Toolbar />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [[stateAtom, getInitialTradeState({ amount: '1' })]],
+      }
+    )
+    expect(component.queryByTestId('toolbar')).toBeTruthy()
+    expect(component.getByText('1 DAI = ')).toBeTruthy() // todo: mock the exchange rate
+    expect(component.queryByText('Insufficient liquidity')).toBeTruthy() // should be disabled
+  })
+
+  // todo: test the loaded trade state by mocking the router API, for a token with no balance
+  xit('should render with both currencies specified, amount input, trade loaded, no balance', () => {
+    const component = renderComponent(
+      <SwapInfoProvider>
+        <Toolbar />
+      </SwapInfoProvider>,
+      {
+        initialAtomValues: [[stateAtom, getInitialTradeState({ amount: '1' })]],
+      }
+    )
+    expect(component.queryByTestId('toolbar')).toBeTruthy()
+    expect(component.getByText('1 DAI = ')).toBeTruthy() // todo: mock the exchange rate
+    expect(component.queryByText('Insufficient ETH balance')).toBeTruthy() // should be disabled
+  })
+
+  it('should render correct values for a wrap transaction', () => {
     const component = renderComponent(
       <SwapInfoProvider>
         <Toolbar />
       </SwapInfoProvider>,
       {
         initialAtomValues: [
-          [stateAtom, getInitialTradeState({ amount: '1' })],
-          [flagsAtom, { permit2: true }],
+          [
+            stateAtom,
+            getInitialTradeState({
+              amount: '1',
+              [Field.INPUT]: ExtendedEther.onChain(SupportedChainId.MAINNET),
+              [Field.OUTPUT]: WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET],
+            }),
+          ],
         ],
       }
     )
-    const action = component.queryByTestId('action-button')
-    assert(action)
-    expect(queryByText(action, 'Approve token')).toBeTruthy()
-
-    const approveAndPermit = (usePermit2Allowance as unknown as { approveAndPermit: () => void }).approveAndPermit
-    await act(() => action.querySelector('button')?.click())
-    expect(approveAndPermit).toHaveBeenCalled()
+    expect(component.queryByTestId('toolbar')).toBeTruthy()
+    expect(component.getByText('Convert ETH to WETH')).toBeTruthy()
+    expect(component.queryByText('Wrap ETH')).toBeTruthy() // should be enabled
   })
 })

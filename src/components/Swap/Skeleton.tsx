@@ -1,4 +1,3 @@
-import WidgetContainer from 'components/WidgetContainer'
 import WidgetWrapper from 'components/WidgetWrapper'
 import { StrictMode } from 'react'
 import styled from 'styled-components/macro'
@@ -11,12 +10,11 @@ import ReverseButton from './ReverseButton'
 const LoadingWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
   justify-content: space-between;
 `
 const Blob = styled.div<{ height: string; width: string; radius?: number; isModule?: boolean }>`
   background-color: ${({ isModule, theme }) => (isModule ? theme.outline : theme.module)};
-  border-radius: ${({ theme, radius }) => (radius ?? 0.25 * theme.borderRadius) + 'em'};
+  border-radius: ${({ theme, radius }) => (radius ?? 0.25) + 'em'};
   height: ${({ height }) => height};
   width: ${({ width }) => width};
 `
@@ -32,42 +30,23 @@ const TitleColumn = styled(Column)`
 
 const InputColumn = styled(Column)`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   display: flex;
   gap: 1.875em;
   margin-bottom: 0.25em;
   padding: 0.75em;
   padding-bottom: 3.25em;
-  padding-top: 1.5em;
+  padding-top: 3.25em;
 `
 
-const OutputColumn = styled(Column)`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  display: flex;
-  padding-top: 0.5em;
-`
-
-const OutputInnerTopColumn = styled(Column)`
-  border-bottom: 1px solid ${({ theme }) => theme.container};
-  padding-bottom: 3.25em;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  padding-top: 1.5em;
-  width: 100%;
-`
-
-const OutputInnerBottomColumn = styled(Column)`
-  padding-bottom: 1em;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  padding-top: 0.75em;
-  width: 100%;
+const OutputColumn = styled(InputColumn)`
+  padding-bottom: 3em;
+  padding-top: 3.5em;
 `
 
 const ButtonColumn = styled(Column)`
   padding-bottom: 0em;
-  padding-top: 0.75em;
+  padding-top: 0.55em;
   width: 100%;
 `
 
@@ -75,7 +54,7 @@ function FloatingTitle() {
   return (
     <TitleColumn gap={0.75}>
       <Row>
-        <Blob height="1em" width="2.5em" isModule={false} />
+        <Blob height="1em" width="2.5em" />
       </Row>
     </TitleColumn>
   )
@@ -85,33 +64,17 @@ function FloatingInput() {
   return (
     <WideColumn gap={0.75}>
       <Row>
-        <Blob height="2em" width="3.75em" isModule={true} />
-        <Blob height="2em" width="7.25em" isModule={true} />
+        <Blob height="2em" width="3.75em" isModule />
+        <Blob height="2em" width="7.25em" isModule />
       </Row>
     </WideColumn>
   )
 }
 
-function FloatingOutput({ isModule }: { isModule?: boolean }) {
-  return (
-    <>
-      <OutputInnerTopColumn>
-        <Row>
-          <Blob height="2em" width="3.75em" isModule={isModule} />
-          <Blob height="2em" width="7.25em" isModule={isModule} />
-        </Row>
-      </OutputInnerTopColumn>
-      <OutputInnerBottomColumn>
-        <Blob height="1em" width="7.5em" isModule />
-      </OutputInnerBottomColumn>
-    </>
-  )
-}
-
 function FloatingButton() {
   return (
-    <ButtonColumn gap={0.875}>
-      <Blob height="3.375em" width="100%" radius={0.75} isModule />
+    <ButtonColumn>
+      <Blob height="3.5em" width="100%" radius={0.75} />
     </ButtonColumn>
   )
 }
@@ -125,23 +88,21 @@ export function SwapWidgetSkeleton({ theme, width }: SwapWidgetSkeletonProps) {
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <WidgetContainer width={width}>
-          <WidgetWrapper>
-            <LoadingWrapper>
-              <FloatingTitle />
-              <InputColumn>
+        <WidgetWrapper width={width}>
+          <LoadingWrapper>
+            <FloatingTitle />
+            <InputColumn>
+              <FloatingInput />
+            </InputColumn>
+            <div>
+              <ReverseButton />
+              <OutputColumn>
                 <FloatingInput />
-              </InputColumn>
-              <div>
-                <ReverseButton />
-                <OutputColumn>
-                  <FloatingOutput isModule />
-                </OutputColumn>
-                <FloatingButton />
-              </div>
-            </LoadingWrapper>
-          </WidgetWrapper>
-        </WidgetContainer>
+              </OutputColumn>
+              <FloatingButton />
+            </div>
+          </LoadingWrapper>
+        </WidgetWrapper>
       </ThemeProvider>
     </StrictMode>
   )

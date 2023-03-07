@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
@@ -12,12 +13,12 @@ import { MouseEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { AnimationSpeed, ThemedText } from 'theme'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
 import Row from '../Row'
+import { PriceImpactRow } from './PriceImpactRow'
 import TokenInput, { TokenInputHandle } from './TokenInput'
 
 const USDC = styled(Row)`
@@ -26,13 +27,13 @@ const USDC = styled(Row)`
 `
 
 const Balance = styled(ThemedText.Body2)`
-  transition: color 0.25s ease-in-out;
+  transition: color ${AnimationSpeed.Medium} ease-in-out;
 `
 
 const InputColumn = styled(Column)<{ disableHover?: boolean; isWide: boolean }>`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  margin-bottom: 4px;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  margin-bottom: 0.25em;
   padding: ${({ isWide }) => (isWide ? '1em 0' : '1em 0 1.5em')};
   position: relative;
 
@@ -74,7 +75,7 @@ export function useFormattedFieldAmount({
       return fieldAmount
     }
     if (currencyAmount) {
-      return formatCurrencyAmount({ amount: currencyAmount })
+      return formatCurrencyAmount(currencyAmount, NumberType.SwapTradeAmount)
     }
     return ''
   }, [currencyAmount, fieldAmount])
@@ -83,7 +84,6 @@ export function useFormattedFieldAmount({
 interface FieldWrapperProps {
   field: Field
   maxAmount?: string
-  isSufficientBalance?: boolean
   approved?: boolean
   impact?: PriceImpact
   subheader: string
@@ -92,7 +92,6 @@ interface FieldWrapperProps {
 export function FieldWrapper({
   field,
   maxAmount,
-  isSufficientBalance,
   approved,
   impact,
   className,
@@ -131,14 +130,13 @@ export function FieldWrapper({
   const formattedAmount = useMemo(() => {
     if (amount !== undefined) return amount
     if (!currencyAmount) return ''
-    return isWrap ? currencyAmount.toExact() : formatCurrencyAmount({ amount: currencyAmount })
+    return isWrap ? currencyAmount.toExact() : formatCurrencyAmount(currencyAmount, NumberType.SwapTradeAmount)
   }, [amount, currencyAmount, isWrap])
 
   const onClickMax = useCallback(() => {
     if (!maxAmount) return
     updateAmount(maxAmount, /* origin= */ 'max')
-    input?.focus()
-  }, [input, maxAmount, updateAmount])
+  }, [maxAmount, updateAmount])
 
   return (
     <InputColumn
@@ -165,17 +163,13 @@ export function FieldWrapper({
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
             <USDC isLoading={isRouteLoading}>
-              {usdc && `${formatCurrencyAmount({ amount: usdc, isUsdPrice: true })}`}
-              {impact && (
-                <ThemedText.Body2 userSelect={false} color={impact.warning ?? 'hint'}>
-                  ({impact.toString()})
-                </ThemedText.Body2>
-              )}
+              {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
+              <PriceImpactRow impact={impact} />
             </USDC>
             {balance && (
               <Row gap={0.5}>
-                <Balance color={isSufficientBalance === false ? 'error' : 'secondary'}>
-                  <Trans>Balance:</Trans> {formatCurrencyAmount({ amount: balance })}
+                <Balance color="secondary">
+                  <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
                 </Balance>
                 {maxAmount && (
                   <TextButton onClick={onClickMax}>
@@ -199,11 +193,6 @@ export default function Input() {
     approval: { state: approvalState },
   } = useSwapInfo()
 
-  const isSufficientBalance = useMemo(() => {
-    if (!balance || !currencyAmount) return undefined
-    return !currencyAmount.greaterThan(balance)
-  }, [balance, currencyAmount])
-
   const maxAmount = useMemo(() => {
     // account for gas needed if using max on native token
     const max = maxAmountSpend(balance)
@@ -217,9 +206,8 @@ export default function Input() {
     <FieldWrapper
       field={Field.INPUT}
       maxAmount={maxAmount}
-      isSufficientBalance={isSufficientBalance}
       approved={approvalState === SwapApprovalState.APPROVED}
-      subheader={t`You Pay`}
+      subheader={t`You pay`}
     />
   )
 }

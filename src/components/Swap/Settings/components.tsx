@@ -1,3 +1,4 @@
+import { Info } from 'icons'
 import { ReactNode } from 'react'
 import styled, { AnyStyledComponent, css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -6,8 +7,8 @@ import Row from '../../Row'
 import Tooltip from '../../Tooltip'
 
 export const optionCss = (selected: boolean) => css`
-  border: 1px solid ${({ theme }) => (selected ? theme.active : theme.outline)};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border: 1px solid ${({ theme }) => (selected ? theme.active : '')};
+  border-radius: ${({ theme }) => theme.borderRadius.small}em;
   color: ${({ theme }) => theme.primary} !important;
   display: grid;
   grid-gap: 0.25em;
@@ -39,10 +40,10 @@ interface LabelProps {
 
 export function Label({ name, tooltip }: LabelProps) {
   return (
-    <Row gap={0.5} justify="flex-start">
+    <Row gap={0.5} justify="flex-start" flex align="center">
       <ThemedText.Subhead2>{name}</ThemedText.Subhead2>
       {tooltip && (
-        <Tooltip placement="top" contained>
+        <Tooltip placement="top" contained icon={Info} iconProps={{ style: { height: '100%' } }}>
           <ThemedText.Caption>{tooltip}</ThemedText.Caption>
         </Tooltip>
       )}

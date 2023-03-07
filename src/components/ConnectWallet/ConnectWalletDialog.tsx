@@ -28,7 +28,7 @@ const StyledButtonContents = styled(Column)`
 `
 
 const StyledMainButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   grid-column: 1 / 3;
   height: 100%;
   padding: 22px;
@@ -40,7 +40,7 @@ const StyledMainButtonRow = styled(Row)`
 `
 
 const StyledSmallButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   height: 88px;
   padding: 16px;
 `

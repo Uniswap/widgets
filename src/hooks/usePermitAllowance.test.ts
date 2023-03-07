@@ -100,6 +100,9 @@ describe('useUpdatePermitAllowance', () => {
     const { result } = renderHook(() => useUpdatePermitAllowance(TOKEN, SPENDER, NONCE, onPermitSignature))
     expect(result.current).toBeInstanceOf(Function)
 
+    const expectedSignature =
+      '0x1befd08fcc4085dc484346d69fd15659616522454a33e66e7b0f6917379ab888236304ebed307813208bf004da04d998dcd15a8f83241d033e4040adc4b0b5311b'
+
     jest.spyOn(Date, 'now').mockReturnValue(0)
     await waitFor(() => result.current())
     expect(onPermitSignature).toHaveBeenCalledWith({
@@ -112,7 +115,7 @@ describe('useUpdatePermitAllowance', () => {
       sigDeadline: ms`30m` / 1000,
       signature:
         // Signature copied from a signature by the hardhat provider:
-        '0x1befd08fcc4085dc484346d69fd15659616522454a33e66e7b0f6917379ab888236304ebed307813208bf004da04d998dcd15a8f83241d033e4040adc4b0b5311b',
+        expectedSignature,
       spender: SPENDER,
     })
   })

@@ -23,6 +23,7 @@ export enum AllowanceState {
 export interface AllowanceRequired {
   state: AllowanceState.REQUIRED
   token: Token
+  shouldRequestApproval: boolean
   isApprovalLoading: boolean
   approveAndPermit: () => Promise<void>
 }
@@ -103,9 +104,15 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
       if (!tokenAllowance || !permitAllowance) {
         return { state: AllowanceState.LOADING }
       } else if (!(isPermitted || isSigned)) {
-        return { token, state: AllowanceState.REQUIRED, isApprovalLoading: false, approveAndPermit }
+        return {
+          token,
+          state: AllowanceState.REQUIRED,
+          shouldRequestApproval,
+          isApprovalLoading: false,
+          approveAndPermit,
+        }
       } else if (!isApproved) {
-        return { token, state: AllowanceState.REQUIRED, isApprovalLoading, approveAndPermit }
+        return { token, state: AllowanceState.REQUIRED, shouldRequestApproval, isApprovalLoading, approveAndPermit }
       }
     }
     return { state: AllowanceState.ALLOWED, permitSignature: !isPermitted && isSigned ? signature : undefined }
@@ -116,6 +123,7 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
     isPermitted,
     isSigned,
     permitAllowance,
+    shouldRequestApproval,
     signature,
     token,
     tokenAllowance,

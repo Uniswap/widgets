@@ -66,7 +66,7 @@ export function useIsPendingApproval(token?: Token): boolean {
 }
 
 export type OnTxSubmit = (hash: string, tx: Transaction) => void
-export type OnTxSuccess = (hash: string, receipt: TransactionReceipt) => void
+export type OnTxSuccess = (hash: string, tx: WithRequired<Transaction, 'receipt'>) => void
 export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void
 
 export interface TransactionEventHandlers {
@@ -102,10 +102,13 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
       if (receipt.status === 0) {
         onTxFail?.(hash, receipt)
       } else {
-        onTxSuccess?.(hash, receipt)
+        onTxSuccess?.(hash, {
+          ...currentPendingTxs[hash],
+          receipt,
+        })
       }
     },
-    [updateTxs, onTxFail, onTxSuccess]
+    [updateTxs, onTxFail, onTxSuccess, currentPendingTxs]
   )
 
   const oldPendingTxs = useRef({})

@@ -47,7 +47,9 @@ export default function WrapButton({ disabled }: { disabled: boolean }) {
 
   const actionProps = useMemo(
     () =>
-      isPending ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } } : { onClick: onWrap },
+      isPending
+        ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner, hideButton: true } }
+        : { onClick: onWrap },
     [isPending, onWrap]
   )
 

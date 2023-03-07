@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import BrandedFooter from 'components/BrandedFooter'
 import Wallet from 'components/ConnectWallet'
 import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
+import useSyncSwapRouterUrl from 'hooks/swap/useSyncSwapRouterUrl'
 import useSyncTokenDefaults, { TokenDefaults } from 'hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'hooks/transactions'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
@@ -21,7 +21,6 @@ import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import { StatusDialog } from './Status'
-import SwapActionButton from './SwapActionButton'
 import Toolbar from './Toolbar'
 import useValidate from './useValidate'
 
@@ -39,8 +38,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
   useSyncTokenDefaults(props as TokenDefaults)
-
-  const { account } = useWeb3React()
+  useSyncSwapRouterUrl(props.routerUrl)
 
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -56,12 +54,11 @@ export default function Swap(props: SwapProps) {
       </Header>
       <div ref={setWrapper}>
         <PopoverBoundaryProvider value={wrapper}>
-          <SwapInfoProvider routerUrl={props.routerUrl}>
+          <SwapInfoProvider>
             <Input />
             <ReverseButton />
             <Output />
-            {account && <Toolbar />}
-            <SwapActionButton />
+            <Toolbar hideConnectionUI={props.hideConnectionUI} />
             {useBrandedFooter() && <BrandedFooter />}
           </SwapInfoProvider>
         </PopoverBoundaryProvider>

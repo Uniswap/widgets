@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 
 import { SupportedChainId } from './chains'
 import {
@@ -15,6 +15,7 @@ import {
   FEI,
   FRAX,
   FXS,
+  nativeOnChain,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
   renBTC,
@@ -36,7 +37,7 @@ import {
 } from './tokens'
 
 type ChainTokenList = {
-  readonly [chainId: number]: Token[]
+  readonly [chainId: number]: Array<Token | NativeCurrency>
 }
 
 const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
@@ -49,11 +50,12 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
   [SupportedChainId.MAINNET]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET],
+    nativeOnChain(SupportedChainId.MAINNET),
     DAI,
     USDC_MAINNET,
     USDT,
     WBTC,
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET],
   ],
   [SupportedChainId.OPTIMISM]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.OPTIMISM],

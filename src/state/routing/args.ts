@@ -2,10 +2,14 @@ import { BaseProvider } from '@ethersproject/providers'
 import { isPlainObject } from '@reduxjs/toolkit'
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { QuoteConfig, QuoteType } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { swapRouterUrlAtom } from 'state/swap'
 
 import { GetQuoteArgs } from './types'
+import { currencyAddressForSwapQuote } from './utils'
 
 const NON_SERIALIZABLE_KEYS = ['provider']
 
@@ -41,39 +45,40 @@ export function useGetQuoteArgs(
     amountSpecified,
     currencyIn,
     currencyOut,
-    routerUrl,
   }: Partial<{
     provider: BaseProvider
     tradeType: TradeType
     amountSpecified: CurrencyAmount<Currency>
     currencyIn: Currency
     currencyOut: Currency
-    routerUrl: string
   }>,
-  skip?: boolean
+  quoteConfig: QuoteConfig
 ): GetQuoteArgs | SkipToken {
+  const routerUrl = useAtomValue(swapRouterUrlAtom)
   const args = useMemo(() => {
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
+    if (quoteConfig.type === QuoteType.SKIP) return null
 
     return {
       amount: amountSpecified?.quotient.toString() ?? null,
-      tokenInAddress: currencyIn.wrapped.address,
-      tokenInChainId: currencyIn.wrapped.chainId,
-      tokenInDecimals: currencyIn.wrapped.decimals,
-      tokenInSymbol: currencyIn.wrapped.symbol,
-      tokenOutAddress: currencyOut.wrapped.address,
-      tokenOutChainId: currencyOut.wrapped.chainId,
-      tokenOutDecimals: currencyOut.wrapped.decimals,
-      tokenOutSymbol: currencyOut.wrapped.symbol,
+      tokenInAddress: currencyAddressForSwapQuote(currencyIn),
+      tokenInChainId: currencyIn.chainId,
+      tokenInDecimals: currencyIn.decimals,
+      tokenInSymbol: currencyIn.symbol,
+      tokenOutAddress: currencyAddressForSwapQuote(currencyOut),
+      tokenOutChainId: currencyOut.chainId,
+      tokenOutDecimals: currencyOut.decimals,
+      tokenOutSymbol: currencyOut.symbol,
+      routerPreference: quoteConfig.preference,
       routerUrl,
       tradeType,
       provider,
     }
-  }, [provider, amountSpecified, tradeType, currencyIn, currencyOut, routerUrl])
+  }, [provider, tradeType, currencyIn, currencyOut, amountSpecified?.quotient, quoteConfig, routerUrl])
 
   const isWindowVisible = useIsWindowVisible()
-  if (skip || !isWindowVisible) return skipToken
+  if (quoteConfig.type === QuoteType.SKIP || !isWindowVisible) return skipToken
 
   return args ?? skipToken
 }

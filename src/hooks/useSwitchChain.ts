@@ -31,10 +31,13 @@ function toHex(chainId: SupportedChainId): string {
   return `0x${chainId.toString(16)}`
 }
 
+/** Attempts to add and switch to a chain in the wallet. */
 async function addChain(provider: Web3Provider, addChainParameter: AddEthereumChainParameter): Promise<void> {
   for (const rpcUrl of addChainParameter.rpcUrls) {
     try {
+      // NB: MetaMask will prompt to switch to a successfully added chain as part of wallet_addEthereumChain.
       await provider.send('wallet_addEthereumChain', [{ ...addChainParameter, rpcUrls: [rpcUrl] }]) // EIP-3085
+      return
     } catch (error) {
       // Some providers (eg MetaMask) make test calls from a background page before switching,
       // so fallback urls which are publicly available must be used. Otherwise, the switch will fail
@@ -54,8 +57,7 @@ async function switchChain(
     await provider.send('wallet_switchEthereumChain', [{ chainId: toHex(chainId) }]) // EIP-3326 (used by MetaMask)
   } catch (error) {
     if (error?.code === ErrorCode.CHAIN_NOT_ADDED && addChainParameter?.rpcUrls.length) {
-      await addChain(provider, addChainParameter)
-      return switchChain(provider, chainId)
+      return addChain(provider, addChainParameter)
     }
     throw error
   }
@@ -68,11 +70,14 @@ export default function useSwitchChain(): (chainId: SupportedChainId) => Promise
   const onSwitchChain = useAtomValue(onSwitchChainAtom)
   return useCallback(
     async (chainId: SupportedChainId) => {
-      const { label: chainName, nativeCurrency, explorer } = getChainInfo(chainId)
+      const { safe, label, nativeCurrency, explorer } = getChainInfo(chainId)
       const addChainParameter: AddEthereumChainParameter = {
         chainId: toHex(chainId),
-        chainName,
-        nativeCurrency,
+        chainName: safe?.label ?? label,
+        nativeCurrency: {
+          ...nativeCurrency,
+          symbol: safe?.symbol ?? nativeCurrency.symbol,
+        },
         blockExplorerUrls: [explorer],
         rpcUrls: urlMap[chainId],
       }

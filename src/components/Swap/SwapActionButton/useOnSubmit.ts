@@ -6,16 +6,23 @@ import { displayTxHashAtom, Field } from 'state/swap'
 import { TransactionInfo, TransactionType } from 'state/transactions'
 import { isAnimating } from 'utils/animations'
 
-/** Submits a transaction. */
+/**
+ * Returns a callback to submit a transaction.
+ *
+ * Returns a boolean indicating whether the transaction was submitted.
+ * For example, will return false if the user rejected the transaction.
+ *
+ * For other types of errors, `submit` should throw.
+ * */
 export default function useOnSubmit() {
   const addTransactionInfo = useAddTransactionInfo()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const [, setInputAmount] = useSwapAmount(Field.INPUT)
 
   return useCallback(
-    async (submit: () => Promise<TransactionInfo | void>): Promise<void> => {
+    async (submit: () => Promise<TransactionInfo | void>): Promise<boolean> => {
       const info = await submit()
-      if (!info) return
+      if (!info) return false
 
       addTransactionInfo(info)
 
@@ -40,6 +47,7 @@ export default function useOnSubmit() {
             setInputAmount('')
           }
       }
+      return true
     },
     [addTransactionInfo, setDisplayTxHash, setInputAmount]
   )

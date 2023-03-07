@@ -26,7 +26,7 @@ describe('connect', () => {
   function itPromptsForWalletConnection(ui: ReactElement) {
     it('prompts for wallet connection', async () => {
       const widget = render(ui)
-      expect((await widget.findByTestId('connect-wallet')).textContent).toBe('Connect Wallet')
+      expect((await widget.findByTestId('connect-wallet')).textContent).toBe('Connect wallet')
     })
   }
 

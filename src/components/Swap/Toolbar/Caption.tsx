@@ -1,21 +1,20 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
 import { formatPriceImpact } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
 import { PriceImpact as PriceImpactType } from 'hooks/usePriceImpact'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
-import { AlertTriangle, Gas, Icon, Info, LargeIcon, Spinner } from 'icons'
+import { AlertTriangle, ChevronDown, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
-import { Color, ThemedText } from 'theme'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { AnimationSpeed, Color, ThemedText } from 'theme'
 
 import Price from '../Price'
-import RoutingDiagram from '../RoutingDiagram'
+import { GasEstimateTooltip, TradeTooltip } from './GasEstimateTooltip'
 
 const Loading = styled.span`
   color: ${({ theme }) => theme.secondary};
@@ -23,9 +22,22 @@ const Loading = styled.span`
 `
 
 const CaptionRow = styled(Row)<{ gap: number; shrink?: number }>`
+  align-items: center;
   flex-shrink: ${({ shrink }) => shrink ?? 1};
   gap: ${({ gap }) => gap}em;
   height: 100%;
+`
+
+// TODO (tina): consolidate this and Expando icon
+const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
+  color: ${({ theme }) => theme.secondary};
+  cursor: pointer;
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transition: transform ${AnimationSpeed.Medium};
+
+  :hover {
+    opacity: 0.6;
+  }
 `
 
 interface CaptionTooltip {
@@ -34,17 +46,13 @@ interface CaptionTooltip {
 }
 
 interface CaptionProps {
-  icon?: Icon
+  icon?: Icon | null
   caption: ReactNode
   color?: Color
   tooltip?: CaptionTooltip
 }
 
-interface GasEstimateProps {
-  gasUseEstimateUSD: CurrencyAmount<Token> | undefined
-}
-
-function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', tooltip }: CaptionProps) {
+function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: CaptionProps) {
   return (
     <CaptionRow gap={0.5} shrink={0}>
       {tooltip ? (
@@ -52,31 +60,9 @@ function Caption({ icon: Icon = AlertTriangle, caption, color = 'secondary', too
           {tooltip?.content}
         </Tooltip>
       ) : (
-        <LargeIcon icon={Icon} color={color} />
+        Icon && <LargeIcon icon={Icon} color={color} />
       )}
       <ThemedText.Body2 color={color}>{caption}</ThemedText.Body2>
-    </CaptionRow>
-  )
-}
-
-function GasEstimate({ gasUseEstimateUSD }: GasEstimateProps) {
-  const isWideWidget = useIsWideWidget()
-  // TODO(just-toby): use formatCurrencyAmount from conedison
-  const displayEstimate = !gasUseEstimateUSD
-    ? '-'
-    : formatCurrencyAmount({ amount: gasUseEstimateUSD, isUsdPrice: true })
-  return (
-    <CaptionRow gap={0.25}>
-      {isWideWidget ? (
-        <>
-          <Gas color="secondary" />
-          <ThemedText.Body2 color="secondary">{displayEstimate}</ThemedText.Body2>
-        </>
-      ) : (
-        <Tooltip icon={Gas} placement="left" iconProps={{ color: 'secondary' }}>
-          <ThemedText.Body2 color="secondary">Estimated gas: {displayEstimate}</ThemedText.Body2>
-        </Tooltip>
-      )}
     </CaptionRow>
   )
 }
@@ -94,47 +80,15 @@ export function Connecting() {
   )
 }
 
-export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Switch to a supported network to trade</Trans>} />
-}
-
-export function InsufficientBalance({ currency }: { currency: Currency }) {
-  return (
-    <Caption
-      color="warning"
-      caption={
-        <Trans>
-          You don{"'"}t have enough {currency?.symbol}
-        </Trans>
-      }
-    />
-  )
-}
-
-export function InsufficientLiquidity() {
-  return (
-    <Caption
-      color="warning"
-      caption={<Trans>Insufficient liquidity</Trans>}
-      tooltip={{
-        content: (
-          <ThemedText.Caption>Not enough liquidity in pool to swap between these two tokens.</ThemedText.Caption>
-        ),
-        placement: 'right',
-      }}
-    />
-  )
-}
-
 export function Error() {
-  return <Caption caption={<Trans>Error fetching trade</Trans>} />
+  return <Caption icon={AlertTriangle} caption={<Trans>Error fetching trade</Trans>} />
 }
 
 export function MissingInputs() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 
-export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
+export function LoadingTrade({ gasUseEstimateUSD }: TradeTooltip) {
   return (
     <>
       <Caption
@@ -146,7 +100,9 @@ export function LoadingTrade({ gasUseEstimateUSD }: GasEstimateProps) {
           </Loading>
         }
       />
-      <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
+      <CaptionRow gap={0.25}>
+        <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} />
+      </CaptionRow>
     </>
   )
 }
@@ -156,7 +112,7 @@ interface WrapProps {
   outputCurrency: Currency
 }
 
-export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapProps & GasEstimateProps) {
+export function Wrap({ inputCurrency, outputCurrency }: WrapProps) {
   const isWideWidget = useIsWideWidget()
   const Text = useCallback(
     () =>
@@ -172,30 +128,48 @@ export function Wrap({ inputCurrency, outputCurrency, gasUseEstimateUSD }: WrapP
     [inputCurrency.symbol, isWideWidget, outputCurrency.symbol]
   )
 
-  return (
-    <>
-      <Caption icon={Info} caption={<Text />} />
-      <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
-    </>
-  )
+  return <Caption caption={<Text />} />
 }
 
 export interface TradeProps {
   trade: InterfaceTrade
+  loading: boolean
   outputUSDC?: CurrencyAmount<Currency>
 }
 
-export function Trade({ trade, outputUSDC, gasUseEstimateUSD }: TradeProps & GasEstimateProps) {
+interface ExpandProps {
+  expanded: boolean
+}
+
+const Expander = ({ expanded }: ExpandProps) => {
+  return <ExpandIcon $expanded={expanded} />
+}
+
+export function Trade({
+  trade,
+  outputUSDC,
+  gasUseEstimateUSD,
+  expanded,
+  loading,
+}: TradeProps & TradeTooltip & ExpandProps) {
   return (
     <>
       <Caption
-        icon={Info}
-        caption={<Price trade={trade} outputUSDC={outputUSDC} />}
-        tooltip={{
-          content: <RoutingDiagram trade={trade} />,
-        }}
+        caption={
+          <ThemedText.Body2 opacity={loading ? 0.4 : 1}>
+            <Price trade={trade} outputUSDC={outputUSDC} />
+          </ThemedText.Body2>
+        }
+        icon={loading ? Spinner : null}
       />
-      <GasEstimate gasUseEstimateUSD={gasUseEstimateUSD} />
+      <CaptionRow gap={0.75}>
+        {!expanded && (
+          <CaptionRow gap={0.25}>
+            <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
+          </CaptionRow>
+        )}
+        <Expander expanded={expanded} />
+      </CaptionRow>
     </>
   )
 }
@@ -204,7 +178,13 @@ interface PriceImpactProps {
   impact: PriceImpactType
 }
 
-export function PriceImpact({ impact }: PriceImpactProps) {
+export const PriceImpactWarningTooltipContent = () => (
+  <ThemedText.Caption>
+    There will be a large difference between your input and output values due to current liquidity.
+  </ThemedText.Caption>
+)
+
+export function PriceImpact({ impact, expanded }: PriceImpactProps & ExpandProps) {
   return (
     <>
       <Caption
@@ -212,17 +192,16 @@ export function PriceImpact({ impact }: PriceImpactProps) {
         caption="High price impact"
         color={impact.warning}
         tooltip={{
-          placement: 'right',
-          content: (
-            <ThemedText.Caption>
-              There will be a large difference between your input and output values due to current liquidity.
-            </ThemedText.Caption>
-          ),
+          placement: 'auto',
+          content: <PriceImpactWarningTooltipContent />,
         }}
       />
-      <ThemedText.Body2 userSelect={false} color={impact.warning}>
-        {formatPriceImpact(impact?.percent)}
-      </ThemedText.Body2>
+      <CaptionRow gap={0.75}>
+        <ThemedText.Body2 userSelect={false} color={impact.warning}>
+          {formatPriceImpact(impact?.percent)}
+        </ThemedText.Body2>
+        <Expander expanded={expanded} />
+      </CaptionRow>
     </>
   )
 }

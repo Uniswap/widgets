@@ -2,7 +2,7 @@ import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
-import polygon from 'assets/svg/polygon.svg'
+import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
@@ -22,12 +22,21 @@ interface BaseChainInfo {
   readonly explorer: string
   readonly infoLink: string
   readonly logoUrl: string
+  /*
+   * The label and native currency symbol as listed on the "safe" list used by MetaMask: https://chainid.network/chains.json.
+   * If undefined, label and nativeCurrency.symbol may be safely used.
+   * MetaMask shows a warning when adding a chain using anything but its "safe" label.
+   */
+  readonly safe?: {
+    label?: string
+    symbol?: string
+  }
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
-    name: string // e.g. 'Goerli ETH',
-    symbol: string // e.g. 'gorETH',
-    decimals: 18 // e.g. 18,
+    name: string // e.g. 'Goerli ETH'
+    symbol: string // e.g. 'gorETH'
+    decimals: 18 // e.g. 18
   }
   readonly color?: string
   readonly backgroundColor?: string
@@ -121,6 +130,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://optimism.io/',
     explorer: 'https://goerli-optimism.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
+    safe: { label: 'Optimism Goerli Testnet', symbol: 'ETH' },
     label: 'Optimism Görli',
     logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
@@ -164,10 +174,11 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
+    safe: { label: 'Polygon Mainnet' },
     label: 'Polygon',
-    logoUrl: polygon,
+    logoUrl: polygonMaticLogo,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-    color: '#8247e5',
+    color: '#A457FF',
     backgroundColor: '#a457ff29',
   },
   [SupportedChainId.POLYGON_MUMBAI]: {
@@ -177,10 +188,11 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://polygon.io/',
     explorer: 'https://mumbai.polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
+    safe: { symbol: 'MATIC' },
     label: 'Polygon Mumbai',
-    logoUrl: polygon,
+    logoUrl: polygonMaticLogo,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
-    color: '#8247e5',
+    color: '#A457FF',
     backgroundColor: '#a457ff29',
   },
   [SupportedChainId.CELO]: {
@@ -190,6 +202,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.celo.org/',
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo',
+    safe: { label: 'Celo Mainnet' },
     label: 'Celo',
     logoUrl: celoLogo,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
@@ -203,9 +216,10 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.celo.org/',
     explorer: 'https://alfajores.celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo',
+    safe: { label: 'Celo Alfajores Testnet', symbol: 'CELO' },
     label: 'Celo Alfajores',
     logoUrl: celoLogo,
-    nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
+    nativeCurrency: { name: 'Celo', symbol: 'aCELO', decimals: 18 },
     color: '#35D07F',
     backgroundColor: '#34d07f1f',
   },

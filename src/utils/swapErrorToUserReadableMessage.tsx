@@ -1,5 +1,15 @@
 import { t } from '@lingui/macro'
 import { ErrorCode } from 'constants/eip1193'
+
+export function getReason(error: any): string | undefined {
+  let reason: string | undefined
+  while (Boolean(error)) {
+    reason = error.reason ?? error.message ?? reason
+    error = error.error ?? error.data?.originalError
+  }
+  return reason
+}
+
 /**
  * This is hacking out the revert reason from the ethers provider thrown error however it can.
  * This object seems to be undocumented by ethers.
@@ -8,21 +18,17 @@ import { ErrorCode } from 'constants/eip1193'
 export function swapErrorToUserReadableMessage(error: any): string {
   if (error.code) {
     if (error.code === ErrorCode.USER_REJECTED_REQUEST) {
-      return t`transaction rejected.`
+      return t`Transaction rejected`
     }
   }
 
-  let reason: string | undefined
-  while (Boolean(error)) {
-    reason = error.reason ?? error.message ?? reason
-    error = error.error ?? error.data?.originalError
-  }
+  let reason = getReason(error)
 
   if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
 
   switch (reason) {
     case 'UniswapV2Router: EXPIRED':
-      return t`The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.`
+      return t`This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.`
     case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
     case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
       return t`This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.`
@@ -43,8 +49,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
         console.error(error, reason)
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
-      return t`Unknown error${
-        reason ? `: "${reason}"` : ''
-      }. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`${reason ? reason : 'Unknown error'}. Try increasing your slippage tolerance.
+Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
   }
 }

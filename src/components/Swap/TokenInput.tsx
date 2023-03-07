@@ -21,11 +21,11 @@ const ValueInput = styled(DecimalInput)`
   height: 1.5em;
   margin: -0.25em 0;
 
-  ${loadingTransitionCss}
+  ${loadingTransitionCss};
 `
 
 const TokenInputColumn = styled(Column)`
-  margin: 0.5em 1em 0;
+  margin: 0.25em 1em 0;
 `
 
 export interface TokenInputHandle {
