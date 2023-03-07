@@ -85,7 +85,7 @@ interface FieldWrapperProps {
   field: Field
   maxAmount?: string
   approved?: boolean
-  impact?: PriceImpact
+  fiatValueChange?: PriceImpact
   subheader: string
 }
 
@@ -93,7 +93,7 @@ export function FieldWrapper({
   field,
   maxAmount,
   approved,
-  impact,
+  fiatValueChange,
   className,
   subheader,
 }: FieldWrapperProps & { className?: string }) {
@@ -164,7 +164,7 @@ export function FieldWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
-              <PriceImpactRow impact={impact} />
+              <PriceImpactRow impact={fiatValueChange} />
             </USDC>
             {balance && (
               <Row gap={0.5}>

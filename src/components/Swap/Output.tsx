@@ -42,7 +42,7 @@ export default function Output() {
       <OutputWrapper
         isWide={isWideWidget}
         field={Field.OUTPUT}
-        impact={fiatValueChange}
+        fiatValueChange={fiatValueChange}
         hasColor={hasColor}
         subheader={t`You receive`}
       />
