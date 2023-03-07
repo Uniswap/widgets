@@ -11,4 +11,3 @@ updates:
       - dependency-name: '@uniswap/redux-multicall'
     reviewers:
       - 'Uniswap/dependabot-reviewers'
-      - 'Uniswap/web-tokens'
