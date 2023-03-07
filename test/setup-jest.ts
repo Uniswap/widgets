@@ -18,7 +18,7 @@ jest.mock('@uniswap/conedison/format', () => ({
 const MOCK_TYPED_DATA_SIG =
   '0x1befd08fcc4085dc484346d69fd15659616522454a33e66e7b0f6917379ab888236304ebed307813208bf004da04d998dcd15a8f83241d033e4040adc4b0b5311b'
 
-jest.mock('@uniswap/conedison/provider', () => ({
+jest.mock('@uniswap/conedison/provider/signing', () => ({
   signTypedData: () => Promise.resolve(MOCK_TYPED_DATA_SIG),
 }))
 

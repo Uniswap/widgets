@@ -10,7 +10,7 @@ export const Context = createContext<{
   onToggleOpen: () => null,
 })
 
-export const Provider = ({ children }: PropsWithChildren) => {
+export function Provider({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false)
   const onToggleOpen = () => setOpen((open) => !open)
   const collapse = () => setOpen(false)

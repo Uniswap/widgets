@@ -15,7 +15,7 @@ import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 
 const EtherscanLinkContainer = styled(Row)`
-  padding: 0.5em 0 1.5em;
+  padding: 0.5rem 0 1.5rem;
   transition: opacity ${AnimationSpeed.Medium};
   width: 100%;
   :hover {
@@ -36,9 +36,9 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   }, [tx.receipt?.status])
 
   return (
-    <Column flex padded align="stretch" style={{ height: '100%', marginTop: '3em' }} data-testid="status-dialog">
+    <Column flex padded align="stretch" style={{ height: '100%', marginTop: '3rem' }} data-testid="status-dialog">
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
-        <ThemedText.H4 margin="3em 0 0">{heading}</ThemedText.H4>
+        <ThemedText.H4 margin="3rem 0 0">{heading}</ThemedText.H4>
         {tx.info.type === TransactionType.SWAP ? (
           <SwapSummary input={tx.info.trade.inputAmount} output={tx.info.trade.outputAmount} />
         ) : null}

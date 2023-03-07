@@ -48,28 +48,28 @@ const Dots = styled(DotLine)`
 
 const RouteRow = styled(Row)`
   flex-wrap: nowrap;
-  margin: 0 0.5em;
+  margin: 0 0.5rem;
   position: relative;
 `
 
 const GasEstimateRow = styled(Row)`
   border-top: 1px solid ${({ theme }) => theme.outline};
   max-width: 350px;
-  padding: 0.5em 0 0;
+  padding: 0.5rem 0 0;
 `
 
 const RouteNode = styled(Row)`
   background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.5}em`};
-  margin-left: 0.5em;
-  padding: 0.25em;
+  border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.5}rem`};
+  margin-left: 0.5rem;
+  padding: 0.25rem;
   width: max-content;
 `
 
 const RouteBadge = styled.div`
   background-color: ${({ theme }) => theme.interactive};
-  border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.25}em`};
-  padding: 0.25em;
+  border-radius: ${({ theme }) => `${(theme.borderRadius.medium ?? 1) * 0.25}rem`};
+  padding: 0.25rem;
 `
 
 function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
@@ -89,8 +89,8 @@ function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
 }
 
 const RoutePool = styled(RouteNode)`
-  margin: 0 0.75em;
-  padding: 0.25em;
+  margin: 0 0.75rem;
+  padding: 0.25rem;
 `
 
 function Pool({
@@ -107,7 +107,7 @@ function Pool({
       <Row gap={0.25}>
         <Row flex align="center">
           <TokenImg token={originCurrency} size={0.75} />
-          <Row style={{ marginLeft: '-0.25em' }} flex align="center">
+          <Row style={{ marginLeft: '-0.25rem' }} flex align="center">
             <TokenImg token={targetCurrency} size={0.75} />
           </Row>
         </Row>

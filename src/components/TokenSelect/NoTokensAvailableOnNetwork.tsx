@@ -6,10 +6,10 @@ import { ThemedText } from 'theme'
 import Column from '../Column'
 
 const HelpCircleIcon = styled(HelpCircle)`
-  height: 4em;
-  margin-bottom: 0.75em;
+  height: 4rem;
+  margin-bottom: 0.75rem;
   stroke: ${({ theme }) => theme.secondary};
-  width: 4em;
+  width: 4rem;
 `
 
 const StyledColumn = styled(Column)`
