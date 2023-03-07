@@ -20,7 +20,7 @@ export enum SupportedChainId {
   CELO = 42220,
   CELO_ALFAJORES = 44787,
 
-  BSC = 56,
+  BNB = 56,
 }
 
 export enum ChainName {
@@ -37,7 +37,7 @@ export enum ChainName {
   POLYGON_MUMBAI = 'polygon-mumbai',
   CELO = 'celo',
   CELO_ALFAJORES = 'celo-alfajores',
-  BSC = 'bsc',
+  BNB = 'bnb',
 }
 
 export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
@@ -54,7 +54,7 @@ export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
   [ChainName.OPTIMISM_GOERLI]: SupportedChainId.OPTIMISM_GOERLI,
   [ChainName.CELO]: SupportedChainId.CELO,
   [ChainName.CELO_ALFAJORES]: SupportedChainId.CELO_ALFAJORES,
-  [ChainName.BSC]: SupportedChainId.BSC,
+  [ChainName.BNB]: SupportedChainId.BNB,
 }
 
 /**
@@ -70,7 +70,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
 ]
 
 /**

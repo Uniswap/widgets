@@ -74,7 +74,7 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Safe" URLs
     'https://alfajores-forno.celo-testnet.org',
   ],
-  [SupportedChainId.BSC]: [
+  [SupportedChainId.BNB]: [
     // "Safe" URLs
     'https://endpoints.omniatech.io/v1/bsc/mainnet/public',
     'https://bsc-mainnet.gateway.pokt.network/v1/lb/6136201a7bad1500343e248d',

@@ -224,7 +224,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#35D07F',
     backgroundColor: '#34d07f1f',
   },
-  [SupportedChainId.BSC]: {
+  [SupportedChainId.BNB]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://cbridge.celer.network/1/56',

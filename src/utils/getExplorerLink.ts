@@ -12,7 +12,7 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
   [SupportedChainId.CELO]: 'https://celoscan.io',
   [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores.celoscan.io',
-  [SupportedChainId.BSC]: 'https://bscscan.com',
+  [SupportedChainId.BNB]: 'https://bscscan.com',
 }
 
 export enum ExplorerDataType {

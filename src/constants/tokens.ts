@@ -123,8 +123,8 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
-export const USDC_BSC = new Token(
-  SupportedChainId.BSC,
+export const USDC_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
   18,
   'USDC',
@@ -144,7 +144,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
-  [SupportedChainId.BSC]: USDC_BSC,
+  [SupportedChainId.BNB]: USDC_BNB_CHAIN,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -343,76 +343,88 @@ export const CEUR_CELO_ALFAJORES = new Token(
   'CEUR',
   'Celo Euro Stablecoin'
 )
-export const USDT_BSC = new Token(
-  SupportedChainId.BSC,
+export const USDT_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0x55d398326f99059fF775485246999027B3197955',
   18,
   'USDT',
   'USDT'
 )
 
-export const ETH_BSC = new Token(
-  SupportedChainId.BSC,
+export const ETH_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
   18,
   'ETH',
   'Ethereum'
 )
 
-export const MATIC_BSC = new Token(
-  SupportedChainId.BSC,
+export const MATIC_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
   18,
   'MATIC',
   'Matic'
 )
 
-export const FRAX_BSC = new Token(
-  SupportedChainId.BSC,
+export const FRAX_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40',
   18,
   'FRAX',
   'FRAX'
 )
 
-export const BTC_BSC = new Token(SupportedChainId.BSC, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
+export const BTC_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
+  '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+  18,
+  'BTCB',
+  'BTCB'
+)
 
-export const CAKE_BSC = new Token(
-  SupportedChainId.BSC,
+export const CAKE_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
   18,
   'CAKE',
   'Cake'
 )
 
-export const BUSD_BSC = new Token(
-  SupportedChainId.BSC,
+export const BUSD_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
   '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
   18,
   'BUSD',
   'BUSD'
 )
 
-export const DAI_BSC = new Token(SupportedChainId.BSC, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
+export const DAI_BNB_CHAIN = new Token(
+  SupportedChainId.BNB,
+  '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
+  18,
+  'DAI',
+  'DAI'
+)
 
-function isBsc(chainId: number): chainId is SupportedChainId.BSC {
-  return chainId === SupportedChainId.BSC
+function isBnbChain(chainId: number): chainId is SupportedChainId.BNB {
+  return chainId === SupportedChainId.BNB
 }
 
-class BscNativeCurrency extends NativeCurrency {
+class BnbChainNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
   }
 
   get wrapped(): Token {
-    if (!isBsc(this.chainId)) throw new Error('Not bnb')
+    if (!isBnbChain(this.chainId)) throw new Error('Not BNB Chain')
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (!isBsc(chainId)) throw new Error('Not bnb')
+    if (!isBnbChain(chainId)) throw new Error('Not BNB Chain')
     super(chainId, 18, 'BNB', 'BNB')
   }
 }
@@ -471,8 +483,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WMATIC',
     'Wrapped MATIC'
   ),
-  [SupportedChainId.BSC]: new Token(
-    SupportedChainId.BSC,
+  [SupportedChainId.BNB]: new Token(
+    SupportedChainId.BNB,
     '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     18,
     'WBNB',
@@ -539,8 +551,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new MaticNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
-  } else if (isBsc(chainId)) {
-    nativeCurrency = new BscNativeCurrency(chainId)
+  } else if (isBnbChain(chainId)) {
+    nativeCurrency = new BnbChainNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }

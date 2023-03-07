@@ -21,7 +21,7 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network | undefined 
       return 'polygon'
     case SupportedChainId.CELO:
       return 'celo'
-    case SupportedChainId.BSC:
+    case SupportedChainId.BNB:
       return 'binance'
     default:
       return 'ethereum'
@@ -49,7 +49,7 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
-    case SupportedChainId.BSC:
+    case SupportedChainId.BNB:
       return BnbLogo
     default:
       return EthereumLogo
