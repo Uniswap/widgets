@@ -96,11 +96,11 @@ export function useIsDialogPageCentered() {
 
 const HeaderRow = styled(Row)`
   display: flex;
-  height: 1.75em;
+  height: 1.75rem;
   ${largeIconCss}
 
   justify-content: flex-start;
-  margin: 0.5em 0.75em 0.75em;
+  margin: 0.5rem 0.75rem 0.75rem;
   position: relative;
 `
 
@@ -159,22 +159,22 @@ export const Modal = styled.div<{ color: Color; constrain?: boolean; padded?: bo
 
 const slideInLeft = keyframes`
   from {
-    transform: translateX(calc(100% - 0.25em));
+    transform: translateX(calc(100% - 0.25rem));
   }
 `
 const slideOutLeft = keyframes`
   to {
-    transform: translateX(calc(0.25em - 100%));
+    transform: translateX(calc(0.25rem - 100%));
   }
 `
 const slideOutRight = keyframes`
   to {
-    transform: translateX(calc(100% - 0.25em));
+    transform: translateX(calc(100% - 0.25rem));
   }
 `
 
 const HiddenWrapper = styled.div<{ hideOverflow?: boolean; constrain?: boolean }>`
-  border-radius: ${({ theme }) => theme.borderRadius.large}em;
+  border-radius: ${({ theme }) => theme.borderRadius.large}rem;
   height: ${({ constrain }) => (constrain ? 'fit-content' : '100%')};
   left: 0;
   outline: transparent;

@@ -25,7 +25,7 @@ import { getEstimateMessage } from './Estimate'
 
 const Label = styled.span`
   color: ${({ theme }) => theme.secondary};
-  margin-right: 0.5em;
+  margin-right: 0.5rem;
   max-width: 50%;
 `
 const Value = styled.span<{ color?: Color }>`
@@ -39,7 +39,7 @@ const DetailValue = styled(Value)`
 `
 
 const RuleWrapper = styled.div`
-  margin: 0.75em 0.125em;
+  margin: 0.75rem 0.125rem;
 `
 
 const MAX_AMOUNT_STR_LENGTH = 9

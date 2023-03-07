@@ -22,18 +22,18 @@ import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
 const StyledExpando = styled(Expando)`
   border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   overflow: hidden;
 `
 
-const COLLAPSED_TOOLBAR_HEIGHT_EM = 3
+const COLLAPSED_TOOLBAR_HEIGHT_REM = 3
 
 const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   cursor: ${({ isExpandable }) => isExpandable && 'pointer'};
   flex-wrap: nowrap;
-  gap: 0.5em;
-  height: ${COLLAPSED_TOOLBAR_HEIGHT_EM}em;
-  padding: 0 1em;
+  gap: 0.5rem;
+  height: ${COLLAPSED_TOOLBAR_HEIGHT_REM}rem;
+  padding: 0 1rem;
 `
 
 interface ToolbarProps {
@@ -133,7 +133,7 @@ function CaptionRow() {
       },
       {
         name: (
-          <ThemedText.Body2 marginRight="0.25em">
+          <ThemedText.Body2 marginRight="0.25rem">
             <Trans>Minimum output after slippage </Trans>
             <ThemedText.Body2 $inline color={impact?.warning ?? 'secondary'}>
               {' '}

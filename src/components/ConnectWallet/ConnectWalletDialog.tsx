@@ -17,30 +17,30 @@ const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-
 const Body = styled(Column)`
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(2, calc(50% - 0.5em / 2));
+  grid-template-columns: repeat(2, calc(50% - 0.5rem / 2));
   grid-template-rows: 2fr 1fr;
-  height: calc(100% - 2.5em);
+  height: calc(100% - 2.5rem);
 `
 
 const StyledButtonContents = styled(Column)`
-  gap: 0.75em;
+  gap: 0.75rem;
   justify-items: center;
 `
 
 const StyledMainButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   grid-column: 1 / 3;
   height: 100%;
   padding: 22px;
 `
 
 const StyledMainButtonRow = styled(Row)`
-  grid-template-columns: repeat(2, calc(50% - 1em / 2));
+  grid-template-columns: repeat(2, calc(50% - 1rem / 2));
   justify-items: center;
 `
 
 const StyledSmallButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   height: 88px;
   padding: 16px;
 `

@@ -14,9 +14,9 @@ const UniswapA = styled(ExternalLink)`
 
   ${Logo} {
     fill: ${({ theme }) => theme.secondary};
-    height: 1em;
+    height: 1rem;
     transition: transform ${AnimationSpeed.Medium} ease, fill ${AnimationSpeed.Medium} ease;
-    width: 1em;
+    width: 1rem;
     will-change: transform;
   }
 

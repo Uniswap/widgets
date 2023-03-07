@@ -24,7 +24,7 @@ const Loading = styled.span`
 const CaptionRow = styled(Row)<{ gap: number; shrink?: number }>`
   align-items: center;
   flex-shrink: ${({ shrink }) => shrink ?? 1};
-  gap: ${({ gap }) => gap}em;
+  gap: ${({ gap }) => gap}rem;
   height: 100%;
 `
 

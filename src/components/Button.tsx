@@ -6,7 +6,7 @@ import { AnimationSpeed, Color } from 'theme'
 export const BaseButton = styled.button`
   background-color: transparent;
   border: none;
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
   color: currentColor;
   cursor: pointer;
   font-size: inherit;
@@ -52,7 +52,7 @@ export const TextButton = transparentButton('accent')
 const SecondaryButton = transparentButton('secondary')
 
 const StyledIconButton = styled(SecondaryButton)`
-  height: 1em;
+  height: 1rem;
 `
 
 interface IconButtonProps {
