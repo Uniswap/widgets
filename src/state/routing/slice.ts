@@ -82,7 +82,6 @@ export const routing = createApi({
             protocols,
           })
           if (typeof quote === 'string') return { data: quote as TradeQuoteResult }
-
           const tradeResult = transformQuoteToTradeResult(args, quote)
           return { data: tradeResult }
         } catch (error: any) {

@@ -23,10 +23,12 @@ import {
   sETH2,
   SWISE,
   TRIBE,
+  USDC_BNB_CHAIN,
   USDC_MAINNET,
   USDC_POLYGON,
   USDT,
   USDT_ARBITRUM_ONE,
+  USDT_BNB_CHAIN,
   USDT_OPTIMISM,
   USDT_POLYGON,
   WBTC,
@@ -83,6 +85,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     CMC02_CELO,
     PORTAL_USDC_CELO,
     PORTAL_ETH_CELO,
+  ],
+  [SupportedChainId.BNB]: [
+    nativeOnChain(SupportedChainId.BNB),
+    USDC_BNB_CHAIN,
+    USDT_BNB_CHAIN,
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BNB],
   ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {

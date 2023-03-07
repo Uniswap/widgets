@@ -2,11 +2,12 @@ import { SupportedChainId } from 'constants/chains'
 import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import { LogoTableInput } from './LogoTable'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'celo'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'celo' | 'binance'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network | undefined {
   switch (networkId) {
@@ -20,6 +21,8 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network | undefined 
       return 'polygon'
     case SupportedChainId.CELO:
       return 'celo'
+    case SupportedChainId.BNB:
+      return 'binance'
     default:
       return 'ethereum'
   }
@@ -46,6 +49,8 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
+    case SupportedChainId.BNB:
+      return BnbLogo
     default:
       return EthereumLogo
   }
