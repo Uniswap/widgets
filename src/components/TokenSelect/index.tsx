@@ -1,11 +1,10 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { BottomSheetModal } from 'components/BottomSheetModal'
 import { inputCss, StringInput } from 'components/Input'
+import { ResponsiveDialog } from 'components/ResponsiveDialog'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
-import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { Search } from 'icons'
@@ -166,23 +165,13 @@ export default memo(function TokenSelect({ field, value, approved, disabled, onS
     },
     [onSelect, setOpen]
   )
-  const isMobile = useIsMobileWidth()
-  const pageCenteredDialogsEnabled = useIsDialogPageCentered()
 
   return (
     <>
       <TokenButton value={value} approved={approved} disabled={disabled} onClick={onOpen} />
-      {isMobile && pageCenteredDialogsEnabled ? (
-        <BottomSheetModal onClose={() => setOpen(false)} open={open}>
-          <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
-        </BottomSheetModal>
-      ) : (
-        open && (
-          <Dialog onClose={() => setOpen(false)} color="container" padded={false}>
-            <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
-          </Dialog>
-        )
-      )}
+      <ResponsiveDialog open={open} setOpen={setOpen}>
+        <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
+      </ResponsiveDialog>
     </>
   )
 })
