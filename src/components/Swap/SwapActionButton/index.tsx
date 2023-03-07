@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { isSupportedChainId } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ChainError, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
@@ -28,16 +29,18 @@ export default function SwapActionButton() {
       (!permit2Enabled && approval.state !== SwapApprovalState.APPROVED) ||
       error !== undefined ||
       (!isWrap && !trade) ||
-      !(inputCurrencyAmount && inputCurrencyBalance) ||
-      inputCurrencyBalance.lessThan(inputCurrencyAmount),
+      !inputCurrencyAmount ||
+      // If there is no balance loaded, we should default to isDisabled=false
+      Boolean(inputCurrencyBalance?.lessThan(inputCurrencyAmount)),
     [permit2Enabled, approval.state, error, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
   )
 
   if (!account || !isActive) {
     return <ConnectWalletButton />
-  } else if (error === ChainError.MISMATCHED_CHAINS) {
-    const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId ?? SupportedChainId.MAINNET
-    return <SwitchChainButton chainId={tokenChainId} />
+  } else if (error === ChainError.MISMATCHED_CHAINS || error === ChainError.UNSUPPORTED_CHAIN) {
+    const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
+    const supportedTokenChainId = isSupportedChainId(tokenChainId) ? tokenChainId : SupportedChainId.MAINNET
+    return <SwitchChainButton chainId={supportedTokenChainId} />
   } else if (isWrap) {
     return <WrapButton disabled={isDisabled} />
   } else {

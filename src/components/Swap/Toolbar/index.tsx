@@ -21,23 +21,19 @@ import ToolbarTradeSummary, { SummaryRowProps } from './ToolbarTradeSummary'
 
 const StyledExpando = styled(Expando)`
   border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   overflow: hidden;
 `
 
-const COLLAPSED_TOOLBAR_HEIGHT_EM = 3
+const COLLAPSED_TOOLBAR_HEIGHT_REM = 3
 
 const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   cursor: ${({ isExpandable }) => isExpandable && 'pointer'};
   flex-wrap: nowrap;
-  gap: 0.5em;
-  height: ${COLLAPSED_TOOLBAR_HEIGHT_EM}em;
-  padding: 0 1em;
+  gap: 0.5rem;
+  height: ${COLLAPSED_TOOLBAR_HEIGHT_REM}rem;
+  padding: 0 1rem;
 `
-
-interface ToolbarProps {
-  hideConnectionUI?: boolean
-}
 
 function CaptionRow() {
   const {
@@ -179,7 +175,7 @@ function CaptionRow() {
   )
 }
 
-function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
+function ToolbarActionButton() {
   const {
     [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency },
@@ -209,19 +205,19 @@ function ToolbarActionButton({ hideConnectionUI }: ToolbarProps) {
   return <SwapActionButton />
 }
 
-function Toolbar({ hideConnectionUI }: ToolbarProps) {
+function Toolbar() {
   return (
     <>
       <CaptionRow />
-      <ToolbarActionButton hideConnectionUI={hideConnectionUI} />
+      <ToolbarActionButton />
     </>
   )
 }
 
-export default memo(function WrappedToolbar(props: ToolbarProps) {
+export default memo(function WrappedToolbar() {
   return (
     <ToolbarContextProvider>
-      <Toolbar {...props} />
+      <Toolbar />
     </ToolbarContextProvider>
   )
 })

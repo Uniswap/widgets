@@ -39,7 +39,7 @@ const BottomSheetModalBackdrop = styled.div<{ className?: string }>`
   z-index: ${({ theme }) => theme.zIndex.modal - 1};
 `
 
-const Wrapper = styled.div<{ open: boolean }>`
+const Wrapper = styled.div`
   border-radius: 0;
   bottom: 0;
   left: 0;
@@ -85,7 +85,7 @@ export function BottomSheetModal({ children, onClose, open, title }: BottomSheet
 
   return (
     <>
-      <RootElement ref={setRootElement} open={open} />
+      <RootElement ref={setRootElement} open={open} onClose={onClose} />
       <DialogProvider value={rootElement}>
         {open && (
           <Dialog color="dialog" onClose={onClose} forceContain>
@@ -102,17 +102,24 @@ export function BottomSheetModal({ children, onClose, open, title }: BottomSheet
 
 type RootElementProps = PropsWithChildren<{
   open: boolean
+  onClose: () => void
 }>
 
 const RootElement = forwardRef<HTMLDivElement, RootElementProps>(function RootWrapper(
-  { children, open }: RootElementProps,
+  { children, open, onClose }: RootElementProps,
   ref
 ) {
   return createPortal(
     <>
       {/* TODO (WEB-2767): Support dismissing modal when clicking on backdrop */}
-      <BottomSheetModalBackdrop className={!open ? 'hidden' : undefined} />
-      <Wrapper open={open} ref={ref}>
+      <BottomSheetModalBackdrop
+        className={!open ? 'hidden' : undefined}
+        onClick={(e) => {
+          onClose()
+          e.stopPropagation()
+        }}
+      />
+      <Wrapper data-testid="BottomSheetModal__Wrapper" ref={ref}>
         {children}
       </Wrapper>
     </>,

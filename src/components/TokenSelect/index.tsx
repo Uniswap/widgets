@@ -1,11 +1,10 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { BottomSheetModal } from 'components/BottomSheetModal'
 import { inputCss, StringInput } from 'components/Input'
+import { ResponsiveDialog } from 'components/ResponsiveDialog'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
-import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { Search } from 'icons'
@@ -29,10 +28,12 @@ const SearchInputContainer = styled(Row)`
   ${inputCss}
 `
 
-const TokenSelectContainer = styled.div`
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+const TokenSelectContainer = styled.div<{ $pageCentered: boolean }>`
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
+  min-height: ${($pageCentered) => ($pageCentered ? 'unset' : '100%')};
+  min-width: ${({ $pageCentered }) => ($pageCentered ? "min(400px, '100vw')" : 'auto')};
   overflow: hidden;
-  padding: 0.5em 0 0;
+  padding: 0.5rem 0 0;
   @supports (overflow: clip) {
     overflow: 'clip';
   }
@@ -66,6 +67,8 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
   const list = useTokenList()
   const tokens = useQueryTokens(query, list)
 
+  const isPageCentered = useIsDialogPageCentered()
+
   const isTokenListLoaded = useIsTokenListLoaded()
   const areBalancesLoaded = useAreBalancesLoaded()
   const [isLoaded, setIsLoaded] = useState(isTokenListLoaded && areBalancesLoaded)
@@ -98,10 +101,10 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
     )
   }
   return (
-    <TokenSelectContainer>
+    <TokenSelectContainer $pageCentered={isPageCentered ?? false}>
       <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
-        <Column gap={0.75} style={{ margin: '0 0.5em' }}>
+        <Column gap={0.75} style={{ margin: '0 0.5rem' }}>
           <Row pad={0.75} grow>
             <SearchInputContainer gap={0.75} justify="start" flex>
               <Search color="secondary" />
@@ -162,23 +165,13 @@ export default memo(function TokenSelect({ field, value, approved, disabled, onS
     },
     [onSelect, setOpen]
   )
-  const isMobile = useIsMobileWidth()
-  const pageCenteredDialogsEnabled = useIsDialogPageCentered()
 
   return (
     <>
       <TokenButton value={value} approved={approved} disabled={disabled} onClick={onOpen} />
-      {isMobile && pageCenteredDialogsEnabled ? (
-        <BottomSheetModal onClose={() => setOpen(false)} open={open}>
-          <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
-        </BottomSheetModal>
-      ) : (
-        open && (
-          <Dialog onClose={() => setOpen(false)} color="container" padded={false}>
-            <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
-          </Dialog>
-        )
-      )}
+      <ResponsiveDialog open={open} setOpen={setOpen}>
+        <TokenSelectDialogContent value={value} onSelect={selectAndClose} onClose={() => setOpen(false)} />
+      </ResponsiveDialog>
     </>
   )
 })

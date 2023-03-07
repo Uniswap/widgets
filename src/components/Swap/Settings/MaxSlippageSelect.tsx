@@ -39,7 +39,7 @@ const Custom = styled(BaseButton)<{ selected: boolean }>`
 `
 
 const ExpandoContentRow = styled(Row)`
-  margin: 1em 0 0;
+  margin: 1rem 0 0;
 `
 
 interface OptionProps {

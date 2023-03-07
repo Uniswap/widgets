@@ -1,15 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
+import { sendTransaction } from '@uniswap/conedison/provider/index'
 import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { ErrorCode } from 'constants/eip1193'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { SwapError } from 'errors'
 import { useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { getReason, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -68,15 +69,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      let gasEstimate: BigNumber
-      try {
-        gasEstimate = await provider.estimateGas(tx)
-      } catch (gasError) {
-        console.warn(gasError)
-        throw new SwapError({ header: t`Swap Error`, message: t`Your swap is expected to fail` })
-      }
-      const gasLimit = calculateGasMargin(gasEstimate)
-      response = await provider.getSigner().sendTransaction({ ...tx, gasLimit })
+      response = await sendTransaction(provider, tx, TX_GAS_MARGIN)
     } catch (swapError) {
       if (didUserReject(swapError)) {
         return null

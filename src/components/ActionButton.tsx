@@ -8,9 +8,9 @@ import Row, { RowProps } from './Row'
 import Tooltip from './Tooltip'
 
 const StyledButton = styled(Button)<{ shouldUseDisabledColor?: boolean; narrow?: boolean }>`
-  border-radius: ${({ theme, narrow }) => (narrow ? theme.borderRadius.small : theme.borderRadius.medium)}em;
+  border-radius: ${({ theme, narrow }) => (narrow ? theme.borderRadius.small : theme.borderRadius.medium)}rem;
   flex-grow: 1;
-  max-height: ${({ narrow }) => (narrow ? '2.5em' : '3.5em')};
+  max-height: ${({ narrow }) => (narrow ? '2.5rem' : '3.5rem')};
   transition: background-color ${AnimationSpeed.Medium} ease-out, border-radius ${AnimationSpeed.Medium} ease-out,
     flex-grow ${AnimationSpeed.Medium} ease-out;
   ${({ theme, disabled, shouldUseDisabledColor }) =>
@@ -39,8 +39,8 @@ const grow = keyframes`
 
 const actionCss = css`
   border: 1px solid ${({ theme }) => theme.outline};
-  padding: calc(0.5em - 1px);
-  padding-left: calc(0.75em - 1px);
+  padding: calc(0.5rem - 1px);
+  padding-left: calc(0.75rem - 1px);
 
   ${ActionRow} {
     animation: ${grow} ${AnimationSpeed.Medium} ease-in;
@@ -51,17 +51,17 @@ const actionCss = css`
 
   ${StyledButton} {
     /* Subtract the padding from the borderRadius so that it nests properly. */
-    border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+    border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
     flex-grow: 0;
-    padding: 0 0.75em;
+    padding: 0 0.75rem;
   }
 `
 
 export const Overlay = styled(Row)<{ hasAction: boolean; narrow?: boolean }>`
-  border-radius: ${({ theme, narrow }) => (narrow ? theme.borderRadius.small : theme.borderRadius.medium)}em;
+  border-radius: ${({ theme, narrow }) => (narrow ? theme.borderRadius.small : theme.borderRadius.medium)}rem;
   flex-flow: row-reverse nowrap;
-  margin-top: 0.25em;
-  min-height: ${({ narrow }) => (narrow ? '2.5em' : '3.5em')};
+  margin-top: 0.25rem;
+  min-height: ${({ narrow }) => (narrow ? '2.5rem' : '3.5rem')};
   transition: padding ${AnimationSpeed.Medium} ease-out;
   ${({ hasAction }) => hasAction && actionCss}
 `

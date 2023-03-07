@@ -21,7 +21,7 @@ const Row = styled.div<RowProps>`
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
   flex-flow: ${({ flow }) => flow ?? 'wrap'};
   flex-grow: ${({ grow }) => grow && 1};
-  gap: ${({ gap }) => gap && `${gap}em`};
+  gap: ${({ gap }) => gap && `${gap}rem`};
   grid-auto-flow: column;
   grid-template-columns: ${({ grow, children }) => {
     if (grow === 'first') return '1fr'
@@ -30,7 +30,7 @@ const Row = styled.div<RowProps>`
     return undefined
   }};
   justify-content: ${({ justify }) => justify ?? 'space-between'};
-  padding: ${({ pad }) => pad && `0 ${pad}em`};
+  padding: ${({ pad }) => pad && `0 ${pad}rem`};
 `
 
 export default Row

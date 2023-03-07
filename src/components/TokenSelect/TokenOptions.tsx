@@ -3,7 +3,6 @@ import { useWeb3React } from '@web3-react/core'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
-import { useWindowWidth } from 'hooks/useWindowWidth'
 import {
   ComponentClass,
   CSSProperties,
@@ -34,7 +33,7 @@ import TokenImg from '../TokenImg'
 const TokenButton = styled(BaseButton)`
   border-radius: 0;
   outline: none;
-  padding: 0.5em 1.25em;
+  padding: 0.5rem 1.25rem;
 `
 
 const ITEM_SIZE = 56
@@ -75,8 +74,8 @@ interface BubbledEvent extends SyntheticEvent {
 
 const TokenBalance = styled.div<{ isLoading: boolean }>`
   background-color: ${({ theme, isLoading }) => isLoading && theme.secondary};
-  border-radius: 0.25em;
-  padding: 0.375em 0;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0;
 `
 
 function TokenOption({ index, value, style }: TokenOptionProps) {
@@ -139,7 +138,6 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   { tokens, onSelect }: TokenOptionsProps,
   ref
 ) {
-  const width = useWindowWidth()
   const [focused, setFocused] = useState(false)
 
   const [selected, setSelected] = useState<Currency>(tokens[0])
@@ -223,9 +221,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onFocus={onFocus}
       onMouseMove={onMouseMove}
       style={{
-        overflow: 'hidden',
-        minWidth: Math.min(400, width),
         minHeight: Math.min(tokens.length, MIN_VISIBLE_TOKENS) * ITEM_SIZE,
+        overflow: 'hidden',
       }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}

@@ -1,8 +1,8 @@
-import { DEFAULT_ERROR_ACTION, DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
+import { t } from '@lingui/macro'
+import { DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
 import { Component, ErrorInfo, PropsWithChildren, useCallback, useState } from 'react'
 
-import Dialog from '../Dialog'
-import ErrorDialog from './ErrorDialog'
+import ErrorView from './ErrorView'
 
 export type OnError = (error: Error, info?: ErrorInfo) => void
 
@@ -53,30 +53,30 @@ export default class ErrorBoundary extends Component<PropsWithChildren<ErrorBoun
     this.props.onError?.(error, errorInfo)
   }
 
-  renderErrorDialog(error: Error) {
+  renderErrorView(error: Error) {
     const header = error instanceof WidgetError ? error.header : DEFAULT_ERROR_HEADER
-    const action = error instanceof WidgetError ? error.action : DEFAULT_ERROR_ACTION
     return (
-      <Dialog color="dialog" forceContain>
-        <ErrorDialog
-          message={header}
-          error={error}
-          action={action}
-          onClick={
-            error instanceof WidgetError && error.dismissable
-              ? () => {
-                  this.setState({ error: undefined })
-                }
-              : () => window.location.reload()
-          }
-        />
-      </Dialog>
+      <ErrorView
+        message={header}
+        error={error}
+        action={t`Get support`}
+        onDismiss={
+          error instanceof WidgetError && error.dismissable
+            ? () => {
+                this.setState({ error: undefined })
+              }
+            : () => window.location.reload()
+        }
+        onClick={() => {
+          window.open('https://support.uniswap.org/', '_blank', 'noopener,noreferrer')
+        }}
+      />
     )
   }
 
   render() {
     if (this.state.error) {
-      return this.renderErrorDialog(this.state.error)
+      return this.renderErrorView(this.state.error)
     }
     return this.props.children
   }

@@ -21,7 +21,7 @@ const StyledReverseButton = styled(Button)`
   align-items: center;
   background-color: ${({ theme }) => theme.module};
   border: 4px solid ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => theme.borderRadius.medium}em;
+  border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
   display: flex;
   justify-content: center;
   width: 100%;
