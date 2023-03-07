@@ -5,6 +5,7 @@ import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
+import { formatPriceImpact } from 'hooks/usePriceImpact'
 import { AlertTriangle, Info } from 'icons'
 import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -119,7 +120,7 @@ function CaptionRow() {
       {
         color: impact?.warning,
         name: t`Price impact`,
-        value: impact?.percent ? impact?.toString() : '-',
+        value: impact?.percent ? formatPriceImpact(impact) : '-',
         valueTooltip: impact?.warning
           ? {
               icon: AlertTriangle,

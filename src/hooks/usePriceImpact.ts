@@ -9,7 +9,6 @@ import { useUSDCValue } from './useUSDCPrice'
 export interface PriceImpact {
   percent: Percent
   warning?: 'warning' | 'error'
-  toString(): string
 }
 
 export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined {
@@ -19,7 +18,6 @@ export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined 
       ? {
           percent: marketPriceImpact,
           warning: getPriceImpactWarning(marketPriceImpact),
-          toString: () => toHumanReadablePercent(marketPriceImpact),
         }
       : undefined
   }, [trade])
@@ -48,4 +46,8 @@ export function toHumanReadablePercent(priceImpact: Percent): string {
   }
   const number = parseFloat(priceImpact.multiply(-1)?.toFixed(2))
   return `${sign}${number}%`
+}
+
+export function formatPriceImpact(impact: PriceImpact): string {
+  return toHumanReadablePercent(impact.percent)
 }

@@ -10,7 +10,6 @@ describe('PriceImpactRow', () => {
         impact={{
           percent: new Percent(10, 100),
           warning: 'error',
-          toString: () => '10%',
         }}
       />
     )
@@ -27,7 +26,6 @@ describe('PriceImpactRow', () => {
         impact={{
           percent: new Percent(1, 100),
           warning: 'warning',
-          toString: () => '1%',
         }}
       />
     )
@@ -43,7 +41,6 @@ describe('PriceImpactRow', () => {
       <PriceImpactRow
         impact={{
           percent: new Percent(1, 10000),
-          toString: () => '0.01%',
         }}
       />
     )

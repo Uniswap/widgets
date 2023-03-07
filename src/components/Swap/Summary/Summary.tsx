@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PriceImpact } from 'hooks/usePriceImpact'
+import { formatPriceImpact, PriceImpact } from 'hooks/usePriceImpact'
 import { ArrowDown, ArrowRight } from 'icons'
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
@@ -56,7 +56,7 @@ export default function Summary({ input, output, inputUSDC, outputUSDC, impact, 
       <TokenValue input={input} usdc={inputUSDC} open={open} />
       {open ? <ArrowRight /> : <ArrowDown />}
       <TokenValue input={output} usdc={outputUSDC} open={open}>
-        {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
+        {impact && <ThemedText.Caption color={impact.warning}>({formatPriceImpact(impact)})</ThemedText.Caption>}
       </TokenValue>
     </>
   )
