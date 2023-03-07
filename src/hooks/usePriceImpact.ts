@@ -33,7 +33,6 @@ export function useFiatValueChange(trade?: InterfaceTrade) {
     return {
       percent: fiatPriceImpact,
       warning: getPriceImpactWarning(fiatPriceImpact),
-      toString: () => toHumanReadablePercent(fiatPriceImpact),
     }
   }, [inputUSDCValue, outputUSDCValue])
 }
@@ -48,6 +47,7 @@ export function toHumanReadablePercent(priceImpact: Percent): string {
   return `${sign}${number}%`
 }
 
-export function formatPriceImpact(impact: PriceImpact): string {
+export function formatPriceImpact(impact: PriceImpact | undefined): string {
+  if (!impact) return '-'
   return toHumanReadablePercent(impact.percent)
 }

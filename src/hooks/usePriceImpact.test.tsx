@@ -3,7 +3,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { renderHook } from 'test'
 import { buildSingleV3Route, DAI, USDC } from 'test/utils'
 
-import { usePriceImpact } from './usePriceImpact'
+import { formatPriceImpact, usePriceImpact } from './usePriceImpact'
 
 const usdc = CurrencyAmount.fromRawAmount(USDC, 1)
 const dai = CurrencyAmount.fromRawAmount(DAI, 1)
@@ -16,7 +16,7 @@ describe('usePriceImpact', () => {
       tradeType: TradeType.EXACT_INPUT,
     })
     const { result } = renderHook(() => usePriceImpact(trade))
-    expect(result.current?.toString()).toEqual('-99.61%')
+    expect(formatPriceImpact(result.current)).toEqual('-99.61%')
     expect(result.current?.warning).toEqual('error')
   })
 })

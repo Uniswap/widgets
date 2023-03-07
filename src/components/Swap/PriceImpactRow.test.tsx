@@ -14,7 +14,7 @@ describe('PriceImpactRow', () => {
       />
     )
     // verify that the percentage string is visible
-    expect(el.getByText('(10%)')).toBeTruthy()
+    expect(el.getByText('(-10%)')).toBeTruthy()
     // verify the tooltip is visible
     const iconElement = el.container.querySelector('svg')
     expect(iconElement).toBeTruthy()
@@ -30,7 +30,7 @@ describe('PriceImpactRow', () => {
       />
     )
     // verify that the percentage string is visible
-    expect(el.getByText('(1%)')).toBeTruthy()
+    expect(el.getByText('(-1%)')).toBeTruthy()
     // verify the tooltip is visible
     const iconElement = el.container.querySelector('svg')
     expect(iconElement).toBeTruthy()
@@ -45,7 +45,7 @@ describe('PriceImpactRow', () => {
       />
     )
     // verify that the percentage string is visible
-    expect(el.getByText('(0.01%)')).toBeTruthy()
+    expect(el.getByText('(-0.01%)')).toBeTruthy()
     // verify the tooltip is visible
     const iconElement = el.container.querySelector('svg')
     expect(iconElement).not.toBeTruthy()
