@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import Expando, { IconPrefix } from 'components/Expando'
 import Popover from 'components/Popover'
 import { useTooltip } from 'components/Tooltip'
+import { useSwapInfo } from 'hooks/swap'
 import { getSlippageWarning, toPercent } from 'hooks/useSlippage'
 import { Expando as ExpandoIcon } from 'icons'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'icons'
@@ -144,6 +145,8 @@ export default function MaxSlippageSelect() {
     [setSlippage]
   )
 
+  const { slippage: allowedSlippage } = useSwapInfo()
+
   const [open, setOpen] = useState(false)
   return (
     <Column gap={0.75}>
@@ -190,7 +193,7 @@ export default function MaxSlippageSelect() {
                 size={Math.max(maxSlippageInput.length, 4)}
                 value={maxSlippageInput}
                 onChange={(input) => processInput(input)}
-                placeholder={'0.10'}
+                placeholder={allowedSlippage.allowed.toFixed(2)}
                 ref={input}
                 data-testid="input-slippage"
                 maxLength={10}

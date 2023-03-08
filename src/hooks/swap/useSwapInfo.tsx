@@ -6,7 +6,7 @@ import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import useOnSupportedNetwork from 'hooks/useOnSupportedNetwork'
 import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
-import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
+import { PriceImpact, useFiatValueChange, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
@@ -50,6 +50,7 @@ interface SwapInfo {
   allowance: Allowance
   slippage: Slippage
   impact?: PriceImpact
+  fiatValueChange?: PriceImpact
 }
 
 /** Returns the best computed swap (trade/wrap). */
@@ -105,6 +106,7 @@ function useComputeSwapInfo(): SwapInfo {
   // Wait until the trade is valid to avoid displaying incorrect intermediate values.
   const slippage = useSlippage(trade)
   const impact = usePriceImpact(trade.trade)
+  const fiatValueChange = useFiatValueChange(trade.trade)
 
   const permit2Enabled = usePermit2Enabled()
   const maximumAmountIn = useMemo(() => {
@@ -137,6 +139,7 @@ function useComputeSwapInfo(): SwapInfo {
       allowance,
       slippage,
       impact,
+      fiatValueChange,
     }
   }, [
     allowance,
@@ -148,6 +151,7 @@ function useComputeSwapInfo(): SwapInfo {
     currencyIn,
     currencyOut,
     error,
+    fiatValueChange,
     impact,
     slippage,
     trade,

@@ -48,21 +48,21 @@ export default function Swap(props: SwapProps) {
 
   return (
     <>
-      <Header title={<Trans>Swap</Trans>}>
-        <Wallet disabled={props.hideConnectionUI} />
-        <Settings />
-      </Header>
-      <div ref={setWrapper}>
-        <PopoverBoundaryProvider value={wrapper}>
-          <SwapInfoProvider>
+      <SwapInfoProvider>
+        <Header title={<Trans>Swap</Trans>}>
+          <Wallet disabled={props.hideConnectionUI} />
+          <Settings />
+        </Header>
+        <div ref={setWrapper}>
+          <PopoverBoundaryProvider value={wrapper}>
             <Input />
             <ReverseButton />
             <Output />
             <Toolbar />
             {useBrandedFooter() && <BrandedFooter />}
-          </SwapInfoProvider>
-        </PopoverBoundaryProvider>
-      </div>
+          </PopoverBoundaryProvider>
+        </div>
+      </SwapInfoProvider>
       {displayTx && (
         <Dialog color="dialog">
           <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />

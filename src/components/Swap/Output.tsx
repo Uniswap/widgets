@@ -28,8 +28,7 @@ const OutputWrapper = styled(FieldWrapper)<{ hasColor?: boolean | null; isWide: 
 `
 
 export default function Output() {
-  const { impact } = useSwapInfo()
-
+  const { fiatValueChange } = useSwapInfo()
   const [currency] = useSwapCurrency(Field.OUTPUT)
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(currency)
@@ -43,7 +42,7 @@ export default function Output() {
       <OutputWrapper
         isWide={isWideWidget}
         field={Field.OUTPUT}
-        impact={impact}
+        fiatValueChange={fiatValueChange}
         hasColor={hasColor}
         subheader={t`You receive`}
       />

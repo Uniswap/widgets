@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { PriceImpact } from 'hooks/usePriceImpact'
-import { Slippage } from 'hooks/useSlippage'
+import { formatSlippage, Slippage } from 'hooks/useSlippage'
 import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
@@ -20,22 +19,25 @@ interface EstimateProps {
 }
 
 export default function SwapInputOutputEstimate({ trade, slippage }: EstimateProps) {
-  const { estimateMessage } = useMemo(
-    () => getEstimateMessage(trade, slippage, undefined /* priceImpact */),
-    [slippage, trade]
-  )
+  const { estimateMessage } = useMemo(() => getEstimateMessage(trade, slippage), [slippage, trade])
   return <StyledEstimate color="secondary">{estimateMessage}</StyledEstimate>
 }
 
 export function getEstimateMessage(
-  trade: InterfaceTrade,
-  slippage: Slippage,
-  priceImpact: PriceImpact | undefined
+  trade: InterfaceTrade | undefined,
+  slippage: Slippage
 ): {
   estimateMessage: string
   descriptor: ReactNode
   value: string
 } {
+  if (!trade) {
+    return {
+      estimateMessage: '',
+      descriptor: '',
+      value: '-',
+    }
+  }
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
@@ -49,10 +51,10 @@ export function getEstimateMessage(
       descriptor: (
         <ThemedText.Body2>
           <Trans>Minimum output after slippage</Trans>
-          {priceImpact && (
+          {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({priceImpact?.toString()})
+              ({formatSlippage(slippage)})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>
@@ -68,10 +70,10 @@ export function getEstimateMessage(
       descriptor: (
         <ThemedText.Body2>
           <Trans>Maximum input after slippage</Trans>
-          {priceImpact && (
+          {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({priceImpact?.toString()})
+              ({formatSlippage(slippage)})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>

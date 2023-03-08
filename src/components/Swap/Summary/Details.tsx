@@ -156,7 +156,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       details.push([t`Price impact`, impact?.percent ? impact?.toString() : '-', impact.warning])
     }
 
-    const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage, impact)
+    const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage)
     details.push([descriptor, value])
 
     return { details, estimateMessage }
