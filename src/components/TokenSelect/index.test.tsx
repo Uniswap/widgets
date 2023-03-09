@@ -31,7 +31,7 @@ describe('TokenSelect.tsx', () => {
       const widget = renderTokenSelect(onTokenSelectorClick)
 
       await user.click(widget.getByRole('button'))
-      expect(widget.getByTestId('dialog-header').textContent).toBe('Select a token')
+      expect(widget.getByTestId('dialog-header').textContent).toBe('Select token')
     })
     it('should halt if the handler promise resolves to false', async () => {
       const user = userEvent.setup()
