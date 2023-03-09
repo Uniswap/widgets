@@ -29,8 +29,8 @@ import useOnSubmit from './useOnSubmit'
 export default function SwapButton({ disabled }: { disabled: boolean }) {
   const { account, chainId } = useWeb3React()
   const {
-    [Field.INPUT]: { usdc: inputUSDC },
-    [Field.OUTPUT]: { usdc: outputUSDC },
+    [Field.INPUT]: { usdc: inputUSDC, currency: inputCurrency },
+    [Field.OUTPUT]: { usdc: outputUSDC, currency: outputCurrency },
     trade: { trade, gasUseEstimateUSD },
     approval,
     allowance,
@@ -40,6 +40,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
   const color = useTokenColorExtraction()
+  const missingToken = !inputCurrency || !outputCurrency
 
   const permit2Enabled = usePermit2Enabled()
   const { callback: swapRouterCallback } = useSwapCallback({
@@ -108,7 +109,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   return (
     <>
       <ActionButton color={color} onClick={onClick} disabled={disabled}>
-        <Trans>Review swap</Trans>
+        {missingToken ? <Trans>Select token</Trans> : <Trans>Review swap</Trans>}
       </ActionButton>
       {trade && (
         <ResponsiveDialog open={open} setOpen={setOpen}>

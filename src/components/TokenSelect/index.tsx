@@ -95,14 +95,14 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
   if (!listHasTokens && isLoaded) {
     return (
       <Dialog color="container" onClose={onClose}>
-        <Header title={<Trans>Select a token</Trans>} />
+        <Header title={<Trans>Select token</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )
   }
   return (
     <TokenSelectContainer $pageCentered={isPageCentered ?? false}>
-      <Header title={<Trans>Select a token</Trans>} />
+      <Header title={<Trans>Select token</Trans>} />
       <Column gap={0.75}>
         <Column gap={0.75} style={{ margin: '0 0.5rem' }}>
           <Row pad={0.75} grow>
