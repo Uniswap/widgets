@@ -14,17 +14,17 @@ import {
 export type OnSwapQuote = (args: Omit<GetQuoteArgs, 'provider' | 'onQuote'>, quote: Promise<TradeResult>) => void
 
 /**
- * An integration hook called when requesting token approval from the user for Permit2.
- * NB: You may instrument the time-to-confirmation by calling ransaction.response.wait().
+ * An integration hook called when requesting a token allowance from the user.
+ * NB: You may instrument the time-to-confirmation by calling transaction.response.wait().
  * @param transaction resolves with the approval transaction info when it is granted.
  */
-export type OnSwapApproveToken = (token: Token, transaction: Promise<ApprovalTransactionInfo>) => void
+export type OnTokenAllowance = (token: Token, spender: string, transaction: Promise<ApprovalTransactionInfo>) => void
 
 /**
- * An integration hook called when requesting a router permit for a token from the user through Permit2.
+ * An integration hook called when requesting a Permit2 token allowance from the user.
  * @param signed resolves when the permit is signed.
  */
-export type OnSwapPermitRouter = (token: Token, signed: Promise<void>) => void
+export type OnPermit2Allowance = (token: Token, spender: string, signed: Promise<void>) => void
 
 /**
  * An integration hook called when sending a swap transaction to the mempool through the user.
@@ -38,10 +38,8 @@ export type OnSwapSend = (
 
 export interface PerfEventHandlers {
   onSwapQuote?: OnSwapQuote
-  // TODO(zzmp)
-  onSwapApproveToken?: OnSwapApproveToken
-  // TODO(zzmp)
-  onSwapPermitRouter?: OnSwapPermitRouter
+  onTokenAllowance?: OnTokenAllowance
+  onPermit2Allowance?: OnPermit2Allowance
   // TODO(zzmp)
   onSwapSend?: OnSwapSend
 }

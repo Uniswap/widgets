@@ -5,7 +5,9 @@ import { ErrorCode } from 'constants/eip1193'
 import { UserRejectedRequestError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { swapEventHandlersAtom } from 'state/swap'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -44,7 +46,7 @@ export function useUpdateTokenAllowance(
 ): () => Promise<ApprovalTransactionInfo> {
   const contract = useTokenContract(amount?.currency.address)
 
-  return useCallback(async () => {
+  const updateTokenAllowance = useCallback(async (): Promise<ApprovalTransactionInfo> => {
     try {
       if (!amount) throw new Error('missing amount')
       if (!contract) throw new Error('missing contract')
@@ -74,4 +76,13 @@ export function useUpdateTokenAllowance(
       }
     }
   }, [amount, contract, spender])
+
+  const { onTokenAllowance } = useAtomValue(swapEventHandlersAtom)
+  return useCallback(() => {
+    const allowance = updateTokenAllowance()
+    if (amount && spender) {
+      onTokenAllowance?.(amount.currency, spender, allowance)
+    }
+    return allowance
+  }, [amount, onTokenAllowance, spender, updateTokenAllowance])
 }
