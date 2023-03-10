@@ -34,3 +34,21 @@ export const settingsAtom = atom((get) => {
 export const slippageAtom = pickAtom(settingsAtom, 'slippage')
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
 export const routerPreferenceAtom = pickAtom(settingsAtom, 'routerPreference')
+
+/** An integration hook called when the user resets settings. */
+export type OnSettingsReset = () => void
+
+/** An integration hook called when the user changes slippage settings. */
+export type OnSlippageChange = (slippage: Slippage) => void
+
+/** An integration hook called when the user changes transaction deadline settings. */
+export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
+
+export type OnRouterPreferenceChange = (routerPreference: RouterPreference) => void
+
+export interface SettingsEventHandlers {
+  onSettingsReset?: OnSettingsReset
+  onSlippageChange?: OnSlippageChange
+  onTransactionDeadlineChange?: OnTransactionDeadlineChange
+  onRouterPreferenceChange?: OnRouterPreferenceChange
+}

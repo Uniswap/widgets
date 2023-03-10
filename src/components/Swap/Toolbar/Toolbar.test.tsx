@@ -58,7 +58,7 @@ describe('Toolbar', () => {
       }
     )
     expect(component.queryByTestId('toolbar')).toBeNull()
-    expect(component.queryByText('Review swap')).toBeTruthy() // should be disabled
+    expect(component.queryByText('Select token')).toBeTruthy() // should be disabled
   })
 
   it('should render with both currencies specified, no amount input', () => {
