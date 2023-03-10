@@ -29,38 +29,27 @@ export const routing = createApi({
       async onQueryStarted(args: GetQuoteArgs | SkipToken, { queryFulfilled }) {
         if (args === skipToken) return
 
-        const startTimestamp = performance.now()
-        let result: TradeResult | undefined
-        let error: unknown
-        try {
-          result = (await queryFulfilled).data
-        } catch (tradeError: unknown) {
-          if (error && typeof error === 'object' && 'status' in error) {
-            const queryError = error as FetchBaseQueryError
-            switch (queryError.status) {
-              case 'CUSTOM_ERROR':
-              case 'FETCH_ERROR':
-              case 'PARSING_ERROR':
-                error = queryError.error
-                break
-              default:
-                error = queryError.status
-            }
-          } else {
-            error = tradeError
-          }
-        } finally {
-          const endTimestamp = performance.now()
-          args.onQuote?.(
-            {
-              startTimestamp,
-              endTimestamp,
-              args: JSON.parse(serializeGetQuoteArgs(args)),
-              state: result?.state,
-            },
-            error
-          )
-        }
+        args.onQuote?.(
+          JSON.parse(serializeGetQuoteArgs(args)),
+          queryFulfilled
+            .catch((error) => {
+              const { error: queryError } = error
+              if (queryError && typeof queryError == 'object' && 'status' in queryError) {
+                const parsedError = queryError as FetchBaseQueryError
+                switch (parsedError.status) {
+                  case 'CUSTOM_ERROR':
+                  case 'FETCH_ERROR':
+                  case 'PARSING_ERROR':
+                    throw parsedError.error
+                    break
+                  default:
+                    throw parsedError.status
+                }
+              }
+              throw queryError
+            })
+            .then(({ data }) => data as TradeResult)
+        )
       },
       // Explicitly typing the return type enables typechecking of return values.
       async queryFn(args: GetQuoteArgs | SkipToken): Promise<{ data: TradeResult } | { error: FetchBaseQueryError }> {

@@ -38,16 +38,21 @@ export type {
   OnExpandSwapDetails,
   OnInitialSwapQuote,
   OnReviewSwapClick,
+  OnRouterPreferenceChange,
   OnSettingsReset,
   OnSlippageChange,
-  OnSubmitSwapClick,
-  OnSwapApprove,
+  OnSwapApproveToken,
+  OnSwapPermitRouter,
   OnSwapPriceUpdateAck,
+  OnSwapQuote,
+  OnSwapSend,
   OnSwitchTokens,
   OnTokenChange,
   OnTokenSelectorClick,
   OnTransactionDeadlineChange,
   SwapEventHandlers,
+  SwapPerfEventHandlers,
+  SwapSettingsEventHandlers,
 } from 'state/swap'
 export { Field } from 'state/swap'
 export type { Slippage } from 'state/swap/settings'

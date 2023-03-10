@@ -5,9 +5,7 @@ import { ErrorCode } from 'constants/eip1193'
 import { useIsPendingApproval } from 'hooks/transactions'
 import { PermitState, SignatureData, usePermit } from 'hooks/usePermit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { swapEventHandlersAtom } from 'state/swap'
 
 import { ApprovalState, useApproval } from '../useApproval'
 export { ApprovalState } from '../useApproval'
@@ -42,7 +40,6 @@ export function useSwapApproval(amount?: CurrencyAmount<Currency>): SwapApproval
   const { state: permitState, signatureData, sign } = usePermit(amount, spender, deadline, null)
 
   // If permit is supported, sign a permit; if not, submit an approval.
-  const { onSwapApprove } = useAtomValue(swapEventHandlersAtom)
   const approveOrSign = useMemo(() => {
     if (approval !== ApprovalState.NOT_APPROVED && permitState !== PermitState.NOT_SIGNED) return
     return async () => {
@@ -63,9 +60,8 @@ export function useSwapApproval(amount?: CurrencyAmount<Currency>): SwapApproval
         // Swallow approval errors - user rejections do not need to be displayed.
         return
       }
-      onSwapApprove?.()
     }
-  }, [approval, approve, onSwapApprove, permitState, sign])
+  }, [approval, approve, permitState, sign])
 
   const state = useMemo(() => {
     if (approval === ApprovalState.PENDING) {

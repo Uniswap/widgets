@@ -4,14 +4,23 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
-import { GetQuoteArgs, InterfaceTrade, QuoteState } from 'state/routing/types'
+import { InterfaceTrade } from 'state/routing/types'
 
+import { PerfEventHandlers } from './perf'
 import { SettingsEventHandlers } from './settings'
+export type {
+  OnSwapApproveToken,
+  OnSwapPermitRouter,
+  OnSwapQuote,
+  OnSwapSend,
+  PerfEventHandlers as SwapPerfEventHandlers,
+} from './perf'
 export type {
   OnRouterPreferenceChange,
   OnSettingsReset,
   OnSlippageChange,
   OnTransactionDeadlineChange,
+  SettingsEventHandlers as SwapSettingsEventHandlers,
 } from './settings'
 
 export enum Field {
@@ -62,33 +71,6 @@ export type OnSwitchTokens = () => void
  */
 export type OnTokenSelectorClick = (field: Field) => void | boolean | Promise<boolean>
 
-interface InputEventHandlers {
-  onTokenChange?: OnTokenChange
-  onAmountChange?: OnAmountChange
-  onSwitchTokens?: OnSwitchTokens
-  onTokenSelectorClick?: OnTokenSelectorClick
-}
-
-/** An integration hook called when the user approves a token, either through allowance or permit. */
-export type OnSwapApprove = () => void
-
-/** An integration hook called when a new quote is fetched. */
-export type OnSwapQuote = (
-  event: {
-    startTimestamp: number
-    endTimestamp: number
-    args: Omit<GetQuoteArgs, 'provider' | 'onQuote'>
-    state?: QuoteState
-  },
-  error?: unknown
-) => void
-
-/** An integration hook called when the user receives an initial quote for a set of inputs. */
-export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
-
-/** An integration hook called when the user acks a quote's price update. */
-export type OnSwapPriceUpdateAck = (stale: InterfaceTrade, update: InterfaceTrade) => void
-
 /** An integration hook called when the user expands a swap's details. */
 export type OnExpandSwapDetails = () => void
 
@@ -98,17 +80,24 @@ export type OnExpandSwapDetails = () => void
  */
 export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
 
-/** An integration hook called when the user confirms a swap, but before it is submitted. */
-export type OnSubmitSwapClick = (trade: InterfaceTrade) => void
-
-export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
-  onSwapApprove?: OnSwapApprove
-  onSwapQuote?: OnSwapQuote
-  onInitialSwapQuote?: OnInitialSwapQuote
-  onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
+interface InputEventHandlers {
+  onTokenChange?: OnTokenChange
+  onAmountChange?: OnAmountChange
+  onSwitchTokens?: OnSwitchTokens
+  onTokenSelectorClick?: OnTokenSelectorClick
   onExpandSwapDetails?: OnExpandSwapDetails
   onReviewSwapClick?: OnReviewSwapClick
-  onSubmitSwapClick?: OnSubmitSwapClick
+}
+
+/** An integration hook called when the user receives an initial quote for a set of inputs. */
+export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
+
+/** An integration hook called when the user acks a quote's price update. */
+export type OnSwapPriceUpdateAck = (stale: InterfaceTrade, update: InterfaceTrade) => void
+
+export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers, PerfEventHandlers {
+  onInitialSwapQuote?: OnInitialSwapQuote
+  onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})
