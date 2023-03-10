@@ -6,10 +6,10 @@ import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
-import { useAtomValue } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { swapEventHandlersAtom } from 'state/swap'
+
+import { usePerfHandler } from './usePerfHandler'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`
@@ -87,13 +87,5 @@ export function useUpdatePermitAllowance(
       throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
-
-  const { onPermit2Allowance } = useAtomValue(swapEventHandlersAtom)
-  return useCallback(() => {
-    const allowance = updatePermitAllowance()
-    if (token && spender) {
-      onPermit2Allowance?.({ token, spender }, allowance)
-    }
-    return allowance
-  }, [onPermit2Allowance, spender, token, updatePermitAllowance])
+  return usePerfHandler('onPermit2Allowance', updatePermitAllowance, token && spender ? { token, spender } : undefined)
 }

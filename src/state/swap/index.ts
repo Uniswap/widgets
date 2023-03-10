@@ -9,10 +9,11 @@ import { InterfaceTrade } from 'state/routing/types'
 import { PerfEventHandlers } from './perf'
 import { SettingsEventHandlers } from './settings'
 export type {
-  OnSwapApproveToken,
-  OnSwapPermitRouter,
+  OnPermit2Allowance,
   OnSwapQuote,
   OnSwapSend,
+  OnTokenAllowance,
+  OnWrapSend,
   PerfEventHandlers as SwapPerfEventHandlers,
 } from './perf'
 export type {

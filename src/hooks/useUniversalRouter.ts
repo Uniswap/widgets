@@ -9,14 +9,13 @@ import { useWeb3React } from '@web3-react/core'
 import { ErrorCode } from 'constants/eip1193'
 import { TX_GAS_MARGIN } from 'constants/misc'
 import { SwapError } from 'errors'
-import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { swapEventHandlersAtom } from 'state/swap'
-import { TransactionType } from 'state/transactions'
+import { SwapTransactionInfo, TransactionType } from 'state/transactions'
 import isZero from 'utils/isZero'
 import { getReason, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
+import { usePerfHandler } from './usePerfHandler'
 import { PermitSignature } from './usePermitAllowance'
 
 interface SwapOptions {
@@ -49,7 +48,7 @@ function didUserReject(error: any): boolean {
 export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined, options: SwapOptions) {
   const { account, chainId, provider } = useWeb3React()
 
-  const swapCallback = useCallback(async (): Promise<TransactionResponse | null> => {
+  const swapCallback = useCallback(async (): Promise<SwapTransactionInfo | void> => {
     let tx: TransactionRequest
     let response: TransactionResponse
     try {
@@ -75,7 +74,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       response = await sendTransaction(provider, tx, TX_GAS_MARGIN)
     } catch (swapError) {
       if (didUserReject(swapError)) {
-        return null
+        return
       }
       const message = swapErrorToUserReadableMessage(swapError)
       throw new SwapError({
@@ -87,7 +86,14 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
       })
     }
-    return response
+
+    return {
+      type: TransactionType.SWAP,
+      response,
+      tradeType: trade.tradeType,
+      trade,
+      slippageTolerance: options.slippageTolerance,
+    }
   }, [
     account,
     chainId,
@@ -98,27 +104,5 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
     provider,
     trade,
   ])
-
-  const { onSwapSend } = useAtomValue(swapEventHandlersAtom)
-  return useCallback(() => {
-    const swap = swapCallback()
-    if (trade) {
-      onSwapSend?.(
-        trade,
-        // TODO: Return the SwapTransactionInfo directly, once the other swap codepath is removed.
-        //       Avoid doing so beforehand as it introduces unnecessary risk.
-        swap.then((response) => {
-          if (!response) return
-          return {
-            type: TransactionType.SWAP,
-            response,
-            tradeType: trade.tradeType,
-            trade,
-            slippageTolerance: options.slippageTolerance,
-          }
-        })
-      )
-    }
-    return swap
-  }, [onSwapSend, options.slippageTolerance, swapCallback, trade])
+  return usePerfHandler('onSwapSend', swapCallback, trade && { trade })
 }

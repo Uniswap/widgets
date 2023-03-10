@@ -35,10 +35,7 @@ export type OnPermit2Allowance = (args: { token: Token; spender: string }, signe
  * @param transaction resolves with the swap transaction info when it is sent to the mempool.
  *                    A void transaction indicates user rejection.
  */
-export type OnSwapSend = (
-  trade: InterfaceTrade,
-  transaction: Promise<SwapTransactionInfo | WrapTransactionInfo | UnwrapTransactionInfo | void>
-) => void
+export type OnSwapSend = (args: { trade: InterfaceTrade }, transaction: Promise<SwapTransactionInfo | void>) => void
 
 /**
  * An integration hook called when sending a swap transaction to the mempool through the user.
@@ -47,8 +44,8 @@ export type OnSwapSend = (
  *                    A void transaction indicates user rejection.
  */
 export type OnWrapSend = (
-  amount: CurrencyAmount<Currency>,
-  transaction: Promise<SwapTransactionInfo | WrapTransactionInfo | UnwrapTransactionInfo | void>
+  args: { amount: CurrencyAmount<Currency> },
+  transaction: Promise<WrapTransactionInfo | UnwrapTransactionInfo | void>
 ) => void
 
 export interface PerfEventHandlers {

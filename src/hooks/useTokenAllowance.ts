@@ -5,11 +5,11 @@ import { ErrorCode } from 'constants/eip1193'
 import { UserRejectedRequestError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
-import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { swapEventHandlersAtom } from 'state/swap'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+
+import { usePerfHandler } from './usePerfHandler'
 
 export function useTokenAllowance(
   token?: Token,
@@ -76,13 +76,9 @@ export function useUpdateTokenAllowance(
       }
     }
   }, [amount, contract, spender])
-
-  const { onTokenAllowance } = useAtomValue(swapEventHandlersAtom)
-  return useCallback(() => {
-    const allowance = updateTokenAllowance()
-    if (amount && spender) {
-      onTokenAllowance?.({ token: amount.currency, spender }, allowance)
-    }
-    return allowance
-  }, [amount, onTokenAllowance, spender, updateTokenAllowance])
+  return usePerfHandler(
+    'onTokenAllowance',
+    updateTokenAllowance,
+    amount && spender ? { token: amount.currency, spender } : undefined
+  )
 }

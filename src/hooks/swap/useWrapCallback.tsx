@@ -1,9 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useWETHContract } from 'hooks/useContract'
+import { usePerfHandler } from 'hooks/usePerfHandler'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
-import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
+import { Field, swapAtom } from 'state/swap'
 import { TransactionType, UnwrapTransactionInfo, WrapTransactionInfo } from 'state/transactions'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -61,15 +62,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
         return undefined
     }
   }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
-
-  const { onWrapSend } = useAtomValue(swapEventHandlersAtom)
-  const callback = useCallback(() => {
-    const wrap = wrapCallback?.()
-    if (parsedAmountIn) {
-      onWrapSend?.(parsedAmountIn, wrap)
-    }
-    return wrap
-  }, [onWrapSend, parsedAmountIn, wrapCallback])
+  const callback = usePerfHandler('onWrapSend', wrapCallback, parsedAmountIn && { amount: parsedAmountIn })
 
   return useMemo(() => ({ callback, type: wrapType }), [callback, wrapType])
 }
