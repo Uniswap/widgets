@@ -88,8 +88,8 @@ export type OnSwapApprove = () => void
 /** An integration hook called when a new quote is fetched. */
 export type OnSwapQuote = (
   event: {
-    timestamp: number
-    duration: number
+    startTimestamp: number
+    endTimestamp: number
     args: Omit<GetQuoteArgs, 'provider' | 'onQuote'>
     state?: QuoteState
   },
