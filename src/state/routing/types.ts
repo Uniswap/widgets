@@ -93,7 +93,7 @@ export interface QuoteData {
 export type QuoteResult =
   | {
       state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
-      data?: QuoteData
+      data?: undefined
     }
   | {
       state: QuoteState.SUCCESS
@@ -103,9 +103,9 @@ export type QuoteResult =
 export type TradeResult =
   | {
       state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
-      trade?: InterfaceTrade
-      gasUseEstimateUSD?: string
-      blockNumber?: string
+      trade?: undefined
+      gasUseEstimateUSD?: undefined
+      blockNumber?: undefined
     }
   | {
       state: QuoteState.SUCCESS
