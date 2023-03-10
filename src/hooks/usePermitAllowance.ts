@@ -92,7 +92,7 @@ export function useUpdatePermitAllowance(
   return useCallback(() => {
     const allowance = updatePermitAllowance()
     if (token && spender) {
-      onPermit2Allowance?.(token, spender, allowance)
+      onPermit2Allowance?.({ token, spender }, allowance)
     }
     return allowance
   }, [onPermit2Allowance, spender, token, updatePermitAllowance])

@@ -18,13 +18,16 @@ export type OnSwapQuote = (args: Omit<GetQuoteArgs, 'provider' | 'onQuote'>, quo
  * NB: You may instrument the time-to-confirmation by calling transaction.response.wait().
  * @param transaction resolves with the approval transaction info when it is granted.
  */
-export type OnTokenAllowance = (token: Token, spender: string, transaction: Promise<ApprovalTransactionInfo>) => void
+export type OnTokenAllowance = (
+  args: { token: Token; spender: string },
+  transaction: Promise<ApprovalTransactionInfo>
+) => void
 
 /**
  * An integration hook called when requesting a Permit2 token allowance from the user.
  * @param signed resolves when the permit is signed.
  */
-export type OnPermit2Allowance = (token: Token, spender: string, signed: Promise<void>) => void
+export type OnPermit2Allowance = (args: { token: Token; spender: string }, signed: Promise<void>) => void
 
 /**
  * An integration hook called when sending a swap transaction to the mempool through the user.

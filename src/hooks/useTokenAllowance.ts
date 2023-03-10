@@ -81,7 +81,7 @@ export function useUpdateTokenAllowance(
   return useCallback(() => {
     const allowance = updateTokenAllowance()
     if (amount && spender) {
-      onTokenAllowance?.(amount.currency, spender, allowance)
+      onTokenAllowance?.({ token: amount.currency, spender }, allowance)
     }
     return allowance
   }, [amount, onTokenAllowance, spender, updateTokenAllowance])
