@@ -59,13 +59,19 @@ export interface GetQuoteArgs {
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string | null // passing null will initialize the client-side SOR
-  routerPreference?: RouterPreference
+  routerPreference: RouterPreference
   routerUrl?: string
   tradeType: TradeType
   provider: BaseProvider
 }
 
-export interface QuoteResult {
+export enum QuoteState {
+  SUCCESS = 'Success',
+  INITIALIZED = 'Initialized',
+  NOT_FOUND = 'Not found',
+}
+
+export interface QuoteData {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -84,17 +90,28 @@ export interface QuoteResult {
   routeString: string
 }
 
-export const INITIALIZED = 'Initialized'
-export const NO_ROUTE = 'No Route'
+export type QuoteResult =
+  | {
+      state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
+      data?: undefined
+    }
+  | {
+      state: QuoteState.SUCCESS
+      data: QuoteData
+    }
 
-export type GetQuoteError = typeof INITIALIZED | typeof NO_ROUTE
-
-export type TradeResult = {
-  trade?: InterfaceTrade
-  gasUseEstimateUSD?: string
-  blockNumber: string
-}
-
-export type TradeQuoteResult = TradeResult | GetQuoteError
+export type TradeResult =
+  | {
+      state: QuoteState.INITIALIZED | QuoteState.NOT_FOUND
+      trade?: undefined
+      gasUseEstimateUSD?: undefined
+      blockNumber?: undefined
+    }
+  | {
+      state: QuoteState.SUCCESS
+      trade: InterfaceTrade
+      gasUseEstimateUSD: string
+      blockNumber: string
+    }
 
 export class InterfaceTrade extends Trade<Currency, Currency, TradeType> {}

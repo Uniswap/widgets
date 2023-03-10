@@ -6,8 +6,8 @@ import { isPolygonChain } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { PoolType, SwapRouterNativeAssets } from 'hooks/routing/types'
 
-import { TradeResult } from './types'
-import { GetQuoteArgs, InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
+import { QuoteData, QuoteState, TradeResult } from './types'
+import { GetQuoteArgs, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
  * Transforms a Routing API quote into an array of routes that can be used to
@@ -16,7 +16,7 @@ import { GetQuoteArgs, InterfaceTrade, QuoteResult, V2PoolInRoute, V3PoolInRoute
 export function computeRoutes(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
-  quoteResult?: Pick<QuoteResult, 'route'>
+  routes: QuoteData['route']
 ):
   | {
       routev3: V3Route<Currency, Currency> | null
@@ -26,19 +26,17 @@ export function computeRoutes(
       outputAmount: CurrencyAmount<Currency>
     }[]
   | undefined {
-  if (!quoteResult || !quoteResult.route) return
+  if (routes.length === 0) return []
 
-  if (quoteResult.route.length === 0) return []
-
-  const tokenIn = quoteResult.route[0]?.[0]?.tokenIn
-  const tokenOut = quoteResult.route[0]?.[quoteResult.route[0]?.length - 1]?.tokenOut
+  const tokenIn = routes[0]?.[0]?.tokenIn
+  const tokenOut = routes[0]?.[routes[0]?.length - 1]?.tokenOut
   if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
 
   const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseToken(tokenIn)
   const parsedCurrencyOut = tokenOutIsNative ? nativeOnChain(tokenOut.chainId) : parseToken(tokenOut)
 
   try {
-    return quoteResult.route.map((route) => {
+    return routes.map((route) => {
       if (route.length === 0) {
         throw new Error('Expected route to have at least one pair or pool')
       }
@@ -69,11 +67,11 @@ export function computeRoutes(
   }
 }
 
-export function transformQuoteToTradeResult(args: GetQuoteArgs, quoteResult: QuoteResult): TradeResult {
+export function transformQuoteToTradeResult(args: GetQuoteArgs, data: QuoteData): TradeResult {
   const { tokenInAddress, tokenOutAddress, tradeType } = args
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
-  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, quoteResult)
+  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, data.route)
 
   const trade = new InterfaceTrade({
     v2Routes:
@@ -110,10 +108,10 @@ export function transformQuoteToTradeResult(args: GetQuoteArgs, quoteResult: Quo
     tradeType,
   })
 
-  return { trade, gasUseEstimateUSD: quoteResult.gasUseEstimateUSD, blockNumber: quoteResult.blockNumber }
+  return { state: QuoteState.SUCCESS, trade, gasUseEstimateUSD: data.gasUseEstimateUSD, blockNumber: data.blockNumber }
 }
 
-const parseToken = ({ address, chainId, decimals, symbol }: QuoteResult['route'][0][0]['tokenIn']): Token => {
+const parseToken = ({ address, chainId, decimals, symbol }: QuoteData['route'][0][0]['tokenIn']): Token => {
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 
