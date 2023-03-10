@@ -26,7 +26,6 @@ import { getEstimateMessage } from './Estimate'
 const Label = styled.span`
   color: ${({ theme }) => theme.secondary};
   margin-right: 0.5rem;
-  max-width: 50%;
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
@@ -90,7 +89,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   }
 
   return (
-    <Row flex align="flex-start" gap={0.5}>
+    <Row flex align="flex-start" gap={0.75}>
       <Row>
         <ThemedText.Body2 userSelect>
           <Label>{label}</Label>
