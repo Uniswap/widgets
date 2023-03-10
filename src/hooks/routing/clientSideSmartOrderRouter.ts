@@ -13,7 +13,7 @@ import {
 } from '@uniswap/smart-order-router'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
-import { GetQuoteArgs, GetQuoteError, INITIALIZED, NO_ROUTE, QuoteResult } from 'state/routing/types'
+import { GetQuoteArgs, QuoteResult, QuoteState } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 import { transformSwapRouteToGetQuoteResult } from './transformSwapRouteToGetQuoteResult'
@@ -82,7 +82,7 @@ function getRouter(chainId: ChainId, provider: BaseProvider): AlphaRouter {
   return router
 }
 
-async function getQuote(
+async function getQuoteResult(
   {
     tradeType,
     tokenIn,
@@ -96,7 +96,7 @@ async function getQuote(
   },
   router: AlphaRouter,
   routerConfig: Partial<AlphaRouterConfig>
-): Promise<QuoteResult | GetQuoteError> {
+): Promise<QuoteResult> {
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenIn.address as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOut.address as SwapRouterNativeAssets)
   const currencyIn = tokenInIsNative
@@ -111,13 +111,13 @@ async function getQuote(
   const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw ?? '1')) // a null amountRaw should initialize the route
   const route = await router.route(amount, quoteCurrency, tradeType, /*swapConfig=*/ undefined, routerConfig)
 
-  if (!amountRaw) return INITIALIZED
-  if (!route) return NO_ROUTE
+  if (!amountRaw) return { state: QuoteState.INITIALIZED }
+  if (!route) return { state: QuoteState.NOT_FOUND }
 
   return transformSwapRouteToGetQuoteResult({ ...route, routeString: routeAmountsToString(route.route) })
 }
 
-export async function getClientSideQuote(
+export async function getClientSideQuoteResult(
   {
     tokenInAddress,
     tokenInChainId,
@@ -138,7 +138,7 @@ export async function getClientSideQuote(
   }
 
   const router = getRouter(tokenInChainId, provider)
-  return getQuote(
+  return getQuoteResult(
     {
       tradeType,
       tokenIn: {

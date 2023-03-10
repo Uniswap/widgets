@@ -1,6 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import type { SwapRoute } from '@uniswap/smart-order-router'
-import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
+import { QuoteResult, QuoteState, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 import { isExactInput } from 'utils/tradeType'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
@@ -128,20 +128,23 @@ export function transformSwapRouteToGetQuoteResult({
 
   const amount = isExactInput(tradeType) ? inputAmount : outputAmount
   return {
-    methodParameters,
-    blockNumber: blockNumber.toString(),
-    amount: amount.quotient.toString(),
-    amountDecimals: amount.toExact(),
-    quote: quote.quotient.toString(),
-    quoteDecimals: quote.toExact(),
-    quoteGasAdjusted: quoteGasAdjusted.quotient.toString(),
-    quoteGasAdjustedDecimals: quoteGasAdjusted.toExact(),
-    gasUseEstimateQuote: estimatedGasUsedQuoteToken.quotient.toString(),
-    gasUseEstimateQuoteDecimals: estimatedGasUsedQuoteToken.toExact(),
-    gasUseEstimate: estimatedGasUsed.toString(),
-    gasUseEstimateUSD: estimatedGasUsedUSD.toExact(),
-    gasPriceWei: gasPriceWei.toString(),
-    route: routeResponse,
-    routeString,
+    state: QuoteState.SUCCESS,
+    data: {
+      methodParameters,
+      blockNumber: blockNumber.toString(),
+      amount: amount.quotient.toString(),
+      amountDecimals: amount.toExact(),
+      quote: quote.quotient.toString(),
+      quoteDecimals: quote.toExact(),
+      quoteGasAdjusted: quoteGasAdjusted.quotient.toString(),
+      quoteGasAdjustedDecimals: quoteGasAdjusted.toExact(),
+      gasUseEstimateQuote: estimatedGasUsedQuoteToken.quotient.toString(),
+      gasUseEstimateQuoteDecimals: estimatedGasUsedQuoteToken.toExact(),
+      gasUseEstimate: estimatedGasUsed.toString(),
+      gasUseEstimateUSD: estimatedGasUsedUSD.toExact(),
+      gasPriceWei: gasPriceWei.toString(),
+      route: routeResponse,
+      routeString,
+    },
   }
 }
