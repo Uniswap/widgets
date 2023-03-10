@@ -2,12 +2,17 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { InterfaceTrade } from 'state/routing/types'
 
-import { Slippage } from './settings'
+import { SettingsEventHandlers } from './settings'
+export type {
+  OnRouterPreferenceChange,
+  OnSettingsReset,
+  OnSlippageChange,
+  OnTransactionDeadlineChange,
+} from './settings'
 
 export enum Field {
   INPUT = 'INPUT',
