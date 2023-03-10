@@ -63,6 +63,8 @@ export interface GetQuoteArgs {
   routerUrl?: string
   tradeType: TradeType
   provider: BaseProvider
+  quoteType: QuoteType
+  onQuote?: OnSwapQuote
 }
 
 export enum QuoteState {

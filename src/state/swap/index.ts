@@ -5,7 +5,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
-import { InterfaceTrade } from 'state/routing/types'
+import { GetQuoteArgs, InterfaceTrade, QuoteState } from 'state/routing/types'
 
 import { Slippage } from './settings'
 
@@ -85,6 +85,17 @@ interface InputEventHandlers {
 /** An integration hook called when the user approves a token, either through allowance or permit. */
 export type OnSwapApprove = () => void
 
+/** An integration hook called when a new quote is fetched. */
+export type OnSwapQuote = (
+  event: {
+    timestamp: number
+    duration: number
+    args: Omit<GetQuoteArgs, 'provider' | 'onQuote'>
+    state?: QuoteState
+  },
+  error?: unknown
+) => void
+
 /** An integration hook called when the user receives an initial quote for a set of inputs. */
 export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
 
@@ -105,6 +116,7 @@ export type OnSubmitSwapClick = (trade: InterfaceTrade) => void
 
 export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers {
   onSwapApprove?: OnSwapApprove
+  onSwapQuote?: OnSwapQuote
   onInitialSwapQuote?: OnInitialSwapQuote
   onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
   onExpandSwapDetails?: OnExpandSwapDetails

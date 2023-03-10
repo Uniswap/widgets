@@ -6,17 +6,15 @@ import { QuoteConfig, QuoteType } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { swapRouterUrlAtom } from 'state/swap'
+import { swapEventHandlersAtom, swapRouterUrlAtom } from 'state/swap'
 
 import { GetQuoteArgs } from './types'
 import { currencyAddressForSwapQuote } from './utils'
 
-const NON_SERIALIZABLE_KEYS = ['provider']
+const NON_SERIALIZABLE_KEYS = ['provider', 'onQuote']
 
-/** Omits the non-serializable keys from GetQuoteArgs' cache key. */
-export function serializeGetQuoteArgs({ endpointName, queryArgs }: { endpointName: string; queryArgs: GetQuoteArgs }) {
-  // same as default serializeQueryArgs, but ignoring non-serializable keys.
-  return `${endpointName}(${JSON.stringify(queryArgs, (key, value) => {
+export function serializeGetQuoteArgs(args: GetQuoteArgs) {
+  return JSON.stringify(args, (key, value) => {
     if (NON_SERIALIZABLE_KEYS.includes(key)) {
       return undefined
     }
@@ -30,7 +28,18 @@ export function serializeGetQuoteArgs({ endpointName, queryArgs }: { endpointNam
     } else {
       return value
     }
-  })})`
+  })
+}
+
+/** Omits the non-serializable keys from GetQuoteArgs' cache key. */
+export function serializeGetQuoteQueryArgs({
+  endpointName,
+  queryArgs,
+}: {
+  endpointName: string
+  queryArgs: GetQuoteArgs
+}) {
+  return `${endpointName}(${serializeGetQuoteArgs(queryArgs)})`
 }
 
 /**
@@ -55,6 +64,7 @@ export function useGetQuoteArgs(
   quoteConfig: QuoteConfig
 ): GetQuoteArgs | SkipToken {
   const routerUrl = useAtomValue(swapRouterUrlAtom)
+  const { onSwapQuote } = useAtomValue(swapEventHandlersAtom)
   const args = useMemo(() => {
     if (!provider || tradeType === undefined) return null
     if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) return null
@@ -74,8 +84,10 @@ export function useGetQuoteArgs(
       routerUrl,
       tradeType,
       provider,
+      quoteType: quoteConfig.type,
+      onQuote: onSwapQuote,
     }
-  }, [provider, tradeType, currencyIn, currencyOut, amountSpecified?.quotient, quoteConfig, routerUrl])
+  }, [amountSpecified?.quotient, currencyIn, currencyOut, onSwapQuote, provider, quoteConfig, routerUrl, tradeType])
 
   const isWindowVisible = useIsWindowVisible()
   if (quoteConfig.type === QuoteType.SKIP || !isWindowVisible) return skipToken

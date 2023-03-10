@@ -30,6 +30,7 @@ export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers
   'onConnectWalletClick',
   'onError',
   'onExpandSwapDetails',
+  'onSwapQuote',
   'onInitialSwapQuote',
   'onSwapApprove',
   'onReviewSwapClick',
