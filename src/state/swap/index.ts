@@ -44,24 +44,6 @@ export const displayTxHashAtom = atom<string | undefined>(undefined)
 
 export const feeOptionsAtom = atom<FeeOptions | undefined>(undefined)
 
-/** An integration hook called when the user resets settings. */
-export type OnSettingsReset = () => void
-
-/** An integration hook called when the user changes slippage settings. */
-export type OnSlippageChange = (slippage: Slippage) => void
-
-/** An integration hook called when the user changes transaction deadline settings. */
-export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
-
-export type OnRouterPreferenceChange = (routerPreference: RouterPreference) => void
-
-interface SettingsEventHandlers {
-  onSettingsReset?: OnSettingsReset
-  onSlippageChange?: OnSlippageChange
-  onTransactionDeadlineChange?: OnTransactionDeadlineChange
-  onRouterPreferenceChange?: OnRouterPreferenceChange
-}
-
 /** An integration hook called when the user selects a new token. */
 export type OnTokenChange = (field: Field, token: Currency) => void
 
