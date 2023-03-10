@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { GetQuoteArgs, InterfaceTrade, TradeResult } from 'state/routing/types'
 import {
   ApprovalTransactionInfo,
@@ -30,16 +30,28 @@ export type OnPermit2Allowance = (token: Token, spender: string, signed: Promise
  * An integration hook called when sending a swap transaction to the mempool through the user.
  * NB: You may instrument the time-to-confirmation by calling ransaction.response.wait().
  * @param transaction resolves with the swap transaction info when it is sent to the mempool.
+ *                    A void transaction indicates user rejection.
  */
 export type OnSwapSend = (
   trade: InterfaceTrade,
-  transaction: Promise<SwapTransactionInfo | WrapTransactionInfo | UnwrapTransactionInfo>
+  transaction: Promise<SwapTransactionInfo | WrapTransactionInfo | UnwrapTransactionInfo | void>
+) => void
+
+/**
+ * An integration hook called when sending a swap transaction to the mempool through the user.
+ * NB: You may instrument the time-to-confirmation by calling ransaction.response.wait().
+ * @param transaction resolves with the swap transaction info when it is sent to the mempool.
+ *                    A void transaction indicates user rejection.
+ */
+export type OnWrapSend = (
+  amount: CurrencyAmount<Currency>,
+  transaction: Promise<SwapTransactionInfo | WrapTransactionInfo | UnwrapTransactionInfo | void>
 ) => void
 
 export interface PerfEventHandlers {
   onSwapQuote?: OnSwapQuote
   onTokenAllowance?: OnTokenAllowance
   onPermit2Allowance?: OnPermit2Allowance
-  // TODO(zzmp)
   onSwapSend?: OnSwapSend
+  onWrapSend?: OnWrapSend
 }
