@@ -36,6 +36,8 @@ export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers
   'onRouterPreferenceChange',
   'onSettingsReset',
   'onSlippageChange',
+  'onSubmitSwapClick',
+  'onSwapApprove',
   'onSwapPriceUpdateAck',
   'onSwapQuote',
   'onSwapSend',

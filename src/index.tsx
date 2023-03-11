@@ -42,6 +42,8 @@ export type {
   OnRouterPreferenceChange,
   OnSettingsReset,
   OnSlippageChange,
+  OnSubmitSwapClick,
+  OnSwapApprove,
   OnSwapPriceUpdateAck,
   OnSwapQuote,
   OnSwapSend,

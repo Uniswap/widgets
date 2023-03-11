@@ -159,14 +159,18 @@ export function ConfirmButton({
   triggerImpactSpeedbump: () => boolean
   allowance: Allowance
 }) {
-  const { onSwapPriceUpdateAck } = useAtomValue(swapEventHandlersAtom)
+  const { onSwapPriceUpdateAck, onSubmitSwapClick } = useAtomValue(swapEventHandlersAtom)
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade, slippage.allowed)),
     [ackTrade, trade, slippage]
   )
+  const onSwap = useCallback(async () => {
+    onSubmitSwapClick?.(trade)
+    await onConfirm()
+  }, [onConfirm, onSubmitSwapClick, trade])
 
-  const { onStartSwapFlow, onCancel, currentState } = useReviewState(onConfirm, allowance, doesTradeDiffer)
+  const { onStartSwapFlow, onCancel, currentState } = useReviewState(onSwap, allowance, doesTradeDiffer)
 
   // Used to determine specific message to render while in ALLOWANCE_PROMPTED state
   const [shouldRequestApproval, isApprovalLoading] = useMemo(

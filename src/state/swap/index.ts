@@ -96,9 +96,19 @@ export type OnInitialSwapQuote = (trade: InterfaceTrade) => void
 /** An integration hook called when the user acks a quote's price update. */
 export type OnSwapPriceUpdateAck = (stale: InterfaceTrade, update: InterfaceTrade) => void
 
+/** An integration hook called when the user approves a token, either through allowance or permit. */
+export type OnSwapApprove = () => void
+
+/** An integration hook called when the confirms a swap, but before it is submitted. */
+export type OnSubmitSwapClick = (trade: InterfaceTrade) => void
+
 export interface SwapEventHandlers extends SettingsEventHandlers, InputEventHandlers, PerfEventHandlers {
   onInitialSwapQuote?: OnInitialSwapQuote
   onSwapPriceUpdateAck?: OnSwapPriceUpdateAck
+  /** @deprecated Use {@link onTokenAllowance} and {@link onPermit2Allowance} instead. */
+  onSwapApprove?: OnSwapApprove
+  /** @deprecated Use {@link onSwapSend} instead. */
+  onSubmitSwapClick?: OnSubmitSwapClick
 }
 
 export const swapEventHandlersAtom = atom<SwapEventHandlers>({})
