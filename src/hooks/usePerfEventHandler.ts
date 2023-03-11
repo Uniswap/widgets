@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { swapEventHandlersAtom } from 'state/swap'
 import { PerfEventHandlers } from 'state/swap/perf'
 
-export function usePerfHandler<
+export function usePerfEventHandler<
   K extends keyof PerfEventHandlers,
   P extends Parameters<NonNullable<PerfEventHandlers[K]>>,
   A extends P[0],
@@ -12,6 +12,8 @@ export function usePerfHandler<
 >(name: K, callback: () => Promise<E>, args?: A): () => Promise<E> {
   const perfHandler = useAtomValue(swapEventHandlersAtom)[name] as H
   return useCallback(() => {
+    // Use Promise.resolve().then to defer the execution of the callback until after the perfHandler has executed.
+    // This ensures that the perfHandler can capture the beginning of the callback's execution.
     const event = Promise.resolve().then(callback)
     if (args) {
       perfHandler?.(args, event)

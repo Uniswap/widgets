@@ -191,6 +191,7 @@
     "inter-ui": "^3.13.1",
     "jest": "^27.5.1",
     "jest-environment-hardhat": "^1.1.4",
+    "jest-extended": "^3.2.4",
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.5",
     "json-loader": "^0.5.7",

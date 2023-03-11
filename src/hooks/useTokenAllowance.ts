@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-import { usePerfHandler } from './usePerfHandler'
+import { usePerfEventHandler } from './usePerfEventHandler'
 
 export function useTokenAllowance(
   token?: Token,
@@ -76,7 +76,7 @@ export function useUpdateTokenAllowance(
       }
     }
   }, [amount, contract, spender])
-  return usePerfHandler(
+  return usePerfEventHandler(
     'onTokenAllowance',
     updateTokenAllowance,
     amount && spender ? { token: amount.currency, spender } : undefined

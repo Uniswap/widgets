@@ -9,7 +9,7 @@ import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { usePerfHandler } from './usePerfHandler'
+import { usePerfEventHandler } from './usePerfEventHandler'
 
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`
@@ -87,5 +87,9 @@ export function useUpdatePermitAllowance(
       throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
-  return usePerfHandler('onPermit2Allowance', updatePermitAllowance, token && spender ? { token, spender } : undefined)
+  return usePerfEventHandler(
+    'onPermit2Allowance',
+    updatePermitAllowance,
+    token && spender ? { token, spender } : undefined
+  )
 }

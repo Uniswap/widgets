@@ -15,7 +15,7 @@ import { SwapTransactionInfo, TransactionType } from 'state/transactions'
 import isZero from 'utils/isZero'
 import { getReason, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
-import { usePerfHandler } from './usePerfHandler'
+import { usePerfEventHandler } from './usePerfEventHandler'
 import { PermitSignature } from './usePermitAllowance'
 
 interface SwapOptions {
@@ -104,5 +104,5 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
     provider,
     trade,
   ])
-  return usePerfHandler('onSwapSend', swapCallback, trade && { trade })
+  return usePerfEventHandler('onSwapSend', swapCallback, trade && { trade })
 }

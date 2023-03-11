@@ -4,7 +4,7 @@
     "paths": {
       "@uniswap/widgets": ["index"]
     },
-    "types": ["jest"]
+    "types": ["jest", "jest-extended"]
   },
   "include": ["src/", "test/", "e2e/"]
 }
