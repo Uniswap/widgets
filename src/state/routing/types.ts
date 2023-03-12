@@ -2,7 +2,8 @@ import { BaseProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Token, TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
-import { RouterPreference } from 'hooks/routing/types'
+import { QuoteType, RouterPreference } from 'hooks/routing/types'
+import { OnSwapQuote } from 'state/swap'
 
 export enum TradeState {
   LOADING,
@@ -63,6 +64,8 @@ export interface GetQuoteArgs {
   routerUrl?: string
   tradeType: TradeType
   provider: BaseProvider
+  quoteType: QuoteType
+  onQuote?: OnSwapQuote
 }
 
 export enum QuoteState {

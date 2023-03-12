@@ -5,7 +5,7 @@ import ms from 'ms.macro'
 import qs from 'qs'
 import { isExactInput } from 'utils/tradeType'
 
-import { serializeGetQuoteArgs } from './args'
+import { serializeGetQuoteArgs, serializeGetQuoteQueryArgs } from './args'
 import { GetQuoteArgs, QuoteData, QuoteState, TradeResult } from './types'
 import { transformQuoteToTradeResult } from './utils'
 
@@ -23,9 +23,34 @@ const baseQuery: BaseQueryFn<GetQuoteArgs, TradeResult> = () => {
 export const routing = createApi({
   reducerPath: 'routing',
   baseQuery,
-  serializeQueryArgs: serializeGetQuoteArgs,
+  serializeQueryArgs: serializeGetQuoteQueryArgs,
   endpoints: (build) => ({
     getTradeQuote: build.query({
+      async onQueryStarted(args: GetQuoteArgs | SkipToken, { queryFulfilled }) {
+        if (args === skipToken) return
+
+        args.onQuote?.(
+          JSON.parse(serializeGetQuoteArgs(args)),
+          queryFulfilled
+            .catch((error) => {
+              const { error: queryError } = error
+              if (queryError && typeof queryError == 'object' && 'status' in queryError) {
+                const parsedError = queryError as FetchBaseQueryError
+                switch (parsedError.status) {
+                  case 'CUSTOM_ERROR':
+                  case 'FETCH_ERROR':
+                  case 'PARSING_ERROR':
+                    throw parsedError.error
+                    break
+                  default:
+                    throw parsedError.status
+                }
+              }
+              throw queryError
+            })
+            .then(({ data }) => data as TradeResult)
+        )
+      },
       // Explicitly typing the return type enables typechecking of return values.
       async queryFn(args: GetQuoteArgs | SkipToken): Promise<{ data: TradeResult } | { error: FetchBaseQueryError }> {
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
