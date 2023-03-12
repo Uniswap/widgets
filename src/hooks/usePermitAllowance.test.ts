@@ -9,6 +9,7 @@ import { UNI } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
+import { swapEventHandlersAtom } from 'state/swap'
 import { renderHook, waitFor } from 'test'
 
 import { usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
@@ -118,6 +119,20 @@ describe('useUpdatePermitAllowance', () => {
         expectedSignature,
       spender: SPENDER,
     })
+  })
+
+  it('triggers onPermit2Allowance', async () => {
+    const onPermit2Allowance = jest.fn()
+    const onPermitSignature = jest.fn()
+    const { result } = renderHook(() => useUpdatePermitAllowance(TOKEN, SPENDER, NONCE, onPermitSignature), {
+      initialAtomValues: [[swapEventHandlersAtom, { onPermit2Allowance }]],
+    })
+    await waitFor(() => result.current())
+    expect(onPermit2Allowance).toHaveBeenLastCalledWith(
+      expect.objectContaining({ token: TOKEN, spender: SPENDER }),
+      expect.any(Promise)
+    )
+    await expect(onPermit2Allowance.mock.calls.slice(-1)[0][1]).resolves.toBe(undefined)
   })
 
   it('rejects on failure', async () => {
