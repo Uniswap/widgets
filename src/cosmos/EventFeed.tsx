@@ -1,5 +1,6 @@
 import { defaultTheme, SwapEventHandlers, TransactionEventHandlers, WidgetEventHandlers } from '@uniswap/widgets'
 import Row from 'components/Row'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 import * as Type from 'theme/type'
 
@@ -47,6 +48,8 @@ export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers
   'onTxSuccess',
 ]
 
+const SHOW_ALL_EVENTS = '(show all events)'
+
 export interface Event {
   name: string
   data: unknown
@@ -58,6 +61,7 @@ export interface EventFeedProps {
 }
 
 export default function EventFeed({ events, onClear }: EventFeedProps) {
+  const [selectedEventType, onSelectEventType] = useState<string>(SHOW_ALL_EVENTS)
   return (
     <EventFeedWrapper>
       <Row>
@@ -66,15 +70,32 @@ export default function EventFeed({ events, onClear }: EventFeedProps) {
           <Type.Subhead1>clear</Type.Subhead1>
         </button>
       </Row>
+      <Row>
+        <Type.Subhead2>Filter: </Type.Subhead2>
+        <select
+          onChange={(e) => {
+            console.log(e.target.value)
+            onSelectEventType(e.target.value)
+          }}
+          value={selectedEventType}
+        >
+          <option>{SHOW_ALL_EVENTS}</option>
+          {HANDLERS.map((name) => (
+            <option key={name}>{name}</option>
+          ))}
+        </select>
+      </Row>
       <EventColumn>
-        {events?.map(({ name, data }, i) => (
-          <EventRow key={i}>
-            <Type.Subhead2 margin={0} padding={0}>
-              {name}
-            </Type.Subhead2>
-            <EventData>{JSON.stringify(data, null, 2)}</EventData>
-          </EventRow>
-        ))}
+        {events
+          ?.filter(({ name }) => (selectedEventType === SHOW_ALL_EVENTS ? true : name === selectedEventType))
+          .map(({ name, data }, i) => (
+            <EventRow key={i}>
+              <Type.Subhead2 margin={0} padding={0}>
+                {name}
+              </Type.Subhead2>
+              <EventData>{JSON.stringify(data, null, 2)}</EventData>
+            </EventRow>
+          ))}
       </EventColumn>
     </EventFeedWrapper>
   )
