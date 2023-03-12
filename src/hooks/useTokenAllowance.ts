@@ -9,6 +9,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
+import { usePerfEventHandler } from './usePerfEventHandler'
+
 export function useTokenAllowance(
   token?: Token,
   owner?: string,
@@ -44,7 +46,7 @@ export function useUpdateTokenAllowance(
 ): () => Promise<ApprovalTransactionInfo> {
   const contract = useTokenContract(amount?.currency.address)
 
-  return useCallback(async () => {
+  const updateTokenAllowance = useCallback(async (): Promise<ApprovalTransactionInfo> => {
     try {
       if (!amount) throw new Error('missing amount')
       if (!contract) throw new Error('missing contract')
@@ -74,4 +76,9 @@ export function useUpdateTokenAllowance(
       }
     }
   }, [amount, contract, spender])
+  return usePerfEventHandler(
+    'onTokenAllowance',
+    updateTokenAllowance,
+    amount && spender ? { token: amount.currency, spender } : undefined
+  )
 }
