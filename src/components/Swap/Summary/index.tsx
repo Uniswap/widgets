@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro'
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
@@ -7,7 +8,7 @@ import { PopoverBoundaryProvider } from 'components/Popover'
 import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
 import { UserRejectedRequestError } from 'errors'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
-import { formatPriceImpact, PriceImpact } from 'hooks/usePriceImpact'
+import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
 import { useWindowWidth } from 'hooks/useWindowWidth'
 import { AlertTriangle, Spinner } from 'icons'
@@ -290,7 +291,8 @@ export function SummaryDialog(props: SummaryDialogProps) {
     <>
       {showSpeedbump && props.impact ? (
         <SpeedBumpDialog onAcknowledge={onAcknowledgeSpeedbump}>
-          {t`This transaction will result in a`} <PriceImpactText>{formatPriceImpact(props.impact)} </PriceImpactText>
+          {t`This transaction will result in a`}{' '}
+          <PriceImpactText>{formatPriceImpact(props.impact?.percent)} </PriceImpactText>
           {t`price impact on the market price of this pool. Do you wish to continue? `}
         </SpeedBumpDialog>
       ) : (

@@ -36,18 +36,3 @@ export function useFiatValueChange(trade?: InterfaceTrade) {
     }
   }, [inputUSDCValue, outputUSDCValue])
 }
-
-export function toHumanReadablePercent(priceImpact: Percent): string {
-  const sign = priceImpact.lessThan(0) ? '+' : ''
-  const exactFloat = (Number(priceImpact.numerator) / Number(priceImpact.denominator)) * 100
-  if (exactFloat < 0.005) {
-    return '0.00%'
-  }
-  const number = parseFloat(priceImpact.multiply(-1)?.toFixed(2))
-  return `${sign}${number}%`
-}
-
-export function formatPriceImpact(impact: PriceImpact | undefined): string {
-  if (!impact) return '-'
-  return toHumanReadablePercent(impact.percent)
-}

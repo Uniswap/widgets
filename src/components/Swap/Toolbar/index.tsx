@@ -1,11 +1,10 @@
 import { t, Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
-import { formatPriceImpact } from 'hooks/usePriceImpact'
 import { AlertTriangle, Info } from 'icons'
 import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -120,7 +119,7 @@ function CaptionRow() {
       {
         color: impact?.warning,
         name: t`Price impact`,
-        value: impact?.percent ? formatPriceImpact(impact) : '-',
+        value: impact?.percent ? formatPriceImpact(impact.percent) : '-',
         valueTooltip: impact?.warning
           ? {
               icon: AlertTriangle,

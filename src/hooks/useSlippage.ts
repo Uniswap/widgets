@@ -1,11 +1,10 @@
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { slippageAtom } from 'state/swap/settings'
-
-import { toHumanReadablePercent } from './usePriceImpact'
 
 export function toPercent(maxSlippage: string | undefined): Percent | undefined {
   if (!maxSlippage) return undefined
@@ -54,5 +53,5 @@ export function getSlippageWarning(slippage?: Percent): 'warning' | 'error' | un
 }
 
 export function formatSlippage(slippage: Slippage): string {
-  return toHumanReadablePercent(slippage.allowed)
+  return formatPriceImpact(slippage.allowed)
 }

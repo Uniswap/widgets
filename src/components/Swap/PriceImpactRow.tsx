@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import Row from 'components/Row'
 import Tooltip, { SmallToolTipBody } from 'components/Tooltip'
-import { formatPriceImpact, PriceImpact } from 'hooks/usePriceImpact'
+import { PriceImpact } from 'hooks/usePriceImpact'
 import { AlertTriangle } from 'icons'
 import { ThemedText } from 'theme'
 
@@ -17,7 +18,7 @@ export function PriceImpactRow({ impact, reverse }: PriceImpactProps) {
   return (
     <Row gap={0.25} flex align="center" flow={reverse ? 'row-reverse' : 'row wrap'}>
       <ThemedText.Body2 userSelect={false} color={impact.warning ?? 'hint'}>
-        ({formatPriceImpact(impact)})
+        ({formatPriceImpact(impact?.percent)})
       </ThemedText.Body2>
       {impact?.warning && (
         <Tooltip icon={AlertTriangle} iconProps={{ color: impact.warning }} data-testid="alert-tooltip">
