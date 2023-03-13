@@ -129,7 +129,7 @@ function CaptionRow() {
       },
       {
         // min/max output/input after slippage
-        name: <div style={{ marginRight: '0.25em' }}>{descriptor}</div>,
+        name: <div style={{ marginRight: '0.5em' }}>{descriptor}</div>,
         value,
       },
       {
