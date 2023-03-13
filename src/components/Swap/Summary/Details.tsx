@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { useIsDialogPageCentered } from 'components/Dialog'
@@ -26,6 +26,7 @@ import { getEstimateMessage } from './Estimate'
 const Label = styled.span`
   color: ${({ theme }) => theme.secondary};
   margin-right: 0.5rem;
+  max-width: 75%;
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
@@ -52,7 +53,7 @@ interface DetailProps {
 function Detail({ label, value, color }: DetailProps) {
   return (
     <ThemedText.Body2 userSelect>
-      <Row flex align="flex-start">
+      <Row flex align="flex-start" flow="no-wrap">
         <Label>{label}</Label>
         <DetailValue color={color}>{value}</DetailValue>
       </Row>
@@ -152,7 +153,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
     }
 
     if (impact) {
-      details.push([t`Price impact`, impact?.percent ? impact?.toString() : '-', impact.warning])
+      details.push([t`Price impact`, impact?.percent ? formatPriceImpact(impact?.percent) : '-', impact.warning])
     }
 
     const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage)

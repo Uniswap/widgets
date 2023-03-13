@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro'
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
@@ -289,7 +290,8 @@ export function SummaryDialog(props: SummaryDialogProps) {
     <>
       {showSpeedbump && props.impact ? (
         <SpeedBumpDialog onAcknowledge={onAcknowledgeSpeedbump}>
-          {t`This transaction will result in a`} <PriceImpactText>{props.impact.toString()} </PriceImpactText>
+          {t`This transaction will result in a`}{' '}
+          <PriceImpactText>{formatPriceImpact(props.impact?.percent)} </PriceImpactText>
           {t`price impact on the market price of this pool. Do you wish to continue? `}
         </SpeedBumpDialog>
       ) : (

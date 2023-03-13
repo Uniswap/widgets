@@ -1,3 +1,4 @@
+import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { ArrowDown, ArrowRight } from 'icons'
@@ -56,7 +57,9 @@ export default function Summary({ input, output, inputUSDC, outputUSDC, impact, 
       <TokenValue input={input} usdc={inputUSDC} open={open} />
       {open ? <ArrowRight /> : <ArrowDown />}
       <TokenValue input={output} usdc={outputUSDC} open={open}>
-        {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
+        {impact && (
+          <ThemedText.Caption color={impact.warning}>({formatPriceImpact(impact?.percent)})</ThemedText.Caption>
+        )}
       </TokenValue>
     </>
   )

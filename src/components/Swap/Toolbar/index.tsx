@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'
@@ -119,7 +119,7 @@ function CaptionRow() {
       {
         color: impact?.warning,
         name: t`Price impact`,
-        value: impact?.percent ? impact?.toString() : '-',
+        value: impact?.percent ? formatPriceImpact(impact.percent) : '-',
         valueTooltip: impact?.warning
           ? {
               icon: AlertTriangle,
@@ -129,7 +129,7 @@ function CaptionRow() {
       },
       {
         // min/max output/input after slippage
-        name: <div style={{ marginRight: '0.25em' }}>{descriptor}</div>,
+        name: <div style={{ marginRight: '0.5em' }}>{descriptor}</div>,
         value,
       },
       {
