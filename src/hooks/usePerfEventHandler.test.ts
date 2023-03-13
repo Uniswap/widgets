@@ -28,7 +28,7 @@ describe('usePerfEventHandler', () => {
         // The execution of the callback should be deferred until after the perfHandler has executed.
         // This ensures that the perfHandler can capture the beginning of the callback's execution.
         expect(onSwapQuote).toHaveBeenCalledBefore(callback)
-        expect(onSwapQuote).toHaveBeenCalledWith(expect.any(Promise), args)
+        expect(onSwapQuote).toHaveBeenCalledWith(args, expect.any(Promise))
         expect(onSwapQuote.mock.calls[0][1]).resolves.toBe(tradeResult)
       })
     })
