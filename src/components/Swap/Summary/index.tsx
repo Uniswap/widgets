@@ -287,7 +287,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
   }, [ackPriceImpact, props.impact, showSpeedbump])
 
   return (
-    <>
+    <Column style={{ minWidth: isPageCentered ? Math.min(400, width) : 'auto', height: '100%' }} ref={setBoundary}>
       {showSpeedbump && props.impact ? (
         <SpeedBumpDialog onAcknowledge={onAcknowledgeSpeedbump}>
           {t`This transaction will result in a`}{' '}
@@ -295,16 +295,14 @@ export function SummaryDialog(props: SummaryDialogProps) {
           {t`price impact on the market price of this pool. Do you wish to continue? `}
         </SpeedBumpDialog>
       ) : (
-        <Column style={{ minWidth: isPageCentered ? Math.min(400, width) : 'auto', height: '100%' }} ref={setBoundary}>
-          <PopoverBoundaryProvider value={boundary}>
-            <Header title={<Trans>Review swap</Trans>} />
-            <Body flex align="stretch">
-              <Details {...props} />
-            </Body>
-            <ConfirmButton {...props} triggerImpactSpeedbump={triggerImpactSpeedbump} />
-          </PopoverBoundaryProvider>
-        </Column>
+        <PopoverBoundaryProvider value={boundary}>
+          <Header title={<Trans>Review swap</Trans>} />
+          <Body flex align="stretch">
+            <Details {...props} />
+          </Body>
+          <ConfirmButton {...props} triggerImpactSpeedbump={triggerImpactSpeedbump} />
+        </PopoverBoundaryProvider>
       )}
-    </>
+    </Column>
   )
 }
