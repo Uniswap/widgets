@@ -17,7 +17,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 const baseQuery: BaseQueryFn<GetQuoteArgs, TradeResult> = () => {
-  return { error: { reason: 'Unimplemented baseQuery' } }
+  return { error: { status: 'CUSTOM_ERROR', error: 'Unimplemented baseQuery' } as FetchBaseQueryError }
 }
 
 export const routing = createApi({
