@@ -17,7 +17,7 @@ describe('usePriceImpact', () => {
       tradeType: TradeType.EXACT_INPUT,
     })
     const { result } = renderHook(() => usePriceImpact(trade))
-    expect(formatPriceImpact(result.current?.percent)).toEqual('-99.61%')
+    expect(formatPriceImpact(result.current?.percent)).toEqual('99.61%')
     expect(result.current?.warning).toEqual('error')
   })
 })
