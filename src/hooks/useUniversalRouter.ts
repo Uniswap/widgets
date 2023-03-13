@@ -9,7 +9,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ErrorCode } from 'constants/eip1193'
 import { TX_GAS_MARGIN } from 'constants/misc'
 import { SwapError } from 'errors'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { SwapTransactionInfo, TransactionType } from 'state/transactions'
 import isZero from 'utils/isZero'
@@ -104,5 +104,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
     provider,
     trade,
   ])
-  return usePerfEventHandler('onSwapSend', swapCallback, trade && { trade })
+
+  const args = useMemo(() => trade && { trade }, [trade])
+  return usePerfEventHandler('onSwapSend', args, swapCallback)
 }

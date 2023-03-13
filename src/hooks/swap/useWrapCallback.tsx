@@ -62,7 +62,9 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
         return undefined
     }
   }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
-  const callback = usePerfEventHandler('onWrapSend', wrapCallback, parsedAmountIn && { amount: parsedAmountIn })
+
+  const args = useMemo(() => parsedAmountIn && { amount: parsedAmountIn }, [parsedAmountIn])
+  const callback = usePerfEventHandler('onWrapSend', args, wrapCallback)
 
   return useMemo(() => ({ callback, type: wrapType }), [callback, wrapType])
 }

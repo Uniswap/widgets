@@ -87,9 +87,7 @@ export function useUpdatePermitAllowance(
       throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
-  return usePerfEventHandler(
-    'onPermit2Allowance',
-    updatePermitAllowance,
-    token && spender ? { token, spender } : undefined
-  )
+
+  const args = useMemo(() => (token && spender ? { token, spender } : undefined), [spender, token])
+  return usePerfEventHandler('onPermit2Allowance', args, updatePermitAllowance)
 }

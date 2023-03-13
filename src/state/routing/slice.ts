@@ -34,17 +34,9 @@ export const routing = createApi({
           queryFulfilled
             .catch((error) => {
               const { error: queryError } = error
-              if (queryError && typeof queryError == 'object' && 'status' in queryError) {
+              if (queryError && typeof queryError === 'object' && 'status' in queryError) {
                 const parsedError = queryError as FetchBaseQueryError
-                switch (parsedError.status) {
-                  case 'CUSTOM_ERROR':
-                  case 'FETCH_ERROR':
-                  case 'PARSING_ERROR':
-                    throw parsedError.error
-                    break
-                  default:
-                    throw parsedError.status
-                }
+                throw typeof parsedError.status === 'number' ? parsedError.status : parsedError.error
               }
               throw queryError
             })

@@ -76,9 +76,7 @@ export function useUpdateTokenAllowance(
       }
     }
   }, [amount, contract, spender])
-  return usePerfEventHandler(
-    'onTokenAllowance',
-    updateTokenAllowance,
-    amount && spender ? { token: amount.currency, spender } : undefined
-  )
+
+  const args = useMemo(() => (amount && spender ? { token: amount.currency, spender } : undefined), [amount, spender])
+  return usePerfEventHandler('onTokenAllowance', args, updateTokenAllowance)
 }
