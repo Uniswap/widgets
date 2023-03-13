@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { formatSlippage, Slippage } from 'hooks/useSlippage'
 import { ReactNode, useMemo } from 'react'
@@ -50,7 +50,7 @@ export function getEstimateMessage(
       estimateMessage: t`Output is estimated. You will receive at least ${minReceivedString} or the transaction will revert.`,
       descriptor: (
         <ThemedText.Body2>
-          <Trans>Minimum output after slippage</Trans>
+          {t`Minimum output after slippage`}
           {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
@@ -69,7 +69,7 @@ export function getEstimateMessage(
       estimateMessage: t`Output is estimated. You will send at most ${maxSentString} or the transaction will revert.`,
       descriptor: (
         <ThemedText.Body2>
-          <Trans>Maximum input after slippage</Trans>
+          {t`Maximum input after slippage`}
           {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}

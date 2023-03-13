@@ -76,8 +76,7 @@ function useReviewState(onSwap: () => Promise<void>, allowance: Allowance, doesT
 }
 
 const Body = styled(Column)`
-  height: 100%;
-  padding: 0.75rem 0.875rem;
+  margin: 0.75rem 0.875rem;
 `
 
 const PriceImpactText = styled.span`
