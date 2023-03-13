@@ -1,4 +1,3 @@
-import { useSwitchSwapCurrencies } from 'hooks/swap'
 import { LargeIcon, Reverse } from 'icons'
 import styled from 'styled-components/macro'
 import { Layer } from 'theme'
@@ -25,16 +24,19 @@ const StyledReverseButton = styled(Button)`
   display: flex;
   justify-content: center;
   width: 100%;
+  :disabled {
+    filter: opacity(1);
+  }
 `
 
 export default function ReverseButton() {
   // const { error } = useSwapInfo()
   // const isDisabled = error !== undefined
-  const switchCurrencies = useSwitchSwapCurrencies()
+  // const switchCurrencies = useSwitchSwapCurrencies()
 
   return (
     <Underlayer>
-      <StyledReverseButton onClick={switchCurrencies}>
+      <StyledReverseButton disabled>
         <LargeIcon icon={Reverse} />
       </StyledReverseButton>
     </Underlayer>
