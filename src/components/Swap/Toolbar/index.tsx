@@ -83,8 +83,11 @@ function CaptionRow() {
         }
       }
 
-      if (state === TradeState.INVALID || state === TradeState.NO_ROUTE_FOUND) {
+      if (state === TradeState.INVALID) {
         return { caption: <Caption.Error /> }
+      }
+      if (state === TradeState.NO_ROUTE_FOUND) {
+        return { caption: null }
       }
     }
 
@@ -149,7 +152,7 @@ function CaptionRow() {
   if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
     return null
   }
-  return (
+  return caption ? (
     <StyledExpando
       title={
         <ToolbarRow
@@ -173,7 +176,7 @@ function CaptionRow() {
         <ToolbarOrderRouting trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
       </Column>
     </StyledExpando>
-  )
+  ) : null
 }
 
 function ToolbarActionButton() {
