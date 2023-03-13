@@ -17,8 +17,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 const baseQuery: BaseQueryFn<GetQuoteArgs, TradeResult> = () => {
-  const error: FetchBaseQueryError = { status: 'CUSTOM_ERROR', error: 'Unimplemented baseQuery' }
-  return { error }
+  return { error: { status: 'CUSTOM_ERROR', error: 'Unimplemented baseQuery' } as FetchBaseQueryError }
 }
 
 export const routing = createApi({
@@ -37,7 +36,14 @@ export const routing = createApi({
               const { error: queryError } = error
               if (queryError && typeof queryError === 'object' && 'status' in queryError) {
                 const parsedError = queryError as FetchBaseQueryError
-                throw typeof parsedError.status === 'number' ? parsedError.status : parsedError.error
+                switch (parsedError.status) {
+                  case 'CUSTOM_ERROR':
+                  case 'FETCH_ERROR':
+                  case 'PARSING_ERROR':
+                    throw parsedError.error
+                  default:
+                    throw parsedError.status
+                }
               }
               throw queryError
             })
