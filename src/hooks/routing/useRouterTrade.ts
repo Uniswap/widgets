@@ -8,7 +8,7 @@ import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
 import { useGetTradeQuoteQueryState, useLazyGetTradeQuoteQuery } from 'state/routing/slice'
-import { InterfaceTrade, NO_ROUTE, TradeResult, TradeState } from 'state/routing/types'
+import { InterfaceTrade, QuoteState, TradeState } from 'state/routing/types'
 
 import { QuoteConfig, QuoteType } from './types'
 
@@ -61,7 +61,12 @@ export function useRouterTrade(
 
   // Get the cached state *immediately* to update the UI without sending a request - using useGetTradeQuoteQueryState -
   // but debounce the actual request - using useLazyGetTradeQuoteQuery - to avoid flooding the router / JSON-RPC endpoints.
-  const { isError, data, currentData, fulfilledTimeStamp } = useGetTradeQuoteQueryState(queryArgs)
+  const {
+    data: tradeResult,
+    currentData: currentTradeResult,
+    fulfilledTimeStamp,
+    isError,
+  } = useGetTradeQuoteQueryState(queryArgs)
 
   // An already-fetched value should be refetched if it is older than the pollingInterval.
   // Without explicit refetch, it would not be refetched until another pollingInterval has elapsed.
@@ -74,21 +79,20 @@ export function useRouterTrade(
   }, [fulfilledTimeStamp, pollingInterval, queryArgs, trigger])
   useTimeout(request, 200)
 
-  const tradeResult: TradeResult | undefined = typeof data === 'object' ? data : undefined
+  const isCurrent = currentTradeResult === tradeResult
   const isValidBlock = useIsValidBlock(Number(tradeResult?.blockNumber))
-  const isValid = currentData === data && isValidBlock
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(tradeResult?.gasUseEstimateUSD)
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
       return TRADE_INVALID
-    } else if (data === NO_ROUTE && isValid) {
+    } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
       return TRADE_LOADING
     } else {
-      const state = isValid ? TradeState.VALID : TradeState.LOADING
-      return { state, trade: tradeResult?.trade, gasUseEstimateUSD }
+      const state = isCurrent && isValidBlock ? TradeState.VALID : TradeState.LOADING
+      return { state, trade: tradeResult.trade, gasUseEstimateUSD }
     }
-  }, [amountSpecified, isError, queryArgs, data, tradeResult?.trade, isValid, gasUseEstimateUSD])
+  }, [amountSpecified, gasUseEstimateUSD, isCurrent, isError, isValidBlock, queryArgs, tradeResult])
 }

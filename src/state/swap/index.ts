@@ -2,12 +2,17 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { RouterPreference } from 'hooks/routing/types'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { InterfaceTrade } from 'state/routing/types'
 
-import { Slippage } from './settings'
+import { SettingsEventHandlers } from './settings'
+export type {
+  OnRouterPreferenceChange,
+  OnSettingsReset,
+  OnSlippageChange,
+  OnTransactionDeadlineChange,
+} from './settings'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -38,24 +43,6 @@ export const swapAtom = atom((get) => {
 export const displayTxHashAtom = atom<string | undefined>(undefined)
 
 export const feeOptionsAtom = atom<FeeOptions | undefined>(undefined)
-
-/** An integration hook called when the user resets settings. */
-export type OnSettingsReset = () => void
-
-/** An integration hook called when the user changes slippage settings. */
-export type OnSlippageChange = (slippage: Slippage) => void
-
-/** An integration hook called when the user changes transaction deadline settings. */
-export type OnTransactionDeadlineChange = (ttl: number | undefined) => void
-
-export type OnRouterPreferenceChange = (routerPreference: RouterPreference) => void
-
-interface SettingsEventHandlers {
-  onSettingsReset?: OnSettingsReset
-  onSlippageChange?: OnSlippageChange
-  onTransactionDeadlineChange?: OnTransactionDeadlineChange
-  onRouterPreferenceChange?: OnRouterPreferenceChange
-}
 
 /** An integration hook called when the user selects a new token. */
 export type OnTokenChange = (field: Field, token: Currency) => void

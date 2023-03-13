@@ -63,7 +63,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
             color={'onAccent'}
             style={{ maxWidth: '10rem', textOverflow: 'ellipsis', overflow: 'hidden' }}
           >
-            <Trans>Select a token</Trans>
+            <Trans>Select token</Trans>
           </ThemedText.ButtonLarge>
         )}
         <ChevronDown strokeWidth={2} color={value ? 'primary' : 'onAccent'} />

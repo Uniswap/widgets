@@ -74,4 +74,16 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Safe" URLs
     'https://alfajores-forno.celo-testnet.org',
   ],
+  [SupportedChainId.BNB]: [
+    // "Safe" URLs
+    'https://endpoints.omniatech.io/v1/bsc/mainnet/public',
+    'https://bsc-mainnet.gateway.pokt.network/v1/lb/6136201a7bad1500343e248d',
+    'https://1rpc.io/bnb',
+    'https://bsc-dataseed3.binance.org',
+    'https://bsc-dataseed2.defibit.io',
+    'https://bsc-dataseed1.ninicoin.io',
+    'https://binance.nodereal.io',
+    'https://bsc-dataseed4.defibit.io',
+    'https://rpc.ankr.com/bsc',
+  ],
 }

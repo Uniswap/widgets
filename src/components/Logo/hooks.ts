@@ -33,7 +33,7 @@ export function useLogo(currency: LogoTableInput | undefined) {
 
   const invalidateSrc = useCallback(() => {
     const nextSrc = entry?.invalidateSrc()
-    nextSrc && setSrc(nextSrc.getUri())
+    setSrc(nextSrc?.getUri())
   }, [entry])
 
   return { src, invalidateSrc }
