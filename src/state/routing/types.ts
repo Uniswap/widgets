@@ -61,6 +61,7 @@ export interface GetQuoteArgs {
   userAddress?: string
   recipientAddress?: string
   slippagePercentage: number
+  partner?: string
 }
 
 export const INITIALIZED = 'Initialized'

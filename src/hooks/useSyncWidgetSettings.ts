@@ -19,6 +19,7 @@ export interface WidgetSettings {
   toToken?: { chainId: number; address: string }
   fromToken?: { chainId: number; address: string }
   toProtocols?: string[]
+  partner?: string
 }
 
 export default function useSyncWidgetSettings({
@@ -30,6 +31,7 @@ export default function useSyncWidgetSettings({
   toToken,
   fromToken,
   toProtocols,
+  partner,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
@@ -42,6 +44,7 @@ export default function useSyncWidgetSettings({
       toToken,
       fromToken,
       toProtocols,
+      partner,
     })
   }, [
     updateWidgetSettingsAtom,
@@ -53,6 +56,7 @@ export default function useSyncWidgetSettings({
     toToken,
     fromToken,
     toProtocols,
+    partner,
   ])
 }
 
@@ -148,4 +152,8 @@ export function useWidgetToToken() {
 
 export function useWidgetToProtocols() {
   return useAtomValue(widgetSettingsAtom).toProtocols
+}
+
+export function usePartnerAddress() {
+  return useAtomValue(widgetSettingsAtom).partner
 }

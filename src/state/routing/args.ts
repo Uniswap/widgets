@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { RouterPreference } from 'hooks/routing/types'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { DEFAULT_SLIPPAGE_PERCENT, toPercent } from 'hooks/useSlippage'
-import { useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
+import { usePartnerAddress, useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
@@ -59,6 +59,8 @@ export function useGetQuoteArgs(
   skip?: boolean
 ): GetQuoteArgs | SkipToken {
   const snAccount = useSnAccountAddress()
+  const partnerAddress = usePartnerAddress()
+
   const [slippage] = useAtom(slippageAtom)
 
   const args = useMemo(() => {
@@ -83,10 +85,21 @@ export function useGetQuoteArgs(
       userAddress: isStarknetChain(currencyIn?.chainId) ? snAccount : account,
       recipientAddress: isStarknetChain(currencyOut?.chainId) ? snAccount : account,
       slippagePercentage: parseFloat(slippagePercentage),
+      partner: partnerAddress,
       routerPreference,
       tradeType,
     }
-  }, [slippage, amountSpecified, tradeType, currencyIn, currencyOut, routerPreference, account, snAccount])
+  }, [
+    slippage,
+    amountSpecified,
+    tradeType,
+    currencyIn,
+    currencyOut,
+    routerPreference,
+    account,
+    snAccount,
+    partnerAddress,
+  ])
 
   const isWindowVisible = useIsWindowVisible()
   if (skip || !isWindowVisible) return skipToken

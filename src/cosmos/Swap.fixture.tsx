@@ -114,6 +114,7 @@ function Fixture() {
       testnetsVisible={testnetsVisible}
       theme={theme}
       width={width}
+      partner="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
       srcChainIds={JSON.parse(srcChainIds)}
       dstChainIds={JSON.parse(dstChainIds)}
       toProtocols={presetToProtocols ? ['jediswap.xyz'] : undefined}

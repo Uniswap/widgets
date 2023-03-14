@@ -73,7 +73,7 @@ export { darkTheme, defaultTheme, lightTheme } from 'theme'
 
 export { isStarknetChain } from 'utils/starknet'
 
-export type SwapWidgetProps = {
+export type WidoWidgetProps = {
   // WidgetProps
 
   ethProvider?: Web3Provider
@@ -88,6 +88,7 @@ export type SwapWidgetProps = {
   className?: string
 
   testnetsVisible?: boolean
+  partner?: string
 
   // TransactionEventHandlers
 
@@ -102,7 +103,7 @@ export type SwapWidgetProps = {
   onSwitchChain?: OnSwitchChain
 }
 
-export function WidoWidget(props: SwapWidgetProps) {
+export function WidoWidget(props: WidoWidgetProps) {
   return (
     <Widget {...props}>
       <Swap {...props} />
