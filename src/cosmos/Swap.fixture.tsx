@@ -74,6 +74,8 @@ function Fixture() {
       const connection = await connect()
       await connection?.enable()
       setStarknet(connection)
+      connection?.on('networkChanged', () => setStarknet(undefined))
+      connection?.on('accountsChanged', () => setStarknet(undefined))
     }
   }, [starknet, setStarknet])
 
