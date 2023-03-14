@@ -1,8 +1,9 @@
 import { TokenInfo } from '@uniswap/token-lists'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { SupportedChainId, VISIBLE_CHAIN_IDS, VISIBLE_TESTNET_CHAIN_IDS } from 'constants/chains'
-import { useEvmChainId, useEvmProvider } from 'hooks/useSyncWidgetSettings'
+import { useEvmChainId, useEvmProvider, widgetSettingsAtom } from 'hooks/useSyncWidgetSettings'
 import { useTestnetsVisible } from 'hooks/useSyncWidgetSettings'
+import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
 import { getSupportedTokens, Token } from 'wido'
@@ -111,4 +112,22 @@ export function Provider({ list, children }: PropsWithChildren<{ list?: string |
   }, [chainTokenMap, list, resolver, throwError])
 
   return <ChainTokenMapContext.Provider value={chainTokenMap}>{children}</ChainTokenMapContext.Provider>
+}
+
+export function useWidgetFromTokens(): TokenListItem[] {
+  const allTokens = useTokenList()
+  const chainTokenMap = useChainTokenMapContext()
+  const presetTokens = useAtomValue(widgetSettingsAtom)
+    .fromTokens?.map((token) => chainTokenMap[token.chainId]?.[token.address]?.token)
+    .filter((token) => !!token)
+  return presetTokens || allTokens
+}
+
+export function useWidgetToTokens(): TokenListItem[] {
+  const allTokens = useTokenList()
+  const chainTokenMap = useChainTokenMapContext()
+  const presetTokens = useAtomValue(widgetSettingsAtom)
+    .toTokens?.map((token) => chainTokenMap[token.chainId]?.[token.address]?.token)
+    .filter((token) => !!token)
+  return presetTokens || allTokens
 }

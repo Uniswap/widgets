@@ -74,30 +74,25 @@ export { darkTheme, defaultTheme, lightTheme } from 'theme'
 export { isStarknetChain } from 'utils/starknet'
 
 export type WidoWidgetProps = {
-  // WidgetProps
-
+  // WidgetSettings
   ethProvider?: Web3Provider
   snAccount?: AccountInterface
-  srcChainIds?: number[]
-  dstChainIds?: number[]
-  toToken?: { chainId: number; address: string }
-  fromToken?: { chainId: number; address: string }
-  toProtocols?: string[]
+  toTokens?: { chainId: number; address: string }[]
+  fromTokens?: { chainId: number; address: string }[]
+  testnetsVisible?: boolean
+  partner?: string
+
+  // WidgetProps
   theme?: Theme
   width?: string | number
   className?: string
 
-  testnetsVisible?: boolean
-  partner?: string
-
   // TransactionEventHandlers
-
   onTxSubmit?: OnTxSubmit
   onTxSuccess?: OnTxSuccess
   onTxFail?: OnTxFail
 
   // WidgetEventHandlers
-
   onConnectWalletClick?: OnConnectWalletClick
   onError?: OnError
   onSwitchChain?: OnSwitchChain

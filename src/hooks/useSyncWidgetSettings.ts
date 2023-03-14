@@ -14,11 +14,8 @@ export interface WidgetSettings {
   ethProvider?: Web3Provider
   snAccount?: AccountInterface
   testnetsVisible?: boolean
-  srcChainIds?: number[]
-  dstChainIds?: number[]
-  toToken?: { chainId: number; address: string }
-  fromToken?: { chainId: number; address: string }
-  toProtocols?: string[]
+  toTokens?: { chainId: number; address: string }[]
+  fromTokens?: { chainId: number; address: string }[]
   partner?: string
 }
 
@@ -26,11 +23,8 @@ export default function useSyncWidgetSettings({
   testnetsVisible,
   ethProvider,
   snAccount,
-  srcChainIds,
-  dstChainIds,
-  toToken,
-  fromToken,
-  toProtocols,
+  toTokens,
+  fromTokens,
   partner,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
@@ -39,25 +33,11 @@ export default function useSyncWidgetSettings({
       testnetsVisible,
       ethProvider,
       snAccount,
-      srcChainIds,
-      dstChainIds,
-      toToken,
-      fromToken,
-      toProtocols,
+      toTokens,
+      fromTokens,
       partner,
     })
-  }, [
-    updateWidgetSettingsAtom,
-    testnetsVisible,
-    ethProvider,
-    snAccount,
-    srcChainIds,
-    dstChainIds,
-    toToken,
-    fromToken,
-    toProtocols,
-    partner,
-  ])
+  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, toTokens, fromTokens, partner])
 }
 
 export function useTestnetsVisible() {
@@ -135,23 +115,31 @@ export function useSnAccountAddress() {
 }
 
 export function useSrcChainIds() {
-  return useAtomValue(widgetSettingsAtom).srcChainIds
+  const { fromTokens } = useAtomValue(widgetSettingsAtom)
+  const set = fromTokens?.reduce((acc, token) => acc.add(token.chainId), new Set<number>())
+  return set ? Array.from(set) : undefined
 }
 
 export function useDstChainIds() {
-  return useAtomValue(widgetSettingsAtom).dstChainIds
+  const { toTokens } = useAtomValue(widgetSettingsAtom)
+  const set = toTokens?.reduce((acc, token) => acc.add(token.chainId), new Set<number>())
+  return set ? Array.from(set) : undefined
 }
 
 export function useWidgetFromToken() {
-  return useAtomValue(widgetSettingsAtom).fromToken
+  const { fromTokens } = useAtomValue(widgetSettingsAtom)
+  if (fromTokens && Array.isArray(fromTokens) && fromTokens.length === 1) {
+    return fromTokens[0]
+  }
+  return undefined
 }
 
 export function useWidgetToToken() {
-  return useAtomValue(widgetSettingsAtom).toToken
-}
-
-export function useWidgetToProtocols() {
-  return useAtomValue(widgetSettingsAtom).toProtocols
+  const { toTokens } = useAtomValue(widgetSettingsAtom)
+  if (toTokens && Array.isArray(toTokens) && toTokens.length === 1) {
+    return toTokens[0]
+  }
+  return undefined
 }
 
 export function usePartnerAddress() {

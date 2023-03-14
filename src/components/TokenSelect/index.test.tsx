@@ -10,7 +10,7 @@ describe('TokenSelect.tsx', () => {
   describe('onTokenSelectorClick', () => {
     function renderTokenSelect(onTokenSelectorClick: OnTokenSelectorClick) {
       return renderComponent(
-        <TokenSelect field={Field.INPUT} value={undefined} disabled={false} onSelect={jest.fn()} />,
+        <TokenSelect tokenList={[]} field={Field.INPUT} value={undefined} disabled={false} onSelect={jest.fn()} />,
         {
           initialAtomValues: [[swapEventHandlersAtom, { onTokenSelectorClick }]],
         }

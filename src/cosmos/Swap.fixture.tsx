@@ -6,7 +6,7 @@ import Row from 'components/Row'
 import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { useLocalApi, useProdApi } from 'wido'
+import { getSupportedTokens, useLocalApi, useProdApi } from 'wido'
 import { darkTheme, defaultTheme, isStarknetChain, lightTheme, WidoWidget } from 'wido-widget'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
@@ -90,7 +90,41 @@ function Fixture() {
 
   const [presetFromToken] = useValue('presetFromToken', { defaultValue: false })
   const [presetToToken] = useValue('presetToToken', { defaultValue: false })
-  const [presetToProtocols] = useValue('presetToProtocols', { defaultValue: false })
+  const [toJediswapProtocol] = useValue('toJediswapProtocol', { defaultValue: false })
+
+  const [fromTokens, setFromTokens] = useState<{ chainId: number; address: string }[]>([])
+  const [toTokens, setToTokens] = useState<{ chainId: number; address: string }[]>([])
+
+  useEffect(() => {
+    if (presetFromToken) {
+      setFromTokens([
+        {
+          chainId: 5,
+          address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        },
+      ])
+    } else {
+      getSupportedTokens({
+        chainId: JSON.parse(srcChainIds),
+      }).then(setFromTokens)
+    }
+  }, [presetFromToken, setFromTokens, srcChainIds])
+
+  useEffect(() => {
+    if (presetToToken) {
+      setToTokens([
+        {
+          chainId: 15367,
+          address: '0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426',
+        },
+      ])
+    } else {
+      getSupportedTokens({
+        chainId: JSON.parse(dstChainIds),
+        protocol: toJediswapProtocol ? ['jediswap.xyz' as any] : undefined,
+      }).then(setToTokens)
+    }
+  }, [presetToToken, setToTokens, dstChainIds, toJediswapProtocol])
 
   const handleConnectWalletClick = useCallback(
     (chainId: number) => {
@@ -109,31 +143,14 @@ function Fixture() {
 
   const widget = (
     <WidoWidget
+      partner="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
       ethProvider={ethProvider}
       snAccount={starknet?.account}
       testnetsVisible={testnetsVisible}
       theme={theme}
       width={width}
-      partner="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-      srcChainIds={JSON.parse(srcChainIds)}
-      dstChainIds={JSON.parse(dstChainIds)}
-      toProtocols={presetToProtocols ? ['jediswap.xyz'] : undefined}
-      fromToken={
-        presetFromToken
-          ? {
-              chainId: 5,
-              address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            }
-          : undefined
-      }
-      toToken={
-        presetToToken
-          ? {
-              chainId: 15367,
-              address: '0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426',
-            }
-          : undefined
-      }
+      fromTokens={fromTokens}
+      toTokens={toTokens}
       {...eventHandlers}
       onConnectWalletClick={handleConnectWalletClick}
     />
@@ -149,7 +166,12 @@ function Fixture() {
         {widget}
         <EventFeed events={events} onClear={() => setEvents([])} />
       </Row>
-      Starknet Address: {starknet?.account?.address}
+      <Column flex align="start" justify="start" gap={0.5}>
+        <span>Starknet Address: {starknet?.account?.address}</span>
+        <span>Starknet ChainId: {starknet?.account?.chainId}</span>
+        <span>EVM Address: {account}</span>
+        <span>EVM ChainId: {chainId}</span>
+      </Column>
     </Column>
   )
 }

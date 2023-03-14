@@ -6,6 +6,7 @@ import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { useNativeCurrencies } from 'hooks/useNativeCurrency'
 import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
+import { TokenListItem } from 'hooks/useTokenList/utils'
 import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -47,37 +48,26 @@ interface TokenSelectDialogProps {
   onSelect: (token: Currency) => void
   onClose: () => void
   chainIdsAllowed?: number[]
-  protocolsAllowed?: string[]
+  tokenList: TokenListItem[]
 }
 
-export function TokenSelectDialog({
-  value,
-  onSelect,
-  onClose,
-  chainIdsAllowed,
-  protocolsAllowed,
-}: TokenSelectDialogProps) {
+export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed, tokenList }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
   const [chainIdFilter, setChainIdFilter] = useState<number | undefined>()
-  const allChainList = useTokenList()
   const list = useMemo(() => {
     let chainFilteredList = []
     if (!chainIdFilter) {
       if (chainIdsAllowed && Array.isArray(chainIdsAllowed)) {
-        chainFilteredList = allChainList.filter((x) => chainIdsAllowed.includes(x.chainId))
+        chainFilteredList = tokenList.filter((x) => chainIdsAllowed.includes(x.chainId))
       } else {
-        chainFilteredList = allChainList
+        chainFilteredList = tokenList
       }
     } else {
-      chainFilteredList = allChainList.filter((x) => x.chainId === chainIdFilter)
-    }
-
-    if (Array.isArray(protocolsAllowed)) {
-      return chainFilteredList.filter((x) => protocolsAllowed.includes((x as any).protocol ?? 'unknown'))
+      chainFilteredList = tokenList.filter((x) => x.chainId === chainIdFilter)
     }
 
     return chainFilteredList
-  }, [allChainList, chainIdFilter, chainIdsAllowed, protocolsAllowed])
+  }, [tokenList, chainIdFilter, chainIdsAllowed])
 
   const tokens = useQueryTokens(query, list)
 
@@ -151,7 +141,7 @@ interface TokenSelectProps {
   onSelect: (value: Currency) => void
   chainIdsAllowed?: number[]
   presetValue?: boolean
-  protocolsAllowed?: string[]
+  tokenList: TokenListItem[]
 }
 
 export default memo(function TokenSelect({
@@ -162,7 +152,7 @@ export default memo(function TokenSelect({
   onSelect,
   chainIdsAllowed,
   presetValue,
-  protocolsAllowed,
+  tokenList,
 }: TokenSelectProps) {
   usePrefetchBalances()
 
@@ -187,7 +177,7 @@ export default memo(function TokenSelect({
           onSelect={selectAndClose}
           onClose={() => setOpen(false)}
           chainIdsAllowed={chainIdsAllowed}
-          protocolsAllowed={protocolsAllowed}
+          tokenList={tokenList}
         />
       )}
     </>
