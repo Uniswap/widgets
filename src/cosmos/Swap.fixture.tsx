@@ -7,7 +7,7 @@ import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 import { useLocalApi, useProdApi } from 'wido'
-import { darkTheme, defaultTheme, isStarknetChain, lightTheme, SwapWidget } from 'wido-widget'
+import { darkTheme, defaultTheme, isStarknetChain, lightTheme, WidoWidget } from 'wido-widget'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 
@@ -108,7 +108,7 @@ function Fixture() {
   )
 
   const widget = (
-    <SwapWidget
+    <WidoWidget
       ethProvider={ethProvider}
       snAccount={starknet?.account}
       testnetsVisible={testnetsVisible}

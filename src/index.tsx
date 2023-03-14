@@ -102,7 +102,7 @@ export type SwapWidgetProps = {
   onSwitchChain?: OnSwitchChain
 }
 
-export function SwapWidget(props: SwapWidgetProps) {
+export function WidoWidget(props: SwapWidgetProps) {
   return (
     <Widget {...props}>
       <Swap {...props} />
