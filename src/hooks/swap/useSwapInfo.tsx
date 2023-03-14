@@ -4,12 +4,12 @@ import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { PriceImpact, usePriceImpact } from 'hooks/usePriceImpact'
 import useSlippage, { DEFAULT_SLIPPAGE, Slippage } from 'hooks/useSlippage'
-import { useEvmAccountAddress, useEvmChainId, useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
+import { useEvmAccountAddress, useEvmChainId, useSnChainId } from 'hooks/useSyncWidgetSettings'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef } from 'react'
 import { TradeState, WidoTrade } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
-import { isStarknet } from 'utils/starknet'
+import { isStarknetChain } from 'utils/starknet'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -49,18 +49,19 @@ interface SwapInfo {
 function useComputeSwapInfo(): SwapInfo {
   const evmChainId = useEvmChainId()
   const evmAccount = useEvmAccountAddress()
-  const snAccount = useSnAccountAddress()
+  const snChainId = useSnChainId()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
 
   const chainIdIn = currencyIn?.chainId
   const error = useMemo(() => {
-    if (isStarknet(chainIdIn) && snAccount) {
-      return
+    if (chainIdIn && isStarknetChain(chainIdIn) && snChainId && snChainId !== chainIdIn) {
+      return ChainError.MISMATCHED_CHAINS
     }
-    if (evmChainId && chainIdIn && evmChainId !== chainIdIn) return ChainError.MISMATCHED_CHAINS
+    if (chainIdIn && !isStarknetChain(chainIdIn) && evmChainId && evmChainId !== chainIdIn)
+      return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainIdIn, evmChainId, snAccount])
+  }, [chainIdIn, evmChainId, snChainId])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),

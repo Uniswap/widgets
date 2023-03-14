@@ -13,7 +13,7 @@ import { TradeState } from 'state/routing/types'
 import { calcMinimumAmountOut } from 'state/routing/utils'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
-import { isStarknet } from 'utils/starknet'
+import { isStarknetChain } from 'utils/starknet'
 
 import Row from '../../Row'
 import SwapInputOutputEstimate from '../Summary/Estimate'
@@ -76,8 +76,8 @@ export default memo(function Toolbar() {
   const account = useEvmAccountAddress()
   const snAccount = useSnAccountAddress()
 
-  const srcWalletConnected = isStarknet(inputCurrency?.chainId) ? snAccount : account
-  const dstWalletConnected = isStarknet(outputCurrency?.chainId) ? snAccount : account
+  const srcWalletConnected = isStarknetChain(inputCurrency?.chainId) ? snAccount : account
+  const dstWalletConnected = isStarknetChain(outputCurrency?.chainId) ? snAccount : account
   const walletsConnected = srcWalletConnected && dstWalletConnected
 
   const insufficientBalance: boolean | undefined = useMemo(() => {

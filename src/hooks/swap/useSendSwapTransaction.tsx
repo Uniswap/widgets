@@ -4,7 +4,7 @@ import { ErrorCode } from 'constants/eip1193'
 import { useMemo } from 'react'
 import { AccountInterface } from 'starknet'
 import { WidoTrade } from 'state/routing/types'
-import { isStarknet } from 'utils/starknet'
+import { isStarknetChain } from 'utils/starknet'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { approve, ChainId } from 'wido'
 
@@ -23,7 +23,7 @@ export default function useSendSwapTransaction(
       return { callback: null }
     }
 
-    const isStarkChain = isStarknet(trade.fromToken.chainId)
+    const isStarkChain = isStarknetChain(trade.fromToken.chainId)
     if (!isStarkChain && (!provider || !account || !chainId)) {
       return { callback: null }
     }

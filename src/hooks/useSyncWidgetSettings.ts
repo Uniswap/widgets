@@ -97,6 +97,30 @@ export function useEvmChainId() {
   return chainId
 }
 
+const WIDO_SN_MAPPING: Record<string, number> = {
+  //MAINNET
+  '0x534e5f4d41494e': 15366,
+  //TESTNET
+  '0x534e5f474f45524c49': 15367,
+  //TESTNET2
+  '0x534e5f474f45524c4932': 15367,
+}
+
+export function useSnChainId() {
+  const [chainId, setChainId] = useState<string | undefined>()
+  const accountInterface = useSnAccountInterface()
+
+  useEffect(() => {
+    if (accountInterface) {
+      setChainId(accountInterface?.chainId)
+    } else {
+      setChainId(undefined)
+    }
+  }, [accountInterface, setChainId])
+
+  return chainId ? WIDO_SN_MAPPING[chainId] : undefined
+}
+
 export function useSnAccountInterface() {
   return useAtomValue(widgetSettingsAtom).snAccount
 }

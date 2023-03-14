@@ -3,7 +3,6 @@ import 'polyfills'
 import { TransactionReceipt, Web3Provider } from '@ethersproject/providers'
 import Swap from 'components/Swap'
 import Widget from 'components/Widget'
-import { SupportedChainId } from 'constants/chains'
 import { OnTxFail, OnTxSubmit, OnTxSuccess } from 'hooks/transactions'
 import { OnError, OnSwitchChain } from 'hooks/useSyncWidgetSettings'
 import { ErrorInfo } from 'react'
@@ -72,9 +71,7 @@ export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 // export { invertTradeType, toTradeType } from 'utils/tradeType'
 
-export function isStarknetChain(chainId: number) {
-  return [SupportedChainId.STARKNET, SupportedChainId.STARKNET_GOERLI].includes(chainId)
-}
+export { isStarknetChain } from 'utils/starknet'
 
 export type SwapWidgetProps = {
   // WidgetProps

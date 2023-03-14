@@ -5,7 +5,7 @@ import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { useEvmAccountAddress, useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { useMemo } from 'react'
 import { Field } from 'state/swap'
-import { isStarknet } from 'utils/starknet'
+import { isStarknetChain } from 'utils/starknet'
 
 import ConnectWalletButton from './ConnectWalletButton'
 import SwapButton from './SwapButton'
@@ -32,8 +32,8 @@ export default function SwapActionButton() {
       inputCurrencyBalance.lessThan(inputCurrencyAmount),
     [approval.state, error, isWrap, trade, inputCurrencyAmount, inputCurrencyBalance]
   )
-  const srcWalletConnected = isStarknet(inputCurrency?.chainId) ? snAccount : account
-  const dstWalletConnected = isStarknet(outputCurrency?.chainId) ? snAccount : account
+  const srcWalletConnected = isStarknetChain(inputCurrency?.chainId) ? snAccount : account
+  const dstWalletConnected = isStarknetChain(outputCurrency?.chainId) ? snAccount : account
 
   if (!inputCurrency && !outputCurrency) {
     return <SwapButton disabled={isDisabled} />

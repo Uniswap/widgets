@@ -8,7 +8,7 @@ import { useCallback, useEffect } from 'react'
 import { RpcProvider } from 'starknet'
 import { snBlockNumberAtom } from 'state/transactions'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
-import { isStarknet } from 'utils/starknet'
+import { isStarknetChain } from 'utils/starknet'
 
 interface Transaction {
   addedTime: number
@@ -57,14 +57,14 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt, chain
   const snBlockNumber = useAtomValue(snBlockNumberAtom)
   const evmBlockNumber = useBlockNumber()
 
-  const lastBlockNumber = isStarknet(chainId) ? snBlockNumber : evmBlockNumber
+  const lastBlockNumber = isStarknetChain(chainId) ? snBlockNumber : evmBlockNumber
   const fastForwardBlockNumber = useFastForwardBlockNumber()
 
   const getReceipt = useCallback(
     (hash: string) => {
       if (!chainId) throw new Error('No chainId')
 
-      if (isStarknet(chainId)) {
+      if (isStarknetChain(chainId)) {
         const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
         return retry(
           () =>
