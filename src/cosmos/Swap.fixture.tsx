@@ -45,16 +45,16 @@ function Fixture() {
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
     [useHandleEvent]
   )
-  const { library, activate, deactivate, account } = useWeb3React()
+  const { library, activate, deactivate, account, chainId } = useWeb3React()
 
   const [ethProvider, setEthProvider] = useState<Web3Provider | undefined>()
 
   useEffect(() => {
     if (!library) return
-    // every time account changes we need to re-create the provider
+    // every time account or chainId changes we need to re-create the provider
     // for the widget to update with the proper address
     setEthProvider(new Web3Provider(library))
-  }, [library, account, setEthProvider])
+  }, [library, account, chainId, setEthProvider])
 
   const handleMetamask = useCallback(async () => {
     if (ethProvider) {
@@ -107,7 +107,6 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
-      // locale={locale} // TODO
       ethProvider={ethProvider}
       snAccount={starknet?.account}
       testnetsVisible={testnetsVisible}
