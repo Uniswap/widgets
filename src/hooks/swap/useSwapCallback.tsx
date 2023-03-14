@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
@@ -9,6 +8,7 @@ import { SignatureData } from 'hooks/usePermit'
 import { useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { SwapTransactionInfo, TransactionType } from 'state/transactions'
 
 import useSendSwapTransaction from './useSendSwapTransaction'
 
@@ -20,7 +20,7 @@ export enum SwapCallbackState {
 
 interface UseSwapCallbackReturns {
   state: SwapCallbackState
-  callback?: () => Promise<TransactionResponse>
+  callback?: () => Promise<SwapTransactionInfo>
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
@@ -71,7 +71,13 @@ export function useSwapCallback({
 
     return {
       state: SwapCallbackState.VALID,
-      callback: async () => callback(),
+      callback: async () => ({
+        type: TransactionType.SWAP,
+        response: await callback(),
+        tradeType: trade.tradeType,
+        trade,
+        slippageTolerance: allowedSlippage,
+      }),
     }
-  }, [trade, provider, account, chainId, callback, recipient, recipientAddressOrName])
+  }, [trade, provider, account, chainId, callback, recipient, recipientAddressOrName, allowedSlippage])
 }

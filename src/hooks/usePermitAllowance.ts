@@ -9,6 +9,8 @@ import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { usePerfEventHandler } from './usePerfEventHandler'
+
 const PERMIT_EXPIRATION = ms`30d`
 const PERMIT_SIG_EXPIRATION = ms`30m`
 
@@ -56,7 +58,7 @@ export function useUpdatePermitAllowance(
 ) {
   const { account, chainId, provider } = useWeb3React()
 
-  return useCallback(async () => {
+  const updatePermitAllowance = useCallback(async () => {
     try {
       if (!chainId) throw new Error('missing chainId')
       if (!provider) throw new Error('missing provider')
@@ -85,4 +87,7 @@ export function useUpdatePermitAllowance(
       throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
+
+  const args = useMemo(() => (token && spender ? { token, spender } : undefined), [spender, token])
+  return usePerfEventHandler('onPermit2Allowance', args, updatePermitAllowance)
 }

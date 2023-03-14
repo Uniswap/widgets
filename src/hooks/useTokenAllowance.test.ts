@@ -10,6 +10,7 @@ import { SupportedChainId } from 'constants/chains'
 import { UNI } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
+import { swapEventHandlersAtom } from 'state/swap'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { renderHook } from 'test'
 
@@ -114,6 +115,19 @@ describe('useUpdateTokenAllowance', () => {
       MaxUint256.toString(),
       { gasLimit: BigNumber.from(120) }, // gasLimit should be multiplied by 6/5
     ])
+  })
+
+  it('triggers onTokenAllowance', async () => {
+    const onTokenAllowance = jest.fn()
+    const { result } = renderHook(() => useUpdateTokenAllowance(FULL_ALLOWANCE, SPENDER), {
+      initialAtomValues: [[swapEventHandlersAtom, { onTokenAllowance }]],
+    })
+    await result.current()
+    expect(onTokenAllowance).toHaveBeenCalledWith(
+      expect.objectContaining({ token: TOKEN, spender: SPENDER }),
+      expect.any(Promise)
+    )
+    await expect(onTokenAllowance.mock.calls[0][1]).resolves.toMatchObject(APPROVAL_TRANSACTION_INFO)
   })
 
   it('falls back to a the amount in case the token restricts approval amounts', async () => {

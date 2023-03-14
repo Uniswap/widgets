@@ -1,15 +1,15 @@
-import { ContractTransaction } from '@ethersproject/contracts'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useWETHContract } from 'hooks/useContract'
+import { usePerfEventHandler } from 'hooks/usePerfEventHandler'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Field, swapAtom } from 'state/swap'
-import { TransactionType } from 'state/transactions'
+import { TransactionType, UnwrapTransactionInfo, WrapTransactionInfo } from 'state/transactions'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 interface UseWrapCallbackReturns {
-  callback: () => Promise<ContractTransaction | void>
+  callback: () => Promise<WrapTransactionInfo | UnwrapTransactionInfo | void>
   type?: TransactionType.WRAP | TransactionType.UNWRAP
 }
 
@@ -43,19 +43,28 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     [inputCurrency, amount]
   )
 
-  const callback = useMemo(() => {
-    return async () => {
-      if (!parsedAmountIn) return
-      switch (wrapType) {
-        case TransactionType.WRAP:
-          return wrappedNativeCurrencyContract?.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
-        case TransactionType.UNWRAP:
-          return wrappedNativeCurrencyContract?.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
-        case undefined:
-          return undefined
-      }
+  const wrapCallback = useCallback(async (): Promise<WrapTransactionInfo | UnwrapTransactionInfo | void> => {
+    if (!parsedAmountIn || !wrappedNativeCurrencyContract) return
+    switch (wrapType) {
+      case TransactionType.WRAP:
+        return {
+          response: await wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` }),
+          type: TransactionType.WRAP,
+          amount: parsedAmountIn,
+        }
+      case TransactionType.UNWRAP:
+        return {
+          response: await wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`),
+          type: TransactionType.WRAP,
+          amount: parsedAmountIn,
+        }
+      case undefined:
+        return undefined
     }
   }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
+
+  const args = useMemo(() => parsedAmountIn && { amount: parsedAmountIn }, [parsedAmountIn])
+  const callback = usePerfEventHandler('onWrapSend', args, wrapCallback)
 
   return useMemo(() => ({ callback, type: wrapType }), [callback, wrapType])
 }
