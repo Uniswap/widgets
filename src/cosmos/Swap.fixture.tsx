@@ -45,7 +45,16 @@ function Fixture() {
     () => HANDLERS.reduce((handlers, name) => ({ ...handlers, [name]: useHandleEvent(name) }), {}),
     [useHandleEvent]
   )
-  const { library: ethProvider, activate, deactivate } = useWeb3React()
+  const { library, activate, deactivate, account } = useWeb3React()
+
+  const [ethProvider, setEthProvider] = useState<Web3Provider | undefined>()
+
+  useEffect(() => {
+    if (!library) return
+    // every time account changes we need to re-create the provider
+    // for the widget to update with the proper address
+    setEthProvider(new Web3Provider(library))
+  }, [library, account, setEthProvider])
 
   const handleMetamask = useCallback(async () => {
     if (ethProvider) {
@@ -143,15 +152,11 @@ function Fixture() {
   )
 }
 
-function getLibrary(provider: any) {
-  return new Web3Provider(provider) // this will vary according to whether you use e.g. ethers or web3.js
-}
-
 export const injected = new InjectedConnector({})
 
 export default function App() {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <Web3ReactProvider getLibrary={(provider) => provider}>
       <Fixture />
     </Web3ReactProvider>
   )

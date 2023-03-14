@@ -4,6 +4,7 @@ import ErrorBoundary, { OnError } from 'components/Error/ErrorBoundary'
 import { SupportedLocale } from 'constants/locales'
 import { TransactionEventHandlers, TransactionsUpdater } from 'hooks/transactions'
 import { Provider as BlockNumberProvider } from 'hooks/useBlockNumber'
+import { TokenBalancesProvider } from 'hooks/useCurrencyBalance'
 import { Flags, useInitialFlags } from 'hooks/useSyncFlags'
 import useSyncWidgetEventHandlers, { WidgetEventHandlers } from 'hooks/useSyncWidgetEventHandlers'
 import useSyncWidgetSettings, { WidgetSettings } from 'hooks/useSyncWidgetSettings'
@@ -57,9 +58,11 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                   <AtomProvider initialValues={useInitialFlags(props as Flags)}>
                     <WidgetUpdater {...props} />
                     <BlockNumberProvider>
-                      <MulticallUpdater />
-                      <TransactionsUpdater {...(props as TransactionEventHandlers)} />
-                      <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
+                      <TokenBalancesProvider>
+                        <MulticallUpdater />
+                        <TransactionsUpdater {...(props as TransactionEventHandlers)} />
+                        <TokenListProvider list={props.tokenList}>{props.children}</TokenListProvider>
+                      </TokenBalancesProvider>
                     </BlockNumberProvider>
                   </AtomProvider>
                 </ReduxProvider>

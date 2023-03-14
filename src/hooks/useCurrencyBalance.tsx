@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { Balance, getBalances, ZERO_ADDRESS } from 'wido'
 
 import { useEvmAccountAddress, useSnAccountAddress } from './useSyncWidgetSettings'
@@ -9,22 +9,30 @@ import { NATIVE_ADDRESS } from './useTokenList/utils'
 
 export type BalanceMap = { [chainId: number]: { [tokenAddress: string]: CurrencyAmount<Token> | undefined } }
 
-export const evmBalancesAtom = atom<Balance[]>([])
-export const evmFetchedBalancesAtom = atom<boolean>(false)
+export const evmBalancesAtom = atom<{
+  [address: string]: Balance[]
+}>({})
+export const evmFetchedBalancesAtom = atom<{
+  [address: string]: boolean
+}>({})
 
 export const snBalancesAtom = atom<Balance[]>([])
 export const snFetchedBalancesAtom = atom<boolean>(false)
 
-export function useTokenBalances(): BalanceMap {
+const TokenBalancesContext = createContext<BalanceMap>([])
+
+export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const address = useEvmAccountAddress()
   const evmRawBalances = useAtomValue(evmBalancesAtom)
   const evmFetchedBalances = useAtomValue(evmFetchedBalancesAtom)
   const setEvmRawBalances = useUpdateAtom(evmBalancesAtom)
   const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
 
-  if (!evmFetchedBalances && address) {
-    setEvmFetchedBalances(true)
-    getBalances(address).then(setEvmRawBalances)
+  if (address && !evmFetchedBalances[address]) {
+    setEvmFetchedBalances({ [address]: true })
+    getBalances(address).then((balances) => {
+      setEvmRawBalances({ ...evmRawBalances, [address]: balances })
+    })
   }
 
   const snAccount = useSnAccountAddress()
@@ -38,8 +46,9 @@ export function useTokenBalances(): BalanceMap {
     getBalances(snAccount).then(setSnRawBalances)
   }
 
-  return useMemo(() => {
-    return [...evmRawBalances, ...snRawBalances].reduce((map: BalanceMap, item) => {
+  const value = useMemo(() => {
+    const evmRawBalancesForCurrentUser = evmRawBalances[address || ''] || []
+    return [...evmRawBalancesForCurrentUser, ...snRawBalances].reduce((map: BalanceMap, item) => {
       if (!map[item.chainId]) {
         map[item.chainId] = {}
       }
@@ -50,7 +59,13 @@ export function useTokenBalances(): BalanceMap {
       )
       return map
     }, {} as BalanceMap)
-  }, [evmRawBalances, snRawBalances])
+  }, [address, evmRawBalances, snRawBalances])
+
+  return <TokenBalancesContext.Provider value={value}>{children}</TokenBalancesContext.Provider>
+}
+
+export function useTokenBalances(): BalanceMap {
+  return useContext(TokenBalancesContext)
 }
 
 export function useCurrencyBalances(currencies?: (Currency | undefined)[]): (CurrencyAmount<Currency> | undefined)[] {
