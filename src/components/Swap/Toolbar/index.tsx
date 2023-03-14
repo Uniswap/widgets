@@ -149,10 +149,10 @@ function CaptionRow() {
     return rows
   }, [gasUseEstimateUSD, impact, slippage, trade])
 
-  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
+  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS || caption === null) {
     return null
   }
-  return caption ? (
+  return (
     <StyledExpando
       title={
         <ToolbarRow
@@ -176,7 +176,7 @@ function CaptionRow() {
         <ToolbarOrderRouting trade={trade} gasUseEstimateUSD={gasUseEstimateUSD} />
       </Column>
     </StyledExpando>
-  ) : null
+  )
 }
 
 function ToolbarActionButton() {
