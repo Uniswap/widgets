@@ -113,7 +113,7 @@ export default function Swap(props: SwapProps) {
               setDisplayTxHash()
               setDstTxHash(undefined)
               setSnFetchedBalances(false)
-              setEvmFetchedBalances(false)
+              setEvmFetchedBalances({})
             }}
           />
         </Dialog>
