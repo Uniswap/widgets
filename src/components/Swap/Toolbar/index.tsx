@@ -83,8 +83,11 @@ function CaptionRow() {
         }
       }
 
-      if (state === TradeState.INVALID || state === TradeState.NO_ROUTE_FOUND) {
+      if (state === TradeState.INVALID) {
         return { caption: <Caption.Error /> }
+      }
+      if (state === TradeState.NO_ROUTE_FOUND) {
+        return { caption: null }
       }
     }
 
@@ -146,7 +149,7 @@ function CaptionRow() {
     return rows
   }, [gasUseEstimateUSD, impact, slippage, trade])
 
-  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS) {
+  if (inputCurrency == null || outputCurrency == null || error === ChainError.MISMATCHED_CHAINS || caption === null) {
     return null
   }
   return (
