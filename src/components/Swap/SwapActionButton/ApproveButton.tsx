@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
 import EtherscanLink from 'components/EtherscanLink'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
+import { UserRejectedRequestError } from 'errors'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { usePendingApproval } from 'hooks/transactions'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
@@ -44,7 +45,8 @@ export default function ApproveButton({
         return { type: TransactionType.APPROVAL, ...info }
       })
     } catch (e) {
-      console.error(e) // ignore error
+      if (e instanceof UserRejectedRequestError) return // ignore user rejections
+      console.warn(e) // ignore other errors too, but log them
     } finally {
       setIsPending(false)
     }

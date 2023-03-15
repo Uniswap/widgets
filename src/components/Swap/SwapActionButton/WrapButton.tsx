@@ -33,7 +33,8 @@ export default function WrapButton({ disabled }: { disabled: boolean }) {
     try {
       await onSubmit(wrapCallback)
     } catch (e) {
-      if (!(e instanceof UserRejectedRequestError)) throwAsync(e)
+      if (e instanceof UserRejectedRequestError) return // ignore user rejections
+      throwAsync(e)
     } finally {
       setIsPending(false)
     }
