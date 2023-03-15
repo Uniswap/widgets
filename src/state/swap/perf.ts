@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { UserRejectedRequestError } from 'errors'
 import { GetQuoteArgs, InterfaceTrade, TradeResult } from 'state/routing/types'
 import {
   ApprovalTransactionInfo,
@@ -6,6 +7,12 @@ import {
   UnwrapTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions'
+
+interface PromiseWithError<T, E> extends Promise<T> {
+  catch: (onrejected: ((reason: E | Error) => void) | null | undefined) => Promise<T>
+}
+
+type RejectablePromise<T> = PromiseWithError<T, UserRejectedRequestError>
 
 /**
  * An integration hook called when a new quote is fetched.
@@ -20,32 +27,30 @@ export type OnSwapQuote = (args: Omit<GetQuoteArgs, 'provider' | 'onQuote'>, quo
  */
 export type OnTokenAllowance = (
   args: { token: Token; spender: string },
-  transaction: Promise<ApprovalTransactionInfo>
+  transaction: RejectablePromise<ApprovalTransactionInfo>
 ) => void
 
 /**
  * An integration hook called when requesting a Permit2 token allowance from the user.
  * @param signed resolves when the permit is signed.
  */
-export type OnPermit2Allowance = (args: { token: Token; spender: string }, signed: Promise<void>) => void
+export type OnPermit2Allowance = (args: { token: Token; spender: string }, signed: RejectablePromise<void>) => void
 
 /**
  * An integration hook called when sending a swap transaction to the mempool through the user.
  * NB: You may instrument the time-to-confirmation by calling ransaction.response.wait().
  * @param transaction resolves with the swap transaction info when it is sent to the mempool.
- *                    A void transaction indicates user rejection.
  */
-export type OnSwapSend = (args: { trade: InterfaceTrade }, transaction: Promise<SwapTransactionInfo | void>) => void
+export type OnSwapSend = (args: { trade: InterfaceTrade }, transaction: RejectablePromise<SwapTransactionInfo>) => void
 
 /**
  * An integration hook called when sending a swap transaction to the mempool through the user.
  * NB: You may instrument the time-to-confirmation by calling ransaction.response.wait().
  * @param transaction resolves with the swap transaction info when it is sent to the mempool.
- *                    A void transaction indicates user rejection.
  */
 export type OnWrapSend = (
   args: { amount: CurrencyAmount<Currency> },
-  transaction: Promise<WrapTransactionInfo | UnwrapTransactionInfo | void>
+  transaction: RejectablePromise<WrapTransactionInfo | UnwrapTransactionInfo>
 ) => void
 
 export interface PerfEventHandlers {

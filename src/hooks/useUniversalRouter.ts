@@ -6,14 +6,14 @@ import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ErrorCode } from 'constants/eip1193'
 import { TX_GAS_MARGIN } from 'constants/misc'
-import { SwapError } from 'errors'
+import { DismissableError, UserRejectedRequestError } from 'errors'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { SwapTransactionInfo, TransactionType } from 'state/transactions'
 import isZero from 'utils/isZero'
-import { getReason, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { isUserRejection } from 'utils/jsonRpcError'
+import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 import { usePerfEventHandler } from './usePerfEventHandler'
 import { PermitSignature } from './usePermitAllowance'
@@ -25,20 +25,6 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
-function didUserReject(error: any): boolean {
-  const reason = getReason(error)
-  if (
-    error?.code === ErrorCode.USER_REJECTED_REQUEST ||
-    (reason?.match(/request/i) && reason?.match(/reject/i)) || // For Rainbow
-    reason?.match(/declined/i) || // For Frame
-    reason?.match(/cancelled by user/i) || // For SafePal
-    reason?.match(/user denied/i) // For Coinbase
-  ) {
-    return true
-  }
-  return false
-}
-
 /**
  * Returns a callback to submit a transaction to the universal router.
  *
@@ -48,7 +34,7 @@ function didUserReject(error: any): boolean {
 export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined, options: SwapOptions) {
   const { account, chainId, provider } = useWeb3React()
 
-  const swapCallback = useCallback(async (): Promise<SwapTransactionInfo | void> => {
+  const swapCallback = useCallback(async (): Promise<SwapTransactionInfo> => {
     let tx: TransactionRequest
     let response: TransactionResponse
     try {
@@ -72,17 +58,15 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       }
 
       response = await sendTransaction(provider, tx, TX_GAS_MARGIN)
-    } catch (swapError) {
-      if (didUserReject(swapError)) {
-        return
+    } catch (error: unknown) {
+      if (isUserRejection(error)) {
+        throw new UserRejectedRequestError()
+      } else {
+        throw new DismissableError({ message: swapErrorToUserReadableMessage(error) })
       }
-      const message = swapErrorToUserReadableMessage(swapError)
-      throw new SwapError({
-        message,
-      })
     }
     if (tx.data !== response.data) {
-      throw new SwapError({
+      throw new DismissableError({
         message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
       })
     }

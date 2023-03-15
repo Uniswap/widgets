@@ -23,17 +23,7 @@ export abstract class WidgetError extends Error {
   }
 }
 
-abstract class DismissableWidgetError extends WidgetError {
-  constructor(config: WidgetErrorConfig) {
-    super({
-      ...config,
-      action: config.action ?? DEFAULT_DISMISSABLE_ERROR_ACTION,
-      header: config.header ?? DEFAULT_ERROR_HEADER,
-    })
-    this.dismissable = true
-  }
-}
-
+/** Integration errors are considered fatal. They are caused by invalid integrator configuration. */
 export class IntegrationError extends WidgetError {
   constructor(message: string) {
     super({ message })
@@ -41,27 +31,34 @@ export class IntegrationError extends WidgetError {
   }
 }
 
-class ConnectionError extends WidgetError {
+/** Dismissable errors are not be considered fatal by the ErrorBoundary. */
+export class DismissableError extends WidgetError {
   constructor(config: WidgetErrorConfig) {
-    super(config)
-    this.name = 'ConnectionError'
+    super({
+      ...config,
+      action: config.action ?? DEFAULT_DISMISSABLE_ERROR_ACTION,
+      header: config.header ?? DEFAULT_ERROR_HEADER,
+    })
+    this.name = 'DismissableError'
+    this.dismissable = true
   }
 }
 
-export class SwapError extends DismissableWidgetError {
-  constructor(config: WidgetErrorConfig) {
-    super(config)
-    this.name = 'SwapError'
-  }
-}
-
-export class UserRejectedRequestError extends DismissableWidgetError {
+export class UserRejectedRequestError extends DismissableError {
   constructor() {
     super({
       header: t`Request rejected`,
       message: t`This error was prompted by denying a request in your wallet.`,
     })
     this.name = 'UserRejectedRequestError'
+  }
+}
+
+/** Connection errors are considered fatal. They are caused by wallet integrations. */
+class ConnectionError extends WidgetError {
+  constructor(config: WidgetErrorConfig) {
+    super(config)
+    this.name = 'ConnectionError'
   }
 }
 

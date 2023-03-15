@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
-import { ErrorCode } from 'constants/eip1193'
-import { SwapError } from 'errors'
+import { DismissableError, UserRejectedRequestError } from 'errors'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
+import { isUserRejection } from 'utils/jsonRpcError'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 interface SwapCall {
@@ -118,12 +118,12 @@ export default function useSendSwapTransaction(
           })
           .catch((error) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === ErrorCode.USER_REJECTED_REQUEST) {
-              throw new Error(t`Transaction rejected.`)
+            if (isUserRejection(error)) {
+              throw new UserRejectedRequestError()
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, calldata, value)
-              throw new SwapError({
+              throw new DismissableError({
                 message: t`Swap failed: ${swapErrorToUserReadableMessage(error)}`,
               })
             }
