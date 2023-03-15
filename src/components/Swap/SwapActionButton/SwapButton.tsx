@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { ResponsiveDialog } from 'components/ResponsiveDialog'
-import { UserRejectedRequestError } from 'errors'
 import { useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
@@ -85,7 +84,6 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
         setOpen(false)
       }
     } catch (e) {
-      if (e instanceof UserRejectedRequestError) return // ignore user rejections
       throwAsync(e)
     }
   }, [onSubmit, setOldestValidBlock, swapCallback, throwAsync])

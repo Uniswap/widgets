@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
-import { UserRejectedRequestError } from 'errors'
 import useWrapCallback from 'hooks/swap/useWrapCallback'
 import useNativeCurrency from 'hooks/useNativeCurrency'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
@@ -33,7 +32,6 @@ export default function WrapButton({ disabled }: { disabled: boolean }) {
     try {
       await onSubmit(wrapCallback)
     } catch (e) {
-      if (e instanceof UserRejectedRequestError) return // ignore user rejections
       throwAsync(e)
     } finally {
       setIsPending(false)
