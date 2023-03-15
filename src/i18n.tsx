@@ -36,6 +36,8 @@ import {
 import { PluralCategory } from 'make-plural/plurals'
 import { ReactNode, useEffect, useMemo } from 'react'
 
+import defaultCatalog from './locales/en-US'
+
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
 }
@@ -82,7 +84,9 @@ export async function dynamicActivate(locale: SupportedLocale) {
     const catalog = await import(`./locales/${locale}.js`)
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
-  } catch {}
+  } catch {
+    i18n.load(locale, defaultCatalog.messages)
+  }
   i18n.activate(locale)
 }
 
