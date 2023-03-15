@@ -16,8 +16,12 @@ export const evmFetchedBalancesAtom = atom<{
   [address: string]: boolean
 }>({})
 
-export const snBalancesAtom = atom<Balance[]>([])
-export const snFetchedBalancesAtom = atom<boolean>(false)
+export const snBalancesAtom = atom<{
+  [address: string]: Balance[]
+}>({})
+export const snFetchedBalancesAtom = atom<{
+  [address: string]: boolean
+}>({})
 
 const TokenBalancesContext = createContext<BalanceMap>([])
 
@@ -41,14 +45,17 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const setSnRawBalances = useUpdateAtom(snBalancesAtom)
   const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
 
-  if (!snFetchedBalances && snAccount) {
-    setSnFetchedBalances(true)
-    getBalances(snAccount).then(setSnRawBalances)
+  if (snAccount && !snFetchedBalances[snAccount]) {
+    setSnFetchedBalances({ [snAccount]: true })
+    getBalances(snAccount).then((balances) => {
+      setSnRawBalances({ ...snRawBalances, [snAccount]: balances })
+    })
   }
 
   const value = useMemo(() => {
     const evmRawBalancesForCurrentUser = evmRawBalances[address || ''] || []
-    return [...evmRawBalancesForCurrentUser, ...snRawBalances].reduce((map: BalanceMap, item) => {
+    const snRawBalancesForCurrentUser = snRawBalances[snAccount || ''] || []
+    return [...evmRawBalancesForCurrentUser, ...snRawBalancesForCurrentUser].reduce((map: BalanceMap, item) => {
       if (!map[item.chainId]) {
         map[item.chainId] = {}
       }
@@ -59,7 +66,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
       )
       return map
     }, {} as BalanceMap)
-  }, [address, evmRawBalances, snRawBalances])
+  }, [address, evmRawBalances, snRawBalances, snAccount])
 
   return <TokenBalancesContext.Provider value={value}>{children}</TokenBalancesContext.Provider>
 }

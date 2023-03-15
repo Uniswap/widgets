@@ -87,7 +87,7 @@ const WIDO_SN_MAPPING: Record<string, number> = {
   //TESTNET
   '0x534e5f474f45524c49': 15367,
   //TESTNET2
-  '0x534e5f474f45524c4932': 15367,
+  '0x534e5f474f45524c4932': 15368,
 }
 
 export function useSnChainId() {
