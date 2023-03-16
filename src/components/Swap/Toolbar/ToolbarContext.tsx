@@ -1,5 +1,7 @@
+import { useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
+import { Field } from 'state/swap'
 
 export const Context = createContext<{
   open: boolean
@@ -15,13 +17,20 @@ export function Provider({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false)
   const onToggleOpen = () => setOpen((open) => !open)
   const collapse = () => setOpen(false)
+  const {
+    [Field.INPUT]: { currency: inputCurrency },
+    [Field.OUTPUT]: { currency: outputCurrency },
+  } = useSwapInfo()
 
   const isWrap = useIsWrap()
   useEffect(() => {
     if (isWrap) {
       collapse()
     }
-  }, [isWrap])
+    if (!inputCurrency || !outputCurrency) {
+      collapse()
+    }
+  }, [isWrap, inputCurrency, outputCurrency])
 
   return <Context.Provider value={{ open, onToggleOpen, collapse }}>{children}</Context.Provider>
 }
