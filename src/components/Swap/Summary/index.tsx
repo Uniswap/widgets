@@ -3,7 +3,7 @@ import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'
-import { Header, useCloseDialog, useIsDialogPageCentered } from 'components/Dialog'
+import { Header, MIN_PAGE_CENTERED_DIALOG_WIDTH, useCloseDialog, useIsDialogPageCentered } from 'components/Dialog'
 import { PopoverBoundaryProvider } from 'components/Popover'
 import { SmallToolTipBody, TooltipText } from 'components/Tooltip'
 import { UserRejectedRequestError } from 'errors'
@@ -287,7 +287,10 @@ export function SummaryDialog(props: SummaryDialogProps) {
   }, [ackPriceImpact, props.impact, showSpeedbump])
 
   return (
-    <Column style={{ minWidth: isPageCentered ? Math.min(400, width) : 'auto', height: '100%' }} ref={setBoundary}>
+    <Column
+      style={{ minWidth: isPageCentered ? Math.min(MIN_PAGE_CENTERED_DIALOG_WIDTH, width) : 'auto', height: '100%' }}
+      ref={setBoundary}
+    >
       {showSpeedbump && props.impact ? (
         <SpeedBumpDialog onAcknowledge={onAcknowledgeSpeedbump}>
           {t`This transaction will result in a`}{' '}
