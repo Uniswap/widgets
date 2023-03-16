@@ -17,8 +17,8 @@ const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
-const baseQuery: BaseQueryFn<GetQuoteArgs, TradeResult> = () => {
-  return { error: { status: 'CUSTOM_ERROR', error: 'Unimplemented baseQuery' } as FetchBaseQueryError }
+const baseQuery: BaseQueryFn<GetQuoteArgs, TradeResult, FetchBaseQueryError> = () => {
+  return { error: { status: 'CUSTOM_ERROR', error: 'Unimplemented baseQuery' } }
 }
 
 export const routing = createApi({
@@ -26,8 +26,8 @@ export const routing = createApi({
   baseQuery,
   serializeQueryArgs: serializeGetQuoteQueryArgs,
   endpoints: (build) => ({
-    getTradeQuote: build.query({
-      async onQueryStarted(args: GetQuoteArgs | SkipToken, { queryFulfilled }) {
+    getTradeQuote: build.query<TradeResult, GetQuoteArgs | SkipToken>({
+      async onQueryStarted(args, { queryFulfilled }) {
         if (args === skipToken) return
 
         args.onQuote?.(
@@ -50,7 +50,7 @@ export const routing = createApi({
         )
       },
       // Explicitly typing the return type enables typechecking of return values.
-      async queryFn(args: GetQuoteArgs | SkipToken): Promise<{ data: TradeResult } | { error: FetchBaseQueryError }> {
+      async queryFn(args: GetQuoteArgs | SkipToken) {
         if (args === skipToken) return { error: { status: 'CUSTOM_ERROR', error: 'Skipped' } }
 
         if (
