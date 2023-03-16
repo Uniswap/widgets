@@ -38,9 +38,9 @@ const grow = keyframes`
 `
 
 const actionCss = css`
+  align-items: center;
   border: 1px solid ${({ theme }) => theme.outline};
-  padding: calc(0.5rem - 1px);
-  padding-left: calc(0.75rem - 1px);
+  padding: calc(0.25rem - 1px) calc(0.75rem - 1px);
 
   ${ActionRow} {
     animation: ${grow} ${AnimationSpeed.Medium} ease-in;
@@ -51,8 +51,9 @@ const actionCss = css`
 
   ${StyledButton} {
     /* Subtract the padding from the borderRadius so that it nests properly. */
-    border-radius: ${({ theme }) => theme.borderRadius.medium}rem;
+    border-radius: ${({ theme }) => theme.borderRadius.small}rem;
     flex-grow: 0;
+    height: 2.5rem;
     padding: 0 0.75rem;
   }
 `
