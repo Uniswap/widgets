@@ -29,6 +29,7 @@ function didUserReject(error: any): boolean {
   const reason = getReason(error)
   if (
     error?.code === ErrorCode.USER_REJECTED_REQUEST ||
+    error?.code === 'ACTION_REJECTED' ||
     (reason?.match(/request/i) && reason?.match(/reject/i)) || // For Rainbow
     reason?.match(/declined/i) || // For Frame
     reason?.match(/cancelled by user/i) || // For SafePal
