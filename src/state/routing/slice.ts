@@ -42,7 +42,7 @@ export const routing = createApi({
                 case 'PARSING_ERROR':
                   throw new WidgetError({ message: parsedError.error, error: parsedError })
                 default:
-                  throw new WidgetError({ message: parsedError.status.toString(), error: parsedError.status })
+                  throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
               }
             }
             throw new WidgetError({ message: 'Unknown error', error })
