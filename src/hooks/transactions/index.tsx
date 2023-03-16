@@ -71,14 +71,10 @@ export function useIsPendingApproval(token?: Token, spender?: string): boolean {
   return Boolean(usePendingApproval(token, spender))
 }
 
-export type OnTxSubmit = (hash: string, tx: Transaction) => void
-export type OnTxSuccess = (hash: string, receipt: TransactionReceipt) => void
-export type OnTxFail = (hash: string, receipt: TransactionReceipt) => void
-
 export interface TransactionEventHandlers {
-  onTxSubmit?: OnTxSubmit
-  onTxSuccess?: OnTxSuccess
-  onTxFail?: OnTxFail
+  onTxSubmit?: (hash: string, tx: Transaction) => void
+  onTxSuccess?: (hash: string, receipt: TransactionReceipt) => void
+  onTxFail?: (hash: string, receipt: TransactionReceipt) => void
 }
 
 export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: TransactionEventHandlers) {

@@ -1,16 +1,12 @@
-import { OnError } from 'components/Error/ErrorBoundary'
-import { OnSwitchChain, onSwitchChainAtom } from 'hooks/useSwitchChain'
+import { AddEthereumChainParameter, onSwitchChainAtom } from 'hooks/useSwitchChain'
 import { useUpdateAtom } from 'jotai/utils'
-import { useEffect } from 'react'
-import { OnConnectWalletClick, onConnectWalletClickAtom } from 'state/wallet'
-export type { OnError } from 'components/Error/ErrorBoundary'
-export type { AddEthereumChainParameter, OnSwitchChain } from 'hooks/useSwitchChain'
-export type { OnConnectWalletClick } from 'state/wallet'
+import { ErrorInfo, useEffect } from 'react'
+import { onConnectWalletClickAtom } from 'state/wallet'
 
 export interface WidgetEventHandlers {
-  onConnectWalletClick?: OnConnectWalletClick
-  onError?: OnError
-  onSwitchChain?: OnSwitchChain
+  onConnectWalletClick?: (chainId: number) => void | boolean | Promise<boolean>
+  onError?: (error: Error, info?: ErrorInfo) => void
+  onSwitchChain?: (addChainParameter: AddEthereumChainParameter) => void | Promise<void>
 }
 
 export default function useSyncWidgetEventHandlers({ onConnectWalletClick, onSwitchChain }: WidgetEventHandlers): void {

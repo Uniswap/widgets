@@ -54,9 +54,6 @@ interface SettingsEventHandlers {
   onRouterPreferenceChange?: OnRouterPreferenceChange
 }
 
-/** An integration hook called when the user selects a new token. */
-export type OnTokenChange = (field: Field, token: Currency) => void
-
 /**
  * An integration hook called when the user enters a new amount.
  * If the amount changed from the user clicking Max, origin will be set to 'max'.
@@ -73,7 +70,8 @@ export type OnSwitchTokens = () => void
 export type OnTokenSelectorClick = (field: Field) => void | boolean | Promise<boolean>
 
 interface InputEventHandlers {
-  onTokenChange?: OnTokenChange
+  onFromTokenChange?: (token: Currency) => void
+  onToTokenChange?: (token: Currency) => void
   onAmountChange?: OnAmountChange
   onSwitchTokens?: OnSwitchTokens
   onTokenSelectorClick?: OnTokenSelectorClick

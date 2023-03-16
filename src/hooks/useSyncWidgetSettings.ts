@@ -4,10 +4,6 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { AccountInterface } from 'starknet'
 
-export type { OnError } from 'components/Error/ErrorBoundary'
-export type { AddEthereumChainParameter, OnSwitchChain } from 'hooks/useSwitchChain'
-export type { OnConnectWalletClick } from 'state/wallet'
-
 export const widgetSettingsAtom = atom<WidgetSettings>({})
 
 export interface WidgetSettings {
