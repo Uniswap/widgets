@@ -61,7 +61,7 @@ export interface EventFeedProps {
 }
 
 export default function EventFeed({ events, onClear }: EventFeedProps) {
-  const [selectedEventType, onSelectEventType] = useState<string>(SHOW_ALL_EVENTS)
+  const [selectedEventType, setSelectedEventType] = useState<string>(SHOW_ALL_EVENTS)
   return (
     <EventFeedWrapper>
       <Row>
@@ -72,15 +72,10 @@ export default function EventFeed({ events, onClear }: EventFeedProps) {
       </Row>
       <Row>
         <Type.Subhead2>Filter: </Type.Subhead2>
-        <select
-          onChange={(e) => {
-            console.log(e.target.value)
-            onSelectEventType(e.target.value)
-          }}
-          value={selectedEventType}
-        >
+        <select onChange={(e) => setSelectedEventType(e.target.value)} value={selectedEventType}>
           <option>{SHOW_ALL_EVENTS}</option>
           {HANDLERS.map((name) => (
+            // Handlers should never have the same name - using key={name} will enforce that at runtime.
             <option key={name}>{name}</option>
           ))}
         </select>
