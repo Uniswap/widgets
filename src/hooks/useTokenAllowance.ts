@@ -2,7 +2,7 @@ import { BigNumberish } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Erc20 } from 'abis/types'
-import { UserRejectedRequestError, WidgetError } from 'errors'
+import { toWidgetPromise, UserRejectedRequestError, WidgetError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -41,14 +41,11 @@ export function useTokenAllowance(
   return useMemo(() => ({ tokenAllowance: allowance, isSyncing }), [allowance, isSyncing])
 }
 
-export function useUpdateTokenAllowance(
-  amount: CurrencyAmount<Token> | undefined,
-  spender: string
-): () => Promise<ApprovalTransactionInfo> {
+export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
   const contract = useTokenContract(amount?.currency.address)
 
-  const updateTokenAllowance = useCallback(async (): Promise<ApprovalTransactionInfo> => {
-    try {
+  const updateTokenAllowance = useCallback(() => {
+    const trigger = async () => {
       if (!amount) throw new Error('missing amount')
       if (!contract) throw new Error('missing contract')
       if (!spender) throw new Error('missing spender')
@@ -67,18 +64,18 @@ export function useUpdateTokenAllowance(
         response,
         tokenAddress: contract.address,
         spenderAddress: spender,
-      }
-    } catch (error: unknown) {
-      if (isUserRejection(error)) {
-        throw new UserRejectedRequestError()
-      } else {
-        const symbol = amount?.currency.symbol ?? 'Token'
-        throw new WidgetError({
-          message: t`${symbol} token allowance failed: ${(error as any)?.message ?? error}`,
-          error,
-        })
-      }
+      } as ApprovalTransactionInfo
     }
+
+    return toWidgetPromise(trigger(), null, (error) => {
+      if (isUserRejection(error)) throw new UserRejectedRequestError()
+
+      const symbol = amount?.currency.symbol ?? 'Token'
+      throw new WidgetError({
+        message: t`${symbol} token allowance failed: ${(error as any)?.message ?? error}`,
+        error,
+      })
+    })
   }, [amount, contract, spender])
 
   const args = useMemo(() => (amount && spender ? { token: amount.currency, spender } : undefined), [amount, spender])

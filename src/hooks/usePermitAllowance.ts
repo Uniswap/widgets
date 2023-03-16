@@ -5,7 +5,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
-import { UserRejectedRequestError, WidgetError } from 'errors'
+import { toWidgetPromise, UserRejectedRequestError, WidgetError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
@@ -61,8 +61,8 @@ export function useUpdatePermitAllowance(
 ) {
   const { account, chainId, provider } = useWeb3React()
 
-  const updatePermitAllowance = useCallback(async () => {
-    try {
+  const updatePermitAllowance = useCallback(() => {
+    const trigger = async () => {
       if (!chainId) throw new Error('missing chainId')
       if (!provider) throw new Error('missing provider')
       if (!token) throw new Error('missing token')
@@ -84,18 +84,17 @@ export function useUpdatePermitAllowance(
       // Use conedison's signTypedData for better x-wallet compatibility.
       const signature = await signTypedData(provider.getSigner(account), domain, types, values)
       onPermitSignature?.({ ...permit, signature })
-      return
-    } catch (error: unknown) {
-      if (isUserRejection(error)) {
-        throw new UserRejectedRequestError()
-      } else {
-        const symbol = token?.symbol ?? 'Token'
-        throw new WidgetError({
-          message: t`${symbol} permit allowance failed: ${(error as any)?.message ?? error}`,
-          error,
-        })
-      }
     }
+
+    return toWidgetPromise(trigger(), null, (error) => {
+      if (isUserRejection(error)) throw new UserRejectedRequestError()
+
+      const symbol = token?.symbol ?? 'Token'
+      throw new WidgetError({
+        message: t`${symbol} permit allowance failed: ${(error as any)?.message ?? error}`,
+        error,
+      })
+    })
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
 
   const args = useMemo(() => (token && spender ? { token, spender } : undefined), [spender, token])

@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
 import { sendTransaction } from '@uniswap/conedison/provider/index'
 import { Percent } from '@uniswap/sdk-core'
@@ -7,7 +6,7 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TX_GAS_MARGIN } from 'constants/misc'
-import { DismissableError, UserRejectedRequestError } from 'errors'
+import { DismissableError, toWidgetPromise, UserRejectedRequestError } from 'errors'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { SwapTransactionInfo, TransactionType } from 'state/transactions'
@@ -34,10 +33,8 @@ interface SwapOptions {
 export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined, options: SwapOptions) {
   const { account, chainId, provider } = useWeb3React()
 
-  const swapCallback = useCallback(async (): Promise<SwapTransactionInfo> => {
-    let tx: TransactionRequest
-    let response: TransactionResponse
-    try {
+  const swapCallback = useCallback(() => {
+    const trigger = async () => {
       if (!account) throw new Error('missing account')
       if (!chainId) throw new Error('missing chainId')
       if (!provider) throw new Error('missing provider')
@@ -49,7 +46,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         inputTokenPermit: options.permit,
         fee: options.feeOptions,
       })
-      tx = {
+      const tx = {
         from: account,
         to: UNIVERSAL_ROUTER_ADDRESS(chainId),
         data,
@@ -57,28 +54,28 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      response = await sendTransaction(provider, tx, TX_GAS_MARGIN)
-    } catch (error: unknown) {
-      if (isUserRejection(error)) {
-        throw new UserRejectedRequestError()
-      } else {
-        throw new DismissableError({ message: swapErrorToUserReadableMessage(error), error })
+      const response = await sendTransaction(provider, tx, TX_GAS_MARGIN)
+      if (tx.data !== response.data) {
+        throw new DismissableError({
+          message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
+          error: 'Swap was modified in wallet.',
+        })
       }
-    }
-    if (tx.data !== response.data) {
-      throw new DismissableError({
-        message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
-        error: 'Swap was modified in wallet.',
-      })
+
+      return {
+        type: TransactionType.SWAP,
+        response,
+        tradeType: trade.tradeType,
+        trade,
+        slippageTolerance: options.slippageTolerance,
+      } as SwapTransactionInfo
     }
 
-    return {
-      type: TransactionType.SWAP,
-      response,
-      tradeType: trade.tradeType,
-      trade,
-      slippageTolerance: options.slippageTolerance,
-    }
+    return toWidgetPromise(trigger(), null, (error) => {
+      if (error instanceof DismissableError) throw error
+      if (isUserRejection(error)) throw new UserRejectedRequestError()
+      throw new DismissableError({ message: swapErrorToUserReadableMessage(error), error })
+    })
   }, [
     account,
     chainId,

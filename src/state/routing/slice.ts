@@ -32,21 +32,25 @@ export const routing = createApi({
 
         args.onQuote?.(
           JSON.parse(serializeGetQuoteArgs(args)),
-          toWidgetPromise(queryFulfilled, (error) => {
-            const { error: queryError } = error
-            if (queryError && typeof queryError === 'object' && 'status' in queryError) {
-              const parsedError = queryError as FetchBaseQueryError
-              switch (parsedError.status) {
-                case 'CUSTOM_ERROR':
-                case 'FETCH_ERROR':
-                case 'PARSING_ERROR':
-                  throw new WidgetError({ message: parsedError.error, error: parsedError })
-                default:
-                  throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
+          toWidgetPromise(
+            queryFulfilled,
+            ({ data }) => data,
+            (error) => {
+              const { error: queryError } = error
+              if (queryError && typeof queryError === 'object' && 'status' in queryError) {
+                const parsedError = queryError as FetchBaseQueryError
+                switch (parsedError.status) {
+                  case 'CUSTOM_ERROR':
+                  case 'FETCH_ERROR':
+                  case 'PARSING_ERROR':
+                    throw new WidgetError({ message: parsedError.error, error: parsedError })
+                  default:
+                    throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
+                }
               }
+              throw new WidgetError({ message: 'Unknown error', error })
             }
-            throw new WidgetError({ message: 'Unknown error', error })
-          }).then(({ data }) => data as TradeResult)
+          )
         )
       },
       // Explicitly typing the return type enables typechecking of return values.

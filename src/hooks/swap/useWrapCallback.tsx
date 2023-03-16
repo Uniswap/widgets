@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { DismissableError, UserRejectedRequestError } from 'errors'
+import { DismissableError, toWidgetPromise, UserRejectedRequestError } from 'errors'
 import { useWETHContract } from 'hooks/useContract'
 import { usePerfEventHandler } from 'hooks/usePerfEventHandler'
 import { useAtomValue } from 'jotai/utils'
@@ -45,11 +45,11 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     [inputCurrency, amount]
   )
 
-  const wrapCallback = useCallback(async (): Promise<WrapTransactionInfo | UnwrapTransactionInfo> => {
-    if (!parsedAmountIn) throw new Error('missing amount')
-    if (!wrappedNativeCurrencyContract) throw new Error('missing contract')
-    if (wrapType === undefined) throw new Error('missing wrapType')
-    try {
+  const wrapCallback = useCallback(() => {
+    const trigger = async () => {
+      if (!parsedAmountIn) throw new Error('missing amount')
+      if (!wrappedNativeCurrencyContract) throw new Error('missing contract')
+      if (wrapType === undefined) throw new Error('missing wrapType')
       switch (wrapType) {
         case TransactionType.WRAP:
           return {
@@ -58,21 +58,20 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
             }),
             type: TransactionType.WRAP,
             amount: parsedAmountIn,
-          }
+          } as WrapTransactionInfo
         case TransactionType.UNWRAP:
           return {
             response: await wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`),
-            type: TransactionType.WRAP,
+            type: TransactionType.UNWRAP,
             amount: parsedAmountIn,
-          }
-      }
-    } catch (error: unknown) {
-      if (isUserRejection(error)) {
-        throw new UserRejectedRequestError()
-      } else {
-        throw new DismissableError({ message: (error as any)?.message ?? error, error })
+          } as UnwrapTransactionInfo
       }
     }
+
+    return toWidgetPromise(trigger(), null, (error) => {
+      if (isUserRejection(error)) throw new UserRejectedRequestError()
+      throw new DismissableError({ message: (error as any)?.message ?? error, error })
+    })
   }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
 
   const args = useMemo(() => parsedAmountIn && { amount: parsedAmountIn }, [parsedAmountIn])
