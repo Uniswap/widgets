@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { DEFAULT_ERROR_HEADER, WidgetError } from 'errors'
+import { DEFAULT_ERROR_HEADER, UserRejectedRequestError, WidgetError } from 'errors'
 import { Component, ErrorInfo, PropsWithChildren, useCallback, useState } from 'react'
 
 import ErrorView from './ErrorView'
@@ -28,10 +28,13 @@ type ErrorBoundaryState = {
  * }, [throwError])
  */
 export function useAsyncError() {
-  const [, setError] = useState()
+  const [, setError] = useState<void>()
   return useCallback(
     (error: unknown) =>
       setError(() => {
+        // Ignore user rejections - they should not trigger the ErrorBoundary
+        if (error instanceof UserRejectedRequestError) return
+
         if (error instanceof Error) throw error
         throw new Error(error as string)
       }),

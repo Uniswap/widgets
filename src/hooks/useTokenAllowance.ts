@@ -1,13 +1,14 @@
 import { BigNumberish } from '@ethersproject/bignumber'
+import { t } from '@lingui/macro'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Erc20 } from 'abis/types'
-import { ErrorCode } from 'constants/eip1193'
-import { UserRejectedRequestError } from 'errors'
+import { UserRejectedRequestError, WidgetError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApprovalTransactionInfo, TransactionType } from 'state/transactions'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { isUserRejection } from 'utils/jsonRpcError'
 
 import { usePerfEventHandler } from './usePerfEventHandler'
 
@@ -67,12 +68,15 @@ export function useUpdateTokenAllowance(
         tokenAddress: contract.address,
         spenderAddress: spender,
       }
-    } catch (e: unknown) {
-      const symbol = amount?.currency.symbol ?? 'Token'
-      if ((e as any)?.code === ErrorCode.USER_REJECTED_REQUEST) {
+    } catch (error: unknown) {
+      if (isUserRejection(error)) {
         throw new UserRejectedRequestError()
       } else {
-        throw new Error(`${symbol} token allowance failed: ${(e as any)?.message ?? e}`)
+        const symbol = amount?.currency.symbol ?? 'Token'
+        throw new WidgetError({
+          message: t`${symbol} token allowance failed: ${(error as any)?.message ?? error}`,
+          error,
+        })
       }
     }
   }, [amount, contract, spender])

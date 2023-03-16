@@ -2,6 +2,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import ActionButton from 'components/ActionButton'
+import { useAsyncError } from 'components/Error/ErrorBoundary'
 import EtherscanLink from 'components/EtherscanLink'
 import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
@@ -33,6 +34,7 @@ export default function ApproveButton({
   } | void>
 }) {
   const [isPending, setIsPending] = useState(false)
+  const throwAsync = useAsyncError()
   const onSubmit = useOnSubmit()
   const onApprove = useCallback(async () => {
     setIsPending(true)
@@ -44,11 +46,11 @@ export default function ApproveButton({
         return { type: TransactionType.APPROVAL, ...info }
       })
     } catch (e) {
-      console.error(e) // ignore error
+      throwAsync(e)
     } finally {
       setIsPending(false)
     }
-  }, [approve, onSubmit])
+  }, [approve, onSubmit, throwAsync])
 
   const currency = trade?.inputAmount?.currency
   const symbol = currency?.symbol || ''

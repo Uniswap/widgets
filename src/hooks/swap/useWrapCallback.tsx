@@ -1,11 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { DismissableError, UserRejectedRequestError } from 'errors'
 import { useWETHContract } from 'hooks/useContract'
 import { usePerfEventHandler } from 'hooks/usePerfEventHandler'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { Field, swapAtom } from 'state/swap'
 import { TransactionType, UnwrapTransactionInfo, WrapTransactionInfo } from 'state/transactions'
+import { isUserRejection } from 'utils/jsonRpcError'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
 interface UseWrapCallbackReturns {
@@ -43,23 +45,33 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     [inputCurrency, amount]
   )
 
-  const wrapCallback = useCallback(async (): Promise<WrapTransactionInfo | UnwrapTransactionInfo | void> => {
-    if (!parsedAmountIn || !wrappedNativeCurrencyContract) return
-    switch (wrapType) {
-      case TransactionType.WRAP:
-        return {
-          response: await wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` }),
-          type: TransactionType.WRAP,
-          amount: parsedAmountIn,
-        }
-      case TransactionType.UNWRAP:
-        return {
-          response: await wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`),
-          type: TransactionType.WRAP,
-          amount: parsedAmountIn,
-        }
-      case undefined:
-        return undefined
+  const wrapCallback = useCallback(async (): Promise<WrapTransactionInfo | UnwrapTransactionInfo> => {
+    if (!parsedAmountIn) throw new Error('missing amount')
+    if (!wrappedNativeCurrencyContract) throw new Error('missing contract')
+    if (wrapType === undefined) throw new Error('missing wrapType')
+    try {
+      switch (wrapType) {
+        case TransactionType.WRAP:
+          return {
+            response: await wrappedNativeCurrencyContract.deposit({
+              value: `0x${parsedAmountIn.quotient.toString(16)}`,
+            }),
+            type: TransactionType.WRAP,
+            amount: parsedAmountIn,
+          }
+        case TransactionType.UNWRAP:
+          return {
+            response: await wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`),
+            type: TransactionType.WRAP,
+            amount: parsedAmountIn,
+          }
+      }
+    } catch (error: unknown) {
+      if (isUserRejection(error)) {
+        throw new UserRejectedRequestError()
+      } else {
+        throw new DismissableError({ message: (error as any)?.message ?? error, error })
+      }
     }
   }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
 
