@@ -46,6 +46,8 @@ export enum DialogAnimationType {
   NONE = 'none',
 }
 
+export const MIN_PAGE_CENTERED_DIALOG_WIDTH = 400
+
 const Context = createContext({
   element: null as HTMLElement | null,
   options: {} as DialogOptions | undefined,

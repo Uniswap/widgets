@@ -13,6 +13,7 @@ const SpeedBumpWrapper = styled(Column)`
   display: flex;
   height: 100%;
   justify-content: space-between;
+  max-width: 420px;
   padding: 1rem;
   text-align: center;
 `
@@ -28,7 +29,6 @@ const SpeedbumpButtonStyle = css`
   padding: 1rem;
 `
 const HeaderRow = styled(Row)`
-  align-items: flex-start;
   width: 100%;
 `
 
@@ -56,7 +56,7 @@ export default function SpeedBumpDialog({ onAcknowledge, children }: PropsWithCh
   return (
     <SpeedBumpWrapper>
       <Column flex gap={0.75}>
-        <HeaderRow>
+        <HeaderRow flex align="center" justify="flex-end">
           <StyledXButton onClick={onClose} />
         </HeaderRow>
         <IconWrapper>

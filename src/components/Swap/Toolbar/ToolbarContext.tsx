@@ -21,8 +21,8 @@ export function Provider({ children }: PropsWithChildren) {
     [Field.INPUT]: { currency: inputCurrency },
     [Field.OUTPUT]: { currency: outputCurrency },
   } = useSwapInfo()
-
   const isWrap = useIsWrap()
+
   useEffect(() => {
     if (isWrap) {
       collapse()
