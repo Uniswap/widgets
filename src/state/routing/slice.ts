@@ -1,5 +1,6 @@
 import { BaseQueryFn, createApi, FetchBaseQueryError, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+import { toWidgetPromise, WidgetError } from 'errors'
 import { RouterPreference } from 'hooks/routing/types'
 import ms from 'ms.macro'
 import qs from 'qs'
@@ -31,23 +32,21 @@ export const routing = createApi({
 
         args.onQuote?.(
           JSON.parse(serializeGetQuoteArgs(args)),
-          queryFulfilled
-            .catch((error) => {
-              const { error: queryError } = error
-              if (queryError && typeof queryError === 'object' && 'status' in queryError) {
-                const parsedError = queryError as FetchBaseQueryError
-                switch (parsedError.status) {
-                  case 'CUSTOM_ERROR':
-                  case 'FETCH_ERROR':
-                  case 'PARSING_ERROR':
-                    throw parsedError.error
-                  default:
-                    throw parsedError.status
-                }
+          toWidgetPromise(queryFulfilled, (error) => {
+            const { error: queryError } = error
+            if (queryError && typeof queryError === 'object' && 'status' in queryError) {
+              const parsedError = queryError as FetchBaseQueryError
+              switch (parsedError.status) {
+                case 'CUSTOM_ERROR':
+                case 'FETCH_ERROR':
+                case 'PARSING_ERROR':
+                  throw new WidgetError({ message: parsedError.error, error: parsedError })
+                default:
+                  throw new WidgetError({ message: parsedError.status.toString(), error: parsedError.status })
               }
-              throw queryError
-            })
-            .then(({ data }) => data as TradeResult)
+            }
+            throw new WidgetError({ message: 'Unknown error', error })
+          }).then(({ data }) => data as TradeResult)
         )
       },
       // Explicitly typing the return type enables typechecking of return values.

@@ -70,7 +70,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
       if (isUserRejection(error)) {
         throw new UserRejectedRequestError()
       } else {
-        throw new DismissableError({ message: (error as any)?.message ?? error })
+        throw new DismissableError({ message: (error as any)?.message ?? error, error })
       }
     }
   }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])

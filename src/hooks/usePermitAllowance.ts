@@ -1,10 +1,11 @@
+import { t } from '@lingui/macro'
 import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
-import { UserRejectedRequestError } from 'errors'
+import { UserRejectedRequestError, WidgetError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
@@ -89,7 +90,10 @@ export function useUpdatePermitAllowance(
         throw new UserRejectedRequestError()
       } else {
         const symbol = token?.symbol ?? 'Token'
-        throw new Error(`${symbol} permit allowance failed: ${(error as any)?.message ?? error}`)
+        throw new WidgetError({
+          message: t`${symbol} permit allowance failed: ${(error as any)?.message ?? error}`,
+          error,
+        })
       }
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])

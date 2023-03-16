@@ -1,7 +1,8 @@
 import { BigNumberish } from '@ethersproject/bignumber'
+import { t } from '@lingui/macro'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Erc20 } from 'abis/types'
-import { UserRejectedRequestError } from 'errors'
+import { UserRejectedRequestError, WidgetError } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -72,7 +73,10 @@ export function useUpdateTokenAllowance(
         throw new UserRejectedRequestError()
       } else {
         const symbol = amount?.currency.symbol ?? 'Token'
-        throw new Error(`${symbol} token allowance failed: ${(error as any)?.message ?? error}`)
+        throw new WidgetError({
+          message: t`${symbol} token allowance failed: ${(error as any)?.message ?? error}`,
+          error,
+        })
       }
     }
   }, [amount, contract, spender])

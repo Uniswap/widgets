@@ -62,12 +62,13 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       if (isUserRejection(error)) {
         throw new UserRejectedRequestError()
       } else {
-        throw new DismissableError({ message: swapErrorToUserReadableMessage(error) })
+        throw new DismissableError({ message: swapErrorToUserReadableMessage(error), error })
       }
     }
     if (tx.data !== response.data) {
       throw new DismissableError({
         message: t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`,
+        error: 'Swap was modified in wallet.',
       })
     }
 
