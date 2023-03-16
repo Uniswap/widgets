@@ -1,5 +1,6 @@
 import { defaultTheme, SwapEventHandlers, TransactionEventHandlers, WidgetEventHandlers } from '@uniswap/widgets'
 import Row from 'components/Row'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 import * as Type from 'theme/type'
 
@@ -53,6 +54,8 @@ export const HANDLERS: (keyof SwapEventHandlers | keyof TransactionEventHandlers
   'onWrapSend',
 ]
 
+const SHOW_ALL_EVENTS = '(show all events)'
+
 export interface Event {
   name: string
   data: unknown
@@ -64,6 +67,7 @@ export interface EventFeedProps {
 }
 
 export default function EventFeed({ events, onClear }: EventFeedProps) {
+  const [selectedEventType, setSelectedEventType] = useState<string>(SHOW_ALL_EVENTS)
   return (
     <EventFeedWrapper>
       <Row>
@@ -72,15 +76,27 @@ export default function EventFeed({ events, onClear }: EventFeedProps) {
           <Type.Subhead1>clear</Type.Subhead1>
         </button>
       </Row>
+      <Row>
+        <Type.Subhead2>Filter: </Type.Subhead2>
+        <select onChange={(e) => setSelectedEventType(e.target.value)} value={selectedEventType}>
+          <option>{SHOW_ALL_EVENTS}</option>
+          {HANDLERS.map((name) => (
+            // Handlers should never have the same name - using key={name} will enforce that at runtime.
+            <option key={name}>{name}</option>
+          ))}
+        </select>
+      </Row>
       <EventColumn>
-        {events?.map(({ name, data }, i) => (
-          <EventRow key={i}>
-            <Type.Subhead2 margin={0} padding={0}>
-              {name}
-            </Type.Subhead2>
-            <EventData>{JSON.stringify(data, null, 2)}</EventData>
-          </EventRow>
-        ))}
+        {events
+          ?.filter(({ name }) => (selectedEventType === SHOW_ALL_EVENTS ? true : name === selectedEventType))
+          .map(({ name, data }, i) => (
+            <EventRow key={i}>
+              <Type.Subhead2 margin={0} padding={0}>
+                {name}
+              </Type.Subhead2>
+              <EventData>{JSON.stringify(data, null, 2)}</EventData>
+            </EventRow>
+          ))}
       </EventColumn>
     </EventFeedWrapper>
   )
