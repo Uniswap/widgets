@@ -28,6 +28,13 @@ export class WidgetError extends Error {
   }
 }
 
+class UnknownError extends WidgetError {
+  constructor(config: WidgetErrorConfig) {
+    super(config)
+    this.name = 'UnknownError'
+  }
+}
+
 /**
  * A Promise which rejects with a known WidgetError.
  * Although it is well-typed, this typing only works when using the Promise as a Thennable, not through async/await.
@@ -43,12 +50,20 @@ export class WidgetPromise<V, R extends WidgetError = WidgetError> extends Promi
   >(
     promise: P,
     /** Synchronously maps the value to the WidgetPromise value. Any thrown reason must be mappable by onrejected. */
-    onfulfilled?: ((value: V) => WidgetValue) | null,
+    onfulfilled: ((value: V) => WidgetValue) | null,
     /** Synchronously maps the reason to the WidgetPromise reason. Must throw the mapped reason. */
-    onrejected?: ((reason: R) => never) | null
+    onrejected: (reason: R) => never
   ): WidgetPromise<WidgetValue, WidgetReason> {
     return promise.then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
-      throw onrejected ? onrejected(reason) : reason
+      try {
+        onrejected(reason)
+      } catch (error) {
+        // > Must throw the mapped reason.
+        // This cannot actually be enforced in TypeScript, so this bit is unsafe:
+        // the best we can do is check that it's a WidgetError at runtime.
+        if (error instanceof WidgetError) throw error
+        throw new UnknownError({ message: `Unknown error: ${error.toString()}`, error })
+      }
     }) as WidgetPromise<WidgetValue, WidgetReason>
   }
 
