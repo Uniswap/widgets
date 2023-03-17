@@ -23,7 +23,7 @@ describe('computeFiatValuePriceImpact', () => {
         CurrencyAmount.fromRawAmount(USDC_MAINNET, 100),
         CurrencyAmount.fromRawAmount(USDC_MAINNET, 150)
       )?.toFixed(2)
-    ).toEqual(new Percent(-50, 100).toFixed(2))
+    ).toEqual(new Percent(50, 100).toFixed(2))
   })
 
   it('should return undefined: different currencies', () => {

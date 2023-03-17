@@ -8,7 +8,7 @@ import { useUSDCValue } from './useUSDCPrice'
 
 export interface PriceImpact {
   percent: Percent
-  warning?: 'warning' | 'error'
+  warning?: 'warning' | 'error' | 'success'
 }
 
 export function usePriceImpact(trade?: InterfaceTrade): PriceImpact | undefined {
@@ -32,7 +32,8 @@ export function useFiatValueChange(trade?: InterfaceTrade) {
     }
     return {
       percent: fiatPriceImpact,
-      warning: getPriceImpactWarning(fiatPriceImpact),
+      // Fiat value should be green when it's positive to indicate a profitable trade.
+      warning: fiatPriceImpact.greaterThan(0) ? 'success' : getPriceImpactWarning(fiatPriceImpact),
     }
   }, [inputUSDCValue, outputUSDCValue])
 }

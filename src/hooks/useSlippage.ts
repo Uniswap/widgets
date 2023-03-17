@@ -53,5 +53,7 @@ export function getSlippageWarning(slippage?: Percent): 'warning' | 'error' | un
 }
 
 export function formatSlippage(slippage: Slippage): string {
-  return formatPriceImpact(slippage.allowed)
+  // Allowed slippage should always be displayed as a positive number,
+  // and conedison flips the sign when formatting price impact.
+  return formatPriceImpact(slippage.allowed.multiply(-1))
 }
