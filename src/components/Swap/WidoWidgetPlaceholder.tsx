@@ -79,12 +79,12 @@ function FloatingButton() {
   )
 }
 
-export interface SwapWidgetSkeletonProps {
+export interface WidoWidgetPlaceholderProps {
   theme?: Theme
   width?: string | number
 }
 
-export function SwapWidgetSkeleton({ theme, width }: SwapWidgetSkeletonProps) {
+export function WidoWidgetPlaceholder({ theme, width }: WidoWidgetPlaceholderProps) {
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>

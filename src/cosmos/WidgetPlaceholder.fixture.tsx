@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { darkTheme, defaultTheme, lightTheme, SwapWidgetSkeleton } from 'wido-widget'
+import { darkTheme, defaultTheme, lightTheme, WidoWidgetPlaceholder } from 'wido-widget'
 
 function Fixture() {
   const [width] = useValue('width', { defaultValue: 360 })
@@ -8,7 +8,7 @@ function Fixture() {
   const [darkMode] = useValue('darkMode', { defaultValue: false })
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
 
-  return <SwapWidgetSkeleton theme={theme} width={width} />
+  return <WidoWidgetPlaceholder theme={theme} width={width} />
 }
 
 export default <Fixture />
