@@ -5,6 +5,7 @@ import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
 import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
+import { transparentize } from 'polished'
 import {
   ComponentClass,
   CSSProperties,
@@ -36,6 +37,19 @@ const TokenButton = styled(BaseButton)`
   border-radius: 0;
   outline: none;
   padding: 0.5em 0.75em;
+`
+
+const TokenBadge = styled(ThemedText.Caption)<{ active?: boolean }>`
+  background-color: ${({ theme }) => transparentize(0.5, theme.outline)};
+  border: 1px solid ${({ theme }) => theme.outline};
+  border-radius: 1em;
+  color: ${({ theme }) => theme.secondary};
+  padding: 0.2em 0.5em;
+`
+const Overflowable = styled(ThemedText.Caption)<{ active?: boolean }>`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const ITEM_SIZE = 56
@@ -113,7 +127,11 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
               <ChainImgBadge src={chainSrc} size={1.5} />
             </TokenGroup>
             <Column flex gap={0.125} align="flex-start">
-              <ThemedText.Subhead1>{value.name}</ThemedText.Subhead1>
+              <Row gap={0.25}>
+                <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
+                <Overflowable color="secondary">{value.name}</Overflowable>
+                {value.protocol !== 'dex' && <TokenBadge>{value.protocol}</TokenBadge>}
+              </Row>
               <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
             </Column>
           </Row>
