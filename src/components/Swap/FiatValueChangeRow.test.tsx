@@ -1,12 +1,12 @@
 import { Percent } from '@uniswap/sdk-core'
 import { renderComponent } from 'test'
 
-import { PriceImpactRow } from './PriceImpactRow'
+import { FiatValueChangeRow } from './FiatValueChangeRow'
 
-describe('PriceImpactRow', () => {
+describe('FiatValueChangeRow', () => {
   it('should display the percentage and icon for an error', () => {
     const el = renderComponent(
-      <PriceImpactRow
+      <FiatValueChangeRow
         impact={{
           percent: new Percent(10, 100),
           warning: 'error',
@@ -22,7 +22,7 @@ describe('PriceImpactRow', () => {
 
   it('should display the percentage and icon for a warning', () => {
     const el = renderComponent(
-      <PriceImpactRow
+      <FiatValueChangeRow
         impact={{
           percent: new Percent(1, 100),
           warning: 'warning',
@@ -38,7 +38,7 @@ describe('PriceImpactRow', () => {
 
   it('should display the percentage but no icon for small percentage', () => {
     const el = renderComponent(
-      <PriceImpactRow
+      <FiatValueChangeRow
         impact={{
           percent: new Percent(1, 10000),
         }}

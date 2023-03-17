@@ -18,7 +18,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
 import Row from '../Row'
-import { PriceImpactRow } from './PriceImpactRow'
+import { FiatValueChangeRow } from './FiatValueChangeRow'
 import TokenInput, { TokenInputHandle } from './TokenInput'
 
 const USDC = styled(Row)`
@@ -164,7 +164,7 @@ export function FieldWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
-              <PriceImpactRow
+              <FiatValueChangeRow
                 impact={fiatValueChange}
                 tooltipText={t`The estimated difference between the USD values of input and output amounts.`}
               />

@@ -12,7 +12,7 @@ interface PriceImpactProps {
   reverse?: boolean
 }
 
-export function PriceImpactRow({ impact, reverse, tooltipText }: PriceImpactProps) {
+export function FiatValueChangeRow({ impact, reverse, tooltipText }: PriceImpactProps) {
   if (!impact) {
     return null
   }
