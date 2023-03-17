@@ -48,13 +48,16 @@ export class WidgetPromise<V, R extends WidgetError = WidgetError> extends Promi
     WidgetValue = V,
     WidgetReason extends WidgetError = WidgetError
   >(
-    promise: P,
+    value: P | (() => P),
     /** Synchronously maps the value to the WidgetPromise value. Any thrown reason must be mappable by onrejected. */
     onfulfilled: ((value: V) => WidgetValue) | null,
-    /** Synchronously maps the reason to the WidgetPromise reason. Must throw the mapped reason. */
+    /**
+     * Synchronously maps the reason to the WidgetPromise reason. Must throw the mapped reason.
+     * @throws {@link WidgetReason}
+     */
     onrejected: (reason: R) => never
   ): WidgetPromise<WidgetValue, WidgetReason & UnknownError> {
-    return promise.then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
+    return ('then' in value ? value : value()).then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
       try {
         onrejected(reason)
       } catch (error) {

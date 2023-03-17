@@ -44,39 +44,43 @@ export function useTokenAllowance(
 export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefined, spender: string) {
   const contract = useTokenContract(amount?.currency.address)
 
-  const updateTokenAllowance = useCallback(() => {
-    const trigger = async () => {
-      if (!amount) throw new Error('missing amount')
-      if (!contract) throw new Error('missing contract')
-      if (!spender) throw new Error('missing spender')
+  const updateTokenAllowance = useCallback(
+    () =>
+      WidgetPromise.from(
+        async () => {
+          if (!amount) throw new Error('missing amount')
+          if (!contract) throw new Error('missing contract')
+          if (!spender) throw new Error('missing spender')
 
-      let allowance: BigNumberish = MaxUint256.toString()
-      const estimatedGas = await contract.estimateGas.approve(spender, allowance).catch(() => {
-        // Fallback for tokens which restrict approval amounts:
-        allowance = amount.quotient.toString()
-        return contract.estimateGas.approve(spender, allowance)
-      })
+          let allowance: BigNumberish = MaxUint256.toString()
+          const estimatedGas = await contract.estimateGas.approve(spender, allowance).catch(() => {
+            // Fallback for tokens which restrict approval amounts:
+            allowance = amount.quotient.toString()
+            return contract.estimateGas.approve(spender, allowance)
+          })
 
-      const gasLimit = calculateGasMargin(estimatedGas)
-      const response = await contract.approve(spender, allowance, { gasLimit })
-      return {
-        type: TransactionType.APPROVAL,
-        response,
-        tokenAddress: contract.address,
-        spenderAddress: spender,
-      } as ApprovalTransactionInfo
-    }
+          const gasLimit = calculateGasMargin(estimatedGas)
+          const response = await contract.approve(spender, allowance, { gasLimit })
+          return {
+            type: TransactionType.APPROVAL,
+            response,
+            tokenAddress: contract.address,
+            spenderAddress: spender,
+          } as ApprovalTransactionInfo
+        },
+        null,
+        (error) => {
+          if (isUserRejection(error)) throw new UserRejectedRequestError()
 
-    return WidgetPromise.from(trigger(), null, (error) => {
-      if (isUserRejection(error)) throw new UserRejectedRequestError()
-
-      const symbol = amount?.currency.symbol ?? 'Token'
-      throw new WidgetError({
-        message: t`${symbol} token allowance failed: ${(error as any)?.message ?? error}`,
-        error,
-      })
-    })
-  }, [amount, contract, spender])
+          const symbol = amount?.currency.symbol ?? 'Token'
+          throw new WidgetError({
+            message: t`${symbol} token allowance failed: ${(error as any)?.message ?? error}`,
+            error,
+          })
+        }
+      ),
+    [amount, contract, spender]
+  )
 
   const args = useMemo(() => (amount && spender ? { token: amount.currency, spender } : undefined), [amount, spender])
   return usePerfEventHandler('onTokenAllowance', args, updateTokenAllowance)

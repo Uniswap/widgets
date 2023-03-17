@@ -61,41 +61,45 @@ export function useUpdatePermitAllowance(
 ) {
   const { account, chainId, provider } = useWeb3React()
 
-  const updatePermitAllowance = useCallback(() => {
-    const trigger = async () => {
-      if (!chainId) throw new Error('missing chainId')
-      if (!provider) throw new Error('missing provider')
-      if (!token) throw new Error('missing token')
-      if (!spender) throw new Error('missing spender')
-      if (nonce === undefined) throw new Error('missing nonce')
+  const updatePermitAllowance = useCallback(
+    () =>
+      WidgetPromise.from(
+        async () => {
+          if (!chainId) throw new Error('missing chainId')
+          if (!provider) throw new Error('missing provider')
+          if (!token) throw new Error('missing token')
+          if (!spender) throw new Error('missing spender')
+          if (nonce === undefined) throw new Error('missing nonce')
 
-      const permit: Permit = {
-        details: {
-          token: token.address,
-          amount: MaxAllowanceTransferAmount,
-          expiration: toDeadline(PERMIT_EXPIRATION),
-          nonce,
+          const permit: Permit = {
+            details: {
+              token: token.address,
+              amount: MaxAllowanceTransferAmount,
+              expiration: toDeadline(PERMIT_EXPIRATION),
+              nonce,
+            },
+            spender,
+            sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
+          }
+
+          const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
+          // Use conedison's signTypedData for better x-wallet compatibility.
+          const signature = await signTypedData(provider.getSigner(account), domain, types, values)
+          onPermitSignature?.({ ...permit, signature })
         },
-        spender,
-        sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
-      }
+        null,
+        (error) => {
+          if (isUserRejection(error)) throw new UserRejectedRequestError()
 
-      const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
-      // Use conedison's signTypedData for better x-wallet compatibility.
-      const signature = await signTypedData(provider.getSigner(account), domain, types, values)
-      onPermitSignature?.({ ...permit, signature })
-    }
-
-    return WidgetPromise.from(trigger(), null, (error) => {
-      if (isUserRejection(error)) throw new UserRejectedRequestError()
-
-      const symbol = token?.symbol ?? 'Token'
-      throw new WidgetError({
-        message: t`${symbol} permit allowance failed: ${(error as any)?.message ?? error}`,
-        error,
-      })
-    })
-  }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
+          const symbol = token?.symbol ?? 'Token'
+          throw new WidgetError({
+            message: t`${symbol} permit allowance failed: ${(error as any)?.message ?? error}`,
+            error,
+          })
+        }
+      ),
+    [account, chainId, nonce, onPermitSignature, provider, spender, token]
+  )
 
   const args = useMemo(() => (token && spender ? { token, spender } : undefined), [spender, token])
   return usePerfEventHandler('onPermit2Allowance', args, updatePermitAllowance)
