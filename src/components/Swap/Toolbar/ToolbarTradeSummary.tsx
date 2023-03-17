@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import Tooltip from 'components/Tooltip'
+import Tooltip, { TooltipText } from 'components/Tooltip'
 import { Icon } from 'icons'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
@@ -31,7 +31,6 @@ export interface SummaryRowProps {
   color?: Color
   nameTooltip?: {
     content: ReactNode
-    icon: Icon
   }
   valueTooltip?: {
     content: ReactNode
@@ -44,10 +43,11 @@ function SummaryRow({ name, value, color, nameTooltip, valueTooltip }: SummaryRo
     <Row>
       {nameTooltip ? (
         <Row gap={0.25}>
-          <TradeAttributeName color={color}>{name}</TradeAttributeName>
-          <Tooltip icon={nameTooltip.icon} iconProps={{ color }} placement="auto">
-            {nameTooltip.content}
-          </Tooltip>
+          <TradeAttributeName color={color}>
+            <TooltipText text={name} placement="top">
+              <ThemedText.Caption>{nameTooltip.content}</ThemedText.Caption>
+            </TooltipText>
+          </TradeAttributeName>
         </Row>
       ) : (
         <TradeAttributeName color={color}>{name}</TradeAttributeName>
