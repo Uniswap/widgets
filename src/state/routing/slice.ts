@@ -1,6 +1,5 @@
 import { BaseQueryFn, createApi, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import ms from 'ms.macro'
-import { quote } from 'wido'
 
 import { serializeGetQuoteArgs } from './args'
 import { GetQuoteArgs, GetQuoteResult, NO_ROUTE } from './types'
@@ -29,9 +28,10 @@ export const routing = createApi({
             recipientAddress,
             slippagePercentage,
             partner,
+            quoteApi,
           } = args
 
-          const quoteResult = await quote({
+          const quoteResult = await quoteApi({
             fromToken: tokenInAddress,
             fromChainId: tokenInChainId as any, // TODO(Daniel)
             toToken: tokenOutAddress,

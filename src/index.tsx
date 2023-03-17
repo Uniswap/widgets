@@ -9,6 +9,7 @@ import { ErrorInfo } from 'react'
 import { AccountInterface } from 'starknet'
 import { Transaction } from 'state/transactions'
 import { Theme } from 'theme'
+import { QuoteRequest, QuoteResult } from 'wido'
 export type { WidoWidgetPlaceholderProps } from 'components/Swap/WidoWidgetPlaceholder'
 export { WidoWidgetPlaceholder } from 'components/Swap/WidoWidgetPlaceholder'
 export type { SupportedLocale } from 'constants/locales'
@@ -51,6 +52,11 @@ export type WidoWidgetProps = {
   onConnectWalletClick?: (chainId: number) => void | boolean | Promise<boolean>
   onError?: (error: Error, info?: ErrorInfo) => void
   onSwitchChain?: (addChainParameter: AddEthereumChainParameter) => void | Promise<void>
+
+  /**
+   * Defaults to the quote function from the wido sdk. Can be used to override the default behavior.
+   */
+  quoteApi?: (request: QuoteRequest) => Promise<QuoteResult>
 }
 
 export function WidoWidget(props: WidoWidgetProps) {

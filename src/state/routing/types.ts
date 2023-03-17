@@ -3,7 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import type { ChainId } from '@uniswap/smart-order-router'
 import { RouterPreference } from 'hooks/routing/types'
-import { QuoteResult, Step } from 'wido'
+import { QuoteRequest, QuoteResult, Step } from 'wido'
 
 export enum TradeState {
   LOADING,
@@ -62,6 +62,7 @@ export interface GetQuoteArgs {
   recipientAddress?: string
   slippagePercentage: number
   partner?: string
+  quoteApi: (request: QuoteRequest) => Promise<QuoteResult>
 }
 
 export const INITIALIZED = 'Initialized'

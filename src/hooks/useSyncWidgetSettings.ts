@@ -3,6 +3,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { AccountInterface } from 'starknet'
+import { quote, QuoteRequest, QuoteResult } from 'wido'
 
 export const widgetSettingsAtom = atom<WidgetSettings>({})
 
@@ -13,6 +14,7 @@ export interface WidgetSettings {
   toTokens?: { chainId: number; address: string }[]
   fromTokens?: { chainId: number; address: string }[]
   partner?: string
+  quoteApi?: (request: QuoteRequest) => Promise<QuoteResult>
 }
 
 export default function useSyncWidgetSettings({
@@ -22,6 +24,7 @@ export default function useSyncWidgetSettings({
   toTokens,
   fromTokens,
   partner,
+  quoteApi,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
@@ -32,8 +35,9 @@ export default function useSyncWidgetSettings({
       toTokens,
       fromTokens,
       partner,
+      quoteApi,
     })
-  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, toTokens, fromTokens, partner])
+  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, toTokens, fromTokens, partner, quoteApi])
 }
 
 export function useTestnetsVisible() {
@@ -140,4 +144,8 @@ export function useWidgetToToken() {
 
 export function usePartnerAddress() {
   return useAtomValue(widgetSettingsAtom).partner
+}
+
+export function useQuoteApi() {
+  return useAtomValue(widgetSettingsAtom).quoteApi || quote
 }

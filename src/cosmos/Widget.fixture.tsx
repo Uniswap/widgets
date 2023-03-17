@@ -6,7 +6,7 @@ import Row from 'components/Row'
 import { connect, disconnect, IStarknetWindowObject } from 'get-starknet'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { getSupportedTokens, useLocalApi, useProdApi } from 'wido'
+import { getSupportedTokens, quote, useLocalApi, useProdApi } from 'wido'
 import { darkTheme, defaultTheme, isStarknetChain, lightTheme, WidoWidget } from 'wido-widget'
 
 import EventFeed, { Event, HANDLERS } from './EventFeed'
@@ -151,6 +151,10 @@ function Fixture() {
       width={width}
       fromTokens={fromTokens}
       toTokens={toTokens}
+      quoteApi={(request) => {
+        // place to override the quote request or result
+        return quote(request)
+      }}
       {...eventHandlers}
       onConnectWalletClick={handleConnectWalletClick}
     />
