@@ -2,7 +2,7 @@ import { BigNumberish } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Erc20 } from 'abis/types'
-import { toWidgetPromise, UserRejectedRequestError, WidgetError } from 'errors'
+import { UserRejectedRequestError, WidgetError, WidgetPromise } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -67,7 +67,7 @@ export function useUpdateTokenAllowance(amount: CurrencyAmount<Token> | undefine
       } as ApprovalTransactionInfo
     }
 
-    return toWidgetPromise(trigger(), null, (error) => {
+    return WidgetPromise.from(trigger(), null, (error) => {
       if (isUserRejection(error)) throw new UserRejectedRequestError()
 
       const symbol = amount?.currency.symbol ?? 'Token'

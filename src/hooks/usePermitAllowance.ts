@@ -5,7 +5,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
-import { toWidgetPromise, UserRejectedRequestError, WidgetError } from 'errors'
+import { UserRejectedRequestError, WidgetError, WidgetPromise } from 'errors'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
 import ms from 'ms.macro'
@@ -86,7 +86,7 @@ export function useUpdatePermitAllowance(
       onPermitSignature?.({ ...permit, signature })
     }
 
-    return toWidgetPromise(trigger(), null, (error) => {
+    return WidgetPromise.from(trigger(), null, (error) => {
       if (isUserRejection(error)) throw new UserRejectedRequestError()
 
       const symbol = token?.symbol ?? 'Token'

@@ -6,7 +6,7 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TX_GAS_MARGIN } from 'constants/misc'
-import { DismissableError, toWidgetPromise, UserRejectedRequestError } from 'errors'
+import { DismissableError, UserRejectedRequestError, WidgetPromise } from 'errors'
 import { useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { SwapTransactionInfo, TransactionType } from 'state/transactions'
@@ -71,7 +71,7 @@ export function useUniversalRouterSwapCallback(trade: InterfaceTrade | undefined
       } as SwapTransactionInfo
     }
 
-    return toWidgetPromise(trigger(), null, (error) => {
+    return WidgetPromise.from(trigger(), null, (error) => {
       if (error instanceof DismissableError) throw error
       if (isUserRejection(error)) throw new UserRejectedRequestError()
       throw new DismissableError({ message: swapErrorToUserReadableMessage(error), error })

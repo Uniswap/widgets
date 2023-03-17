@@ -28,26 +28,28 @@ export class WidgetError extends Error {
   }
 }
 
-export interface WidgetPromise<V, R extends WidgetError = WidgetError> extends Promise<V> {
-  catch<T = never>(onrejected?: ((reason: R) => T | Promise<T>) | undefined | null): Promise<T>
-}
+export class WidgetPromise<V, R extends WidgetError = WidgetError> extends Promise<V> {
+  static from<
+    P extends { then(onfulfilled: (value: any) => any): any; catch(onrejected: (reason: any) => any): any },
+    V extends Parameters<Parameters<P['then']>[0]>[0],
+    R extends Parameters<Parameters<P['catch']>[0]>[0],
+    WidgetPromiseValue = V,
+    WidgetPromiseReason extends WidgetError = WidgetError
+  >(
+    promise: P,
+    /** Synchronously maps the value to the widget promise value. Any thrown reason must be mappable by onrejected. */
+    onfulfilled?: ((value: V) => WidgetPromiseValue) | null,
+    /** Synchronously maps the reason to the widget promise reason. Must throw the mapped reason. */
+    onrejected?: ((reason: R) => never) | null
+  ): WidgetPromise<WidgetPromiseValue, WidgetPromiseReason> {
+    return promise.then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
+      throw onrejected ? onrejected(reason) : reason
+    }) as WidgetPromise<WidgetPromiseValue, WidgetPromiseReason>
+  }
 
-export function toWidgetPromise<
-  P extends { then(onfulfilled: (value: any) => any): any; catch(onrejected: (reason: any) => any): any },
-  V extends Parameters<Parameters<P['then']>[0]>[0],
-  R extends Parameters<Parameters<P['catch']>[0]>[0],
-  WidgetPromiseValue = V,
-  WidgetPromiseReason extends WidgetError = WidgetError
->(
-  promise: P,
-  /** Synchronously maps the value to the widget promise value. Any thrown reason must be mappable by onrejected. */
-  onfulfilled?: ((value: V) => WidgetPromiseValue) | null,
-  /** Synchronously maps the reason to the widget promise reason. Must throw the mapped reason. */
-  onrejected?: ((reason: R) => never) | null
-): WidgetPromise<WidgetPromiseValue, WidgetPromiseReason> {
-  return promise.then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
-    throw onrejected ? onrejected(reason) : reason
-  }) as WidgetPromise<WidgetPromiseValue, WidgetPromiseReason>
+  catch<T = never>(onrejected?: ((reason: R) => T | Promise<T>) | undefined | null): Promise<V | T> {
+    return super.catch(onrejected)
+  }
 }
 
 /** Integration errors are considered fatal. They are caused by invalid integrator configuration. */

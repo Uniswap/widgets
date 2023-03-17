@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { DismissableError, toWidgetPromise, UserRejectedRequestError } from 'errors'
+import { DismissableError, UserRejectedRequestError, WidgetPromise } from 'errors'
 import { useWETHContract } from 'hooks/useContract'
 import { usePerfEventHandler } from 'hooks/usePerfEventHandler'
 import { useAtomValue } from 'jotai/utils'
@@ -68,7 +68,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
       }
     }
 
-    return toWidgetPromise(trigger(), null, (error) => {
+    return WidgetPromise.from(trigger(), null, (error) => {
       if (isUserRejection(error)) throw new UserRejectedRequestError()
       throw new DismissableError({ message: (error as any)?.message ?? error, error })
     })
