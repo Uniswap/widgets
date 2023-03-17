@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { DismissableError, UserRejectedRequestError } from 'errors'
+import { DismissableError, UserRejectedRequestError, WidgetPromise } from 'errors'
 import { useWETHContract } from 'hooks/useContract'
 import { usePerfEventHandler } from 'hooks/usePerfEventHandler'
 import { useAtomValue } from 'jotai/utils'
@@ -45,35 +45,38 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     [inputCurrency, amount]
   )
 
-  const wrapCallback = useCallback(async (): Promise<WrapTransactionInfo | UnwrapTransactionInfo> => {
-    if (!parsedAmountIn) throw new Error('missing amount')
-    if (!wrappedNativeCurrencyContract) throw new Error('missing contract')
-    if (wrapType === undefined) throw new Error('missing wrapType')
-    try {
-      switch (wrapType) {
-        case TransactionType.WRAP:
-          return {
-            response: await wrappedNativeCurrencyContract.deposit({
-              value: `0x${parsedAmountIn.quotient.toString(16)}`,
-            }),
-            type: TransactionType.WRAP,
-            amount: parsedAmountIn,
+  const wrapCallback = useCallback(
+    () =>
+      WidgetPromise.from(
+        async () => {
+          if (!parsedAmountIn) throw new Error('missing amount')
+          if (!wrappedNativeCurrencyContract) throw new Error('missing contract')
+          if (wrapType === undefined) throw new Error('missing wrapType')
+          switch (wrapType) {
+            case TransactionType.WRAP:
+              return {
+                response: await wrappedNativeCurrencyContract.deposit({
+                  value: `0x${parsedAmountIn.quotient.toString(16)}`,
+                }),
+                type: TransactionType.WRAP,
+                amount: parsedAmountIn,
+              } as WrapTransactionInfo
+            case TransactionType.UNWRAP:
+              return {
+                response: await wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`),
+                type: TransactionType.UNWRAP,
+                amount: parsedAmountIn,
+              } as UnwrapTransactionInfo
           }
-        case TransactionType.UNWRAP:
-          return {
-            response: await wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`),
-            type: TransactionType.WRAP,
-            amount: parsedAmountIn,
-          }
-      }
-    } catch (error: unknown) {
-      if (isUserRejection(error)) {
-        throw new UserRejectedRequestError()
-      } else {
-        throw new DismissableError({ message: (error as any)?.message ?? error, error })
-      }
-    }
-  }, [parsedAmountIn, wrappedNativeCurrencyContract, wrapType])
+        },
+        null,
+        (error) => {
+          if (isUserRejection(error)) throw new UserRejectedRequestError()
+          throw new DismissableError({ message: (error as any)?.message ?? error, error })
+        }
+      ),
+    [parsedAmountIn, wrappedNativeCurrencyContract, wrapType]
+  )
 
   const args = useMemo(() => parsedAmountIn && { amount: parsedAmountIn }, [parsedAmountIn])
   const callback = usePerfEventHandler('onWrapSend', args, wrapCallback)

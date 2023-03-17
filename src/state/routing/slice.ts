@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi, FetchBaseQueryError, SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { toWidgetPromise, WidgetError } from 'errors'
+import { WidgetError, WidgetPromise } from 'errors'
 import { RouterPreference } from 'hooks/routing/types'
 import ms from 'ms.macro'
 import qs from 'qs'
@@ -32,21 +32,25 @@ export const routing = createApi({
 
         args.onQuote?.(
           JSON.parse(serializeGetQuoteArgs(args)),
-          toWidgetPromise(queryFulfilled, (error) => {
-            const { error: queryError } = error
-            if (queryError && typeof queryError === 'object' && 'status' in queryError) {
-              const parsedError = queryError as FetchBaseQueryError
-              switch (parsedError.status) {
-                case 'CUSTOM_ERROR':
-                case 'FETCH_ERROR':
-                case 'PARSING_ERROR':
-                  throw new WidgetError({ message: parsedError.error, error: parsedError })
-                default:
-                  throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
+          WidgetPromise.from(
+            queryFulfilled,
+            ({ data }) => data,
+            (error) => {
+              const { error: queryError } = error
+              if (queryError && typeof queryError === 'object' && 'status' in queryError) {
+                const parsedError = queryError as FetchBaseQueryError
+                switch (parsedError.status) {
+                  case 'CUSTOM_ERROR':
+                  case 'FETCH_ERROR':
+                  case 'PARSING_ERROR':
+                    throw new WidgetError({ message: parsedError.error, error: parsedError })
+                  default:
+                    throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
+                }
               }
+              throw new WidgetError({ message: 'Unknown error', error })
             }
-            throw new WidgetError({ message: 'Unknown error', error })
-          }).then(({ data }) => data as TradeResult)
+          )
         )
       },
       // Explicitly typing the return type enables typechecking of return values.

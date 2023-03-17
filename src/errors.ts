@@ -28,23 +28,51 @@ export class WidgetError extends Error {
   }
 }
 
-export interface WidgetPromise<T> extends Omit<Promise<T>, 'then' | 'catch'> {
-  then: <V>(
-    /** @throws {@link WidgetError} */
-    onfulfilled: (value: T) => V
-  ) => WidgetPromise<V>
-  catch: <V>(
-    /** @throws {@link WidgetError} */
-    onrejected: (reason: WidgetError) => V
-  ) => WidgetPromise<V>
+export class UnknownError extends WidgetError {
+  constructor(config: WidgetErrorConfig) {
+    super(config)
+    this.name = 'UnknownError'
+  }
 }
 
-export function toWidgetPromise<
-  P extends { then(onfulfilled: (value: any) => any): any; catch(onrejected: (reason: any) => any): any },
-  V extends Parameters<Parameters<P['then']>[0]>[0],
-  R extends Parameters<Parameters<P['catch']>[0]>[0]
->(promise: P, mapRejection: (reason: R) => WidgetError): WidgetPromise<V> {
-  return promise.catch(mapRejection) as WidgetPromise<V>
+/**
+ * A Promise which rejects with a known WidgetError.
+ * Although it is well-typed, this typing only works when using the Promise as a Thennable, not through async/await.
+ * @example widgetPromise.catch((reason: WidgetError) => console.error(reason.error))
+ */
+export class WidgetPromise<V, R extends WidgetError = WidgetError> extends Promise<V> {
+  static from<
+    P extends { then(onfulfilled: (value: any) => any): any; catch(onrejected: (reason: any) => any): any },
+    V extends Parameters<Parameters<P['then']>[0]>[0],
+    R extends Parameters<Parameters<P['catch']>[0]>[0],
+    WidgetValue = V,
+    WidgetReason extends WidgetError = WidgetError
+  >(
+    value: P | (() => P),
+    /** Synchronously maps the value to the WidgetPromise value. Any thrown reason must be mappable by onrejected. */
+    onfulfilled: ((value: V) => WidgetValue) | null,
+    /**
+     * Synchronously maps the reason to the WidgetPromise reason. Must throw the mapped reason.
+     * @throws {@link WidgetReason}
+     */
+    onrejected: (reason: R) => never
+  ): WidgetPromise<WidgetValue, WidgetReason & UnknownError> {
+    return ('then' in value ? value : value()).then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
+      try {
+        onrejected(reason)
+      } catch (error) {
+        // > Must throw the mapped reason.
+        // This cannot actually be enforced in TypeScript, so this bit is unsafe:
+        // the best we can do is check that it's a WidgetError at runtime and wrap it if it's not.
+        if (error instanceof WidgetError) throw error
+        throw new UnknownError({ message: `Unknown error: ${error.toString()}`, error })
+      }
+    }) as WidgetPromise<WidgetValue, WidgetReason>
+  }
+
+  catch<T = never>(onrejected?: ((reason: R) => T | Promise<T>) | undefined | null): Promise<V | T> {
+    return super.catch(onrejected)
+  }
 }
 
 /** Integration errors are considered fatal. They are caused by invalid integrator configuration. */
