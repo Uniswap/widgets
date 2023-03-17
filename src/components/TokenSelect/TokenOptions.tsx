@@ -130,7 +130,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
               <Row gap={0.25}>
                 <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
                 <Overflowable color="secondary">{value.name}</Overflowable>
-                {value.protocol !== 'dex' && <TokenBadge>{value.protocol}</TokenBadge>}
+                {value.protocol && value.protocol !== 'dex' && <TokenBadge>{value.protocol}</TokenBadge>}
               </Row>
               <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
             </Column>
