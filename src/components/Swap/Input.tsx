@@ -164,7 +164,10 @@ export function FieldWrapper({
           <Row>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
-              <PriceImpactRow impact={fiatValueChange} />
+              <PriceImpactRow
+                impact={fiatValueChange}
+                tooltipText={t`The estimated difference between the USD values of input and output amounts.`}
+              />
             </USDC>
             {balance && (
               <Row gap={0.5}>

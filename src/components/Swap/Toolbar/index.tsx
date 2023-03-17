@@ -5,14 +5,14 @@ import Column from 'components/Column'
 import Expando from 'components/Expando'
 import { ChainError, useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
-import { AlertTriangle, Info } from 'icons'
+import { AlertTriangle } from 'icons'
 import { memo, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 
 import Row from '../../Row'
-import SwapInputOutputEstimate, { getEstimateMessage } from '../Summary/Estimate'
+import { getEstimateMessage } from '../Summary/Estimate'
 import SwapActionButton from '../SwapActionButton'
 import * as Caption from './Caption'
 import { Context as ToolbarContext, Provider as ToolbarContextProvider } from './ToolbarContext'
@@ -113,15 +113,17 @@ function CaptionRow() {
 
   const tradeSummaryRows: SummaryRowProps[] = useMemo(() => {
     const currencySymbol = trade?.outputAmount?.currency.symbol ?? ''
-    const { descriptor, value } = getEstimateMessage(trade, slippage)
+    const { descriptor, value, estimateMessage } = getEstimateMessage(trade, slippage)
     const rows: SummaryRowProps[] = [
       {
         name: t`Network fee`,
+        nameTooltip: { content: t`The fee paid to miners to process your transaction. This must be paid in ETH.` },
         value: gasUseEstimateUSD ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}` : '-',
       },
       {
         color: impact?.warning,
         name: t`Price impact`,
+        nameTooltip: { content: t`The impact your trade has on the market price of this pool.` },
         value: impact?.percent ? formatPriceImpact(impact.percent) : '-',
         valueTooltip: impact?.warning
           ? {
@@ -134,14 +136,14 @@ function CaptionRow() {
         // min/max output/input after slippage
         name: <div style={{ marginRight: '0.5em' }}>{descriptor}</div>,
         value,
+        nameTooltip: { content: estimateMessage },
       },
       {
         name: t`Expected output`,
         value: trade ? `${formatCurrencyAmount(trade?.outputAmount)} ${currencySymbol}` : '-',
         nameTooltip: trade
           ? {
-              icon: Info,
-              content: <SwapInputOutputEstimate trade={trade} slippage={slippage} />,
+              content: t`The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.`,
             }
           : undefined,
       },
