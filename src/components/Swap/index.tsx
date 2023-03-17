@@ -112,7 +112,7 @@ export default function Swap(props: SwapProps) {
             onClose={() => {
               setDisplayTxHash()
               setDstTxHash(undefined)
-              setEvmFetchedBalances({})
+              setSnFetchedBalances({})
               setEvmFetchedBalances({})
             }}
           />
