@@ -53,14 +53,14 @@ export class WidgetPromise<V, R extends WidgetError = WidgetError> extends Promi
     onfulfilled: ((value: V) => WidgetValue) | null,
     /** Synchronously maps the reason to the WidgetPromise reason. Must throw the mapped reason. */
     onrejected: (reason: R) => never
-  ): WidgetPromise<WidgetValue, WidgetReason> {
+  ): WidgetPromise<WidgetValue, WidgetReason & UnknownError> {
     return promise.then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
       try {
         onrejected(reason)
       } catch (error) {
         // > Must throw the mapped reason.
         // This cannot actually be enforced in TypeScript, so this bit is unsafe:
-        // the best we can do is check that it's a WidgetError at runtime.
+        // the best we can do is check that it's a WidgetError at runtime and wrap it if it's not.
         if (error instanceof WidgetError) throw error
         throw new UnknownError({ message: `Unknown error: ${error.toString()}`, error })
       }
