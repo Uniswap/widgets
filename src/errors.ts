@@ -28,23 +28,28 @@ export class WidgetError extends Error {
   }
 }
 
+/**
+ * A Promise which rejects with a known WidgetError.
+ * Although it is well-typed, this typing only works when using the Promise as a Thennable, not through async/await.
+ * @example widgetPromise.catch((reason: WidgetError) => console.error(reason.error))
+ */
 export class WidgetPromise<V, R extends WidgetError = WidgetError> extends Promise<V> {
   static from<
     P extends { then(onfulfilled: (value: any) => any): any; catch(onrejected: (reason: any) => any): any },
     V extends Parameters<Parameters<P['then']>[0]>[0],
     R extends Parameters<Parameters<P['catch']>[0]>[0],
-    WidgetPromiseValue = V,
-    WidgetPromiseReason extends WidgetError = WidgetError
+    WidgetValue = V,
+    WidgetReason extends WidgetError = WidgetError
   >(
     promise: P,
-    /** Synchronously maps the value to the widget promise value. Any thrown reason must be mappable by onrejected. */
-    onfulfilled?: ((value: V) => WidgetPromiseValue) | null,
-    /** Synchronously maps the reason to the widget promise reason. Must throw the mapped reason. */
+    /** Synchronously maps the value to the WidgetPromise value. Any thrown reason must be mappable by onrejected. */
+    onfulfilled?: ((value: V) => WidgetValue) | null,
+    /** Synchronously maps the reason to the WidgetPromise reason. Must throw the mapped reason. */
     onrejected?: ((reason: R) => never) | null
-  ): WidgetPromise<WidgetPromiseValue, WidgetPromiseReason> {
+  ): WidgetPromise<WidgetValue, WidgetReason> {
     return promise.then(onfulfilled ?? ((v) => v)).catch((reason: R) => {
       throw onrejected ? onrejected(reason) : reason
-    }) as WidgetPromise<WidgetPromiseValue, WidgetPromiseReason>
+    }) as WidgetPromise<WidgetValue, WidgetReason>
   }
 
   catch<T = never>(onrejected?: ((reason: R) => T | Promise<T>) | undefined | null): Promise<V | T> {
