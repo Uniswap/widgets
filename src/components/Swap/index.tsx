@@ -5,15 +5,17 @@ import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import { SN_PROVIDER, usePendingTransactions } from 'hooks/transactions'
+import { getTxReceipt } from 'hooks/transactions/updater'
 import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
-import useInterval from 'hooks/useInterval'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
-import { useSnAccountAddress, WidgetSettings } from 'hooks/useSyncWidgetSettings'
+import { WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { useAtom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useMemo, useState } from 'react'
+import { useUpdateAtom } from 'jotai/utils'
+import { useEffect, useMemo, useState } from 'react'
+import { GetTransactionReceiptResponse } from 'starknet'
 import { displayTxHashAtom } from 'state/swap'
-import { snBlockNumberAtom } from 'state/transactions'
+import { SwapTransactionInfo, Transaction } from 'state/transactions'
+import { getStatus } from 'wido'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -26,29 +28,6 @@ import { StatusDialog } from './Status'
 import SwapActionButton from './SwapActionButton'
 import Toolbar, { Provider as ToolbarProvider } from './Toolbar'
 import useValidate from './useValidate'
-
-const WIDO_ROUTER = '0x05a0a35f386dc7e41621afcf3de7e6a74bc88ffe1c2c7e3fef0c3fa3f5154c06'
-
-async function getFistValidTxHash(snBlockNumber?: number, snAccount?: string) {
-  if (!snBlockNumber || !snAccount) return
-
-  let { events } = await SN_PROVIDER.getEvents({
-    from_block: { block_number: snBlockNumber },
-    address: WIDO_ROUTER,
-    chunk_size: 1000,
-  })
-
-  events = events.filter((event) => event.data.length === 5 && event.data[2] === snAccount)
-
-  for (let i = events.length - 1; i >= 0; i--) {
-    const event = events[i]
-    if (event.data.length === 5 && event.data[2] === snAccount) {
-      return event.transaction_hash
-    }
-  }
-
-  return
-}
 
 // SwapProps also currently includes props needed for wallet connection (eg hideConnectionUI),
 // since the wallet connection component exists within the Swap component.
@@ -63,24 +42,29 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
 
-  const snAccount = useSnAccountAddress()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
-  const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
-  const pendingTxs = usePendingTransactions(displayTxHash?.chainId)
-  const displayTx = useMemo(() => displayTxHash && pendingTxs[displayTxHash.hash], [displayTxHash, pendingTxs])
-  const snBlockNumber = useAtomValue(snBlockNumberAtom)
-
+  const [txHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
+  const pendingTxs = usePendingTransactions(txHash?.chainId)
+  const tx = useMemo(
+    () => txHash && (pendingTxs[txHash.hash] as Transaction<SwapTransactionInfo>),
+    [txHash, pendingTxs]
+  )
   const [dstTxHash, setDstTxHash] = useState<string | undefined>()
+  const [dstTxReceipt, setDstTxReceipt] = useState<GetTransactionReceiptResponse | undefined>()
 
-  useInterval(() => {
-    if (dstTxHash) return
-    getFistValidTxHash(snBlockNumber, snAccount).then((txHash) => {
-      if (txHash) {
-        setDstTxHash(txHash)
-      }
+  useEffect(() => {
+    if (!tx || !tx.receipt) return
+    getStatus({ chainId: tx.info.trade.fromToken.chainId, txHash: tx.receipt.transactionHash }).then(({ toTxHash }) => {
+      setDstTxHash(toTxHash)
+
+      getTxReceipt(tx.info.trade.toToken.chainId, toTxHash, SN_PROVIDER)
+        .then(({ promise, cancel }) => promise)
+        .then((receipt) => {
+          setDstTxReceipt(receipt)
+        })
     })
-  }, 1000)
+  }, [tx])
 
   const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
   const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
@@ -104,14 +88,16 @@ export default function Swap(props: SwapProps) {
           </SwapInfoProvider>
         </PopoverBoundaryProvider>
       </div>
-      {displayTx && (
+      {tx && (
         <Dialog color="dialog">
           <StatusDialog
-            tx={displayTx}
+            tx={tx}
             dstTxHash={dstTxHash}
+            dstTxReceipt={dstTxReceipt}
             onClose={() => {
               setDisplayTxHash()
               setDstTxHash(undefined)
+              setDstTxReceipt(undefined)
               setSnFetchedBalances({})
               setEvmFetchedBalances({})
             }}

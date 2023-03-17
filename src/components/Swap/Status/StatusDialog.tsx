@@ -4,6 +4,7 @@ import SwapSummary from 'components/Swap/Summary'
 import { MS_IN_SECOND } from 'constants/misc'
 import { LargeArrow, LargeCheck, LargeSpinner } from 'icons'
 import { useEffect, useMemo, useState } from 'react'
+import { GetTransactionReceiptResponse } from 'starknet'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'state/transactions'
 import { ThemedText, TransitionDuration } from 'theme'
 
@@ -13,10 +14,11 @@ import Column from '../../Column'
 interface TransactionStatusProps {
   tx: Transaction
   dstTxHash?: string
+  dstTxReceipt?: GetTransactionReceiptResponse
   onClose: () => void
 }
 
-function TransactionStatus({ tx, onClose, dstTxHash }: TransactionStatusProps) {
+function TransactionStatus({ tx, onClose, dstTxHash, dstTxReceipt }: TransactionStatusProps) {
   const fromChainId = (tx.info as SwapTransactionInfo).trade.fromToken.chainId
   const toChainId = (tx.info as SwapTransactionInfo).trade.toToken.chainId
   const isSingleChain = fromChainId === toChainId
@@ -28,12 +30,12 @@ function TransactionStatus({ tx, onClose, dstTxHash }: TransactionStatusProps) {
     }
 
     if (tx.receipt?.status) {
-      if (dstTxHash || isSingleChain) {
+      if (dstTxReceipt || isSingleChain) {
         return LargeCheck
       }
     }
     return LargeSpinner
-  }, [showConfirmation, tx.receipt?.status, dstTxHash, isSingleChain])
+  }, [showConfirmation, tx.receipt?.status, dstTxReceipt, isSingleChain])
 
   useEffect(() => {
     // We should show the confirmation for 1 second,
@@ -51,7 +53,7 @@ function TransactionStatus({ tx, onClose, dstTxHash }: TransactionStatusProps) {
       return <Trans>Transaction submitted</Trans>
     } else if (tx.info.type === TransactionType.SWAP) {
       if (tx.receipt?.status) {
-        if (dstTxHash || isSingleChain) {
+        if (dstTxReceipt || isSingleChain) {
           return <Trans>Success</Trans>
         }
       }
@@ -62,23 +64,23 @@ function TransactionStatus({ tx, onClose, dstTxHash }: TransactionStatusProps) {
       return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Unwrap pending</Trans>
     }
     return tx.receipt?.status ? <Trans>Success</Trans> : <Trans>Transaction pending</Trans>
-  }, [showConfirmation, tx.info.type, tx.receipt?.status, dstTxHash, isSingleChain])
+  }, [showConfirmation, tx.info.type, tx.receipt?.status, dstTxReceipt, isSingleChain])
 
   const subheading = useMemo(() => {
     if (isSingleChain && tx.receipt?.status) {
       return <Trans>Your transaction was successful</Trans>
     }
-    if (tx.receipt?.status && !dstTxHash) {
+    if (tx.receipt?.status && !dstTxReceipt) {
       return <Trans>Waiting for the second transaction...</Trans>
     }
-    if (tx.receipt?.status && dstTxHash) {
+    if (tx.receipt?.status && dstTxReceipt) {
       return <Trans>Your transaction was successful</Trans>
     }
     if (isSingleChain) {
       return <Trans>Waiting for the transaction...</Trans>
     }
     return <Trans>Waiting for the first transaction...</Trans>
-  }, [tx.receipt?.status, dstTxHash, isSingleChain])
+  }, [tx.receipt?.status, dstTxReceipt, isSingleChain])
 
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
@@ -102,7 +104,7 @@ function TransactionStatus({ tx, onClose, dstTxHash }: TransactionStatusProps) {
   )
 }
 
-export default function TransactionStatusDialog({ tx, onClose, dstTxHash }: TransactionStatusProps) {
+export default function TransactionStatusDialog({ tx, onClose, dstTxHash, dstTxReceipt }: TransactionStatusProps) {
   return tx.receipt?.status === 0 ? (
     <ErrorDialog
       header={<Trans>Your swap failed.</Trans>}
@@ -117,6 +119,6 @@ export default function TransactionStatusDialog({ tx, onClose, dstTxHash }: Tran
       onClick={onClose}
     />
   ) : (
-    <TransactionStatus tx={tx} dstTxHash={dstTxHash} onClose={onClose} />
+    <TransactionStatus tx={tx} dstTxHash={dstTxHash} dstTxReceipt={dstTxReceipt} onClose={onClose} />
   )
 }

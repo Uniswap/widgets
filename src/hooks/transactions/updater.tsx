@@ -136,3 +136,31 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt, chain
 
   return null
 }
+
+export async function getTxReceipt(chainId: number, hash: string, snProvider: RpcProvider) {
+  if (isStarknetChain(chainId)) {
+    const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
+    return retry(
+      () =>
+        snProvider
+          .getTransactionReceipt(hash)
+          .then((receipt: any) => {
+            if (!receipt || !['ACCEPTED_ON_L2', 'ACCEPTED_ON_L1', 'REJECTED'].includes(receipt.status)) {
+              throw new RetryableError()
+            }
+            return {
+              ...receipt,
+              blockHash: receipt.block_hash,
+              blockNumber: Number(receipt.block_number),
+              status: receipt.status,
+            } as any
+          })
+          .catch(() => {
+            throw new RetryableError()
+          }),
+      retryOptions
+    )
+  }
+
+  throw new Error('Not implemented.')
+}

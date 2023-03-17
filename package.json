@@ -115,7 +115,7 @@
     "wcag-contrast": "^3.0.0",
     "web3": "^1.8.2",
     "wicg-inert": "^3.1.1",
-    "wido": "^0.2.2"
+    "wido": "^0.2.3"
   },
   "peerDependencies": {
     "@babel/runtime": ">=7.17.0",
