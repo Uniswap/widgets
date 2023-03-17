@@ -28,7 +28,7 @@ export class WidgetError extends Error {
   }
 }
 
-class UnknownError extends WidgetError {
+export class UnknownError extends WidgetError {
   constructor(config: WidgetErrorConfig) {
     super(config)
     this.name = 'UnknownError'
