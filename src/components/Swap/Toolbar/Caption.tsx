@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
-import { useIsWideWidget } from 'hooks/useWidgetWidth'
+import { useIsWideWidget, useWidgetWidth } from 'hooks/useWidgetWidth'
 import { AlertTriangle, ChevronDown, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -146,7 +146,7 @@ const ExpanderRow = styled(Row)<{ $expanded: boolean; warning?: 'warning' | 'err
     css`
       background-color: ${({ theme }) =>
         $expanded ? 'transparent' : warning === 'error' ? theme.criticalSoft : theme.warningSoft};
-      border-radius: 0.25rem;
+      border-radius: ${({ theme }) => theme.borderRadius.xsmall}rem;
       padding: 0.375rem 0.5rem 0.375rem 0.375rem;
       transition: background-color ${AnimationSpeed.Medium} linear, padding ${AnimationSpeed.Medium} linear,
         width ${AnimationSpeed.Medium} linear;
@@ -176,12 +176,14 @@ export function Trade({
   loading,
   warning,
 }: TradeProps & TradeTooltip & ExpandProps) {
+  const widgetWidth = useWidgetWidth()
+  const shouldHideUSD = widgetWidth < 360 && warning && !expanded
   return (
     <>
       <Caption
         caption={
           <ThemedText.Body2 opacity={loading ? 0.4 : 1}>
-            <Price trade={trade} outputUSDC={outputUSDC} />
+            <Price trade={trade} outputUSDC={shouldHideUSD ? undefined : outputUSDC} />
           </ThemedText.Body2>
         }
         icon={loading ? Spinner : null}
