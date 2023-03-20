@@ -1,4 +1,3 @@
-import { formatPriceImpact } from '@uniswap/conedison/format'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'
@@ -50,10 +49,4 @@ export function getSlippageWarning(slippage?: Percent): 'warning' | 'error' | un
   if (slippage?.greaterThan(MAX_VALID_SLIPPAGE)) return 'error'
   if (slippage?.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
   return
-}
-
-export function formatSlippage(slippage: Slippage): string {
-  // Allowed slippage should always be displayed as a positive number,
-  // and conedison flips the sign when formatting price impact.
-  return formatPriceImpact(slippage.allowed.multiply(-1))
 }
