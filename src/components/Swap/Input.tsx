@@ -192,7 +192,7 @@ export function FieldWrapper({
           <Row>
             <EtherscanLink
               type={ExplorerDataType.TOKEN}
-              data={(currency as WrappedTokenInfo).address}
+              data={(currency as WrappedTokenInfo)?.address}
               showIcon={true}
               chainIdOverride={currency?.chainId}
             >
