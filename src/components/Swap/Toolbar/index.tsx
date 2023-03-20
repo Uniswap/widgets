@@ -77,6 +77,7 @@ function CaptionRow() {
               gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
               expanded={open}
               loading={state === TradeState.LOADING}
+              warning={impact?.warning}
             />
           ),
           isExpandable: true,
@@ -95,14 +96,15 @@ function CaptionRow() {
   }, [
     error,
     state,
+    trade,
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
     gasUseEstimateUSD,
     isWrap,
-    trade,
-    open,
     outputUSDC,
+    open,
+    impact?.warning,
   ])
 
   const maybeToggleOpen = useCallback(() => {
