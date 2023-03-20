@@ -2,11 +2,13 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
+import EtherscanLink from 'components/EtherscanLink'
 import Row from 'components/Row'
 import Rule from 'components/Rule'
 import Tooltip from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { Slippage } from 'hooks/useSlippage'
+import { useRecipientAddress } from 'hooks/useSyncWidgetSettings'
 import { useWidgetWidth } from 'hooks/useWidgetWidth'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -16,6 +18,7 @@ import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 import { currencyId } from 'utils/currencyId'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import { useTradeExchangeRate } from '../Price'
 import { getEstimateMessage } from './Estimate'
@@ -33,6 +36,12 @@ const Value = styled.span<{ color?: Color }>`
 const DetailValue = styled(Value)`
   max-width: 45%;
   overflow-wrap: break-word;
+`
+
+const Overflowable = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const RuleWrapper = styled.div`
@@ -128,6 +137,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
   const [exchangeRate] = useTradeExchangeRate(trade)
+  const recipientAddress = useRecipientAddress(outputCurrency.chainId)
 
   const { details, estimateMessage } = useMemo(() => {
     const details: Array<[string, string] | [string, string, Color | undefined]> = []
@@ -166,6 +176,21 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
         </RuleWrapper>
       </Column>
       <Column gap={0.75}>
+        <ThemedText.Body2 userSelect>
+          <Row flex align="flex-start">
+            <Label>Recipient</Label>
+            <DetailValue>
+              <EtherscanLink
+                type={ExplorerDataType.ADDRESS}
+                data={recipientAddress}
+                showIcon
+                chainIdOverride={outputCurrency.chainId}
+              >
+                <Overflowable>{recipientAddress}</Overflowable>
+              </EtherscanLink>
+            </DetailValue>
+          </Row>
+        </ThemedText.Body2>
         {details.map(([label, detail, color]) => (
           <Detail key={label} label={label} value={detail} color={color} />
         ))}

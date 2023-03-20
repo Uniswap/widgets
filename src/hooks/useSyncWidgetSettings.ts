@@ -3,6 +3,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { AccountInterface } from 'starknet'
+import { isStarknetChain } from 'utils/starknet'
 import { quote, QuoteRequest, QuoteResult } from 'wido'
 
 export const widgetSettingsAtom = atom<WidgetSettings>({})
@@ -112,6 +113,17 @@ export function useSnAccountInterface() {
 export function useSnAccountAddress() {
   const accountInterface = useSnAccountInterface()
   return accountInterface?.address
+}
+
+export function useRecipientAddress(chainId: number) {
+  const snAccountAddress = useSnAccountAddress()
+  const evmAccountAddress = useEvmAccountAddress()
+
+  if (isStarknetChain(chainId)) {
+    return snAccountAddress || ''
+  } else {
+    return evmAccountAddress || ''
+  }
 }
 
 export function useSrcChainIds() {
