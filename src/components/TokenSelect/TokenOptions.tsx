@@ -24,6 +24,7 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps, ListChildComponentProps } from 'react-window'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
@@ -114,6 +115,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   const balance = useCurrencyBalance(value)
   const chainSrc = getNativeLogoURI(value?.chainId)
   const chainInfo = getChainInfo(value?.chainId)
+  const tokenInfo = value as WrappedTokenInfo
 
   return (
     <TokenButton
@@ -139,7 +141,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
                 {!isMobile && <Overflowable color="secondary">{value.name}</Overflowable>}
               </Row>
               <Row gap={0.25}>
-                {value.protocol && value.protocol !== 'dex' && <TokenBadge>{value.protocol}</TokenBadge>}
+                {tokenInfo.protocol && tokenInfo.protocol !== 'dex' && <TokenBadge>{tokenInfo.protocol}</TokenBadge>}
                 <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
               </Row>
             </Column>

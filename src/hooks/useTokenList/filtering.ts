@@ -1,16 +1,15 @@
-import { NativeCurrency } from '@uniswap/sdk-core'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { isAddress } from 'utils'
 
 const alwaysTrue = () => true
 
 /** Creates a filter function that filters tokens that do not match the query. */
-export function getTokenFilter<T extends WrappedTokenInfo>(query: string): (token: T | NativeCurrency) => boolean {
+export function getTokenFilter<T extends WrappedTokenInfo>(query: string): (token: T) => boolean {
   const searchingAddress = isAddress(query)
 
   if (searchingAddress) {
     const address = searchingAddress.toLowerCase()
-    return (t: T | NativeCurrency) => 'address' in t && address === t.address.toLowerCase()
+    return (t: T) => 'address' in t && address === t.address.toLowerCase()
   }
 
   const queryParts = query
@@ -29,6 +28,6 @@ export function getTokenFilter<T extends WrappedTokenInfo>(query: string): (toke
     return queryParts.every((p) => p.length === 0 || parts.some((sp) => sp.startsWith(p) || sp.endsWith(p)))
   }
 
-  return ({ name, symbol, protocol }: T | NativeCurrency): boolean =>
+  return ({ name, symbol, protocol }: T): boolean =>
     Boolean((symbol && match(symbol)) || (name && match(name)) || (protocol && match(protocol)))
 }

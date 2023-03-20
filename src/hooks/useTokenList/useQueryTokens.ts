@@ -16,7 +16,7 @@ export function useQueryTokens(query: string, tokens: TokenListItem[]) {
 
   const debouncedQuery = useDebounce(query, 200)
   const filter = useMemo(() => getTokenFilter(debouncedQuery), [debouncedQuery])
-  const filteredTokens = useMemo(() => sortedTokens.filter(filter), [filter, sortedTokens])
+  const filteredTokens = useMemo(() => sortedTokens.filter(filter as any), [filter, sortedTokens])
 
   const queriedTokens = useSortTokensByQuery(debouncedQuery, filteredTokens)
   return queriedTokens

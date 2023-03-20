@@ -5,6 +5,7 @@ import { useChainTokenMapContext } from 'hooks/useTokenList'
 import { NATIVE_ADDRESS, TokenListItem } from 'hooks/useTokenList/utils'
 import { ChevronRight, HelpCircle } from 'icons'
 import React, { ComponentProps, forwardRef, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import styled from 'styled-components/macro'
 import { Layer, ThemedText } from 'theme'
 import { Body2LineHeightRem } from 'theme/type'
@@ -112,7 +113,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
                   {index === 0 && (
                     <EtherscanLink
                       type={ExplorerDataType.TOKEN}
-                      data={fromToken.address}
+                      data={(fromToken as WrappedTokenInfo).address}
                       showIcon={false}
                       chainIdOverride={fromToken.chainId}
                     >
@@ -122,7 +123,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
                   <ChevronRight />
                   <EtherscanLink
                     type={ExplorerDataType.TOKEN}
-                    data={toToken.address}
+                    data={(toToken as WrappedTokenInfo).address}
                     showIcon={false}
                     chainIdOverride={toToken.chainId}
                   >

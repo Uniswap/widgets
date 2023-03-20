@@ -13,6 +13,7 @@ import { PriceImpact } from 'hooks/usePriceImpact'
 import { useWidgetFromToken } from 'hooks/useSyncWidgetSettings'
 import { useIsWideWidget } from 'hooks/useWidgetWidth'
 import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
@@ -191,7 +192,7 @@ export function FieldWrapper({
           <Row>
             <EtherscanLink
               type={ExplorerDataType.TOKEN}
-              data={currency?.address}
+              data={(currency as WrappedTokenInfo).address}
               showIcon={true}
               chainIdOverride={currency?.chainId}
             >
