@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
+import { useIsMobileWidth } from 'hooks/useIsMobileWidth'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
 import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
@@ -51,8 +52,13 @@ const Overflowable = styled(ThemedText.Caption)<{ active?: boolean }>`
   text-overflow: ellipsis;
   white-space: nowrap;
 `
+const OverflowableSubhead1 = styled(ThemedText.Subhead1)<{ active?: boolean }>`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
 
-const ITEM_SIZE = 56
+const ITEM_SIZE = 60
 type ItemData = Currency[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
@@ -103,6 +109,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.ref = ref.current ?? undefined
   }
 
+  const isMobile = useIsMobileWidth()
   const account = useEvmAccountAddress()
   const balance = useCurrencyBalance(value)
   const chainSrc = getNativeLogoURI(value?.chainId)
@@ -128,11 +135,13 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
             </TokenGroup>
             <Column flex gap={0.125} align="flex-start">
               <Row gap={0.25}>
-                <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
-                <Overflowable color="secondary">{value.name}</Overflowable>
-                {value.protocol && value.protocol !== 'dex' && <TokenBadge>{value.protocol}</TokenBadge>}
+                <OverflowableSubhead1>{value.symbol}</OverflowableSubhead1>
+                {!isMobile && <Overflowable color="secondary">{value.name}</Overflowable>}
               </Row>
-              <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
+              <Row gap={0.25}>
+                {value.protocol && value.protocol !== 'dex' && <TokenBadge>{value.protocol}</TokenBadge>}
+                <ThemedText.Caption color="secondary"> on {chainInfo?.label}</ThemedText.Caption>
+              </Row>
             </Column>
           </Row>
           <TokenBalance isLoading={Boolean(account) && !balance}>
