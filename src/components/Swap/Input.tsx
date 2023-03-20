@@ -2,6 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
+import EtherscanLink from 'components/EtherscanLink'
 import { loadingTransitionCss } from 'css/loading'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
@@ -16,6 +17,7 @@ import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, ThemedText } from 'theme'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
@@ -187,7 +189,14 @@ export function FieldWrapper({
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <ThemedText.Subhead2 color={'secondary'}>{currency?.name}</ThemedText.Subhead2>
+            <EtherscanLink
+              type={ExplorerDataType.TOKEN}
+              data={currency?.address}
+              showIcon={true}
+              chainIdOverride={currency?.chainId}
+            >
+              <ThemedText.Subhead2 color={'secondary'}>{currency?.name}</ThemedText.Subhead2>
+            </EtherscanLink>
             <USDC isLoading={isRouteLoading}>
               {usdc && `${formatCurrencyAmount(usdc, NumberType.FiatTokenQuantity)}`}
               {impact && (

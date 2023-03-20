@@ -2,15 +2,17 @@ import { Trans } from '@lingui/macro'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
 import Row from 'components/Row'
 import { useChainTokenMapContext } from 'hooks/useTokenList'
-import { NATIVE_ADDRESS } from 'hooks/useTokenList/utils'
+import { NATIVE_ADDRESS, TokenListItem } from 'hooks/useTokenList/utils'
 import { ChevronRight, HelpCircle } from 'icons'
 import React, { ComponentProps, forwardRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import { Layer, ThemedText } from 'theme'
 import { Body2LineHeightRem } from 'theme/type'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 import { Step, ZERO_ADDRESS } from 'wido'
 
 import { IconButton } from './Button'
+import EtherscanLink from './EtherscanLink'
 import Popover from './Popover'
 import TokenImg from './TokenImg'
 import { useTooltip } from './Tooltip'
@@ -57,7 +59,7 @@ const OrderRoutingRow = styled(Row)`
   padding: ${CONTAINER_VERTICAL_PADDING_EM}em 0;
 `
 
-export function getToken(chainTokenMap: any, chainId: any, address: any) {
+export function getToken(chainTokenMap: any, chainId: any, address: any): TokenListItem {
   const actualAddress = address === ZERO_ADDRESS ? NATIVE_ADDRESS : address
   return chainTokenMap[chainId][actualAddress].token
 }
@@ -102,11 +104,30 @@ export function RouteBreakdown(props: { steps: Step[] }) {
         <ForwardedRow ref={setTooltip}>
           <RouteSummary>
             {steps.map((step, index) => {
+              const fromToken = getToken(chainTokenMap, step.chainId, step.fromToken)
+              const toToken = getToken(chainTokenMap, step.toChainId, step.toToken)
+
               return (
                 <React.Fragment key={index}>
-                  {index === 0 && getToken(chainTokenMap, step.chainId, step.fromToken).symbol}
+                  {index === 0 && (
+                    <EtherscanLink
+                      type={ExplorerDataType.TOKEN}
+                      data={fromToken.address}
+                      showIcon={false}
+                      chainIdOverride={fromToken.chainId}
+                    >
+                      {fromToken.symbol}
+                    </EtherscanLink>
+                  )}
                   <ChevronRight />
-                  {getToken(chainTokenMap, step.toChainId, step.toToken).symbol}
+                  <EtherscanLink
+                    type={ExplorerDataType.TOKEN}
+                    data={toToken.address}
+                    showIcon={false}
+                    chainIdOverride={toToken.chainId}
+                  >
+                    {toToken.symbol}
+                  </EtherscanLink>
                 </React.Fragment>
               )
             })}

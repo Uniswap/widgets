@@ -62,7 +62,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
         return `https://testnet.starkscan.co/tx/${data}`
       case ExplorerDataType.ADDRESS:
       case ExplorerDataType.TOKEN:
-        return `https://testnet.starkscan.co/address/${data}`
+        return `https://testnet.starkscan.co/contract/${data}`
       case ExplorerDataType.BLOCK:
         return `https://testnet.starkscan.co/block/${data}`
       default:
