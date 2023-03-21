@@ -2,10 +2,11 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
-import { useEvmAccountAddress, useEvmChainId } from 'hooks/useSyncWidgetSettings'
+import { useEvmAccountAddress, useSnAccountAddress } from 'hooks/useSyncWidgetSettings'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { isStarknetChain } from 'utils/starknet'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -15,14 +16,17 @@ export enum ApprovalState {
 }
 
 function useApprovalStateForSpender(
+  chainId: number,
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
 ): ApprovalState {
   const account = useEvmAccountAddress()
+  const snAccount = useSnAccountAddress()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+  const owner = isStarknetChain(chainId) ? snAccount : account
 
-  const { tokenAllowance } = useTokenAllowance(token, account ?? undefined, spender)
+  const { tokenAllowance } = useTokenAllowance(token, owner, spender)
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {
@@ -41,6 +45,7 @@ function useApprovalStateForSpender(
 }
 
 export function useApproval(
+  chainId: number,
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
@@ -48,11 +53,10 @@ export function useApproval(
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
 ] {
-  const chainId = useEvmChainId()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status
-  const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
+  const approvalState = useApprovalStateForSpender(chainId, amountToApprove, spender, useIsPendingApproval)
 
   const tokenContract = useTokenContract(token?.address)
 

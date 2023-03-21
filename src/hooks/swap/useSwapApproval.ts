@@ -36,7 +36,12 @@ export function useSwapApproval(trade?: WidoTrade): SwapApproval {
     }).then(setSpender)
   }, [trade, setSpender])
 
-  const [approval, approve] = useApproval(trade?.inputAmount, spender, useIsPendingApproval)
+  const [approval, approve] = useApproval(
+    trade?.fromToken.chainId ?? 1,
+    trade?.inputAmount,
+    spender,
+    useIsPendingApproval
+  )
 
   const { onSwapApprove } = useAtomValue(swapEventHandlersAtom)
   const approveHandler = useMemo(() => {
