@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Slippage } from 'hooks/useSlippage'
 import { useMemo } from 'react'
 import { WidoTrade } from 'state/routing/types'
@@ -29,10 +28,7 @@ export function getEstimateMessage(trade: WidoTrade, slippage: Slippage) {
   const outputCurrency = outputAmount.currency
 
   if (isExactInput(trade.tradeType)) {
-    const localizedMinReceived = formatCurrencyAmount(
-      calcMinimumAmountOut(slippage.allowed, trade.outputAmount),
-      NumberType.TokenTx
-    )
+    const localizedMinReceived = calcMinimumAmountOut(slippage.allowed, trade.outputAmount).toSignificant().toString()
     const minReceivedString = `${localizedMinReceived} ${outputCurrency.symbol}`
 
     return {

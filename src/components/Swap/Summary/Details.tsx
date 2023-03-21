@@ -85,7 +85,8 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
       ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
         ? ['24px', '30px']
         : ['30px', '36px']
-      : ['36px', '44px']
+      : ['30px', '36px']
+  // : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
@@ -139,7 +140,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   const [exchangeRate] = useTradeExchangeRate(trade)
   const recipientAddress = useRecipientAddress(outputCurrency.chainId)
 
-  const { details, estimateMessage } = useMemo(() => {
+  const { details, estimateMessage, fromTooltipMessage } = useMemo(() => {
     const details: Array<[string, string] | [string, string, Color | undefined]> = []
 
     details.push([t`Exchange rate`, exchangeRate])
@@ -163,13 +164,30 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
     const { estimateMessage, descriptor, value } = getEstimateMessage(trade, slippage)
     details.push([descriptor, value])
 
-    return { details, estimateMessage }
-  }, [exchangeRate, feeOptions, gasUseEstimateUSD, impact, integrator, outputAmount, outputCurrency, slippage, trade])
+    return {
+      details,
+      estimateMessage,
+      fromTooltipMessage: t`Input is approximated. You will spend exactly ${inputAmount.toSignificant()} ${
+        outputCurrency.symbol
+      }.`,
+    }
+  }, [
+    exchangeRate,
+    feeOptions,
+    gasUseEstimateUSD,
+    impact,
+    integrator,
+    inputAmount,
+    outputAmount,
+    outputCurrency,
+    slippage,
+    trade,
+  ])
 
   return (
     <>
       <Column gap={0.75}>
-        <Amount label={t`From`} amount={inputAmount} usdcAmount={inputUSDC} />
+        <Amount label={t`From`} amount={inputAmount} usdcAmount={inputUSDC} tooltipText={fromTooltipMessage} />
         <Amount label={t`To`} amount={outputAmount} usdcAmount={outputUSDC} tooltipText={estimateMessage} />
         <RuleWrapper>
           <Rule />
