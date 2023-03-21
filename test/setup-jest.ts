@@ -10,6 +10,7 @@ fetch.enableMocks()
 jest.mock('@uniswap/conedison/format', () => ({
   formatCurrencyAmount: jest.fn((amount: CurrencyAmount<Currency>) => amount.toFixed(2)),
   formatPriceImpact: jest.fn((percent: Percent) => percent.toFixed(2) + '%'),
+  formatSlippage: jest.fn((percent: Percent) => percent.toFixed(2) + '%'),
   NumberType: {
     FiatGasPrice: 'fiat-gas-price',
   },
