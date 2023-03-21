@@ -4,13 +4,14 @@ import { inputCss, StringInput } from 'components/Input'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
 import { useNativeCurrencies } from 'hooks/useNativeCurrency'
-import { useEvmAccountAddress } from 'hooks/useSyncWidgetSettings'
+import { useEvmAccountAddress, useRecipientAddress } from 'hooks/useSyncWidgetSettings'
 import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'hooks/useTokenList'
 import { TokenListItem } from 'hooks/useTokenList/utils'
 import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field, swapEventHandlersAtom } from 'state/swap'
+import { onConnectWalletClickAtom } from 'state/wallet'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -25,6 +26,15 @@ import TokenOptionsSkeleton from './TokenOptionsSkeleton'
 
 const SearchInputContainer = styled(Row)`
   ${inputCss}
+`
+
+const ConnectWallet = styled(ThemedText.Caption)`
+  text-align: center;
+  :hover {
+    color: ${({ theme }) => theme.accent};
+    cursor: pointer;
+    text-decoration: underline;
+  }
 `
 
 function usePrefetchBalances() {
@@ -92,6 +102,12 @@ export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed, t
 
   const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
 
+  const onConnectWalletClick = useConditionalHandler(useAtomValue(onConnectWalletClickAtom))
+  const handleWalletConnectClick = useCallback(async () => {
+    await onConnectWalletClick(value?.chainId ?? 1)
+  }, [onConnectWalletClick, value])
+  const recipient = useRecipientAddress(value?.chainId ?? 1)
+
   return (
     <Dialog color="container" onClose={onClose}>
       <Header title={<Trans>Select token</Trans>} />
@@ -118,7 +134,7 @@ export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed, t
         tokens.length ? (
           <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
         ) : (
-          <Column padded>
+          <Column padded style={{ margin: 'auto 0' }}>
             <Row justify="center">
               <ThemedText.Body1 color="secondary">
                 <Trans>No results found.</Trans>
@@ -128,6 +144,11 @@ export function TokenSelectDialog({ value, onSelect, onClose, chainIdsAllowed, t
         )
       ) : (
         <TokenOptionsSkeleton />
+      )}
+      {!recipient && (
+        <ConnectWallet onClick={handleWalletConnectClick}>
+          <u>Connect wallet</u> to see balances
+        </ConnectWallet>
       )}
     </Dialog>
   )
