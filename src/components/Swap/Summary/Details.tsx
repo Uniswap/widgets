@@ -80,13 +80,12 @@ interface AmountProps {
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const width = useWidgetWidth()
-  const [amountFontSize, amountLineHeight] =
-    width < WIDGET_BREAKPOINTS.MEDIUM
-      ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
-        ? ['24px', '30px']
-        : ['30px', '36px']
-      : ['30px', '36px']
-  // : ['36px', '44px']
+  const [amountFontSize, amountLineHeight] = ['24px', '30px']
+  // width < WIDGET_BREAKPOINTS.MEDIUM
+  //   ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
+  //     ? ['24px', '30px']
+  //     : ['30px', '36px']
+  //      : ['36px', '44px']
 
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
