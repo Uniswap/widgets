@@ -16,6 +16,10 @@ export interface WidgetSettings {
   fromTokens?: { chainId: number; address: string }[]
   partner?: string
   quoteApi?: (request: QuoteRequest) => Promise<QuoteResult>
+  /**
+   * @default "Zap"
+   */
+  title?: string
 }
 
 export default function useSyncWidgetSettings({
@@ -26,6 +30,7 @@ export default function useSyncWidgetSettings({
   fromTokens,
   partner,
   quoteApi,
+  title,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
@@ -37,8 +42,19 @@ export default function useSyncWidgetSettings({
       fromTokens,
       partner,
       quoteApi,
+      title,
     })
-  }, [updateWidgetSettingsAtom, testnetsVisible, ethProvider, snAccount, toTokens, fromTokens, partner, quoteApi])
+  }, [
+    updateWidgetSettingsAtom,
+    testnetsVisible,
+    ethProvider,
+    snAccount,
+    toTokens,
+    fromTokens,
+    partner,
+    quoteApi,
+    title,
+  ])
 }
 
 export function useTestnetsVisible() {
@@ -160,4 +176,8 @@ export function usePartnerAddress() {
 
 export function useQuoteApi() {
   return useAtomValue(widgetSettingsAtom).quoteApi || quote
+}
+
+export function useWidgetTitle() {
+  return useAtomValue(widgetSettingsAtom).title || 'Zap'
 }

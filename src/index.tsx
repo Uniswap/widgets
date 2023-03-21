@@ -40,6 +40,10 @@ export type WidoWidgetProps = {
   theme?: Theme
   width?: string | number
   className?: string
+  /**
+   * @default "Zap"
+   */
+  title?: string
 
   // TransactionEventHandlers
   onFromTokenChange?: (token: Currency) => void

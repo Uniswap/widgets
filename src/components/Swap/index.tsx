@@ -8,7 +8,7 @@ import { SN_PROVIDER, usePendingTransactions } from 'hooks/transactions'
 import { getTxReceipt } from 'hooks/transactions/updater'
 import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
-import { WidgetSettings } from 'hooks/useSyncWidgetSettings'
+import { useWidgetTitle, WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { useAtom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
@@ -68,10 +68,11 @@ export default function Swap(props: SwapProps) {
 
   const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
   const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
+  const title = useWidgetTitle()
 
   return (
     <>
-      <Header title={<Trans>Zap</Trans>}>
+      <Header title={<Trans>{title}</Trans>}>
         <Settings />
       </Header>
       <div ref={setWrapper}>
