@@ -23,14 +23,9 @@ export function computeRealizedPriceImpact(trade: InterfaceTrade): Percent {
   return trade.priceImpact.subtract(realizedLpFeePercent)
 }
 
-/**
- * Returns the warning level for a given % change. The change can be either positive or negative.
- */
 export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error' | 'success' | undefined {
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
-  if (priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH.multiply(-1))) return 'error'
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
-  if (priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM.multiply(-1))) return 'warning'
   return
 }
 

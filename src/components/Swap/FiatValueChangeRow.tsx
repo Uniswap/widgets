@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { formatSlippage } from '@uniswap/conedison/format'
 import Row from 'components/Row'
 import Tooltip, { SmallToolTipBody, TooltipText } from 'components/Tooltip'
 import { PriceImpact } from 'hooks/usePriceImpact'

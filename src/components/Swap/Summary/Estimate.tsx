@@ -54,7 +54,7 @@ export function getEstimateMessage(
           {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({formatSlippage(slippage)})
+              ({formatSlippage(slippage.allowed)})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>
@@ -73,7 +73,7 @@ export function getEstimateMessage(
           {slippage && (
             <ThemedText.Body2 $inline color={slippage?.warning ?? 'secondary'}>
               {' '}
-              ({formatSlippage(slippage)})
+              ({formatSlippage(slippage.allowed)})
             </ThemedText.Body2>
           )}
         </ThemedText.Body2>
