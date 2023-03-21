@@ -47,6 +47,10 @@ export default function ChainFilter({
     chainIds = chainIds.filter((x) => chainIdsAllowed.includes(x))
   }
 
+  if (chainIds.length <= 1) {
+    return null
+  }
+
   return (
     <BasesContainer gap={0.5} flex justify="start">
       {chainIds.map((chainId) => {
