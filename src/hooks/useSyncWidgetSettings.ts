@@ -20,6 +20,12 @@ export interface WidgetSettings {
    * @default "Zap"
    */
   title?: string
+  /**
+   * Whether the widget can open the token select in a larger Modal, or to show it contained within the widget.
+   *
+   * @default false
+   */
+  largeTokenSelect?: boolean
 }
 
 export default function useSyncWidgetSettings({
@@ -31,6 +37,7 @@ export default function useSyncWidgetSettings({
   partner,
   quoteApi,
   title,
+  largeTokenSelect,
 }: WidgetSettings): void {
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
@@ -43,6 +50,7 @@ export default function useSyncWidgetSettings({
       partner,
       quoteApi,
       title,
+      largeTokenSelect,
     })
   }, [
     updateWidgetSettingsAtom,
@@ -54,6 +62,7 @@ export default function useSyncWidgetSettings({
     partner,
     quoteApi,
     title,
+    largeTokenSelect,
   ])
 }
 
@@ -180,4 +189,8 @@ export function useQuoteApi() {
 
 export function useWidgetTitle() {
   return useAtomValue(widgetSettingsAtom).title || 'Zap'
+}
+
+export function useLargeTokenSelect() {
+  return useAtomValue(widgetSettingsAtom).largeTokenSelect || false
 }

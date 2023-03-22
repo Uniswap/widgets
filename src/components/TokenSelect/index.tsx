@@ -29,7 +29,9 @@ const SearchInputContainer = styled(Row)`
 `
 
 const ConnectWallet = styled(ThemedText.Caption)`
+  margin-top: 4px;
   text-align: center;
+
   :hover {
     color: ${({ theme }) => theme.accent};
     cursor: pointer;

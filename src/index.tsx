@@ -44,6 +44,12 @@ export type WidoWidgetProps = {
    * @default "Zap"
    */
   title?: string
+  /**
+   * Whether the widget can open the token select in a larger Modal, or to show it contained within the widget.
+   *
+   * @default false
+   */
+  largeTokenSelect?: boolean
 
   // TransactionEventHandlers
   onFromTokenChange?: (token: Currency) => void

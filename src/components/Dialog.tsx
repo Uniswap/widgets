@@ -2,6 +2,7 @@ import 'wicg-inert'
 
 import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
+import { useLargeTokenSelect } from 'hooks/useSyncWidgetSettings'
 import { largeIconCss } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
@@ -149,8 +150,20 @@ const slideOutRight = keyframes`
   }
 `
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+`
+const fadeOut = keyframes`
+  to {
+    opacity: 1;
+    transform: scale(0.7);
+  }
+`
+
 const HiddenWrapper = styled.div`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 100%;
   left: 0;
   overflow: hidden;
@@ -163,8 +176,22 @@ const HiddenWrapper = styled.div`
     overflow: clip;
   }
 `
+const LargeHiddenWrapper = styled.div`
+  left: -2px;
+  max-height: 72vh;
+  min-height: 72vh;
+  overflow: hidden;
+  padding: 0.5em;
+  position: absolute;
+  top: -2px;
+  width: calc(100% + 4px);
 
-const AnimationWrapper = styled.div`
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
+`
+
+const SlideInAnimationWrapper = styled.div`
   ${Modal} {
     animation: ${slideInLeft} ${AnimationSpeed.Medium} ease-in;
 
@@ -173,6 +200,22 @@ const AnimationWrapper = styled.div`
     }
     &.${Animation.CLOSING} {
       animation: ${slideOutRight} ${AnimationSpeed.Medium} ease-out;
+    }
+  }
+`
+
+const FadeInAnimationWrapper = styled.div`
+  ${Modal} {
+    animation: ${fadeIn} ${AnimationSpeed.Fast} ease-in;
+
+    border: 1px solid ${({ theme }) => theme.outline};
+    border-radius: ${({ theme }) => theme.borderRadius.large}em;
+
+    &.${Animation.PAGING} {
+      animation: ${fadeOut} ${AnimationSpeed.Fast} ease-in;
+    }
+    &.${Animation.CLOSING} {
+      animation: ${fadeOut} ${AnimationSpeed.Fast} ease-out;
     }
   }
 `
@@ -189,13 +232,17 @@ function AnimatedPopoverProvider({ children }: PropsWithChildren) {
       setUpdatePopover(true)
     }, TransitionDuration.Medium + PopoverAnimationUpdateDelay)
   }, [])
+  const largeTokenSelect = useLargeTokenSelect()
+
+  const AnimationComponent = largeTokenSelect ? FadeInAnimationWrapper : SlideInAnimationWrapper
+  const WrapperComponent = largeTokenSelect ? LargeHiddenWrapper : HiddenWrapper
 
   return (
     <PopoverBoundaryProvider value={popoverRef.current} updateTrigger={updatePopover}>
       <div ref={popoverRef}>
-        <HiddenWrapper>
-          <AnimationWrapper>{children}</AnimationWrapper>
-        </HiddenWrapper>
+        <WrapperComponent>
+          <AnimationComponent>{children}</AnimationComponent>
+        </WrapperComponent>
       </div>
     </PopoverBoundaryProvider>
   )

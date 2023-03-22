@@ -91,6 +91,7 @@ function Fixture() {
   const [presetFromToken] = useValue('presetFromToken', { defaultValue: false })
   const [presetToToken] = useValue('presetToToken', { defaultValue: false })
   const [toJediswapProtocol] = useValue('toJediswapProtocol', { defaultValue: false })
+  const [largeTokenSelect] = useValue('largeTokenSelect', { defaultValue: false })
 
   const [fromTokens, setFromTokens] = useState<{ chainId: number; address: string }[]>([])
   const [toTokens, setToTokens] = useState<{ chainId: number; address: string }[]>([])
@@ -157,6 +158,7 @@ function Fixture() {
       }}
       {...eventHandlers}
       onConnectWalletClick={handleConnectWalletClick}
+      largeTokenSelect={largeTokenSelect}
     />
   )
 
