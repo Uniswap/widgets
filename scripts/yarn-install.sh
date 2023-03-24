@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# In yarn v1, --frozen-lockfile is completely
-# broken when combined with Yarn workspaces. See https://github.com/yarnpkg/yarn/issues/5840
+# --frozen-lockfile may not always catch the change in yarn.lock file
+# See https://github.com/yarnpkg/yarn/issues/5840
 
 CKSUM_BEFORE=$(cksum yarn.lock)
 yarn install --ignore-scripts
