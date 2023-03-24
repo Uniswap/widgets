@@ -3,7 +3,7 @@ import 'wicg-inert'
 import { globalFontStyles } from 'css/font'
 import { useOnEscapeHandler } from 'hooks/useOnEscapeHandler'
 import { useLargeTokenSelect } from 'hooks/useSyncWidgetSettings'
-import { largeIconCss } from 'icons'
+import { largeIconCss, X } from 'icons'
 import { ArrowLeft } from 'icons'
 import ms from 'ms.macro'
 import {
@@ -17,6 +17,7 @@ import {
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
+import OutsideClickHandler from 'react-outside-click-handler'
 import styled, { keyframes } from 'styled-components/macro'
 import { AnimationSpeed, Color, Layer, Provider as ThemeProvider, ThemedText, TransitionDuration } from 'theme'
 import { useUnmountingAnimation } from 'utils/animations'
@@ -89,11 +90,58 @@ const HeaderRow = styled(Row)`
   position: relative;
 `
 
-const StyledBackButton = styled(ArrowLeft)`
+const slideInLeft = keyframes`
+  from {
+    transform: translateX(calc(100% - 0.25em));
+  }
+`
+const slideOutLeft = keyframes`
+  to {
+    transform: translateX(calc(0.25em - 100%));
+  }
+`
+const slideOutRight = keyframes`
+  to {
+    transform: translateX(calc(100% - 0.25em));
+  }
+`
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+`
+const fadeOut = keyframes`
+  to {
+    opacity: 1;
+  }
+`
+
+const StyledBackButtonArrow = styled(ArrowLeft)`
   :hover {
     cursor: pointer;
     opacity: 0.6;
   }
+`
+
+const StyledBackButtonCross = styled(X)`
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
+
+const Backdrop = styled.div`
+  animation: ${fadeIn} ${AnimationSpeed.Slow} ease-out;
+  background-color: rgba(13, 17, 28, 0.6);
+  bottom: 0;
+  cursor: pointer;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
 `
 
 const Title = styled.div`
@@ -108,9 +156,12 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
   const onClose = useCloseDialog()
+  const largeTokenSelect = useLargeTokenSelect()
+  const ButtonComponent = largeTokenSelect ? StyledBackButtonCross : StyledBackButtonArrow
+
   return (
     <HeaderRow iconSize={1.25} data-testid="dialog-header">
-      <StyledBackButton onClick={onClose} />
+      <ButtonComponent onClick={onClose} />
       <Title>
         <ThemedText.Subhead1>{title}</ThemedText.Subhead1>
       </Title>
@@ -132,35 +183,6 @@ export const Modal = styled.div<{ color: Color }>`
   right: 0;
   top: 0;
   z-index: ${Layer.DIALOG};
-`
-
-const slideInLeft = keyframes`
-  from {
-    transform: translateX(calc(100% - 0.25em));
-  }
-`
-const slideOutLeft = keyframes`
-  to {
-    transform: translateX(calc(0.25em - 100%));
-  }
-`
-const slideOutRight = keyframes`
-  to {
-    transform: translateX(calc(100% - 0.25em));
-  }
-`
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-`
-const fadeOut = keyframes`
-  to {
-    opacity: 1;
-    transform: scale(0.7);
-  }
 `
 
 const HiddenWrapper = styled.div`
@@ -204,19 +226,10 @@ const SlideInAnimationWrapper = styled.div`
   }
 `
 
-const FadeInAnimationWrapper = styled.div`
+const NoAnimationWrapper = styled.div`
   ${Modal} {
-    animation: ${fadeIn} ${AnimationSpeed.Fast} ease-in;
-
     border: 1px solid ${({ theme }) => theme.outline};
     border-radius: ${({ theme }) => theme.borderRadius.large}em;
-
-    &.${Animation.PAGING} {
-      animation: ${fadeOut} ${AnimationSpeed.Fast} ease-in;
-    }
-    &.${Animation.CLOSING} {
-      animation: ${fadeOut} ${AnimationSpeed.Fast} ease-out;
-    }
   }
 `
 
@@ -234,7 +247,7 @@ function AnimatedPopoverProvider({ children }: PropsWithChildren) {
   }, [])
   const largeTokenSelect = useLargeTokenSelect()
 
-  const AnimationComponent = largeTokenSelect ? FadeInAnimationWrapper : SlideInAnimationWrapper
+  const AnimationComponent = largeTokenSelect ? NoAnimationWrapper : SlideInAnimationWrapper
   const WrapperComponent = largeTokenSelect ? LargeHiddenWrapper : HiddenWrapper
 
   return (
@@ -270,6 +283,7 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
   })
 
   useOnEscapeHandler(onClose)
+  const largeTokenSelect = useLargeTokenSelect()
 
   return (
     context.element &&
@@ -277,9 +291,28 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
       <ThemeProvider>
         <AnimatedPopoverProvider>
           <OnCloseContext.Provider value={onClose}>
-            <Modal color={color} ref={modal}>
-              {children}
-            </Modal>
+            {largeTokenSelect ? (
+              <>
+                <Backdrop />
+                <OutsideClickHandler
+                  onOutsideClick={
+                    onClose
+                      ? onClose
+                      : () => {
+                          // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        }
+                  }
+                >
+                  <Modal color={color} ref={modal}>
+                    {children}
+                  </Modal>
+                </OutsideClickHandler>
+              </>
+            ) : (
+              <Modal color={color} ref={modal}>
+                {children}
+              </Modal>
+            )}
           </OnCloseContext.Provider>
         </AnimatedPopoverProvider>
       </ThemeProvider>,
