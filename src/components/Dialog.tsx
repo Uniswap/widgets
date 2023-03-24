@@ -142,6 +142,7 @@ const Backdrop = styled.div`
   right: 0;
   top: 0;
   width: 100%;
+  z-index: ${Layer.OVERLAY};
 `
 
 const Title = styled.div`
