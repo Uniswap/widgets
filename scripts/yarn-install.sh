@@ -4,7 +4,7 @@
 # broken when combined with Yarn workspaces. See https://github.com/yarnpkg/yarn/issues/5840
 
 CKSUM_BEFORE=$(cksum yarn.lock)
-yarn install
+yarn install --ignore-scripts
 CKSUM_AFTER=$(cksum yarn.lock)
 
 

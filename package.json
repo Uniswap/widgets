@@ -41,7 +41,8 @@
     "deduplicate": "yarn-deduplicate --strategy=highest",
     "lint": "eslint .",
     "test": "jest src",
-    "test:e2e": "jest e2e"
+    "test:e2e": "jest e2e",
+    "yarn-install": "./scripts/yarn-install.sh"
   },
   "browserslist": {
     "production": [

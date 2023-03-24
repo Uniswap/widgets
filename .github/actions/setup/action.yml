@@ -17,5 +17,5 @@ runs:
         key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock', '**/package.json') }}
 
     - if: steps.install-cache.outputs.cache-hit != 'true'
-      run: yarn run scripts/yarn-install.sh
+      run: yarn run yarn-install
       shell: bash
