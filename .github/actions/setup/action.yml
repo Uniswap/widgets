@@ -14,7 +14,7 @@ runs:
       id: install-cache
       with:
         path: node_modules/
-        key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock', '**/package.json') }}
 
     - if: steps.install-cache.outputs.cache-hit != 'true'
       run: yarn run scripts/yarn-install.sh
