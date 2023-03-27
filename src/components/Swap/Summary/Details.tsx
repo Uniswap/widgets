@@ -26,7 +26,7 @@ import { getEstimateMessage } from './Estimate'
 const Label = styled.span`
   color: ${({ theme }) => theme.secondary};
   margin-right: 0.5em;
-  max-width: 50%;
+  /* max-width: 50%; */
 `
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
@@ -34,7 +34,7 @@ const Value = styled.span<{ color?: Color }>`
 `
 
 const DetailValue = styled(Value)`
-  max-width: 45%;
+  /* max-width: 45%; */
   overflow-wrap: break-word;
 `
 

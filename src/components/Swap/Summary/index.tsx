@@ -79,7 +79,7 @@ function ConfirmButton({
 
   return (
     <ActionButton onClick={onClick} action={action} color={isPending ? 'interactive' : 'accent'}>
-      {isPending ? <Trans>Cancel</Trans> : <Trans>Confirm swap</Trans>}
+      {isPending ? <Trans>Cancel</Trans> : <Trans>Confirm</Trans>}
     </ActionButton>
   )
 }
