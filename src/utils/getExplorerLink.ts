@@ -12,6 +12,7 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
   [SupportedChainId.CELO]: 'https://celoscan.io',
   [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores.celoscan.io',
+  [SupportedChainId.FANTOM]: 'https://ftmscan.com',
 }
 
 export enum ExplorerDataType {
@@ -67,6 +68,20 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
         return `https://testnet.starkscan.co/block/${data}`
       default:
         return `https://testnet.starkscan.co/`
+    }
+  }
+
+  if (chainId === SupportedChainId.STARKNET) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `https://starkscan.co/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
+        return `https://starkscan.co/contract/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://starkscan.co/block/${data}`
+      default:
+        return `https://starkscan.co/`
     }
   }
 
