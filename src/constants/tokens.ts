@@ -110,6 +110,13 @@ export const USDC_STARKNET_GOERLI = new WrappedTokenInfo({
   symbol: 'USDC',
   name: 'USD Coin',
 })
+export const USDC_FANTOM = new WrappedTokenInfo({
+  chainId: SupportedChainId.FANTOM,
+  address: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
+  decimals: 6,
+  symbol: 'USDC',
+  name: 'USD Coin',
+})
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -154,6 +161,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
   [SupportedChainId.STARKNET]: USDC_STARKNET,
   [SupportedChainId.STARKNET_GOERLI]: USDC_STARKNET_GOERLI,
+  [SupportedChainId.FANTOM]: USDC_FANTOM,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
