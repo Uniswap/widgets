@@ -22,6 +22,8 @@ export enum SupportedChainId {
 
   STARKNET = 15366,
   STARKNET_GOERLI = 15367,
+
+  FANTOM = 250,
 }
 
 export const VISIBLE_CHAIN_IDS: number[] = [
@@ -30,6 +32,7 @@ export const VISIBLE_CHAIN_IDS: number[] = [
   SupportedChainId.STARKNET,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.OPTIMISM,
+  SupportedChainId.FANTOM,
 ]
 
 export enum ChainName {

@@ -252,6 +252,20 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#35D07F',
     backgroundColor: '#34d07f1f',
   },
+  [SupportedChainId.FANTOM]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: '',
+    docs: '',
+    explorer: '',
+    infoLink: '',
+    safe: { label: 'Fantom', symbol: 'FTM' },
+    label: 'Fantom',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'FTM', symbol: 'FTM', decimals: 18 },
+    color: '#35D07F',
+    backgroundColor: '#34d07f1f',
+  },
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo

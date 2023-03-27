@@ -1,7 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
+import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import CeloLogo from 'assets/svg/celo_logo.svg'
+import fantomLogo from 'assets/svg/fantom-logo.svg'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
+import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import starknetLogo from 'assets/svg/starknet-logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
@@ -35,6 +38,12 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.STARKNET:
     case SupportedChainId.STARKNET_GOERLI:
       return starknetLogo
+    case SupportedChainId.ARBITRUM_ONE:
+      return arbitrumLogoUrl
+    case SupportedChainId.OPTIMISM:
+      return optimismLogoUrl
+    case SupportedChainId.FANTOM:
+      return fantomLogo
     default:
       return EthereumLogo
   }
