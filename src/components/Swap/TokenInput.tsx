@@ -2,9 +2,8 @@ import 'setimmediate'
 
 import { Currency } from '@uniswap/sdk-core'
 import { loadingTransitionCss } from 'css/loading'
-import { useDstChainIds, useSrcChainIds } from 'hooks/useSyncWidgetSettings'
 import { useWidgetFromTokens, useWidgetToTokens } from 'hooks/useTokenList'
-import { forwardRef, PropsWithChildren, useCallback, useImperativeHandle, useRef } from 'react'
+import { forwardRef, PropsWithChildren, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -84,12 +83,14 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
   }, [])
   useImperativeHandle(ref, () => ({ focus }), [focus])
 
-  const srcChainIds = useSrcChainIds()
   const fromTokens = useWidgetFromTokens()
-  const dstChainIds = useDstChainIds()
   const toTokens = useWidgetToTokens()
-  const chainIdsAllowed = field === Field.INPUT ? srcChainIds : dstChainIds
   const tokenList = field === Field.INPUT ? fromTokens : toTokens
+
+  const chainIdsAllowed = useMemo(() => {
+    const set = tokenList?.reduce((acc, token) => acc.add(token.chainId), new Set<number>())
+    return set ? Array.from(set) : []
+  }, [tokenList])
 
   return (
     <TokenInputColumn gap={0.5} {...rest}>

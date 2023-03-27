@@ -59,7 +59,7 @@ interface TokenSelectDialogProps {
   value?: Currency
   onSelect: (token: Currency) => void
   onClose: () => void
-  chainIdsAllowed?: number[]
+  chainIdsAllowed: number[]
   tokenList: TokenListItem[]
 }
 
@@ -162,7 +162,7 @@ interface TokenSelectProps {
   approved?: boolean
   disabled?: boolean
   onSelect: (value: Currency) => void
-  chainIdsAllowed?: number[]
+  chainIdsAllowed: number[]
   presetValue?: boolean
   tokenList: TokenListItem[]
 }

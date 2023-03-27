@@ -27,18 +27,9 @@ function Fixture() {
 
   const [theme, setTheme] = useValue('theme', { defaultValue: defaultTheme })
   const [darkMode] = useValue('darkMode', { defaultValue: false })
+  const [largeTokenSelect] = useValue('largeTokenSelect', { defaultValue: false })
+
   useEffect(() => setTheme((theme) => ({ ...theme, ...(darkMode ? darkTheme : lightTheme) })), [darkMode, setTheme])
-
-  const [srcChainIds] = useValue('srcChainIds', {
-    defaultValue: '[1,5,137,15367]',
-    // defaultValue: '[5]',
-  })
-  const [dstChainIds] = useValue('dstChainIds', {
-    defaultValue: '[1,137,15367]',
-    // defaultValue: '[15367]',
-  })
-
-  const [testnetsVisible] = useValue('testnetsVisible', { defaultValue: true })
 
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -88,10 +79,17 @@ function Fixture() {
     useProdApi()
   }
 
+  const [presetFromChainIds] = useValue('presetFromChainIds', {
+    defaultValue: '[1,5,137,15367]',
+    // defaultValue: '[5]',
+  })
+  const [presetToChainIds] = useValue('presetToChainIds', {
+    defaultValue: '[1,137,15367]',
+    // defaultValue: '[15367]',
+  })
   const [presetFromToken] = useValue('presetFromToken', { defaultValue: false })
   const [presetToToken] = useValue('presetToToken', { defaultValue: false })
-  const [toJediswapProtocol] = useValue('toJediswapProtocol', { defaultValue: false })
-  const [largeTokenSelect] = useValue('largeTokenSelect', { defaultValue: false })
+  const [presetToProtocol] = useValue('presetToProtocol', { defaultValue: false })
 
   const [fromTokens, setFromTokens] = useState<{ chainId: number; address: string }[]>([])
   const [toTokens, setToTokens] = useState<{ chainId: number; address: string }[]>([])
@@ -106,10 +104,10 @@ function Fixture() {
       ])
     } else {
       getSupportedTokens({
-        chainId: JSON.parse(srcChainIds),
+        chainId: JSON.parse(presetFromChainIds),
       }).then(setFromTokens)
     }
-  }, [presetFromToken, setFromTokens, srcChainIds])
+  }, [presetFromToken, setFromTokens, presetFromChainIds])
 
   useEffect(() => {
     if (presetToToken) {
@@ -121,11 +119,11 @@ function Fixture() {
       ])
     } else {
       getSupportedTokens({
-        chainId: JSON.parse(dstChainIds),
-        protocol: toJediswapProtocol ? ['jediswap.xyz' as any] : undefined,
+        chainId: JSON.parse(presetToChainIds),
+        protocol: presetToProtocol ? ['jediswap.xyz' as any] : undefined,
       }).then(setToTokens)
     }
-  }, [presetToToken, setToTokens, dstChainIds, toJediswapProtocol])
+  }, [presetToToken, setToTokens, presetToChainIds, presetToProtocol])
 
   const handleConnectWalletClick = useCallback(
     (chainId: number) => {
@@ -147,7 +145,6 @@ function Fixture() {
       partner="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
       ethProvider={ethProvider}
       snAccount={starknet?.account}
-      testnetsVisible={testnetsVisible}
       theme={theme}
       width={width}
       fromTokens={fromTokens}

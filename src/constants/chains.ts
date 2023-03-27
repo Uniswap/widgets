@@ -24,8 +24,13 @@ export enum SupportedChainId {
   STARKNET_GOERLI = 15367,
 }
 
-export const VISIBLE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.POLYGON, SupportedChainId.STARKNET]
-export const VISIBLE_TESTNET_CHAIN_IDS = [SupportedChainId.GOERLI, SupportedChainId.STARKNET_GOERLI]
+export const VISIBLE_CHAIN_IDS: number[] = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.STARKNET,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.OPTIMISM,
+]
 
 export enum ChainName {
   MAINNET = 'mainnet',

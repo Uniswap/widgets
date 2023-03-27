@@ -1,9 +1,7 @@
 import Row from 'components/Row'
 import { ChainImg } from 'components/TokenImg'
 import { getChainInfo } from 'constants/chainInfo'
-import { VISIBLE_CHAIN_IDS, VISIBLE_TESTNET_CHAIN_IDS } from 'constants/chains'
 import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
-import { useTestnetsVisible } from 'hooks/useSyncWidgetSettings'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -38,22 +36,15 @@ export default function ChainFilter({
 }: {
   selected?: number
   onSelect: (chainId?: number) => void
-  chainIdsAllowed?: number[]
+  chainIdsAllowed: number[]
 }) {
-  const testnetsVisible = useTestnetsVisible()
-  let chainIds = testnetsVisible ? [...VISIBLE_CHAIN_IDS, ...VISIBLE_TESTNET_CHAIN_IDS] : VISIBLE_CHAIN_IDS
-
-  if (chainIdsAllowed && chainIdsAllowed.length !== 0) {
-    chainIds = chainIds.filter((x) => chainIdsAllowed.includes(x))
-  }
-
-  if (chainIds.length <= 1) {
+  if (chainIdsAllowed.length <= 1) {
     return null
   }
 
   return (
     <BasesContainer gap={0.5} flex justify="start">
-      {chainIds.map((chainId) => {
+      {chainIdsAllowed.map((chainId) => {
         const isSelected = selected === chainId
         const handleClick = () => onSelect(isSelected ? undefined : chainId)
         const chainInfo = getChainInfo(chainId)

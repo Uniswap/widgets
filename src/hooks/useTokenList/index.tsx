@@ -1,8 +1,7 @@
 import { TokenInfo } from '@uniswap/token-lists'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
-import { SupportedChainId, VISIBLE_CHAIN_IDS, VISIBLE_TESTNET_CHAIN_IDS } from 'constants/chains'
+import { SupportedChainId, VISIBLE_CHAIN_IDS } from 'constants/chains'
 import { useEvmChainId, useEvmProvider, widgetSettingsAtom } from 'hooks/useSyncWidgetSettings'
-import { useTestnetsVisible } from 'hooks/useSyncWidgetSettings'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import resolveENSContentHash from 'utils/resolveENSContentHash'
@@ -31,7 +30,6 @@ export function useIsTokenListLoaded() {
 
 export default function useTokenList(): TokenListItem[] {
   const chainTokenMap = useChainTokenMapContext()
-  const testnetsVisible = useTestnetsVisible()
   return useMemo(() => {
     if (!chainTokenMap) return []
     const tokens: TokenListItem[] = []
@@ -39,9 +37,8 @@ export default function useTokenList(): TokenListItem[] {
     tokenMaps.forEach((tokenMap) => {
       tokens.push(...Object.values(tokenMap).map(({ token }) => token))
     })
-    const chainIds = testnetsVisible ? [...VISIBLE_CHAIN_IDS, ...VISIBLE_TESTNET_CHAIN_IDS] : VISIBLE_CHAIN_IDS
-    return tokens.filter((x) => chainIds.includes(x.chainId))
-  }, [chainTokenMap, testnetsVisible])
+    return tokens
+  }, [chainTokenMap])
 }
 
 export type TokenMap = { [address: string]: TokenListItem }
@@ -116,18 +113,25 @@ export function Provider({ list, children }: PropsWithChildren<{ list?: string |
 
 export function useWidgetFromTokens(): TokenListItem[] {
   const allTokens = useTokenList()
+
   const chainTokenMap = useChainTokenMapContext()
   const presetTokens = useAtomValue(widgetSettingsAtom)
     .fromTokens?.map((token) => chainTokenMap[token.chainId]?.[token.address]?.token)
     .filter((token) => !!token)
-  return presetTokens || allTokens
+  if (presetTokens) return presetTokens
+
+  return allTokens.filter((x) => VISIBLE_CHAIN_IDS.includes(x.chainId))
 }
 
 export function useWidgetToTokens(): TokenListItem[] {
   const allTokens = useTokenList()
+
   const chainTokenMap = useChainTokenMapContext()
   const presetTokens = useAtomValue(widgetSettingsAtom)
     .toTokens?.map((token) => chainTokenMap[token.chainId]?.[token.address]?.token)
     .filter((token) => !!token)
-  return presetTokens || allTokens
+
+  if (presetTokens) return presetTokens
+
+  return allTokens.filter((x) => VISIBLE_CHAIN_IDS.includes(x.chainId))
 }

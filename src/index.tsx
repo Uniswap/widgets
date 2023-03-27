@@ -33,7 +33,6 @@ export type WidoWidgetProps = {
   snAccount?: AccountInterface
   toTokens?: { chainId: number; address: string }[]
   fromTokens?: { chainId: number; address: string }[]
-  testnetsVisible?: boolean
   partner?: string
 
   // WidgetProps

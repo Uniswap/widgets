@@ -11,7 +11,6 @@ export const widgetSettingsAtom = atom<WidgetSettings>({})
 export interface WidgetSettings {
   ethProvider?: Web3Provider
   snAccount?: AccountInterface
-  testnetsVisible?: boolean
   toTokens?: { chainId: number; address: string }[]
   fromTokens?: { chainId: number; address: string }[]
   partner?: string
@@ -29,7 +28,6 @@ export interface WidgetSettings {
 }
 
 export default function useSyncWidgetSettings({
-  testnetsVisible,
   ethProvider,
   snAccount,
   toTokens,
@@ -42,7 +40,6 @@ export default function useSyncWidgetSettings({
   const updateWidgetSettingsAtom = useUpdateAtom(widgetSettingsAtom)
   useEffect(() => {
     updateWidgetSettingsAtom({
-      testnetsVisible,
       ethProvider,
       snAccount,
       toTokens,
@@ -54,7 +51,6 @@ export default function useSyncWidgetSettings({
     })
   }, [
     updateWidgetSettingsAtom,
-    testnetsVisible,
     ethProvider,
     snAccount,
     toTokens,
@@ -64,10 +60,6 @@ export default function useSyncWidgetSettings({
     title,
     largeTokenSelect,
   ])
-}
-
-export function useTestnetsVisible() {
-  return useAtomValue(widgetSettingsAtom).testnetsVisible ?? false
 }
 
 export function useEvmProvider() {
@@ -149,18 +141,6 @@ export function useRecipientAddress(chainId: number) {
   } else {
     return evmAccountAddress || ''
   }
-}
-
-export function useSrcChainIds() {
-  const { fromTokens } = useAtomValue(widgetSettingsAtom)
-  const set = fromTokens?.reduce((acc, token) => acc.add(token.chainId), new Set<number>())
-  return set ? Array.from(set) : undefined
-}
-
-export function useDstChainIds() {
-  const { toTokens } = useAtomValue(widgetSettingsAtom)
-  const set = toTokens?.reduce((acc, token) => acc.add(token.chainId), new Set<number>())
-  return set ? Array.from(set) : undefined
 }
 
 export function useWidgetFromToken() {
