@@ -20,5 +20,7 @@ runs:
       run: yarn install --ignore-scripts
       shell: bash
 
+    # --quiet disables all output and makes the program exit with codes similar to diff(1)
+    # e.g. exits with 1 if there are differences and 0 if there are no differences
     - run: git diff --quiet -- yarn.lock
       shell: bash
