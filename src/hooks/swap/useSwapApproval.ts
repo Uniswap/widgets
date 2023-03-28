@@ -32,6 +32,7 @@ export function useSwapApproval(trade?: WidoTrade): SwapApproval {
     getWidoSpender({
       chainId: trade.fromToken.chainId as ChainId,
       fromToken: trade.fromToken.address,
+      toChainId: trade.toToken.chainId as ChainId,
       toToken: trade.toToken.isNative ? ZERO_ADDRESS : trade.toToken.address,
     }).then(setSpender)
   }, [trade, setSpender])
