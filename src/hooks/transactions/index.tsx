@@ -4,16 +4,12 @@ import { useEvmChainId } from 'hooks/useSyncWidgetSettings'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useRef } from 'react'
-import { RpcProvider } from 'starknet'
 import { displayTxHashAtom } from 'state/swap'
 import { snBlockNumberAtom, Transaction, TransactionInfo, transactionsAtom, TransactionType } from 'state/transactions'
+import { isStarknetChain } from 'utils/starknet'
 
 import useBlockNumber from '../useBlockNumber'
-import Updater from './updater'
-
-export const SN_PROVIDER = new RpcProvider({
-  nodeUrl: 'https://starknet-goerli.infura.io/v3/d8bc6187de214a4c956d4c64dbde2cc7',
-})
+import Updater, { getSnProvider } from './updater'
 
 function isTransactionRecent(transaction: Transaction) {
   return Date.now() - transaction.addedTime < ms`1d`
@@ -41,7 +37,9 @@ export function useAddTransactionInfo() {
         chainTxs[chainId] = txs
       })
 
-      SN_PROVIDER.getBlockNumber().then(updateSnBlockNumber)
+      if (isStarknetChain(chainId)) {
+        getSnProvider(chainId).getBlockNumber().then(updateSnBlockNumber)
+      }
     },
     [blockNumber, updateTxs, updateSnBlockNumber]
   )
@@ -128,13 +126,5 @@ export function TransactionsUpdater({ onTxSubmit, onTxSuccess, onTxFail }: Trans
     }
   }, [currentPendingTxs, onTxSubmit])
 
-  return (
-    <Updater
-      pendingTransactions={currentPendingTxs}
-      onCheck={onCheck}
-      onReceipt={onReceipt}
-      chainId={chainId}
-      snProvider={SN_PROVIDER}
-    />
-  )
+  return <Updater pendingTransactions={currentPendingTxs} onCheck={onCheck} onReceipt={onReceipt} chainId={chainId} />
 }

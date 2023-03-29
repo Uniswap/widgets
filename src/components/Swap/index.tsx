@@ -4,7 +4,7 @@ import { SwapInfoProvider } from 'hooks/swap/useSwapInfo'
 import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
-import { SN_PROVIDER, usePendingTransactions } from 'hooks/transactions'
+import { usePendingTransactions } from 'hooks/transactions'
 import { getTxReceipt } from 'hooks/transactions/updater'
 import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
@@ -58,7 +58,7 @@ export default function Swap(props: SwapProps) {
     getStatus({ chainId: tx.info.trade.fromToken.chainId, txHash: tx.receipt.transactionHash }).then(({ toTxHash }) => {
       setDstTxHash(toTxHash)
 
-      getTxReceipt(tx.info.trade.toToken.chainId, toTxHash, SN_PROVIDER)
+      getTxReceipt(tx.info.trade.toToken.chainId, toTxHash)
         .then(({ promise, cancel }) => promise)
         .then((receipt) => {
           setDstTxReceipt(receipt)

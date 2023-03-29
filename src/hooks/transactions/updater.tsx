@@ -10,6 +10,18 @@ import { snBlockNumberAtom } from 'state/transactions'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
 import { isStarknetChain } from 'utils/starknet'
 
+export const getSnProvider = (chainId?: number) => {
+  if (chainId === SupportedChainId.STARKNET_GOERLI) {
+    return new RpcProvider({
+      nodeUrl: 'https://starknet-goerli.infura.io/v3/d8bc6187de214a4c956d4c64dbde2cc7',
+    })
+  }
+
+  return new RpcProvider({
+    nodeUrl: 'https://starknet-mainnet.infura.io/v3/d8bc6187de214a4c956d4c64dbde2cc7',
+  })
+}
+
 interface Transaction {
   addedTime: number
   receipt?: unknown
@@ -49,13 +61,13 @@ interface UpdaterProps {
   onCheck: (tx: { chainId: number; hash: string; blockNumber: number }) => void
   onReceipt: (tx: { chainId: number; hash: string; receipt: TransactionReceipt }) => void
   chainId?: number
-  snProvider: RpcProvider
 }
 
-export default function Updater({ pendingTransactions, onCheck, onReceipt, chainId, snProvider }: UpdaterProps): null {
+export default function Updater({ pendingTransactions, onCheck, onReceipt, chainId }: UpdaterProps): null {
   const provider = useEvmProvider()
   const snBlockNumber = useAtomValue(snBlockNumberAtom)
   const evmBlockNumber = useBlockNumber()
+  const snProvider = getSnProvider(chainId)
 
   const lastBlockNumber = isStarknetChain(chainId) ? snBlockNumber : evmBlockNumber
   const fastForwardBlockNumber = useFastForwardBlockNumber()
@@ -137,8 +149,9 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt, chain
   return null
 }
 
-export async function getTxReceipt(chainId: number, hash: string, snProvider: RpcProvider) {
+export async function getTxReceipt(chainId: number, hash: string) {
   if (isStarknetChain(chainId)) {
+    const snProvider = getSnProvider(chainId)
     const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
     return retry(
       () =>
