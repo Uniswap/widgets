@@ -34,7 +34,7 @@ const ToolbarRow = styled(Row)<{ isExpandable?: true }>`
   flex-wrap: nowrap;
   gap: 0.5em;
   height: ${COLLAPSED_TOOLBAR_HEIGHT_EM}em;
-  padding: 0 1em;
+  padding: 0.75em;
 `
 
 const Context = createContext<{
@@ -111,7 +111,7 @@ export default memo(function Toolbar() {
       }
       if (state === TradeState.INVALID) {
         if (!walletsConnected && error) {
-          return { caption: <Caption.Caption icon={AlertTriangle} caption={error} /> }
+          return { caption: <Caption.Caption color="warning" icon={AlertTriangle} caption={error} /> }
         } else {
           return { caption: <Caption.Error /> }
         }
@@ -145,7 +145,7 @@ export default memo(function Toolbar() {
       default:
     }
     if (error) {
-      return { caption: <Caption.Caption icon={AlertTriangle} caption={error} /> }
+      return { caption: <Caption.Caption color="warning" icon={AlertTriangle} caption={error} /> }
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -255,6 +255,28 @@ export default memo(function Toolbar() {
           <div />
         </StyledExpando>
       )}
+      {trade &&
+        trade.messages.length > 0 &&
+        trade.messages.map(({ type, message }, index) => (
+          <StyledExpando
+            key={index}
+            padded
+            title={
+              <Caption.Caption
+                color={type === 'warning' ? 'warning' : undefined}
+                icon={type === 'warning' ? AlertTriangle : Info}
+                caption={message}
+              />
+            }
+            styledTitleWrapper={false}
+            showBottomGradient={false}
+            open={false}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onExpand={() => {}}
+          >
+            <div />
+          </StyledExpando>
+        ))}
     </Column>
   )
 })

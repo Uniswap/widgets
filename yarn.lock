@@ -15668,10 +15668,10 @@ wide-align@^1.1.5:
   dependencies:
     string-width "^1.0.2 || 2 || 3 || 4"
 
-wido@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/wido/-/wido-0.2.4.tgz#6bbdcae67fd89e16b2a618a18c3bcf85fa338a8f"
-  integrity sha512-0P1qFeaJ6toojly2K2csdz7Lh74PWYESuWjs61S9lOf+REP41q1th9XlubmcgeRvndTGoegBZ60NK5VdZutl6w==
+wido@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/wido/-/wido-0.2.5.tgz#451cfeafd430872a9c935ae3b4ebbf116def7d4f"
+  integrity sha512-P4WH4uzTJilg9/tA6559sBD+Wef3uw32xeiMeSdGhxh0VpLs+ywqwPlJLHm+iuCklIfp6QHuWpoYK5mhrUsYqg==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
