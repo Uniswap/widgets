@@ -17,11 +17,15 @@ export function isAddress(value: any): string | false {
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
-  const parsed = isAddress(address)
-  if (!parsed) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+  try {
+    const parsed = isAddress(address)
+    if (!parsed) {
+      return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`
+    }
+    return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+  } catch (err) {
+    return address
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
 // account is not optional

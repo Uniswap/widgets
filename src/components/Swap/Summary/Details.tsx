@@ -17,6 +17,7 @@ import { feeOptionsAtom } from 'state/swap'
 import styled from 'styled-components/macro'
 import { Color, ThemedText } from 'theme'
 import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
+import { shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
@@ -203,7 +204,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
                 showIcon
                 chainIdOverride={outputCurrency.chainId}
               >
-                <Overflowable>{recipientAddress}</Overflowable>
+                <Overflowable>{shortenAddress(recipientAddress)}</Overflowable>
               </EtherscanLink>
             </DetailValue>
           </Row>
