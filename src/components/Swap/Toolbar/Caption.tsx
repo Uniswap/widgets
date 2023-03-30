@@ -10,6 +10,7 @@ import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { css } from 'styled-components/macro'
 import { AnimationSpeed, Color, ThemedText } from 'theme'
+import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 
 import Price from '../Price'
 import { GasEstimateTooltip, TradeTooltip } from './GasEstimateTooltip'
@@ -141,16 +142,17 @@ interface ExpandProps {
 }
 
 const ExpanderRow = styled(Row)<{ $expanded: boolean; warning?: 'warning' | 'error' }>`
-  ${({ warning, $expanded }) =>
-    warning &&
-    css`
+  ${({ warning, $expanded }) => {
+    if (!warning) return undefined
+    return css`
       background-color: ${({ theme }) =>
         $expanded ? 'transparent' : warning === 'error' ? theme.criticalSoft : theme.warningSoft};
       border-radius: ${({ theme }) => theme.borderRadius.xsmall}rem;
       padding: 0.375rem 0.5rem 0.375rem 0.375rem;
       transition: background-color ${AnimationSpeed.Medium} linear, padding ${AnimationSpeed.Medium} linear,
         width ${AnimationSpeed.Medium} linear;
-    `}
+    `
+  }}
 `
 
 function Expander({ expanded, warning }: ExpandProps) {
@@ -177,7 +179,7 @@ export function Trade({
   warning,
 }: TradeProps & TradeTooltip & ExpandProps) {
   const widgetWidth = useWidgetWidth()
-  const shouldHideUSD = widgetWidth < 360 && warning && !expanded
+  const shouldHideUSD = widgetWidth < WIDGET_BREAKPOINTS.EXTRA_SMALL && warning && !expanded
   return (
     <>
       <Caption
