@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useSwapInfo } from 'hooks/swap'
+import { useIsAmountPopulated, useSwapInfo } from 'hooks/swap'
 import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
@@ -26,8 +26,8 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const evmChainId = useEvmChainId()
 
   const {
-    [Field.INPUT]: { usdc: inputUSDC },
-    [Field.OUTPUT]: { usdc: outputUSDC },
+    [Field.INPUT]: { currency: inputCurrency, usdc: inputUSDC },
+    [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     trade: { trade, gasUseEstimateUSD },
     // approval,
     slippage,
@@ -36,6 +36,8 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const deadline = useTransactionDeadline()
   const feeOptions = useAtomValue(feeOptionsAtom)
   const color = useTokenColorExtraction()
+  const isAmountPopulated = useIsAmountPopulated()
+  const missingInput = inputCurrency != null && outputCurrency != null && !isAmountPopulated
 
   const permit2Enabled = usePermit2Enabled()
   const { callback: swapCallback } = useSwapCallback({
@@ -92,7 +94,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   return (
     <>
       <ActionButton color={color} onClick={onClick} disabled={disabled}>
-        <Trans>Review</Trans>
+        <Trans>{missingInput ? 'Enter an amount' : 'Review'}</Trans>
       </ActionButton>
       {open && trade && (
         <Dialog color="container" onClose={() => setOpen(false)}>

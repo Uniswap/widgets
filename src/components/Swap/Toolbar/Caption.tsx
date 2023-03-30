@@ -61,7 +61,9 @@ export function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: C
       ) : (
         Icon && <LargeIcon icon={Icon} color={color} />
       )}
-      <ThemedText.Body2 color={color}>{caption}</ThemedText.Body2>
+      <ThemedText.Body2 color={color} userSelect>
+        {caption}
+      </ThemedText.Body2>
     </CaptionRow>
   )
 }
@@ -115,10 +117,6 @@ export function InsufficientLiquidity() {
 
 export function Error() {
   return <Caption icon={AlertTriangle} caption={<Trans>Error fetching trade</Trans>} />
-}
-
-export function MissingInputs() {
-  return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
 
 export function LoadingTrade({ gasUseEstimateUSD }: TradeTooltip) {

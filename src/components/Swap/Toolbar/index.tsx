@@ -118,7 +118,7 @@ export default memo(function Toolbar() {
       }
     }
 
-    return { caption: <Caption.MissingInputs /> }
+    return { caption: null }
   }, [
     walletsConnected,
     state,
@@ -201,7 +201,7 @@ export default memo(function Toolbar() {
     return rows
   }, [impact?.percent, impact?.warning, slippage, trade])
 
-  if (inputCurrency == null || outputCurrency == null) {
+  if (inputCurrency == null || outputCurrency == null || !isAmountPopulated) {
     return null
   }
 
