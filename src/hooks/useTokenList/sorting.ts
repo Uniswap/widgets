@@ -3,6 +3,7 @@ import { BalanceMap } from 'hooks/useCurrencyBalance'
 import { useMemo } from 'react'
 
 import { NATIVE_ADDRESS, TokenListItem } from './utils'
+const IMPORTANT_TOKENS = ['ETH', 'WETH', 'DAI', 'USDC', 'USDT', 'WBTC']
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>) {
@@ -27,6 +28,16 @@ export function tokenComparator(balances: BalanceMap, a: TokenListItem, b: Token
 
   // Sorts by symbol
   if (a.symbol && b.symbol) {
+    if (a.symbol === b.symbol) return 0
+
+    if (IMPORTANT_TOKENS.includes(a.symbol) && !IMPORTANT_TOKENS.includes(b.symbol)) {
+      return -1
+    }
+
+    if (IMPORTANT_TOKENS.includes(b.symbol) && !IMPORTANT_TOKENS.includes(a.symbol)) {
+      return 1
+    }
+
     return a.symbol.toLowerCase() < b.symbol.toLowerCase() ? -1 : 1
   }
 
