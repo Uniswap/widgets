@@ -179,6 +179,7 @@ export function Trade({
   warning,
 }: TradeProps & TradeTooltip & ExpandProps) {
   const widgetWidth = useWidgetWidth()
+  // The USD value doesn't fit in the widget at small sizes when we show the warning UI.
   const shouldHideUSD = widgetWidth < WIDGET_BREAKPOINTS.EXTRA_SMALL && warning && !expanded
   return (
     <>
