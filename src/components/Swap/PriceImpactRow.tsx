@@ -19,7 +19,9 @@ export function PriceImpactRow({ impact, reverse, tooltipText }: PriceImpactProp
   return (
     <Row gap={0.25} flex align="center" flow={reverse ? 'row-reverse' : 'row wrap'}>
       <ThemedText.Body2 userSelect={false} color={impact.warning ?? 'hint'}>
-        <TooltipText text={`(${formatPriceImpact(impact?.percent)})`}>{tooltipText}</TooltipText>
+        <TooltipText text={`(${formatPriceImpact(impact?.percent)})`}>
+          <ThemedText.Caption>{tooltipText}</ThemedText.Caption>
+        </TooltipText>
       </ThemedText.Body2>
       {impact?.warning && (
         <Tooltip icon={AlertTriangle} iconProps={{ color: impact.warning }} data-testid="alert-tooltip">

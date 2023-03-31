@@ -3,6 +3,7 @@ import { WidgetWidthProvider } from 'hooks/useWidgetWidth'
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components/macro'
+import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 import toLength from 'utils/toLength'
 
 const ROOT_CONTAINER_PADDING = 8
@@ -49,7 +50,7 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
         return 600
       }
     }
-    return props.width ?? 360
+    return props.width ?? WIDGET_BREAKPOINTS.EXTRA_SMALL
   }, [props.width])
 
   /**
@@ -59,7 +60,7 @@ export default function WidgetWrapper(props: PropsWithChildren<WidgetWrapperProp
   const ref = useRef<HTMLDivElement>(null)
   const [wrapperWidth, setWidgetWidth] = useState<number>(
     toLength(initialWidth) === initialWidth
-      ? 360 // If the initial width is a string, use default width until the ResizeObserver gives us the true width as a number.
+      ? WIDGET_BREAKPOINTS.EXTRA_SMALL // If the initial width is a string, use default width until the ResizeObserver gives us the true width as a number.
       : (initialWidth as number)
   )
   useEffect(() => {

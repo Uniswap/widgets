@@ -1,17 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { Placement } from '@popperjs/core'
-import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
 import { loadingCss } from 'css/loading'
-import { PriceImpact as PriceImpactType } from 'hooks/usePriceImpact'
-import { useIsWideWidget } from 'hooks/useWidgetWidth'
+import { useIsWideWidget, useWidgetWidth } from 'hooks/useWidgetWidth'
 import { AlertTriangle, ChevronDown, Icon, Info, LargeIcon, Spinner } from 'icons'
 import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { AnimationSpeed, Color, ThemedText } from 'theme'
+import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 
 import Price from '../Price'
 import { GasEstimateTooltip, TradeTooltip } from './GasEstimateTooltip'
@@ -139,10 +138,36 @@ export interface TradeProps {
 
 interface ExpandProps {
   expanded: boolean
+  warning?: 'warning' | 'error'
 }
 
-function Expander({ expanded }: ExpandProps) {
-  return <ExpandIcon $expanded={expanded} />
+const ExpanderRow = styled(Row)<{ $expanded: boolean; warning?: 'warning' | 'error' }>`
+  ${({ warning, $expanded }) => {
+    if (!warning) return undefined
+    return css`
+      background-color: ${({ theme }) =>
+        $expanded ? 'transparent' : warning === 'error' ? theme.criticalSoft : theme.warningSoft};
+      border-radius: ${({ theme }) => theme.borderRadius.xsmall}rem;
+      padding: 0.375rem 0.5rem 0.375rem 0.375rem;
+      transition: background-color ${AnimationSpeed.Medium} linear, padding ${AnimationSpeed.Medium} linear,
+        width ${AnimationSpeed.Medium} linear;
+    `
+  }}
+`
+
+function Expander({ expanded, warning }: ExpandProps) {
+  return (
+    <ExpanderRow $expanded={expanded} warning={warning} gap={0.5}>
+      {warning && !expanded && (
+        <Tooltip icon={AlertTriangle} iconProps={{ color: warning }} placement="auto">
+          <ThemedText.Caption>
+            <Trans>Your trade will have a high impact on the market price of this pool.</Trans>
+          </ThemedText.Caption>
+        </Tooltip>
+      )}
+      <ExpandIcon $expanded={expanded} color={expanded ? undefined : warning} />
+    </ExpanderRow>
+  )
 }
 
 export function Trade({
@@ -151,31 +176,33 @@ export function Trade({
   gasUseEstimateUSD,
   expanded,
   loading,
+  warning,
 }: TradeProps & TradeTooltip & ExpandProps) {
+  const widgetWidth = useWidgetWidth()
+  // The USD value doesn't fit in the widget at small sizes when we show the warning UI.
+  const shouldHideUSD = widgetWidth < WIDGET_BREAKPOINTS.EXTRA_SMALL && warning && !expanded
   return (
     <>
       <Caption
         caption={
           <ThemedText.Body2 opacity={loading ? 0.4 : 1}>
-            <Price trade={trade} outputUSDC={outputUSDC} />
+            <Price trade={trade} outputUSDC={shouldHideUSD ? undefined : outputUSDC} />
           </ThemedText.Body2>
         }
         icon={loading ? Spinner : null}
       />
-      <CaptionRow gap={0.75}>
-        {!expanded && (
-          <CaptionRow gap={0.25}>
-            <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
-          </CaptionRow>
-        )}
-        <Expander expanded={expanded} />
-      </CaptionRow>
+      {!loading && (
+        <CaptionRow gap={0.75}>
+          {!expanded && (
+            <CaptionRow gap={0.25}>
+              <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
+            </CaptionRow>
+          )}
+          <Expander expanded={expanded} warning={warning} />
+        </CaptionRow>
+      )}
     </>
   )
-}
-
-interface PriceImpactProps {
-  impact: PriceImpactType
 }
 
 export function PriceImpactWarningTooltipContent() {
@@ -183,27 +210,5 @@ export function PriceImpactWarningTooltipContent() {
     <ThemedText.Caption>
       There will be a large difference between your input and output values due to current liquidity.
     </ThemedText.Caption>
-  )
-}
-
-export function PriceImpact({ impact, expanded }: PriceImpactProps & ExpandProps) {
-  return (
-    <>
-      <Caption
-        icon={AlertTriangle}
-        caption="High price impact"
-        color={impact.warning}
-        tooltip={{
-          placement: 'auto',
-          content: <PriceImpactWarningTooltipContent />,
-        }}
-      />
-      <CaptionRow gap={0.75}>
-        <ThemedText.Body2 userSelect={false} color={impact.warning}>
-          {formatPriceImpact(impact?.percent)}
-        </ThemedText.Body2>
-        <Expander expanded={expanded} />
-      </CaptionRow>
-    </>
   )
 }

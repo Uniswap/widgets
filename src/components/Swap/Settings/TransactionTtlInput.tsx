@@ -9,6 +9,7 @@ import { Expando as ExpandoIcon } from 'icons'
 import { useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { WIDGET_BREAKPOINTS } from 'theme/breakpoints'
 
 import { Label } from './components'
 
@@ -16,7 +17,7 @@ const Input = styled(Row)`
   ${inputCss};
 
   background-color: transparent;
-  max-width: 360px;
+  max-width: ${WIDGET_BREAKPOINTS.EXTRA_SMALL}px;
 
   input {
     text-align: right;
