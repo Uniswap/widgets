@@ -14,7 +14,7 @@ import styled from 'styled-components/macro'
 import { AnimationSpeed, Color, ThemedText } from 'theme'
 
 import Price from '../Price'
-import { TradeTooltip } from './GasEstimateTooltip'
+import { GasEstimateTooltip, TradeTooltip } from './GasEstimateTooltip'
 
 const Loading = styled.span`
   color: ${({ theme }) => theme.secondary};
@@ -180,7 +180,7 @@ export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeP
       <CaptionRow gap={0.75}>
         {!expanded && (
           <CaptionRow gap={0.25}>
-            {/* <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} /> */}
+            <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
           </CaptionRow>
         )}
         <Expander expanded={expanded} />

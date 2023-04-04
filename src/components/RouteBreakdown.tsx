@@ -69,6 +69,39 @@ export function getToken(chainTokenMap: any, chainId: any, address: any): TokenL
   return chainTokenMap[chainId][actualAddress].token
 }
 
+export function ExpandedRouteBreakdown(props: { steps: Step[]; chainTokenMap: any }) {
+  const { steps, chainTokenMap } = props
+  return (
+    <Row align="center" style={{ position: 'relative' }}>
+      {steps.map((step, index) => {
+        return (
+          <React.Fragment key={index}>
+            {index === 0 && (
+              <TokenInfoContainer flex>
+                <TokenImg size={2} token={getToken(chainTokenMap, step.chainId, step.fromToken)} />
+                <ThemedText.Caption>{getToken(chainTokenMap, step.chainId, step.fromToken).symbol}</ThemedText.Caption>
+              </TokenInfoContainer>
+            )}
+            <Dots />
+            <RouteNode>
+              <Row gap={0.375}>
+                <ThemedText.Caption>{step.protocol}</ThemedText.Caption>
+                {/* <RouteBadge>
+                  <ThemedText.Badge color="secondary">{step.functionName}</ThemedText.Badge>
+                </RouteBadge> */}
+              </Row>
+            </RouteNode>
+            <TokenInfoContainer flex>
+              <TokenImg size={2} token={getToken(chainTokenMap, step.toChainId, step.toToken)} />
+              <ThemedText.Caption>{getToken(chainTokenMap, step.toChainId, step.toToken).symbol}</ThemedText.Caption>
+            </TokenInfoContainer>
+          </React.Fragment>
+        )
+      })}
+    </Row>
+  )
+}
+
 export function RouteBreakdown(props: { steps: Step[] }) {
   const { steps } = props
 
@@ -82,39 +115,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
         <Trans>Route preview</Trans>
       </ThemedText.Body2>
       <Popover
-        content={
-          <Row align="center" style={{ position: 'relative' }}>
-            {steps.map((step, index) => {
-              return (
-                <React.Fragment key={index}>
-                  {index === 0 && (
-                    <TokenInfoContainer flex>
-                      <TokenImg size={2} token={getToken(chainTokenMap, step.chainId, step.fromToken)} />
-                      <ThemedText.Caption>
-                        {getToken(chainTokenMap, step.chainId, step.fromToken).symbol}
-                      </ThemedText.Caption>
-                    </TokenInfoContainer>
-                  )}
-                  <Dots />
-                  <RouteNode>
-                    <Row gap={0.375}>
-                      <ThemedText.Caption>{step.protocol}</ThemedText.Caption>
-                      {/* <RouteBadge>
-                          <ThemedText.Badge color="secondary">{step.functionName}</ThemedText.Badge>
-                        </RouteBadge> */}
-                    </Row>
-                  </RouteNode>
-                  <TokenInfoContainer flex>
-                    <TokenImg size={2} token={getToken(chainTokenMap, step.toChainId, step.toToken)} />
-                    <ThemedText.Caption>
-                      {getToken(chainTokenMap, step.toChainId, step.toToken).symbol}
-                    </ThemedText.Caption>
-                  </TokenInfoContainer>
-                </React.Fragment>
-              )
-            })}
-          </Row>
-        }
+        content={<ExpandedRouteBreakdown steps={steps} chainTokenMap={chainTokenMap} />}
         show={showTooltip}
         placement="bottom"
         offset={12}
