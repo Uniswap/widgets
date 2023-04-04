@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { nativeOnChain } from 'constants/tokens'
 import {
   calcStablecoinAmountFromFiatValue,
   useStablecoinAmountFromFiatValue,
@@ -112,6 +113,10 @@ export function useRouterTrade(
   }, [quote, currencyIn, currencyOut])
 
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(trade?.gasFeeUsdValue)
+  const gasUseEstimate =
+    trade?.gasFee && currencyIn
+      ? CurrencyAmount.fromRawAmount(nativeOnChain(currencyIn?.chainId), trade.gasFee)
+      : undefined
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {
@@ -122,7 +127,7 @@ export function useRouterTrade(
       return TRADE_LOADING
     } else {
       const state = isValid ? TradeState.VALID : TradeState.LOADING
-      return { state, trade, gasUseEstimateUSD }
+      return { state, trade, gasUseEstimate, gasUseEstimateUSD }
     }
-  }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimateUSD, errorMessage])
+  }, [isError, amountSpecified, queryArgs, data, trade, isValid, gasUseEstimate, gasUseEstimateUSD, errorMessage])
 }

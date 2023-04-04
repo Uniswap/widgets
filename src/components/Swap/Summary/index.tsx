@@ -87,6 +87,7 @@ function ConfirmButton({
 interface SummaryDialogProps {
   trade: WidoTrade
   slippage: Slippage
+  gasUseEstimate?: CurrencyAmount<Token>
   gasUseEstimateUSD?: CurrencyAmount<Token>
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>

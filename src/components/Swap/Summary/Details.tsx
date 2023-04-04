@@ -126,13 +126,22 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
 interface DetailsProps {
   trade: WidoTrade
   slippage: Slippage
+  gasUseEstimate?: CurrencyAmount<Token>
   gasUseEstimateUSD?: CurrencyAmount<Token>
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
 }
 
-export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC, outputUSDC, impact }: DetailsProps) {
+export default function Details({
+  trade,
+  slippage,
+  gasUseEstimate,
+  gasUseEstimateUSD,
+  inputUSDC,
+  outputUSDC,
+  impact,
+}: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
@@ -153,9 +162,14 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
       }
     }
 
-    if (gasUseEstimateUSD) {
-      details.push([t`Network fee`, `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`])
-    }
+    details.push([
+      t`Network fee`,
+      gasUseEstimateUSD
+        ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`
+        : gasUseEstimate
+        ? `${formatCurrencyAmount(gasUseEstimate, NumberType.TokenTx)} ${gasUseEstimate.currency.symbol}`
+        : '-',
+    ])
 
     if (impact) {
       details.push([t`Price impact`, impact.toString(), impact.warning])
@@ -174,6 +188,7 @@ export default function Details({ trade, slippage, gasUseEstimateUSD, inputUSDC,
   }, [
     exchangeRate,
     feeOptions,
+    gasUseEstimate,
     gasUseEstimateUSD,
     impact,
     integrator,

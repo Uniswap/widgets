@@ -14,6 +14,7 @@ import { ThemedText } from 'theme'
 
 export interface TradeTooltip {
   trade?: WidoTrade
+  gasUseEstimate?: CurrencyAmount<Token> | null
   gasUseEstimateUSD?: CurrencyAmount<Token> | null
 }
 
@@ -22,10 +23,11 @@ export interface TradeTooltip {
  *
  * On larger widths, hovering or focusing the view shows a popover with the routing diagram.
  */
-export function GasEstimateTooltip({ gasUseEstimateUSD, trade }: TradeTooltip) {
+export function GasEstimateTooltip({ gasUseEstimate, gasUseEstimateUSD, trade }: TradeTooltip) {
   const [tooltip, setTooltip] = useState<HTMLDivElement | null>(null)
   const showTooltip = useTooltip(tooltip)
-  const displayEstimate = formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)
+  const displayEstimateUsd = formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)
+  const displayEstimate = formatCurrencyAmount(gasUseEstimate, NumberType.TokenTx)
   const chainTokenMap = useChainTokenMapContext()
 
   return (
@@ -37,7 +39,9 @@ export function GasEstimateTooltip({ gasUseEstimateUSD, trade }: TradeTooltip) {
     >
       <Row ref={setTooltip} gap={0.25}>
         <Gas color="secondary" />
-        <ThemedText.Body2 color="secondary">{displayEstimate}</ThemedText.Body2>
+        <ThemedText.Body2 color="secondary">
+          {gasUseEstimateUSD ? displayEstimateUsd : `${displayEstimate} ${gasUseEstimate?.currency.symbol}`}
+        </ThemedText.Body2>
       </Row>
     </Popover>
   )

@@ -38,6 +38,7 @@ interface SwapInfo {
   trade: {
     state: TradeState
     trade?: WidoTrade
+    gasUseEstimate?: CurrencyAmount<Token>
     gasUseEstimateUSD?: CurrencyAmount<Token>
   }
   approval: SwapApproval

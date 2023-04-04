@@ -119,7 +119,7 @@ export function Error() {
   return <Caption icon={AlertTriangle} caption={<Trans>Error fetching trade</Trans>} />
 }
 
-export function LoadingTrade({ gasUseEstimateUSD }: TradeTooltip) {
+export function LoadingTrade() {
   return (
     <>
       <Caption
@@ -131,7 +131,6 @@ export function LoadingTrade({ gasUseEstimateUSD }: TradeTooltip) {
           </Loading>
         }
       />
-      <CaptionRow gap={0.25}>{/* <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} /> */}</CaptionRow>
     </>
   )
 }
@@ -173,14 +172,20 @@ const Expander = ({ expanded }: ExpandProps) => {
   return <ExpandIcon $expanded={expanded} />
 }
 
-export function Trade({ trade, outputUSDC, gasUseEstimateUSD, expanded }: TradeProps & TradeTooltip & ExpandProps) {
+export function Trade({
+  trade,
+  outputUSDC,
+  gasUseEstimate,
+  gasUseEstimateUSD,
+  expanded,
+}: TradeProps & TradeTooltip & ExpandProps) {
   return (
     <>
       <Caption caption={<Price trade={trade} outputUSDC={outputUSDC} />} />
       <CaptionRow gap={0.75}>
         {!expanded && (
           <CaptionRow gap={0.25}>
-            <GasEstimateTooltip gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
+            <GasEstimateTooltip gasUseEstimate={gasUseEstimate} gasUseEstimateUSD={gasUseEstimateUSD} trade={trade} />
           </CaptionRow>
         )}
         <Expander expanded={expanded} />

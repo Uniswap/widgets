@@ -28,7 +28,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const {
     [Field.INPUT]: { currency: inputCurrency, usdc: inputUSDC },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
-    trade: { trade, gasUseEstimateUSD },
+    trade: { trade, gasUseEstimateUSD, gasUseEstimate },
     // approval,
     slippage,
     impact,
@@ -101,6 +101,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
           <SummaryDialog
             trade={trade}
             slippage={slippage}
+            gasUseEstimate={gasUseEstimate}
             gasUseEstimateUSD={gasUseEstimateUSD}
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}

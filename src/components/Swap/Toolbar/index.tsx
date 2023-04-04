@@ -65,7 +65,7 @@ export default memo(function Toolbar() {
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     error,
     approval,
-    trade: { trade, state, gasUseEstimateUSD },
+    trade: { trade, state, gasUseEstimateUSD, gasUseEstimate },
     impact,
     slippage,
   } = useSwapInfo()
@@ -86,7 +86,7 @@ export default memo(function Toolbar() {
 
   const { caption, isExpandable } = useMemo((): { caption: ReactNode; isExpandable?: true } => {
     if (state === TradeState.LOADING) {
-      return { caption: <Caption.LoadingTrade gasUseEstimateUSD={gasUseEstimateUSD} /> }
+      return { caption: <Caption.LoadingTrade /> }
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
@@ -103,6 +103,7 @@ export default memo(function Toolbar() {
           <Caption.Trade
             trade={trade}
             outputUSDC={outputUSDC}
+            gasUseEstimate={open ? null : gasUseEstimate}
             gasUseEstimateUSD={open ? null : gasUseEstimateUSD}
             expanded={open}
           />
@@ -126,6 +127,7 @@ export default memo(function Toolbar() {
     inputCurrency,
     outputCurrency,
     isAmountPopulated,
+    gasUseEstimate,
     gasUseEstimateUSD,
     isWrap,
     trade,
@@ -168,7 +170,11 @@ export default memo(function Toolbar() {
     const rows: SummaryRowProps[] = [
       {
         name: t`Network fee`,
-        value: gasUseEstimateUSD ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}` : '-',
+        value: gasUseEstimateUSD
+          ? `~${formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)}`
+          : gasUseEstimate
+          ? `${formatCurrencyAmount(gasUseEstimate, NumberType.TokenTx)} ${gasUseEstimate.currency.symbol}`
+          : '-',
       },
       {
         color: impact?.warning,
@@ -199,7 +205,7 @@ export default memo(function Toolbar() {
       },
     ]
     return rows
-  }, [gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
+  }, [gasUseEstimate, gasUseEstimateUSD, impact?.percent, impact?.warning, slippage, trade])
 
   if (inputCurrency == null || outputCurrency == null || !isAmountPopulated) {
     return null
