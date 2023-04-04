@@ -29,23 +29,26 @@ export function GasEstimateTooltip({ gasUseEstimate, gasUseEstimateUSD, trade }:
   const displayEstimateUsd = formatCurrencyAmount(gasUseEstimateUSD, NumberType.FiatGasPrice)
   const displayEstimate = formatCurrencyAmount(gasUseEstimate, NumberType.TokenTx)
   const chainTokenMap = useChainTokenMapContext()
+  const gasCostLabel = gasUseEstimateUSD
+    ? displayEstimateUsd
+    : gasUseEstimate
+    ? `${displayEstimate} ${gasUseEstimate?.currency.symbol}`
+    : '-'
 
   return (
     <Popover
-      content={trade ? <ExpandedRouteBreakdown steps={trade.steps} chainTokenMap={chainTokenMap} /> : null}
+      content={
+        trade ? (
+          <ExpandedRouteBreakdown steps={trade.steps} chainTokenMap={chainTokenMap} gasLabel={gasCostLabel} />
+        ) : null
+      }
       placement="bottom"
       show={Boolean(trade) && showTooltip}
       offset={12}
     >
       <Row ref={setTooltip} gap={0.25}>
         <Gas color="secondary" />
-        <ThemedText.Body2 color="secondary">
-          {gasUseEstimateUSD
-            ? displayEstimateUsd
-            : gasUseEstimate
-            ? `${displayEstimate} ${gasUseEstimate?.currency.symbol}`
-            : '-'}
-        </ThemedText.Body2>
+        <ThemedText.Body2 color="secondary">{gasCostLabel}</ThemedText.Body2>
       </Row>
     </Popover>
   )

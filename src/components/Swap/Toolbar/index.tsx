@@ -240,7 +240,7 @@ export default memo(function Toolbar() {
       >
         <Column>
           <ToolbarTradeSummary rows={tradeSummaryRows} />
-          {trade && <RouteBreakdown steps={trade.steps} />}
+          {trade && <RouteBreakdown steps={trade.steps} gasLabel={tradeSummaryRows[0].value} />}
         </Column>
       </StyledExpando>
       {approveButton && approveButton}
