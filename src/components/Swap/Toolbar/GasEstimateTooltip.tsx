@@ -40,7 +40,11 @@ export function GasEstimateTooltip({ gasUseEstimate, gasUseEstimateUSD, trade }:
       <Row ref={setTooltip} gap={0.25}>
         <Gas color="secondary" />
         <ThemedText.Body2 color="secondary">
-          {gasUseEstimateUSD ? displayEstimateUsd : `${displayEstimate} ${gasUseEstimate?.currency.symbol}`}
+          {gasUseEstimateUSD
+            ? displayEstimateUsd
+            : gasUseEstimate
+            ? `${displayEstimate} ${gasUseEstimate?.currency.symbol}`
+            : '-'}
         </ThemedText.Body2>
       </Row>
     </Popover>
