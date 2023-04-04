@@ -1,7 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { calcStablecoinAmountFromFiatValue } from 'hooks/useStablecoinAmountFromFiatValue'
+import {
+  calcStablecoinAmountFromFiatValue,
+  useStablecoinAmountFromFiatValue,
+} from 'hooks/useStablecoinAmountFromFiatValue'
 import useTimeout from 'hooks/useTimeout'
 import { useCallback, useMemo } from 'react'
 import { useGetQuoteArgs } from 'state/routing/args'
@@ -77,7 +80,6 @@ export function useRouterTrade(
   const quote = typeof data === 'object' ? (data as Required<QuoteResult>) : undefined
 
   const isValid = currentData === data
-  const gasUseEstimateUSD = undefined // useStablecoinAmountFromFiatValue('999')
 
   const trade = useMemo(() => {
     if (!quote) return
@@ -103,9 +105,13 @@ export function useRouterTrade(
       tradeType: TradeType.EXACT_INPUT,
       steps: quote.steps,
       messages: quote.messages,
+      gasFee: quote.gasFee,
+      gasFeeUsdValue: quote.gasFeeUsdValue,
     }
     return trade
   }, [quote, currencyIn, currencyOut])
+
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(trade?.gasFeeUsdValue)
 
   return useMemo(() => {
     if (!amountSpecified || isError || queryArgs === skipToken) {

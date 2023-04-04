@@ -92,6 +92,8 @@ export interface WidoTradeType<TradeInput extends Currency, TradeOutput extends 
   tradeType: TradeType
   steps: Step[]
   messages: { type: 'info' | 'warning'; message: string }[]
+  gasFee?: string
+  gasFeeUsdValue?: string
 }
 
 export type WidoTrade = WidoTradeType<Currency, Currency>
