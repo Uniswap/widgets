@@ -13,6 +13,7 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 import { Step, ZERO_ADDRESS } from 'wido'
 
 import { IconButton } from './Button'
+import Column from './Column'
 import EtherscanLink from './EtherscanLink'
 import Popover from './Popover'
 import TokenImg from './TokenImg'
@@ -59,6 +60,9 @@ const OrderRoutingRow = styled(Row)`
   margin: 0 1em;
   padding: ${CONTAINER_VERTICAL_PADDING_EM}em 0;
 `
+const TokenInfoContainer = styled(Column)`
+  margin-top: 1rem;
+`
 
 export function getToken(chainTokenMap: any, chainId: any, address: any): TokenListItem {
   const actualAddress = address === ZERO_ADDRESS ? NATIVE_ADDRESS : address
@@ -83,17 +87,29 @@ export function RouteBreakdown(props: { steps: Step[] }) {
             {steps.map((step, index) => {
               return (
                 <React.Fragment key={index}>
-                  {index === 0 && <TokenImg size={2} token={getToken(chainTokenMap, step.chainId, step.fromToken)} />}
+                  {index === 0 && (
+                    <TokenInfoContainer flex>
+                      <TokenImg size={2} token={getToken(chainTokenMap, step.chainId, step.fromToken)} />
+                      <ThemedText.Caption>
+                        {getToken(chainTokenMap, step.chainId, step.fromToken).symbol}
+                      </ThemedText.Caption>
+                    </TokenInfoContainer>
+                  )}
                   <Dots />
                   <RouteNode>
                     <Row gap={0.375}>
                       <ThemedText.Caption>{step.protocol}</ThemedText.Caption>
                       {/* <RouteBadge>
-                        <ThemedText.Badge color="secondary">{step.functionName}</ThemedText.Badge>
-                      </RouteBadge> */}
+                          <ThemedText.Badge color="secondary">{step.functionName}</ThemedText.Badge>
+                        </RouteBadge> */}
                     </Row>
                   </RouteNode>
-                  <TokenImg size={2} token={getToken(chainTokenMap, step.toChainId, step.toToken)} />
+                  <TokenInfoContainer flex>
+                    <TokenImg size={2} token={getToken(chainTokenMap, step.toChainId, step.toToken)} />
+                    <ThemedText.Caption>
+                      {getToken(chainTokenMap, step.toChainId, step.toToken).symbol}
+                    </ThemedText.Caption>
+                  </TokenInfoContainer>
                 </React.Fragment>
               )
             })}
@@ -101,6 +117,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
         }
         show={showTooltip}
         placement="bottom"
+        offset={12}
       >
         <ForwardedRow ref={setTooltip}>
           <RouteSummary>
@@ -114,7 +131,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
                     <EtherscanLink
                       type={ExplorerDataType.TOKEN}
                       data={(fromToken as WrappedTokenInfo).address}
-                      showIcon={false}
+                      showIcon={true}
                       chainIdOverride={fromToken.chainId}
                     >
                       {fromToken.symbol}
@@ -124,7 +141,7 @@ export function RouteBreakdown(props: { steps: Step[] }) {
                   <EtherscanLink
                     type={ExplorerDataType.TOKEN}
                     data={(toToken as WrappedTokenInfo).address}
-                    showIcon={false}
+                    showIcon={true}
                     chainIdOverride={toToken.chainId}
                   >
                     {toToken.symbol}
