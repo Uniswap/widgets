@@ -14,6 +14,8 @@ import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { feeOptionsAtom, Field, swapEventHandlersAtom } from 'state/swap'
+import { TransactionType } from 'state/transactions'
+import invariant from 'tiny-invariant'
 
 import ActionButton from '../../ActionButton'
 import { SummaryDialog } from '../Summary'
@@ -77,6 +79,16 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
         response.response.wait(1).then((receipt) => {
           setOldestValidBlock(receipt.blockNumber)
         })
+
+        invariant(trade)
+        // onSubmit expects the TransactionInfo to be returned if the transaction was submitted.
+        return {
+          type: TransactionType.SWAP,
+          response: response.response,
+          tradeType: trade.tradeType,
+          trade,
+          slippageTolerance: slippage.allowed,
+        }
       })
 
       // Only close the review modal if the swap submitted (ie no-throw).
@@ -86,7 +98,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
     } catch (e) {
       throwAsync(e)
     }
-  }, [onSubmit, setOldestValidBlock, swapCallback, throwAsync])
+  }, [onSubmit, setOldestValidBlock, slippage.allowed, swapCallback, throwAsync, trade])
 
   const onReviewSwapClick = useConditionalHandler(useAtomValue(swapEventHandlersAtom).onReviewSwapClick)
   const collapseToolbar = useCollapseToolbar()
