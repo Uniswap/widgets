@@ -1,5 +1,6 @@
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
+import auroraLogo from 'assets/svg/aurora-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
@@ -264,6 +265,31 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'FTM', symbol: 'FTM', decimals: 18 },
     color: '#35D07F',
+    backgroundColor: '#34d07f1f',
+  },
+  [SupportedChainId.AURORA]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://rainbowbridge.app/transfer',
+    docs: 'https://aurora.dev/',
+    explorer: 'https://explorer.aurora.dev/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Aurora',
+    logoUrl: auroraLogo,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    color: '#70d150',
+    backgroundColor: '#34d07f1f',
+  },
+  [SupportedChainId.AURORA_TESTNET]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    docs: 'https://testnet.aurora.dev/',
+    explorer: 'https://explorer.testnet.aurora.dev/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Aurora Testnet',
+    logoUrl: auroraLogo,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    color: '#70d150',
     backgroundColor: '#34d07f1f',
   },
 }

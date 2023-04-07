@@ -117,6 +117,20 @@ export const USDC_FANTOM = new WrappedTokenInfo({
   symbol: 'USDC',
   name: 'USD Coin',
 })
+export const USDC_AURORA = new Token(
+  SupportedChainId.AURORA,
+  '0xB12BFcA5A55806AaF64E99521918A4bf0fC40802',
+  6,
+  'USDC',
+  'USD Coin'
+)
+export const USDC_AURORA_TESTNET = new Token(
+  SupportedChainId.AURORA_TESTNET,
+  '0x3dcB6AdF46E4d854E94719b6ed9cfab6939cC1Cb',
+  6,
+  'USDC',
+  'USDC'
+)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -162,6 +176,8 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.STARKNET]: USDC_STARKNET,
   [SupportedChainId.STARKNET_GOERLI]: USDC_STARKNET_GOERLI,
   [SupportedChainId.FANTOM]: USDC_FANTOM,
+  [SupportedChainId.AURORA]: USDC_AURORA,
+  [SupportedChainId.AURORA_TESTNET]: USDC_AURORA_TESTNET,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,

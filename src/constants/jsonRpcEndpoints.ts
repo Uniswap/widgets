@@ -77,4 +77,12 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
   [SupportedChainId.STARKNET]: [],
   [SupportedChainId.STARKNET_GOERLI]: [],
   [SupportedChainId.FANTOM]: [],
+  [SupportedChainId.AURORA]: [
+    // "Safe" URLs
+    'https://mainnet.aurora.dev',
+  ],
+  [SupportedChainId.AURORA_TESTNET]: [
+    // "Safe" URLs
+    'https://testnet.aurora.dev',
+  ],
 }

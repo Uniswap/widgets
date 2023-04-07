@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
+import AuroraLogo from 'assets/svg/aurora-logo.svg'
 import CeloLogo from 'assets/svg/celo_logo.svg'
 import fantomLogo from 'assets/svg/fantom-logo.svg'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
@@ -12,7 +13,7 @@ import { useMemo } from 'react'
 
 import { isCelo, nativeOnChain } from '../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'aurora'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
@@ -22,6 +23,8 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'arbitrum'
     case SupportedChainId.OPTIMISM:
       return 'optimism'
+    case SupportedChainId.AURORA:
+      return 'aurora'
     default:
       return 'ethereum'
   }
@@ -44,6 +47,9 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
       return optimismLogoUrl
     case SupportedChainId.FANTOM:
       return fantomLogo
+    case SupportedChainId.AURORA:
+    case SupportedChainId.AURORA_TESTNET:
+      return AuroraLogo
     default:
       return EthereumLogo
   }

@@ -13,6 +13,8 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.CELO]: 'https://celoscan.io',
   [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores.celoscan.io',
   [SupportedChainId.FANTOM]: 'https://ftmscan.com',
+  [SupportedChainId.AURORA]: 'https://explorer.aurora.dev',
+  [SupportedChainId.AURORA_TESTNET]: 'https://explorer.testnet.aurora.dev',
 }
 
 export enum ExplorerDataType {

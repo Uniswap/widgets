@@ -24,6 +24,9 @@ export enum SupportedChainId {
   STARKNET_GOERLI = 15367,
 
   FANTOM = 250,
+
+  AURORA = 1313161554,
+  AURORA_TESTNET = 1313161555,
 }
 
 export const VISIBLE_CHAIN_IDS: number[] = [
@@ -49,6 +52,8 @@ export enum ChainName {
   POLYGON_MUMBAI = 'polygon-mumbai',
   CELO = 'celo',
   CELO_ALFAJORES = 'celo-alfajores',
+  AURORA = 'aurora',
+  AURORA_TESTNET = 'aurora-testnet',
 }
 
 export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
@@ -65,6 +70,8 @@ export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
   [ChainName.OPTIMISM_GOERLI]: SupportedChainId.OPTIMISM_GOERLI,
   [ChainName.CELO]: SupportedChainId.CELO,
   [ChainName.CELO_ALFAJORES]: SupportedChainId.CELO_ALFAJORES,
+  [ChainName.AURORA]: SupportedChainId.AURORA,
+  [ChainName.AURORA_TESTNET]: SupportedChainId.AURORA_TESTNET,
 }
 
 /**
@@ -80,6 +87,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
+  SupportedChainId.AURORA,
 ]
 
 /**
@@ -95,6 +103,8 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,
   SupportedChainId.CELO_ALFAJORES,
+  SupportedChainId.AURORA,
+  SupportedChainId.AURORA_TESTNET,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
