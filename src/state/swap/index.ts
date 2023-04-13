@@ -79,7 +79,11 @@ export type OnExpandSwapDetails = () => void
  * An integration hook called when the user clicks 'Review swap'.
  * If the hook resolves to false or rejects, the review dialog will not open.
  */
-export type OnReviewSwapClick = () => void | boolean | Promise<boolean>
+export type OnReviewSwapClick = (
+  inputToken: Currency | undefined,
+  outputToken: Currency | undefined,
+  slippage: string
+) => void | boolean | Promise<boolean>
 
 interface InputEventHandlers {
   onTokenChange?: OnTokenChange

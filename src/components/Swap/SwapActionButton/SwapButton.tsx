@@ -7,6 +7,7 @@ import { useSwapCallback } from 'hooks/swap/useSwapCallback'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
 import { useSetOldestValidBlock } from 'hooks/useIsValidBlock'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
+import { formatSlippage } from 'hooks/useSlippage'
 import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import useTokenColorExtraction from 'hooks/useTokenColorExtraction'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -104,8 +105,8 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
   const collapseToolbar = useCollapseToolbar()
   const onClick = useCallback(async () => {
     collapseToolbar()
-    setOpen(await onReviewSwapClick())
-  }, [onReviewSwapClick, collapseToolbar])
+    setOpen(await onReviewSwapClick(inputCurrency, outputCurrency, formatSlippage(slippage)))
+  }, [collapseToolbar, onReviewSwapClick, inputCurrency, outputCurrency, slippage])
 
   return (
     <>
