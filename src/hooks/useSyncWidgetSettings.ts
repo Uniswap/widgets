@@ -7,12 +7,16 @@ import { isStarknetChain } from 'utils/starknet'
 import { quote, QuoteRequest, QuoteResult } from 'wido'
 
 export const widgetSettingsAtom = atom<WidgetSettings>({})
+export const userSelectedToToken = atom<boolean>(false)
+export const userSelectedFromToken = atom<boolean>(false)
 
 export interface WidgetSettings {
   ethProvider?: Web3Provider
   snAccount?: AccountInterface
   toTokens?: { chainId: number; address: string }[]
   fromTokens?: { chainId: number; address: string }[]
+  presetToToken?: { chainId: number; address: string }
+  presetFromToken?: { chainId: number; address: string }
   partner?: string
   quoteApi?: (request: QuoteRequest) => Promise<QuoteResult>
   /**
@@ -32,6 +36,8 @@ export default function useSyncWidgetSettings({
   snAccount,
   toTokens,
   fromTokens,
+  presetToToken,
+  presetFromToken,
   partner,
   quoteApi,
   title,
@@ -44,6 +50,8 @@ export default function useSyncWidgetSettings({
       snAccount,
       toTokens,
       fromTokens,
+      presetToToken,
+      presetFromToken,
       partner,
       quoteApi,
       title,
@@ -55,6 +63,8 @@ export default function useSyncWidgetSettings({
     snAccount,
     toTokens,
     fromTokens,
+    presetToToken,
+    presetFromToken,
     partner,
     quoteApi,
     title,
@@ -144,17 +154,31 @@ export function useRecipientAddress(chainId: number) {
 }
 
 export function useWidgetFromToken() {
-  const { fromTokens } = useAtomValue(widgetSettingsAtom)
+  const { fromTokens, presetFromToken } = useAtomValue(widgetSettingsAtom)
+  const userHasSelected = useAtomValue(userSelectedFromToken)
+  if (userHasSelected) {
+    return undefined
+  }
   if (fromTokens && Array.isArray(fromTokens) && fromTokens.length === 1) {
     return fromTokens[0]
+  }
+  if (presetFromToken && presetFromToken.chainId && presetFromToken.address) {
+    return presetFromToken
   }
   return undefined
 }
 
 export function useWidgetToToken() {
-  const { toTokens } = useAtomValue(widgetSettingsAtom)
+  const { toTokens, presetToToken } = useAtomValue(widgetSettingsAtom)
+  const userHasSelected = useAtomValue(userSelectedToToken)
+  if (userHasSelected) {
+    return undefined
+  }
   if (toTokens && Array.isArray(toTokens) && toTokens.length === 1) {
     return toTokens[0]
+  }
+  if (presetToToken && presetToToken.chainId && presetToToken.address) {
+    return presetToToken
   }
   return undefined
 }
