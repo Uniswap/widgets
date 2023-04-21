@@ -43,6 +43,7 @@
     "prebuild": "tsc -p tsconfig.build.json && yarn docs",
     "build": "rollup --config",
     "deduplicate": "yarn-deduplicate --strategy=highest",
+    "release": "semantic-release",
     "lint": "eslint .",
     "test": "jest src",
     "test:e2e": "jest e2e",

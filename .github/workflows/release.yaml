@@ -15,27 +15,6 @@ jobs:
       - uses: ./.github/actions/setup
       - run: yarn prepare
 
-      - run: yarn i18n:extract
-      - uses: crowdin/github-action@1.4.8
-        with:
-          upload_sources: true
-          download_translations: true
-          create_pull_request: false
-          push_translations: false
-          localization_branch_name: main
-          source: 'src/locales/en-US.po'
-          translation: 'src/locales/%locale%.po'
-          crowdin_branch_name: widgets
-          token: ${{ secrets.CROWDIN_TOKEN }}
-          project_id: 458284
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: yarn test
-        if: success()
-        env:
-          JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
-
       - run: yarn release
         if: success()
         env:
