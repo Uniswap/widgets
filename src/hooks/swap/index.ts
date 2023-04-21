@@ -5,6 +5,7 @@ import { useCallback, useMemo } from 'react'
 import { pickAtom } from 'state/atoms'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { toTradeType } from 'utils/tradeType'
+import { userSelectedFromToken, userSelectedToToken } from '../useSyncWidgetSettings';
 export { ChainError, default as useSwapInfo } from './useSwapInfo'
 
 function otherField(field: Field) {
@@ -38,6 +39,8 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency:
   const otherCurrencyAtom = useMemo(() => pickAtom(swapAtom, otherField(field)), [field])
   const otherCurrency = useAtomValue(otherCurrencyAtom)
   const { onFromTokenChange, onToTokenChange } = useAtomValue(swapEventHandlersAtom)
+  const setUserSelectedToToken = useUpdateAtom(userSelectedToToken)
+  const setUserSelectedFromToken = useUpdateAtom(userSelectedFromToken)
   const switchSwapCurrencies = useSwitchSwapCurrencies()
   const setOrSwitchCurrency = useCallback(
     (update: Currency) => {
@@ -46,8 +49,10 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency:
         switchSwapCurrencies()
       } else {
         if (field === Field.INPUT) {
+          setUserSelectedToToken(true)
           onFromTokenChange?.(update)
         } else {
+          setUserSelectedFromToken(true)
           onToTokenChange?.(update)
         }
         setCurrency(update)
