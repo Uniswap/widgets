@@ -21,8 +21,8 @@ export interface WidgetSettings {
   snAccount?: AccountInterface
   toTokens?: { chainId: number; address: string }[]
   fromTokens?: { chainId: number; address: string }[]
-  presetToToken?: { chainId: number; address: string }
-  presetFromToken?: { chainId: number; address: string }
+  presetToToken?: { chainId: number; address: string } | undefined
+  presetFromToken?: { chainId: number; address: string } | undefined
   partner?: string
   quoteApi?: (request: QuoteRequest) => Promise<QuoteResult>
   /**
