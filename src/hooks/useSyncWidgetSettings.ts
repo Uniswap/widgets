@@ -7,8 +7,14 @@ import { isStarknetChain } from 'utils/starknet'
 import { quote, QuoteRequest, QuoteResult } from 'wido'
 
 export const widgetSettingsAtom = atom<WidgetSettings>({})
-export const userSelectedToToken = atom<boolean>(false)
+/**
+ * Stores whether the user selected a `from` token on the UI
+ */
 export const userSelectedFromToken = atom<boolean>(false)
+/**
+ * Stores whether the user selected a `to` token on the UI
+ */
+export const userSelectedToToken = atom<boolean>(false)
 
 export interface WidgetSettings {
   ethProvider?: Web3Provider
@@ -153,33 +159,49 @@ export function useRecipientAddress(chainId: number) {
   }
 }
 
+/**
+ * Checks if a preset token should be used in the `From` field
+ * If it is the case, it returns the token, otherwise undefined, meaning no preset.
+ */
 export function useWidgetFromToken() {
   const { fromTokens, presetFromToken } = useAtomValue(widgetSettingsAtom)
   const userHasSelected = useAtomValue(userSelectedFromToken)
+  // if the user selected something, no preset token
   if (userHasSelected) {
     return undefined
   }
+  // if only one token on the list, that should be the preset
   if (fromTokens && Array.isArray(fromTokens) && fromTokens.length === 1) {
     return fromTokens[0]
   }
+  // if a preset is given by props, that should be the preset
   if (presetFromToken && presetFromToken.chainId && presetFromToken.address) {
     return presetFromToken
   }
+  // otherwise none
   return undefined
 }
 
+/**
+ * Checks if a preset token should be used in the `To` field
+ * If it is the case, it returns the token, otherwise undefined, meaning no preset.
+ */
 export function useWidgetToToken() {
   const { toTokens, presetToToken } = useAtomValue(widgetSettingsAtom)
   const userHasSelected = useAtomValue(userSelectedToToken)
+  // if the user selected something, no preset token
   if (userHasSelected) {
     return undefined
   }
+  // if only one token on the list, that should be the preset
   if (toTokens && Array.isArray(toTokens) && toTokens.length === 1) {
     return toTokens[0]
   }
+  // if a preset is given by props, that should be the preset
   if (presetToToken && presetToToken.chainId && presetToToken.address) {
     return presetToToken
   }
+  // otherwise none
   return undefined
 }
 
