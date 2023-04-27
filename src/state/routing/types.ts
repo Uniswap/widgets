@@ -88,6 +88,7 @@ export interface WidoTradeType<TradeInput extends Currency, TradeOutput extends 
     to: Required<QuoteResult>['to']
     data: Required<QuoteResult>['data']
     value: BigNumber
+    gasLimit?: number
   }
   tradeType: TradeType
   steps: Step[]
