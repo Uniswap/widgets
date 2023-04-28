@@ -81,9 +81,6 @@ export default function useSendSwapTransaction(
     return {
       callback: async function onSwap(): Promise<TransactionResponse> {
         const { tx } = trade as Required<WidoTrade>
-        if (isStarknetChain(trade.toToken.chainId)) {
-          tx.gasLimit = 170000 // FIX: gas estimation for Starknet Router fails on some cases
-        }
         return provider
           .getSigner()
           .sendTransaction(tx)
