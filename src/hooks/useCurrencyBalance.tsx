@@ -6,6 +6,7 @@ import { Balance, getBalances, ZERO_ADDRESS } from 'wido'
 
 import { useEvmAccountAddress, useSnAccountAddress } from './useSyncWidgetSettings'
 import { NATIVE_ADDRESS } from './useTokenList/utils'
+import { BigNumber } from 'ethers'
 
 export type BalanceMap = { [chainId: number]: { [tokenAddress: string]: CurrencyAmount<Token> | undefined } }
 
@@ -59,10 +60,14 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
       if (!map[item.chainId]) {
         map[item.chainId] = {}
       }
-
+      let balance = item.balance
+      if (item.address === NATIVE_ADDRESS) {
+        // FIX: native token has issues with wallet when max is used
+        balance = BigNumber.from(balance).sub(1).toString()
+      }
       map[item.chainId][item.address] = CurrencyAmount.fromRawAmount(
         new Token(item.chainId, ZERO_ADDRESS, item.decimals, item.symbol, item.name),
-        item.balance
+        balance
       )
       return map
     }, {} as BalanceMap)
