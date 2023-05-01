@@ -85,4 +85,12 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     // "Safe" URLs
     'https://testnet.aurora.dev',
   ],
+  [SupportedChainId.BSC]: [
+    // "Safe" URLs
+    'https://bsc-dataseed.binance.org',
+  ],
+  [SupportedChainId.AVALANCHE]: [
+    // "Safe" URLs
+    'https://avalanche-c-chain.publicnode.com',
+  ],
 }

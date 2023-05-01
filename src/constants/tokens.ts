@@ -131,6 +131,20 @@ export const USDC_AURORA_TESTNET = new Token(
   'USDC',
   'USDC'
 )
+export const USDC_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+  18,
+  'USDC',
+  'USD Coin'
+)
+export const USDC_AVALANCHE = new Token(
+  SupportedChainId.AVALANCHE,
+  '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+  6,
+  'USDC',
+  'USD Coin'
+)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -178,6 +192,8 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.FANTOM]: USDC_FANTOM,
   [SupportedChainId.AURORA]: USDC_AURORA,
   [SupportedChainId.AURORA_TESTNET]: USDC_AURORA_TESTNET,
+  [SupportedChainId.BSC]: USDC_BSC,
+  [SupportedChainId.AVALANCHE]: USDC_AVALANCHE,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,

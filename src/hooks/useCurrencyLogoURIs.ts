@@ -2,18 +2,20 @@ import { Currency } from '@uniswap/sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import AuroraLogo from 'assets/svg/aurora-logo.svg'
+import avalancheLogo from 'assets/svg/avalanche-logo.svg'
+import BscLogo from 'assets/svg/bsc-logo.svg'
 import CeloLogo from 'assets/svg/celo_logo.svg'
 import fantomLogo from 'assets/svg/fantom-logo.svg'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import starknetLogo from 'assets/svg/starknet-logo.svg'
-import { SupportedChainId } from 'constants/chains'
+import { ChainName, SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 
 import { isCelo, nativeOnChain } from '../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'aurora'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'aurora' | 'bsc' | 'avalanche'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
@@ -25,6 +27,10 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'optimism'
     case SupportedChainId.AURORA:
       return 'aurora'
+    case SupportedChainId.BSC:
+      return ChainName.BSC
+    case SupportedChainId.AVALANCHE:
+      return ChainName.AVALANCHE
     default:
       return 'ethereum'
   }
@@ -50,6 +56,10 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.AURORA:
     case SupportedChainId.AURORA_TESTNET:
       return AuroraLogo
+    case SupportedChainId.BSC:
+      return BscLogo
+    case SupportedChainId.AVALANCHE:
+      return avalancheLogo
     default:
       return EthereumLogo
   }

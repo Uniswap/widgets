@@ -27,6 +27,10 @@ export enum SupportedChainId {
 
   AURORA = 1313161554,
   AURORA_TESTNET = 1313161555,
+
+  BSC = 56,
+
+  AVALANCHE = 43114,
 }
 
 export const VISIBLE_CHAIN_IDS: number[] = [
@@ -36,6 +40,8 @@ export const VISIBLE_CHAIN_IDS: number[] = [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.OPTIMISM,
   SupportedChainId.FANTOM,
+  SupportedChainId.BSC,
+  SupportedChainId.AVALANCHE,
 ]
 
 export enum ChainName {
@@ -54,6 +60,8 @@ export enum ChainName {
   CELO_ALFAJORES = 'celo-alfajores',
   AURORA = 'aurora',
   AURORA_TESTNET = 'aurora-testnet',
+  BSC = 'bsc',
+  AVALANCHE = 'avalanche',
 }
 
 export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
@@ -72,6 +80,8 @@ export const CHAIN_NAMES_TO_IDS: { [chainName: string]: SupportedChainId } = {
   [ChainName.CELO_ALFAJORES]: SupportedChainId.CELO_ALFAJORES,
   [ChainName.AURORA]: SupportedChainId.AURORA,
   [ChainName.AURORA_TESTNET]: SupportedChainId.AURORA_TESTNET,
+  [ChainName.BSC]: SupportedChainId.BSC,
+  [ChainName.AVALANCHE]: SupportedChainId.AVALANCHE,
 }
 
 /**
@@ -88,6 +98,8 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
   SupportedChainId.AURORA,
+  SupportedChainId.BSC,
+  SupportedChainId.AVALANCHE,
 ]
 
 /**
@@ -105,6 +117,8 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.CELO_ALFAJORES,
   SupportedChainId.AURORA,
   SupportedChainId.AURORA_TESTNET,
+  SupportedChainId.BSC,
+  SupportedChainId.AVALANCHE,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
