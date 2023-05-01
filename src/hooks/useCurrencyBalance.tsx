@@ -63,7 +63,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
       let balance = item.balance
       if (item.address === NATIVE_ADDRESS) {
         // FIX: native token has issues with wallet when max is used
-        balance = BigNumber.from(balance).sub(1).toString()
+        balance = BigNumber.from(balance).sub(2).toString()
       }
       map[item.chainId][item.address] = CurrencyAmount.fromRawAmount(
         new Token(item.chainId, ZERO_ADDRESS, item.decimals, item.symbol, item.name),
