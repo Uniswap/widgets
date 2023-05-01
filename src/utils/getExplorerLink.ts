@@ -15,6 +15,8 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.FANTOM]: 'https://ftmscan.com',
   [SupportedChainId.AURORA]: 'https://explorer.aurora.dev',
   [SupportedChainId.AURORA_TESTNET]: 'https://explorer.testnet.aurora.dev',
+  [SupportedChainId.BSC]: 'https://bscscan.com/',
+  [SupportedChainId.AVALANCHE]: 'https://snowtrace.io/',
 }
 
 export enum ExplorerDataType {
