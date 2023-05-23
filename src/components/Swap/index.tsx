@@ -56,13 +56,16 @@ export default function Swap(props: SwapProps) {
   useEffect(() => {
     if (!tx || !tx.receipt) return
     getStatus({ chainId: tx.info.trade.fromToken.chainId, txHash: tx.receipt.transactionHash }).then(({ toTxHash }) => {
-      setDstTxHash(toTxHash)
+      // if not `toTxHash` is returned, the tx is single-chain
+      if (toTxHash) {
+        setDstTxHash(toTxHash)
 
-      getTxReceipt(tx.info.trade.toToken.chainId, toTxHash)
-        .then(({ promise, cancel }) => promise)
-        .then((receipt) => {
-          setDstTxReceipt(receipt)
-        })
+        getTxReceipt(tx.info.trade.toToken.chainId, toTxHash)
+          .then(({ promise, cancel }) => promise)
+          .then((receipt) => {
+            setDstTxReceipt(receipt)
+          })
+      }
     })
   }, [tx])
 
