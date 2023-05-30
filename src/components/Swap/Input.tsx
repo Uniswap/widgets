@@ -1,5 +1,4 @@
 import { t, Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { TextButton } from 'components/Button'
 import { loadingTransitionCss } from 'css/loading'
@@ -14,6 +13,7 @@ import { TradeState } from 'state/routing/types'
 import { Field } from 'state/swap'
 import styled from 'styled-components/macro'
 import { AnimationSpeed, ThemedText } from 'theme'
+import { formatCurrencyAmount, NumberType } from 'utils/conedison/format'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'

@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from 'utils/conedison/format'
 import ActionButton from 'components/ActionButton'
 import Column from 'components/Column'
 import Expando from 'components/Expando'

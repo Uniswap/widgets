@@ -1,4 +1,4 @@
-import { formatPriceImpact } from '@uniswap/conedison/format'
+import { formatPriceImpact } from 'utils/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PriceImpact } from 'hooks/usePriceImpact'
 import { ArrowDown, ArrowRight } from 'icons'

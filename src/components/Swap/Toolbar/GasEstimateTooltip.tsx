@@ -1,4 +1,4 @@
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from 'utils/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { BottomSheetModal } from 'components/BottomSheetModal'
 import Column from 'components/Column'
