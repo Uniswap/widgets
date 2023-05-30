@@ -37,6 +37,7 @@
     "start": "cosmos",
     "typecheck": "tsc -p tsconfig.json",
     "prebuild": "tsc -p tsconfig.build.json",
+    "postinstall": "yarn build",
     "build": "rollup --config --failAfterWarnings",
     "release": "semantic-release",
     "deduplicate": "yarn-deduplicate --strategy=highest",
