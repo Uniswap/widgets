@@ -5,14 +5,12 @@ import useSyncController, { SwapController } from 'hooks/swap/useSyncController'
 import useSyncConvenienceFee, { FeeOptions } from 'hooks/swap/useSyncConvenienceFee'
 import useSyncSwapEventHandlers, { SwapEventHandlers } from 'hooks/swap/useSyncSwapEventHandlers'
 import { usePendingTransactions } from 'hooks/transactions'
-import { getTxReceipt } from 'hooks/transactions/updater'
 import { evmFetchedBalancesAtom, snFetchedBalancesAtom } from 'hooks/useCurrencyBalance'
 import { useBrandedFooter } from 'hooks/useSyncFlags'
 import { useWidgetTitle, WidgetSettings } from 'hooks/useSyncWidgetSettings'
 import { useAtom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
-import { GetTransactionReceiptResponse } from 'starknet'
 import { displayTxHashAtom } from 'state/swap'
 import { SwapTransactionInfo, Transaction } from 'state/transactions'
 import { getStatus } from 'wido'
@@ -36,11 +34,32 @@ export interface SwapProps extends FeeOptions, SwapController, SwapEventHandlers
   hideConnectionUI?: boolean
 }
 
+function usePoll(timeout: number) {
+  const [timer, setTimer] = useState(0)
+
+  useEffect(() => {
+    let t: NodeJS.Timer
+    function loop(x: number, delay: number) {
+      t = setTimeout(() => {
+        requestAnimationFrame(() => {
+          setTimer(x)
+          loop(x + 1, delay)
+        })
+      }, delay)
+    }
+    loop(1, timeout)
+    return () => clearTimeout(t)
+  }, [])
+
+  return timer
+}
+
 export default function Swap(props: SwapProps) {
   useValidate(props)
   useSyncController(props as SwapController)
   useSyncConvenienceFee(props as FeeOptions)
   useSyncSwapEventHandlers(props as SwapEventHandlers)
+  const timer = usePoll(30000)
 
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
@@ -51,7 +70,6 @@ export default function Swap(props: SwapProps) {
     [txHash, pendingTxs]
   )
   const [dstTxHash, setDstTxHash] = useState<string | undefined>()
-  const [dstTxReceipt, setDstTxReceipt] = useState<GetTransactionReceiptResponse | undefined>()
 
   useEffect(() => {
     if (!tx || !tx.receipt) return
@@ -61,14 +79,8 @@ export default function Swap(props: SwapProps) {
       txHash: tx.receipt.transactionHash,
     }).then(({ toTxHash }) => {
       setDstTxHash(toTxHash)
-
-      getTxReceipt(tx.info.trade.toToken.chainId, toTxHash)
-        .then(({ promise, cancel }) => promise)
-        .then((receipt) => {
-          setDstTxReceipt(receipt)
-        })
     })
-  }, [tx])
+  }, [tx, timer])
 
   const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
   const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
@@ -98,11 +110,9 @@ export default function Swap(props: SwapProps) {
           <StatusDialog
             tx={tx}
             dstTxHash={dstTxHash}
-            dstTxReceipt={dstTxReceipt}
             onClose={() => {
               setDisplayTxHash()
               setDstTxHash(undefined)
-              setDstTxReceipt(undefined)
               setSnFetchedBalances({})
               setEvmFetchedBalances({})
             }}
