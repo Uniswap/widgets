@@ -70,17 +70,22 @@ export default function Swap(props: SwapProps) {
     [txHash, pendingTxs]
   )
   const [dstTxHash, setDstTxHash] = useState<string | undefined>()
+  const [txCompleted, setTxCompleted] = useState<boolean>(false)
 
   useEffect(() => {
     if (!tx || !tx.receipt) return
     if (tx.info.trade.fromToken.chainId === tx.info.trade.toToken.chainId) return
+    if (txCompleted) return
     getStatus({
       chainId: tx.info.trade.fromToken.chainId,
       txHash: tx.receipt.transactionHash,
-    }).then(({ toTxHash }) => {
+    }).then(({ status, toTxHash }) => {
+      if (status === 'success') {
+        setTxCompleted(true)
+      }
       setDstTxHash(toTxHash)
     })
-  }, [tx, timer])
+  }, [tx, txCompleted, timer])
 
   const setSnFetchedBalances = useUpdateAtom(snFetchedBalancesAtom)
   const setEvmFetchedBalances = useUpdateAtom(evmFetchedBalancesAtom)
