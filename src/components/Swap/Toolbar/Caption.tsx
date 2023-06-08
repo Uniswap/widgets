@@ -61,7 +61,7 @@ export function Caption({ icon: Icon, caption, color = 'secondary', tooltip }: C
       ) : (
         Icon && <LargeIcon icon={Icon} color={color} />
       )}
-      <ThemedText.Body2 color={color} userSelect>
+      <ThemedText.Body2 color={color} preWrap={true} userSelect>
         {caption}
       </ThemedText.Body2>
     </CaptionRow>
