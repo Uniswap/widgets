@@ -92,6 +92,7 @@ interface FieldWrapperProps {
   impact?: PriceImpact
   subheader: string
   presetCurrency?: Currency
+  showBalance: boolean
 }
 
 export function FieldWrapper({
@@ -102,6 +103,7 @@ export function FieldWrapper({
   className,
   subheader,
   presetCurrency,
+  showBalance,
 }: FieldWrapperProps & { className?: string }) {
   const {
     [field]: { balance, amount: currencyAmount, usdc },
@@ -162,9 +164,11 @@ export function FieldWrapper({
         <ThemedText.Subhead2 color={'secondary'}>{subheader}</ThemedText.Subhead2>
         {balance && (
           <Row gap={0.5}>
-            <Balance color="secondary">
-              <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
-            </Balance>
+            {showBalance && (
+              <Balance color="secondary">
+                <Trans>Balance:</Trans> {formatCurrencyAmount(balance)}
+              </Balance>
+            )}
             {maxAmount && (
               <TextButton onClick={onClickMax}>
                 <ThemedText.ButtonSmall>
@@ -237,6 +241,7 @@ export default function Input() {
       approved={approvalState === SwapApprovalState.APPROVED}
       presetCurrency={presetCurrency}
       subheader={t`From`}
+      showBalance={true}
     />
   )
 }

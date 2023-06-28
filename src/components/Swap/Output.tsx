@@ -54,6 +54,7 @@ export default function Output() {
         hasColor={hasColor}
         subheader={t`To`}
         presetCurrency={presetCurrency}
+        showBalance={false}
       />
     </DynamicThemeProvider>
   )
