@@ -81,7 +81,7 @@ interface AmountProps {
 
 function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   const width = useWidgetWidth()
-  const [amountFontSize, amountLineHeight] = ['24px', '30px']
+  const [amountFontSize, amountLineHeight] = ['22px', '30px']
   // width < WIDGET_BREAKPOINTS.MEDIUM
   //   ? width < WIDGET_BREAKPOINTS.EXTRA_SMALL
   //     ? ['24px', '30px']
@@ -111,7 +111,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
 
       <Column flex align="flex-end" grow>
         <ThemedText.H1 color="primary" fontSize={amountFontSize} lineHeight={amountLineHeight}>
-          {formattedAmount} {amount.currency.symbol}
+          {amount.toExact()} {amount.currency.symbol}
         </ThemedText.H1>
         {usdcAmount && (
           <ThemedText.Body2>
