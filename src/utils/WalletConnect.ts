@@ -1,7 +1,7 @@
-import { WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
+import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-
 import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
+import QRCode from 'qrcode'
 
 
 // Avoid testing for the best URL by only passing a single URL per chain.
@@ -15,27 +15,48 @@ const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(JSON_RPC_FALLBACK_ENDPOINTS).r
 )
 const optionalChains = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((x) => x !== SupportedChainId.MAINNET)
 
-export class WalletConnectV2 extends WalletConnect {
+export class WalletConnectPopup extends WalletConnect {
   ANALYTICS_EVENT = 'Wallet Connect QR Scan'
   constructor({
     actions,
     onError,
-    qrcode = true,
-  }: Omit<WalletConnectConstructorArgs, 'options'> & { qrcode?: boolean }) {
+    options
+  }: WalletConnectConstructorArgs) {
     super({
       actions,
-      options: {
-        projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
-        optionalChains,
-        chains: [SupportedChainId.MAINNET],
-        showQrModal: qrcode,
-        rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
-        // as of 6/16/2023 there are no docs for `optionalMethods`
-        // this set of optional methods fixes a bug we encountered where permit2 signatures were never received from the connected wallet
-        // source: https://uniswapteam.slack.com/archives/C03R5G8T8BH/p1686858618164089?thread_ts=1686778867.145689&cid=C03R5G8T8BH
-        optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
-      },
+      options,
       onError,
     })
+  }
+}
+
+export class WalletConnectQR extends WalletConnect {
+  static SVG_AVAILABLE = 'svg_available'
+  svg?: string
+  constructor({
+    actions,
+    onError,
+    options,
+  }: WalletConnectConstructorArgs) {
+    super({
+      actions,
+      options,
+      onError,
+    })
+    this.events.on(URI_AVAILABLE, async (uri) => {
+      this.svg = undefined
+      if (!uri) return
+      this.svg = await QRCode.toString(uri, {
+        margin: 1,
+        width: 110,
+        type: 'svg',
+      })
+      this.events.emit(WalletConnectQR.SVG_AVAILABLE, this.svg)
+    })
+    this.events.emit(WalletConnectQR.SVG_AVAILABLE, this.svg)
+  }
+    deactivate() {
+    this.events.emit(URI_AVAILABLE)
+    return super.deactivate()
   }
 }

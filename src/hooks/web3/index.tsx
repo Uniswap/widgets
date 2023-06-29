@@ -162,7 +162,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
   const walletConnect = useMemo(
     () =>
       initializeWeb3ReactConnector(WalletConnectPopup, {
-        options: { rpc: urlMap },
+        options: { rpc: urlMap, projectId, chains, showQrModal: true },
         defaultChainId,
         onError: console.error,
       }),
@@ -171,7 +171,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
   const walletConnectQR = useMemo(
     () =>
       initializeWeb3ReactConnector(WalletConnectQR, {
-        options: { rpc: urlMap },
+        options: { rpc: urlMap, projectId, chains, showQrModal: false },
         defaultChainId,
         onError: console.error,
       }),
