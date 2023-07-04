@@ -164,6 +164,7 @@ interface TokenSelectProps {
   onSelect: (value: Currency) => void
   chainIdsAllowed: number[]
   tokenList: TokenListItem[]
+  hasPresetValue?: boolean
 }
 
 export default memo(function TokenSelect({
@@ -174,6 +175,7 @@ export default memo(function TokenSelect({
   onSelect,
   chainIdsAllowed,
   tokenList,
+  hasPresetValue,
 }: TokenSelectProps) {
   usePrefetchBalances()
 
@@ -191,7 +193,13 @@ export default memo(function TokenSelect({
   )
   return (
     <>
-      <TokenButton value={value} approved={approved} disabled={disabled} onClick={onOpen} />
+      <TokenButton
+        value={value}
+        approved={approved}
+        disabled={disabled}
+        onClick={onOpen}
+        hasPresetValue={hasPresetValue}
+      />
       {open && (
         <TokenSelectDialog
           value={value}

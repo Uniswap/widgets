@@ -3,17 +3,26 @@ import { Currency } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import { getNativeLogoURI } from 'hooks/useCurrencyLogoURIs'
 import { ChevronDown } from 'icons'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Button from '../Button'
 import Row from '../Row'
 import TokenImg, { ChainImgBadge, TokenGroup } from '../TokenImg'
 
+const presetValueCss = css`
+  cursor: initial;
+  :hover:enabled {
+    background-color: ${({ theme }) => theme['interactive']};
+  }
+`
+
 const StyledTokenButton = styled(Button)<{ approved?: boolean; presetValue?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.medium}em;
   min-height: 2em;
   padding: 0.25em 0.5em 0.25em 0.25em;
+
+  ${({ presetValue }) => presetValue && presetValueCss};
 
   :enabled {
     transition: none;
@@ -54,19 +63,21 @@ interface TokenButtonProps {
   approved?: boolean
   disabled?: boolean
   onClick: () => void
+  hasPresetValue?: boolean
 }
 
-export default function TokenButton({ value, approved, disabled, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, approved, disabled, onClick, hasPresetValue }: TokenButtonProps) {
   const chainInfo = getChainInfo(value?.chainId)
   const chainSrc = getNativeLogoURI(value?.chainId)
 
   return (
     <StyledTokenButton
-      onClick={onClick}
+      onClick={hasPresetValue ? undefined : onClick}
       color={value ? 'interactive' : 'accent'}
       approved={approved}
       disabled={disabled}
       data-testid="token-select"
+      presetValue={hasPresetValue}
     >
       <TokenButtonRow empty={!value} flex gap={0.4}>
         {value ? (
@@ -85,7 +96,7 @@ export default function TokenButton({ value, approved, disabled, onClick }: Toke
             <Trans>Select token</Trans>
           </ThemedText.ButtonLarge>
         )}
-        <DropDownIcon strokeWidth={2} color={value ? 'primary' : 'onAccent'} />
+        {!hasPresetValue && <DropDownIcon strokeWidth={2} color={value ? 'primary' : 'onAccent'} />}
       </TokenButtonRow>
     </StyledTokenButton>
   )

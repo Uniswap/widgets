@@ -101,6 +101,7 @@ export const TokenInput = forwardRef<TokenInputHandle, PropsWithChildren<TokenIn
           onSelect={onSelect}
           chainIdsAllowed={chainIdsAllowed}
           tokenList={tokenList}
+          hasPresetValue={tokenList.length === 1}
         />
         <ThemedText.H2>
           <ValueInput
