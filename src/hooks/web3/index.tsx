@@ -5,7 +5,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
-import { SupportedChainId } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { MetaMaskConnectionError } from 'errors'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
@@ -159,23 +159,41 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
       }),
     [throwAsync]
   )
+
+  const walletConnectDefaultOptions = useMemo(
+    () => ({
+      rpcMap: urlMap,
+      projectId: 'c6c9bacd35afa3eb9e6cccf6d8464395',
+      chains: [SupportedChainId.MAINNET],
+      optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
+      optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
+    }),
+    [urlMap]
+  )
+
   const walletConnect = useMemo(
     () =>
       initializeWeb3ReactConnector(WalletConnectPopup, {
-        options: { rpc: urlMap, projectId, chains, showQrModal: true },
+        options: {
+          ...walletConnectDefaultOptions,
+          showQrModal: true,
+        },
         defaultChainId,
-        onError: console.error,
+        onError: console.warn,
       }),
-    [defaultChainId, urlMap]
+    [defaultChainId, walletConnectDefaultOptions]
   )
   const walletConnectQR = useMemo(
     () =>
       initializeWeb3ReactConnector(WalletConnectQR, {
-        options: { rpc: urlMap, projectId, chains, showQrModal: false },
+        options: {
+          ...walletConnectDefaultOptions,
+          showQrModal: false,
+        },
         defaultChainId,
-        onError: console.error,
+        onError: console.warn,
       }),
-    [defaultChainId, urlMap]
+    [defaultChainId, walletConnectDefaultOptions]
   )
   const network = useMemo(
     () => initializeWeb3ReactConnector(Network, { urlMap: connectionMap, defaultChainId }),

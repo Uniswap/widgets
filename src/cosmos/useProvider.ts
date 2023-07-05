@@ -1,8 +1,8 @@
 import { initializeConnector } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { Connector } from '@web3-react/types'
-import { WalletConnect } from '@web3-react/walletconnect'
-import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
+import { WalletConnect } from '@web3-react/walletconnect-v2'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useEffect, useState } from 'react'
 
 import useOption from './useOption'
@@ -12,15 +12,18 @@ enum Wallet {
   WalletConnect = 'WalletConnect',
 }
 const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions }))
+
+const WALLET_CONNECT_PROJECT_ID = 'c6c9bacd35afa3eb9e6cccf6d8464395'
 const [walletConnect] = initializeConnector<WalletConnect>(
   (actions) =>
     new WalletConnect({
       actions,
       options: {
-        rpc: Object.entries(JSON_RPC_FALLBACK_ENDPOINTS).reduce((rpcMap, [chainId, rpcUrls]) => ({
-          ...rpcMap,
-          [chainId]: rpcUrls.slice(0, 1),
-        })),
+        showQrModal: true,
+        projectId: WALLET_CONNECT_PROJECT_ID,
+        chains: [SupportedChainId.MAINNET],
+        optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
+        optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
       },
     })
 )
