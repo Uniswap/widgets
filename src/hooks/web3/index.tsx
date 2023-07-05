@@ -4,13 +4,15 @@ import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
+import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { MetaMaskConnectionError } from 'errors'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
+import { Layer } from 'theme'
 import JsonRpcConnector from 'utils/JsonRpcConnector'
 import { supportedChainId } from 'utils/supportedChainId'
-import { WalletConnectPopup, WalletConnectQR } from 'utils/WalletConnect'
+import { WalletConnectQR } from 'utils/WalletConnect'
 
 import { Provider as ConnectorsProvider } from './useConnectors'
 import {
@@ -27,7 +29,7 @@ type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 interface Web3ReactConnectors {
   user: Web3ReactConnector<EIP1193 | JsonRpcConnector> | undefined
   metaMask: Web3ReactConnector<MetaMask>
-  walletConnect: Web3ReactConnector<WalletConnectPopup>
+  walletConnect: Web3ReactConnector<WalletConnect>
   walletConnectQR: Web3ReactConnector<WalletConnectQR>
   network: Web3ReactConnector<Network>
 }
@@ -167,19 +169,24 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
       chains: [SupportedChainId.MAINNET],
       optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
       optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
+      qrModalOptions: {
+        themeVariables: {
+          '--wcm-z-index': Layer.DIALOG.toString(),
+        },
+      },
     }),
     [urlMap]
   )
 
   const walletConnect = useMemo(
     () =>
-      initializeWeb3ReactConnector(WalletConnectPopup, {
+      initializeWeb3ReactConnector(WalletConnect, {
         options: {
           ...walletConnectDefaultOptions,
           showQrModal: true,
         },
         defaultChainId,
-        onError: console.warn,
+        onError: console.error,
       }),
     [defaultChainId, walletConnectDefaultOptions]
   )
@@ -191,7 +198,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
           showQrModal: false,
         },
         defaultChainId,
-        onError: console.warn,
+        onError: console.error,
       }),
     [defaultChainId, walletConnectDefaultOptions]
   )

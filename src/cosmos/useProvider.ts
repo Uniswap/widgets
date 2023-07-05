@@ -3,6 +3,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { JSON_RPC_FALLBACK_ENDPOINTS } from 'constants/jsonRpcEndpoints'
 import { useEffect, useState } from 'react'
 
 import useOption from './useOption'
@@ -19,6 +20,10 @@ const [walletConnect] = initializeConnector<WalletConnect>(
     new WalletConnect({
       actions,
       options: {
+        rpcMap: Object.entries(JSON_RPC_FALLBACK_ENDPOINTS).reduce((rpcMap, [chainId, rpcUrls]) => ({
+          ...rpcMap,
+          [chainId]: rpcUrls.slice(0, 1),
+        })),
         showQrModal: true,
         projectId: WALLET_CONNECT_PROJECT_ID,
         chains: [SupportedChainId.MAINNET],
