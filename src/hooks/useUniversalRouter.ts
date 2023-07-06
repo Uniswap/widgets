@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { sendTransaction } from '@uniswap/conedison/provider/index'
+import { sendTransaction } from 'utils/conedison/provider/index'
 import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'

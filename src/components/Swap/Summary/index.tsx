@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { formatPriceImpact } from '@uniswap/conedison/format'
+import { formatPriceImpact } from 'utils/conedison/format'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ActionButton, { Action, ActionButtonColor } from 'components/ActionButton'
 import Column from 'components/Column'

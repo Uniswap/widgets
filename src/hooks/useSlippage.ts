@@ -1,4 +1,4 @@
-import { formatPriceImpact } from '@uniswap/conedison/format'
+import { formatPriceImpact } from 'utils/conedison/format'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance, { DEFAULT_AUTO_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'

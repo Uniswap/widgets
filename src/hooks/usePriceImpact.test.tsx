@@ -1,4 +1,4 @@
-import { formatPriceImpact } from '@uniswap/conedison/format'
+import { formatPriceImpact } from 'utils/conedison/format'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { InterfaceTrade } from 'state/routing/types'
 import { renderHook } from 'test'

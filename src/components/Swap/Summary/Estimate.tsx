@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { formatCurrencyAmount, NumberType } from 'utils/conedison/format'
 import { formatSlippage, Slippage } from 'hooks/useSlippage'
 import { ReactNode, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
