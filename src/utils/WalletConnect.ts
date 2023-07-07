@@ -1,13 +1,7 @@
 import 'setimmediate'
 
-import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect'
+import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import QRCode from 'qrcode'
-
-export class WalletConnectPopup extends WalletConnect {
-  constructor({ actions, options, defaultChainId, timeout, onError }: WalletConnectConstructorArgs) {
-    super({ actions, options: { ...options, qrcode: true }, defaultChainId, timeout, onError })
-  }
-}
 
 export class WalletConnectQR extends WalletConnect {
   static SVG_AVAILABLE = 'svg_available'
@@ -15,12 +9,10 @@ export class WalletConnectQR extends WalletConnect {
   svg?: string
 
   constructor({ actions, options, defaultChainId, timeout, onError }: WalletConnectConstructorArgs) {
-    super({ actions, options: { ...options, qrcode: false }, defaultChainId, timeout, onError })
+    super({ actions, options: { ...options, showQrModal: false }, defaultChainId, timeout, onError })
 
     this.events.once(URI_AVAILABLE, () => {
-      this.provider?.connector.on('disconnect', () => {
-        this.deactivate()
-      })
+      this.provider?.events.on('disconnect', this.deactivate)
     })
 
     this.events.on(URI_AVAILABLE, async (uri) => {
