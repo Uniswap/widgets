@@ -168,6 +168,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
     () => ({
       rpcMap: urlMap,
       projectId: 'c6c9bacd35afa3eb9e6cccf6d8464395',
+      // this requires the connecting wallet to support eth mainnet
       chains: [SupportedChainId.MAINNET],
       optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
       optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],

@@ -26,6 +26,7 @@ const [walletConnect] = initializeConnector<WalletConnect>(
         })),
         showQrModal: true,
         projectId: WALLET_CONNECT_PROJECT_ID,
+        // this requires the connecting wallet to support eth mainnet
         chains: [SupportedChainId.MAINNET],
         optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
