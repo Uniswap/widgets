@@ -12,6 +12,7 @@ export interface RowProps {
   grow?: true | 'first' | 'last'
   children?: ReactNode
   theme: Theme
+  width?: string
 }
 
 const Row = styled.div<RowProps>`
@@ -30,6 +31,7 @@ const Row = styled.div<RowProps>`
   }};
   justify-content: ${({ justify }) => justify ?? 'space-between'};
   padding: ${({ pad }) => pad && `0 ${pad}em`};
+  width: ${({ width }) => width ?? 'auto'};
 `
 
 export default Row

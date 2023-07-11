@@ -49,6 +49,10 @@ const RuleWrapper = styled.div`
   margin: 0.75em 0.125em;
 `
 
+const AmountValue = styled.span`
+  display: inline-block;
+`
+
 const MAX_AMOUNT_STR_LENGTH = 9
 
 interface DetailProps {
@@ -97,7 +101,7 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
   }
 
   return (
-    <Row flex align="flex-start">
+    <Row flex align="flex-start" width="100%">
       <Row>
         <ThemedText.Body2 userSelect>
           <Label>{label}</Label>
@@ -109,9 +113,17 @@ function Amount({ tooltipText, label, amount, usdcAmount }: AmountProps) {
         )}
       </Row>
 
-      <Column flex align="flex-end" grow>
-        <ThemedText.H1 color="primary" fontSize={amountFontSize} lineHeight={amountLineHeight}>
-          {amount.toExact()} {amount.currency.symbol}
+      <Column flex align="flex-end" grow width="80%">
+        <ThemedText.H1
+          color="primary"
+          fontSize={amountFontSize}
+          lineHeight={amountLineHeight}
+          textAlign="right"
+          style={{ whiteSpace: 'pre-wrap' }}
+          paddingLeft={'1rem'}
+        >
+          <AmountValue>{amount.toExact()}</AmountValue>
+          <AmountValue>&nbsp;{amount.currency.symbol}</AmountValue>
         </ThemedText.H1>
         {usdcAmount && (
           <ThemedText.Body2>

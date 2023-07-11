@@ -10,6 +10,7 @@ export interface ColumnProps {
   flex?: true
   grow?: true
   css?: ReturnType<typeof css>
+  width?: string
 }
 
 const Column = styled.div<ColumnProps>`
@@ -23,6 +24,7 @@ const Column = styled.div<ColumnProps>`
   grid-template-columns: 1fr;
   justify-content: ${({ justify }) => justify ?? 'space-between'};
   padding: ${({ padded }) => padded && '0.75em'};
+  width: ${({ width }) => width ?? 'auto'};
 
   ${({ css }) => css}
 `
