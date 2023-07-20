@@ -12,7 +12,7 @@ import styled from 'styled-components/macro'
 import { lightTheme, ThemedText } from 'theme'
 import { WalletConnectQR } from 'utils/WalletConnect'
 
-const NO_WALLET_HELP_CENTER_URL = 'https://help.uniswap.org/en/articles/5391585-how-to-get-a-wallet'
+const NO_WALLET_HELP_CENTER_URL = 'https://support.uniswap.org/hc/en-us/articles/8699029297677-How-to-get-a-crypto-wallet'
 
 const Body = styled(Column)`
   display: grid;
