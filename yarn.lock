@@ -3725,15 +3725,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.8.0.tgz#60fcfa1475780350a719510ccee1f6a49f8c5cf8"
   integrity sha512-EeC37bbrd4sJnqW3TxNhExdWUBvzyJDhbTXcbDzFdBh/bg5sOCu1NbYJEnrjwBHEfewc9nF2OjEzejJFyJUx9A==
 
-"@uniswap/default-token-list@^11.2.0":
+"@uniswap/default-token-list@^11.2.0", "@uniswap/default-token-list@^11.4.0":
   version "11.4.0"
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-11.4.0.tgz#d0f8073e4a270ca4bd3c2604ea89c22e0f661efa"
   integrity sha512-ADAksIMv/emjJpeD9Rx/1vPBfpI5+Qkf/jWMOnNpRgW1MIGbRPKsVWyZTFeebx6p0MxXnxN70PbysgswWNmemA==
-
-"@uniswap/default-token-list@^9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-9.0.0.tgz#35e070095ac24d24ef03877842c5d46807b59c87"
-  integrity sha512-a62uqv5ApULDVEXCOursXIaEoxP4MtlzdNSiQikYl1x9RfsUAZXl9dBtCo2d1Ne+iS1THic1oCJMshNtT9Z0EQ==
 
 "@uniswap/lib@^4.0.1-alpha":
   version "4.0.1-alpha"
