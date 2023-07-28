@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 import { BASES_TO_CHECK_TRADES_AGAINST } from 'constants/routing'
 import { USDC_MAINNET } from 'constants/tokens'
 import { renderComponent, userEvent, waitFor } from 'test'
@@ -6,7 +6,7 @@ import { renderComponent, userEvent, waitFor } from 'test'
 import CommonBases from './CommonBases'
 
 describe('CommonBases', () => {
-  const itRendersCorrectCurrenciesForChainId = (chainId: SupportedChainId) => {
+  const itRendersCorrectCurrenciesForChainId = (chainId: ChainId) => {
     const tokens = BASES_TO_CHECK_TRADES_AGAINST[chainId]
     const component = renderComponent(<CommonBases chainId={chainId} onSelect={jest.fn()} />)
     tokens.forEach((token) => {
@@ -16,7 +16,7 @@ describe('CommonBases', () => {
 
   it('calls the select function on click', () => {
     const callback = jest.fn()
-    const component = renderComponent(<CommonBases chainId={SupportedChainId.MAINNET} onSelect={callback} />)
+    const component = renderComponent(<CommonBases chainId={ChainId.MAINNET} onSelect={callback} />)
     component.getByText('USDC').click()
     expect(callback).toHaveBeenCalledWith(USDC_MAINNET)
   })
@@ -24,7 +24,7 @@ describe('CommonBases', () => {
   it('calls the select function on enter', async () => {
     const user = userEvent.setup()
     const callback = jest.fn()
-    const component = renderComponent(<CommonBases chainId={SupportedChainId.MAINNET} onSelect={callback} />)
+    const component = renderComponent(<CommonBases chainId={ChainId.MAINNET} onSelect={callback} />)
     await user.tab()
     await user.type(component.container, '{enter}')
     waitFor(() => {
@@ -33,22 +33,22 @@ describe('CommonBases', () => {
   })
 
   it('renders correct currencies, mainnet', () => {
-    itRendersCorrectCurrenciesForChainId(SupportedChainId.MAINNET)
+    itRendersCorrectCurrenciesForChainId(ChainId.MAINNET)
   })
 
   it('renders correct currencies, optimism', () => {
-    itRendersCorrectCurrenciesForChainId(SupportedChainId.OPTIMISM)
+    itRendersCorrectCurrenciesForChainId(ChainId.OPTIMISM)
   })
 
   it('renders correct currencies, arbitrum', () => {
-    itRendersCorrectCurrenciesForChainId(SupportedChainId.ARBITRUM_ONE)
+    itRendersCorrectCurrenciesForChainId(ChainId.ARBITRUM_ONE)
   })
 
   it('renders correct currencies, polygon', () => {
-    itRendersCorrectCurrenciesForChainId(SupportedChainId.POLYGON)
+    itRendersCorrectCurrenciesForChainId(ChainId.POLYGON)
   })
 
   it('renders correct currencies, celo', () => {
-    itRendersCorrectCurrenciesForChainId(SupportedChainId.CELO)
+    itRendersCorrectCurrenciesForChainId(ChainId.CELO)
   })
 })

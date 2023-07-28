@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { renderHook } from 'test'
 
@@ -69,7 +69,7 @@ describe('useLogos', () => {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/info/logo.png'
 
   it('returns local native uri first followed by assets repo native', () => {
-    const native = nativeOnChain(SupportedChainId.MAINNET)
+    const native = nativeOnChain(ChainId.MAINNET)
     const { result } = renderHook(() => useLogos(native))
     expect(result.current).toEqual([EthereumLogo, nativeAssetsRepoUri])
   })
