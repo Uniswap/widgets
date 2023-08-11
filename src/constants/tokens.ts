@@ -338,6 +338,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'Wrapped MATIC'
   ),
   [ChainId.BNB]: new Token(ChainId.BNB, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB'),
+  [ChainId.AVALANCHE]: new Token(
+    ChainId.AVALANCHE,
+    '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+    18,
+    'WAVAX',
+    'Wrapped AVAX'
+  ),
   [ChainId.BASE]: new Token(ChainId.BASE, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'),
   [ChainId.BASE_GOERLI]: new Token(
     ChainId.BASE_GOERLI,
