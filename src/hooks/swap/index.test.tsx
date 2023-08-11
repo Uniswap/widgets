@@ -1,5 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId, TradeType } from '@uniswap/sdk-core'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
 import { controlledAtom, Field, stateAtom, Swap, swapAtom, swapEventHandlersAtom } from 'state/swap'
@@ -8,7 +7,7 @@ import { act, renderHook } from 'test'
 import { useSwapAmount, useSwapCurrency, useSwitchSwapCurrencies } from './'
 
 const DAI_MAINNET = DAI
-const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
+const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 const INITIAL_SWAP: Swap = {
   type: TradeType.EXACT_INPUT,

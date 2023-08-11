@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
@@ -6,7 +7,7 @@ import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms.macro'
 
-import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
+import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
 
 export const STANDARD_L1_BLOCK_TIME = ms`12s`
 
@@ -59,7 +60,7 @@ export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainIn
   { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 const CHAIN_INFO: ChainInfoMap = {
-  [SupportedChainId.MAINNET]: {
+  [ChainId.MAINNET]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
@@ -69,37 +70,7 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: '#627EEA',
   },
-  [SupportedChainId.RINKEBY]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://rinkeby.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Rinkeby',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
-    color: '#FB118E',
-  },
-  [SupportedChainId.ROPSTEN]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://ropsten.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ropsten',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
-    color: '#A08116',
-  },
-  [SupportedChainId.KOVAN]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://kovan.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Kovan',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
-    color: '#FF0420',
-  },
-  [SupportedChainId.GOERLI]: {
+  [ChainId.GOERLI]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://goerli.etherscan.io/',
@@ -109,7 +80,7 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
     color: '#209853',
   },
-  [SupportedChainId.OPTIMISM]: {
+  [ChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://app.optimism.io/bridge',
@@ -124,7 +95,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#FF0420',
     backgroundColor: '#ff042029',
   },
-  [SupportedChainId.OPTIMISM_GOERLI]: {
+  [ChainId.OPTIMISM_GOERLI]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://app.optimism.io/bridge',
@@ -140,7 +111,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#FF0420',
     backgroundColor: '#ff042029',
   },
-  [SupportedChainId.ARBITRUM_ONE]: {
+  [ChainId.ARBITRUM_ONE]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
@@ -154,21 +125,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#28A0F0',
     backgroundColor: '#28a0f029',
   },
-  [SupportedChainId.ARBITRUM_RINKEBY]: {
-    networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://bridge.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    explorer: 'https://rinkeby-explorer.arbitrum.io/',
-    infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: 'Arbitrum Rinkeby',
-    logoUrl: arbitrumLogoUrl,
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
-    color: '#28A0F0',
-    backgroundColor: '#28a0f029',
-  },
-  [SupportedChainId.POLYGON]: {
+  [ChainId.POLYGON]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://wallet.polygon.technology/login?redirectTo=%2Fpolygon%2Fbridge',
@@ -182,7 +139,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#A457FF',
     backgroundColor: '#a457ff29',
   },
-  [SupportedChainId.POLYGON_MUMBAI]: {
+  [ChainId.POLYGON_MUMBAI]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://wallet.polygon.technology/login?redirectTo=%2Fpolygon%2Fbridge',
@@ -196,7 +153,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#A457FF',
     backgroundColor: '#a457ff29',
   },
-  [SupportedChainId.CELO]: {
+  [ChainId.CELO]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://www.portalbridge.com/#/transfer',
@@ -210,7 +167,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#35D07F',
     backgroundColor: '#34d07f1f',
   },
-  [SupportedChainId.CELO_ALFAJORES]: {
+  [ChainId.CELO_ALFAJORES]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://www.portalbridge.com/#/transfer',
@@ -224,7 +181,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: '#35D07F',
     backgroundColor: '#34d07f1f',
   },
-  [SupportedChainId.BNB]: {
+  [ChainId.BNB]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://cbridge.celer.network/1/56',
@@ -241,9 +198,9 @@ const CHAIN_INFO: ChainInfoMap = {
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
 export function getChainInfo(chainId: SupportedL2ChainId): L2ChainInfo
-export function getChainInfo(chainId: SupportedChainId): L1ChainInfo | L2ChainInfo
+export function getChainInfo(chainId: ChainId): L1ChainInfo | L2ChainInfo
 export function getChainInfo(
-  chainId: SupportedChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
+  chainId: ChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
 ): L1ChainInfo | L2ChainInfo | undefined
 
 /**
@@ -261,12 +218,12 @@ export function getChainInfo(chainId: any): any {
   return undefined
 }
 
-export const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET]
+export const MAINNET_INFO = CHAIN_INFO[ChainId.MAINNET]
 export function getChainInfoOrDefault(chainId: number | undefined) {
   return getChainInfo(chainId) ?? MAINNET_INFO
 }
 
-export function isSupportedChainId(chainId: number | undefined): chainId is SupportedChainId {
+export function isSupportedChainId(chainId: number | undefined): chainId is ChainId {
   if (chainId === undefined) return false
-  return !!SupportedChainId[chainId]
+  return !!ChainId[chainId]
 }

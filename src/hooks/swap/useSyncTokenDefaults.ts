@@ -1,7 +1,6 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useToken } from 'hooks/useCurrency'
 import { useUpdateAtom } from 'jotai/utils'
@@ -18,7 +17,7 @@ export interface TokenDefaults {
   defaultInputAmount?: number | string
   defaultOutputTokenAddress?: DefaultAddress
   defaultOutputAmount?: number | string
-  defaultChainId?: SupportedChainId
+  defaultChainId?: ChainId
 }
 
 function useDefaultToken(

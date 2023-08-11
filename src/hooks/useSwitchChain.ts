@@ -1,7 +1,7 @@
 import type { Web3Provider } from '@ethersproject/providers'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { ErrorCode } from 'constants/eip1193'
 import useJsonRpcUrlsMap from 'hooks/web3/useJsonRpcUrlsMap'
 import { atom } from 'jotai'
@@ -27,7 +27,7 @@ export interface AddEthereumChainParameter {
 export type OnSwitchChain = (addChainParameter: AddEthereumChainParameter) => void | Promise<void>
 export const onSwitchChainAtom = atom<OnSwitchChain | undefined>(undefined)
 
-function toHex(chainId: SupportedChainId): string {
+function toHex(chainId: ChainId): string {
   return `0x${chainId.toString(16)}`
 }
 
@@ -50,7 +50,7 @@ async function addChain(provider: Web3Provider, addChainParameter: AddEthereumCh
 
 async function switchChain(
   provider: Web3Provider,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   addChainParameter?: AddEthereumChainParameter
 ): Promise<void> {
   try {
@@ -63,13 +63,13 @@ async function switchChain(
   }
 }
 
-export default function useSwitchChain(): (chainId: SupportedChainId) => Promise<void> {
+export default function useSwitchChain(): (chainId: ChainId) => Promise<void> {
   const { connector, provider } = useWeb3React()
   const connectors = useConnectors()
   const urlMap = useJsonRpcUrlsMap()
   const onSwitchChain = useAtomValue(onSwitchChainAtom)
   return useCallback(
-    async (chainId: SupportedChainId) => {
+    async (chainId: ChainId) => {
       const { safe, label, nativeCurrency, explorer } = getChainInfo(chainId)
       const addChainParameter: AddEthereumChainParameter = {
         chainId: toHex(chainId),

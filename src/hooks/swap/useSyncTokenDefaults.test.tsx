@@ -1,6 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import { TradeType } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId, TradeType } from '@uniswap/sdk-core'
 import { DAI_POLYGON, nativeOnChain } from 'constants/tokens'
 import { USDC_MAINNET } from 'constants/tokens'
 import { Provider as AtomProvider } from 'jotai'
@@ -27,11 +26,11 @@ const TOKEN_DEFAULTS: TokenDefaults = {
 }
 
 jest.mock('@web3-react/core', () => {
-  const { SupportedChainId } = jest.requireActual('constants/chains')
+  const { ChainId } = jest.requireActual('@uniswap/sdk-core')
   const connector = {}
   return {
     useWeb3React: () => ({
-      chainId: SupportedChainId.MAINNET,
+      chainId: ChainId.MAINNET,
       connector,
     }),
   }
@@ -57,15 +56,15 @@ describe('useSyncTokenDefaults', () => {
   it('syncs to default chainId on initial render if defaultChainId is provided', () => {
     const { result } = renderHook(
       () => {
-        useSyncTokenDefaults({ ...TOKEN_DEFAULTS, defaultChainId: SupportedChainId.POLYGON })
+        useSyncTokenDefaults({ ...TOKEN_DEFAULTS, defaultChainId: ChainId.POLYGON })
         return useAtomValue(swapAtom)
       },
       { wrapper: Wrapper }
     )
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
-      INPUT: nativeOnChain(SupportedChainId.POLYGON),
-      OUTPUT: nativeOnChain(SupportedChainId.POLYGON),
+      INPUT: nativeOnChain(ChainId.POLYGON),
+      OUTPUT: nativeOnChain(ChainId.POLYGON),
     })
   })
 
@@ -79,8 +78,8 @@ describe('useSyncTokenDefaults', () => {
     )
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
-      INPUT: nativeOnChain(SupportedChainId.MAINNET),
-      OUTPUT: nativeOnChain(SupportedChainId.MAINNET),
+      INPUT: nativeOnChain(ChainId.MAINNET),
+      OUTPUT: nativeOnChain(ChainId.MAINNET),
     })
   })
 
@@ -91,7 +90,7 @@ describe('useSyncTokenDefaults', () => {
           ...TOKEN_DEFAULTS,
           defaultInputTokenAddress: DAI_POLYGON.address,
           defaultOutputTokenAddress: DAI_POLYGON.address,
-          defaultChainId: SupportedChainId.POLYGON,
+          defaultChainId: ChainId.POLYGON,
         })
         return useAtomValue(swapAtom)
       },
@@ -114,8 +113,8 @@ describe('useSyncTokenDefaults', () => {
     )
     expect(result.current).toMatchObject({
       ...INITIAL_SWAP,
-      INPUT: nativeOnChain(SupportedChainId.MAINNET),
-      OUTPUT: nativeOnChain(SupportedChainId.MAINNET),
+      INPUT: nativeOnChain(ChainId.MAINNET),
+      OUTPUT: nativeOnChain(ChainId.MAINNET),
     })
   })
 })

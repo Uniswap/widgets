@@ -1,8 +1,7 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { sendTransaction } from '@uniswap/conedison/provider/index'
-import { TradeType } from '@uniswap/sdk-core'
+import { ChainId, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { SupportedChainId } from 'constants/chains'
 import { TWO_PERCENT } from 'constants/misc'
 import { InterfaceTrade } from 'state/routing/types'
 import { swapEventHandlersAtom } from 'state/swap'
@@ -39,7 +38,7 @@ describe('useUniversalRouter', () => {
       hardhat.provider,
       {
         from: expect.stringMatching(new RegExp(hardhat.account.address, 'i')),
-        to: UNIVERSAL_ROUTER_ADDRESS(SupportedChainId.MAINNET),
+        to: UNIVERSAL_ROUTER_ADDRESS(ChainId.MAINNET),
         data: 'calldata',
       },
       0.2

@@ -1,5 +1,5 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import { Link } from 'icons'
 import { ReactNode, useMemo } from 'react'
 import styled from 'styled-components/macro'
@@ -30,10 +30,7 @@ export default function EtherscanLink({
   showIcon = true,
 }: EtherscanLinkProps) {
   const { chainId } = useWeb3React()
-  const url = useMemo(
-    () => data && getExplorerLink(chainId || SupportedChainId.MAINNET, data, type),
-    [chainId, data, type]
-  )
+  const url = useMemo(() => data && getExplorerLink(chainId || ChainId.MAINNET, data, type), [chainId, data, type])
 
   return (
     <StyledExternalLink href={url} color={color} target="_blank">

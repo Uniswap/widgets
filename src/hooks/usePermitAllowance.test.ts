@@ -1,10 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
 import { MaxAllowanceTransferAmount, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
-import { SupportedChainId } from 'constants/chains'
 import { UNI } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useContract } from 'hooks/useContract'
@@ -14,9 +13,9 @@ import { renderHook, waitFor } from 'test'
 
 import { usePermitAllowance, useUpdatePermitAllowance } from './usePermitAllowance'
 
-const TOKEN = UNI[SupportedChainId.MAINNET]
+const TOKEN = UNI[ChainId.MAINNET]
 const OWNER = hardhat.account.address
-const SPENDER = UNIVERSAL_ROUTER_ADDRESS(SupportedChainId.MAINNET)
+const SPENDER = UNIVERSAL_ROUTER_ADDRESS(ChainId.MAINNET)
 
 const CONTRACT = new Contract(PERMIT2_ADDRESS, PERMIT2_ABI) as Permit2
 const EXPIRATION = 1234567890

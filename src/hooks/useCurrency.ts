@@ -1,6 +1,6 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TOKEN_SHORTHANDS } from 'constants/tokens'
 import { NEVER_RELOAD, useSingleCallResult } from 'hooks/multicall'
@@ -10,7 +10,6 @@ import { useMemo } from 'react'
 import { isAddress } from 'utils'
 import { supportedChainId } from 'utils/supportedChainId'
 
-import { SupportedChainId } from '..'
 import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
@@ -95,7 +94,7 @@ export function useTokenFromMapOrNetwork(
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useToken(tokenAddress?: string | null, chainId?: SupportedChainId): Token | null | undefined {
+export function useToken(tokenAddress?: string | null, chainId?: ChainId): Token | null | undefined {
   const { chainId: activeChainId } = useWeb3React()
 
   const tokens = useTokenMap(chainId)

@@ -1,6 +1,7 @@
 import './polyfills' // must be imported first
 
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { ChainId } from '@uniswap/sdk-core'
 import { initializeConnector, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { MetaMask } from '@web3-react/metamask'
@@ -8,7 +9,7 @@ import { Network } from '@web3-react/network'
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { useAsyncError } from 'components/Error/ErrorBoundary'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { MetaMaskConnectionError } from 'errors'
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { Layer } from 'theme'
@@ -24,7 +25,7 @@ import {
   toJsonRpcUrlMap,
 } from './useJsonRpcUrlsMap'
 
-const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET
+const DEFAULT_CHAIN_ID = ChainId.MAINNET
 
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks]
 
@@ -37,7 +38,7 @@ interface Web3ReactConnectors {
 }
 
 export interface ProviderProps {
-  defaultChainId?: SupportedChainId
+  defaultChainId?: ChainId
   jsonRpcUrlMap?: JsonRpcConnectionMap
   /**
    * If null, no auto-connection (MetaMask or WalletConnect) will be attempted.
@@ -57,7 +58,7 @@ export function TestableProvider({ provider, children }: PropsWithChildren<{ pro
 }
 
 export function Provider({
-  defaultChainId: chainId = SupportedChainId.MAINNET,
+  defaultChainId: chainId = ChainId.MAINNET,
   jsonRpcUrlMap,
   provider,
   children,
@@ -65,7 +66,7 @@ export function Provider({
   const defaultChainId = useMemo(() => {
     if (!supportedChainId(chainId)) {
       console.warn(
-        `Unsupported chainId: ${chainId}. Falling back to ${DEFAULT_CHAIN_ID} (${SupportedChainId[DEFAULT_CHAIN_ID]}).`
+        `Unsupported chainId: ${chainId}. Falling back to ${DEFAULT_CHAIN_ID} (${ChainId[DEFAULT_CHAIN_ID]}).`
       )
       return DEFAULT_CHAIN_ID
     }
@@ -169,7 +170,7 @@ function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: Pro
       rpcMap: urlMap,
       projectId: 'c6c9bacd35afa3eb9e6cccf6d8464395',
       // this requires the connecting wallet to support eth mainnet
-      chains: [SupportedChainId.MAINNET],
+      chains: [ChainId.MAINNET],
       optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
       optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
       qrModalOptions: {

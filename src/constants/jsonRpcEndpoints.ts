@@ -1,4 +1,4 @@
-import { SupportedChainId } from './chains'
+import { ChainId } from '@uniswap/sdk-core'
 
 /**
  * Fallback JSON RPC endpoints.
@@ -10,71 +10,76 @@ import { SupportedChainId } from './chains'
  *
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
-export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
-  [SupportedChainId.MAINNET]: [
+export const JSON_RPC_FALLBACK_ENDPOINTS = {
+  [ChainId.MAINNET]: [
     // "Safe" URLs
+    'https://api.mycryptoapi.com/eth',
     'https://cloudflare-eth.com',
     // "Fallback" URLs
     'https://rpc.ankr.com/eth',
     'https://eth-mainnet.public.blastapi.io',
   ],
-  [SupportedChainId.ROPSTEN]: [
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth_ropsten',
-  ],
-  [SupportedChainId.RINKEBY]: [
-    // "Fallback" URLs
-    'https://rinkeby-light.eth.linkpool.io/',
-  ],
-  [SupportedChainId.GOERLI]: [
+  [ChainId.GOERLI]: [
     // "Safe" URLs
     'https://rpc.goerli.mudit.blog/',
     // "Fallback" URLs
     'https://rpc.ankr.com/eth_goerli',
   ],
-  [SupportedChainId.KOVAN]: [
+  [ChainId.SEPOLIA]: [
+    // "Safe" URLs
+    'https://rpc.sepolia.dev/',
     // "Fallback" URLs
-    'https://eth-kovan.public.blastapi.io',
+    'https://rpc.sepolia.org/',
+    'https://rpc2.sepolia.org/',
+    'https://rpc.sepolia.online/',
+    'https://www.sepoliarpc.space/',
+    'https://rpc-sepolia.rockx.com/',
+    'https://rpc.bordel.wtf/sepolia',
   ],
-  [SupportedChainId.POLYGON]: [
+  [ChainId.POLYGON]: [
     // "Safe" URLs
     'https://polygon-rpc.com/',
+    'https://rpc-mainnet.matic.network',
+    'https://matic-mainnet.chainstacklabs.com',
+    'https://rpc-mainnet.maticvigil.com',
+    'https://rpc-mainnet.matic.quiknode.pro',
+    'https://matic-mainnet-full-rpc.bwarelabs.com',
   ],
-  [SupportedChainId.POLYGON_MUMBAI]: [
+  [ChainId.POLYGON_MUMBAI]: [
     // "Safe" URLs
     'https://matic-mumbai.chainstacklabs.com',
     'https://rpc-mumbai.maticvigil.com',
     'https://matic-testnet-archive-rpc.bwarelabs.com',
   ],
-  [SupportedChainId.ARBITRUM_ONE]: [
+  [ChainId.ARBITRUM_ONE]: [
     // "Safe" URLs
     'https://arb1.arbitrum.io/rpc',
     // "Fallback" URLs
     'https://arbitrum.public-rpc.com',
   ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
+  [ChainId.ARBITRUM_GOERLI]: [
     // "Safe" URLs
-    'https://rinkeby.arbitrum.io/rpc',
+    'https://goerli-rollup.arbitrum.io/rpc',
   ],
-  [SupportedChainId.OPTIMISM]: [
+  [ChainId.OPTIMISM]: [
     // "Safe" URLs
     'https://mainnet.optimism.io/',
     // "Fallback" URLs
     'https://rpc.ankr.com/optimism',
   ],
-  [SupportedChainId.OPTIMISM_GOERLI]: [
+  [ChainId.OPTIMISM_GOERLI]: [
     // "Safe" URLs
     'https://goerli.optimism.io',
   ],
-  [SupportedChainId.CELO]: [
+  [ChainId.CELO]: [
     // "Safe" URLs
-    'https://forno.celo.org',
+    `https://forno.celo.org`,
   ],
-  [SupportedChainId.CELO_ALFAJORES]: [
+  [ChainId.CELO_ALFAJORES]: [
     // "Safe" URLs
-    'https://alfajores-forno.celo-testnet.org',
+    `https://alfajores-forno.celo-testnet.org`,
   ],
-  [SupportedChainId.BNB]: [
+  [ChainId.BNB]: [
     // "Safe" URLs
     'https://endpoints.omniatech.io/v1/bsc/mainnet/public',
     'https://bsc-mainnet.gateway.pokt.network/v1/lb/6136201a7bad1500343e248d',
@@ -86,4 +91,25 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
     'https://bsc-dataseed4.defibit.io',
     'https://rpc.ankr.com/bsc',
   ],
+  [ChainId.AVALANCHE]: [
+    // "Safe" URLs
+    'https://api.avax.network/ext/bc/C/rpc',
+    'https://avalanche-c-chain.publicnode.com',
+  ],
+  [ChainId.BASE]: [
+    // "Safe" URLs
+    'https://mainnet.base.org',
+    // "Unsafe" URLs
+    'https://base-mainnet.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
+    'https://svc.blockdaemon.com/base/mainnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
+  ],
+  [ChainId.BASE_GOERLI]: [
+    // "Safe" URLs
+    'https://goerli.base.org',
+    // "Unsafe" URLs
+    'https://base-goerli.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
+    'https://svc.blockdaemon.com/base/testnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
+  ],
+  [ChainId.GNOSIS]: [],
+  [ChainId.MOONBEAM]: [],
 }

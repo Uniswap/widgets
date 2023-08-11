@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
@@ -9,19 +9,19 @@ import { LogoTableInput } from './LogoTable'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'celo' | 'smartchain'
 
-function chainIdToNetworkName(networkId: SupportedChainId): Network | undefined {
+function chainIdToNetworkName(networkId: ChainId): Network | undefined {
   switch (networkId) {
-    case SupportedChainId.MAINNET:
+    case ChainId.MAINNET:
       return 'ethereum'
-    case SupportedChainId.ARBITRUM_ONE:
+    case ChainId.ARBITRUM_ONE:
       return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
+    case ChainId.OPTIMISM:
       return 'optimism'
-    case SupportedChainId.POLYGON:
+    case ChainId.POLYGON:
       return 'polygon'
-    case SupportedChainId.CELO:
+    case ChainId.CELO:
       return 'celo'
-    case SupportedChainId.BNB:
+    case ChainId.BNB:
       return 'smartchain'
     default:
       return 'ethereum'
@@ -41,15 +41,15 @@ export function getAssetsRepoURI(asset: LogoTableInput): string | undefined {
     : undefined
 }
 
-export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
+export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   switch (chainId) {
-    case SupportedChainId.POLYGON:
-    case SupportedChainId.POLYGON_MUMBAI:
+    case ChainId.POLYGON:
+    case ChainId.POLYGON_MUMBAI:
       return MaticLogo
-    case SupportedChainId.CELO:
-    case SupportedChainId.CELO_ALFAJORES:
+    case ChainId.CELO:
+    case ChainId.CELO_ALFAJORES:
       return CeloLogo
-    case SupportedChainId.BNB:
+    case ChainId.BNB:
       return BnbLogo
     default:
       return EthereumLogo

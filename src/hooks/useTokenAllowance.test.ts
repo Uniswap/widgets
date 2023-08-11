@@ -4,9 +4,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract, ContractTransaction } from '@ethersproject/contracts'
 import { Deferrable } from '@ethersproject/properties'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { CurrencyAmount, MaxUint256 } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, MaxUint256 } from '@uniswap/sdk-core'
 import ERC20_ABI from 'abis/erc20.json'
-import { SupportedChainId } from 'constants/chains'
 import { UNI } from 'constants/tokens'
 import { useSingleCallResult } from 'hooks/multicall'
 import { useTokenContract } from 'hooks/useContract'
@@ -16,7 +15,7 @@ import { renderHook } from 'test'
 
 import { useTokenAllowance, useUpdateTokenAllowance } from './useTokenAllowance'
 
-const TOKEN = UNI[SupportedChainId.MAINNET]
+const TOKEN = UNI[ChainId.MAINNET]
 const OWNER = hardhat.account.address
 const SPENDER = PERMIT2_ADDRESS
 const SIGNER = new VoidSigner(OWNER)

@@ -1,6 +1,6 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChainId } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { ChainError, useSwapInfo } from 'hooks/swap'
 import { SwapApprovalState } from 'hooks/swap/useSwapApproval'
 import { useIsWrap } from 'hooks/swap/useWrapCallback'
@@ -39,7 +39,7 @@ export default function SwapActionButton() {
     return <ConnectWalletButton />
   } else if (error === ChainError.MISMATCHED_CHAINS || error === ChainError.UNSUPPORTED_CHAIN) {
     const tokenChainId = inputCurrency?.chainId ?? outputCurrency?.chainId
-    const supportedTokenChainId = isSupportedChainId(tokenChainId) ? tokenChainId : SupportedChainId.MAINNET
+    const supportedTokenChainId = isSupportedChainId(tokenChainId) ? tokenChainId : ChainId.MAINNET
     return <SwitchChainButton chainId={supportedTokenChainId} />
   } else if (isWrap) {
     return <WrapButton disabled={isDisabled} />

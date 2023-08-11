@@ -1,6 +1,6 @@
 import { tokens } from '@uniswap/default-token-list'
-import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Field, SupportedChainId, SwapWidget } from '@uniswap/widgets'
+import { ChainId, Currency, TradeType } from '@uniswap/sdk-core'
+import { Field, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { useCallback, useMemo, useState } from 'react'
 
@@ -21,12 +21,12 @@ function Fixture() {
   const currencies: Record<string, Currency> = useMemo(
     () => ({
       // Include native token from each chain
-      ...Object.values(SupportedChainId)
+      ...Object.values(ChainId)
         .filter((id): id is number => Number.isInteger(id))
         .reduce(
           (eth, chainId) => ({
             ...eth,
-            [SupportedChainId[chainId]]: nativeOnChain(chainId),
+            [ChainId[chainId]]: nativeOnChain(chainId),
           }),
           {}
         ),
@@ -34,7 +34,7 @@ function Fixture() {
       ...Object.values(USDC).reduce(
         (usdc, chainUsdc) => ({
           ...usdc,
-          [`${SupportedChainId[chainUsdc.chainId]} USDC`]: chainUsdc,
+          [`${ChainId[chainUsdc.chainId]} USDC`]: chainUsdc,
         }),
         {}
       ),
@@ -43,14 +43,14 @@ function Fixture() {
   )
   const inputToken = useOption('input', {
     options: currencies,
-    defaultValue: SupportedChainId[SupportedChainId.MAINNET],
+    defaultValue: ChainId[ChainId.MAINNET],
   })
   const outputToken = useOption('output', {
     options: currencies,
-    defaultValue: `${SupportedChainId[SupportedChainId.MAINNET]} USDC`,
+    defaultValue: `${ChainId[ChainId.MAINNET]} USDC`,
   })
 
-  const connector = useProvider(SupportedChainId.MAINNET)
+  const connector = useProvider(ChainId.MAINNET)
 
   const eventHandlers = useMemo(
     // eslint-disable-next-line react-hooks/rules-of-hooks

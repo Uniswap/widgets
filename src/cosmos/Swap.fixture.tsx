@@ -1,13 +1,6 @@
 import { tokens } from '@uniswap/default-token-list'
 import { TokenInfo } from '@uniswap/token-lists'
-import {
-  darkTheme,
-  defaultTheme,
-  DialogAnimationType,
-  lightTheme,
-  SupportedChainId,
-  SwapWidget,
-} from '@uniswap/widgets'
+import { ChainId, darkTheme, defaultTheme, DialogAnimationType, lightTheme, SwapWidget } from '@uniswap/widgets'
 import Row from 'components/Row'
 import { CHAIN_NAMES_TO_IDS } from 'constants/chains'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -26,7 +19,7 @@ const TOKEN_WITH_NO_LOGO = {
   address: '0x3819f64f282bf135d62168C1e513280dAF905e06',
 }
 
-const mainnetTokens = tokens.filter((token) => token.chainId === SupportedChainId.MAINNET)
+const mainnetTokens = tokens.filter((token) => token.chainId === ChainId.MAINNET)
 const tokenLists: Record<string, TokenInfo[] | string> = {
   Default: tokens,
   Extended: 'https://extendedtokens.uniswap.org/',
