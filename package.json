@@ -92,7 +92,7 @@
     "multicodec": "^3.0.1",
     "multihashes": "^4.0.2",
     "node-vibrant": "^3.2.1-alpha.1",
-    "polished": "^3.3.2",
+    "polished": "^3.7.2",
     "popper-max-size-modifier": "^0.2.0",
     "qrcode": "^1.5.0",
     "react": ">=17.0.1",
@@ -173,7 +173,7 @@
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.5",
     "babel-plugin-macros": "^3.1.0",
-    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-module-resolver": "^5.0.0",
     "babel-runtime": "^6.26.0",
     "concurrently": "^8.2.0",
     "dotenv": "^16.0.1",
@@ -205,12 +205,12 @@
     "rollup-plugin-node-externals": "^3.1.2",
     "rollup-plugin-scss": "^3.0.0",
     "sass": "^1.45.1",
-    "semantic-release": "^19.0.2",
+    "semantic-release": "^19.0.3",
     "typechain": "^5.0.0",
     "typescript": "^4.4.3",
     "wcag-contrast": "^3.0.0",
-    "webpack": "^5.72.0",
-    "yarn-deduplicate": "^6.0.0"
+    "webpack": "^5.76.0",
+    "yarn-deduplicate": "^6.0.2"
   },
   "resolutions": {
     "decode-uri-component": "^0.2.2"
