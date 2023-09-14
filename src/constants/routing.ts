@@ -9,6 +9,7 @@ import {
   CUSD_CELO,
   DAI,
   DAI_ARBITRUM_ONE,
+  DAI_BASE,
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH2X_FLI,
@@ -24,6 +25,7 @@ import {
   SWISE,
   TRIBE,
   USDC_BNB_CHAIN,
+  USDC_BASE,
   USDC_MAINNET,
   USDC_POLYGON,
   USDT,
@@ -91,6 +93,11 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC_BNB_CHAIN,
     USDT_BNB_CHAIN,
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BNB],
+  ],
+  [SupportedChainId.BASE]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BASE],
+    DAI_BASE,
+    USDC_BASE,
   ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
