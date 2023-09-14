@@ -89,9 +89,11 @@ export const JSON_RPC_FALLBACK_ENDPOINTS: Record<SupportedChainId, string[]> = {
   [SupportedChainId.BASE]: [
     // "Safe" URLs
     'https://mainnet.base.org',
-  ],
-  [SupportedChainId.BASE_GOERLI]: [
-    // "Safe" URLs
-    'https://goerli.base.org',
+    'https://developer-access-mainnet.base.org/',
+    'https://base.gateway.tenderly.co',
+    'https://base.publicnode.com',
+    // "Fallback" URLs
+    'https://1rpc.io/base',
+    'https://base.meowrpc.com',
   ],
 }

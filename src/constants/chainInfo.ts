@@ -250,20 +250,7 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: '#0152ff',
     backgroundColor: '#0152ff',
-  },
-  [SupportedChainId.BASE_GOERLI]: {
-    networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://goerli-bridge.base.org/',
-    docs: 'https://docs.base.org/',
-    explorer: 'https://goerli.basescan.org/',
-    infoLink: 'https://info.uniswap.org/#/base/',
-    label: 'Base Goerli',
-    logoUrl: baseLogo,
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: '#0152ff',
-    backgroundColor: '#0152ff',
-  },
+  }
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
