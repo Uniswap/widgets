@@ -240,7 +240,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [SupportedChainId.BASE]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://bridge.base.org/',
     docs: 'https://docs.base.org/',
     explorer: 'https://basescan.org/',
