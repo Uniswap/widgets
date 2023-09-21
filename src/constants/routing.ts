@@ -24,8 +24,8 @@ import {
   sETH2,
   SWISE,
   TRIBE,
-  USDC_BNB_CHAIN,
   USDC_BASE,
+  USDC_BNB_CHAIN,
   USDC_MAINNET,
   USDC_POLYGON,
   USDT,
@@ -94,11 +94,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_BNB_CHAIN,
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BNB],
   ],
-  [SupportedChainId.BASE]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BASE],
-    DAI_BASE,
-    USDC_BASE,
-  ],
+  [SupportedChainId.BASE]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BASE], DAI_BASE, USDC_BASE],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {

@@ -250,7 +250,7 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: '#0152ff',
     backgroundColor: '#0152ff',
-  }
+  },
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
