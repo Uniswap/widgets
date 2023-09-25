@@ -39,4 +39,7 @@ describe('#getExplorerLink', () => {
   it('bnb chain', () => {
     expect(getExplorerLink(56, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://bscscan.com/address/abc')
   })
+  it('base', () => {
+    expect(getExplorerLink(8453, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/address/abc')
+  })
 })

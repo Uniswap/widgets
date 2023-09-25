@@ -130,6 +130,13 @@ export const USDC_BNB_CHAIN = new Token(
   'USDC',
   'USDC'
 )
+export const USDC_BASE = new Token(
+  SupportedChainId.BASE,
+  '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+  6,
+  'USDC',
+  'USD Coin'
+)
 export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.MAINNET]: USDC_MAINNET,
   [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM,
@@ -145,6 +152,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
   [SupportedChainId.BNB]: USDC_BNB_CHAIN,
+  [SupportedChainId.BASE]: USDC_BASE,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -407,6 +415,14 @@ export const DAI_BNB_CHAIN = new Token(
   'DAI'
 )
 
+export const DAI_BASE = new Token(
+  SupportedChainId.BASE,
+  '0x50c5725949a6f0c72e6c4a641f24049a917db0cb',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
+
 function isBnbChain(chainId: number): chainId is SupportedChainId.BNB {
   return chainId === SupportedChainId.BNB
 }
@@ -489,6 +505,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WBNB',
     'Wrapped BNB'
+  ),
+  [SupportedChainId.BASE]: new Token(
+    SupportedChainId.BASE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
   ),
 }
 
@@ -574,5 +597,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES.address,
+    [SupportedChainId.BASE]: USDC_BASE.address,
   },
 }

@@ -1,7 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from 'constants/tokens'
+import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_BASE, USDC_MAINNET, USDC_POLYGON } from 'constants/tokens'
 import { useMemo } from 'react'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -13,6 +13,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
   [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [SupportedChainId.CELO]: CurrencyAmount.fromRawAmount(CUSD_CELO, 10_000e18),
+  [SupportedChainId.BASE]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
 }
 
 /**
