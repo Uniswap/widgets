@@ -9,8 +9,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    environment: production
+    runs-on:
+      group: npm-deploy
+    environment:
+      name: production
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -37,10 +39,22 @@ jobs:
         if: success()
         env:
           JSON_RPC_PROVIDER: ${{ secrets.JSON_RPC_PROVIDER }}
+      
+      - name: Load secret
+        uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0
+        with:
+          # Export loaded secrets as environment variables
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          # You may need to change this to your vault name and secret name
+          # Refer to it by calling env.NPM_TOKEN
+          # This token is also limited by IP to ONLY work on the runner
+          NPM_TOKEN: op://npm-deploy/npm-runner-token/secret
 
       - run: yarn release
         if: success()
         env:
           NPM_CONFIG_USERCONFIG: /dev/null
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}
