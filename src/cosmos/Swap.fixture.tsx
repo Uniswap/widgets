@@ -43,6 +43,8 @@ function Fixture() {
     []
   )
 
+  const [permit2] = useValue('permit2Enabled', { defaultValue: true })
+
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
   const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
     options: [
@@ -98,7 +100,7 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
-      permit2
+      permit2={permit2}
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputTokenAddress={defaultInputToken}
