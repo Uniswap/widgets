@@ -123,6 +123,7 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
             impact={impact}
             onConfirm={onSwap}
             allowance={allowance}
+            approval={approval}
           />
         </ResponsiveDialog>
       )}

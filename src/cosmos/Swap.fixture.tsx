@@ -5,6 +5,7 @@ import {
   defaultTheme,
   DialogAnimationType,
   lightTheme,
+  RouterPreference,
   SupportedChainId,
   SwapWidget,
 } from '@uniswap/widgets'
@@ -42,6 +43,8 @@ function Fixture() {
         setEvents((events) => [{ name, data }, ...events]),
     []
   )
+
+  const [permit2] = useValue('permit2Enabled', { defaultValue: true })
 
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
   const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
@@ -98,7 +101,7 @@ function Fixture() {
 
   const widget = (
     <SwapWidget
-      permit2
+      permit2={permit2}
       convenienceFee={convenienceFee}
       convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputTokenAddress={defaultInputToken}
@@ -113,6 +116,13 @@ function Fixture() {
       width={width}
       routerUrl={routerUrl}
       brandedFooter={brandedFooter}
+      settings={
+        {
+          slippage: { auto: false, max: '0.3' },
+          routerPreference: RouterPreference.API,
+          transactionTtl: 30,
+      }
+      }
       dialogOptions={{
         animationType: dialogAnimation,
         pageCentered,

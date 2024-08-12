@@ -60,8 +60,7 @@ export function useSwapApproval(amount?: CurrencyAmount<Currency>): SwapApproval
           await approve()
         }
       } catch (e) {
-        // Swallow approval errors - user rejections do not need to be displayed.
-        return
+        throw e
       }
       onSwapApprove?.()
     }

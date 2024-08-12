@@ -63,6 +63,7 @@ function Summary({ allowance }: { allowance: usePermit2Allowance.Allowance }) {
       onConfirm={noopAsync}
       triggerImpactSpeedbump={() => false}
       allowance={allowance}
+      approval={undefined}
       slippage={{
         auto: true,
         allowed: new Percent(1, 100),

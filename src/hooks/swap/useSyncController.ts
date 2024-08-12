@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import { controlledAtom as controlledSwapAtom, Swap } from 'state/swap'
-import { controlledAtom as controlledSettingsAtom, Settings } from 'state/swap/settings'
+import { stateAtom as controlledSettingsAtom, Settings } from 'state/swap/settings'
 
 export interface SwapController {
   value?: Swap
@@ -12,6 +12,13 @@ export default function useSyncController({ value, settings }: SwapController): 
   // Log an error if the component changes from uncontrolled to controlled (or vice versa).
   const isSwapControlled = useRef(Boolean(value))
   const isSettingsControlled = useRef(Boolean(settings))
+  const [controlledSettings, setControlledSettings] = useAtom(controlledSettingsAtom)
+
+  useEffect(() => {
+    // only set settings on mount - otherwise settings are being reset to default after every change in UI
+    setControlledSettings(settings as Settings)
+  },[])
+
   useEffect(() => {
     if (Boolean(value) !== isSwapControlled.current) {
       warnOnControlChange({ state: 'swap', prop: 'value' })
@@ -24,11 +31,6 @@ export default function useSyncController({ value, settings }: SwapController): 
   const [controlledSwap, setControlledSwap] = useAtom(controlledSwapAtom)
   if (controlledSwap !== value) {
     setControlledSwap(value)
-  }
-
-  const [controlledSettings, setControlledSettings] = useAtom(controlledSettingsAtom)
-  if (controlledSettings !== settings) {
-    setControlledSettings(settings)
   }
 }
 
