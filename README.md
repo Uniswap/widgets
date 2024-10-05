@@ -39,7 +39,7 @@ Uniswap Labs maintains two demo apps in branches of the [widgets-demo](https://g
 - [NextJS](https://github.com/Uniswap/widgets-demo/tree/nextjs)
 - [Create React App](https://github.com/Uniswap/widgets-demo/tree/cra)
 
-Others have also also released the widget in production to their userbase:
+Others have also released the widget in production to their userbase:
 
 - [OpenSea](https://opensea.io/)
 - [Friends With Benefits](https://www.fwb.help/)
