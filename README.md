@@ -32,6 +32,10 @@ npm i --save @uniswap/widgets
 - [overview](https://docs.uniswap.org/sdk/widgets/swap-widget)
 - [api reference](https://docs.uniswap.org/sdk/widgets/swap-widget/api)
 
+## Customize your widget 
+
+ - [Customize the theme of your widget ]https://shinydapp.vercel.app/customizer
+
 ## Example Apps
 
 Uniswap Labs maintains two demo apps in branches of the [widgets-demo](https://github.com/Uniswap/widgets-demo) repo:
