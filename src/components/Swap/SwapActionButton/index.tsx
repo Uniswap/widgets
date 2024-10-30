@@ -8,6 +8,7 @@ import { usePermit2 as usePermit2Enabled } from 'hooks/useSyncFlags'
 import { useMemo } from 'react'
 import { Field } from 'state/swap'
 
+import ApproveButton from './ApproveButton'
 import ConnectWalletButton from './ConnectWalletButton'
 import SwapButton from './SwapButton'
 import SwitchChainButton from './SwitchChainButton'
@@ -43,6 +44,8 @@ export default function SwapActionButton() {
     return <SwitchChainButton chainId={supportedTokenChainId} />
   } else if (isWrap) {
     return <WrapButton disabled={isDisabled} />
+  } else if (approval.state !== SwapApprovalState.APPROVED) {
+    return <ApproveButton trade={trade} state={approval.state} approve={approval.approve} />
   } else {
     return <SwapButton disabled={isDisabled} />
   }
