@@ -6,6 +6,10 @@
 [![Lint](https://github.com/Uniswap/interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/lint.yml)
 [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
 
+# Deprecation Notice:
+
+The @uniswap/widgets package is no longer actively supported by Uniswap Labs. Developers are encouraged to transition to Uniswap v4 and build custom swap functionality using the new version of the protocol. Uniswap v4 offers more flexibility and is the recommended approach moving forward.
+
 The `@uniswap/widgets` package is an [npm package](https://www.npmjs.com/package/@uniswap/widgets) of React components used to provide subsets of the Uniswap Protocol functionality in a small and configurable user interface element.
 
 # Uniswap Labs Swap Widget
